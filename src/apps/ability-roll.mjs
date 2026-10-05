@@ -35,7 +35,7 @@ export async function rollAbilities(actor) {
 
 /** 배정 창 */
 export async function assignDialog(actor, totals) {
-  const hasValues = ABILITIES.some((k) => (actor.system.abilities?.[k] ?? 0) > 0);
+  const hasValues = ABILITIES.some((k) => (actor.system.abilities?.[k]?.base ?? 0) > 0);
   const slotOptions = (selected) => totals
     .map((t, i) => `<option value="${i}" ${i === selected ? "selected" : ""}>${L("slot", { n: i + 1, total: t })}</option>`).join("");
   const initial = orderedAssignment();
@@ -104,9 +104,12 @@ async function apply(actor, totals, root) {
     return null;
   }
   const abilities = applyAssignment(totals, slots);
-  const d = deriveCharacter({ abilities, level: actor.system.level });
+  // 최대 【HP】·【TP】는 클래스 보정 등을 포함한 최종값으로 계산
+  const parts = actor.system.abilityParts;
+  const finalAbilities = Object.fromEntries(ABILITIES.map((k) => [k, parts[k].total - parts[k].base + abilities[k]]));
+  const d = deriveCharacter({ abilities: finalAbilities, level: actor.system.level });
   const update = {
-    "system.abilities": abilities,
+    ...Object.fromEntries(ABILITIES.map((k) => [`system.abilities.${k}.base`, abilities[k]])),
     "system.abilityRolls": totals,
     "system.hp.value": d.hpMax,
     "system.tp.value": d.tpMax

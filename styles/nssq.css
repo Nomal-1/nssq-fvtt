@@ -85,3 +85,21 @@
 .nssq-assign .assign-bonus { flex: 0 0 3em; text-align: right; color: #555; }
 .nssq-assign .assign-error { color: #b02020; }
 .nssq-assign .notes.warn { color: #b02020; }
+
+/* 클래스 선택 */
+.nssq .classes { margin-bottom: 4px; }
+.nssq .class-select { display: flex; align-items: center; gap: 6px; }
+.nssq .class-select > span:first-child { flex: 0 0 auto; font-size: 0.85em; color: var(--color-text-dark-secondary, #4b4a44); }
+.nssq .class-select select { flex: 1; }
+.nssq .class-select .hint { font-style: italic; color: #7a7971; font-size: 0.85em; }
+
+/* 능력치 출처 표 */
+.nssq .ability-table { width: 100%; border-collapse: collapse; margin: 2px 0 6px; text-align: center; }
+.nssq .ability-table th, .nssq .ability-table td { padding: 2px 3px; border-bottom: 1px solid #c9c7b8; }
+.nssq .ability-table thead th { font-size: 0.8em; font-weight: normal; color: var(--color-text-dark-secondary, #4b4a44); cursor: help; }
+.nssq .ability-table .ability-name { text-align: left; white-space: nowrap; }
+.nssq .ability-table input[type="number"] { width: 3.2em; text-align: center; }
+.nssq .ability-table .calc { color: #555; }
+.nssq .ability-table .final { background: rgba(0, 0, 0, 0.05); font-size: 1.15em; font-weight: bold; }
+.nssq .ability-table .final .rollable { display: block; }
+.nssq .ability-table .bonus { font-weight: bold; }

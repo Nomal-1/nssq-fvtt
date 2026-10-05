@@ -34,6 +34,7 @@ Hooks.once("init", () => {
   Handlebars.registerHelper("nssqLabel", (prefix, key) => game.i18n.localize(`${prefix}.${key}`));
   Handlebars.registerHelper("nssqEq", (a, b) => a === b);
   Handlebars.registerHelper("nssqGt", (a, b) => a > b);
+  Handlebars.registerHelper("nssqSigned", (n) => (n > 0 ? `+${n}` : n === 0 ? "0" : `${n}`));
 
   registerCheckHooks();
   registerCheckRequest();

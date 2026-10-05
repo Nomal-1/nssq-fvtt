@@ -101,7 +101,7 @@ DROP: 4\~7 R1 이빨 / 8\~ R1 가죽     ← 2D6 범위, R, 소재. "8 고기"�
 ### 4.1 Actor
 **character**
 ```
-abilities: { str, tec, vit, agi, luc }      # 정수 원값
+abilities: { str: { base, growth, temp }, … }   # 굴림·성장·일시 보정. v0.3.x의 숫자 값은 migrateData가 base로 옮긴다
 abilityRolls: [n×5]                          # 작성 시 3D6 결과(초기 소지금 계산)
 level, exp
 hp: { value, max }, tp: { value, max }, fp: { value }
@@ -112,6 +112,8 @@ money                                       # G
 history: [string]                           # 경력표
 ```
 파생치는 `prepareDerivedData`에서 엔진 `derive.mjs`를 호출해 계산한다(01 §1.2).
+- 능력치 최종값 = 굴림 + 클래스(메인 클래스 보정 × Lv) + 성장 + 장비 + 일시 (`abilityBreakdown`). 클래스·장비는 저장하지 않고 계산하며, 결과는 `system.abilityParts`·`system.abilityTotal`.
+- 메인·서브 클래스는 캐릭터가 가진 클래스 아이템(최대 2개)이다. `mainClass`·`subClass`에는 그 아이템의 `system.key`를 둔다. `mainClass`가 맞는 아이템이 없으면 첫 클래스 아이템을 메인으로 본다.
 
 **enemy**
 ```

@@ -7,6 +7,29 @@ export const ABILITIES = ["str", "tec", "vit", "agi", "luc"];
 export const RESISTS = ["slash", "strike", "pierce", "fire", "ice", "volt"];
 export const SUB_STATS = ["physHit", "elemHit", "evasion", "physAtk", "elemAtk", "defense", "suppAtk", "suppDef", "speed"];
 
+/** 능력치 출처: 굴림 · 클래스(보정×Lv) · 성장(경험점 10의 배수) · 장비 · 일시 */
+export const ABILITY_SOURCES = ["base", "class", "growth", "equip", "temp"];
+
+/**
+ * 능력치를 출처별로 나눠 합계를 낸다.
+ * 클래스 보정은 작성 시 1회 + 레벨업마다 1회이므로 보정 × Lv(세션 결과와 성장).
+ * @param {object} p
+ * @param {{[k]: {base, growth, temp}}} p.abilities 저장값
+ * @param {{[k]: number}} [p.classBonus] 메인 클래스의 능력치 보정
+ * @param {number} [p.level]
+ * @param {{[k]: number}} [p.equip] 장비(장식·제련) 보정
+ * @returns {{[k]: {base, class, growth, equip, temp, total}}}
+ */
+export function abilityBreakdown({ abilities, classBonus = {}, level = 1, equip = {} }) {
+  const n = (v) => Number(v) || 0;
+  return Object.fromEntries(ABILITIES.map((k) => {
+    const a = abilities?.[k] ?? {};
+    const parts = { base: n(a.base), class: n(classBonus[k]) * Math.max(1, n(level)), growth: n(a.growth), equip: n(equip[k]), temp: n(a.temp) };
+    parts.total = parts.base + parts.class + parts.growth + parts.equip + parts.temp;
+    return [k, parts];
+  }));
+}
+
 /** 능력치 보너스 = floor(x / 5) */
 export function bonus(value) {
   return Math.floor((Number(value) || 0) / 5);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bonus, deriveCharacter } from "../../src/engine/derive.mjs";
+import { abilityBreakdown, bonus, deriveCharacter } from "../../src/engine/derive.mjs";
 
 describe("능력치 보너스", () => {
   it("floor(x/5)", () => {
@@ -34,5 +34,24 @@ describe("부능력치 (01 §1.2)", () => {
 
   it("【속도】가 음수가 되면 0", () => {
     expect(deriveCharacter({ abilities: { agi: 3 }, level: 1, mods: { speed: -5 } }).sub.speed).toBe(0);
+  });
+});
+
+describe("능력치 출처별 합계", () => {
+  const abilities = { str: { base: 15, growth: 1, temp: -2 }, tec: { base: 13 }, vit: { base: 11 }, agi: { base: 9 }, luc: { base: 8 } };
+  const classBonus = { str: 7, tec: 3, vit: 6, agi: 5, luc: 4 }; // 소드맨
+
+  it("Lv1: 굴림 + 클래스 보정 + 성장 + 장비 + 일시", () => {
+    const b = abilityBreakdown({ abilities, classBonus, level: 1, equip: { str: 3 } });
+    expect(b.str).toEqual({ base: 15, class: 7, growth: 1, equip: 3, temp: -2, total: 24 });
+    expect(b.luc.total).toBe(12);
+  });
+
+  it("클래스 보정은 레벨마다 더해진다(보정 × Lv)", () => {
+    expect(abilityBreakdown({ abilities, classBonus, level: 3 }).tec).toMatchObject({ class: 9, total: 22 });
+  });
+
+  it("클래스가 없으면 0", () => {
+    expect(abilityBreakdown({ abilities, level: 5 }).agi.total).toBe(9);
   });
 });

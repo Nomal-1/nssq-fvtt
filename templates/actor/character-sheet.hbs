@@ -1,5 +1,13 @@
 <form class="{{cssClass}}" autocomplete="off">
   {{> "systems/nssq/templates/actor/parts/header.hbs"}}
+  <section class="classes grid grid-2col">
+    <label class="class-select"><span>{{localize "NSSQ.Class.main"}}</span>
+      {{#if classes.main}}<select name="system.mainClass">{{selectOptions mainClassChoices selected=mainClassKey}}</select>
+      {{else}}<span class="hint">{{localize "NSSQ.Class.dropHint"}}</span>{{/if}}</label>
+    <label class="class-select"><span>{{localize "NSSQ.Class.sub"}}</span>
+      {{#if classes.main}}<select name="system.subClass">{{selectOptions subClassChoices selected=subClassKey}}</select>
+      {{else}}<span class="hint">-</span>{{/if}}</label>
+  </section>
   <section class="resources grid grid-4col">
     <label class="stat"><span>{{localize "NSSQ.Level"}}</span><input type="number" name="system.level" value="{{system.level}}" data-dtype="Number"/></label>
     <label class="stat"><span>{{localize "NSSQ.Exp"}}</span><input type="number" name="system.exp" value="{{system.exp}}" data-dtype="Number"/></label>
@@ -25,15 +33,34 @@
       <section class="abilities">
         <h3 class="section-title">{{localize "NSSQ.Ability.label"}}
           {{#if editable}}<a class="section-action" data-action="roll-abilities" title="{{localize 'NSSQ.AbilityRoll.hint'}}"><i class="fas fa-dice"></i> {{localize "NSSQ.AbilityRoll.title"}}</a>{{/if}}</h3>
-        <div class="grid grid-5col">
-          {{#each abilityKeys as |k|}}
-          <div class="stat">
-            <a class="rollable" data-action="roll-ability" data-ability="{{k}}" title="{{localize 'NSSQ.Check.rollHint'}}"><i class="fas fa-dice-d6"></i> {{nssqLabel "NSSQ.Ability" k}}</a>
-            <input type="number" name="system.abilities.{{k}}" value="{{lookup @root.system.abilities k}}" data-dtype="Number"/>
-            <span class="bonus">B {{lookup @root.system.bonus k}}</span>
-          </div>
-          {{/each}}
-        </div>
+        <table class="ability-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th title="{{localize 'NSSQ.Ability.sourceHint.base'}}">{{localize "NSSQ.Ability.source.base"}}</th>
+              <th title="{{localize 'NSSQ.Ability.sourceHint.class'}}">{{localize "NSSQ.Ability.source.class"}}</th>
+              <th title="{{localize 'NSSQ.Ability.sourceHint.growth'}}">{{localize "NSSQ.Ability.source.growth"}}</th>
+              <th title="{{localize 'NSSQ.Ability.sourceHint.equip'}}">{{localize "NSSQ.Ability.source.equip"}}</th>
+              <th title="{{localize 'NSSQ.Ability.sourceHint.temp'}}">{{localize "NSSQ.Ability.source.temp"}}</th>
+              <th class="final" title="{{localize 'NSSQ.Ability.sourceHint.total'}}">{{localize "NSSQ.Ability.source.total"}}</th>
+              <th>{{localize "NSSQ.Ability.source.bonus"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each abilityRows as |r|}}
+            <tr>
+              <th class="ability-name">{{nssqLabel "NSSQ.Ability" r.key}}</th>
+              <td><input type="number" name="system.abilities.{{r.key}}.base" value="{{r.base}}" data-dtype="Number"/></td>
+              <td class="calc">{{nssqSigned r.class}}</td>
+              <td><input type="number" name="system.abilities.{{r.key}}.growth" value="{{r.growth}}" data-dtype="Number"/></td>
+              <td class="calc">{{nssqSigned r.equip}}</td>
+              <td><input type="number" name="system.abilities.{{r.key}}.temp" value="{{r.temp}}" data-dtype="Number"/></td>
+              <td class="final"><a class="rollable" data-action="roll-ability" data-ability="{{r.key}}" title="{{localize 'NSSQ.Check.rollHint'}}"><i class="fas fa-dice-d6"></i> {{r.total}}</a></td>
+              <td class="bonus">{{r.bonus}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
       </section>
       <section class="substats">
         <h3>{{localize "NSSQ.Sub.label"}}</h3>
