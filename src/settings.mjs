@@ -1,4 +1,4 @@
-import { onShopToggle } from "./apps/shop.mjs";
+import { onShopHiddenChange, onShopToggle } from "./apps/shop.mjs";
 
 export function registerSettings() {
   game.settings.register("nssq", "autoApply", {
@@ -29,6 +29,10 @@ export function registerSettings() {
     onChange: (v) => onShopToggle(v)
   });
   game.settings.register("nssq", "shopFolder", { scope: "world", config: false, type: String, default: "" });
+  game.settings.register("nssq", "shopHidden", {
+    scope: "world", config: false, type: Array, default: [],
+    onChange: () => onShopHiddenChange()
+  });
   game.settings.register("nssq", "fpStart", {
     name: "NSSQ.Settings.fpStart.name",
     hint: "NSSQ.Settings.fpStart.hint",

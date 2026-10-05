@@ -93,6 +93,33 @@ export async function toggleShop(open = !shopOpen()) {
 const isRanked = (d) => d.type === "armor" || (d.type === "weapon" && !!tables.weapons[d.system.weaponType]?.price);
 const tableOf = (d) => (d.type === "weapon" ? tables.weapons[d.system.weaponType] : d.type === "armor" ? tables.armors[d.system.armorType] : null);
 
+/**
+ * 상점 카탈로그: 시스템 품목(장비·아이템 팩) + 「상점 추가 품목」 폴더.
+ * 소재와 가격 식이 없는 무기(주먹)는 팔지 않는다. 숨김 여부와 관계없이 전부 돌려준다.
+ */
+export async function shopCatalog() {
+  const docs = [];
+  for (const id of PACKS) {
+    const pack = game.packs.get(id);
+    if (pack) docs.push(...(await pack.getDocuments()).filter((d) => d.type !== "material" && (d.type !== "weapon" || isRanked(d))));
+  }
+  for (const d of customItems()) if (d.type !== "material" && TABS.some(([t]) => t === d.type)) docs.push(Object.assign(d, { nssqCustom: true }));
+  return docs;
+}
+
+/** 숨긴 품목(uuid). GM 스크린 「상점 품목」 탭에서 고른다 */
+export function hiddenSet() {
+  return new Set(game.settings.get("nssq", "shopHidden") ?? []);
+}
+
+/** GM: 품목 숨김·판매 전환 */
+export async function setHidden(uuids, hidden) {
+  if (!game.user.isGM) return;
+  const set = hiddenSet();
+  for (const u of uuids) hidden ? set.add(u) : set.delete(u);
+  await game.settings.set("nssq", "shopHidden", [...set]);
+}
+
 class ShopApp extends Application {
   constructor(actor, options) {
     super(options);
@@ -119,21 +146,14 @@ class ShopApp extends Application {
   }
 
   async loadDocs() {
-    if (this.docs) return this.docs;
-    const docs = [];
-    for (const id of PACKS) {
-      const pack = game.packs.get(id);
-      // 시스템 품목: 소재는 팔지 않고, 가격 식이 없는 무기(주먹)도 팔지 않는다
-      if (pack) docs.push(...(await pack.getDocuments()).filter((d) => d.type !== "material" && (d.type !== "weapon" || isRanked(d))));
-    }
-    // 추가 품목: 소재는 가격이 없으므로 팔지 않는다
-    for (const d of customItems()) if (d.type !== "material" && TABS.some(([t]) => t === d.type)) docs.push(Object.assign(d, { nssqCustom: true }));
-    this.docs = docs;
-    return docs;
+    this.docs ??= await shopCatalog();
+    return this.docs;
   }
 
   async getData() {
-    const docs = await this.loadDocs();
+    // 숨긴 품목: 플레이어에게는 안 보이고, GM에게는 「숨김」 표시
+    const hidden = hiddenSet();
+    const docs = (await this.loadDocs()).filter((d) => game.user.isGM || !hidden.has(d.uuid));
     const level = this.actor.system.level;
     const rankDefault = Math.min(MAX_RANK, Math.max(1, level));
     const rowFor = (d) => {
@@ -148,6 +168,7 @@ class ShopApp extends Application {
         id: d.id, name: d.name, img: d.img, ranked, rank, qty, unit,
         price: unit * qty,
         custom: !!d.nssqCustom,
+        hidden: hidden.has(d.uuid),
         materials: mats && (table ? `${mats} R${rank}+` : mats),
         info: d.system.effectText ?? ""
       };
@@ -179,7 +200,7 @@ class ShopApp extends Application {
   async buy(id) {
     if (!shopOpen() && !game.user.isGM) return ui.notifications.warn(L("closed"));
     const doc = this.docs.find((d) => d.id === id);
-    if (!doc) return;
+    if (!doc || (!game.user.isGM && hiddenSet().has(doc.uuid))) return;
     const actor = this.actor;
     const qty = this.qty[id] ?? 1;
     const data = doc.toObject();
@@ -271,7 +292,13 @@ export function onShopToggle(open) {
   ui.actors?.render();
 }
 
+export function onShopHiddenChange() {
+  for (const w of Object.values(ui.windows)) if (w instanceof ShopApp) w.render(false);
+}
+
 export function registerShopHooks() {
+  const reload = () => { for (const w of Object.values(ui.windows)) if (w instanceof ShopApp) { w.docs = null; w.render(false); } };
+  for (const hook of ["createItem", "updateItem", "deleteItem", "updateFolder"]) Hooks.on(hook, (doc) => { if (!doc.parent) reload(); });
   // GM 도구: 토큰 컨트롤의 상점 토글
   Hooks.on("getSceneControlButtons", (controls) => {
     if (!game.user.isGM) return;

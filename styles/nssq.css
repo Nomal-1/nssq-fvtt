@@ -187,3 +187,16 @@
 .nssq-gm-screen .ref th { width: 3.5em; }
 .nssq-gm-screen .ref td { text-align: left; font-size: 0.9em; }
 .nssq-gm-screen .ref.levels td.note { font-size: 0.8em; color: #555; }
+
+/* 상점 품목 숨김 */
+.nssq-shop .hidden-tag, .nssq-gm-screen .hidden-tag { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: rgba(176, 32, 32, 0.2); }
+.nssq-gm-screen .shop-tools { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+.nssq-gm-screen .shop-tools input[type="search"] { flex: 0 0 180px; }
+.nssq-gm-screen .shop-group .count { font-size: 0.8em; font-weight: normal; color: #555; }
+.nssq-gm-screen .shop-group .group-actions { margin-left: auto; font-size: 0.8em; font-weight: normal; display: flex; gap: 10px; }
+.nssq-gm-screen .shop-group .group-actions a { cursor: pointer; }
+.nssq-gm-screen .shop-items { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px 8px; }
+.nssq-gm-screen .shop-items label { display: flex; align-items: center; gap: 4px; }
+.nssq-gm-screen .shop-items img { border: none; }
+.nssq-gm-screen .shop-items .hidden-item { opacity: 0.55; }
+.nssq-gm-screen .custom-tag { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: rgba(26, 95, 180, 0.2); }

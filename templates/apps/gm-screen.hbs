@@ -8,6 +8,7 @@
 
   <nav class="gm-tabs tabs">
     <a class="item" data-tab="party">{{localize "NSSQ.GMScreen.party"}}</a>
+    <a class="item" data-tab="shop">{{localize "NSSQ.GMScreen.shopItems"}}</a>
     <a class="item" data-tab="reference">{{localize "NSSQ.GMScreen.reference"}}</a>
   </nav>
 
@@ -43,6 +44,31 @@
         </tbody>
       </table>
       <p class="notes">{{localize "NSSQ.GMScreen.partyNote"}}</p>
+    </div>
+
+    <div class="tab" data-tab="shop">
+      <div class="shop-tools">
+        <input type="search" name="shopFilter" value="{{shopFilter}}" placeholder="{{localize 'NSSQ.GMScreen.shopFilter'}}"/>
+        <span class="notes">{{localize "NSSQ.GMScreen.shopItemsNote"}}</span>
+      </div>
+      {{#each shopGroups as |g|}}
+      <section class="shop-group" data-shop-group="{{g.type}}">
+        <h3 class="section-title">{{localize g.label}} <span class="count">{{g.selling}} / {{g.items.length}}</span>
+          <span class="group-actions">
+            <a data-shop-all="show"><i class="fas fa-eye"></i> {{localize "NSSQ.GMScreen.sellAll"}}</a>
+            <a data-shop-all="hide"><i class="fas fa-eye-slash"></i> {{localize "NSSQ.GMScreen.hideAll"}}</a>
+          </span>
+        </h3>
+        <ul class="shop-items">
+          {{#each g.items as |i|}}
+          <li data-name="{{i.name}}" class="{{#unless i.selling}}hidden-item{{/unless}}">
+            <label><input type="checkbox" data-shop-uuid="{{i.uuid}}" {{checked i.selling}}/>
+              <img src="{{i.img}}" width="20" height="20"/> {{i.name}}{{#if i.custom}} <span class="custom-tag">{{localize "NSSQ.Shop.custom"}}</span>{{/if}}</label>
+          </li>
+          {{/each}}
+        </ul>
+      </section>
+      {{/each}}
     </div>
 
     <div class="tab" data-tab="reference">

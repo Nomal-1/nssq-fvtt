@@ -3,7 +3,7 @@
  * 던전(단계 9)·전투(단계 4·5) 탭은 해당 단계에서 붙인다.
  */
 import { openRequestDialog } from "./check-request.mjs";
-import { ensureShopFolder, shopOpen, toggleShop } from "./shop.mjs";
+import { ensureShopFolder, hiddenSet, setHidden, shopCatalog, shopOpen, toggleShop } from "./shop.mjs";
 import { storageActive } from "./acquire.mjs";
 import tables from "../generated/tables.mjs";
 
@@ -45,7 +45,7 @@ export class GMScreen extends Application {
     if (GMScreen.instance?.rendered) GMScreen.instance.render(false);
   }
 
-  getData() {
+  async getData() {
     const storageSetting = !!game.settings.get("nssq", "storage");
     const party = partyActors().map((a) => {
       const s = a.system;
@@ -65,7 +65,20 @@ export class GMScreen extends Application {
       };
     });
     const lv = tables.levelExp;
+    const hidden = hiddenSet();
+    const catalog = await shopCatalog();
+    const shopGroups = [
+      ["weapon", "TYPES.Item.weapon"], ["armor", "TYPES.Item.armor"], ["accessory", "TYPES.Item.accessory"],
+      ["consumable", "TYPES.Item.consumable"], ["tool", "TYPES.Item.tool"]
+    ].map(([type, label]) => {
+      const items = catalog.filter((d) => d.type === type).map((d) => ({
+        uuid: d.uuid, name: d.name, img: d.img, custom: !!d.nssqCustom, selling: !hidden.has(d.uuid)
+      }));
+      return { type, label, items, selling: items.filter((i) => i.selling).length };
+    }).filter((g) => g.items.length);
     return {
+      shopGroups,
+      shopFilter: this.shopFilter ?? "",
       party,
       storageSetting,
       shopOpen: shopOpen(),
@@ -87,6 +100,26 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=shop]", () => toggleShop());
     html.on("click", "[data-gm=shop-folder]", () => ensureShopFolder());
     html.on("click", "[data-gm=session-start]", () => this.sessionStart());
+    // 상점 품목: 체크 = 판매, 해제 = 숨김
+    html.on("change", "[data-shop-uuid]", (ev) => setHidden([ev.currentTarget.dataset.shopUuid], !ev.currentTarget.checked));
+    html.on("click", "[data-shop-all]", (ev) => {
+      const group = ev.currentTarget.closest("[data-shop-group]");
+      const uuids = [...group.querySelectorAll("[data-shop-uuid]")].filter((i) => i.closest("li").style.display !== "none").map((i) => i.dataset.shopUuid);
+      setHidden(uuids, ev.currentTarget.dataset.shopAll === "hide");
+    });
+    html.on("input", "[name=shopFilter]", (ev) => {
+      this.shopFilter = ev.currentTarget.value;
+      this.applyShopFilter(html[0]);
+    });
+    this.applyShopFilter(html[0]);
+  }
+
+  /** 이름 검색: 다시 그리지 않고 줄만 숨긴다 */
+  applyShopFilter(root) {
+    const q = (this.shopFilter ?? "").trim();
+    root.querySelectorAll(".shop-items li").forEach((li) => {
+      li.style.display = !q || li.dataset.name.includes(q) ? "" : "none";
+    });
   }
 
   /** 세션 시작: 파티 전원의 【FP】를 설정값(기본 1)으로 */

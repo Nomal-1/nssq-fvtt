@@ -319,7 +319,8 @@
       "noMaterialNeeded": "필요 없음",
       "confirmTitle": "구입 확인",
       "confirmBody": "{name} × {qty} — 개당 {unit}G, 합계 {total}G",
-      "confirmMoney": "소지금 {before}G → {after}G"
+      "confirmMoney": "소지금 {before}G → {after}G",
+      "hiddenTag": "숨김"
     },
     "Storage": {
       "title": "창고",
@@ -362,7 +363,12 @@
       "sessionExp": "세션 경험점",
       "levels": "레벨표",
       "need": "필요",
-      "total": "누계"
+      "total": "누계",
+      "shopItems": "상점 품목",
+      "shopFilter": "이름 검색",
+      "sellAll": "전부 판매",
+      "hideAll": "전부 숨김",
+      "shopItemsNote": "체크한 품목만 플레이어 상점에 나온다. GM이 연 상점에는 숨긴 것도 「숨김」으로 보인다."
     }
   }
 }
