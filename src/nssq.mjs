@@ -16,6 +16,7 @@ import { NssqCombat } from "./documents/combat.mjs";
 import { registerApply } from "./combat/apply.mjs";
 import { attackerFromContext, normalAttack, registerAttackHooks } from "./combat/attack.mjs";
 import { registerTracker, rollEscape } from "./combat/tracker.mjs";
+import { registerFormation } from "./combat/formation.mjs";
 import { createPreset, openEndDialog, openStartDialog, registerBattle } from "./apps/battle.mjs";
 
 Hooks.once("init", () => {
@@ -55,6 +56,7 @@ Hooks.once("init", () => {
   registerAttackHooks();
   registerTracker();
   registerBattle();
+  registerFormation();
   // 매크로·모듈용 API
   game.nssq = {
     promptCheck, rollCheck, openRequestDialog, rollAbilities, acquireItems, openShop, toggleShop,

@@ -5,23 +5,20 @@
  * - 종료: 결과 기록 → 사본의 음악 정지 → 원래 씬·음악으로 → 전투·사본 삭제
  */
 import { partyActors } from "./gm-screen.mjs";
+import { LAYOUT } from "../engine/formation.mjs";
+import { relayout } from "../combat/formation.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /* ---------------- 배치(격자 100px, 3000×2000) ---------------- */
 
-const GRID = 100;
-const SCENE_W = 3000;
+const GRID = LAYOUT.grid;
+const SCENE_W = LAYOUT.width;
 const SCENE_H = 2000;
 const CENTER_X = SCENE_W / 2;
-const SPACING = 250;
-/** 각 줄의 토큰 중심 y */
-export const LANES = { enemyBack: 400, enemyFront: 750, partyFront: 1250, partyBack: 1600 };
+export const LANES = LAYOUT.lanes;
 const ENEMY_MID = (LANES.enemyBack + LANES.enemyFront) / 2;
-
-/** n개를 가운데 정렬로 늘어놓을 때 i번째의 중심 x */
-const laneX = (i, n) => CENTER_X - ((n - 1) * SPACING) / 2 + i * SPACING;
 
 /* ---------------- 프리셋 ---------------- */
 
@@ -175,26 +172,23 @@ export async function startBattle({ presetId, members, surprise = "none" }) {
     tokenUpdates.push(u);
   }
   if (tokenUpdates.length) await copy.updateEmbeddedDocuments("Token", tokenUpdates);
-  for (const t of copy.tokens) {
-    if (t.actor?.type !== "enemy") continue;
+  // 열은 놓인 높이로, 순서는 왼쪽부터
+  const enemyTokens = copy.tokens.filter((t) => t.actor?.type === "enemy").sort((a, b) => a.x - b.x);
+  for (const [i, t] of enemyTokens.entries()) {
     const cy = t.y + (t.height * GRID) / 2;
-    await t.actor.update({ "system.row": cy < ENEMY_MID ? "back" : "front" });
+    await t.actor.update({ "system.row": cy < ENEMY_MID ? "back" : "front", "system.order": i });
   }
   if (relinked) ui.notifications.warn(L("relinked", { n: relinked }));
 
-  // 3) 파티 토큰: 열에 따라 줄에 늘어놓는다. PC는 액터와 연결(【HP】가 캐릭터에 남도록)
+  // 3) 파티 토큰: 액터와 연결(【HP】가 캐릭터에 남도록). 자리는 칸 배치(전위·후위 각 3칸)가 정한다
   const actors = members.map((id) => game.actors.get(id)).filter(Boolean);
-  const lanes = { front: actors.filter((a) => a.system.row !== "back"), back: actors.filter((a) => a.system.row === "back") };
   const tokenData = [];
-  for (const [row, list] of Object.entries(lanes)) {
-    for (const [i, actor] of list.entries()) {
-      const cx = laneX(i, list.length);
-      const cy = row === "front" ? LANES.partyFront : LANES.partyBack;
-      const doc = await actor.getTokenDocument({ x: cx - GRID / 2, y: cy - GRID / 2, actorLink: true, disposition: CONST.TOKEN_DISPOSITIONS.FRIENDLY });
-      tokenData.push(doc.toObject());
-    }
+  for (const actor of actors) {
+    const doc = await actor.getTokenDocument({ x: 0, y: SCENE_H - GRID, actorLink: true, disposition: CONST.TOKEN_DISPOSITIONS.FRIENDLY });
+    tokenData.push(doc.toObject());
   }
   await copy.createEmbeddedDocuments("Token", tokenData);
+  await relayout(copy);
 
   // 4) 음악 전환·화면 전환(씬에 연결된 BGM은 활성화 때 재생된다)
   await stopSounds(previousSounds);

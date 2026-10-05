@@ -300,3 +300,10 @@
 .nssq-battle-start .member .notes { margin-left: auto; }
 .nssq-battle-start-card h3, .nssq-battle-end-card h3 { margin: 0 0 4px; border: none; }
 .nssq-battle-start-card .warn { color: #b02020; font-weight: bold; }
+
+/* 배치 변경 칸 고르기 */
+.nssq-slot-picker .slot-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
+.nssq-slot-picker .row-name { flex: 0 0 3em; font-weight: bold; }
+.nssq-slot-picker .slot-cell { flex: 1; display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid #999; border-radius: 4px; font-size: 0.9em; }
+.nssq-slot-picker .slot-cell.taken { opacity: 0.5; }
+.nssq-slot-picker .slot-cell.mine { border-color: #1a5fb4; }

@@ -2,11 +2,12 @@
  * 컴뱃 트래커: 페이즈 표시·[다음 페이즈], 전투원별 열·방어 전념 표시,
  * 개막 행동(방어 전념·배치 변경·무기 교체), 통상 공격, 도주 판정.
  */
-import { escapeSucceeds, rowFull } from "../engine/combat.mjs";
+import { escapeSucceeds } from "../engine/combat.mjs";
+import { changePosition } from "./formation.mjs";
 import { evaluateCheck } from "../engine/check.mjs";
 import { slotOccupant } from "../engine/equipment.mjs";
 import { normalAttack } from "./attack.mjs";
-import { combatProfile, sideOf } from "./profile.mjs";
+import { combatProfile } from "./profile.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 
@@ -22,15 +23,7 @@ async function toggleGuard(combatant) {
 }
 
 async function toggleRow(combatant) {
-  const actor = combatant.actor;
-  const to = actor.system.row === "front" ? "back" : "front";
-  if (sideOf(actor) !== "enemy") {
-    const party = combatant.combat.combatants.filter((c) => c.actor && sideOf(c.actor) !== "enemy" && c !== combatant)
-      .map((c) => ({ row: c.actor.system.row }));
-    if (rowFull(party, to)) return ui.notifications.warn(L("rowFull", { row: game.i18n.localize(`NSSQ.Row.${to}`) }));
-  }
-  await actor.update({ "system.row": to });
-  await combatant.setFlag("nssq", "opening", "row");
+  if (await changePosition(combatant)) await combatant.setFlag("nssq", "opening", "row");
 }
 
 /** 무기 슬롯과 기타 슬롯의 무기를 맞바꾼다 */

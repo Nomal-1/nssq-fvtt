@@ -450,8 +450,7 @@
       "guardOn": "{name}: 방어 전념",
       "guardOff": "{name}: 방어 전념 취소",
       "guardTitle": "방어 전념 중(대기)",
-      "changeRow": "배치 변경(전위↔후위)",
-      "rowFull": "{row}에는 3명까지다.",
+      "changeRow": "배치 변경(열·칸)",
       "rowTitle": "열",
       "swapWeapon": "무기 교체(무기↔기타 슬롯)",
       "noSwap": "무기 슬롯과 기타 슬롯 모두에 무기가 있어야 바꿀 수 있다.",
@@ -462,7 +461,13 @@
       "escapeChase": "추격 측",
       "escapeSuccess": "도주 성공",
       "escapeFail": "도주 실패(동점 포함)",
-      "escapeNote": "도주에 성공하면 드롭 판정 없이 전투가 끝난다(전투 종료는 GM이 한다)."
+      "escapeNote": "도주에 성공하면 드롭 판정 없이 전투가 끝난다(전투 종료는 GM이 한다).",
+      "formationOverflow": "파티가 6명을 넘어 {n}명은 칸이 없다.",
+      "orderTitle": "순서(작을수록 왼쪽)",
+      "enemyOrderHint": "에너미는 같은 열에서 순서대로 왼쪽부터 늘어선다.",
+      "slotPickerHint": "자기 자신만 옮길 수 있다. 다른 사람이 있는 칸은 고를 수 없다.",
+      "slotSelf": "(지금 자리)",
+      "slotEmpty": "빈 칸"
     },
     "Battle": {
       "tab": "전투",
