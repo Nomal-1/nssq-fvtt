@@ -314,10 +314,10 @@
       "closed": "상점이 닫혀 있다. GM이 열어야 이용할 수 있다.",
       "openedNotice": "상점이 열렸다.",
       "closedNotice": "상점이 닫혔다.",
-      "folderButton": "상점 추가 품목",
+      "folderButton": "추가 품목 폴더",
       "folderName": "상점 추가 품목",
-      "folderCreated": "아이템 탭에 「{name}」 폴더를 만들었다. 이 폴더(하위 폴더 포함)에 넣은 아이템이 상점에 올라간다.",
-      "folderExists": "아이템 탭의 「{name}」 폴더에 넣은 아이템이 상점에 올라간다.",
+      "folderCreated": "아이템 탭에 「{name}」 폴더를 만들었다. 이 폴더(하위 폴더 포함)에 넣은 아이템이 상점에 올라간다. 판매·숨김은 GM 스크린 「상점 품목」 탭에서 정한다.",
+      "folderExists": "아이템 탭의 「{name}」 폴더에 넣은 아이템이 상점에 올라간다. 판매·숨김은 GM 스크린 「상점 품목」 탭에서 정한다.",
       "custom": "추가",
       "noMaterialNeeded": "필요 없음",
       "confirmTitle": "구입 확인",
@@ -334,7 +334,8 @@
       "refineRule": "무기·방어구 하나에 2개까지, 같은 효과는 중복 불가. 대응 소재(R 이상) 1개와 효과별 가격이 든다.",
       "refineNoItems": "제련할 수 있는 무기·방어구가 없다.",
       "itemName": "이름",
-      "itemNameHint": "비워 두면 원래 이름. 여러 개를 사면 모두 같은 이름이 된다."
+      "itemNameHint": "비워 두면 원래 이름. 여러 개를 사면 모두 같은 이름이 된다.",
+      "folderHint": "아이템 탭에 「상점 추가 품목」 폴더를 만들거나 연다. 그 폴더에 넣은 아이템이 상점에 올라간다."
     },
     "Storage": {
       "title": "창고",
@@ -382,7 +383,9 @@
       "shopFilter": "이름 검색",
       "sellAll": "전부 판매",
       "hideAll": "전부 숨김",
-      "shopItemsNote": "체크한 품목만 플레이어 상점에 나온다. GM이 연 상점에는 숨긴 것도 「숨김」으로 보인다."
+      "shopItemsNote": "체크한 품목만 플레이어 상점에 나온다. GM이 연 상점에는 숨긴 것도 「숨김」으로 보인다.",
+      "shopItemsButton": "판매 품목 설정",
+      "shopItemsHint": "상점에 내놓을 품목과 플레이어에게 감출 품목을 고른다(「상점 품목」 탭)"
     },
     "Badge": {
       "resist": "내",

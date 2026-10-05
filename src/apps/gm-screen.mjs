@@ -99,6 +99,8 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=request]", () => openRequestDialog());
     html.on("click", "[data-gm=shop]", () => toggleShop());
     html.on("click", "[data-gm=shop-folder]", () => ensureShopFolder());
+    // 판매 품목 설정: 「상점 품목」 탭으로 이동
+    html.on("click", "[data-gm=shop-items]", () => this._tabs?.[0]?.activate("shop"));
     html.on("click", "[data-gm=session-start]", () => this.sessionStart());
     // 상점 품목: 체크 = 판매, 해제 = 숨김
     html.on("change", "[data-shop-uuid]", (ev) => setHidden([ev.currentTarget.dataset.shopUuid], !ev.currentTarget.checked));

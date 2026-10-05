@@ -2,7 +2,8 @@
   <header class="gm-actions">
     <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
     <button type="button" data-gm="shop" class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</button>
-    <button type="button" data-gm="shop-folder"><i class="fas fa-folder-plus"></i> {{localize "NSSQ.Shop.folderButton"}}</button>
+    <button type="button" data-gm="shop-items" title="{{localize 'NSSQ.GMScreen.shopItemsHint'}}"><i class="fas fa-eye-slash"></i> {{localize "NSSQ.GMScreen.shopItemsButton"}}</button>
+    <button type="button" data-gm="shop-folder" title="{{localize 'NSSQ.Shop.folderHint'}}"><i class="fas fa-folder-plus"></i> {{localize "NSSQ.Shop.folderButton"}}</button>
     <button type="button" data-gm="session-start"><i class="fas fa-flag"></i> {{localize "NSSQ.GMScreen.sessionStart"}} ({{localize "NSSQ.FP"}} {{fpStart}})</button>
   </header>
 

@@ -2,7 +2,7 @@
   "id": "nssq",
   "title": "SRS가 아닌 세계수의 미궁 TRPG",
   "description": "팬메이드 TRPG 「SRSじゃない世界樹の迷宮TRPG」(NSSQ) 한국어판 게임 시스템",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "authors": [
     {
       "name": "Nomal-1"
@@ -10,7 +10,7 @@
   ],
   "url": "https://github.com/Nomal-1/nssq-fvtt",
   "manifest": "https://github.com/Nomal-1/nssq-fvtt/releases/latest/download/system.json",
-  "download": "https://github.com/Nomal-1/nssq-fvtt/releases/download/v0.4.6/nssq.zip",
+  "download": "https://github.com/Nomal-1/nssq-fvtt/releases/download/v0.4.7/nssq.zip",
   "compatibility": {
     "minimum": "12",
     "verified": "12.331",
