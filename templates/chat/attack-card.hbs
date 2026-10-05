@@ -1,0 +1,43 @@
+<div class="nssq-attack">
+  <header class="check-header">
+    <span class="check-label"><i class="fas fa-fist-raised"></i> {{label}}</span>
+    <span class="check-kind">{{#if weapon}}{{weapon}} · {{/if}}{{elementText}}</span>
+  </header>
+  {{#each targets as |t|}}
+  <section class="attack-target" data-index="{{@index}}">
+    <div class="target-name"><i class="fas fa-bullseye"></i> {{t.name}}</div>
+    <div class="hit-line">
+      <span class="label">{{localize "NSSQ.Combat.hitCheck"}}</span>
+      <span class="dice">{{#each t.hitDice as |d|}}<span class="die-s {{#if (nssqEq d 1)}}one{{/if}}{{#if (nssqEq d 6)}}six{{/if}}">{{d}}</span>{{/each}}</span>
+      <span>+ {{@root.hitStat}} = <b>{{t.hitTotal}}</b> / {{localize "NSSQ.Combat.evasion"}} {{t.evasion}}</span>
+      {{#if t.absSuccess}}<span class="tag success">{{localize "NSSQ.Check.absSuccess"}}</span>{{/if}}
+      {{#if t.absFailure}}<span class="tag failure">{{localize "NSSQ.Check.absFailure"}}</span>{{/if}}
+      <span class="result {{#if t.hit}}success{{else}}failure{{/if}}">{{#if t.hit}}{{localize "NSSQ.Combat.hit"}}{{else}}{{localize "NSSQ.Combat.miss"}}{{/if}}</span>
+    </div>
+    {{#if t.hit}}
+    <div class="dmg-line">
+      <span class="label">{{localize "NSSQ.Combat.damageDice"}} {{t.diceCount}}D6</span>
+      <span class="calc">({{@root.physAtk}} − {{localize "NSSQ.Combat.defense"}} {{@root.defense}}) · {{localize "NSSQ.Combat.resist"}} {{t.resist}}</span>
+    </div>
+    <div class="dmg-dice">
+      {{#each t.dmg as |d|}}<span class="die-s {{#if d.over}}over{{/if}} {{#if d.six}}six{{/if}} {{#if d.one}}one{{/if}}">{{d.v}}</span>{{else}}<span class="notes">-</span>{{/each}}
+    </div>
+    {{#if t.crit}}
+    <div class="crit-line"><span class="tag crit">{{localize "NSSQ.Combat.critical"}}</span> +4D6
+      {{#each t.crit4 as |d|}}<span class="die-s {{#if d.over}}over{{/if}}">{{d.v}}</span>{{/each}}
+    </div>
+    {{/if}}
+    <div class="final-line">
+      {{localize "NSSQ.Combat.damage"}} <b class="final">{{t.finalDamage}}</b>
+      {{#if t.guarded}}<span class="notes">({{t.rawDamage}} → {{localize "NSSQ.Combat.guardHalf"}})</span>{{/if}}
+      <span class="apply-status"></span>
+    </div>
+    <div class="apply-buttons">
+      <button type="button" data-apply><i class="fas fa-check"></i> {{localize "NSSQ.Combat.apply"}}</button>
+      <button type="button" data-undo><i class="fas fa-undo"></i> {{localize "NSSQ.Combat.undo"}}</button>
+    </div>
+    {{/if}}
+  </section>
+  {{/each}}
+  {{#if fpGain}}<div class="check-notes"><span class="fp-gain">{{localize "NSSQ.FP"}} +{{fpGain}}</span></div>{{/if}}
+</div>

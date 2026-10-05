@@ -25,6 +25,8 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       order: int(0),
       money: int(0, { min: 0 }),
       storageEnabled: new foundry.data.fields.BooleanField({ initial: false }),
+      // GM이 파티에 넣는 동료 NPC(전투에서 아군 NPC로 행동)
+      npc: new foundry.data.fields.BooleanField({ initial: false }),
       history: new ArrayField(new StringField()),
       description: description()
     };

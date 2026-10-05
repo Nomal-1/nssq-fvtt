@@ -27,7 +27,7 @@
           {{#each party as |p|}}
           <tr>
             <td class="who">
-              <a data-open-actor="{{p.id}}"><img src="{{p.img}}" width="28" height="28"/> {{p.name}}</a>
+              <a data-open-actor="{{p.id}}"><img src="{{p.img}}" width="28" height="28"/> {{p.name}}{{#if p.npc}} <span class="npc-tag">{{localize "NSSQ.Party.npcShort"}}</span>{{/if}}</a>
               <div class="owners {{#if p.online}}online{{/if}}">{{p.owners}}</div>
             </td>
             <td>{{p.level}}</td>
@@ -45,6 +45,15 @@
         </tbody>
       </table>
       <p class="notes">{{localize "NSSQ.GMScreen.partyNote"}}</p>
+      {{#if npcCandidates.length}}
+      <h3>{{localize "NSSQ.Party.npcSection"}}</h3>
+      <p class="notes">{{localize "NSSQ.Party.npcSectionNote"}}</p>
+      <ul class="npc-list">
+        {{#each npcCandidates as |n|}}
+        <li><label><input type="checkbox" data-npc-actor="{{n.id}}" {{checked n.npc}}/> <img src="{{n.img}}" width="20" height="20"/> {{n.name}}</label></li>
+        {{/each}}
+      </ul>
+      {{/if}}
     </div>
 
     <div class="tab" data-tab="shop">

@@ -12,6 +12,7 @@ export const TEMPLATES = [
   "systems/nssq/templates/item/item-sheet.hbs",
   "systems/nssq/templates/chat/check-card.hbs",
   "systems/nssq/templates/chat/ability-roll.hbs",
+  "systems/nssq/templates/chat/attack-card.hbs",
   "systems/nssq/templates/apps/shop.hbs",
   "systems/nssq/templates/apps/gm-screen.hbs"
 ];

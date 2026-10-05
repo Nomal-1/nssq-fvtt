@@ -231,3 +231,53 @@
 .nssq-shop .shop-row .name .refine-badges { margin-left: 4px; }
 .nssq-sell-list { margin: 0 0 6px; padding-left: 1.2em; }
 .nssq-buy-confirm .notes.warn, .notes.warn { color: #b02020; }
+
+/* 시트 머리: 통상 공격·동료 NPC */
+.nssq .sheet-header .header-actions { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.nssq .sheet-header .attack-btn { flex: 0 0 auto; width: auto; line-height: 1.8em; }
+.nssq .sheet-header .npc-toggle { font-size: 0.9em; }
+.nssq-gm-screen .npc-tag { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: rgba(110, 60, 160, 0.2); }
+.nssq-gm-screen .npc-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px 8px; }
+.nssq-gm-screen .npc-list label { display: flex; align-items: center; gap: 4px; }
+.nssq-gm-screen .npc-list img { border: none; }
+
+/* 공격 카드 */
+.nssq-attack .attack-target { border-top: 1px solid #c9c7b8; padding-top: 3px; margin-top: 3px; }
+.nssq-attack .target-name { font-weight: bold; }
+.nssq-attack .hit-line, .nssq-attack .dmg-line, .nssq-attack .crit-line, .nssq-attack .final-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 2px 0; }
+.nssq-attack .label { font-size: 0.85em; color: #555; }
+.nssq-attack .calc { font-size: 0.8em; color: #7a7971; }
+.nssq-attack .dmg-dice { display: flex; flex-wrap: wrap; gap: 2px; }
+.nssq-attack .die-s { width: 18px; height: 18px; line-height: 18px; text-align: center; border: 1px solid #999; border-radius: 3px; font-size: 0.85em; opacity: 0.5; }
+.nssq-attack .hit-line .die-s { opacity: 1; }
+.nssq-attack .die-s.over { opacity: 1; font-weight: bold; background: rgba(176, 32, 32, 0.15); }
+.nssq-attack .die-s.six { color: #18762b; }
+.nssq-attack .die-s.one { color: #b02020; }
+.nssq-attack .result, .nssq-attack .tag { font-size: 0.8em; padding: 0 5px; border-radius: 3px; font-weight: bold; }
+.nssq-attack .result.success, .nssq-attack .tag.success { background: rgba(24, 118, 43, 0.15); color: #18762b; }
+.nssq-attack .result.failure, .nssq-attack .tag.failure { background: rgba(176, 32, 32, 0.12); color: #b02020; }
+.nssq-attack .tag.crit { background: rgba(214, 140, 32, 0.25); color: #8a4b00; }
+.nssq-attack .final { font-size: 1.5em; color: #b02020; }
+.nssq-attack .apply-status { font-size: 0.85em; color: #555; margin-left: auto; }
+.nssq-attack .apply-buttons { display: flex; gap: 4px; }
+.nssq-attack .apply-buttons button { line-height: 1.6em; font-size: 0.85em; }
+.nssq-combat-note { font-size: 0.95em; }
+.nssq-combat-note.end { font-weight: bold; }
+.nssq-phase { font-weight: bold; text-align: center; }
+.nssq-escape ul { margin: 2px 0 4px; padding-left: 1.2em; }
+
+/* 컴뱃 트래커 */
+.nssq-phase-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 4px 6px; margin: 2px 0; border-radius: 4px; background: rgba(0, 0, 0, 0.25); }
+.nssq-phase-bar .phase-label { font-weight: bold; }
+.nssq-phase-bar .phase-hint { font-size: 0.8em; opacity: 0.8; flex: 1 1 100%; }
+.nssq-phase-bar.phase-opening { border-left: 4px solid #3a8fd6; }
+.nssq-phase-bar.phase-main { border-left: 4px solid #d6a03a; }
+.nssq-phase-bar.phase-end { border-left: 4px solid #a33a3a; }
+.nssq-phase-bar button { flex: 1 1 auto; line-height: 1.6em; font-size: 0.85em; }
+.nssq-combatant-tools { display: flex; align-items: center; gap: 6px; font-size: 0.8em; }
+.nssq-combatant-tools .row-tag { padding: 0 4px; border-radius: 3px; background: rgba(255, 255, 255, 0.15); }
+.nssq-combatant-tools .row-tag.back { opacity: 0.7; }
+.nssq-combatant-tools .guard-tag { color: #8fc3ff; }
+.nssq-combatant-tools .nssq-tool { cursor: pointer; }
+.nssq-combatant-tools .nssq-tool:hover { color: #ff6400; }
+#combat li.combatant.nssq-opened { box-shadow: inset 3px 0 0 #3a8fd6; }

@@ -123,11 +123,11 @@ nssq/
 | `timeUnit` | 랜덤 던전 턴 / 베이직 던전 세그먼트 |
 
 ## 6. 확인 필요 (확인하면 체크하고 결과를 적는다)
-- [ ] #1 Combat 정렬 재정의 지점 (`Combat#_sortCombatants` 시그니처, `setupTurns`)
-- [ ] #2 Combat/Combatant 하위 타입 데이터모델 지원 여부 → 미지원이면 `flags.nssq`
+- [x] #1 Combat 정렬: 정렬은 재정의하지 않고, `rollInitiative`를 재정의해 이니셔티브 = 【속도】(+1000/−1000, 동률 PC +0.2·아군 +0.1)로 넣는다. 기본 정렬(내림차순)이 그대로 맞는다
+- [x] #2 Combat/Combatant 상태는 `flags.nssq`(phase, guarding, waiting, opening, timing)로 둔다
 - [ ] #3 ActiveEffect 지속 시간 자동 처리를 피하는 방법
 - [ ] #4 `CONFIG.Actor.trackableAttributes` 형식
 - [x] #5 `compilePack` 옵션과 `packs` 항목 → `@foundryvtt/foundryvtt-cli` **1.1.0**으로 고정(2.x 이상은 v13용). 소스는 문서당 JSON 1개, 확장자로 yaml/json 구분. 문서마다 `_key` 필수: 최상위 `!items!<id>`·`!actors!<id>`·`!folders!<id>`, 임베디드 `!actors.items!<actorId>.<itemId>`. 액터의 `items`는 객체 배열로 넣으면 CLI가 id 배열로 바꿔 따로 저장한다. `packs` 항목은 `{ name, label, path, type, system, ownership }`, 폴더 묶음은 `packFolders`. `tools/pack.mjs`가 system.json의 두 항목을 다시 쓴다.
-- [ ] #7 `game.users.activeGM` 사용 가능 여부(없으면 활성 GM 중 id가 가장 작은 사용자)
+- [x] #7 `game.users.activeGM` 사용(v12에 있음). `src/combat/apply.mjs`의 `isActiveGM`
 - [ ] #8 매니페스트 `grid` 키 형식(v12)과 `primaryTokenAttribute` 지원 여부
 - [ ] #6 `renderChatMessage`에서 버튼 이벤트를 위임할 때 메시지 재렌더 시의 중복 바인딩

@@ -1,0 +1,108 @@
+/**
+ * NSSQ 전투(04 §5.3): 개막 → 메인 → 종료 페이즈.
+ * - 이니셔티브는 굴리지 않는다: 【속도】(최속 +1000, 후발 −1000, 동률 PC → 아군 NPC → 에너미)
+ * - 메인 페이즈만 Foundry의 턴을 쓰고, 전투 불능·대기 상태는 건너뛴다
+ * - 개막·종료 페이즈에서 [다음]을 누르면 페이즈가 넘어간다
+ * - 종료 페이즈 처리(독·자연 회복·강화 감소 등)는 단계 5
+ */
+import { initiativeValue } from "../engine/combat.mjs";
+import { combatProfile } from "../combat/profile.mjs";
+
+export class NssqCombat extends Combat {
+  get phase() {
+    return this.getFlag("nssq", "phase") ?? "opening";
+  }
+
+  /** 【속도】로 이니셔티브를 정한다(굴리지 않음) */
+  async rollInitiative(ids) {
+    ids = typeof ids === "string" ? [ids] : ids;
+    const updates = ids.map((id) => this.combatants.get(id)).filter(Boolean).map((c) => ({
+      _id: c.id,
+      initiative: c.actor ? initiativeValue({
+        speed: combatProfile(c.actor, c).speed,
+        side: combatProfile(c.actor, c).side,
+        timing: c.getFlag("nssq", "timing") ?? "normal"
+      }) : 0
+    }));
+    if (updates.length) await this.updateEmbeddedDocuments("Combatant", updates);
+    return this;
+  }
+
+  async refreshInitiative() {
+    return this.rollInitiative(this.combatants.map((c) => c.id));
+  }
+
+  async startCombat() {
+    await this.refreshInitiative();
+    await this.clearRoundFlags();
+    await super.startCombat();
+    // 1턴은 개막 페이즈부터(메인 페이즈 전에는 차례 표시 없음)
+    await this.setPhase("opening", { turn: null });
+    return this;
+  }
+
+  /** 메인 페이즈에서 행동할 수 있는가: 전투 불능·대기 상태·이미 행동함은 건너뜀 */
+  canAct(combatant) {
+    if (!combatant || combatant.defeated || combatant.isDefeated) return false;
+    if (combatant.getFlag("nssq", "waiting")) return false;
+    return true;
+  }
+
+  firstActingTurn(from = 0) {
+    for (let i = from; i < this.turns.length; i++) if (this.canAct(this.turns[i])) return i;
+    return null;
+  }
+
+  /** 라운드마다 지워지는 전투원 표시(방어 전념·대기·개막 행동) */
+  async clearRoundFlags() {
+    const updates = this.combatants.map((c) => ({
+      _id: c.id,
+      "flags.nssq.-=guarding": null,
+      "flags.nssq.-=waiting": null,
+      "flags.nssq.-=opening": null
+    }));
+    if (updates.length) await this.updateEmbeddedDocuments("Combatant", updates);
+  }
+
+  async setPhase(phase, extra = {}) {
+    await this.update({ "flags.nssq.phase": phase, ...extra });
+    await ChatMessage.create({
+      speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
+      content: `<div class="nssq-phase phase-${phase}"><i class="fas fa-hourglass-half"></i> ${game.i18n.format("NSSQ.Combat.phaseStart", { round: this.round, phase: game.i18n.localize(`NSSQ.Combat.phase.${phase}`) })}</div>`
+    });
+  }
+
+  async nextTurn() {
+    if (!game.user.isGM) return this;
+    switch (this.phase) {
+      case "opening": {
+        // 개막 → 메인: 【속도】를 다시 계산하고 첫 행동자부터
+        await this.refreshInitiative();
+        const first = this.firstActingTurn(0);
+        if (first === null) return this.setPhase("end", { turn: null });
+        return this.setPhase("main", { turn: first });
+      }
+      case "main": {
+        const next = this.firstActingTurn((this.turn ?? -1) + 1);
+        if (next === null) return this.setPhase("end", { turn: null });
+        return this.update({ turn: next });
+      }
+      default:
+        return this.nextRound();
+    }
+  }
+
+  async nextRound() {
+    if (!game.user.isGM) return this;
+    await this.clearRoundFlags();
+    await this.refreshInitiative();
+    await super.nextRound();
+    await this.setPhase("opening", { turn: null });
+    return this;
+  }
+
+  /** 다음 페이즈 버튼(컴뱃 트래커) */
+  async nextPhase() {
+    return this.nextTurn();
+  }
+}

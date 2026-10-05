@@ -9,11 +9,18 @@ import tables from "../generated/tables.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.GMScreen.${k}`, d) : game.i18n.localize(`NSSQ.GMScreen.${k}`));
 
-/** 파티: 플레이어(GM 아닌 사용자)가 소유한 캐릭터. 없으면 모든 캐릭터 */
+const playerOwned = (a) => game.users.some((u) => !u.isGM && a.testUserPermission(u, "OWNER"));
+
+/** 파티: 플레이어가 소유한 캐릭터 + GM이 넣은 동료 NPC. 아무도 없으면 모든 캐릭터 */
 export function partyActors() {
   const chars = game.actors.filter((a) => a.type === "character");
-  const owned = chars.filter((a) => game.users.some((u) => !u.isGM && a.testUserPermission(u, "OWNER")));
-  return owned.length ? owned : chars;
+  const party = chars.filter((a) => playerOwned(a) || a.system.npc);
+  return party.length ? party : chars;
+}
+
+/** GM만 가진 캐릭터(동료 NPC 후보) */
+export function gmCharacters() {
+  return game.actors.filter((a) => a.type === "character" && !playerOwned(a));
 }
 
 const pct = (v, max) => (max > 0 ? Math.clamp(Math.round((v / max) * 100), 0, 100) : 0);
@@ -61,6 +68,7 @@ export class GMScreen extends Application {
         money: s.money,
         row: game.i18n.localize(`NSSQ.Row.${s.row}`),
         storageEnabled: !!s.storageEnabled,
+        npc: !!s.npc,
         storageActive: storageActive(a)
       };
     });
@@ -76,7 +84,9 @@ export class GMScreen extends Application {
       }));
       return { type, label, items, selling: items.filter((i) => i.selling).length };
     }).filter((g) => g.items.length);
+    const npcCandidates = gmCharacters().map((a) => ({ id: a.id, name: a.name, img: a.img, npc: !!a.system.npc }));
     return {
+      npcCandidates,
       shopGroups,
       shopFilter: this.shopFilter ?? "",
       party,
@@ -93,6 +103,9 @@ export class GMScreen extends Application {
   activateListeners(html) {
     super.activateListeners(html);
     html.on("click", "[data-open-actor]", (ev) => game.actors.get(ev.currentTarget.dataset.openActor)?.sheet.render(true));
+    html.on("change", "[data-npc-actor]", (ev) => {
+      game.actors.get(ev.currentTarget.dataset.npcActor)?.update({ "system.npc": ev.currentTarget.checked });
+    });
     html.on("change", "[data-storage-actor]", (ev) => {
       game.actors.get(ev.currentTarget.dataset.storageActor)?.update({ "system.storageEnabled": ev.currentTarget.checked });
     });
