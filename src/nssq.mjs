@@ -8,6 +8,7 @@ import { TEMPLATES } from "./templates.mjs";
 import { promptCheck, registerCheckHooks, rollCheck } from "./chat/check.mjs";
 import { openRequestDialog, registerCheckRequest } from "./apps/check-request.mjs";
 import { registerSocket } from "./socket.mjs";
+import { registerAbilityRollHooks, rollAbilities } from "./apps/ability-roll.mjs";
 
 Hooks.once("init", () => {
   CONFIG.Actor.documentClass = NssqActor;
@@ -36,8 +37,9 @@ Hooks.once("init", () => {
 
   registerCheckHooks();
   registerCheckRequest();
+  registerAbilityRollHooks();
   // 매크로·모듈용 API
-  game.nssq = { promptCheck, rollCheck, openRequestDialog };
+  game.nssq = { promptCheck, rollCheck, openRequestDialog, rollAbilities };
 });
 
 Hooks.once("ready", () => registerSocket());

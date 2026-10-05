@@ -23,7 +23,8 @@
   <section class="sheet-body">
     <div class="tab" data-group="primary" data-tab="main">
       <section class="abilities">
-        <h3>{{localize "NSSQ.Ability.label"}}</h3>
+        <h3 class="section-title">{{localize "NSSQ.Ability.label"}}
+          {{#if editable}}<a class="section-action" data-action="roll-abilities" title="{{localize 'NSSQ.AbilityRoll.hint'}}"><i class="fas fa-dice"></i> {{localize "NSSQ.AbilityRoll.title"}}</a>{{/if}}</h3>
         <div class="grid grid-5col">
           {{#each abilityKeys as |k|}}
           <div class="stat">

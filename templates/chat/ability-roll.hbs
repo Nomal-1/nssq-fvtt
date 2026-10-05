@@ -1,0 +1,13 @@
+<div class="nssq-ability-roll">
+  <header class="check-header">
+    <span class="check-label">{{localize "NSSQ.AbilityRoll.title"}}</span>
+    <span class="check-kind">3D6 × 5</span>
+  </header>
+  <ol class="ability-results">
+    {{#each results as |r|}}
+    <li><span class="n">{{r.n}}</span><span class="dice">{{#each r.dice as |d|}}<span class="die-s">{{d}}</span>{{/each}}</span><b class="total">{{r.total}}</b></li>
+    {{/each}}
+  </ol>
+  <div class="ability-sum">{{localize "NSSQ.AbilityRoll.sum"}} {{sum}} · {{localize "NSSQ.AbilityRoll.money"}} {{money}}G</div>
+  <div class="check-buttons"><button type="button" data-nssq-action="assign">{{localize "NSSQ.AbilityRoll.assign"}}</button></div>
+</div>

@@ -67,3 +67,21 @@
 .nssq-check .check-notes .fp-pending { font-weight: normal; color: #7a7971; }
 .nssq-check .check-buttons button:disabled { opacity: 0.45; cursor: not-allowed; }
 .nssq-check .check-notes .fp-gain.pending { color: #7a7971; }
+
+/* 능력치 굴리기 */
+.nssq .section-title { display: flex; justify-content: space-between; align-items: baseline; }
+.nssq .section-title .section-action { font-size: 0.8em; font-weight: normal; cursor: pointer; }
+.nssq .section-title .section-action:hover { color: var(--color-text-hyperlink, #ff6400); }
+.nssq-ability-roll .ability-results { list-style: none; margin: 4px 0; padding: 0; }
+.nssq-ability-roll .ability-results li { display: flex; align-items: center; gap: 8px; padding: 1px 0; }
+.nssq-ability-roll .ability-results .n { width: 1.2em; color: #7a7971; }
+.nssq-ability-roll .ability-results .dice { display: flex; gap: 2px; flex: 1; }
+.nssq-ability-roll .die-s { width: 18px; height: 18px; line-height: 18px; text-align: center; border: 1px solid #999; border-radius: 3px; font-size: 0.85em; }
+.nssq-ability-roll .ability-results .total { font-size: 1.2em; width: 2em; text-align: right; }
+.nssq-ability-roll .ability-sum { font-size: 0.9em; color: #555; text-align: right; }
+.nssq-assign .assign-values { display: flex; justify-content: space-around; font-size: 1.1em; }
+.nssq-assign .assign-tools { display: flex; gap: 4px; margin-bottom: 4px; }
+.nssq-assign .assign-row select.dup { outline: 2px solid #b02020; }
+.nssq-assign .assign-bonus { flex: 0 0 3em; text-align: right; color: #555; }
+.nssq-assign .assign-error { color: #b02020; }
+.nssq-assign .notes.warn { color: #b02020; }

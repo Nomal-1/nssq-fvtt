@@ -1,5 +1,6 @@
 import { ABILITIES, RESISTS, SUB_STATS } from "../engine/derive.mjs";
 import { promptCheck, rollCheck } from "../chat/check.mjs";
+import { rollAbilities } from "../apps/ability-roll.mjs";
 
 export class NssqActorSheet extends ActorSheet {
   static get defaultOptions() {
@@ -39,6 +40,10 @@ export class NssqActorSheet extends ActorSheet {
       this.actor.items.get(id)?.sheet.render(true);
     });
     if (!this.isEditable) return;
+    html.on("click", "[data-action=roll-abilities]", (ev) => {
+      ev.preventDefault();
+      rollAbilities(this.actor);
+    });
     // 능력치 판정: 클릭하면 대화창, Shift+클릭하면 바로 굴린다
     html.on("click", "[data-action=roll-ability]", async (ev) => {
       ev.preventDefault();
