@@ -42,6 +42,20 @@ async function swapWeapon(combatant) {
   });
 }
 
+/* ---------------- 식별(GM이 언제든) ---------------- */
+
+/** 에너미 식별 상태를 바꾼다. 식별하면 모두에게 알린다 */
+async function setIdentified(actors, on) {
+  const changed = actors.filter((a) => a?.type === "enemy" && !!a.system.identified !== on);
+  for (const a of changed) await a.update({ "system.identified": on });
+  if (on && changed.length) {
+    await ChatMessage.create({
+      speaker: { alias: L("tracker") },
+      content: `<div class="nssq-combat-note"><i class="fas fa-eye"></i> ${L("identified", { names: changed.map((a) => a.token?.name ?? a.name).join(", ") })}</div>`
+    });
+  }
+}
+
 /* ---------------- 도주 ---------------- */
 
 /** 도주 판정(GM): 살아 있는 참가자 전원 【회피】로 일반 행위 판정 */
@@ -113,6 +127,16 @@ export function registerTracker() {
         next.innerHTML = `<i class="fas fa-forward"></i> ${phase === "main" ? L("nextTurn") : L("nextPhase")}`;
         next.addEventListener("click", () => combat.nextPhase());
         bar.append(next);
+        // 모두 식별: 전투 중 어느 때든(창발적 행동으로 알게 된 경우 등)
+        const unknown = combat.combatants.filter((c) => c.actor?.type === "enemy" && !c.actor.system.identified);
+        if (unknown.length) {
+          const idAll = document.createElement("button");
+          idAll.type = "button";
+          idAll.title = L("identifyAllHint");
+          idAll.innerHTML = `<i class="fas fa-eye"></i> ${L("identifyAll")}`;
+          idAll.addEventListener("click", () => setIdentified(unknown.map((c) => c.actor), true));
+          bar.append(idAll);
+        }
         if (phase === "opening") {
           const esc = document.createElement("button");
           esc.type = "button";
@@ -155,6 +179,11 @@ export function registerTracker() {
       if (owner && started && phase === "main" && !c.defeated) {
         btn("fa-fist-raised", L("normalAttack"), (ev) => normalAttack(actor, { ignoreRange: ev.shiftKey && game.user.isGM }));
       }
+      // GM: 에너미 식별 전환(감은 눈 = 식별 전, 뜬 눈 = 식별됨)
+      if (game.user.isGM && actor.type === "enemy") {
+        const known = !!actor.system.identified;
+        btn(known ? "fa-eye" : "fa-eye-slash", known ? L("identifiedOn") : L("identifiedOff"), () => setIdentified([actor], !known), known);
+      }
       const row = actor.system.row === "back" ? "back" : "front";
       const tags = document.createElement("span");
       tags.className = "nssq-tags";
@@ -173,6 +202,7 @@ export function registerTracker() {
   Hooks.on("createCombatant", (combatant) => {
     if (game.user.isGM && combatant.combat?.started) combatant.combat.rollInitiative([combatant.id]);
   });
-  // 【속도】·열이 바뀌면 트래커 갱신
+  // 【속도】·열·식별이 바뀌면 트래커 갱신
   Hooks.on("updateActor", () => ui.combat?.render(false));
+  Hooks.on("updateToken", () => ui.combat?.render(false));
 }

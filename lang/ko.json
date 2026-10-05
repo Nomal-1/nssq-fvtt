@@ -483,7 +483,12 @@
       "endDefeat": "전투 종료(전멸)",
       "notYourTurn": "{name}의 차례가 아니다(지금은 {current}의 차례).",
       "gmForce": "GM은 그래도 공격할 수 있다. 공격할까?",
-      "appliedHidden": "적용됨"
+      "appliedHidden": "적용됨",
+      "identifyAll": "모두 식별",
+      "identifyAllHint": "남은 에너미를 전부 식별한 것으로 한다(전투 중 무엇을 알게 된 경우 등)",
+      "identifiedOn": "식별됨 — 누르면 식별 전으로",
+      "identifiedOff": "식별 전 — 누르면 식별한 것으로(【HP】 변화가 플레이어에게 보인다)",
+      "identified": "{names}을(를) 식별했다."
     },
     "Battle": {
       "tab": "전투",
@@ -540,7 +545,7 @@
       "identify": "식별",
       "identifyUnknown": "식별 전(에너미 【HP】 변화 숨김)",
       "identifySuccess": "식별 성공(공개)",
-      "identifyHint": "식별하지 못한 에너미는 공격 카드의 【HP】 변화가 플레이어에게 보이지 않는다(내성은 보인다). 에너미 시트의 「식별」 체크로 바꿀 수 있다. 식별 판정 굴리기는 단계 5.",
+      "identifyHint": "식별하지 못한 에너미는 공격 카드의 【HP】 변화가 플레이어에게 보이지 않는다(내성은 보인다). 전투 중에도 GM이 전투 추적기의 눈 아이콘이나 [모두 식별]로 언제든 식별한 것으로 할 수 있다. 식별 판정 굴리기는 단계 5.",
       "cleanupMerged": "완전히 같은 중복 {merged}개를 합쳤다.",
       "cleanupTableNote": "남은 에너미 액터. 씬에서 쓰고 있는 것은 지울 수 없다(그 씬을 먼저 지운다). 쓰지 않는 시스템 에너미는 미리 체크해 두었다.",
       "del": "삭제",

@@ -117,8 +117,23 @@ export async function renderAttackCard(card) {
   });
 }
 
+/** 이 액터가 대상인 최근 공격 카드를 다시 그린다 */
+function rerenderCardsFor(actor) {
+  const uuid = actor.uuid;
+  for (const m of game.messages.contents.slice(-100)) {
+    if (m.getFlag("nssq", "attack")?.targets?.some((t) => t.actorUuid === uuid)) ui.chat.updateMessage(m);
+  }
+}
+
 /** 카드 버튼: [적용] [되돌리기]는 GM만. 적용 상태는 플래그에서 다시 그린다 */
 export function registerAttackHooks() {
+  // 식별되면 지난 카드의 【HP】 변화도 플레이어에게 보이게
+  Hooks.on("updateActor", (actor, changes) => {
+    if (foundry.utils.getProperty(changes, "system.identified") !== undefined) rerenderCardsFor(actor);
+  });
+  Hooks.on("updateToken", (token, changes) => {
+    if (foundry.utils.getProperty(changes, "delta.system.identified") !== undefined && token.actor) rerenderCardsFor(token.actor);
+  });
   Hooks.on("renderChatMessage", (message, html) => {
     const card = message.getFlag("nssq", "attack");
     if (!card) return;
