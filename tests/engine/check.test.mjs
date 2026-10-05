@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canAddDice, canReroll, contestWinner, defaultSelection, evaluateCheck, rerollFPDelta, rollDice } from "../../src/engine/check.mjs";
+import { canAddDice, canReroll, confirmCheck, contestWinner, defaultSelection, evaluateCheck, rerollFPDelta, rollDice, settleOnRoll } from "../../src/engine/check.mjs";
 
 describe("일반 행위 판정 (01 §2, 05 필수 케이스)", () => {
   it("2D6 + 수정 = 달성값, 목표값 이상이면 성공", () => {
@@ -66,31 +66,42 @@ describe("일반 행위 판정 (01 §2, 05 필수 케이스)", () => {
   });
 
   it("【FP】 사용 가능 여부", () => {
-    expect(canReroll({ rerolled: false }, 1)).toBe(true);
-    expect(canReroll({ rerolled: true }, 5)).toBe(false);
-    expect(canReroll({ rerolled: false }, 0)).toBe(false);
     expect(canAddDice(2, 2)).toBe(true);
     expect(canAddDice(1, 2)).toBe(false);
   });
 });
 
-describe("다시 굴리기와 【FP】", () => {
-  it("이번 판정의 1로 얻은 【FP】로는 다시 굴릴 수 없다", () => {
-    // 【FP】 0에서 [1,4] → 1 획득 → 현재 1. 그 1은 회수 대상
-    expect(canReroll({ rerolled: false, fpGained: 1 }, 1)).toBe(false);
-    // 원래 1이 있었다면 [1,4] 후 2 → 다시 굴릴 수 있다
-    expect(canReroll({ rerolled: false, fpGained: 1 }, 2)).toBe(true);
+describe("확정·다시 굴리기와 【FP】", () => {
+  it("1이 나왔고 다시 굴릴 【FP】가 있으면 확정할 때까지 보류", () => {
+    expect(settleOnRoll(1, 1)).toEqual({ fpPending: 1, fpGained: 0, closed: false });
   });
 
-  it("다시 굴리면 비용 1 + 얻었던 【FP】 회수", () => {
-    // 【FP】 1에서 [1,1] → 3. 다시 굴리면 -1 -2 = 0
-    expect(rerollFPDelta({ fpGained: 2 })).toBe(-3);
-    expect(rerollFPDelta({ fpGained: 0 })).toBe(-1);
+  it("【FP】 0에서 [1,3] → 다시 굴릴 수 없으므로 바로 +1, 판정 닫힘", () => {
+    const s = settleOnRoll(1, 0);
+    expect(s).toEqual({ fpPending: 0, fpGained: 1, closed: true });
+    expect(canReroll({ rerolled: false, ...s }, 1)).toBe(false);
   });
 
-  it("추가한 판정은 얻은 【FP】가 없으므로 비용만", () => {
-    const r = evaluateCheck({ dice: [1, 1, 3], added: 1 });
-    expect(rerollFPDelta({ fpGained: r.fpGain })).toBe(-1);
+  it("1이 없으면 보류할 것이 없고, 【FP】가 있으면 다시 굴릴 수 있다", () => {
+    const s = settleOnRoll(0, 1);
+    expect(s).toEqual({ fpPending: 0, fpGained: 0, closed: false });
+    expect(canReroll({ rerolled: false, ...s }, 1)).toBe(true);
+    expect(canReroll({ rerolled: false, ...s }, 0)).toBe(false);
+  });
+
+  it("확정하면 보류한 【FP】를 지급하고 다시 굴리기는 막힌다", () => {
+    const c = confirmCheck({ rerolled: false, fpPending: 2, fpGained: 0, closed: false });
+    expect(c.fpGained).toBe(2);
+    expect(c.fpPending).toBe(0);
+    expect(canReroll(c, 5)).toBe(false);
+  });
+
+  it("다시 굴리면 비용만 든다(보류분은 지급하지 않음)", () => {
+    expect(rerollFPDelta()).toBe(-1);
+  });
+
+  it("판정당 1회", () => {
+    expect(canReroll({ rerolled: true, closed: false }, 5)).toBe(false);
   });
 });
 

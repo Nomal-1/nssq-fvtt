@@ -27,13 +27,17 @@
   {{/if}}
 
   <div class="check-notes">
-    {{#if fpGained}}<span class="fp-gain">{{localize "NSSQ.FP"}} +{{fpGained}}{{#if canReroll}} <span class="fp-pending">({{localize "NSSQ.Check.fpRevokedOnReroll"}})</span>{{/if}}</span>{{/if}}
+    {{#if fpGained}}<span class="fp-gain">{{localize "NSSQ.FP"}} +{{fpGained}}</span>{{/if}}
+    {{#if fpPending}}<span class="fp-gain pending">{{localize "NSSQ.FP"}} +{{fpPending}} <span class="fp-pending">({{localize "NSSQ.Check.fpOnConfirm"}})</span></span>{{/if}}
     {{#if added}}<span>{{localize "NSSQ.Check.addedNote"}} +{{added}}</span>{{/if}}
     {{#if rerolled}}<span>{{localize "NSSQ.Check.rerolledNote"}}</span>{{/if}}
   </div>
 
   <div class="check-buttons">
-    {{#if canReroll}}<button type="button" data-nssq-action="reroll" data-owner-only title="{{localize 'NSSQ.Check.rerollHint'}}">{{localize "NSSQ.Check.reroll"}}</button>{{/if}}
+    {{#if open}}
+      {{#if fpPending}}<button type="button" data-nssq-action="confirm" data-owner-only title="{{localize 'NSSQ.Check.confirmHint'}}">{{localize "NSSQ.Check.confirm"}}</button>{{/if}}
+      <button type="button" data-nssq-action="reroll" data-owner-only title="{{localize 'NSSQ.Check.rerollHint'}}">{{localize "NSSQ.Check.reroll"}}</button>
+    {{/if}}
     {{#unless contest}}<button type="button" data-nssq-action="contest">{{localize "NSSQ.Check.contest"}}</button>{{/unless}}
   </div>
 </div>

@@ -66,3 +66,4 @@
 #actors .nssq-request-btn { flex: 0 0 100%; margin-top: 4px; }
 .nssq-check .check-notes .fp-pending { font-weight: normal; color: #7a7971; }
 .nssq-check .check-buttons button:disabled { opacity: 0.45; cursor: not-allowed; }
+.nssq-check .check-notes .fp-gain.pending { color: #7a7971; }

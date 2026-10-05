@@ -3,7 +3,7 @@
  * 계산은 전부 engine/check.mjs가 한다.
  */
 import { ABILITIES } from "../engine/derive.mjs";
-import { REROLL_COST, canReroll, contestWinner, evaluateCheck, rerollFPDelta } from "../engine/check.mjs";
+import { REROLL_COST, canReroll, confirmCheck, contestWinner, evaluateCheck, rerollFPDelta, settleOnRoll } from "../engine/check.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/check-card.hbs";
 
@@ -71,16 +71,18 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
 export async function rollCheck(actor, { ability = null, modifier = 0, target = null, addDice = 0, contestOf = null, rollMode = null, request = null } = {}) {
   const bonus = ability ? actor.system.bonus?.[ability] ?? 0 : 0;
   const added = Math.max(0, addDice);
+  // 새 판정을 굴리면 이 캐릭터의 확정하지 않은 이전 판정은 확정한다
+  await confirmPendingOf(actor);
   const { roll, dice } = await rollD6(2 + added);
   const state = {
     actorUuid: actor.uuid, ability, bonus, modifier, target,
-    dice, selected: null, added, rerolled: false, fpGained: 0,
+    dice, selected: null, added, rerolled: false, fpGained: 0, fpPending: 0, closed: false,
     request: request ? { note: request.note ?? "" } : null
   };
   const result = evaluateCheck({ ...state, modifier: bonus + modifier });
   state.selected = result.selected;
-  state.fpGained = result.fpGain;
-  await changeFP(actor, result.fpGain - added);
+  Object.assign(state, settleOnRoll(result.fpGain, (actor.system.fp?.value ?? 0) - added));
+  await changeFP(actor, -added + state.fpGained);
 
   const flags = { nssq: { check: state } };
   if (contestOf) flags.nssq.contest = { of: contestOf };
@@ -125,9 +127,10 @@ async function renderCard(state, { contest = false } = {}) {
     absSuccess: r.absSuccess,
     absFailure: r.absFailure,
     fpGained: state.fpGained,
+    fpPending: state.fpPending,
     added: state.added,
     rerolled: state.rerolled,
-    canReroll: !state.rerolled
+    open: !state.closed && !state.rerolled
   };
   return renderTemplate(TEMPLATE, data);
 }
@@ -156,18 +159,37 @@ async function onReroll(message) {
   const actor = await actorOf(state);
   if (!actor) return;
   if (!canReroll(state, actor.system.fp?.value ?? 0)) {
-    return ui.notifications.warn(game.i18n.format("NSSQ.Check.notEnoughFPReroll", { cost: REROLL_COST, gained: state.fpGained }));
+    return ui.notifications.warn(game.i18n.format("NSSQ.Check.notEnoughFPReroll", { cost: REROLL_COST }));
   }
   const { roll, dice } = await rollD6(state.dice.length);
   await show3d(roll);
   state.dice = dice;
   state.rerolled = true;
+  state.closed = true;
+  state.fpPending = 0; // 다시 굴리기 전의 1은 【FP】를 주지 않는다
   state.selected = null;
-  const r = evaluateCheck({ ...state, modifier: state.bonus + state.modifier });
-  state.selected = r.selected;
-  await changeFP(actor, rerollFPDelta(state, r.fpGain));
-  state.fpGained = r.fpGain;
+  state.selected = evaluateCheck({ ...state, modifier: state.bonus + state.modifier }).selected;
+  await changeFP(actor, rerollFPDelta());
   await updateCard(message, state);
+}
+
+/** [확정]: 보류한 【FP】를 지급하고 다시 굴리기를 닫는다 */
+async function onConfirm(message) {
+  const state = stateOf(message);
+  if (state.closed || state.rerolled) return;
+  const actor = await actorOf(state);
+  const next = confirmCheck(state);
+  if (actor) await changeFP(actor, state.fpPending ?? 0);
+  await updateCard(message, next);
+}
+
+/** 이 캐릭터의 확정하지 않은 판정을 확정한다(내가 고칠 수 있는 메시지만) */
+async function confirmPendingOf(actor) {
+  const pending = game.messages.contents.slice(-50).filter((m) => {
+    const s = stateOf(m);
+    return s && s.actorUuid === actor.uuid && s.fpPending > 0 && !s.closed && !s.rerolled && (m.isAuthor || game.user.isGM);
+  });
+  for (const m of pending) await onConfirm(m);
 }
 
 /** 3개 이상 굴렸을 때 쓸 주사위를 고른다: 고르지 않은 눈을 누르면 먼저 고른 것과 바뀐다 */
@@ -262,7 +284,7 @@ export function registerCheckHooks() {
       const fp = fromUuidSync(state.actorUuid)?.system?.fp?.value ?? 0;
       if (!canReroll(state, fp)) {
         reroll.disabled = true;
-        reroll.title = game.i18n.format("NSSQ.Check.notEnoughFPReroll", { cost: REROLL_COST, gained: state.fpGained });
+        reroll.title = game.i18n.format("NSSQ.Check.notEnoughFPReroll", { cost: REROLL_COST });
       }
     }
     el.querySelectorAll("[data-nssq-action]").forEach((b) => {
@@ -270,6 +292,7 @@ export function registerCheckHooks() {
         ev.preventDefault();
         const action = b.dataset.nssqAction;
         if (action === "reroll") onReroll(message);
+        else if (action === "confirm") onConfirm(message);
         else if (action === "select" && canEdit) onSelect(message, Number(b.dataset.index));
         else if (action === "contest") onContest(message);
       });
@@ -281,7 +304,7 @@ export function registerCheckHooks() {
     if (foundry.utils.getProperty(changes, "system.fp.value") === undefined) return;
     for (const m of game.messages.contents.slice(-30)) {
       const s = stateOf(m);
-      if (s && !s.rerolled && s.actorUuid === actor.uuid) ui.chat.updateMessage(m);
+      if (s && !s.rerolled && !s.closed && s.actorUuid === actor.uuid) ui.chat.updateMessage(m);
     }
   });
 

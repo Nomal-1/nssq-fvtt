@@ -156,9 +156,11 @@
       "contestWinner": "{name} 승리",
       "contestTargetNote": "대항 판정: {name}의 달성값 {total}이 목표값이다. 같으면 이쪽이 이긴다.",
       "contestLine": "{passive} {total} / 목표값 {target}({active}의 달성값)",
-      "notEnoughFPReroll": "【FP】가 부족하다. 다시 굴리려면 이 판정에서 얻은 【FP】 {gained}를 빼고 {cost}이 남아야 한다.",
-      "rerollHint": "【FP】 1 소모. 이 판정에서 1로 얻은 【FP】는 회수된다. 판정당 1회.",
-      "fpRevokedOnReroll": "다시 굴리면 회수"
+      "notEnoughFPReroll": "다시 굴리려면 【FP】 {cost}이 필요하다.",
+      "rerollHint": "【FP】 1 소모, 판정당 1회. 다시 굴리면 이 판정의 1로는 【FP】를 얻지 않는다.",
+      "confirm": "확정",
+      "confirmHint": "이 결과로 확정하고 1로 얻은 【FP】를 받는다. 이 캐릭터가 다음 판정을 굴리면 자동으로 확정된다.",
+      "fpOnConfirm": "확정 시 지급"
     },
     "Request": {
       "title": "판정 요청",

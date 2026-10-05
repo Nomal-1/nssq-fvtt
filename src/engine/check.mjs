@@ -63,16 +63,29 @@ export function contestWinner(active, passive) {
 export const REROLL_COST = 1; // OPEN-QUESTION #18
 
 /**
- * 다시 굴리기 가능 여부. 이 판정의 1로 얻은 【FP】(fpGained)는 다시 굴리면 회수되므로
- * 그것을 뺀 【FP】로 비용을 낼 수 있어야 한다.
+ * 굴린 직후의 【FP】 처리.
+ * 1로 얻을 【FP】가 있고 다시 굴릴 여유도 있으면 [확정]/[다시 굴리기] 중 고를 때까지 보류한다.
+ * 다시 굴릴 수 없으면 고를 것이 없으므로 바로 지급한다.
+ * @returns {{ fpPending: number, fpGained: number, closed: boolean }}
  */
-export function canReroll(state, fp, cost = REROLL_COST) {
-  return !state.rerolled && fp - (state.fpGained ?? 0) >= cost;
+export function settleOnRoll(fpGain, fp, cost = REROLL_COST) {
+  if (fpGain > 0 && fp >= cost) return { fpPending: fpGain, fpGained: 0, closed: false };
+  return { fpPending: 0, fpGained: fpGain, closed: fpGain > 0 };
 }
 
-/** 다시 굴릴 때의 【FP】 변화: 비용 + 이 판정에서 얻었던 【FP】 회수 (+ 다시 굴린 뒤 획득, 원문상 항상 0) */
-export function rerollFPDelta(state, newGain = 0, cost = REROLL_COST) {
-  return -cost - (state.fpGained ?? 0) + newGain;
+/** [확정]: 보류한 【FP】를 지급하고 판정을 닫는다 */
+export function confirmCheck(state) {
+  return { ...state, fpGained: (state.fpGained ?? 0) + (state.fpPending ?? 0), fpPending: 0, closed: true };
+}
+
+/** 다시 굴리기 가능 여부: 판정당 1회, 확정 전, 비용을 낼 【FP】가 있을 것(보류 중인 【FP】는 아직 내 것이 아니다) */
+export function canReroll(state, fp, cost = REROLL_COST) {
+  return !state.rerolled && !state.closed && fp >= cost;
+}
+
+/** 다시 굴릴 때의 【FP】 변화: 비용만. 보류 중이던 【FP】는 지급하지 않고, 다시 굴린 뒤의 1도 【FP】를 주지 않는다 */
+export function rerollFPDelta(cost = REROLL_COST) {
+  return -cost;
 }
 
 export function canAddDice(fp, n = 1) {
