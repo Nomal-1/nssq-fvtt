@@ -1,0 +1,132 @@
+{
+  "TYPES": {
+    "Actor": {
+      "character": "캐릭터",
+      "enemy": "에너미",
+      "token": "토큰"
+    },
+    "Item": {
+      "class": "클래스",
+      "skill": "스킬",
+      "weapon": "무기",
+      "armor": "방어구",
+      "accessory": "장식",
+      "consumable": "소모품",
+      "tool": "기타 아이템",
+      "material": "소재"
+    }
+  },
+  "NSSQ": {
+    "Name": "이름",
+    "Edit": "편집",
+    "Delete": "삭제",
+    "NoItems": "아이템이 없다",
+    "Level": "Lv",
+    "Exp": "경험점",
+    "Money": "소지금(G)",
+    "Rarity": "희소도",
+    "HP": "【HP】",
+    "TP": "【TP】",
+    "FP": "【FP】",
+    "Carry": "아이템 소지 수 한도",
+    "FOE": "F.O.E.",
+    "Rare": "희소종",
+    "Identified": "식별",
+    "Sheet": {
+      "actor": "NSSQ 액터 시트",
+      "item": "NSSQ 아이템 시트"
+    },
+    "Tab": {
+      "main": "능력치",
+      "items": "아이템",
+      "skills": "스킬",
+      "description": "해설"
+    },
+    "Row": {
+      "label": "열",
+      "front": "전위",
+      "back": "후위"
+    },
+    "Ability": {
+      "label": "능력치",
+      "str": "【STR】",
+      "tec": "【TEC】",
+      "vit": "【VIT】",
+      "agi": "【AGI】",
+      "luc": "【LUC】"
+    },
+    "Sub": {
+      "label": "부능력치",
+      "physHit": "【물리 명중】",
+      "elemHit": "【속성 명중】",
+      "evasion": "【회피】",
+      "physAtk": "【물리 공격】",
+      "elemAtk": "【속성 공격】",
+      "defense": "【방어】",
+      "suppAtk": "【억제 공격】",
+      "suppDef": "【억제 방어】",
+      "speed": "【속도】"
+    },
+    "Resist": {
+      "label": "내성",
+      "slash": "〈참〉",
+      "strike": "〈괴〉",
+      "pierce": "〈돌〉",
+      "fire": "〈염〉",
+      "ice": "〈빙〉",
+      "volt": "〈뇌〉"
+    },
+    "Field": {
+      "key": "키",
+      "skillKey": "스킬 키",
+      "classKey": "클래스 키",
+      "position": "위치",
+      "part": "부위",
+      "category": "분류",
+      "timing": "타이밍",
+      "range": "사거리",
+      "target": "대상",
+      "sl": "SL",
+      "unique": "고유 스킬",
+      "review": "검수",
+      "weaponType": "무기 종류",
+      "armorType": "방어구 종류",
+      "rank": "R(랭크)",
+      "element": "속성",
+      "slot": "슬롯",
+      "equipped": "장비 중",
+      "price": "가격",
+      "quantity": "수량",
+      "foodstuff": "식료품",
+      "materialType": "소재 종류"
+    },
+    "Status": {
+      "petrify": "석화",
+      "curse": "저주",
+      "poison": "독",
+      "sleep": "수면",
+      "confuse": "혼란",
+      "paralyze": "마비",
+      "fear": "공포",
+      "blind": "맹목",
+      "stun": "스턴",
+      "bindHead": "[머리] 봉인",
+      "bindArm": "[팔] 봉인",
+      "bindLeg": "[다리] 봉인",
+      "ko": "전투 불능"
+    },
+    "Settings": {
+      "autoApply": {
+        "name": "자동 적용",
+        "hint": "【HP】·【TP】·상태 변경을 채팅 카드에서 어떻게 적용할지 정한다.",
+        "off": "끔(수동 적용)",
+        "confirm": "확인 후 적용",
+        "auto": "즉시 적용"
+      },
+      "fpStart": {
+        "name": "세션 시작 【FP】",
+        "hint": "세션을 시작할 때 각 캐릭터의 【FP】."
+      }
+    }
+  }
+}

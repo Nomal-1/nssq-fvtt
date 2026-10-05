@@ -1,0 +1,26 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'NSSQ.Name'}}"/></h1>
+      <div class="item-type">{{nssqLabel "TYPES.Item" item.type}}</div>
+    </div>
+  </header>
+  <section class="fields grid grid-2col">
+    {{#each fields as |f|}}
+    <label class="stat">
+      <span>{{localize f.label}}</span>
+      {{#if (nssqEq f.type "BooleanField")}}
+      <input type="checkbox" name="{{f.name}}" {{checked f.value}}/>
+      {{else if (nssqEq f.type "NumberField")}}
+      <input type="number" name="{{f.name}}" value="{{f.value}}" data-dtype="Number"/>
+      {{else}}
+      <input type="text" name="{{f.name}}" value="{{f.value}}"/>
+      {{/if}}
+    </label>
+    {{/each}}
+  </section>
+  <section class="sheet-body">
+    {{editor enrichedDescription target="system.description" button=true editable=editable owner=owner}}
+  </section>
+</form>

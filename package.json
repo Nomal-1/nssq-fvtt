@@ -1,0 +1,22 @@
+{
+  "name": "nssq-fvtt",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SRS가 아닌 세계수의 미궁 TRPG — Foundry VTT v12 시스템",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src tools tests",
+    "build:data": "node tools/convert.mjs",
+    "build:packs": "node tools/pack.mjs",
+    "link": "node tools/link.mjs",
+    "package": "node tools/package.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "vitest": "^2.0.0"
+  }
+}

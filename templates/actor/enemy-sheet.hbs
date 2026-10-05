@@ -1,0 +1,41 @@
+<form class="{{cssClass}}" autocomplete="off">
+  {{> "systems/nssq/templates/actor/parts/header.hbs"}}
+  <section class="resources grid grid-4col">
+    <label class="stat"><span>{{localize "NSSQ.Level"}}</span><input type="number" name="system.level" value="{{system.level}}" data-dtype="Number"/></label>
+    <label class="stat"><span>{{localize "NSSQ.Rarity"}}</span><input type="number" name="system.rarity" value="{{system.rarity}}" data-dtype="Number"/></label>
+    <label class="stat"><span>{{localize "NSSQ.HP"}}</span>
+      <span class="pair"><input type="number" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number"/> / <input type="number" name="system.hp.max" value="{{system.hp.max}}" data-dtype="Number"/></span></label>
+    <label class="stat"><span>{{localize "NSSQ.Row.label"}}</span>
+      <select name="system.row">{{selectOptions rowChoices selected=system.row localize=true}}</select></label>
+    <label class="stat checkbox"><input type="checkbox" name="system.isFOE" {{checked system.isFOE}}/> {{localize "NSSQ.FOE"}}</label>
+    <label class="stat checkbox"><input type="checkbox" name="system.isRare" {{checked system.isRare}}/> {{localize "NSSQ.Rare"}}</label>
+    <label class="stat checkbox"><input type="checkbox" name="system.identified" {{checked system.identified}}/> {{localize "NSSQ.Identified"}}</label>
+  </section>
+
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="main">{{localize "NSSQ.Tab.main"}}</a>
+    <a class="item" data-tab="items">{{localize "NSSQ.Tab.skills"}}</a>
+    <a class="item" data-tab="description">{{localize "NSSQ.Tab.description"}}</a>
+  </nav>
+
+  <section class="sheet-body">
+    <div class="tab" data-group="primary" data-tab="main">
+      <section class="substats">
+        <h3>{{localize "NSSQ.Sub.label"}}</h3>
+        <div class="grid grid-3col">
+          {{#each subKeys as |k|}}
+          <label class="stat"><span>{{nssqLabel "NSSQ.Sub" k}}</span>
+            <input type="number" name="system.stats.{{k}}" value="{{lookup @root.system.stats k}}" data-dtype="Number"/></label>
+          {{/each}}
+        </div>
+      </section>
+      {{> "systems/nssq/templates/actor/parts/resist.hbs"}}
+    </div>
+    <div class="tab" data-group="primary" data-tab="items">
+      {{> "systems/nssq/templates/actor/parts/items.hbs"}}
+    </div>
+    <div class="tab" data-group="primary" data-tab="description">
+      {{editor enrichedDescription target="system.description" button=true editable=editable owner=owner}}
+    </div>
+  </section>
+</form>

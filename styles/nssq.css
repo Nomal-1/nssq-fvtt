@@ -1,0 +1,27 @@
+.nssq.sheet form { display: flex; flex-direction: column; height: 100%; }
+.nssq .sheet-header { display: flex; gap: 8px; align-items: center; flex: 0 0 auto; margin-bottom: 6px; }
+.nssq .sheet-header .profile-img { flex: 0 0 auto; border: none; object-fit: cover; }
+.nssq .sheet-header .header-fields { flex: 1; }
+.nssq .sheet-header h1 input { font-size: 1.6em; height: auto; }
+.nssq .grid { display: grid; gap: 4px 8px; margin: 4px 0; }
+.nssq .grid-2col { grid-template-columns: repeat(2, 1fr); }
+.nssq .grid-3col { grid-template-columns: repeat(3, 1fr); }
+.nssq .grid-4col { grid-template-columns: repeat(4, 1fr); }
+.nssq .grid-5col { grid-template-columns: repeat(5, 1fr); }
+.nssq .grid-6col { grid-template-columns: repeat(6, 1fr); }
+.nssq .stat { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.nssq .stat > span:first-child { font-size: 0.85em; color: var(--color-text-dark-secondary, #4b4a44); }
+.nssq .stat input[type="number"] { width: 4em; text-align: center; }
+.nssq .stat .pair { display: flex; align-items: center; gap: 2px; }
+.nssq .stat .value { font-size: 1.3em; font-weight: bold; }
+.nssq .stat .bonus { font-size: 0.85em; }
+.nssq .stat.checkbox { flex-direction: row; justify-content: center; gap: 4px; }
+.nssq h3 { border-bottom: 1px solid var(--color-underline-header, #782e22); margin: 8px 0 4px; }
+.nssq .sheet-tabs { flex: 0 0 auto; }
+.nssq .sheet-body { flex: 1; overflow-y: auto; }
+.nssq .sheet-body .editor { min-height: 200px; height: 100%; }
+.nssq .item-list { list-style: none; margin: 0; padding: 0; }
+.nssq .item-list .item { align-items: center; gap: 6px; padding: 2px 0; border-bottom: 1px solid #c9c7b8; }
+.nssq .item-list .item-img { flex: 0 0 24px; border: none; }
+.nssq .item-list .item-type { flex: 0 0 90px; font-size: 0.85em; }
+.nssq .item-list .item-control { flex: 0 0 18px; text-align: center; }

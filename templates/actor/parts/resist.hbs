@@ -1,0 +1,11 @@
+<section class="resist">
+  <h3>{{localize "NSSQ.Resist.label"}}</h3>
+  <div class="grid grid-6col">
+    {{#each resistKeys as |k|}}
+    <label class="stat">
+      <span>{{nssqLabel "NSSQ.Resist" k}}</span>
+      <input type="number" name="system.resist.{{k}}" value="{{lookup @root.system.resist k}}" data-dtype="Number"/>
+    </label>
+    {{/each}}
+  </div>
+</section>

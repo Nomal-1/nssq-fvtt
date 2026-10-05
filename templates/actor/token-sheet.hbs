@@ -1,0 +1,12 @@
+<form class="{{cssClass}}" autocomplete="off">
+  {{> "systems/nssq/templates/actor/parts/header.hbs"}}
+  <section class="resources grid grid-4col">
+    <label class="stat"><span>{{localize "NSSQ.HP"}}</span>
+      <span class="pair"><input type="number" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number"/> / <input type="number" name="system.hp.max" value="{{system.hp.max}}" data-dtype="Number"/></span></label>
+    <label class="stat"><span>{{localize "NSSQ.Row.label"}}</span>
+      <select name="system.row">{{selectOptions rowChoices selected=system.row localize=true}}</select></label>
+  </section>
+  <section class="sheet-body">
+    {{editor enrichedDescription target="system.description" button=true editable=editable owner=owner}}
+  </section>
+</form>

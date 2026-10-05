@@ -1,0 +1,8 @@
+node_modules/
+.env
+dist/
+build/
+packs/*/
+!packs/.gitkeep
+*.log
+.DS_Store

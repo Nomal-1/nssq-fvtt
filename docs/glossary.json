@@ -1,0 +1,11297 @@
+[
+ {
+  "ko": "HP 리젠: ○",
+  "jp": "HPリジェネ：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "TP 리젠: ○",
+  "jp": "TPリジェネ：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "크리티컬",
+  "jp": "クリティカル",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "크리티컬 업",
+  "jp": "クリティカルアップ",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "명중 상승: ○",
+  "jp": "命中上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "회피 상승: ○",
+  "jp": "回避上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "완전 내성: ○",
+  "jp": "完全耐性：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "속성 부여: ○",
+  "jp": "属性付与：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "속성 공격 상승: ○",
+  "jp": "属性攻撃上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "약화 효과",
+  "jp": "弱体効果",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "약점 부여: ○",
+  "jp": "弱点付与：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "약점: ○",
+  "jp": "弱点：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "에너미 상시 스킬"
+ },
+ {
+  "ko": "강화 효과",
+  "jp": "強化効果",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "억제 공격 상승: ○",
+  "jp": "抑制攻撃上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "억제 방어 상승: ○",
+  "jp": "抑制防御上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "공격 상승: ○",
+  "jp": "攻撃上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "에너미 《데빌 크라이》. 物理攻撃上昇(물리 공격 상승)과 별개 원어"
+ },
+ {
+  "ko": "최대 HP 강화: ○",
+  "jp": "最大HP強化：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "물리 명중 상승: ○",
+  "jp": "物理命中上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "물리 공격 상승: ○",
+  "jp": "物理攻撃上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "효과명은 『』로 묶음"
+ },
+ {
+  "ko": "물리 방어 상승: ○",
+  "jp": "物理防御上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "내성 상승: ○",
+  "jp": "耐性上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "全=전체, 炎氷雷=염빙뇌. 耐性付与(내성 부여)와 별개 원어"
+ },
+ {
+  "ko": "내성 부여: ○",
+  "jp": "耐性付与：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "내성: ○",
+  "jp": "耐性：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "추격: ○",
+  "jp": "追撃：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "속도 상승: ○",
+  "jp": "速度上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "방어 상승: ○",
+  "jp": "防御上昇：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "\\~ 저하: ○",
+  "jp": "～低下：●",
+  "category": "강화·약화 효과",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "上昇↔상승, 低下↔저하"
+ },
+ {
+  "ko": "10m 로프",
+  "jp": "10mロープ",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "횃불",
+  "jp": "たいまつ",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "횟불"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "텐트",
+  "jp": "テント",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "백팩",
+  "jp": "バックパック",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "랜턴",
+  "jp": "ランタン",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "작업용 나이프",
+  "jp": "作業用ナイフ",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "작업용 망치",
+  "jp": "作業用ハンマー",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "작은 병",
+  "jp": "小瓶",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "천",
+  "jp": "布",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "손거울",
+  "jp": "手鏡",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "물통",
+  "jp": "水筒",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "기름(작은 병)",
+  "jp": "油(小瓶入り)",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "부싯깃통",
+  "jp": "火口箱",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "부싯통"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "자루",
+  "jp": "袋",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "조리기구 세트",
+  "jp": "調理器具セット",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "못·쐐기",
+  "jp": "釘・くさび",
+  "category": "기타 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【AGI】",
+  "jp": "AGI",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "FP(포스 포인트)",
+  "jp": "FP(フォースポイント)",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": "정식 한글판 '포스 스킬' 표기에 맞춤"
+ },
+ {
+  "ko": "【HP】",
+  "jp": "HP",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【LUC】",
+  "jp": "LUC",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【STR】",
+  "jp": "STR",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": "원문 그대로 영문 표기"
+ },
+ {
+  "ko": "【TEC】",
+  "jp": "TEC",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【TP】",
+  "jp": "TP",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【VIT】",
+  "jp": "VIT",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "부능력치",
+  "jp": "副能力値",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【명중】",
+  "jp": "命中",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【회피】",
+  "jp": "回避",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【속성 명중】",
+  "jp": "属性命中",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【속성 공격】",
+  "jp": "属性攻撃",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "희소도",
+  "jp": "希少度",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【억제 공격】",
+  "jp": "抑制攻撃",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【억제 방어】",
+  "jp": "抑制防御",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【물리 명중】",
+  "jp": "物理命中",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【물리 공격】",
+  "jp": "物理攻撃",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "물리 방어",
+  "jp": "物理防御",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "효과·스킬명 안에서만(물리 방어 부스트 등)"
+ },
+ {
+  "ko": "내성",
+  "jp": "耐性",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "능력치 보너스",
+  "jp": "能力値ボーナス",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "【STR】B처럼 줄여 씀"
+ },
+ {
+  "ko": "【속도】",
+  "jp": "速度",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "【방어】",
+  "jp": "防御",
+  "category": "능력치·부능력치",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "능력치로 쓸 때. 물리 방어를 가리킬 때도 【방어】. 스킬 분류 '방어'는 별도 행"
+ },
+ {
+  "ko": "서브웨펀",
+  "jp": "サブウェポン",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "서브웨폰"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "슬롯: 무기/갑옷/기타",
+  "jp": "スロット 武器/鎧/その他",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "도",
+  "jp": "刀",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "도(刀)"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "검",
+  "jp": "剣",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "활",
+  "jp": "弓",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "쇠뇌",
+  "jp": "弩",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "노",
+   "노(쇠뇌)",
+   "놬"
+  ],
+  "note": "정식 한글판 '쇠뇌 마스터리'"
+ },
+ {
+  "ko": "주먹",
+  "jp": "拳",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "맨손"
+  ],
+  "note": "拳マスタリー(주먹 마스터리)와 통일"
+ },
+ {
+  "ko": "도끼",
+  "jp": "斧",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "옷",
+  "jp": "服",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "지팡이",
+  "jp": "杖",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "창",
+  "jp": "槍",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "방패",
+  "jp": "盾",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "단검",
+  "jp": "短剣",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "포검",
+  "jp": "砲剣",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "세검",
+  "jp": "突剣",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "찌르기검"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "장식",
+  "jp": "装飾",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "경갑",
+  "jp": "軽鎧",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "농기구",
+  "jp": "農具",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "중갑",
+  "jp": "重鎧",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "총",
+  "jp": "銃",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "망치",
+  "jp": "鎚",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "둔기"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "채찍",
+  "jp": "鞭",
+  "category": "무기·방어구 종별",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스턴",
+  "jp": "スタン",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "공포",
+  "jp": "テラー",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [
+   "테러"
+  ],
+  "note": "정식 한글판(恐怖) 표기"
+ },
+ {
+  "ko": "즉사",
+  "jp": "即死",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "저주",
+  "jp": "呪い",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "봉인",
+  "jp": "封じ",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "전투 불능",
+  "jp": "戦闘不能",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "독",
+  "jp": "毒",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "혼란",
+  "jp": "混乱",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "상태 이상",
+  "jp": "状態異常",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [
+   "상태이상"
+  ],
+  "note": "띄어 씀"
+ },
+ {
+  "ko": "맹목",
+  "jp": "盲目",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [
+   "실명"
+  ],
+  "note": "정식 한글판 표기"
+ },
+ {
+  "ko": "수면",
+  "jp": "睡眠",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "석화",
+  "jp": "石化",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "\\[다리\\] 봉인",
+  "jp": "脚封じ",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "\\[팔\\] 봉인",
+  "jp": "腕封じ",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "부위: 머리/팔/다리",
+  "jp": "部位：頭/腕/脚",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "\\[머리\\] 봉인",
+  "jp": "頭封じ",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "마비",
+  "jp": "麻痺",
+  "category": "상태 이상·봉인",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "R(랭크)",
+  "jp": "R(ランク)",
+  "category": "성장·경제",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "G",
+  "jp": "en",
+  "category": "성장·경제",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "en"
+  ],
+  "note": "통화 단위. 숫자 뒤에 붙여 쓴다(예: 100G). 조사는 '지' 발음 기준(G를, G와)"
+ },
+ {
+  "ko": "아이템 소지 수",
+  "jp": "アイテム所持数",
+  "category": "성장·경제",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "소지 개수"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "스킬 포인트",
+  "jp": "スキルポイント",
+  "category": "성장·경제",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "레벨업",
+  "jp": "レベルアップ",
+  "category": "성장·경제",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "초기 소지금",
+  "jp": "初期所持金",
+  "category": "성장·경제",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "매각",
+  "jp": "売却",
+  "category": "성장·경제",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "생활비",
+  "jp": "生活費",
+  "category": "성장·경제",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "경험점",
+  "jp": "経験点",
+  "category": "성장·경제",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "제련",
+  "jp": "鍛冶",
+  "category": "성장·경제",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "단연",
+   "단련"
+  ],
+  "note": "정식 한글판 대장간 메뉴 鍛冶をする→제련한다. 일반 낱말 '단련(鍛鍊)'(심신을 단련 등)은 그대로"
+ },
+ {
+  "ko": "F.O.E.",
+  "jp": "F.O.E.",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "아앗!",
+  "jp": "ああっと！",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "아앗! 값"
+ },
+ {
+  "ko": "에어리어",
+  "jp": "エリア",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "에리어"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "캠프",
+  "jp": "キャンプ",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "야영 (캠프)"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "트랩",
+  "jp": "トラップ",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "벌채",
+  "jp": "伐採",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": "채집 방법(탐색 행위) 이름. 커먼 스킬 《벌채》와 표기 동일"
+ },
+ {
+  "ko": "주변 위험도",
+  "jp": "周囲の危険度",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "캠프 판정. 아이템 『텐트』 해설"
+ },
+ {
+  "ko": "채취",
+  "jp": "採取",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "채집"
+  ],
+  "note": "採集(채집)과 구분. 《채취》 커먼 스킬"
+ },
+ {
+  "ko": "채굴",
+  "jp": "採掘",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": "채집 방법(탐색 행위) 이름. 커먼 스킬 《채굴》과 표기 동일"
+ },
+ {
+  "ko": "채집",
+  "jp": "採集",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "채집 포인트",
+  "jp": "採集ポイント",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "식료품",
+  "jp": "食料",
+  "category": "세션·던전·탐색",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "식료"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "암리타",
+  "jp": "アムリタ",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "암리타 II",
+  "jp": "アムリタII",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "아리아드네의 실",
+  "jp": "アリアドネの糸",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "쇼크 오일",
+  "jp": "ショックオイル",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "테리아카α",
+  "jp": "テリアカα",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "테리아카 α"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "테리아카β",
+  "jp": "テリアカβ",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "테리아카 β"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "테리아카γ",
+  "jp": "テリアカγ",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "테리아카 γ"
+  ],
+  "note": "테리아카α·β 정식 표기에 맞춰 붙여 씀"
+ },
+ {
+  "ko": "넥타르",
+  "jp": "ネクタル",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "파이어 오일",
+  "jp": "ファイアオイル",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "프리즈 오일",
+  "jp": "フリーズオイル",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "메디카",
+  "jp": "メディカ",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "메디카 II",
+  "jp": "メディカII",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "메디카 III",
+  "jp": "メディカIII",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "메디카 IV",
+  "jp": "メディカIV",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "알",
+  "jp": "卵",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "과일",
+  "jp": "果物",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "소재 果実(열매)와 구분"
+ },
+ {
+  "ko": "곡류",
+  "jp": "穀類",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "내빙 미스트",
+  "jp": "耐氷ミスト",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "내화 미스트",
+  "jp": "耐火ミスト",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "내뇌 미스트",
+  "jp": "耐雷ミスト",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "내뢰 미스트"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "고기",
+  "jp": "肉",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "채소",
+  "jp": "野菜",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "생선",
+  "jp": "魚",
+  "category": "소모품 아이템",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "칼날",
+  "jp": "刃",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "보석",
+  "jp": "宝石",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "목재",
+  "jp": "木材",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "열매",
+  "jp": "果実",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "가지",
+  "jp": "枝",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "껍질",
+  "jp": "殻",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "껍데기"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "모피",
+  "jp": "毛皮",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "발톱",
+  "jp": "爪",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "이빨",
+  "jp": "牙",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "엄니"
+  ],
+  "note": "소재 牙. 정식 한글판 아이템 표기(작은 이빨, 커다란 짐승 이빨)에 맞춤. 스킬 이름의 牙는 정식 표기대로 '송곳니'"
+ },
+ {
+  "ko": "등딱지",
+  "jp": "甲羅",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "등딝지"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "가죽",
+  "jp": "皮",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "석재",
+  "jp": "石材",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "실",
+  "jp": "糸",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "결정",
+  "jp": "結晶",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "날개·깃털",
+  "jp": "羽",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "깃털"
+  ],
+  "note": "같은 소재(羽). 새에게서 얻으면 '깃털', 곤충·익룡 등에게서 얻으면 '날개'로 쓴다(정식 한글판: 큰 새의 깃털, 나비 날개). 소재 종류를 통틀어 말할 때는 '날개·깃털'"
+ },
+ {
+  "ko": "꽃",
+  "jp": "花",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "풀",
+  "jp": "草",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "덩굴",
+  "jp": "蔓",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "뿔",
+  "jp": "角",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "금속",
+  "jp": "金属",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "가시",
+  "jp": "針",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "침"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "뼈",
+  "jp": "骨",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "비늘",
+  "jp": "鱗",
+  "category": "소재",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "〈괴〉",
+  "jp": "壊",
+  "category": "속성",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "〈괴(壊)〉"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "〈참〉",
+  "jp": "斬",
+  "category": "속성",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "〈참(斬)〉"
+  ],
+  "note": "한자 병기 없이"
+ },
+ {
+  "ko": "〈빙〉",
+  "jp": "氷",
+  "category": "속성",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "얼음의 \\~",
+  "jp": "氷の～(스킬명 접두)",
+  "category": "속성",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "〈염〉",
+  "jp": "炎",
+  "category": "속성",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "불꽃의 \\~",
+  "jp": "炎の～(스킬명 접두)",
+  "category": "속성",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "불의 \\~"
+  ],
+  "note": "스킬·효과 이름 안의 炎/氷/雷 접두는 불꽃의/얼음의/번개의로 통일"
+ },
+ {
+  "ko": "무속성",
+  "jp": "無属性",
+  "category": "속성",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "벽력",
+  "jp": "稲妻",
+  "category": "속성",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "전광"
+  ],
+  "note": "稲妻는 '벽력'(정식 한글판 稲妻の一閃→벽력일섬에 맞춤). 雷(번개, 〈뇌〉)와 구분하여 稲妻를 '번개'로 쓰지 않는다"
+ },
+ {
+  "ko": "〈돌〉",
+  "jp": "突",
+  "category": "속성",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "〈돌(突)〉"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "〈뇌〉",
+  "jp": "雷",
+  "category": "속성",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "〈뢰〉"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "번개의 \\~",
+  "jp": "雷の～(스킬명 접두)",
+  "category": "속성",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "코스트",
+  "jp": "コスト",
+  "category": "스킬 표 항목",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 표 열 이름"
+ },
+ {
+  "ko": "스킬",
+  "jp": "スキル名",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "타이밍",
+  "jp": "タイミング",
+  "category": "스킬 표 항목",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 표 열 이름"
+ },
+ {
+  "ko": "주행동",
+  "jp": "主行動",
+  "category": "스킬 표 항목",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "타이밍 값"
+ },
+ {
+  "ko": "분류",
+  "jp": "分類",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "수동",
+  "jp": "受動",
+  "category": "스킬 표 항목",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "타이밍 값"
+ },
+ {
+  "ko": "호령",
+  "jp": "号令",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "주가",
+  "jp": "呪歌",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "주언",
+  "jp": "呪言",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "저주말"
+  ],
+  "note": "정식 한글판 커스 메이커 표기"
+ },
+ {
+  "ko": "아군 전체",
+  "jp": "味方全",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "대상 값"
+ },
+ {
+  "ko": "아군 열",
+  "jp": "味方列",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "대상 값"
+ },
+ {
+  "ko": "아군 단일",
+  "jp": "味方単",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "대상 값"
+ },
+ {
+  "ko": "회복",
+  "jp": "回復",
+  "category": "스킬 표 항목",
+  "classes": [
+   "미스틱",
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 분류"
+ },
+ {
+  "ko": "대상",
+  "jp": "対象",
+  "category": "스킬 표 항목",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 표 열 이름"
+ },
+ {
+  "ko": "사격",
+  "jp": "射撃",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "사거리",
+  "jp": "射程",
+  "category": "스킬 표 항목",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 표 열 이름"
+ },
+ {
+  "ko": "음양검",
+  "jp": "巫剣",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "무검"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "음양술",
+  "jp": "巫術",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "무술"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "상시",
+  "jp": "常時",
+  "category": "스킬 표 항목",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "타이밍 값"
+ },
+ {
+  "ko": "인법",
+  "jp": "忍法",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "인법・○○ 형식"
+ },
+ {
+  "ko": "투인",
+  "jp": "投刃",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 분류(나이트 시커)"
+ },
+ {
+  "ko": "소환수",
+  "jp": "招獣",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 분류(비스트 킹). 招来=소환"
+ },
+ {
+  "ko": "적 전체",
+  "jp": "敵全",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "대상 값"
+ },
+ {
+  "ko": "적 열",
+  "jp": "敵列",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "대상 값"
+ },
+ {
+  "ko": "적 단일",
+  "jp": "敵単",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "대상 값"
+ },
+ {
+  "ko": "방진",
+  "jp": "方陣",
+  "category": "스킬 표 항목",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 분류"
+ },
+ {
+  "ko": "무기",
+  "jp": "武器",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "특수",
+  "jp": "特殊",
+  "category": "스킬 표 항목",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "타이밍·대상 값"
+ },
+ {
+  "ko": "백병",
+  "jp": "白兵",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "자신",
+  "jp": "自身",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "대상 값. 追撃：(自分)도 자신"
+ },
+ {
+  "ko": "무용",
+  "jp": "舞踊",
+  "category": "스킬 표 항목",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 분류"
+ },
+ {
+  "ko": "술식",
+  "jp": "術式",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "해설",
+  "jp": "解説",
+  "category": "스킬 표 항목",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 표 열 이름"
+ },
+ {
+  "ko": "근",
+  "jp": "近",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "사거리 값"
+ },
+ {
+  "ko": "원",
+  "jp": "遠",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "사거리 값"
+ },
+ {
+  "ko": "부위",
+  "jp": "部位",
+  "category": "스킬 표 항목",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "개막",
+  "jp": "開幕",
+  "category": "스킬 표 항목",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "타이밍 값"
+ },
+ {
+  "ko": "방어",
+  "jp": "防御",
+  "category": "스킬 표 항목",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "스킬 분류 이름으로 쓸 때(괄호 없이 '방어'). 능력치는 별도 행 【방어】. 같은 원어"
+ },
+ {
+  "ko": "배회하는 도약수",
+  "jp": "うろつく跳獣",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "F.O.E."
+ },
+ {
+  "ko": "괴물두리안",
+  "jp": "お化けドリアン",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "도깨비 두리안"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "물어뜯치",
+  "jp": "かみつき魚",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "물어뜯는 물고기",
+   "무는 물고기"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "가위풍뎅이",
+  "jp": "はさみカブト",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "집게 투구벌레"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "할퀴는 두더지",
+  "jp": "ひっかきモグラ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "이블 피시",
+  "jp": "イビルフィッシュ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "워처",
+  "jp": "ウォッチャー",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "일렉 반딧불이",
+  "jp": "エレキボタル",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "오일 웜",
+  "jp": "オイルワーム",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "거대아나콘다",
+  "jp": "オオアナコンダ",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "큰아나콘다"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "큰무당벌레",
+  "jp": "オオテントウ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스라소니",
+  "jp": "オオヤマネコ",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "큰살쾡이"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "가드봇",
+  "jp": "ガードボット",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "큐브 젤라틴",
+  "jp": "キューブゼラチン",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "기라파 비틀",
+  "jp": "ギラファビートル",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "크롤러",
+  "jp": "クローラー",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "최면올빼미",
+  "jp": "サイミンフクロウ",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "최면 올빼미"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "사우로포세이돈",
+  "jp": "サウロポセイドン",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "사에나 버드",
+  "jp": "サエーナ鳥",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "사에나 새"
+  ],
+  "note": "F.O.E."
+ },
+ {
+  "ko": "삼림나비",
+  "jp": "シンリンチョウ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "자이언트 모아",
+  "jp": "ジャイアントモア",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "재커로프",
+  "jp": "ジャッカロープ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스노 드리프트",
+  "jp": "スノードリフト",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "스노드리프트"
+  ],
+  "note": "F.O.E."
+ },
+ {
+  "ko": "타이탄 아룸",
+  "jp": "タイタンアルム",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "정식 한글판(3 HD) 표기는 '티타늄'이나, 실제 식물 타이탄 아룸(시체꽃)을 금속명으로 옮긴 오역으로 판단해 쓰지 않는다"
+ },
+ {
+  "ko": "데스 스토커",
+  "jp": "デスストーカー",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "참개구리",
+  "jp": "トノサマカエル",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "왕개구리"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "드레드 히드라",
+  "jp": "ドレッドヒュドラ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "니치린소",
+  "jp": "ニチリンソウ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "톱날꽃게",
+  "jp": "ノコギリガザミ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "발칸어",
+  "jp": "バルカンウオ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "F.O.E."
+ },
+ {
+  "ko": "비크 빌",
+  "jp": "ビックビル",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "빅 빌"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "핀드 혼",
+  "jp": "フィンドホーン",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "핀드혼"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "포레스트 울프",
+  "jp": "フォレストウルフ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "베놈 스파이더",
+  "jp": "ベノムスパイダー",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "별하늘갯민숭달팽이",
+  "jp": "ホシゾラウミウシ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "볼 애니멀",
+  "jp": "ボールアニマル",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "대왕달팽이",
+  "jp": "マイマイダイオウ",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "달팽이 대왕"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "마하 다람쥐",
+  "jp": "マッハロリス",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "맨드레이크",
+  "jp": "マンドレイク",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "만드레이크"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "산고래",
+  "jp": "ヤマクジラ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "곡룡",
+  "jp": "ヨロイリュウ",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "갑옷룡"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "라플레시아",
+  "jp": "ラフレシア",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "와일드 윙",
+  "jp": "ワイルドウィング",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "워보어",
+  "jp": "ワーボア",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "식인산호",
+  "jp": "人喰いサンゴ",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "식인 산호"
+  ],
+  "note": "정식 한글판 人食いサンゴ(같은 에너미, 한자 표기만 다름)"
+ },
+ {
+  "ko": "모든 것을 사냥하는 그림자",
+  "jp": "全てを狩る影",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "F.O.E."
+ },
+ {
+  "ko": "위험한 꽃잎",
+  "jp": "危険な花びら",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "무는 풀",
+  "jp": "噛みつき草",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "거대지네",
+  "jp": "巨大ムカデ",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "거대 지네"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "난폭한 들소",
+  "jp": "暴れ野牛",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "날뛰는 들소"
+  ],
+  "note": "비스트 킹 '난폭한 들소 소환'과 통일"
+ },
+ {
+  "ko": "숲의 파괴자",
+  "jp": "森の破壊者",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "F.O.E."
+ },
+ {
+  "ko": "숲쥐",
+  "jp": "森ネズミ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "숲달팽이",
+  "jp": "森マイマイ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼림개구리",
+  "jp": "森林カエル",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "숲개구리",
+   "삼림 개구리"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "독 뿜는 호랑나비",
+  "jp": "毒噴きアゲハ",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "독뿜는 호랑나비"
+  ],
+  "note": "정식 한글판 毒吹きアゲハ(같은 에너미, 한자 표기만 다름)"
+ },
+ {
+  "ko": "화식조",
+  "jp": "火喰い鳥",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "불먹는 새"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "화염도마뱀",
+  "jp": "火炎トカゲ",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "화염 도마뱀"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "폭탄 칡",
+  "jp": "爆弾カズラ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "광란의 뿔사슴",
+  "jp": "狂乱の角鹿",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "F.O.E."
+ },
+ {
+  "ko": "난폭한 비비",
+  "jp": "荒くれ狒々",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "탐욕스러운 독도마뱀",
+  "jp": "貪欲な毒蜥蜴",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "F.O.E."
+ },
+ {
+  "ko": "춤추는 무지개도마뱀",
+  "jp": "踊る虹蜥蜴",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "맞서는 패왕수",
+  "jp": "迎え撃つ覇王樹",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "F.O.E."
+ },
+ {
+  "ko": "고슴도치",
+  "jp": "針ネズミ",
+  "category": "에너미",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "바늘쥐"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "눈토끼",
+  "jp": "雪ウサギ",
+  "category": "에너미",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "거슬리는 날갯소리",
+  "jp": "いらつく羽音",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "떠올리기",
+  "jp": "しゃくりあげ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "돌팔매",
+  "jp": "つぶて投げ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "아이시클",
+  "jp": "アイシクル",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "그랜드 혼",
+  "jp": "グランドホーン",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "선더 페더",
+  "jp": "サンダーフェザー",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "썬더 페더"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "쇼크 빔",
+  "jp": "ショックビーム",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "실버 팽",
+  "jp": "シルバーファング",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "제트 어퍼",
+  "jp": "ジェットアッパー",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "점핑",
+  "jp": "ジャンピング",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "졸트 블로",
+  "jp": "ジョルトブロー",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "솔라 레이",
+  "jp": "ソーラーレイ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "타기팅",
+  "jp": "ターゲッティング",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "더블 니들",
+  "jp": "ダブルニードル",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "덩굴 난무",
+  "jp": "ツタの乱舞",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "데빌 크라이",
+  "jp": "デビルクライ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "부메랑 훅",
+  "jp": "ブーメランフック",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "헤비 스탬프",
+  "jp": "ヘヴィスタンプ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "베어 클로",
+  "jp": "ベアークロー",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "달팽이 행진",
+  "jp": "マイマイマーチ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "마하 스텝",
+  "jp": "マッハステップ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "러시 비크",
+  "jp": "ラッシュビーク",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "롤링",
+  "jp": "ローリング",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "늘어나는 혀",
+  "jp": "伸びる舌",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "얼어붙는 송곳니",
+  "jp": "凍てつく牙",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "얼어붙는 엄니"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "흉어의 향연",
+  "jp": "凶魚の饗宴",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "힘 모으기",
+  "jp": "力溜め",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "곤혹스러운 스텝",
+  "jp": "困惑のステップ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "곤혹의 스텝"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "곤혹의 발톱",
+  "jp": "困惑の爪",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "단단한 껍질",
+  "jp": "堅殻",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "야행성",
+  "jp": "夜行性",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "대절단",
+  "jp": "大切断",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "마구 날뛰기",
+  "jp": "大暴れ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "날뛰기"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "대낫 난무",
+  "jp": "大鎌乱舞",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "큰 낫 난무"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "대식가",
+  "jp": "大食らい",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "꼬리 방전",
+  "jp": "尾放電",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "휘감는 뿌리",
+  "jp": "巻きつく根",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "공포의 포효",
+  "jp": "恐怖の咆哮",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "악몽의 만찬",
+  "jp": "悪夢の晩餐",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "혼란의 울음",
+  "jp": "惑乱のいななき",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "수갑 덩굴",
+  "jp": "手枷のツタ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "수갑의 덩굴"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "포식의 냉기",
+  "jp": "捕食の冷気",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "포식의 실",
+  "jp": "捕食の糸",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "주행성",
+  "jp": "昼行性",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "독샘",
+  "jp": "毒の腺",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "독 꽃가루",
+  "jp": "毒の花粉",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "독 인분",
+  "jp": "毒リンプン",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "독물기",
+  "jp": "毒咬み",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "물탄 난사",
+  "jp": "水弾乱射",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "기름투성이",
+  "jp": "油まみれ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "용해액",
+  "jp": "溶解液",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "화염탄",
+  "jp": "火炎弾",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "저격",
+  "jp": "狙撃",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "저돌희용",
+  "jp": "猪突猛進",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "저돌맹진"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "질풍 질주",
+  "jp": "疾風疾駆",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "질풍질구"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "마비 찌르기",
+  "jp": "痺れ突き",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "백족 구속",
+  "jp": "百足拘束",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "지네 구속"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "맹목의 가시",
+  "jp": "盲目のトゲ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "실명 가시",
+   "맹목 가시"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "맹목 인분",
+  "jp": "盲目リンプン",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "실명 인분"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "수면 가루",
+  "jp": "眠りの粉",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "잠의 가루"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "수면 꽃가루",
+  "jp": "眠りの花粉",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "잠의 꽃가루"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "파괴의 큰 발톱",
+  "jp": "破壊の大爪",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "파괴의 큰 집게"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "신속일섬",
+  "jp": "神速一閃",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "찔러 올리기",
+  "jp": "突き上げ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "궁서의 일격",
+  "jp": "窮鼠の一噛み",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "조르기",
+  "jp": "絞め落とし",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "끈적한 실",
+  "jp": "絡みの糸",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "휘감는 실"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "부란의 숨결",
+  "jp": "腐乱の吐息",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "부패의 숨결"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "자폭",
+  "jp": "自爆",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "흩날리는 꽃잎",
+  "jp": "舞い散る花びら",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "무지개 미채",
+  "jp": "虹色迷彩",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "탐욕의 독꼬리",
+  "jp": "貪欲な毒尾",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "탐욕스러운 독니",
+  "jp": "貪欲な毒牙",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "탐욕의 독엄니"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "족쇄의 덩굴",
+  "jp": "足枷のツタ",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "속사",
+  "jp": "速射",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "연속 할퀴기",
+  "jp": "連続ひっかき",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "바늘 지옥",
+  "jp": "針地獄",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "예리한 송곳니",
+  "jp": "鋭い牙",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "날카로운 엄니"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "눈화장",
+  "jp": "雪化粧",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "전기 킥",
+  "jp": "電キック",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "얼굴 할퀴기",
+  "jp": "顔面ひっかき",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "바람의 순간",
+  "jp": "風の瞬き",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "바람의 깜빡임"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "물어뜯기",
+  "jp": "食いちぎり",
+  "category": "에너미 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스트랩 슈즈",
+  "jp": "ストラップシューズ",
+  "category": "장식",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "준족의 부적",
+  "jp": "俊足のお守り",
+  "category": "장식",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "힘의 반지",
+  "jp": "力の指輪",
+  "category": "장식",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "두꺼운 장갑",
+  "jp": "厚手の手袋",
+  "category": "장식",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삶의 벨트",
+  "jp": "命のベルト",
+  "category": "장식",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "생명의 벨트"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "나무 머리 장식",
+  "jp": "木彫りの髪飾り",
+  "category": "장식",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "나무 조각 머리장식"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "백중 고글",
+  "jp": "百中ゴーグル",
+  "category": "장식",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [
+   "백발백중 고글"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "지혜의 피어스",
+  "jp": "知恵のピアス",
+  "category": "장식",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "지혜의 귀걸이"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "지식의 서",
+  "jp": "知識の書",
+  "category": "장식",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "지식의 책"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "인내의 팔찌",
+  "jp": "耐力の腕輪",
+  "category": "장식",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼십육계의 부적",
+  "jp": "脱兎のお守り",
+  "category": "장식",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "탈토의 부적"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "꽃 부적",
+  "jp": "花のお守り",
+  "category": "장식",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "영기의 오브",
+  "jp": "英気のオーブ",
+  "category": "장식",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "운의 네클리스",
+  "jp": "運のネックレス",
+  "category": "장식",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "행운의 목걸이"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "가죽 벨트",
+  "jp": "革のベルト",
+  "category": "장식",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "벌채",
+  "jp": "伐採",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": "커먼 스킬 이름 《벌채》. 탐색 행위로서의 벌채는 '세션·던전·탐색' 행(표기 동일)"
+ },
+ {
+  "ko": "전승 지식",
+  "jp": "伝承知識",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "고대 문명학",
+  "jp": "古代文明学",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "회복 요리",
+  "jp": "回復料理",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "지도 작성",
+  "jp": "地図作成",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "괴물 지식",
+  "jp": "怪物知識",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "채취",
+  "jp": "採取",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "채집"
+  ],
+  "note": "커먼 스킬 이름 《채취》. 탐색 행위로서의 채취는 '세션·던전·탐색' 행(표기 동일). 採集=채집과 구분"
+ },
+ {
+  "ko": "채굴",
+  "jp": "採掘",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": "커먼 스킬 이름 《채굴》. 탐색 행위로서의 채굴은 '세션·던전·탐색' 행(표기 동일)"
+ },
+ {
+  "ko": "조종",
+  "jp": "操縦",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "잠복",
+  "jp": "潜伏",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "일품 요리",
+  "jp": "絶品料理",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "짐꾼",
+  "jp": "荷役",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "약효 요리",
+  "jp": "薬効料理",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "추적",
+  "jp": "追跡",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "운동 기술",
+  "jp": "運動技術",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "예민한 감각",
+  "jp": "鋭敏感覚",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "기승",
+  "jp": "騎乗",
+  "category": "커먼 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "알케미스트",
+  "jp": "アルケミスト",
+  "category": "클래스",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": "클래스 번호 7"
+ },
+ {
+  "ko": "임페리얼",
+  "jp": "インペリアル",
+  "category": "클래스",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 30"
+ },
+ {
+  "ko": "워리어",
+  "jp": "ウォリアー",
+  "category": "클래스",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 13"
+ },
+ {
+  "ko": "커스 메이커",
+  "jp": "カースメーカー",
+  "category": "클래스",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "커스메이커"
+  ],
+  "note": "클래스 번호 10"
+ },
+ {
+  "ko": "거너",
+  "jp": "ガンナー",
+  "category": "클래스",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "건너"
+  ],
+  "note": "클래스 번호 11"
+ },
+ {
+  "ko": "시노비",
+  "jp": "シノビ",
+  "category": "클래스",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 16"
+ },
+ {
+  "ko": "장군",
+  "jp": "ショーグン",
+  "category": "클래스",
+  "classes": [
+   "장군"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "쇼군"
+  ],
+  "note": "클래스 번호 22"
+ },
+ {
+  "ko": "스나이퍼",
+  "jp": "スナイパー",
+  "category": "클래스",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 25"
+ },
+ {
+  "ko": "소드맨",
+  "jp": "ソードマン",
+  "category": "클래스",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": "클래스 번호 2"
+ },
+ {
+  "ko": "조디악",
+  "jp": "ゾディアック",
+  "category": "클래스",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 18"
+ },
+ {
+  "ko": "댄서",
+  "jp": "ダンサー",
+  "category": "클래스",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 27"
+ },
+ {
+  "ko": "다크 헌터",
+  "jp": "ダークハンター",
+  "category": "클래스",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [
+   "다크헌터"
+  ],
+  "note": "클래스 번호 5"
+ },
+ {
+  "ko": "닥터 마구스",
+  "jp": "ドクトルマグス",
+  "category": "클래스",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "닥터매거스"
+  ],
+  "note": "클래스 번호 12"
+ },
+ {
+  "ko": "나이트 시커",
+  "jp": "ナイトシーカー",
+  "category": "클래스",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "나이트시커"
+  ],
+  "note": "클래스 번호 23"
+ },
+ {
+  "ko": "하이랜더",
+  "jp": "ハイランダー",
+  "category": "클래스",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 31"
+ },
+ {
+  "ko": "발리스타",
+  "jp": "バリスタ",
+  "category": "클래스",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": "클래스 번호 20"
+ },
+ {
+  "ko": "바드",
+  "jp": "バード",
+  "category": "클래스",
+  "classes": [
+   "바드"
+  ],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": "클래스 번호 8"
+ },
+ {
+  "ko": "파이리츠",
+  "jp": "パイレーツ",
+  "category": "클래스",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "파이레츠"
+  ],
+  "note": "클래스 번호 15"
+ },
+ {
+  "ko": "팔라딘",
+  "jp": "パラディン",
+  "category": "클래스",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": "클래스 번호 4"
+ },
+ {
+  "ko": "비스트 킹",
+  "jp": "ビーストキング",
+  "category": "클래스",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "비스트킹"
+  ],
+  "note": "클래스 번호 19"
+ },
+ {
+  "ko": "팔랑크스",
+  "jp": "ファランクス",
+  "category": "클래스",
+  "classes": [
+   "팔랑크스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 14"
+ },
+ {
+  "ko": "농부",
+  "jp": "ファーマー",
+  "category": "클래스",
+  "classes": [
+   "농부"
+  ],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [
+   "파머"
+  ],
+  "note": "클래스 번호 21"
+ },
+ {
+  "ko": "포트리스",
+  "jp": "フォートレス",
+  "category": "클래스",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 24"
+ },
+ {
+  "ko": "무사",
+  "jp": "ブシドー",
+  "category": "클래스",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "부시도"
+  ],
+  "note": "클래스 번호 9"
+ },
+ {
+  "ko": "프린스/프린세스",
+  "jp": "プリンス/プリンセス",
+  "category": "클래스",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": "클래스 번호 1"
+ },
+ {
+  "ko": "미스틱",
+  "jp": "ミスティック",
+  "category": "클래스",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 28"
+ },
+ {
+  "ko": "메딕",
+  "jp": "メディック",
+  "category": "클래스",
+  "classes": [
+   "메딕"
+  ],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": "클래스 번호 6"
+ },
+ {
+  "ko": "모노노후",
+  "jp": "モノノフ",
+  "category": "클래스",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "클래스 번호 29"
+ },
+ {
+  "ko": "몽크",
+  "jp": "モンク",
+  "category": "클래스",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "몬크"
+  ],
+  "note": "클래스 번호 17"
+ },
+ {
+  "ko": "룬 마스터",
+  "jp": "ルーンマスター",
+  "category": "클래스",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "룬마스터"
+  ],
+  "note": "클래스 번호 26"
+ },
+ {
+  "ko": "레인저",
+  "jp": "レンジャー",
+  "category": "클래스",
+  "classes": [
+   "레인저"
+  ],
+  "source": "정식 한글판(공식 자료)",
+  "forbidden": [],
+  "note": "클래스 번호 3"
+ },
+ {
+  "ko": "HP 부스트",
+  "jp": "HPブースト",
+  "category": "클래스 스킬",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "TP 부스트",
+  "jp": "TPブースト",
+  "category": "클래스 스킬",
+  "classes": [
+   "전 클래스 공통"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "○○ 드라이브",
+  "jp": "●●ドライブ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 드라이브》의 선언 명칭 중 아무것이나(자리표시)"
+ },
+ {
+  "ko": "아이스 버라지",
+  "jp": "アイスバラージ",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "아이스 배러지"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "아이스 불릿",
+  "jp": "アイスバレット",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 불릿》 선언 명칭"
+ },
+ {
+  "ko": "아이스 브러시",
+  "jp": "アイスブラッシュ",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "액셀 드라이브",
+  "jp": "アクセルドライブ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "어새시네이션",
+  "jp": "アサシネイション",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "어설트 드라이브",
+  "jp": "アサルトドライブ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "아더스 스텝",
+  "jp": "アザーズステップ",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "아더즈 스텝"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "애슬레틱",
+  "jp": "アスレチック",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "어택 탱고",
+  "jp": "アタックタンゴ",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "아나콘다",
+  "jp": "アナコンダ",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "비에도 지지 않고",
+  "jp": "アメニモマケズ",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "어스 브레이크",
+  "jp": "アースブレイク",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "암 스나이핑",
+  "jp": "アームスナイプ",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너",
+   "스나이퍼"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "암 스나이프"
+  ],
+  "note": "《삼종 스나이핑》 선언 명칭"
+ },
+ {
+  "ko": "암 브레이커",
+  "jp": "アームブレイカー",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "암 본디지",
+  "jp": "アームボンデージ",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼종 본디지》 선언 명칭"
+ },
+ {
+  "ko": "암 리커버리",
+  "jp": "アームリカバリ",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "인 더 다크",
+  "jp": "インザダーク",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "임팩트 애로",
+  "jp": "インパクトアロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "임펄스 에지",
+  "jp": "インパルスエッジ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "임펄스 엣지"
+  ],
+  "note": "정식 한글판 エッジ=에지(레이징 에지 등)에 맞춤"
+ },
+ {
+  "ko": "이글 아이",
+  "jp": "イーグルアイ",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "위크 샷",
+  "jp": "ウィークショット",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너",
+   "발리스타"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "울프 하울",
+  "jp": "ウルフハウル",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "엑스터시",
+  "jp": "エクスタシー",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "에너지 왈츠",
+  "jp": "エナジーワルツ",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "에너지 와츠"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "이피션트",
+  "jp": "エフィシエント",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "이밋 웨펀",
+  "jp": "エミットウェポン",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "에어리어 큐어",
+  "jp": "エリアキュア",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕",
+   "닥터 마구스",
+   "몽크"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "에리어 큐어"
+  ],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "에어리어 풀 힐",
+  "jp": "エリアフルヒール",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "에리어 풀 힐"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "에테르 마스터",
+  "jp": "エーテルマスター",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "에테르 압축",
+  "jp": "エーテル圧縮",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "올 아이",
+  "jp": "オウルアイ",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "거너"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "아울 아이"
+  ],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "오버드라이브",
+  "jp": "オーバードライブ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "올 가드",
+  "jp": "オールガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "올 디바이드",
+  "jp": "オールディバイド",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "카운터 삼바",
+  "jp": "カウンターサンバ",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "카타스트로프",
+  "jp": "カタストロフ",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "카무플라주",
+  "jp": "カモフラージュ",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부",
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "카모플라주"
+  ],
+  "note": "외래어 표기법(camouflage)"
+ },
+ {
+  "ko": "건 소드",
+  "jp": "ガンソード",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "가디언",
+  "jp": "ガーディアン",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔랑크스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "가드 탱고",
+  "jp": "ガードタンゴ",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "캐슬링",
+  "jp": "キャスリング",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "캠프 마스터",
+  "jp": "キャンプマスター",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "큐어",
+  "jp": "キュア",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕",
+   "닥터 마구스",
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "큐어 불릿",
+  "jp": "キュアバレット",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "게아스",
+  "jp": "ギアス",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "퀵 액트",
+  "jp": "クイックアクト",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "퀵 오더",
+  "jp": "クイックオーダー",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "퀵 드로",
+  "jp": "クイックドロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "크래시 블로",
+  "jp": "クラッシュブロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "크로스 차지",
+  "jp": "クロスチャージ",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "쿨 에지",
+  "jp": "クールエッジ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "쿨 엣지"
+  ],
+  "note": "정식 한글판 エッジ=에지(레이징 에지 등)에 맞춤"
+ },
+ {
+  "ko": "굿 럭",
+  "jp": "グッドラック",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "게 볼그",
+  "jp": "ゲイボルグ",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "게이볼그"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "사지타리우스의 화살",
+  "jp": "サジタリウスの矢",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "선더 버라지",
+  "jp": "サンダーバラージ",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "선더 배러지"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "선더 불릿",
+  "jp": "サンダーバレット",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 불릿》 선언 명칭"
+ },
+ {
+  "ko": "섀도 엔트리",
+  "jp": "シャドウエントリ",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "섀도 바이트",
+  "jp": "シャドウバイト",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "샤프 에지",
+  "jp": "シャープエッジ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "샤프 엣지"
+  ],
+  "note": "정식 한글판 エッジ=에지(레이징 에지 등)에 맞춤"
+ },
+ {
+  "ko": "쇼크 암즈",
+  "jp": "ショックアームズ",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 암즈》 선언 명칭"
+ },
+ {
+  "ko": "쇼크 가드",
+  "jp": "ショックガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 가드》 선언 명칭"
+ },
+ {
+  "ko": "쇼크 세이버",
+  "jp": "ショックセイバー",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 세이버》 선언 명칭"
+ },
+ {
+  "ko": "쇼크 드라이브",
+  "jp": "ショックドライブ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 드라이브》 선언 명칭"
+ },
+ {
+  "ko": "쇼크 바이트",
+  "jp": "ショックバイト",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "실버 애로",
+  "jp": "シルバーアロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "싱글 스러스트",
+  "jp": "シングルスラスト",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "싱글 버스트",
+  "jp": "シングルバースト",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "실드 스마이트",
+  "jp": "シールドスマイト",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "실드 러시",
+  "jp": "シールドラッシュ",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "디 엔드",
+  "jp": "ジエンド",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "자이언트 킬",
+  "jp": "ジャイアントキル",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "스위프트 소드",
+  "jp": "スウィフトソード",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스캐빈저",
+  "jp": "スカベンジャー",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스콜 샷",
+  "jp": "スコールショット",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스턴 어택",
+  "jp": "スタンアタック",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스턴 스매시",
+  "jp": "スタンスマッシュ",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스타 드롭",
+  "jp": "スタードロップ",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스티그마",
+  "jp": "スティグマ",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스피어 인볼브",
+  "jp": "スピアインボルブ",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "스프레드 스로",
+  "jp": "スプレッドスロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "슬립 애로",
+  "jp": "スリープアロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "슬리프 애로"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "슬립 블로",
+  "jp": "スリープブロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "슬리프 블로"
+  ],
+  "note": "スリープアロー(슬립 애로) 정식 표기에 맞춤"
+ },
+ {
+  "ko": "센티널 가드",
+  "jp": "センチネルガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "소울 리버레이트",
+  "jp": "ソウルリベレイト",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "소닉 스텝",
+  "jp": "ソニックステップ",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "소닉 레이드",
+  "jp": "ソニックレイド",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "소드 템페스트",
+  "jp": "ソードテンペスト",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "더블 액션",
+  "jp": "ダブルアクション",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너",
+   "발리스타"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "더블 샷",
+  "jp": "ダブルショット",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "더블 스트라이크",
+  "jp": "ダブルストライク",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "체이스 아이스",
+  "jp": "チェイスアイス",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 체이스(총)》 선언 명칭"
+ },
+ {
+  "ko": "체이스 선더",
+  "jp": "チェイスサンダー",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 체이스(총)》 선언 명칭"
+ },
+ {
+  "ko": "체이스 삼바",
+  "jp": "チェイスサンバ",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "체이스 쇼크",
+  "jp": "チェイスショック",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 체이스(검)》 선언 명칭"
+ },
+ {
+  "ko": "체이스 스러스트",
+  "jp": "チェイススラスト",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 체이스(세검)》 선언 명칭"
+ },
+ {
+  "ko": "체이스 세이버",
+  "jp": "チェイスセーバー",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 체이스(세검)》 선언 명칭"
+ },
+ {
+  "ko": "체이스 바인드",
+  "jp": "チェイスバインド",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "체이스 파이어",
+  "jp": "チェイスファイア",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 체이스(총)》 선언 명칭"
+ },
+ {
+  "ko": "체이스 프리즈",
+  "jp": "チェイスフリーズ",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 체이스(검)》 선언 명칭"
+ },
+ {
+  "ko": "체이스 플레임",
+  "jp": "チェイスフレイム",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 체이스(검)》 선언 명칭"
+ },
+ {
+  "ko": "체이스 블로",
+  "jp": "チェイスブロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 체이스(세검)》 선언 명칭"
+ },
+ {
+  "ko": "체인 댄스",
+  "jp": "チェインダンス",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "체인지 스텝",
+  "jp": "チェンジステップ",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔랑크스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "차크라 각성",
+  "jp": "チャクラの覚醒",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "차크라의 각성"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "차지 아이스",
+  "jp": "チャージアイス",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "차지 에지",
+  "jp": "チャージエッジ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "차지 엣지"
+  ],
+  "note": "정식 한글판 エッジ=에지(레이징 에지 등)에 맞춤"
+ },
+ {
+  "ko": "차지 선더",
+  "jp": "チャージサンダー",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "차지 플레임",
+  "jp": "チャージフレイム",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "제비 되치기",
+  "jp": "ツバメ返し",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "디바이드 가드",
+  "jp": "ディバイドガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "팔랑크스",
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "디바이드 체인지",
+  "jp": "ディバイドチェンジ",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔랑크스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "디바이드 모드",
+  "jp": "ディバイドモード",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "딜레이 스탭",
+  "jp": "ディレイスタブ",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "딜레이 차지",
+  "jp": "ディレイチャージ",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "딥 스트라이드",
+  "jp": "ディープストライド",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔랑크스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "디코이 사인",
+  "jp": "デコイサイン",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "데스 바운드",
+  "jp": "デスバウンド",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "트래핑",
+  "jp": "トラッピング",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "트래핑 II",
+  "jp": "トラッピングII",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "트랜스",
+  "jp": "トランス",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "트릭 삼바",
+  "jp": "トリックサンバ",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "트릭스터",
+  "jp": "トリックスター",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "트릭 스텝",
+  "jp": "トリックステップ",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "트리트",
+  "jp": "トリート",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "토네이도",
+  "jp": "トルネード",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "드러그 불릿",
+  "jp": "ドラッグバレット",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "드러밍",
+  "jp": "ドラミング",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "드레인 바이트",
+  "jp": "ドレインバイト",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "드롭 샷",
+  "jp": "ドロップショット",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "나이트 비전",
+  "jp": "ナイトビジョン",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타",
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "나인 스매시",
+  "jp": "ナインスマッシュ",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "하이드 클로크",
+  "jp": "ハイドクローク",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "매 찌르기",
+  "jp": "ハヤブサ突き",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "행잉",
+  "jp": "ハンギング",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "하트 바인드",
+  "jp": "ハートバインド",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "하베스트",
+  "jp": "ハーベスト",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "바인드 컷",
+  "jp": "バインドカット",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "바인드 스나이핑",
+  "jp": "バインドスナイプ",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타",
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "바인드 스나이프"
+  ],
+  "note": "ヘッドスナイプ(헤드 스나이핑) 등 정식 표기에 맞춤"
+ },
+ {
+  "ko": "바인드 리커버리",
+  "jp": "バインドリカバリ",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕",
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "백 가드",
+  "jp": "バックガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "배드 스나이핑",
+  "jp": "バッドスナイプ",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타",
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "배드 스나이프"
+  ],
+  "note": "ヘッドスナイプ(헤드 스나이핑) 등 정식 표기에 맞춤"
+ },
+ {
+  "ko": "벌컨 폼",
+  "jp": "バルカンフォーム",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "퍼니시 모어",
+  "jp": "パニッシュモア",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "패링",
+  "jp": "パリィ",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "팔랑크스",
+   "포트리스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "패리"
+  ],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "파워 게인",
+  "jp": "パワーゲイン",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "파워 샷",
+  "jp": "パワーショット",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "파티 힐",
+  "jp": "パーティヒール",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕",
+   "닥터 마구스",
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "히프노 바이트",
+  "jp": "ヒュプノバイト",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "힐링",
+  "jp": "ヒーリング",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕",
+   "닥터 마구스",
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "힐링 왈츠",
+  "jp": "ヒーリングワルツ",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "힐링 와츠"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "비스트 로어",
+  "jp": "ビーストロア",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "비스트 귀환",
+  "jp": "ビースト送還",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "파이어 암즈",
+  "jp": "ファイアアームズ",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 암즈》 선언 명칭"
+ },
+ {
+  "ko": "파이어 가드",
+  "jp": "ファイアガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 가드》 선언 명칭"
+ },
+ {
+  "ko": "파이어 버라지",
+  "jp": "ファイアバラージ",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "파이어 배러지"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "피니셔",
+  "jp": "フィニッシャー",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "플랭크 샷",
+  "jp": "フランクショット",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "프리즈 암즈",
+  "jp": "フリーズアームズ",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 암즈》 선언 명칭"
+ },
+ {
+  "ko": "프리즈 가드",
+  "jp": "フリーズガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 가드》 선언 명칭"
+ },
+ {
+  "ko": "프리즈 세이버",
+  "jp": "フリーズセイバー",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 세이버》 선언 명칭"
+ },
+ {
+  "ko": "프리즈 드라이브",
+  "jp": "フリーズドライブ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 드라이브》 선언 명칭"
+ },
+ {
+  "ko": "프리즈 블로",
+  "jp": "フリーズンブロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "프로즌 블로"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "풀 게인",
+  "jp": "フルゲイン",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "풀 힐링",
+  "jp": "フルヒーリング",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕",
+   "닥터 마구스",
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "풀메탈 애로",
+  "jp": "フルメタルアロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "플레임 세이버",
+  "jp": "フレイムセイバー",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 세이버》 선언 명칭"
+ },
+ {
+  "ko": "플레임 드라이브",
+  "jp": "フレイムドライブ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 드라이브》 선언 명칭"
+ },
+ {
+  "ko": "플레임 불릿",
+  "jp": "フレイムバレット",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 불릿》 선언 명칭"
+ },
+ {
+  "ko": "프레시 왈츠",
+  "jp": "フレッシュワルツ",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "프레시 와츠"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "프런트 가드",
+  "jp": "フロントガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "블라인드 애로",
+  "jp": "ブラインドアロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "블랙 사바스",
+  "jp": "ブラックサバス",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "블러드 웨펀",
+  "jp": "ブラッドウェポン",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "블러드 웨폰"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "블리츠 리터",
+  "jp": "ブリッツリッター",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔랑크스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "브레이크",
+  "jp": "ブレイク",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "브레이크 샷",
+  "jp": "ブレイクショット",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "블레이드 레이브",
+  "jp": "ブレイドレイヴ",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "브레인 렌드",
+  "jp": "ブレインレンド",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "부메랑 액스",
+  "jp": "ブーメランアクス",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "헤드 스나이핑",
+  "jp": "ヘッドスナイプ",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너",
+   "스나이퍼"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "헤드 스나이프"
+  ],
+  "note": "《삼종 스나이핑》 선언 명칭"
+ },
+ {
+  "ko": "헤드 배시",
+  "jp": "ヘッドバッシュ",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "헤드 본디지",
+  "jp": "ヘッドボンデージ",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼종 본디지》 선언 명칭"
+ },
+ {
+  "ko": "헤비 샷",
+  "jp": "ヘビーショット",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "헤븐즈 샷",
+  "jp": "ヘブンズショット",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "헤비 스트라이크",
+  "jp": "ヘヴィストライク",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "페인 트레이드",
+  "jp": "ペイントレード",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "페너트레이터",
+  "jp": "ペネトレイター",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "페네트레이터"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "페너트레이트",
+  "jp": "ペネトレイト",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "핫 스타트",
+  "jp": "ホットスタート",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "다크 헌터",
+   "파이리츠",
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "홀리 기프트",
+  "jp": "ホーリーギフト",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "홀리 배시",
+  "jp": "ホーリーバッシュ",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "볼트 스트라이크",
+  "jp": "ボルトストライク",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "포이즌 애로",
+  "jp": "ポイズンアロー",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "머티리얼 패링",
+  "jp": "マテリアルパリィ",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "팔랑크스",
+   "포트리스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "머티리얼 패리"
+  ],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "미라주 바이트",
+  "jp": "ミラージュバイト",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "밀리언 스러스트",
+  "jp": "ミリオンスラスト",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "밀리언 불릿",
+  "jp": "ミリオンバレット",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "날다람쥐",
+  "jp": "ムササビ",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "메테오",
+  "jp": "メテオ",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "라이엇 폼",
+  "jp": "ライアットフォーム",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "라이플 폼",
+  "jp": "ライフルフォーム",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "라인 가드",
+  "jp": "ラインガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔랑크스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "라인 디바이드",
+  "jp": "ラインディバイド",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "러시",
+  "jp": "ラッシュ",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "러시 댄스",
+  "jp": "ラッシュダンス",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "래피드 파이어",
+  "jp": "ラピッドファイア",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "랜덤 샷",
+  "jp": "ランダムショット",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "램파트",
+  "jp": "ランパート",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "램페이지",
+  "jp": "ランページ",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "리어 가드",
+  "jp": "リアガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "리인포스",
+  "jp": "リインフォース",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "리커버리 왈츠",
+  "jp": "リカバリワルツ",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "리커버리 와츠"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "리저렉션",
+  "jp": "リザレクション",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕",
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "리제너레이트",
+  "jp": "リジェネレート",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "리제네 왈츠",
+  "jp": "リジェネワルツ",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "리제네 와츠"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "리셋 웨펀",
+  "jp": "リセットウェポン",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "리턴 에테르",
+  "jp": "リターンエーテル",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "리프레시",
+  "jp": "リフレッシュ",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕",
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "리벤지 스마이트",
+  "jp": "リベンジスマイト",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "리미트 오버",
+  "jp": "リミットオーバー",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "리밋 오버"
+  ],
+  "note": "정식 한글판 リミット=리미트(리미트 부스트)에 맞춤"
+ },
+ {
+  "ko": "링크 이펙트",
+  "jp": "リンクエフェクト",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "링크 오더",
+  "jp": "リンクオーダー",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "룬의 인도",
+  "jp": "ルーンの導き",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "룬의 방패",
+  "jp": "ルーンの盾",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "룬의 결계",
+  "jp": "ルーンの結界",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "룬의 광휘",
+  "jp": "ルーンの輝き",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "룬의 자물쇠",
+  "jp": "ルーンの鍵",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "룬의 장벽",
+  "jp": "ルーンの障壁",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "레인폴",
+  "jp": "レインフォール",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "레기온 스러스트",
+  "jp": "レギオンスラスト",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "레기온 버스트",
+  "jp": "レギオンバースト",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "레그 스나이핑",
+  "jp": "レッグスナイプ",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너",
+   "스나이퍼"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "레그 스나이프"
+  ],
+  "note": "《삼종 스나이핑》 선언 명칭"
+ },
+ {
+  "ko": "레그 본디지",
+  "jp": "レッグボンデージ",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼종 본디지》 선언 명칭"
+ },
+ {
+  "ko": "로열 벨",
+  "jp": "ロイヤルベール",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "록온",
+  "jp": "ロックオン",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "락온"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "롱 스러스트",
+  "jp": "ロングスラスト",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔랑크스",
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "와이드 이펙트",
+  "jp": "ワイドエフェクト",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어",
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "와이드 패링",
+  "jp": "ワイドパリィ",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔랑크스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "와이드 패리"
+  ],
+  "note": "パリィ(패링) 정식 표기에 맞춤"
+ },
+ {
+  "ko": "와이어 스턴트",
+  "jp": "ワイヤースタント",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "원 샷 킬",
+  "jp": "ワンショットキル",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "뱅가드",
+  "jp": "ヴァンガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "일도필살",
+  "jp": "一刀必殺",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "찰나 간파",
+  "jp": "一寸の見切り",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "한 치의 간파"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "일의전심",
+  "jp": "一意専心",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "일제 사격",
+  "jp": "一斉射撃",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "일제 구호",
+  "jp": "一斉救護",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "일섬",
+  "jp": "一閃",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "일기당천",
+  "jp": "一騎当千",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼종 스나이핑",
+  "jp": "三種スナイプ",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너",
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "삼종 스나이프"
+  ],
+  "note": "여러 클래스 공통 스킬. ヘッドスナイプ(헤드 스나이핑) 등 정식 표기에 맞춤"
+ },
+ {
+  "ko": "삼종 본디지",
+  "jp": "三種ボンデージ",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼종 소형 야수 소환",
+  "jp": "三種小獣招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 암즈",
+  "jp": "三色アームズ",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 가드",
+  "jp": "三色ガード",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "팔랑크스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "삼색 서클",
+  "jp": "三色サークル",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 세이버",
+  "jp": "三色セイバー",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 체이스(검)",
+  "jp": "三色チェイス(剣)",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 체이스(세검)",
+  "jp": "三色チェイス(突剣)",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "삼색 체이스(찌르기검)"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "삼색 체이스(총)",
+  "jp": "三色チェイス(銃)",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 드라이브",
+  "jp": "三色ドライブ",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 불릿",
+  "jp": "三色バレット",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 초급 인술",
+  "jp": "三色初級印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 초급 성술",
+  "jp": "三色初級星術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 초급 술식",
+  "jp": "三色初級術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 환상곡",
+  "jp": "三色幻想曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 서곡",
+  "jp": "三色序曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 물리 술식",
+  "jp": "三色物理術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "삼색 성인",
+  "jp": "三色聖印",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "상단의 자세",
+  "jp": "上段の構え",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "상단 자세"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "보이지 않는 영혼 방패",
+  "jp": "不可視の霊盾",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "불가시의 영방패"
+  ],
+  "note": "정식 한글판의 풀어 쓰기 기조(名状し難き障壁→형용할 수 없는 장벽)에 맞춘 의역"
+ },
+ {
+  "ko": "부정형 생물 소환",
+  "jp": "不定形生物招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "신기한 씨앗",
+  "jp": "不思議な種",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "이상한 씨앗"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "불석신명",
+  "jp": "不惜身命",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "난룡의 진",
+  "jp": "乱れ龍の陣",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "건곤일척",
+  "jp": "乾坤一擲",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "예방의 호령",
+  "jp": "予防の号令",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "이도일인",
+  "jp": "二刀一刃",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "이모작",
+  "jp": "二毛作",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "오행권: 토",
+  "jp": "五行拳：土",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "오행권: 목",
+  "jp": "五行拳：木",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "오행권: 수",
+  "jp": "五行拳：水",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "오행권: 화",
+  "jp": "五行拳：火",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "오행권: 금",
+  "jp": "五行拳：金",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "오행운신권",
+  "jp": "五行雲身拳",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "오륜의 검",
+  "jp": "五輪の剣",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "전서구",
+  "jp": "伝書鳩",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "최면의 방진",
+  "jp": "催眠の方陣",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "최면올빼미 소환",
+  "jp": "催眠梟招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "최면 올빼미 소환"
+  ],
+  "note": "에너미 サイミンフクロウ(최면올빼미)와 통일"
+ },
+ {
+  "ko": "선제 블록",
+  "jp": "先制ブロック",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "선봉의 명예",
+  "jp": "先陣の名誉",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "선진의 명예"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "선봉의 공명",
+  "jp": "先駆けの功名",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨",
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "모두를 위한 자장가",
+  "jp": "全てへの子守唄",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "전력 도주",
+  "jp": "全力逃走",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "팔라딘",
+   "팔랑크스",
+   "파이리츠",
+   "시노비",
+   "장군",
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "육분의 관측",
+  "jp": "六分儀観測",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "동아의 인술",
+  "jp": "凍牙の印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "도 마스터리",
+  "jp": "刀マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사",
+   "장군",
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "돌격대장",
+  "jp": "切り込み隊長",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "전진 박격포술",
+  "jp": "前陣迫撃砲術",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "검의 춤",
+  "jp": "剣の舞",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "검 마스터리",
+  "jp": "剣マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨",
+   "다크 헌터",
+   "닥터 마구스",
+   "워리어",
+   "나이트 시커",
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "검호랑이 소환",
+  "jp": "剣虎招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "검호 소환"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "탈력의 주언",
+  "jp": "力祓いの呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "힘 빼기의 주언"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "겁화의 대인술",
+  "jp": "劫火の大印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "승리의 맹세",
+  "jp": "勝利への誓い",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "의술 방어",
+  "jp": "医術防御",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "박식",
+  "jp": "博識",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕",
+   "알케미스트",
+   "커스 메이커",
+   "조디악",
+   "룬 마스터",
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "인술 마스터리",
+  "jp": "印術マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "위험 감지",
+  "jp": "危険感知",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "파이리츠",
+   "발리스타",
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "위험 식재 처리",
+  "jp": "危険食材処理",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "불꽃 떨구기",
+  "jp": "卸し焔",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "내리치는 불꽃"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "수확 마스터",
+  "jp": "収穫マスター",
+  "category": "클래스 스킬",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "던전 탐색 룰 본문(채집 개수)에만 나오는 이름. 현행 클래스 데이터에는 없음"
+ },
+ {
+  "ko": "수확자의 후각",
+  "jp": "収穫者の嗅覚",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "명군의 재능",
+  "jp": "名君の才",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "설풍의 대인술",
+  "jp": "吹雪の大印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "눈보라의 대인술"
+  ],
+  "note": "정식 한글판 吹雪=설풍(설풍 숨결, 설풍의 보주)에 맞춤"
+ },
+ {
+  "ko": "저주의 침식",
+  "jp": "呪いの浸食",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "저주의 방울 소리",
+  "jp": "呪いの鈴音",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "주가 마스터리",
+  "jp": "呪歌マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "주언 마스터리",
+  "jp": "呪言マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "저주 사슬의 은혜",
+  "jp": "呪鎖の恩恵",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "명하노니, 주인을 감싸라",
+  "jp": "命ず、主を庇え",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "명하노니, 자멸하라",
+  "jp": "命ず、自ら滅せよ",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "명하노니",
+   "스스로 멸하라"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "명하노니, 멈추어라",
+  "jp": "命ず、言動能わず",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "명하노니",
+   "말도 행동도 못하리라"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "명하노니, 상잔하라",
+  "jp": "命ず、輩を喰らえ",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "명하노니",
+   "동료를 먹어라"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "포효",
+  "jp": "咆哮",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "회복 마스터리",
+  "jp": "回復マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕",
+   "닥터 마구스",
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "두더지 소환",
+  "jp": "土竜招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼종 소형 야수 소환》 선언 명칭"
+ },
+ {
+  "ko": "압괴의 술식",
+  "jp": "圧壊の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "지맥 조작",
+  "jp": "地脈操作",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "성채 기사의 마음가짐",
+  "jp": "城塞騎士の心得",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "성새 기사의 심득"
+  ],
+  "note": "고유 스킬(★). 心得=마음가짐(정식 한글판 신참 모험가의 마음가짐), 城塞=성채"
+ },
+ {
+  "ko": "괴의 술식",
+  "jp": "壊の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 물리 술식》 선언 명칭"
+ },
+ {
+  "ko": "괴염권",
+  "jp": "壊炎拳",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "무사도의 각오",
+  "jp": "士道の覚悟",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "사도의 각오"
+  ],
+  "note": "士道=무사도. '사도'는 使徒·邪道로 읽힐 수 있어 피함"
+ },
+ {
+  "ko": "다원 발도",
+  "jp": "多元抜刀",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "다중 방진",
+  "jp": "多重方陣",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "야적의 마음가짐",
+  "jp": "夜賊の心得",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "야적의 심득"
+  ],
+  "note": "고유 스킬(★). 心得=마음가짐(정식 한글판 신참 모험가의 마음가짐)"
+ },
+ {
+  "ko": "몽환잔영",
+  "jp": "夢幻残影",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "몽상검",
+  "jp": "夢想剣",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "큰 바구니",
+  "jp": "大きな籠",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "과감무쌍",
+  "jp": "大武辺者",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "대무변자"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "대빙람의 술식",
+  "jp": "大氷嵐の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "대빙풍의 술식"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "대폭염의 술식",
+  "jp": "大爆炎の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "대자연의 은혜",
+  "jp": "大自然の恵み",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "큰 뱀 소환",
+  "jp": "大蛇招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "큰뱀 소환"
+  ],
+  "note": "《삼종 소형 야수 소환》 선언 명칭"
+ },
+ {
+  "ko": "대뇌광의 술식",
+  "jp": "大雷光の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "큰 새 소환",
+  "jp": "大鳥招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "큰새 소환"
+  ],
+  "note": "《삼종 소형 야수 소환》 선언 명칭"
+ },
+ {
+  "ko": "천변 점성술",
+  "jp": "天変占星術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "천뢰의 대인술",
+  "jp": "天雷の大印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "원시의 인술",
+  "jp": "始原の印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "시원의 인술"
+  ],
+  "note": "정식 한글판 始原の幼子→원시의 유아에 맞춤"
+ },
+ {
+  "ko": "자장가",
+  "jp": "子守唄",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "수호 진형",
+  "jp": "守護陣形",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "평온한 자장가",
+  "jp": "安らぎの子守唄",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "평안의 자장가"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "완전 방어",
+  "jp": "完全防御",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "정량 분석",
+  "jp": "定量分析",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "보물의 후각",
+  "jp": "宝の嗅覚",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "보물 냄새"
+  ],
+  "note": "嗅覚=후각으로 통일"
+ },
+ {
+  "ko": "봉인의 주언",
+  "jp": "封の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "봉인의 주언: 상지",
+  "jp": "封の呪言：上肢",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《봉인의 주언》 선언 명칭"
+ },
+ {
+  "ko": "봉인의 주언: 하지",
+  "jp": "封の呪言：下肢",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《봉인의 주언》 선언 명칭"
+ },
+ {
+  "ko": "봉인의 주언: 두부",
+  "jp": "封の呪言：頭首",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "봉인의 주언: 머리"
+  ],
+  "note": "《봉인의 주언》 선언 명칭"
+ },
+ {
+  "ko": "봉인의 방진",
+  "jp": "封の方陣",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "장수의 그릇",
+  "jp": "将の器",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "손목치기",
+  "jp": "小手打ち",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "발도의 자세",
+  "jp": "居合の構え",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "거합 자세"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "속성 공격 부스트",
+  "jp": "属性攻撃ブースト",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트",
+   "조디악",
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "등치기",
+  "jp": "峰打",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군",
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "거상 소환",
+  "jp": "巨像招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "음양검의 힘",
+  "jp": "巫剣の力",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "무검의 힘"
+  ],
+  "note": "고유 스킬(★). 접두 음양검(巫剣)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양검: 영흡명참",
+  "jp": "巫剣：霊吸命斬",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "무검: 영흡명참"
+  ],
+  "note": "접두 음양검(巫剣)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양검: 영흡심참",
+  "jp": "巫剣：霊吸心斬",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "무검: 영흡심참"
+  ],
+  "note": "접두 음양검(巫剣)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양검: 영봉참",
+  "jp": "巫剣：霊封斬",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "무검: 영봉참"
+  ],
+  "note": "접두 음양검(巫剣)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양검: 영봉각참",
+  "jp": "巫剣：霊封脚斬",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《음양검: 영봉참》 선언 명칭"
+ },
+ {
+  "ko": "음양검: 영봉완참",
+  "jp": "巫剣：霊封腕斬",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《음양검: 영봉참》 선언 명칭"
+ },
+ {
+  "ko": "음양검: 영봉두참",
+  "jp": "巫剣：霊封頭斬",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《음양검: 영봉참》 선언 명칭"
+ },
+ {
+  "ko": "음양검: 영공대참",
+  "jp": "巫剣：霊攻大斬",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "무검: 영공대참"
+  ],
+  "note": "접두 음양검(巫剣)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양검: 영공쇠참",
+  "jp": "巫剣：霊攻衰斬",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "무검: 영공쇠참"
+  ],
+  "note": "접두 음양검(巫剣)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양검: 영방쇠참",
+  "jp": "巫剣：霊防衰斬",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "무검: 영방쇠참"
+  ],
+  "note": "접두 음양검(巫剣)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양술: 준족화",
+  "jp": "巫術：俊足化",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "무술: 준족화"
+  ],
+  "note": "접두 음양술(巫術)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양술: 피부 경화",
+  "jp": "巫術：皮硬化",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "무술: 피경화",
+   "음양술: 피경화"
+  ],
+  "note": "접두 음양술(巫術)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양술: 정화",
+  "jp": "巫術：祓化",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "무술: 불화",
+   "음양술: 불화"
+  ],
+  "note": "접두 음양술(巫術)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양술: 전환",
+  "jp": "巫術：転化",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "무술: 전화",
+   "음양술: 전화"
+  ],
+  "note": "접두 음양술(巫術)은 정식 한글판 표기"
+ },
+ {
+  "ko": "음양술: 귀력화",
+  "jp": "巫術：鬼力化",
+  "category": "클래스 스킬",
+  "classes": [
+   "닥터 마구스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "무술: 귀력화"
+  ],
+  "note": "접두 음양술(巫術)은 정식 한글판 표기"
+ },
+ {
+  "ko": "제국 기사의 극의",
+  "jp": "帝国騎士の極意",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "임전 태세",
+  "jp": "常在戦場",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "상재전장"
+  ],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "행운의 여신",
+  "jp": "幸運の女神",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "환혹의 주언",
+  "jp": "幻惑の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "환혹의 방진",
+  "jp": "幻惑の方陣",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "비호의 호령",
+  "jp": "庇護の号令",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "두 번째 칼",
+  "jp": "弐の太刀",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "이의 다치"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "활 마스터리",
+  "jp": "弓マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "호월",
+  "jp": "弧月",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "쇠뇌 마스터리",
+  "jp": "弩マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "노 마스터리"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "엎친 데 덮치기",
+  "jp": "弱り目に祟り目",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "엎친 데 덮친 격"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "강제 배기",
+  "jp": "強制排熱",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "강제 배열"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "강참의 술식",
+  "jp": "強斬の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "그림자 꿰기",
+  "jp": "影縫",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "그림자 꿰매기"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "인법 마스터리",
+  "jp": "忍法マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "인법: 분신",
+  "jp": "忍法：分身",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "인법: 함침",
+  "jp": "忍法：含針",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "인법: 새 부르기",
+  "jp": "忍法：招鳥",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "인법: 마름쇠",
+  "jp": "忍法：撒菱",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "인법: 수경",
+  "jp": "忍法：水鏡",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "인법: 매미 허물",
+  "jp": "忍法：空蝉",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "인법: 아지랑이",
+  "jp": "忍法：陽炎",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "인법: 구름 숨기",
+  "jp": "忍法：雲隠",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "망각의 주언",
+  "jp": "忘却の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "사념 송신",
+  "jp": "思念送信",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "전화위복",
+  "jp": "怪我の功名",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "혜안의 선율",
+  "jp": "慧眼の旋律",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "아류 살법",
+  "jp": "我流殺法",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "부채의 춤",
+  "jp": "扇の舞",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "억제 공격 부스트",
+  "jp": "抑制攻撃ブースト",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "다크 헌터",
+   "커스 메이커",
+   "거너",
+   "파이리츠",
+   "시노비",
+   "비스트 킹",
+   "나이트 시커",
+   "스나이퍼",
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "억제 방어 부스트",
+  "jp": "抑制防御ブースト",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스",
+   "팔라딘",
+   "메딕",
+   "커스 메이커",
+   "닥터 마구스",
+   "팔랑크스",
+   "몽크",
+   "포트리스",
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "발도 빙설",
+  "jp": "抜刀氷雪",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "발도빙설"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "초인의 주명곡",
+  "jp": "招引の奏鳴曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "받들어야 할 왕명",
+  "jp": "拝受すべき王命",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "주먹 마스터리",
+  "jp": "拳マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "도발",
+  "jp": "挑発",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "팔랑크스",
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "채집 마스터",
+  "jp": "採集マスター",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "공격의 호령",
+  "jp": "攻撃の号令",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "공방일체",
+  "jp": "攻防一体",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "도끼 마스터리",
+  "jp": "斧マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "참의 술식",
+  "jp": "斬の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 물리 술식》 선언 명칭"
+ },
+ {
+  "ko": "참마",
+  "jp": "斬馬",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "방진 마스터리",
+  "jp": "方陣マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "속공",
+  "jp": "早討ち",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "샛별",
+  "jp": "明星",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "성술 마스터리",
+  "jp": "星術マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "별 읽기",
+  "jp": "星詠み",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "암흑권",
+  "jp": "暗黒拳",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "난폭한 들소 소환",
+  "jp": "暴れ野牛招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "에너미 暴れ野牛(난폭한 들소)와 통일"
+ },
+ {
+  "ko": "최종 결전의 군가",
+  "jp": "最終決戦の軍歌",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "월영",
+  "jp": "月影",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "지팡이 마스터리",
+  "jp": "杖マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "자루 치기",
+  "jp": "柄落とし",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "핵열의 술식",
+  "jp": "核熱の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "창 마스터리",
+  "jp": "槍マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔랑크스",
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "수해 연금의 지식",
+  "jp": "樹海錬金の知識",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "무사의 마음가짐",
+  "jp": "武士の心得",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "무사의 심득"
+  ],
+  "note": "고유 스킬(★). 心得=마음가짐(정식 한글판 신참 모험가의 마음가짐)"
+ },
+ {
+  "ko": "죽음의 주언",
+  "jp": "死の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "죽은 자의 법",
+  "jp": "死人の法",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "사인의 법"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "후군의 영예",
+  "jp": "殿軍の誉れ",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "후위군의 영예"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "독의 방진",
+  "jp": "毒の方陣",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "독호랑나비 소환",
+  "jp": "毒アゲハ招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "기공권",
+  "jp": "気功拳",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "수상 기승수",
+  "jp": "水上騎獣",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "물거미",
+  "jp": "水蜘蛛",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "수둔",
+  "jp": "水遁",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "얼음의 선견술",
+  "jp": "氷の先見術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "얼음의 인술",
+  "jp": "氷の印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 초급 인술》 선언 명칭"
+ },
+ {
+  "ko": "얼음의 성술",
+  "jp": "氷の星術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 초급 성술》 선언 명칭"
+ },
+ {
+  "ko": "얼음의 성인",
+  "jp": "氷の聖印",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 성인》 선언 명칭"
+ },
+ {
+  "ko": "얼음의 술식",
+  "jp": "氷の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 초급 술식》 선언 명칭"
+ },
+ {
+  "ko": "얼음의 연성술",
+  "jp": "氷の連星術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "빙찰",
+  "jp": "氷刹",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "빙극의 서곡",
+  "jp": "氷劇の序曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 서곡》 선언 명칭"
+ },
+ {
+  "ko": "빙람의 술식",
+  "jp": "氷嵐の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "빙풍의 술식"
+  ],
+  "note": "大氷嵐の術式(대빙람의 술식) 정식 표기에 맞춤"
+ },
+ {
+  "ko": "빙막의 환상곡",
+  "jp": "氷幕の幻想曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 환상곡》 선언 명칭"
+ },
+ {
+  "ko": "빙창의 인술",
+  "jp": "氷槍の印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "빙결의 술식",
+  "jp": "氷結の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "차분한 기상곡",
+  "jp": "沈静なる奇想曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "진정의 기상곡"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "유추충",
+  "jp": "流墜衝",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "해적 수영법",
+  "jp": "海賊泳法",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "혼신 디펜스",
+  "jp": "渾身ディフェンス",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "팔랑크스",
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "불꽃의 인술",
+  "jp": "火の印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 초급 인술》 선언 명칭"
+ },
+ {
+  "ko": "불꽃의 성술",
+  "jp": "火の星術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 초급 성술》 선언 명칭"
+ },
+ {
+  "ko": "불꽃의 술식",
+  "jp": "火の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "불의 술식"
+  ],
+  "note": "《삼색 초급 술식》 선언 명칭. 火の～도 炎の～ 접두 규칙(불꽃의)에 맞춤(「불의 \\~」는 금지 표기)"
+ },
+ {
+  "ko": "화극의 서곡",
+  "jp": "火劇の序曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 서곡》 선언 명칭"
+ },
+ {
+  "ko": "화막의 환상곡",
+  "jp": "火幕の幻想曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 환상곡》 선언 명칭"
+ },
+ {
+  "ko": "불길 건너기",
+  "jp": "火渡りの行",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "불 건너기 수행"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "화염의 술식",
+  "jp": "火炎の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "화염도마뱀 소환",
+  "jp": "火炎トカゲ招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "화염 도마뱀 소환"
+  ],
+  "note": "에너미 火炎トカゲ(화염도마뱀, 정식 한글판)와 통일"
+ },
+ {
+  "ko": "화구의 인술",
+  "jp": "火球の印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "불꽃의 선견술",
+  "jp": "炎の先見術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "불꽃의 성인",
+  "jp": "炎の聖印",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 성인》 선언 명칭"
+ },
+ {
+  "ko": "불꽃의 연성술",
+  "jp": "炎の連星術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "무쌍 카구라",
+  "jp": "無双神楽",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "무아지경",
+  "jp": "無我の境地",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "무아의 경지"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "연기의 끄트머리",
+  "jp": "煙りの末",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "연기의 끝"
+  ],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "조명탄",
+  "jp": "照明弾",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "폭염의 인술",
+  "jp": "爆炎の印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "폭염의 술식",
+  "jp": "爆炎の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "물리 공격 부스트",
+  "jp": "物理攻撃ブースト",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨",
+   "다크 헌터",
+   "메딕",
+   "무사",
+   "거너",
+   "닥터 마구스",
+   "워리어",
+   "파이리츠",
+   "몽크",
+   "비스트 킹",
+   "발리스타",
+   "장군",
+   "나이트 시커",
+   "스나이퍼",
+   "모노노후",
+   "임페리얼",
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "물리 방어 부스트",
+  "jp": "物理防御ブースト",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스",
+   "소드맨",
+   "팔라딘",
+   "워리어",
+   "팔랑크스",
+   "포트리스",
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "특이점 정리",
+  "jp": "特異点定理",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "광란의 주언",
+  "jp": "狂乱の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "광전사의 맹세",
+  "jp": "狂戦士の誓い",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "저격수의 극의",
+  "jp": "狙撃手の極意",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "사냥꾼의 후각",
+  "jp": "狩猟者の嗅覚",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부",
+   "임페리얼",
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "맹렬한 전투의 춤곡",
+  "jp": "猛き戦いの舞曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "용맹한 싸움의 무곡"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "맹독의 투인",
+  "jp": "猛毒の投刃",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "사자분신",
+  "jp": "獅子奮迅",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "사자왕 소환",
+  "jp": "獅子王招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "야수의 우정",
+  "jp": "獣の友情",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "야수의 경계",
+  "jp": "獣の警戒",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "수왕 마스터리",
+  "jp": "獣王マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "왕의 증표",
+  "jp": "王たる証",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "왕가의 혈통",
+  "jp": "王家の血統",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "왕의 개선가",
+  "jp": "王者の凱歌",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "왕의 격려",
+  "jp": "王者の激励",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "나를 경외하라",
+  "jp": "畏れよ、我を",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "병독의 주언",
+  "jp": "病毒の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "마비의 주언",
+  "jp": "痺縛の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "마비 결박의 주언"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "치유의 자장가",
+  "jp": "癒しの子守唄",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "흰여우 소환",
+  "jp": "白狐招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "백수의 왕기",
+  "jp": "百獣の王気",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "맹목의 투인",
+  "jp": "盲目の投刃",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "방패 마스터리",
+  "jp": "盾マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "팔랑크스",
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "수면의 주언",
+  "jp": "睡眠の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "수면의 투인",
+  "jp": "睡眠の投刃",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "단검 마스터리",
+  "jp": "短剣マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비",
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "포검 마스터리",
+  "jp": "砲剣マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "임페리얼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "파사의 진혼가",
+  "jp": "破邪の鎮魂歌",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "파진: 아공 교파",
+  "jp": "破陣：亜空絞破",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "파진: 아공 명동",
+  "jp": "破陣：亜空鳴動",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "파진: 명맥 활성",
+  "jp": "破陣：命脈活性",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "금단의 술식",
+  "jp": "禁断の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "화각",
+  "jp": "禍刻",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "사략의 규율",
+  "jp": "私掠の掟",
+  "category": "클래스 스킬",
+  "classes": [
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "벽력의 인술",
+  "jp": "稲妻の印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "전광의 인술"
+  ],
+  "note": "稲妻=벽력. 雷の印術(번개의 인술, 《삼색 초급 인술》 선언 명칭)과 다른 스킬이므로 이 스킬을 '번개의 인술'로 쓰지 않는다"
+ },
+ {
+  "ko": "공중 기승수",
+  "jp": "空中騎獣",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "돌의 술식",
+  "jp": "突の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 물리 술식》 선언 명칭"
+ },
+ {
+  "ko": "세검 마스터리",
+  "jp": "突剣マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "소드맨",
+   "다크 헌터",
+   "파이리츠"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "찌르기검 마스터리"
+  ],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "간이 소생",
+  "jp": "簡易蘇生",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "정밀 사격",
+  "jp": "精密射撃",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "정신 통일",
+  "jp": "精神統一",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "세설",
+  "jp": "細雪",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "끝없는 원무곡",
+  "jp": "終わり無き円舞曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "연기의 법",
+  "jp": "練気の法",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "죄구의 주언",
+  "jp": "罪咎の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "나찰",
+  "jp": "羅刹",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "라찰"
+  ],
+  "note": "羅刹의 표준 독음(두음 법칙)"
+ },
+ {
+  "ko": "아름다운 춤",
+  "jp": "美しき舞い",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "신성한 가호",
+  "jp": "聖なる加護",
+  "category": "클래스 스킬",
+  "classes": [
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "성스러운 가호"
+  ],
+  "note": "정식 한글판 聖なる=신성한(신성한 수호의 춤곡)에 맞춤"
+ },
+ {
+  "ko": "신성한 수호의 춤곡",
+  "jp": "聖なる守護の舞曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "성스러운 수호의 무곡"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "성인의 가호",
+  "jp": "聖印の加護",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "다리 봉인의 방진",
+  "jp": "脚封の方陣",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《봉인의 방진》 선언 명칭"
+ },
+ {
+  "ko": "발 엇갈림의 주언",
+  "jp": "脚違えの呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "팔 봉인의 방진",
+  "jp": "腕封の方陣",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《봉인의 방진》 선언 명칭"
+ },
+ {
+  "ko": "지고의 마탄",
+  "jp": "至高の魔弾",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "무용 마스터리",
+  "jp": "舞踊マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "허약의 주언",
+  "jp": "虚弱の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "피의 폭주",
+  "jp": "血の暴走",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "피에 물든 창",
+  "jp": "血染めの朱槍",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "피로 물든 붉은 창"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "행군 수련",
+  "jp": "行軍修練",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "워리어",
+   "팔랑크스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "충파",
+  "jp": "衝破",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "쇠신의 사안",
+  "jp": "衰身の邪眼",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "관측",
+  "jp": "観測",
+  "category": "클래스 스킬",
+  "classes": [
+   "스나이퍼"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "해체 마스터",
+  "jp": "解体マスター",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "해부학",
+  "jp": "解剖学",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "해마의 부적",
+  "jp": "解魔の札",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "풍작 기원",
+  "jp": "豊作祈願",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "호운의 가호",
+  "jp": "豪運の加護",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "관살의 술식",
+  "jp": "貫殺の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "초의술",
+  "jp": "超医術",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "고유 스킬(★)"
+ },
+ {
+  "ko": "도탄",
+  "jp": "跳弾",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "연체의 주언",
+  "jp": "軟身の呪言",
+  "category": "클래스 스킬",
+  "classes": [
+   "커스 메이커"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "무른 몸의 주언"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "경쾌한 선율",
+  "jp": "軽快の旋律",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "추영의 칼날",
+  "jp": "追影の刃",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "추영의 잔상",
+  "jp": "追影の残滓",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "추격의 호령",
+  "jp": "追撃の号令",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "퇴마의 안개",
+  "jp": "退魔の霧",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "속도 부스트",
+  "jp": "速度ブースト",
+  "category": "클래스 스킬",
+  "classes": [
+   "레인저",
+   "바드",
+   "시노비",
+   "장군",
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "노부시의 진형",
+  "jp": "野伏の陣立",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "야생의 후각",
+  "jp": "野生の嗅覚",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "철화",
+  "jp": "鉄火",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "총 마스터리",
+  "jp": "銃マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "거너",
+   "파이리츠"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "연금 마스터리",
+  "jp": "錬金マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "가마이타치",
+  "jp": "鎌鼬",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "망치 마스터리",
+  "jp": "鎚マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "워리어",
+   "포트리스",
+   "모노노후"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "둔기 마스터리"
+  ],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "섬인",
+  "jp": "閃刃",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "방어의 호령",
+  "jp": "防御の号令",
+  "category": "클래스 스킬",
+  "classes": [
+   "프린스/프린세스"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "방어 진형",
+  "jp": "防御陣形",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "방위 본능",
+  "jp": "防衛本能",
+  "category": "클래스 스킬",
+  "classes": [
+   "하이랜더"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "진 회복",
+  "jp": "陣回復",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "진 환원",
+  "jp": "陣還元",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "육상 기승수",
+  "jp": "陸上騎獣",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "집중 치료",
+  "jp": "集中治療",
+  "category": "클래스 스킬",
+  "classes": [
+   "메딕"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "눈토끼 소환",
+  "jp": "雪ウサギ招来",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "운신권",
+  "jp": "雲身拳",
+  "category": "클래스 스킬",
+  "classes": [
+   "몽크"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "번개의 선견술",
+  "jp": "雷の先見術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "번개의 인술",
+  "jp": "雷の印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 초급 인술》 선언 명칭. 稲妻の印術(전광의 인술)과 다른 스킬"
+ },
+ {
+  "ko": "번개의 성술",
+  "jp": "雷の星術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 초급 성술》 선언 명칭"
+ },
+ {
+  "ko": "번개의 성인",
+  "jp": "雷の聖印",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 성인》 선언 명칭"
+ },
+ {
+  "ko": "번개의 술식",
+  "jp": "雷の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 초급 술식》 선언 명칭"
+ },
+ {
+  "ko": "번개의 연성술",
+  "jp": "雷の連星術",
+  "category": "클래스 스킬",
+  "classes": [
+   "조디악"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "뇌광의 술식",
+  "jp": "雷光の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "뇌극의 서곡",
+  "jp": "雷劇の序曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 서곡》 선언 명칭"
+ },
+ {
+  "ko": "뇌막의 환상곡",
+  "jp": "雷幕の幻想曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《삼색 환상곡》 선언 명칭"
+ },
+ {
+  "ko": "뇌격의 인술",
+  "jp": "雷撃の印術",
+  "category": "클래스 스킬",
+  "classes": [
+   "룬 마스터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "뇌격의 술식",
+  "jp": "雷撃の術式",
+  "category": "클래스 스킬",
+  "classes": [
+   "알케미스트"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "번갯불 찌르기",
+  "jp": "雷耀突き",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "뇌요 찌르기"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "안개의 춤",
+  "jp": "霞の舞",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "안개 베기",
+  "jp": "霞斬り",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "청안의 자세",
+  "jp": "青眼の構え",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "청안 자세"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "조용히 하라!",
+  "jp": "静まれ！",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "채찍 마스터리",
+  "jp": "鞭マスタリー",
+  "category": "클래스 스킬",
+  "classes": [
+   "다크 헌터"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "위타천의 춤곡",
+  "jp": "韋駄天の舞曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "이다텐의 무곡"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "머리 봉인의 방진",
+  "jp": "頭封の方陣",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "《봉인의 방진》 선언 명칭"
+ },
+ {
+  "ko": "머리 깨기",
+  "jp": "頭砕",
+  "category": "클래스 스킬",
+  "classes": [
+   "모노노후"
+  ],
+  "source": "자체 번역",
+  "forbidden": [
+   "두쇄"
+  ],
+  "note": "정식 한글판의 풀어 쓰기 기조(首切→참수, 卸し焰→불꽃 떨구기)에 맞춘 의역"
+ },
+ {
+  "ko": "이 악물기",
+  "jp": "食いしばり",
+  "category": "클래스 스킬",
+  "classes": [
+   "장군",
+   "모노노후"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "이를 악물기"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "족제비",
+  "jp": "飯綱",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "이즈나"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "참수",
+  "jp": "首切",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "목 베기"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "짐 운반 야수",
+  "jp": "駄載獣",
+  "category": "클래스 스킬",
+  "classes": [
+   "비스트 킹"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "기사도의 가호",
+  "jp": "騎士道の加護",
+  "category": "클래스 스킬",
+  "classes": [
+   "팔라딘",
+   "포트리스"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "여러 클래스 공통 스킬"
+ },
+ {
+  "ko": "고속 철갑탄",
+  "jp": "高速徹甲弾",
+  "category": "클래스 스킬",
+  "classes": [
+   "발리스타"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "귀염참",
+  "jp": "鬼炎斬",
+  "category": "클래스 스킬",
+  "classes": [
+   "무사"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "매료의 사안",
+  "jp": "魅了の邪眼",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "매혹의 소야곡",
+  "jp": "魅惑の小夜曲",
+  "category": "클래스 스킬",
+  "classes": [
+   "바드"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "매혹의 춤",
+  "jp": "魅惑の舞",
+  "category": "클래스 스킬",
+  "classes": [
+   "댄서"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "모나야 맞을 수 있다",
+  "jp": "鳴かずば討たれず",
+  "category": "클래스 스킬",
+  "classes": [
+   "농부"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "울지 않으면 맞지 않는다"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "매의 날개",
+  "jp": "鷹乃羽",
+  "category": "클래스 스킬",
+  "classes": [
+   "시노비"
+  ],
+  "source": "정식 한글판(게임 화면)",
+  "forbidden": [
+   "매의 깃"
+  ],
+  "note": ""
+ },
+ {
+  "ko": "마비의 투인",
+  "jp": "麻痺の投刃",
+  "category": "클래스 스킬",
+  "classes": [
+   "나이트 시커"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "마비의 방진",
+  "jp": "麻痺の方陣",
+  "category": "클래스 스킬",
+  "classes": [
+   "미스틱"
+  ],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": ""
+ },
+ {
+  "ko": "관통",
+  "jp": "貫通",
+  "category": "판정·전투",
+  "classes": [],
+  "source": "자체 번역",
+  "forbidden": [],
+  "note": "공격 특성"
+ }
+]
