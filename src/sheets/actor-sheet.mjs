@@ -67,11 +67,11 @@ export class NssqActorSheet extends ActorSheet {
       }
       accepted.push(d);
     }
-    // 물건은 소지 수를 확인하며 받는다(넘치면 버릴 것 고르기, 창고로는 보낼 수 없음)
+    // 물건은 소지 수를 확인하며 받는다(넘치면 두고 갈 것·버릴 것 고르기, 창고로는 보낼 수 없음)
     const goods = accepted.filter(isPhysical);
     const others = accepted.filter((d) => !isPhysical(d));
     const created = others.length ? await super._onDropItemCreate(others, event) : [];
-    if (goods.length) created.push(...((await acquireItems(this.actor, goods, { allowStore: false })) ?? []));
+    if (goods.length) created.push(...(await acquireItems(this.actor, goods, { source: "gift" })).taken);
     const update = {};
     for (const c of created.filter((i) => i.type === "class")) {
       if (!this.actor.system.mainClass && !update["system.mainClass"]) update["system.mainClass"] = c.system.key;

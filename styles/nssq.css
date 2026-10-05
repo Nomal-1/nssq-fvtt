@@ -142,3 +142,5 @@
 .nssq-overflow .overflow-status { font-weight: bold; text-align: right; }
 .nssq-overflow .overflow-status.over { color: #b02020; }
 .nssq-overflow .incoming { color: #1a5fb4; }
+.nssq-overflow h4 { margin: 6px 0 2px; border-bottom: 1px solid #999; }
+.nssq-overflow table.incoming td.name { color: #1a5fb4; }

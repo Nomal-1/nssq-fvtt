@@ -172,8 +172,8 @@ class ShopApp extends Application {
     // 받기(같은 묶음은 합침). 소지 수를 넘으면 정리 창 — 상점에서는 창고로 보낼 수도 있다
     data.system.quantity = 1;
     const reserved = used.reduce((m, x) => ({ ...m, [x.id]: (m[x.id] ?? 0) + 1 }), {});
-    const got = await acquireItems(actor, [data], { allowStore: true, delegate: false, reserved });
-    if (!got) return;
+    const { taken } = await acquireItems(actor, [data], { source: "shop", delegate: false, reserved });
+    if (!taken.length) return;
     for (const m of used) {
       const fresh = actor.items.get(m.id);
       if (fresh) await consumeMaterial(fresh);

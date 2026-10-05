@@ -76,8 +76,8 @@ export function inventoryContext(actor) {
   const stored = all.filter((i) => i.system.stored).sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name, "ko")).map(row);
   return {
     storage, stored,
-    // 창고가 꺼졌어도 남아 있는 물건은 꺼낼 수 있게 보여 준다
-    showStorage: storage || stored.length > 0,
+    // 창고 기능이 꺼져 있으면 구역 자체를 숨긴다(물건은 그대로 보관, 소지 수에는 안 들어감)
+    showStorage: storage,
     storageSetting: !!game.settings.get("nssq", "storage"),
     storageEnabled: !!actor.system.storageEnabled,
     slots, groups,

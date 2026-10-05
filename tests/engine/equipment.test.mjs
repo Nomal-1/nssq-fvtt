@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import tables from "../../src/generated/tables.mjs";
 import {
-  armorStats, buyPrice, canEquip, canRefine, carriedCount, checkOverflowPlan, collectEquipment, equipmentMaterialCandidates, stackKey,
+  armorStats, buyPrice, canEquip, canRefine, carriedCount, checkOverflowPlan, collectEquipment, equipmentMaterialCandidates, splitIncoming, stackKey,
   equippedSlot, exceedsOwnLimit, itemMaterialCandidates, refinePrice, sellPrice, slotOccupant, slotsFor, weaponStats
 } from "../../src/engine/equipment.mjs";
 
@@ -203,6 +203,21 @@ describe("창고·소지 수 초과", () => {
     expect(checkOverflowPlan(items, 4, 2, { a: { discard: 1 }, b: { store: 1 } }).ok).toBe(true);
     // 가진 것보다 많이 버린다고 해도 가진 만큼만 빠진다
     expect(checkOverflowPlan(items, 4, 3, { b: { discard: 5 } })).toMatchObject({ ok: false, after: 6 });
+  });
+
+  it("새로 들어올 것 중 두고 가는 개수만큼 빠진다", () => {
+    const items = [{ ...material("풀", 1, 4), id: "a" }]; // 소지 4, 한도 4
+    expect(checkOverflowPlan(items, 4, 3, {}, 3).ok).toBe(true);
+    expect(checkOverflowPlan(items, 4, 3, { a: { discard: 1 } }, 2).ok).toBe(true);
+    expect(checkOverflowPlan(items, 4, 3, {}, 2)).toMatchObject({ ok: false, need: 1 });
+  });
+
+  it("splitIncoming: 수량을 쪼개 챙길 것·두고 갈 것으로 나눈다", () => {
+    const loot = [material("가죽", 1, 3), weapon("검", 2)];
+    const r = splitIncoming(loot, [1, 1]);
+    expect(r.take.map((d) => [d.system.materialType ?? d.system.weaponType, d.system.quantity])).toEqual([["가죽", 2]]);
+    expect(r.left.map((d) => [d.system.materialType ?? d.system.weaponType, d.system.quantity])).toEqual([["가죽", 1], ["검", 1]]);
+    expect(splitIncoming(loot, []).left).toEqual([]);
   });
 
   it("쌓기 키: 소재는 종류+R, 소모품·기타는 key, 장비는 쌓지 않는다", () => {

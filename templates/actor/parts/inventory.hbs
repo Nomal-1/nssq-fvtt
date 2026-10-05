@@ -60,7 +60,7 @@
 
   {{#if inventory.showStorage}}
   <section class="storage">
-    <h3><i class="fas fa-warehouse"></i> {{localize "NSSQ.Storage.title"}}{{#unless inventory.storage}} <span class="notes">({{localize "NSSQ.Storage.off"}})</span>{{/unless}}</h3>
+    <h3><i class="fas fa-warehouse"></i> {{localize "NSSQ.Storage.title"}}</h3>
     <ol class="item-list">
       {{#each inventory.stored as |i|}}
       <li class="item flexrow" data-item-id="{{i.id}}">

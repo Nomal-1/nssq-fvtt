@@ -150,7 +150,7 @@
       },
       "storage": {
         "name": "창고 기능",
-        "hint": "켜면 GM이 캐릭터 시트의 「장비·소지품」 탭에서 캐릭터마다 창고를 허용할 수 있다. 창고의 물건은 소지 수에 들어가지 않는다."
+        "hint": "켜면 GM이 캐릭터 시트의 「장비·소지품」 탭에서 캐릭터마다 창고를 허용할 수 있다. 끄면 창고 구역이 보이지 않는다(넣어 둔 물건은 그대로 보관되고 소지 수에 들어가지 않는다)."
       }
     },
     "Check": {
@@ -299,7 +299,6 @@
     },
     "Storage": {
       "title": "창고",
-      "off": "창고 기능 꺼짐 — 꺼내기만 가능",
       "empty": "비어 있음",
       "enableForActor": "이 캐릭터의 창고 허용(GM)",
       "toStorage": "창고로",
@@ -308,15 +307,20 @@
       "units": "소지",
       "discard": "버리기",
       "overflowTitle": "소지 수 초과 — {name}",
-      "overflowIntro": "소지 {carried} / 한도 {capacity}. 새로 {incoming}개가 들어온다. 버릴 것을 고르라.",
-      "incoming": "받을 것",
+      "overflowIntro": "소지 {carried} / 한도 {capacity}. 새로 {incoming}개가 들어온다. 두고 갈 것 또는 버릴 것을 고르라.",
+      "incoming": "새로 들어올 것",
       "overflowStatus": "정리 후 {after} / {capacity} (앞으로 {need}개 더)",
-      "overflowOk": "정리하고 받기",
-      "overflowCancel": "받지 않기",
+      "overflowOk": "이대로 받기",
+      "overflowCancel": "취소",
       "noStoreInDungeon": "던전에서 얻은 물건은 창고로 보낼 수 없다. 지금 가진 것 중에서 버린다.",
       "notReceived": "{name}: 소지 수가 넘쳐 받지 않았다.",
       "delegated": "{name}의 소지 수가 넘친다. {user}에게 정리를 맡겼다.",
-      "reserved": "이번에 쓸 소재 {n}개 제외"
+      "reserved": "이번에 쓸 소재 {n}개 제외",
+      "owned": "지금 가진 것",
+      "leave": "두고 가기",
+      "leaveAll": "전부 두고 가기",
+      "delegateTimeout": "{user}의 응답이 없어 받지 않은 것으로 처리했다.",
+      "delegateCancelled": "GM 쪽에서 시간이 지나 이 정리 요청은 취소됐다."
     }
   }
 }

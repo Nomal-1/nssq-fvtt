@@ -130,9 +130,10 @@ export function stackKey(item) {
  * @param {number} capacity 소지 한도
  * @param {number} incoming 새로 들어올 개수(소지 수 기준)
  * @param {{[id]: {discard?: number, store?: number}}} plan 아이템별로 버리거나 창고로 보낼 개수
+ * @param {number} [leave] 새로 들어올 것 중 두고 가는 개수
  * @returns {{ ok: boolean, after: number, need: number }}
  */
-export function checkOverflowPlan(items, capacity, incoming, plan = {}) {
+export function checkOverflowPlan(items, capacity, incoming, plan = {}, leave = 0) {
   let removed = 0;
   for (const i of items) {
     const p = plan[i.id];
@@ -140,8 +141,27 @@ export function checkOverflowPlan(items, capacity, incoming, plan = {}) {
     const units = carryUnits(i);
     removed += Math.min(units, Math.max(0, p.discard ?? 0) + Math.max(0, p.store ?? 0));
   }
-  const after = carriedCount(items) + incoming - removed;
+  const after = carriedCount(items) + Math.max(0, incoming - leave) - removed;
   return { ok: after <= capacity, after, need: Math.max(0, after - capacity) };
+}
+
+/**
+ * 들어올 아이템을 「챙길 것」과 「두고 갈 것」으로 나눈다. 수량이 있는 것은 쪼갠다.
+ * @param {object[]} dataList 아이템 데이터
+ * @param {number[]} leave dataList 각각에서 두고 갈 개수
+ * @returns {{ take: object[], left: object[] }}
+ */
+export function splitIncoming(dataList, leave = []) {
+  const take = [];
+  const left = [];
+  dataList.forEach((d, i) => {
+    const qty = Math.max(1, d.system?.quantity ?? 1);
+    const n = Math.min(qty, Math.max(0, leave[i] ?? 0));
+    const withQty = (q) => ({ ...d, system: { ...d.system, quantity: q } });
+    if (n < qty) take.push(withQty(qty - n));
+    if (n > 0) left.push(withQty(n));
+  });
+  return { take, left };
 }
 
 /* ---------------- 가격 ---------------- */
