@@ -64,3 +64,5 @@
 .nssq-request .dialog-buttons button { line-height: 2.2em; font-size: 1.05em; }
 .nssq-check .check-request { font-size: 0.85em; color: #7a4b00; margin-bottom: 2px; }
 #actors .nssq-request-btn { flex: 0 0 100%; margin-top: 4px; }
+.nssq-check .check-notes .fp-pending { font-weight: normal; color: #7a7971; }
+.nssq-check .check-buttons button:disabled { opacity: 0.45; cursor: not-allowed; }

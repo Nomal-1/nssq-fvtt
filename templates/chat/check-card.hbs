@@ -27,7 +27,7 @@
   {{/if}}
 
   <div class="check-notes">
-    {{#if fpGained}}<span class="fp-gain">{{localize "NSSQ.FP"}} +{{fpGained}}</span>{{/if}}
+    {{#if fpGained}}<span class="fp-gain">{{localize "NSSQ.FP"}} +{{fpGained}}{{#if canReroll}} <span class="fp-pending">({{localize "NSSQ.Check.fpRevokedOnReroll"}})</span>{{/if}}</span>{{/if}}
     {{#if added}}<span>{{localize "NSSQ.Check.addedNote"}} +{{added}}</span>{{/if}}
     {{#if rerolled}}<span>{{localize "NSSQ.Check.rerolledNote"}}</span>{{/if}}
   </div>

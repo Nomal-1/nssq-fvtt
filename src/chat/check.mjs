@@ -255,6 +255,16 @@ export function registerCheckHooks() {
     // 판정을 고칠 수 있는 사람: 메시지 작성자 또는 GM
     const canEdit = message.isAuthor || game.user.isGM;
     el.querySelectorAll("[data-owner-only]").forEach((b) => { if (!canEdit) b.remove(); });
+    // 다시 굴리기: 이번 판정에서 얻은 【FP】를 빼고 비용을 낼 수 없으면 비활성
+    const reroll = el.querySelector("[data-nssq-action=reroll]");
+    if (reroll) {
+      const state = stateOf(message);
+      const fp = fromUuidSync(state.actorUuid)?.system?.fp?.value ?? 0;
+      if (!canReroll(state, fp)) {
+        reroll.disabled = true;
+        reroll.title = game.i18n.format("NSSQ.Check.notEnoughFPReroll", { cost: REROLL_COST, gained: state.fpGained });
+      }
+    }
     el.querySelectorAll("[data-nssq-action]").forEach((b) => {
       b.addEventListener("click", (ev) => {
         ev.preventDefault();
@@ -264,6 +274,15 @@ export function registerCheckHooks() {
         else if (action === "contest") onContest(message);
       });
     });
+  });
+
+  // 【FP】가 바뀌면 그 캐릭터의 아직 다시 굴리지 않은 최근 판정 카드의 버튼 상태를 다시 계산한다
+  Hooks.on("updateActor", (actor, changes) => {
+    if (foundry.utils.getProperty(changes, "system.fp.value") === undefined) return;
+    for (const m of game.messages.contents.slice(-30)) {
+      const s = stateOf(m);
+      if (s && !s.rerolled && s.actorUuid === actor.uuid) ui.chat.updateMessage(m);
+    }
   });
 
   // 판정이 바뀌면 그 판정과 대항한 카드도 다시 그린다
