@@ -110,7 +110,19 @@ export async function cleanupEnemies() {
   ui.notifications.info(L("cleanupDone", { merged, removed }));
 }
 
+const isPreset = (scene) => !!scene?.getFlag("nssq", "battlePreset");
+
 export function registerEnemyLibrary() {
+  // 프리셋 씬의 에너미 토큰은 항상 액터와 연결하지 않는다(프리셋에서 고친 값이 액터 원본에 들어가지 않도록)
+  Hooks.on("preCreateToken", (token) => {
+    if (!isPreset(token.parent) || token.actor?.type !== "enemy" || !token.actorLink) return;
+    token.updateSource({ actorLink: false });
+  });
+  Hooks.on("preUpdateToken", (token, changes) => {
+    if (!isPreset(token.parent) || token.actor?.type !== "enemy" || changes.actorLink !== true) return;
+    changes.actorLink = false;
+    ui.notifications.warn(L("presetNoLink"));
+  });
   // 프리셋 씬에 컴펜디움 에너미를 끌어 놓을 때: 기본 동작(매번 새 액터 가져오기) 대신 재사용
   Hooks.on("dropCanvasData", (cnv, data) => {
     if (!game.user.isGM || data?.type !== "Actor" || !data.uuid?.startsWith("Compendium.")) return;
