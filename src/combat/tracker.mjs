@@ -124,6 +124,7 @@ export function registerTracker() {
       box.className = "nssq-combatant-tools";
       const row = actor.system.row === "back" ? "back" : "front";
       const tags = [`<span class="row-tag ${row}" title="${L("rowTitle")}">${game.i18n.localize(`NSSQ.Row.${row}`)}</span>`];
+      if (game.user.isGM && actor.type === "enemy" && actor.system.isRare) tags.push(`<span class="rare-tag" title="${game.i18n.localize("NSSQ.Rare.gmOnly")}">★</span>`);
       if (c.getFlag("nssq", "guarding")) tags.push(`<span class="guard-tag" title="${L("guardTitle")}"><i class="fas fa-shield-alt"></i></span>`);
       box.innerHTML = tags.join("");
       const owner = actor.isOwner;

@@ -4,6 +4,7 @@ import { rollAbilities } from "../apps/ability-roll.mjs";
 import { activateInventoryListeners, inventoryContext } from "./inventory.mjs";
 import { acquireItems } from "../apps/acquire.mjs";
 import { normalAttack } from "../combat/attack.mjs";
+import { makeRare, removeRare } from "../apps/rare.mjs";
 import { isPhysical } from "../engine/equipment.mjs";
 
 export class NssqActorSheet extends ActorSheet {
@@ -30,6 +31,7 @@ export class NssqActorSheet extends ActorSheet {
     context.rowChoices = { front: "NSSQ.Row.front", back: "NSSQ.Row.back" };
     context.canAttack = this.isEditable && (this.actor.type === "character" || this.actor.type === "enemy");
     context.showNpcToggle = game.user.isGM && this.actor.type === "character";
+    context.isGM = game.user.isGM;
     if (this.actor.type === "character") {
       context.abilityRows = ABILITIES.map((k) => ({
         key: k, ...system.abilityParts[k], bonus: system.bonus[k]
@@ -93,6 +95,8 @@ export class NssqActorSheet extends ActorSheet {
     if (!this.isEditable) return;
     if (this.actor.type === "character") activateInventoryListeners(this, html);
     // 통상 공격: 지정(타깃)한 토큰 1개. GM은 Shift로 사거리·아군 확인 무시
+    html.on("click", "[data-action=rare-on]", () => makeRare(this.actor));
+    html.on("click", "[data-action=rare-off]", () => removeRare(this.actor));
     html.on("click", "[data-action=normal-attack]", (ev) => {
       ev.preventDefault();
       normalAttack(this.actor, { ignoreRange: ev.shiftKey && game.user.isGM });

@@ -89,7 +89,7 @@ export class GMScreen extends Application {
     const battle = currentBattle();
     const presets = battlePresets().map((s) => ({
       id: s.id, name: s.name, thumb: s.thumb || s.background?.src || "",
-      enemies: s.tokens.filter((t) => t.actor?.type === "enemy").map((t) => t.name).join(", ") || L("noEnemies"),
+      enemies: s.tokens.filter((t) => t.actor?.type === "enemy").map((t) => `${t.name}${t.actor.system.isRare ? "★" : ""}`).join(", ") || L("noEnemies"),
       bgm: s.playlistSound?.name ?? s.playlist?.name ?? L("noBgm"),
       bg: !!s.background?.src
     }));

@@ -307,3 +307,9 @@
 .nssq-slot-picker .slot-cell { flex: 1; display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid #999; border-radius: 4px; font-size: 0.9em; }
 .nssq-slot-picker .slot-cell.taken { opacity: 0.5; }
 .nssq-slot-picker .slot-cell.mine { border-color: #1a5fb4; }
+
+/* 희소종(GM) */
+.nssq .rare-tools { flex-direction: row; gap: 6px; justify-content: center; }
+.nssq .rare-tools .rare-mark { color: #b8860b; font-weight: bold; }
+.nssq .rare-tools button { width: auto; line-height: 1.6em; font-size: 0.85em; }
+.nssq-combatant-tools .rare-tag { color: #f0c040; font-weight: bold; }

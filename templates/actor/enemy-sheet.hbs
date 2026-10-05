@@ -8,7 +8,13 @@
     <label class="stat"><span>{{localize "NSSQ.Row.label"}}</span>
       <select name="system.row">{{selectOptions rowChoices selected=system.row localize=true}}</select></label>
     <label class="stat checkbox"><input type="checkbox" name="system.isFOE" {{checked system.isFOE}}/> {{localize "NSSQ.FOE"}}</label>
-    <label class="stat checkbox"><input type="checkbox" name="system.isRare" {{checked system.isRare}}/> {{localize "NSSQ.Rare"}}</label>
+    {{#if isGM}}
+    <div class="stat rare-tools">
+      {{#if system.isRare}}<span class="rare-mark" title="{{localize 'NSSQ.Rare.gmOnly'}}">★ {{localize "NSSQ.Rare.label"}}</span>
+        <button type="button" data-action="rare-off">{{localize "NSSQ.Rare.off"}}</button>
+      {{else}}<button type="button" data-action="rare-on" title="{{localize 'NSSQ.Rare.onHint'}}">★ {{localize "NSSQ.Rare.on"}}</button>{{/if}}
+    </div>
+    {{/if}}
     <label class="stat checkbox"><input type="checkbox" name="system.identified" {{checked system.identified}}/> {{localize "NSSQ.Identified"}}</label>
   </section>
 

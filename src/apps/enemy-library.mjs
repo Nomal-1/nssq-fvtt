@@ -1,9 +1,12 @@
 /**
  * 프리셋용 에너미 액터 관리.
  * - 프리셋 씬에 컴펜디움 에너미를 끌어 놓으면, 같은 에너미 액터를 「프리셋 에너미」 폴더에서 재사용한다(중복 생성 방지)
- * - [에너미 정리]: 같은 원본의 중복 액터를 하나로 합치고(토큰은 그 하나를 가리키게, 토큰별 수정은 유지),
+ * - [에너미 정리]: 이름·이미지·능력치까지 완전히 같은 중복만 하나로 합치고(토큰은 그 하나를 가리키게, 토큰별 수정은 유지),
+ *   GM이 복제해 만든 변형(이름·값이 다른 것)은 건드리지 않는다.
  *   어느 씬에서도 쓰지 않는 시스템 에너미 액터는 확인 후 지운다
  */
+import { sameEnemyData } from "../engine/rare.mjs";
+
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
@@ -16,16 +19,21 @@ async function enemyFolder() {
   return folder;
 }
 
-/** 이 원본의 월드 액터(없으면 「프리셋 에너미」 폴더에 하나 만든다) */
+/**
+ * 이 원본의 기본 액터(없으면 「프리셋 에너미」 폴더에 하나 만든다).
+ * 기본 액터 = 이 기능으로 만든 것(flags.nssq.library)이고 이름이 원본 그대로, 희소종이 아닌 것.
+ * GM이 복제·수정한 변형은 재사용 대상이 아니다.
+ */
 export async function enemyActorFor(uuid) {
-  const existing = game.actors.find((a) => a.type === "enemy" && sourceOf(a) === uuid);
-  if (existing) return existing;
   const doc = await fromUuid(uuid);
   if (!doc) return null;
+  const existing = game.actors.find((a) => a.type === "enemy" && a.getFlag("nssq", "library") === uuid && a.name === doc.name && !a.system.isRare);
+  if (existing) return existing;
   const folder = await enemyFolder();
   const data = game.actors.fromCompendium(doc);
   data.folder = folder.id;
   foundry.utils.setProperty(data, "_stats.compendiumSource", uuid);
+  foundry.utils.setProperty(data, "flags.nssq.library", uuid);
   return Actor.implementation.create(data);
 }
 
@@ -54,23 +62,35 @@ export async function cleanupEnemies() {
     groups.get(src).push(a);
   }
   const folder = await enemyFolder();
-  // 1) 중복 합치기: 폴더 안의 것을 우선 대표로
+  // 1) 완전히 같은 중복만 합친다(변형은 그대로). 기본 액터(library)를 대표로
   let merged = 0;
   for (const list of groups.values()) {
-    if (list.length < 2) {
-      if (list[0] && list[0].folder?.id !== folder.id) await list[0].update({ folder: folder.id });
-      continue;
+    const clusters = [];
+    for (const actor of list) {
+      const data = actor.toObject();
+      const c = clusters.find((cl) => sameEnemyData(cl.data, data));
+      if (c) c.actors.push(actor);
+      else clusters.push({ data, actors: [actor] });
     }
-    const keep = list.find((a) => a.folder?.id === folder.id) ?? list[0];
-    const drop = list.filter((a) => a !== keep);
-    const dropIds = new Set(drop.map((a) => a.id));
-    for (const scene of game.scenes) {
-      const updates = scene.tokens.filter((t) => dropIds.has(t.actorId)).map((t) => ({ _id: t.id, actorId: keep.id, actorLink: false }));
-      if (updates.length) await scene.updateEmbeddedDocuments("Token", updates);
+    for (const { actors } of clusters) {
+      const keep = actors.find((x) => x.getFlag("nssq", "library")) ?? actors.find((x) => x.folder?.id === folder.id) ?? actors[0];
+      const drop = actors.filter((x) => x !== keep);
+      if (drop.length) {
+        const dropIds = new Set(drop.map((x) => x.id));
+        for (const scene of game.scenes) {
+          const updates = scene.tokens.filter((t) => dropIds.has(t.actorId)).map((t) => ({ _id: t.id, actorId: keep.id, actorLink: false }));
+          if (updates.length) await scene.updateEmbeddedDocuments("Token", updates);
+        }
+        for (const x of drop) await x.delete();
+        merged += drop.length;
+      }
+      const upd = {};
+      if (keep.folder?.id !== folder.id) upd.folder = folder.id;
+      // 원본 그대로인 것만 재사용 대상(기본 액터)으로 표시
+      const src = await fromUuid(sourceOf(keep));
+      if (src && keep.name === src.name && !keep.getFlag("nssq", "library") && !keep.system.isRare) upd["flags.nssq.library"] = sourceOf(keep);
+      if (Object.keys(upd).length) await keep.update(upd);
     }
-    for (const a of drop) await a.delete();
-    if (keep.folder?.id !== folder.id) await keep.update({ folder: folder.id });
-    merged += drop.length;
   }
   // 2) 어느 씬의 토큰도 쓰지 않는 시스템 에너미(컴펜디움에서 온 것)
   const used = new Set(game.scenes.flatMap((s) => s.tokens.map((t) => t.actorId)));
