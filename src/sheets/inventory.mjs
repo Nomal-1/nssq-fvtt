@@ -4,6 +4,7 @@
 import { canEquip, equippedSlot, sellPrice, slotOccupant, slotsFor } from "../engine/equipment.mjs";
 import tables from "../generated/tables.mjs";
 import { openRefineDialog, openShop, sellItem } from "../apps/shop.mjs";
+import { retrieveItem, storageActive, storeItem } from "../apps/acquire.mjs";
 
 const GROUPS = [
   ["weapon", "TYPES.Item.weapon"],
@@ -47,7 +48,9 @@ function rankLabel(item) {
 }
 
 export function inventoryContext(actor) {
-  const items = actor.items.contents;
+  const all = actor.items.contents;
+  const items = all.filter((i) => !i.system.stored);
+  const storage = storageActive(actor);
   const level = actor.system.level;
   const row = (i) => ({
     id: i.id, name: i.name, img: i.img, type: i.type,
@@ -57,7 +60,8 @@ export function inventoryContext(actor) {
     summary: summary(i),
     equippable: slotsFor(i).length > 0,
     canSub: i.type === "weapon",
-    refinable: i.type === "weapon" || i.type === "armor",
+    refinable: (i.type === "weapon" || i.type === "armor") && !i.system.stored,
+    canStore: storage && !i.system.equipped,
     sell: sellPrice(i, tables, { level })
   });
   const slots = ["weapon", "armor", "other"].map((slot) => {
@@ -69,12 +73,20 @@ export function inventoryContext(actor) {
     items: items.filter((i) => i.type === type && !equippedSlot(i)).sort((a, b) => (a.sort || 0) - (b.sort || 0)).map(row)
   })).filter((g) => g.items.length);
   const weapon = actor.system.equipment?.weapon;
+  const stored = all.filter((i) => i.system.stored).sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name, "ko")).map(row);
   return {
+    storage, stored,
+    // 창고가 꺼졌어도 남아 있는 물건은 꺼낼 수 있게 보여 준다
+    showStorage: storage || stored.length > 0,
+    storageSetting: !!game.settings.get("nssq", "storage"),
+    storageEnabled: !!actor.system.storageEnabled,
     slots, groups,
     carried: actor.system.carried,
     carry: actor.system.carry,
     over: actor.system.carried > actor.system.carry,
-    weaponLine: weapon ? summary(weapon.item) : game.i18n.localize("NSSQ.Inventory.noWeapon"),
+    weaponLine: weapon?.item ? summary(weapon.item)
+      : weapon?.unarmed ? game.i18n.format("NSSQ.Inventory.unarmed", { type: weapon.weaponType, atk: weapon.physAtk })
+        : game.i18n.localize("NSSQ.Inventory.noWeapon"),
     classes: items.filter((i) => i.type === "class"),
     skills: items.filter((i) => i.type === "skill").sort((a, b) => a.name.localeCompare(b.name, "ko"))
   };
@@ -118,6 +130,16 @@ export function activateInventoryListeners(sheet, html) {
     ev.preventDefault();
     const item = itemOf(ev);
     if (item) openRefineDialog(actor, item);
+  });
+  html.on("click", "[data-action=store]", (ev) => {
+    ev.preventDefault();
+    const item = itemOf(ev);
+    if (item) storeItem(actor, item);
+  });
+  html.on("click", "[data-action=retrieve]", (ev) => {
+    ev.preventDefault();
+    const item = itemOf(ev);
+    if (item) retrieveItem(actor, item);
   });
   html.on("click", "[data-action=shop]", (ev) => {
     ev.preventDefault();

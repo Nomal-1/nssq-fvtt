@@ -743,7 +743,9 @@ for (const d of ["skills", "enemies", "tables"]) {
     weapons: Object.fromEntries(load("weapons.json").map((w) => [w.system.weaponType, { key: w.system.key, element: w.system.element, ...w.system.table }])),
     armors: Object.fromEntries(load("armors.json").map((a) => [a.system.armorType, { key: a.system.key, ...a.system.table }])),
     refinements: load("refinements.json").map(({ key, name, kinds, price, effects }) => ({ key, name, kinds, price, effects })),
-    materials: load("materials.json").map((m) => m.name)
+    materials: load("materials.json").map((m) => m.name),
+    // 가격 식이 없는 무기 종류(주먹) = 무기 슬롯이 비었을 때의 맨손(07 #20)
+    unarmed: load("weapons.json").find((w) => !w.system.table.price)?.system.weaponType ?? null
   };
   const file = path.join(ROOT, "src", "generated", "tables.mjs");
   fs.mkdirSync(path.dirname(file), { recursive: true });

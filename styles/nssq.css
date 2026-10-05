@@ -131,3 +131,14 @@
 .nssq-shop .shop-row .price { flex: 0 0 60px; text-align: right; font-weight: bold; }
 .nssq-shop .shop-row button { flex: 0 0 52px; line-height: 1.5em; }
 .nssq-trade { font-size: 0.95em; }
+
+/* 창고·소지 수 초과 */
+.nssq .storage-toggle { display: block; margin: 8px 0 2px; font-size: 0.9em; }
+.nssq .storage h3 .notes { font-size: 0.8em; font-weight: normal; color: #7a7971; }
+.nssq-overflow table { width: 100%; border-collapse: collapse; }
+.nssq-overflow th, .nssq-overflow td { padding: 2px 4px; border-bottom: 1px solid #c9c7b8; text-align: center; }
+.nssq-overflow td.name { text-align: left; }
+.nssq-overflow input[type="number"] { width: 3.5em; text-align: center; }
+.nssq-overflow .overflow-status { font-weight: bold; text-align: right; }
+.nssq-overflow .overflow-status.over { color: #b02020; }
+.nssq-overflow .incoming { color: #1a5fb4; }

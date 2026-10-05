@@ -147,6 +147,10 @@
       "fpStart": {
         "name": "세션 시작 【FP】",
         "hint": "세션을 시작할 때 각 캐릭터의 【FP】."
+      },
+      "storage": {
+        "name": "창고 기능",
+        "hint": "켜면 GM이 캐릭터 시트의 「장비·소지품」 탭에서 캐릭터마다 창고를 허용할 수 있다. 창고의 물건은 소지 수에 들어가지 않는다."
       }
     },
     "Check": {
@@ -260,7 +264,8 @@
         "weaponNotAllowed": "{name}: 메인·서브 클래스 모두 이 무기를 쓸 수 없다. (GM은 Shift+클릭으로 무시)",
         "shieldNotAllowed": "{name}: 메인·서브 클래스 모두 방패를 쓸 수 없다. (GM은 Shift+클릭으로 무시)",
         "armorNotAllowed": "{name}: 갑옷은 메인 클래스가 장비할 수 있는 것만 가능하다. (GM은 Shift+클릭으로 무시)"
-      }
+      },
+      "unarmed": "맨손({type}) · 물공 {atk}"
     },
     "Shop": {
       "title": "상점",
@@ -291,6 +296,27 @@
       "refineFull": "{name}은(는) 이미 제련이 2개다.",
       "refineNone": "붙일 수 있는 제련이 없다.",
       "refined": "제련: {name}에 {effect} ({price}G)"
+    },
+    "Storage": {
+      "title": "창고",
+      "off": "창고 기능 꺼짐 — 꺼내기만 가능",
+      "empty": "비어 있음",
+      "enableForActor": "이 캐릭터의 창고 허용(GM)",
+      "toStorage": "창고로",
+      "retrieve": "꺼내기",
+      "item": "아이템",
+      "units": "소지",
+      "discard": "버리기",
+      "overflowTitle": "소지 수 초과 — {name}",
+      "overflowIntro": "소지 {carried} / 한도 {capacity}. 새로 {incoming}개가 들어온다. 버릴 것을 고르라.",
+      "incoming": "받을 것",
+      "overflowStatus": "정리 후 {after} / {capacity} (앞으로 {need}개 더)",
+      "overflowOk": "정리하고 받기",
+      "overflowCancel": "받지 않기",
+      "noStoreInDungeon": "던전에서 얻은 물건은 창고로 보낼 수 없다. 지금 가진 것 중에서 버린다.",
+      "notReceived": "{name}: 소지 수가 넘쳐 받지 않았다.",
+      "delegated": "{name}의 소지 수가 넘친다. {user}에게 정리를 맡겼다.",
+      "reserved": "이번에 쓸 소재 {n}개 제외"
     }
   }
 }

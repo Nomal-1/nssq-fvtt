@@ -24,6 +24,7 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       row: row(),
       order: int(0),
       money: int(0, { min: 0 }),
+      storageEnabled: new foundry.data.fields.BooleanField({ initial: false }),
       history: new ArrayField(new StringField()),
       description: description()
     };

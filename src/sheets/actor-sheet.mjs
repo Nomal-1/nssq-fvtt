@@ -2,6 +2,8 @@ import { ABILITIES, RESISTS, SUB_STATS } from "../engine/derive.mjs";
 import { promptCheck, rollCheck } from "../chat/check.mjs";
 import { rollAbilities } from "../apps/ability-roll.mjs";
 import { activateInventoryListeners, inventoryContext } from "./inventory.mjs";
+import { acquireItems } from "../apps/acquire.mjs";
+import { isPhysical } from "../engine/equipment.mjs";
 
 export class NssqActorSheet extends ActorSheet {
   static get defaultOptions() {
@@ -36,6 +38,7 @@ export class NssqActorSheet extends ActorSheet {
       context.mainClassKey = main?.system.key ?? "";
       context.subClassKey = sub?.system.key ?? "";
       context.inventory = inventoryContext(this.actor);
+      context.isGM = game.user.isGM;
       context.resistRows = RESISTS.map((k) => ({ key: k, base: system.resist[k], total: system.resistTotal[k], changed: system.resistTotal[k] !== system.resist[k] }));
     }
     context.items = this.actor.items.contents.sort((a, b) => (a.sort || 0) - (b.sort || 0));
@@ -64,7 +67,11 @@ export class NssqActorSheet extends ActorSheet {
       }
       accepted.push(d);
     }
-    const created = await super._onDropItemCreate(accepted, event);
+    // 물건은 소지 수를 확인하며 받는다(넘치면 버릴 것 고르기, 창고로는 보낼 수 없음)
+    const goods = accepted.filter(isPhysical);
+    const others = accepted.filter((d) => !isPhysical(d));
+    const created = others.length ? await super._onDropItemCreate(others, event) : [];
+    if (goods.length) created.push(...((await acquireItems(this.actor, goods, { allowStore: false })) ?? []));
     const update = {};
     for (const c of created.filter((i) => i.type === "class")) {
       if (!this.actor.system.mainClass && !update["system.mainClass"]) update["system.mainClass"] = c.system.key;

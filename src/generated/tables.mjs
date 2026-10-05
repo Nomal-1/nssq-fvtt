@@ -626,5 +626,6 @@ export default {
   "풀",
   "꽃",
   "열매"
- ]
+ ],
+ "unarmed": "주먹"
 };

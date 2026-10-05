@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import tables from "../../src/generated/tables.mjs";
 import {
-  armorStats, buyPrice, canEquip, canRefine, carriedCount, collectEquipment, equipmentMaterialCandidates,
+  armorStats, buyPrice, canEquip, canRefine, carriedCount, checkOverflowPlan, collectEquipment, equipmentMaterialCandidates, stackKey,
   equippedSlot, exceedsOwnLimit, itemMaterialCandidates, refinePrice, sellPrice, slotOccupant, slotsFor, weaponStats
 } from "../../src/engine/equipment.mjs";
 
@@ -121,8 +121,9 @@ describe("구입 소재", () => {
     expect(equipmentMaterialCandidates(inv, tables.weapons["검"], 2).map((m) => m.id)).toEqual(["m금속2"]);
     expect(equipmentMaterialCandidates(inv, tables.weapons["검"], 3)).toEqual([]);
   });
-  it("아이템: 같은 종류 R 이상, 수량 0은 제외", () => {
-    expect(itemMaterialCandidates(inv, { type: "가죽", rank: 4 }).length).toBe(1);
+  it("아이템: 같은 종류, R이 정확히 같을 것(07 #23), 수량 0은 제외", () => {
+    expect(itemMaterialCandidates(inv, { type: "가죽", rank: 5 }).length).toBe(1);
+    expect(itemMaterialCandidates(inv, { type: "가죽", rank: 4 })).toEqual([]);
     expect(itemMaterialCandidates(inv, { type: "풀", rank: 4 })).toEqual([]);
   });
 });
@@ -157,15 +158,56 @@ describe("장비 보정 합산", () => {
     expect(r.mods).toMatchObject({ physHit: 1 + 2, speed: 3 - 3 - 4, evasion: -1, "abilities.str": 1 });
   });
 
-  it("서브웨펀은 성능·제련을 더하지 않는다(07 #21)", () => {
-    const r = collectEquipment([weapon("세검", 2, { equipped: true, slot: "other" })], tables);
-    expect(r.weapon).toBeNull();
-    expect(r.mods).toEqual({});
+  it("서브웨펀은 성능·제련을 더하지 않고, 무기 슬롯이 비었으니 맨손(07 #21·#20)", () => {
+    const r = collectEquipment([weapon("세검", 2, { equipped: true, slot: "other" })], tables, { level: 2 });
+    expect(r.weapon).toMatchObject({ unarmed: true, weaponType: "주먹", physAtk: 2, element: "strike" });
+    expect(r.mods).toEqual({ physHit: 0, elemHit: 0, speed: 0 });
+  });
+
+  it("무기가 없으면 주먹: 물공 Lv, 《주먹 마스터리》면 (Lv×3)+4", () => {
+    expect(collectEquipment([], tables, { level: 3 }).weapon.physAtk).toBe(3);
+    expect(collectEquipment([], tables, { level: 3, skillNames: ["주먹 마스터리"] }).weapon.physAtk).toBe(13);
   });
 
   it("속성 부여 제련은 imbue로 표시(07 #24)", () => {
     const r = collectEquipment([weapon("검", 1, { equipped: true, refinements: [ref("〈염〉 속성 부여").key] })], tables);
     expect(r.weapon.element).toBe("slash");
     expect(r.weapon.imbue).toBe("fire");
+  });
+});
+
+describe("창고·소지 수 초과", () => {
+  const backpack = { id: "bp", type: "tool", system: { key: "バックパック", quantity: 1, effects: [
+    { type: "modifier", path: "carry", value: 4 }, { type: "flag", flag: "noCarryCount", value: true }, { type: "flag", flag: "ownLimit", value: 1 }] } };
+
+  it("창고에 있는 것은 소지 수에 들어가지 않는다", () => {
+    const items = [material("풀", 1, 3), { ...material("뼈", 2, 2), system: { materialType: "뼈", rank: 2, quantity: 2, stored: true } }];
+    expect(carriedCount(items)).toBe(3);
+  });
+
+  it("창고의 백팩은 한도를 늘리지 않고, 소지 개수 제한에도 세지 않는다", () => {
+    const stored = { ...backpack, system: { ...backpack.system, stored: true } };
+    expect(collectEquipment([stored], tables).mods.carry).toBeUndefined();
+    expect(exceedsOwnLimit([stored], backpack)).toBe(false);
+  });
+
+  it("창고의 소재는 구입 재료 후보가 아니다", () => {
+    const m = { id: "s", type: "material", system: { materialType: "금속", rank: 3, quantity: 1, stored: true } };
+    expect(equipmentMaterialCandidates([m], tables.weapons["검"], 1)).toEqual([]);
+  });
+
+  it("정리 계획: 버리거나 창고로 보낸 만큼 빠지고, 한도 안이면 ok", () => {
+    const items = [{ ...material("풀", 1, 3), id: "a" }, { ...weapon("검"), id: "b" }]; // 소지 4
+    expect(checkOverflowPlan(items, 4, 1, {})).toMatchObject({ ok: false, need: 1 });
+    expect(checkOverflowPlan(items, 4, 1, { a: { discard: 1 } }).ok).toBe(true);
+    expect(checkOverflowPlan(items, 4, 2, { a: { discard: 1 }, b: { store: 1 } }).ok).toBe(true);
+    // 가진 것보다 많이 버린다고 해도 가진 만큼만 빠진다
+    expect(checkOverflowPlan(items, 4, 3, { b: { discard: 5 } })).toMatchObject({ ok: false, after: 6 });
+  });
+
+  it("쌓기 키: 소재는 종류+R, 소모품·기타는 key, 장비는 쌓지 않는다", () => {
+    expect(stackKey(material("풀", 2))).toBe("material:풀:2");
+    expect(stackKey({ type: "consumable", system: { key: "メディカ" } })).toBe("consumable:メディカ");
+    expect(stackKey(weapon("검"))).toBeNull();
   });
 });

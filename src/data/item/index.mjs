@@ -61,7 +61,8 @@ export class WeaponData extends NssqItemData {
       element: str(""),
       refinements: refinements(),
       slot: str("weapon", { choices: ["weapon", "other"] }),
-      equipped: new BooleanField({ initial: false })
+      equipped: new BooleanField({ initial: false }),
+      stored: new BooleanField({ initial: false })
     };
   }
 
@@ -85,7 +86,8 @@ export class ArmorData extends NssqItemData {
       armorType: str(""),
       rank: int(1, { min: 1, max: 15 }),
       refinements: refinements(),
-      equipped: new BooleanField({ initial: false })
+      equipped: new BooleanField({ initial: false }),
+      stored: new BooleanField({ initial: false })
     };
   }
 
@@ -101,7 +103,8 @@ export class AccessoryData extends NssqItemData {
       ...super.defineSchema(),
       effects: effects(),
       price: int(0),
-      equipped: new BooleanField({ initial: false })
+      equipped: new BooleanField({ initial: false }),
+      stored: new BooleanField({ initial: false })
     };
   }
 }
@@ -114,6 +117,7 @@ export class ConsumableData extends NssqItemData {
       materials: new ArrayField(new SchemaField({ type: str(""), rank: int(1) })),
       effects: effects(),
       quantity: int(1, { min: 0 }),
+      stored: new BooleanField({ initial: false }),
       foodstuff: new BooleanField({ initial: false })
     };
   }
@@ -121,12 +125,12 @@ export class ConsumableData extends NssqItemData {
 
 export class ToolData extends NssqItemData {
   static defineSchema() {
-    return { ...super.defineSchema(), effects: effects(), price: int(0), quantity: int(1, { min: 0 }) };
+    return { ...super.defineSchema(), effects: effects(), price: int(0), quantity: int(1, { min: 0 }), stored: new BooleanField({ initial: false }) };
   }
 }
 
 export class MaterialData extends NssqItemData {
   static defineSchema() {
-    return { ...super.defineSchema(), materialType: str(""), rank: int(1, { min: 1 }), quantity: int(1, { min: 0 }) };
+    return { ...super.defineSchema(), materialType: str(""), rank: int(1, { min: 1 }), quantity: int(1, { min: 0 }), stored: new BooleanField({ initial: false }) };
   }
 }

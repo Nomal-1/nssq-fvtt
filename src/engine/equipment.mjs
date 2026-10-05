@@ -94,20 +94,54 @@ export function equippedSlot(item) {
 
 const flagOf = (item, flag) => (item.system?.effects ?? []).find((e) => e.type === "flag" && e.flag === flag)?.value;
 
-/** 소지 수: 장비 중이 아닌 물건의 수량 합. 『백팩』처럼 noCarryCount 플래그가 있으면 세지 않는다 */
-export function carriedCount(items) {
-  return items
-    .filter((i) => PHYSICAL_TYPES.includes(i.type) && !i.system?.equipped && !flagOf(i, "noCarryCount"))
-    .reduce((n, i) => n + Math.max(0, i.system?.quantity ?? 1), 0);
+export const isPhysical = (item) => PHYSICAL_TYPES.includes(item.type);
+export const isStored = (item) => !!item.system?.stored;
+
+/** 소지 수에 들어가는 개수: 장비 중·창고·noCarryCount(백팩 등)는 0, 그 외는 수량 */
+export function carryUnits(item) {
+  if (!isPhysical(item) || item.system?.equipped || isStored(item) || flagOf(item, "noCarryCount")) return 0;
+  return Math.max(0, item.system?.quantity ?? 1);
 }
 
-/** ownLimit 플래그(백팩 1개)를 넘는지 */
+/** 소지 수: 장비 중이 아니고 창고에 없는 물건의 수량 합 */
+export function carriedCount(items) {
+  return items.reduce((n, i) => n + carryUnits(i), 0);
+}
+
+/** ownLimit 플래그(백팩 1개)를 넘는지. 창고에 있는 것은 소지가 아니므로 세지 않는다 */
 export function exceedsOwnLimit(items, candidate) {
   const limit = flagOf(candidate, "ownLimit");
   if (!limit) return false;
-  const owned = items.filter((i) => i.system?.key && i.system.key === candidate.system?.key)
+  const owned = items.filter((i) => !isStored(i) && i.system?.key && i.system.key === candidate.system?.key)
     .reduce((n, i) => n + (i.system?.quantity ?? 1), 0);
   return owned + (candidate.system?.quantity ?? 1) > limit;
+}
+
+/** 쌓을 수 있는 같은 아이템인지: 소모품·기타 아이템은 key, 소재는 종류+R */
+export function stackKey(item) {
+  if (item.type === "material") return `material:${item.system.materialType}:${item.system.rank}`;
+  if ((item.type === "consumable" || item.type === "tool") && item.system?.key) return `${item.type}:${item.system.key}`;
+  return null;
+}
+
+/**
+ * 소지 수 초과 정리 계획이 유효한지.
+ * @param {object[]} items 현재 아이템
+ * @param {number} capacity 소지 한도
+ * @param {number} incoming 새로 들어올 개수(소지 수 기준)
+ * @param {{[id]: {discard?: number, store?: number}}} plan 아이템별로 버리거나 창고로 보낼 개수
+ * @returns {{ ok: boolean, after: number, need: number }}
+ */
+export function checkOverflowPlan(items, capacity, incoming, plan = {}) {
+  let removed = 0;
+  for (const i of items) {
+    const p = plan[i.id];
+    if (!p) continue;
+    const units = carryUnits(i);
+    removed += Math.min(units, Math.max(0, p.discard ?? 0) + Math.max(0, p.store ?? 0));
+  }
+  const after = carriedCount(items) + incoming - removed;
+  return { ok: after <= capacity, after, need: Math.max(0, after - capacity) };
 }
 
 /* ---------------- 가격 ---------------- */
@@ -131,12 +165,12 @@ export function sellPrice(item, tables, opts = {}) {
 /** 무기·방어구 구입·제련에 쓸 수 있는 소재: 대응 소재 종류이고 R이 장비 R 이상 */
 export function equipmentMaterialCandidates(items, table, rank) {
   const types = table?.materials ?? [];
-  return items.filter((i) => i.type === "material" && types.includes(i.system.materialType) && i.system.rank >= rank && (i.system.quantity ?? 1) > 0);
+  return items.filter((i) => i.type === "material" && !isStored(i) && types.includes(i.system.materialType) && i.system.rank >= rank && (i.system.quantity ?? 1) > 0);
 }
 
-/** 아이템(소모품) 구입에 필요한 소재 [{type, rank}] 각각에 맞는 후보: 같은 종류, R 이상(07 #23) */
+/** 아이템(소모품) 구입에 필요한 소재 [{type, rank}] 각각에 맞는 후보: 같은 종류, R이 정확히 같을 것(07 #23) */
 export function itemMaterialCandidates(items, requirement) {
-  return items.filter((i) => i.type === "material" && i.system.materialType === requirement.type && i.system.rank >= requirement.rank && (i.system.quantity ?? 1) > 0);
+  return items.filter((i) => i.type === "material" && !isStored(i) && i.system.materialType === requirement.type && i.system.rank === requirement.rank && (i.system.quantity ?? 1) > 0);
 }
 
 /* ---------------- 제련 ---------------- */
@@ -167,7 +201,8 @@ export function refinePrice(refinement, rank) {
  * - 갑옷 슬롯의 갑옷, 기타 슬롯의 방패: 방어·회피·속도, 제련
  * - 기타 슬롯의 장식: 효과
  * - 기타 슬롯의 서브웨펀: 교체용이라 성능·제련을 더하지 않는다(07 #21)
- * - 소지만 해도 되는 기타 아이템(백팩 등)의 modifier
+ * - 소지만 해도 되는 기타 아이템(백팩 등)의 modifier (창고에 있으면 제외)
+ * - 무기 슬롯이 비어 있으면 맨손(tables.unarmed, 07 #20)
  * @returns {{ weapon: object|null, armorDefense: number, mods: Record<string, number>, flags: Record<string, any>, sources: object[] }}
  */
 export function collectEquipment(items, tables, { level = 1, skillNames = [] } = {}) {
@@ -187,14 +222,14 @@ export function collectEquipment(items, tables, { level = 1, skillNames = [] } =
   let armorDefense = 0;
   for (const item of items) {
     const slot = equippedSlot(item);
-    if (item.type === "tool" && !item.system?.equipped) applyEffects(item.system.effects, {});
+    if (item.type === "tool" && !item.system?.equipped && !isStored(item)) applyEffects(item.system.effects, {});
     if (!slot) continue;
     if (item.type === "weapon" && slot === "weapon") {
       const table = tables.weapons[item.system.weaponType];
       if (!table) continue;
       const altSkill = table.physAtkAlt?.requires;
       const s = weaponStats(table, { rank: item.system.rank, level, hasAltSkill: !!altSkill && skillNames.includes(altSkill) });
-      weapon = { ...s, item, element: item.system.element || table.element };
+      weapon = { ...s, item, weaponType: item.system.weaponType, element: item.system.element || table.element };
       add("physHit", s.physHit);
       add("elemHit", s.elemHit);
       add("speed", s.speed);
@@ -208,6 +243,15 @@ export function collectEquipment(items, tables, { level = 1, skillNames = [] } =
     } else if (item.type === "accessory") {
       applyEffects(item.system.effects, {});
     }
+  }
+  if (!weapon && tables.unarmed && tables.weapons[tables.unarmed]) {
+    const table = tables.weapons[tables.unarmed];
+    const altSkill = table.physAtkAlt?.requires;
+    const s = weaponStats(table, { rank: 1, level, hasAltSkill: !!altSkill && skillNames.includes(altSkill) });
+    weapon = { ...s, item: null, unarmed: true, weaponType: tables.unarmed, element: table.element };
+    add("physHit", s.physHit);
+    add("elemHit", s.elemHit);
+    add("speed", s.speed);
   }
   // 제련 속성 부여: 기본 속성과의 관계(교체/복합)는 전투 단계에서 정한다(07 #24)
   if (weapon && flags.weaponElement) weapon.imbue = flags.weaponElement;
