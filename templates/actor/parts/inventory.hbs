@@ -1,77 +1,80 @@
-<section class="inventory">
-  <header class="inventory-header">
-    <span class="carry {{#if inventory.over}}over{{/if}}" title="{{localize 'NSSQ.Inventory.carryHint'}}">
-      <i class="fas fa-suitcase"></i> {{localize "NSSQ.Inventory.carried"}} {{inventory.carried}} / {{inventory.carry}}
-    </span>
-    <span class="money"><i class="fas fa-coins"></i> {{system.money}}G</span>
-    {{#if editable}}<button type="button" class="shop-btn" data-action="shop" {{#unless inventory.shopAvailable}}disabled title="{{localize 'NSSQ.Shop.closed'}}"{{/unless}}><i class="fas fa-store"></i> {{localize "NSSQ.Shop.title"}}</button>{{/if}}
+<section class="nq-inventory">
+  <header class="nq-inv-head">
+    <span class="nq-chip {{#if inventory.over}}over{{/if}}" title="{{localize 'NSSQ.Inventory.carryHint'}}"><i class="fas fa-suitcase"></i> {{localize "NSSQ.Inventory.carried"}} <b>{{inventory.carried}} / {{inventory.carry}}</b></span>
+    <span class="nq-chip"><i class="fas fa-coins"></i> <b>{{system.money}}G</b></span>
+    <span class="nq-spacer"></span>
+    {{#if editable}}<button type="button" data-action="shop" {{#unless inventory.shopAvailable}}disabled title="{{localize 'NSSQ.Shop.closed'}}"{{/unless}}><i class="fas fa-store"></i> {{localize "NSSQ.Shop.title"}}</button>{{/if}}
   </header>
 
-  <h3>{{localize "NSSQ.Inventory.equipped"}}</h3>
-  <ol class="slot-list">
+  <h3 class="nq-title">{{localize "NSSQ.Inventory.equipped"}}</h3>
+  <ol class="nq-slots">
     {{#each inventory.slots as |s|}}
-    <li class="slot flexrow" {{#if s.item}}data-item-id="{{s.item.id}}"{{/if}}>
-      <span class="slot-label">{{localize s.label}}{{#if s.item.sub}} ({{localize "NSSQ.Slot.sub"}}){{/if}}</span>
+    <li class="nq-slot {{#if s.item}}filled{{/if}}" {{#if s.item}}data-item-id="{{s.item.id}}"{{/if}}>
+      <span class="nq-slot-label">{{localize s.label}}{{#if s.item.sub}}<em>{{localize "NSSQ.Slot.sub"}}</em>{{/if}}</span>
       {{#if s.item}}
-        <img class="item-img" src="{{s.item.img}}" width="24" height="24"/>
-        <span class="item-name"><a data-action="item-edit">{{s.item.name}}</a> {{s.item.rank}} {{> "systems/nssq/templates/actor/parts/refine-badges.hbs" refine=s.item.refine}}</span>
-        <span class="item-summary">{{s.item.summary}}</span>
-        {{#if @root.editable}}
-            <a class="item-control" data-action="unequip" title="{{localize 'NSSQ.Inventory.unequip'}}"><i class="fas fa-times-circle"></i></a>
-        {{/if}}
+        <img src="{{s.item.img}}"/>
+        <div class="nq-item-main">
+          <div><a data-action="item-edit">{{s.item.name}}</a> <span class="nq-rank">{{s.item.rank}}</span> {{> "systems/nssq/templates/actor/parts/refine-badges.hbs" refine=s.item.refine}}</div>
+          <div class="nq-item-sum">{{s.item.summary}}</div>
+        </div>
+        {{#if @root.editable}}<a class="nq-ctl" data-action="unequip" title="{{localize 'NSSQ.Inventory.unequip'}}"><i class="fas fa-times-circle"></i></a>{{/if}}
       {{else}}
-        <span class="slot-empty">{{localize "NSSQ.Inventory.empty"}}</span>
+        <span class="nq-empty">{{localize "NSSQ.Inventory.empty"}}</span>
       {{/if}}
     </li>
     {{/each}}
   </ol>
-  <p class="weapon-line"><i class="fas fa-crosshairs"></i> {{inventory.weaponLine}}</p>
+  <p class="nq-weapon-line"><i class="fas fa-crosshairs"></i> {{inventory.weaponLine}}</p>
 
   {{#each inventory.groups as |g|}}
-  <h3>{{localize g.label}}</h3>
-  <ol class="item-list">
+  <h3 class="nq-title">{{localize g.label}} <span class="nq-note">{{g.items.length}}</span></h3>
+  <ol class="nq-items">
     {{#each g.items as |i|}}
-    <li class="item flexrow" data-item-id="{{i.id}}">
-      <img class="item-img" src="{{i.img}}" width="24" height="24"/>
-      <span class="item-name"><a data-action="item-edit">{{i.name}}</a> {{i.rank}} {{> "systems/nssq/templates/actor/parts/refine-badges.hbs" refine=i.refine}}</span>
-      <span class="item-summary">{{i.summary}}</span>
-      {{#if i.uses}}<span class="item-uses" title="{{localize 'NSSQ.Inventory.usesHint'}}">{{i.uses}}</span>{{/if}}
-      {{#if i.stackable}}
-        <input class="item-qty" type="number" min="0" value="{{i.quantity}}" data-action="quantity" {{#unless @root.editable}}disabled{{/unless}}/>
-      {{/if}}
+    <li class="nq-item" data-item-id="{{i.id}}">
+      <img src="{{i.img}}"/>
+      <div class="nq-item-main">
+        <div><a data-action="item-edit">{{i.name}}</a> <span class="nq-rank">{{i.rank}}</span> {{> "systems/nssq/templates/actor/parts/refine-badges.hbs" refine=i.refine}}</div>
+        {{#if i.summary}}<div class="nq-item-sum">{{i.summary}}</div>{{/if}}
+      </div>
+      {{#if i.uses}}<span class="nq-uses" title="{{localize 'NSSQ.Inventory.usesHint'}}">{{i.uses}}</span>{{/if}}
+      {{#if i.stackable}}<input class="nq-qty" type="number" min="0" value="{{i.quantity}}" data-action="quantity" {{#unless @root.editable}}disabled{{/unless}}/>{{/if}}
       {{#if @root.editable}}
-        {{#if i.usable}}<a class="item-control" data-action="use" title="{{localize 'NSSQ.Inventory.use'}}"><i class="fas fa-hand-sparkles"></i></a>{{/if}}
-        {{#if i.equippable}}<a class="item-control" data-action="equip" title="{{localize 'NSSQ.Inventory.equip'}}"><i class="fas fa-shield-alt"></i></a>{{/if}}
-        {{#if i.canSub}}<a class="item-control" data-action="equip" data-slot="other" title="{{localize 'NSSQ.Inventory.equipSub'}}"><i class="fas fa-exchange-alt"></i></a>{{/if}}
-        {{#if i.canStore}}<a class="item-control" data-action="store" title="{{localize 'NSSQ.Storage.toStorage'}}"><i class="fas fa-warehouse"></i></a>{{/if}}
-        <a class="item-control" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>
+      <span class="nq-ctls">
+        {{#if i.usable}}<a class="nq-ctl" data-action="use" title="{{localize 'NSSQ.Inventory.use'}}"><i class="fas fa-hand-sparkles"></i></a>{{/if}}
+        {{#if i.equippable}}<a class="nq-ctl" data-action="equip" title="{{localize 'NSSQ.Inventory.equip'}}"><i class="fas fa-shield-alt"></i></a>{{/if}}
+        {{#if i.canSub}}<a class="nq-ctl" data-action="equip" data-slot="other" title="{{localize 'NSSQ.Inventory.equipSub'}}"><i class="fas fa-exchange-alt"></i></a>{{/if}}
+        {{#if i.canStore}}<a class="nq-ctl" data-action="store" title="{{localize 'NSSQ.Storage.toStorage'}}"><i class="fas fa-warehouse"></i></a>{{/if}}
+        <a class="nq-ctl" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>
+      </span>
       {{/if}}
     </li>
     {{/each}}
   </ol>
   {{else}}
-  <p class="empty">{{localize "NSSQ.NoItems"}}</p>
+  <p class="nq-empty">{{localize "NSSQ.NoItems"}}</p>
   {{/each}}
 
   {{#if @root.isGM}}{{#if inventory.storageSetting}}
-  <label class="storage-toggle"><input type="checkbox" name="system.storageEnabled" {{checked inventory.storageEnabled}}/> {{localize "NSSQ.Storage.enableForActor"}}</label>
+  <label class="nq-toggle gm"><input type="checkbox" name="system.storageEnabled" {{checked inventory.storageEnabled}}/> {{localize "NSSQ.Storage.enableForActor"}}</label>
   {{/if}}{{/if}}
 
   {{#if inventory.showStorage}}
-  <section class="storage">
-    <h3><i class="fas fa-warehouse"></i> {{localize "NSSQ.Storage.title"}}</h3>
-    <ol class="item-list">
+  <section class="nq-storage">
+    <h3 class="nq-title"><i class="fas fa-warehouse"></i> {{localize "NSSQ.Storage.title"}} <span class="nq-note">{{inventory.stored.length}}</span></h3>
+    <ol class="nq-items">
       {{#each inventory.stored as |i|}}
-      <li class="item flexrow" data-item-id="{{i.id}}">
-        <img class="item-img" src="{{i.img}}" width="24" height="24"/>
-        <span class="item-name"><a data-action="item-edit">{{i.name}}</a> {{i.rank}} {{> "systems/nssq/templates/actor/parts/refine-badges.hbs" refine=i.refine}}</span>
-        <span class="item-summary">{{i.summary}}</span>
-        {{#if i.uses}}<span class="item-uses">{{i.uses}}</span>{{/if}}
-        {{#if i.stackable}}<span class="item-qty">×{{i.quantity}}</span>{{/if}}
-        {{#if @root.editable}}<a class="item-control" data-action="retrieve" title="{{localize 'NSSQ.Storage.retrieve'}}"><i class="fas fa-sign-out-alt"></i></a>{{/if}}
+      <li class="nq-item" data-item-id="{{i.id}}">
+        <img src="{{i.img}}"/>
+        <div class="nq-item-main">
+          <div><a data-action="item-edit">{{i.name}}</a> <span class="nq-rank">{{i.rank}}</span> {{> "systems/nssq/templates/actor/parts/refine-badges.hbs" refine=i.refine}}</div>
+          {{#if i.summary}}<div class="nq-item-sum">{{i.summary}}</div>{{/if}}
+        </div>
+        {{#if i.uses}}<span class="nq-uses">{{i.uses}}</span>{{/if}}
+        {{#if i.stackable}}<span class="nq-qty ro">×{{i.quantity}}</span>{{/if}}
+        {{#if @root.editable}}<span class="nq-ctls"><a class="nq-ctl" data-action="retrieve" title="{{localize 'NSSQ.Storage.retrieve'}}"><i class="fas fa-sign-out-alt"></i></a></span>{{/if}}
       </li>
       {{else}}
-      <li class="empty">{{localize "NSSQ.Storage.empty"}}</li>
+      <li class="nq-empty">{{localize "NSSQ.Storage.empty"}}</li>
       {{/each}}
     </ol>
   </section>

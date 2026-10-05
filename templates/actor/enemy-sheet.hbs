@@ -1,46 +1,85 @@
-<form class="{{cssClass}}" autocomplete="off">
-  {{> "systems/nssq/templates/actor/parts/header.hbs"}}
-  <section class="resources grid grid-4col">
-    <label class="stat"><span>{{localize "NSSQ.Level"}}</span><input type="number" name="system.level" value="{{system.level}}" data-dtype="Number"/></label>
-    <label class="stat"><span>{{localize "NSSQ.Rarity"}}</span><input type="number" name="system.rarity" value="{{system.rarity}}" data-dtype="Number"/></label>
-    <label class="stat"><span>{{localize "NSSQ.HP"}}</span>
-      <span class="pair"><input type="number" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number"/> / <input type="number" name="system.hp.max" value="{{system.hp.max}}" data-dtype="Number"/></span></label>
-    <label class="stat"><span>{{localize "NSSQ.Row.label"}}</span>
-      <select name="system.row">{{selectOptions rowChoices selected=system.row localize=true}}</select></label>
-    <label class="stat checkbox"><input type="checkbox" name="system.isFOE" {{checked system.isFOE}}/> {{localize "NSSQ.FOE"}}</label>
-    {{#if isGM}}
-    <div class="stat rare-tools">
-      {{#if system.isRare}}<span class="rare-mark" title="{{localize 'NSSQ.Rare.gmOnly'}}">★ {{localize "NSSQ.Rare.label"}}</span>
-        <button type="button" data-action="rare-off">{{localize "NSSQ.Rare.off"}}</button>
-      {{else}}<button type="button" data-action="rare-on" title="{{localize 'NSSQ.Rare.onHint'}}">★ {{localize "NSSQ.Rare.on"}}</button>{{/if}}
+<form class="{{cssClass}} nq-sheet" autocomplete="off">
+  <header class="nq-head">
+    <img class="nq-portrait" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+    <div class="nq-id">
+      <input class="nq-name" name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'NSSQ.Name'}}"/>
+      <div class="nq-sub">
+        <label class="nq-lv">Lv <input type="number" name="system.level" value="{{system.level}}" data-dtype="Number"/></label>
+        <label class="nq-lv">{{localize "NSSQ.Rarity"}} <input type="number" name="system.rarity" value="{{system.rarity}}" data-dtype="Number"/></label>
+        <select class="nq-row" name="system.row" title="{{localize 'NSSQ.Row.label'}}">{{selectOptions rowChoices selected=system.row localize=true}}</select>
+        {{#if isGM}}{{#if system.isRare}}<span class="nq-rare" title="{{localize 'NSSQ.Rare.gmOnly'}}">★ {{localize "NSSQ.Rare.label"}}</span>{{/if}}{{/if}}
+      </div>
+      <div class="nq-bars">
+        <span class="nq-bar-label hp">HP</span>
+        <div class="nq-bar hp"><i style="width: {{hpPct}}%"></i></div>
+        <span class="nq-bar-val"><input type="number" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number"/> / <input type="number" name="system.hp.max" value="{{system.hp.max}}" data-dtype="Number"/></span>
+      </div>
     </div>
-    {{/if}}
-    <label class="stat checkbox"><input type="checkbox" name="system.identified" {{checked system.identified}}/> {{localize "NSSQ.Identified"}}</label>
-  </section>
+    <div class="nq-side">
+      <label class="nq-chip"><span>{{localize "NSSQ.FOE"}}</span><input type="checkbox" name="system.isFOE" {{checked system.isFOE}}/></label>
+      <label class="nq-chip"><span>{{localize "NSSQ.Identified"}}</span><input type="checkbox" name="system.identified" {{checked system.identified}}/></label>
+      <div class="nq-chip"><span>{{localize "NSSQ.Sheet.attackElement"}}</span><b>{{attackElementText}}</b></div>
+    </div>
+  </header>
 
-  <nav class="sheet-tabs tabs" data-group="primary">
-    <a class="item" data-tab="main">{{localize "NSSQ.Tab.main"}}</a>
-    <a class="item" data-tab="items">{{localize "NSSQ.Tab.skills"}}</a>
-    <a class="item" data-tab="description">{{localize "NSSQ.Tab.description"}}</a>
+  <div class="nq-actions">
+    {{#if canAttack}}<button type="button" data-action="normal-attack" title="{{localize 'NSSQ.Combat.normalAttackHint'}}"><i class="fas fa-fist-raised"></i> {{localize "NSSQ.Combat.normalAttack"}}</button>{{/if}}
+    <span class="nq-spacer"></span>
+    {{#if isGM}}
+      {{#if system.isRare}}<button type="button" data-action="rare-off">{{localize "NSSQ.Rare.off"}}</button>
+      {{else}}<button type="button" data-action="rare-on" title="{{localize 'NSSQ.Rare.onHint'}}">★ {{localize "NSSQ.Rare.on"}}</button>{{/if}}
+    {{/if}}
+  </div>
+
+  <nav class="nq-tabs sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="main"><i class="fas fa-skull"></i> {{localize "NSSQ.Tab.main"}}</a>
+    <a class="item" data-tab="items"><i class="fas fa-book-open"></i> {{localize "NSSQ.Tab.skills"}}</a>
+    <a class="item" data-tab="description"><i class="fas fa-feather"></i> {{localize "NSSQ.Tab.description"}}</a>
   </nav>
 
-  <section class="sheet-body">
+  <section class="sheet-body nq-body">
     <div class="tab" data-group="primary" data-tab="main">
-      <section class="substats">
-        <h3>{{localize "NSSQ.Sub.label"}}</h3>
-        <div class="grid grid-3col">
-          {{#each subKeys as |k|}}
-          <label class="stat"><span>{{nssqLabel "NSSQ.Sub" k}}</span>
-            <input type="number" name="system.stats.{{k}}" value="{{lookup @root.system.stats k}}" data-dtype="Number"/></label>
-          {{/each}}
+      <div class="nq-cols">
+        <div class="nq-col">
+          <h3 class="nq-title">{{localize "NSSQ.Sub.label"}}</h3>
+          <div class="nq-stat-grid">
+            {{#each subKeys as |k|}}
+            <label class="nq-sub-stat"><span>{{nssqLabel "NSSQ.Sub" k}}</span><input type="number" name="system.stats.{{k}}" value="{{lookup @root.system.stats k}}" data-dtype="Number"/></label>
+            {{/each}}
+          </div>
         </div>
-      </section>
-      {{> "systems/nssq/templates/actor/parts/resist.hbs"}}
+        <div class="nq-col">
+          <h3 class="nq-title">{{localize "NSSQ.Resist.label"}}</h3>
+          <div class="nq-resists">
+            {{#each resistKeys as |k|}}
+            <div class="nq-resist {{k}}">
+              <span class="nq-resist-name">{{nssqLabel "NSSQ.Resist" k}}</span>
+              <input type="number" name="system.resist.{{k}}" value="{{lookup @root.system.resist k}}" data-dtype="Number" style="width:3em;height:24px;font-size:1.1em"/>
+            </div>
+            {{/each}}
+          </div>
+          <h3 class="nq-title">DROP</h3>
+          <ul class="nq-drops">
+            {{#each drops as |d|}}<li><b>{{d.range}}</b> {{d.item}}</li>{{else}}<li class="nq-empty">-</li>{{/each}}
+          </ul>
+        </div>
+      </div>
     </div>
     <div class="tab" data-group="primary" data-tab="items">
-      {{> "systems/nssq/templates/actor/parts/items.hbs"}}
+      <ol class="nq-skill-list">
+        {{#each items as |item|}}
+        <li class="nq-skill" data-item-id="{{item.id}}">
+          <img src="{{item.img}}"/>
+          <a class="nq-skill-name" data-action="item-edit">{{item.name}}</a>
+          {{#if item.system.timing}}<span class="nq-timing">{{item.system.timing}}</span>{{/if}}
+          {{#if @root.editable}}<a class="nq-ctl" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>{{/if}}
+        </li>
+        {{else}}
+        <li class="nq-empty">{{localize "NSSQ.NoItems"}}</li>
+        {{/each}}
+      </ol>
     </div>
-    <div class="tab" data-group="primary" data-tab="description">
+    <div class="tab nq-description" data-group="primary" data-tab="description">
       {{editor enrichedDescription target="system.description" button=true editable=editable owner=owner}}
     </div>
   </section>

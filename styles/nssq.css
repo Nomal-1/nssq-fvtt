@@ -1,332 +1,472 @@
-.nssq.sheet form { display: flex; flex-direction: column; height: 100%; }
-.nssq .sheet-header { display: flex; gap: 8px; align-items: center; flex: 0 0 auto; margin-bottom: 6px; }
-.nssq .sheet-header .profile-img { flex: 0 0 auto; border: none; object-fit: cover; }
-.nssq .sheet-header .header-fields { flex: 1; }
-.nssq .sheet-header h1 input { font-size: 1.6em; height: auto; }
-.nssq .grid { display: grid; gap: 4px 8px; margin: 4px 0; }
-.nssq .grid-2col { grid-template-columns: repeat(2, 1fr); }
-.nssq .grid-3col { grid-template-columns: repeat(3, 1fr); }
-.nssq .grid-4col { grid-template-columns: repeat(4, 1fr); }
-.nssq .grid-5col { grid-template-columns: repeat(5, 1fr); }
-.nssq .grid-6col { grid-template-columns: repeat(6, 1fr); }
-.nssq .stat { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.nssq .stat > span:first-child { font-size: 0.85em; color: var(--color-text-dark-secondary, #4b4a44); }
-.nssq .stat input[type="number"] { width: 4em; text-align: center; }
-.nssq .stat .pair { display: flex; align-items: center; gap: 2px; }
-.nssq .stat .value { font-size: 1.3em; font-weight: bold; }
-.nssq .stat .bonus { font-size: 0.85em; }
-.nssq .stat.checkbox { flex-direction: row; justify-content: center; gap: 4px; }
-.nssq h3 { border-bottom: 1px solid var(--color-underline-header, #782e22); margin: 8px 0 4px; }
-.nssq .sheet-tabs { flex: 0 0 auto; }
-.nssq .sheet-body { flex: 1; overflow-y: auto; }
-.nssq .sheet-body .editor { min-height: 200px; height: 100%; }
-.nssq .item-list { list-style: none; margin: 0; padding: 0; }
-.nssq .item-list .item { align-items: center; gap: 6px; padding: 2px 0; border-bottom: 1px solid #c9c7b8; }
-.nssq .item-list .item-img { flex: 0 0 24px; border: none; }
-.nssq .item-list .item-type { flex: 0 0 90px; font-size: 0.85em; }
-.nssq .item-list .item-control { flex: 0 0 18px; text-align: center; }
+/* =====================================================================
+   NSSQ — 원작 게임풍 테마
+   1 토큰 · 2 창틀 · 3 공통 부품 · 4 캐릭터 시트 · 5 소지품·스킬 · 6 에너미·아이템 시트
+   7 채팅 카드 · 8 대화창 · 9 상점 · 10 GM 스크린 · 11 전투 추적기 · 12 전투 HUD
+   ===================================================================== */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600&display=swap");
 
-/* 능력치 판정 */
-.nssq .rollable { cursor: pointer; }
-.nssq .rollable:hover { color: var(--color-text-hyperlink, #ff6400); text-shadow: 0 0 6px var(--color-shadow-primary, #ff0000); }
+/* 1 ─ 토큰 */
+:root {
+  --nq-bg: #0f1e33;
+  --nq-bg2: #0a1626;
+  --nq-panel: #132743;
+  --nq-panel2: #183152;
+  --nq-line: #2b4466;
+  --nq-line2: #3a557a;
+  --nq-gold: #c9a24a;
+  --nq-gold-l: #e7cf8a;
+  --nq-tx: #ece4cc;
+  --nq-mu: #93a8bf;
+  --nq-dim: #6c84a0;
+  --nq-hp: #4fae6a;
+  --nq-tp: #3b8fd9;
+  --nq-fp: #e0b84a;
+  --nq-cy: #6fd3e6;
+  --nq-red: #e0705f;
+  --nq-green: #74d08e;
+  --nq-fire: #e8835f;
+  --nq-ice: #7cc4f0;
+  --nq-volt: #e8cf5a;
+  --nq-font: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  --nq-title: "Noto Serif KR", "Batang", serif;
+  --nq-r: 6px;
+}
 
-/* 판정 카드 */
-.nssq-check .check-header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid #c9c7b8; margin-bottom: 4px; }
-.nssq-check .check-label { font-weight: bold; font-size: 1.1em; }
-.nssq-check .check-kind { font-size: 0.85em; color: #7a7971; }
-.nssq-check .check-dice { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 4px 0; padding: 0; }
-.nssq-check .die { width: 26px; height: 26px; line-height: 26px; text-align: center; font-weight: bold; border: 1px solid #999; border-radius: 4px; opacity: 0.45; }
-.nssq-check .die.used { opacity: 1; background: rgba(255, 255, 255, 0.6); }
-.nssq-check .die.one { color: #b02020; }
-.nssq-check .die.six { color: #18762b; }
-.nssq-check .die[data-nssq-action] { cursor: pointer; }
-.nssq-check .check-total { display: flex; align-items: baseline; gap: 6px; }
-.nssq-check .check-total .formula { font-size: 0.85em; color: #555; }
-.nssq-check .check-total .total { font-size: 1.6em; font-weight: bold; }
-.nssq-check .check-result { text-align: center; font-weight: bold; padding: 2px; margin: 4px 0; border-radius: 3px; }
-.nssq-check .check-result.success { background: rgba(24, 118, 43, 0.15); color: #18762b; }
-.nssq-check .check-result.failure { background: rgba(176, 32, 32, 0.12); color: #b02020; }
-.nssq-check .check-notes { display: flex; gap: 8px; font-size: 0.85em; }
-.nssq-check .check-notes .fp-gain { color: #1a5fb4; font-weight: bold; }
-.nssq-check .check-buttons { display: flex; gap: 4px; margin-top: 4px; }
-.nssq-check .check-buttons button { flex: 1; line-height: 1.6em; font-size: 0.85em; }
-.nssq-check .nssq-contest { border-top: 1px dashed #999; margin-top: 4px; padding-top: 4px; font-size: 0.9em; }
-.nssq-check .nssq-contest .winner { color: #18762b; }
+/* 2 ─ 창틀(시트·앱·대화창) */
+.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen { font-family: var(--nq-font); }
+.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen {
+  border: 1px solid var(--nq-gold);
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px #000, 0 8px 30px rgba(0, 0, 0, 0.6);
+}
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) .window-header {
+  background: linear-gradient(#1a3354, #0f1e33);
+  border-bottom: 1px solid var(--nq-gold);
+  color: var(--nq-gold-l);
+}
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) .window-header .window-title { font-family: var(--nq-title); letter-spacing: 0.02em; }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) .window-content {
+  background: radial-gradient(ellipse at top, #16304f 0%, var(--nq-bg) 55%, var(--nq-bg2) 100%);
+  color: var(--nq-tx);
+}
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) :is(input[type="text"], input[type="number"], input[type="search"], select, textarea) {
+  background: var(--nq-bg2);
+  border: 1px solid var(--nq-line);
+  color: var(--nq-tx);
+  border-radius: 4px;
+}
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) :is(input, select):focus { border-color: var(--nq-cy); box-shadow: 0 0 0 1px var(--nq-cy); outline: none; }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) select option { background: var(--nq-bg2); color: var(--nq-tx); }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) button {
+  background: linear-gradient(#1e3a5f, #142a46);
+  border: 1px solid var(--nq-gold);
+  color: var(--nq-gold-l);
+  border-radius: var(--nq-r);
+  font-family: var(--nq-font);
+}
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) button:hover:not(:disabled) { background: linear-gradient(#2a4d7a, #1a3557); box-shadow: 0 0 6px rgba(231, 207, 138, 0.35); }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) button:disabled { opacity: 0.45; cursor: not-allowed; }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) a:hover { color: var(--nq-cy); text-shadow: none; }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) h3 { color: var(--nq-gold-l); border-bottom: 1px solid var(--nq-line2); font-family: var(--nq-title); font-weight: 600; }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) .notes, :is(.nq-window, .nssq.dialog) .hint { color: var(--nq-mu); }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) .warn, .nssq .notes.warn { color: var(--nq-red); }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) fieldset { border: 1px solid var(--nq-line); border-radius: var(--nq-r); }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) legend { color: var(--nq-gold-l); padding: 0 4px; }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) img { border: none; }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) .tabs { border-color: var(--nq-gold); }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) .tabs .item { color: var(--nq-mu); }
+:is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) .tabs .item.active { color: var(--nq-gold-l); text-shadow: 0 0 6px rgba(231, 207, 138, 0.5); }
+.nssq.dialog .dialog-buttons button { line-height: 2em; }
+.nssq .editor, .nssq .editor-content { color: var(--nq-tx); }
+.nssq .editor-content a { color: var(--nq-cy); }
 
-/* 판정 요청 */
-.nssq-request-form .request-actors { display: flex; flex-direction: column; gap: 2px; max-height: 220px; overflow-y: auto; }
-.nssq-request-form .request-actor { display: flex; align-items: center; gap: 6px; }
-.nssq-request-form .request-actor img { border: none; }
-.nssq-request-form .request-actor .owner { margin-left: auto; font-size: 0.85em; color: #7a7971; }
-.nssq-request-popup .request-what { font-size: 1.2em; text-align: center; margin: 6px 0; }
-.nssq-request-popup .request-formula { text-align: center; color: #555; }
-.nssq-request-popup .request-note { font-style: italic; text-align: center; }
-.nssq-request .dialog-buttons button { line-height: 2.2em; font-size: 1.05em; }
-.nssq-check .check-request { font-size: 0.85em; color: #7a4b00; margin-bottom: 2px; }
-#actors .nssq-request-btn { flex: 0 0 100%; margin-top: 4px; }
-.nssq-check .check-notes .fp-pending { font-weight: normal; color: #7a7971; }
-.nssq-check .check-buttons button:disabled { opacity: 0.45; cursor: not-allowed; }
-.nssq-check .check-notes .fp-gain.pending { color: #7a7971; }
-
-/* 능력치 굴리기 */
-.nssq .section-title { display: flex; justify-content: space-between; align-items: baseline; }
-.nssq .section-title .section-action { font-size: 0.8em; font-weight: normal; cursor: pointer; }
-.nssq .section-title .section-action:hover { color: var(--color-text-hyperlink, #ff6400); }
-.nssq-ability-roll .ability-results { list-style: none; margin: 4px 0; padding: 0; }
-.nssq-ability-roll .ability-results li { display: flex; align-items: center; gap: 8px; padding: 1px 0; }
-.nssq-ability-roll .ability-results .n { width: 1.2em; color: #7a7971; }
-.nssq-ability-roll .ability-results .dice { display: flex; gap: 2px; flex: 1; }
-.nssq-ability-roll .die-s { width: 18px; height: 18px; line-height: 18px; text-align: center; border: 1px solid #999; border-radius: 3px; font-size: 0.85em; }
-.nssq-ability-roll .ability-results .total { font-size: 1.2em; width: 2em; text-align: right; }
-.nssq-ability-roll .ability-sum { font-size: 0.9em; color: #555; text-align: right; }
-.nssq-assign .assign-values { display: flex; justify-content: space-around; font-size: 1.1em; }
-.nssq-assign .assign-tools { display: flex; gap: 4px; margin-bottom: 4px; }
-.nssq-assign .assign-row select.dup { outline: 2px solid #b02020; }
-.nssq-assign .assign-bonus { flex: 0 0 3em; text-align: right; color: #555; }
-.nssq-assign .assign-error { color: #b02020; }
-.nssq-assign .notes.warn { color: #b02020; }
-
-/* 클래스 선택 */
-.nssq .classes { margin-bottom: 4px; }
-.nssq .class-select { display: flex; align-items: center; gap: 6px; }
-.nssq .class-select > span:first-child { flex: 0 0 auto; font-size: 0.85em; color: var(--color-text-dark-secondary, #4b4a44); }
-.nssq .class-select select { flex: 1; }
-.nssq .class-select .hint { font-style: italic; color: #7a7971; font-size: 0.85em; }
-
-/* 능력치 출처 표 */
-.nssq .ability-table { width: 100%; border-collapse: collapse; margin: 2px 0 6px; text-align: center; }
-.nssq .ability-table th, .nssq .ability-table td { padding: 2px 3px; border-bottom: 1px solid #c9c7b8; }
-.nssq .ability-table thead th { font-size: 0.8em; font-weight: normal; color: var(--color-text-dark-secondary, #4b4a44); cursor: help; }
-.nssq .ability-table .ability-name { text-align: left; white-space: nowrap; }
-.nssq .ability-table input[type="number"] { width: 3.2em; text-align: center; }
-.nssq .ability-table .calc { color: #555; }
-.nssq .ability-table .final { background: rgba(0, 0, 0, 0.05); font-size: 1.15em; font-weight: bold; }
-.nssq .ability-table .final .rollable { display: block; }
-.nssq .ability-table .bonus { font-weight: bold; }
-
-/* 장비·소지품 */
-.nssq .inventory-header { display: flex; align-items: center; gap: 12px; margin: 4px 0; }
-.nssq .inventory-header .carry.over, .nssq .value.over { color: #b02020; font-weight: bold; }
-.nssq .inventory-header .shop-btn { margin-left: auto; flex: 0 0 auto; width: auto; line-height: 1.6em; }
-.nssq .slot-list, .nssq-shop .shop-list { list-style: none; margin: 0; padding: 0; }
-.nssq .slot { align-items: center; gap: 6px; padding: 3px 0; border-bottom: 1px solid #c9c7b8; min-height: 30px; }
-.nssq .slot .slot-label { flex: 0 0 80px; font-weight: bold; }
-.nssq .slot .slot-empty { color: #7a7971; font-style: italic; }
-.nssq .item-name { flex: 0 0 auto; max-width: 40%; }
-.nssq .item-summary { flex: 1; font-size: 0.85em; color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.nssq .item-qty { flex: 0 0 3em; text-align: center; height: 22px; }
-.nssq .weapon-line { font-size: 0.9em; color: #444; margin: 4px 0 8px; }
-.nssq .item-stats .value { font-size: 1.1em; }
-.nssq .item-refinements ul { margin: 0; padding-left: 1.2em; }
-.nssq-shop .shop-header { display: flex; justify-content: space-between; align-items: center; }
-.nssq-shop .shop-header .money { font-size: 1.2em; font-weight: bold; }
-.nssq-shop .shop-body { overflow-y: auto; height: calc(100% - 110px); }
-.nssq-shop .shop-row { align-items: center; gap: 6px; padding: 3px 0; border-bottom: 1px solid #c9c7b8; }
-.nssq-shop .shop-row img { flex: 0 0 24px; border: none; }
-.nssq-shop .shop-row .name { flex: 1; }
-.nssq-shop .shop-row .info { font-size: 0.8em; color: #555; }
-.nssq-shop .shop-row .rank { flex: 0 0 auto; }
-.nssq-shop .shop-row .rank input { width: 3em; text-align: center; }
-.nssq-shop .shop-row .mats { flex: 0 0 150px; font-size: 0.8em; color: #555; text-align: right; }
-.nssq-shop .shop-row .price { flex: 0 0 60px; text-align: right; font-weight: bold; }
-.nssq-shop .shop-row button { flex: 0 0 52px; line-height: 1.5em; }
-.nssq-trade { font-size: 0.95em; }
-
-/* 창고·소지 수 초과 */
-.nssq .storage-toggle { display: block; margin: 8px 0 2px; font-size: 0.9em; }
-.nssq .storage h3 .notes { font-size: 0.8em; font-weight: normal; color: #7a7971; }
-.nssq-overflow table { width: 100%; border-collapse: collapse; }
-.nssq-overflow th, .nssq-overflow td { padding: 2px 4px; border-bottom: 1px solid #c9c7b8; text-align: center; }
-.nssq-overflow td.name { text-align: left; }
-.nssq-overflow input[type="number"] { width: 3.5em; text-align: center; }
-.nssq-overflow .overflow-status { font-weight: bold; text-align: right; }
-.nssq-overflow .overflow-status.over { color: #b02020; }
-.nssq-overflow .incoming { color: #1a5fb4; }
-.nssq-overflow h4 { margin: 6px 0 2px; border-bottom: 1px solid #999; }
-.nssq-overflow table.incoming td.name { color: #1a5fb4; }
-
-/* 상점 GM 도구·수량 */
-#actors .nssq-shop-gm { gap: 4px; margin: 4px 0 0; flex: 0 0 100%; }
-#actors .nssq-shop-gm button { line-height: 1.6em; font-size: 0.9em; }
-#actors .nssq-shop-gm .shop-toggle.on { background: rgba(24, 118, 43, 0.35); }
-.nssq-shop .shop-state { font-weight: bold; color: #b02020; }
-.nssq-shop .shop-state.on { color: #18762b; }
-.nssq-shop .shop-row .qty input { width: 2.8em; text-align: center; }
-.nssq-shop .shop-row .qty { flex: 0 0 auto; }
-.nssq-shop .custom-tag { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: rgba(26, 95, 180, 0.2); }
-.nssq .inventory-header .shop-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* 사용 */
-.nssq .item-uses { flex: 0 0 auto; font-size: 0.85em; padding: 0 4px; border: 1px solid #999; border-radius: 3px; }
-.nssq-use .left { font-size: 0.85em; color: #555; }
-
-/* GM 스크린 */
-#actors .nssq-gm-screen-btn { flex: 0 0 100%; margin-top: 4px; }
-.nssq-gm-screen .window-content { display: flex; flex-direction: column; }
-.nssq-gm-screen .gm-screen { display: flex; flex-direction: column; height: 100%; }
-.nssq-gm-screen .gm-actions { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; flex: 0 0 auto; }
-.nssq-gm-screen .gm-actions button { flex: 1 1 auto; width: auto; line-height: 1.8em; }
-.nssq-gm-screen .gm-actions button.on { background: rgba(24, 118, 43, 0.35); }
-.nssq-gm-screen .gm-tabs { flex: 0 0 auto; }
-.nssq-gm-screen .gm-body { flex: 1; overflow-y: auto; }
-.nssq-gm-screen table { width: 100%; border-collapse: collapse; }
-.nssq-gm-screen th, .nssq-gm-screen td { padding: 3px 4px; border-bottom: 1px solid #c9c7b8; text-align: center; vertical-align: middle; }
-.nssq-gm-screen .party .who { text-align: left; }
-.nssq-gm-screen .party .who a { display: flex; align-items: center; gap: 6px; font-weight: bold; cursor: pointer; }
-.nssq-gm-screen .party .who img { border: none; }
-.nssq-gm-screen .party .owners { font-size: 0.8em; color: #7a7971; }
-.nssq-gm-screen .party .owners.online { color: #18762b; }
-.nssq-gm-screen .bar { position: relative; height: 18px; min-width: 90px; background: rgba(0, 0, 0, 0.12); border-radius: 3px; overflow: hidden; }
-.nssq-gm-screen .bar span { position: absolute; left: 0; top: 0; bottom: 0; }
-.nssq-gm-screen .bar.hp span { background: rgba(176, 32, 32, 0.55); }
-.nssq-gm-screen .bar.tp span { background: rgba(26, 95, 180, 0.55); }
-.nssq-gm-screen .bar b { position: relative; font-size: 0.85em; }
-.nssq-gm-screen .fp { font-weight: bold; color: #1a5fb4; }
-.nssq-gm-screen .over { color: #b02020; font-weight: bold; }
-.nssq-gm-screen .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.nssq-gm-screen .ref th { width: 3.5em; }
-.nssq-gm-screen .ref td { text-align: left; font-size: 0.9em; }
-.nssq-gm-screen .ref.levels td.note { font-size: 0.8em; color: #555; }
-
-/* 상점 품목 숨김 */
-.nssq-shop .hidden-tag, .nssq-gm-screen .hidden-tag { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: rgba(176, 32, 32, 0.2); }
-.nssq-gm-screen .shop-tools { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
-.nssq-gm-screen .shop-tools input[type="search"] { flex: 0 0 180px; }
-.nssq-gm-screen .shop-group .count { font-size: 0.8em; font-weight: normal; color: #555; }
-.nssq-gm-screen .shop-group .group-actions { margin-left: auto; font-size: 0.8em; font-weight: normal; display: flex; gap: 10px; }
-.nssq-gm-screen .shop-group .group-actions a { cursor: pointer; }
-.nssq-gm-screen .shop-items { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px 8px; }
-.nssq-gm-screen .shop-items label { display: flex; align-items: center; gap: 4px; }
-.nssq-gm-screen .shop-items img { border: none; }
-.nssq-gm-screen .shop-items .hidden-item { opacity: 0.55; }
-.nssq-gm-screen .custom-tag { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: rgba(26, 95, 180, 0.2); }
+/* 3 ─ 공통 부품 */
+.nssq .nq-title { display: flex; align-items: baseline; gap: 8px; margin: 10px 0 6px; padding-bottom: 2px; font-size: 1.05em; }
+.nssq .nq-note { font-family: var(--nq-font); font-size: 0.75em; font-weight: 400; color: var(--nq-mu); }
+.nssq .nq-spacer { flex: 1; }
+.nssq .nq-empty { color: var(--nq-dim); font-style: italic; }
+.nssq .nq-hint { color: var(--nq-mu); font-size: 0.85em; font-style: italic; }
+.nssq .nq-chip { display: flex; align-items: center; gap: 6px; padding: 3px 8px; background: var(--nq-bg2); border: 1px solid var(--nq-line2); border-radius: var(--nq-r); }
+.nssq .nq-chip > span:first-child { color: var(--nq-mu); font-size: 0.8em; }
+.nssq .nq-chip b { margin-left: auto; font-weight: 500; }
+.nssq .nq-chip input { width: 4em; height: 22px; text-align: right; margin-left: auto; }
+.nssq .nq-chip em { font-style: normal; color: var(--nq-mu); }
+.nssq .nq-chip.over b, .nssq .nq-chip.over { color: var(--nq-red); border-color: var(--nq-red); }
+.nssq .nq-chip.fp span:first-child { color: var(--nq-fp); font-weight: 700; }
+.nssq .nq-toggle { display: inline-flex; align-items: center; gap: 4px; font-size: 0.9em; color: var(--nq-mu); }
+.nssq .nq-toggle.gm { margin-top: 10px; color: var(--nq-gold-l); }
+.nssq .nq-tag { font-size: 0.75em; padding: 0 6px; border-radius: 8px; border: 1px solid var(--nq-line2); color: var(--nq-mu); }
+.nssq .nq-tag.locked { color: var(--nq-gold-l); border-color: var(--nq-gold); }
+.nssq .nq-ctl { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: 4px; color: var(--nq-mu); }
+.nssq .nq-ctl:hover { background: var(--nq-panel2); color: var(--nq-cy); }
+.nssq .nq-rank { color: var(--nq-gold-l); font-size: 0.85em; }
 
 /* 제련 배지 */
-.nssq .refine-badges, .nssq-shop .refine-badges { display: inline-flex; gap: 2px; vertical-align: middle; }
-.refine-badge { display: inline-flex; align-items: center; gap: 2px; font-size: 0.75em; line-height: 1.5; padding: 0 4px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.25); background: rgba(0, 0, 0, 0.06); white-space: nowrap; }
-.refine-badge.imbue.fire, .refine-badge.resist.fire { background: rgba(214, 64, 32, 0.18); color: #a3301a; }
-.refine-badge.imbue.ice, .refine-badge.resist.ice { background: rgba(32, 128, 214, 0.18); color: #1a5fb4; }
-.refine-badge.imbue.volt, .refine-badge.resist.volt { background: rgba(214, 180, 32, 0.25); color: #806400; }
+.refine-badges { display: inline-flex; gap: 3px; vertical-align: middle; }
+.refine-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 0.75em; line-height: 1.5; padding: 0 5px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.06); white-space: nowrap; color: var(--nq-tx); }
+.refine-badge.fire { color: var(--nq-fire); border-color: rgba(232, 131, 95, 0.5); }
+.refine-badge.ice { color: var(--nq-ice); border-color: rgba(124, 196, 240, 0.5); }
+.refine-badge.volt { color: var(--nq-volt); border-color: rgba(232, 207, 90, 0.5); }
 .refine-badge.resist { border-style: dashed; }
-.refine-badge.ability { background: rgba(24, 118, 43, 0.15); color: #18762b; }
-.refine-badge.sub { background: rgba(110, 60, 160, 0.15); color: #5e2f8f; }
-.refine-empty { font-size: 0.8em; color: #9a9890; }
+.refine-badge.ability { color: var(--nq-green); border-color: rgba(116, 208, 142, 0.45); }
+.refine-badge.sub { color: #c7a6f0; border-color: rgba(199, 166, 240, 0.45); }
+.refine-empty { font-size: 0.8em; color: var(--nq-dim); }
 
-/* 내성 기본·최종 */
-.nssq .resist-table { width: 100%; border-collapse: collapse; text-align: center; }
-.nssq .resist-table th, .nssq .resist-table td { padding: 2px; border-bottom: 1px solid #c9c7b8; }
-.nssq .resist-table thead th { font-weight: normal; }
-.nssq .resist-table tbody th { text-align: left; font-size: 0.85em; width: 3em; }
-.nssq .resist-table input { width: 3em; text-align: center; }
-.nssq .resist-table tr.final td { font-weight: bold; font-size: 1.1em; }
-.nssq .resist-table tr.final td.changed { color: #1a5fb4; }
+/* 4 ─ 캐릭터 시트 */
+.nssq.sheet .window-content { padding: 10px 12px; }
+.nssq .nq-sheet { display: flex; flex-direction: column; height: 100%; }
+.nssq .nq-head { display: grid; grid-template-columns: 92px minmax(0, 1fr) 170px; gap: 12px; align-items: center; padding: 8px; background: linear-gradient(var(--nq-panel2), var(--nq-panel)); border: 1px solid var(--nq-gold); border-radius: 8px; flex: 0 0 auto; }
+.nssq .nq-portrait { width: 92px; height: 92px; object-fit: cover; border: 1.5px solid var(--nq-gold) !important; border-radius: 8px; background: var(--nq-bg2); cursor: pointer; }
+.nssq .nq-name { font-family: var(--nq-title); font-size: 1.6em; height: auto; color: var(--nq-gold-l) !important; background: transparent !important; border-color: transparent !important; padding: 0 2px; }
+.nssq .nq-name:hover { border-color: var(--nq-line) !important; }
+.nssq .nq-sub { display: flex; align-items: center; gap: 6px; margin: 2px 0 6px; color: var(--nq-mu); font-size: 0.9em; }
+.nssq .nq-sub select, .nssq .nq-sub input { height: 22px; font-size: 0.95em; }
+.nssq .nq-lv input { width: 2.6em; text-align: center; }
+.nssq .nq-class { max-width: 9em; }
+.nssq .nq-class.sub { color: var(--nq-mu); }
+.nssq .nq-row { max-width: 5em; }
+.nssq .nq-bars { display: grid; grid-template-columns: 26px minmax(0, 1fr) 96px; gap: 3px 8px; align-items: center; }
+.nssq .nq-bar-label { font-weight: 700; font-size: 0.85em; }
+.nssq .nq-bar-label.hp { color: var(--nq-hp); }
+.nssq .nq-bar-label.tp { color: var(--nq-tp); }
+.nssq .nq-bar { height: 10px; border-radius: 5px; background: #22344d; overflow: hidden; border: 1px solid #000; }
+.nssq .nq-bar i { display: block; height: 100%; transition: width 0.3s; }
+.nssq .nq-bar.hp i { background: linear-gradient(#7cd893, var(--nq-hp)); }
+.nssq .nq-bar.tp i { background: linear-gradient(#7ab8f0, var(--nq-tp)); }
+.nssq .nq-bar-val { font-size: 0.85em; color: var(--nq-mu); }
+.nssq .nq-bar-val input { width: 3em; height: 20px; text-align: right; }
+.nssq .nq-side { display: grid; gap: 4px; }
+.nssq .nq-actions { display: flex; align-items: center; gap: 6px; margin: 6px 0; flex: 0 0 auto; }
+.nssq .nq-actions button { flex: 0 0 auto; width: auto; line-height: 1.8em; padding: 0 10px; }
+.nssq .nq-tabs { flex: 0 0 auto; margin: 0; border-bottom: 1px solid var(--nq-gold); }
+.nssq .nq-tabs .item { padding: 4px 12px; border: 1px solid transparent; border-bottom: none; border-radius: 6px 6px 0 0; }
+.nssq .nq-tabs .item.active { border-color: var(--nq-gold); background: var(--nq-bg2); }
+.nssq .nq-body { flex: 1; overflow-y: auto; padding: 6px 4px; background: rgba(10, 22, 38, 0.6); border: 1px solid var(--nq-line); border-top: none; border-radius: 0 0 8px 8px; }
+.nssq .nq-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.nssq .nq-ability-cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.nssq .nq-ability { position: relative; background: linear-gradient(var(--nq-panel2), var(--nq-bg2)); border: 1px solid var(--nq-line2); border-radius: 8px; text-align: center; }
+.nssq .nq-ability.boosted { border-color: var(--nq-cy); }
+.nssq .nq-ability-roll { display: flex; flex-direction: column; align-items: center; padding: 6px 0 4px; }
+.nssq .nq-ability-roll:hover { background: rgba(111, 211, 230, 0.08); border-radius: 8px; }
+.nssq .nq-ability-name { font-size: 0.8em; color: var(--nq-mu); }
+.nssq .nq-ability-val { font-size: 1.9em; line-height: 1.1; font-weight: 500; color: var(--nq-tx); }
+.nssq .nq-ability-b { font-size: 0.85em; color: var(--nq-gold-l); }
+.nssq .nq-ability-edit { position: absolute; top: 2px; right: 3px; font-size: 0.7em; color: var(--nq-dim); }
+.nssq .nq-ability-edit:hover { color: var(--nq-cy); }
+.nssq .nq-resists { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; }
+.nssq .nq-resist { display: flex; flex-direction: column; align-items: center; padding: 4px 0; background: var(--nq-bg2); border: 1px solid var(--nq-line); border-radius: 6px; }
+.nssq .nq-resist-name { font-size: 0.8em; color: var(--nq-mu); }
+.nssq .nq-resist.slash .nq-resist-name, .nssq .nq-resist.strike .nq-resist-name, .nssq .nq-resist.pierce .nq-resist-name { color: #d7c9a7; }
+.nssq .nq-resist.fire .nq-resist-name { color: var(--nq-fire); }
+.nssq .nq-resist.ice .nq-resist-name { color: var(--nq-ice); }
+.nssq .nq-resist.volt .nq-resist-name { color: var(--nq-volt); }
+.nssq .nq-resist-final { font-size: 1.25em; font-weight: 500; }
+.nssq .nq-resist.changed .nq-resist-final { color: var(--nq-cy); }
+.nssq .nq-resist input { width: 2.6em; height: 18px; font-size: 0.8em; text-align: center; margin-top: 2px; }
+.nssq .nq-subs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+.nssq .nq-sub-stat { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 8px; background: var(--nq-bg2); border: 1px solid var(--nq-line); border-radius: 6px; }
+.nssq .nq-sub-stat span { color: var(--nq-mu); font-size: 0.85em; }
+.nssq .nq-sub-stat b { font-size: 1.15em; font-weight: 500; }
+.nssq .nq-equip { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.nssq .nq-equip li { display: flex; align-items: center; gap: 8px; padding: 5px 8px; background: var(--nq-bg2); border: 1px solid var(--nq-line); border-radius: 6px; min-height: 30px; }
+.nssq .nq-equip li > i { width: 16px; color: var(--nq-gold); text-align: center; }
+.nssq .nq-gm-panel { margin-top: 12px; border: 1px dashed var(--nq-gold); border-radius: 8px; padding: 4px 8px; background: rgba(201, 162, 74, 0.06); }
+.nssq .nq-gm-panel summary { cursor: pointer; color: var(--nq-gold-l); display: flex; align-items: center; gap: 6px; }
+.nssq .nq-gm-body { padding: 6px 0; display: grid; gap: 4px; font-size: 0.9em; }
+.nssq .nq-kv { display: flex; gap: 8px; flex-wrap: wrap; }
+.nssq .nq-kv > span { color: var(--nq-mu); min-width: 9em; }
+.nssq .nq-kv b { font-weight: 500; }
+.nssq .nq-kv em { color: var(--nq-mu); font-style: normal; }
+.nssq .nq-log { list-style: none; margin: 4px 0; padding: 4px 6px; max-height: 140px; overflow-y: auto; background: var(--nq-bg2); border-radius: 4px; font-size: 0.85em; }
+.nssq .nq-log .when { color: var(--nq-dim); margin-right: 4px; }
+.nssq .nq-gm-body button { width: auto; justify-self: start; padding: 0 10px; }
+.nssq .nq-description .editor { min-height: 300px; }
 
-/* 상점 매각·제련 탭 */
-.nssq-shop .shop-tabs .item.service { font-weight: bold; }
-.nssq-shop .sell-list .sell-check { flex: 0 0 auto; margin: 0 2px; }
-.nssq-shop .sell-footer { display: flex; align-items: center; gap: 10px; padding-top: 6px; border-top: 1px solid #999; }
-.nssq-shop .sell-footer .sell-total { margin-left: auto; }
-.nssq-shop .sell-footer button { flex: 0 0 auto; width: auto; }
-.nssq-shop .sell-footer a { cursor: pointer; font-size: 0.9em; }
-.nssq-shop .shop-row .name .refine-badges { margin-left: 4px; }
-.nssq-sell-list { margin: 0 0 6px; padding-left: 1.2em; }
-.nssq-buy-confirm .notes.warn, .notes.warn { color: #b02020; }
+/* 5 ─ 소지품·스킬 */
+.nssq .nq-inv-head { display: flex; align-items: center; gap: 8px; margin: 2px 0 4px; }
+.nssq .nq-inv-head button { width: auto; flex: 0 0 auto; padding: 0 10px; line-height: 1.8em; }
+.nssq .nq-slots, .nssq .nq-items, .nssq .nq-skill-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.nssq .nq-slot, .nssq .nq-item, .nssq .nq-skill { display: flex; align-items: center; gap: 8px; padding: 4px 6px; background: var(--nq-bg2); border: 1px solid var(--nq-line); border-radius: 6px; min-height: 34px; }
+.nssq .nq-slot.filled { border-color: var(--nq-line2); }
+.nssq .nq-slot-label { flex: 0 0 64px; color: var(--nq-gold-l); font-size: 0.85em; display: flex; flex-direction: column; }
+.nssq .nq-slot-label em { font-style: normal; color: var(--nq-mu); font-size: 0.85em; }
+.nssq :is(.nq-slot, .nq-item, .nq-skill) img { flex: 0 0 28px; width: 28px; height: 28px; border-radius: 4px; object-fit: cover; }
+.nssq .nq-item-main { flex: 1; min-width: 0; }
+.nssq .nq-item-sum { font-size: 0.8em; color: var(--nq-mu); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nssq .nq-weapon-line { font-size: 0.85em; color: var(--nq-mu); margin: 4px 2px; }
+.nssq .nq-uses { font-size: 0.8em; padding: 0 5px; border: 1px solid var(--nq-line2); border-radius: 8px; color: var(--nq-gold-l); }
+.nssq .nq-qty { flex: 0 0 3.2em; width: 3.2em; height: 22px; text-align: center; }
+.nssq .nq-qty.ro { color: var(--nq-mu); }
+.nssq .nq-ctls { display: inline-flex; gap: 1px; }
+.nssq .nq-storage { margin-top: 8px; padding: 2px 6px 6px; border: 1px solid var(--nq-line); border-radius: 8px; background: rgba(0, 0, 0, 0.15); }
+.nssq .nq-classes { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
+.nssq .nq-class-card { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid var(--nq-gold); border-radius: 8px; background: linear-gradient(var(--nq-panel2), var(--nq-panel)); }
+.nssq .nq-class-card img { width: 24px; height: 24px; }
+.nssq .nq-skill-group.main .nq-title { color: var(--nq-gold-l); }
+.nssq .nq-skill-group.sub .nq-title { color: var(--nq-cy); }
+.nssq .nq-skill-name { flex: 1; min-width: 0; }
+.nssq .nq-unique { color: var(--nq-fp); margin-right: 3px; }
+.nssq .nq-timing { font-size: 0.75em; padding: 0 6px; border-radius: 8px; border: 1px solid var(--nq-line2); color: var(--nq-mu); }
+.nssq .nq-timing.action { color: #f0b37a; border-color: rgba(240, 179, 122, 0.5); }
+.nssq .nq-timing.passive { color: var(--nq-green); border-color: rgba(116, 208, 142, 0.4); }
+.nssq .nq-timing.reaction { color: #c7a6f0; border-color: rgba(199, 166, 240, 0.45); }
+.nssq .nq-timing.opening { color: var(--nq-cy); border-color: rgba(111, 211, 230, 0.45); }
+.nssq .nq-cost { font-size: 0.8em; color: var(--nq-tp); }
+.nssq .nq-sl { font-size: 0.85em; color: var(--nq-gold-l); min-width: 4em; text-align: right; }
+.nssq .nq-sl em { font-style: normal; color: var(--nq-dim); }
 
-/* 시트 머리: 통상 공격·동료 NPC */
-.nssq .sheet-header .header-actions { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
-.nssq .sheet-header .attack-btn { flex: 0 0 auto; width: auto; line-height: 1.8em; }
-.nssq .sheet-header .npc-toggle { font-size: 0.9em; }
-.nssq-gm-screen .npc-tag { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: rgba(110, 60, 160, 0.2); }
-.nssq-gm-screen .npc-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px 8px; }
-.nssq-gm-screen .npc-list label { display: flex; align-items: center; gap: 4px; }
-.nssq-gm-screen .npc-list img { border: none; }
+/* 6 ─ 에너미·토큰·아이템 시트 */
+.nssq .nq-stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+.nssq .nq-stat-grid .nq-sub-stat input { width: 3.2em; height: 22px; text-align: right; }
+.nssq .nq-enemy-flags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.nssq .nq-rare { color: var(--nq-fp); font-weight: 700; }
+.nssq .nq-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 10px; }
+.nssq .nq-field { display: flex; align-items: center; gap: 6px; }
+.nssq .nq-field > span { flex: 0 0 6.5em; color: var(--nq-mu); font-size: 0.85em; }
+.nssq .nq-field :is(input, select) { flex: 1; min-width: 0; }
+.nssq .nq-field input[type="checkbox"] { flex: 0 0 auto; }
+.nssq .nq-refine-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 3px; }
+.nssq .nq-refine-list li { display: flex; align-items: center; gap: 6px; }
+.nssq .nq-drops { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; font-size: 0.9em; }
 
-/* 공격 카드 */
-.nssq-attack .attack-target { border-top: 1px solid #c9c7b8; padding-top: 3px; margin-top: 3px; }
-.nssq-attack .target-name { font-weight: bold; }
-.nssq-attack .hit-line, .nssq-attack .dmg-line, .nssq-attack .crit-line, .nssq-attack .final-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 2px 0; }
-.nssq-attack .label { font-size: 0.85em; color: #555; }
-.nssq-attack .calc { font-size: 0.8em; color: #7a7971; }
+/* 7 ─ 채팅 카드 */
+:is(.nssq-check, .nssq-attack, .nssq-ability-roll, .nssq-escape, .nssq-battle-start-card, .nssq-battle-end-card, .nssq-use, .nssq-trade, .nssq-combat-note, .nssq-phase) {
+  font-family: var(--nq-font);
+  color: var(--nq-tx);
+  background: linear-gradient(var(--nq-panel2), var(--nq-bg));
+  border: 1px solid var(--nq-gold);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+:is(.nssq-use, .nssq-trade, .nssq-combat-note, .nssq-phase) { padding: 4px 8px; border-color: var(--nq-line2); }
+.nssq-phase { text-align: center; font-family: var(--nq-title); color: var(--nq-gold-l); border-color: var(--nq-gold); }
+.nssq-combat-note.end { border-color: var(--nq-fp); color: var(--nq-fp); font-weight: 700; }
+:is(.nssq-check, .nssq-attack, .nssq-ability-roll, .nssq-escape) .check-header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--nq-line2); margin-bottom: 4px; padding-bottom: 2px; }
+:is(.nssq-check, .nssq-attack, .nssq-ability-roll, .nssq-escape) .check-label { font-family: var(--nq-title); font-size: 1.1em; color: var(--nq-gold-l); }
+:is(.nssq-check, .nssq-attack, .nssq-ability-roll) .check-kind { font-size: 0.8em; color: var(--nq-mu); }
+.nssq-check .check-request { font-size: 0.85em; color: var(--nq-fp); margin-bottom: 2px; }
+.nssq-check .check-dice { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 4px 0; padding: 0; }
+.nssq-check .die, :is(.nssq-attack, .nssq-ability-roll) .die-s { text-align: center; font-weight: 700; border: 1px solid var(--nq-line2); border-radius: 5px; background: var(--nq-bg2); color: var(--nq-tx); }
+.nssq-check .die { width: 28px; height: 28px; line-height: 26px; opacity: 0.45; }
+.nssq-check .die.used { opacity: 1; border-color: var(--nq-gold); }
+.nssq-check .die[data-nssq-action] { cursor: pointer; }
+.nssq-check .die.one, :is(.nssq-attack, .nssq-ability-roll) .die-s.one { color: var(--nq-red); }
+.nssq-check .die.six, :is(.nssq-attack, .nssq-ability-roll) .die-s.six { color: var(--nq-green); }
+.nssq-check .check-total { display: flex; align-items: baseline; gap: 6px; }
+.nssq-check .check-total .formula { font-size: 0.85em; color: var(--nq-mu); }
+.nssq-check .check-total .total { font-size: 1.8em; font-weight: 700; color: var(--nq-gold-l); }
+.nssq-check .check-total .target { color: var(--nq-mu); }
+:is(.nssq-check, .nssq-escape) .check-result { text-align: center; font-weight: 700; padding: 2px; margin: 4px 0; border-radius: 4px; letter-spacing: 0.1em; }
+:is(.nssq-check, .nssq-escape) .check-result.success { background: rgba(116, 208, 142, 0.15); color: var(--nq-green); border: 1px solid rgba(116, 208, 142, 0.4); }
+:is(.nssq-check, .nssq-escape) .check-result.failure { background: rgba(224, 112, 95, 0.12); color: var(--nq-red); border: 1px solid rgba(224, 112, 95, 0.4); }
+.nssq-check .check-notes { display: flex; gap: 8px; font-size: 0.85em; color: var(--nq-mu); }
+.nssq-check .fp-gain, .nssq-attack .fp-gain { color: var(--nq-fp); font-weight: 700; }
+.nssq-check .fp-gain.pending { color: var(--nq-mu); font-weight: 400; }
+:is(.nssq-check, .nssq-attack, .nssq-ability-roll) .check-buttons, .nssq-attack .apply-buttons { display: flex; gap: 4px; margin-top: 4px; }
+:is(.nssq-check, .nssq-attack, .nssq-ability-roll) button { flex: 1; line-height: 1.8em; font-size: 0.85em; background: linear-gradient(#1e3a5f, #142a46); border: 1px solid var(--nq-gold); color: var(--nq-gold-l); border-radius: 5px; }
+:is(.nssq-check, .nssq-attack, .nssq-ability-roll) button:disabled { opacity: 0.45; cursor: not-allowed; }
+.nssq-check .nssq-contest { border-top: 1px dashed var(--nq-line2); margin-top: 4px; padding-top: 4px; font-size: 0.9em; }
+.nssq-check .nssq-contest .winner { color: var(--nq-green); }
+.nssq-attack .attack-target { border-top: 1px solid var(--nq-line); padding-top: 4px; margin-top: 4px; }
+.nssq-attack .target-name { font-weight: 700; color: var(--nq-gold-l); }
+.nssq-attack :is(.hit-line, .dmg-line, .crit-line, .final-line) { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 2px 0; }
+.nssq-attack .label, .nssq-attack .calc { font-size: 0.8em; color: var(--nq-mu); }
 .nssq-attack .dmg-dice { display: flex; flex-wrap: wrap; gap: 2px; }
-.nssq-attack .die-s { width: 18px; height: 18px; line-height: 18px; text-align: center; border: 1px solid #999; border-radius: 3px; font-size: 0.85em; opacity: 0.5; }
-.nssq-attack .hit-line .die-s { opacity: 1; }
-.nssq-attack .die-s.over { opacity: 1; font-weight: bold; background: rgba(176, 32, 32, 0.15); }
-.nssq-attack .die-s.six { color: #18762b; }
-.nssq-attack .die-s.one { color: #b02020; }
-.nssq-attack .result, .nssq-attack .tag { font-size: 0.8em; padding: 0 5px; border-radius: 3px; font-weight: bold; }
-.nssq-attack .result.success, .nssq-attack .tag.success { background: rgba(24, 118, 43, 0.15); color: #18762b; }
-.nssq-attack .result.failure, .nssq-attack .tag.failure { background: rgba(176, 32, 32, 0.12); color: #b02020; }
-.nssq-attack .tag.crit { background: rgba(214, 140, 32, 0.25); color: #8a4b00; }
-.nssq-attack .final { font-size: 1.5em; color: #b02020; }
-.nssq-attack .apply-status { font-size: 0.85em; color: #555; margin-left: auto; }
-.nssq-attack .apply-buttons { display: flex; gap: 4px; }
-.nssq-attack .apply-buttons button { line-height: 1.6em; font-size: 0.85em; }
-.nssq-combat-note { font-size: 0.95em; }
-.nssq-combat-note.end { font-weight: bold; }
-.nssq-phase { font-weight: bold; text-align: center; }
+.nssq-attack .die-s, .nssq-ability-roll .die-s { width: 20px; height: 20px; line-height: 18px; font-size: 0.85em; }
+.nssq-attack .dmg-dice .die-s, .nssq-attack .crit-line .die-s { opacity: 0.5; }
+.nssq-attack .die-s.over { opacity: 1 !important; border-color: var(--nq-red); background: rgba(224, 112, 95, 0.18); }
+.nssq-attack :is(.result, .tag) { font-size: 0.8em; padding: 0 6px; border-radius: 4px; font-weight: 700; }
+.nssq-attack :is(.result, .tag).success { background: rgba(116, 208, 142, 0.15); color: var(--nq-green); }
+.nssq-attack :is(.result, .tag).failure { background: rgba(224, 112, 95, 0.15); color: var(--nq-red); }
+.nssq-attack .tag.crit { background: rgba(224, 184, 74, 0.2); color: var(--nq-fp); }
+.nssq-attack .final { font-size: 1.6em; color: var(--nq-red); }
+.nssq-attack .apply-status { font-size: 0.85em; color: var(--nq-mu); margin-left: auto; }
+.nssq-ability-roll .ability-results { list-style: none; margin: 4px 0; padding: 0; }
+.nssq-ability-roll .ability-results li { display: flex; align-items: center; gap: 8px; padding: 1px 0; }
+.nssq-ability-roll .ability-results .n { width: 1.2em; color: var(--nq-mu); }
+.nssq-ability-roll .ability-results .dice { display: flex; gap: 2px; flex: 1; }
+.nssq-ability-roll .ability-results .total { font-size: 1.2em; width: 2em; text-align: right; color: var(--nq-gold-l); }
+.nssq-ability-roll .ability-sum { font-size: 0.9em; color: var(--nq-mu); text-align: right; }
 .nssq-escape ul { margin: 2px 0 4px; padding-left: 1.2em; }
+:is(.nssq-battle-start-card, .nssq-battle-end-card) h3 { margin: 0 0 4px; border: none; color: var(--nq-gold-l); font-family: var(--nq-title); }
+.nssq-battle-start-card .warn { color: var(--nq-red); font-weight: 700; }
+.nssq-use .left { font-size: 0.85em; color: var(--nq-mu); }
 
-/* 컴뱃 트래커 */
-.nssq-phase-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 4px 6px; margin: 2px 0; border-radius: 4px; background: rgba(0, 0, 0, 0.25); }
-.nssq-phase-bar .phase-label { font-weight: bold; }
-.nssq-phase-bar .phase-hint { font-size: 0.8em; opacity: 0.8; flex: 1 1 100%; }
-.nssq-phase-bar.phase-opening { border-left: 4px solid #3a8fd6; }
-.nssq-phase-bar.phase-main { border-left: 4px solid #d6a03a; }
-.nssq-phase-bar.phase-end { border-left: 4px solid #a33a3a; }
-.nssq-phase-bar button { flex: 1 1 auto; line-height: 1.6em; font-size: 0.85em; }
-.nssq-combatant-tools { display: flex; align-items: center; gap: 6px; font-size: 0.8em; }
-.nssq-combatant-tools .row-tag { padding: 0 4px; border-radius: 3px; background: rgba(255, 255, 255, 0.15); }
-.nssq-combatant-tools .row-tag.back { opacity: 0.7; }
-.nssq-combatant-tools .guard-tag { color: #8fc3ff; }
-.nssq-combatant-tools .nssq-tool { cursor: pointer; }
-.nssq-combatant-tools .nssq-tool:hover { color: #ff6400; }
-#combat li.combatant.nssq-opened { box-shadow: inset 3px 0 0 #3a8fd6; }
-
-/* 전투 프리셋 */
-.nssq-gm-screen .gm-actions button.battle { font-weight: bold; }
-.nssq-gm-screen .gm-actions button.battle.on { background: rgba(176, 32, 32, 0.35); }
-.nssq-gm-screen .battle-tools { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
-.nssq-gm-screen .battle-tools button { flex: 0 0 auto; width: auto; }
-.nssq-gm-screen .preset-list { list-style: none; margin: 0; padding: 0; }
-.nssq-gm-screen .preset { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid #c9c7b8; }
-.nssq-gm-screen .preset .thumb { flex: 0 0 96px; height: 54px; border-radius: 4px; background: #1a1a22 center / cover no-repeat; }
-.nssq-gm-screen .preset .info { flex: 1; font-size: 0.9em; }
-.nssq-gm-screen .preset .name { font-weight: bold; font-size: 1.05em; }
-.nssq-gm-screen .preset .actions { display: flex; align-items: center; gap: 8px; }
-.nssq-gm-screen .preset .actions a { cursor: pointer; }
-.nssq-gm-screen .preset .actions button { width: auto; line-height: 1.6em; }
-.nssq-battle-start .member { display: flex; align-items: center; gap: 6px; }
-.nssq-battle-start .member img { border: none; }
-.nssq-battle-start .member .notes { margin-left: auto; }
-.nssq-battle-start-card h3, .nssq-battle-end-card h3 { margin: 0 0 4px; border: none; }
-.nssq-battle-start-card .warn { color: #b02020; font-weight: bold; }
-
-/* 배치 변경 칸 고르기 */
-.nssq-slot-picker .slot-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
-.nssq-slot-picker .row-name { flex: 0 0 3em; font-weight: bold; }
-.nssq-slot-picker .slot-cell { flex: 1; display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid #999; border-radius: 4px; font-size: 0.9em; }
-.nssq-slot-picker .slot-cell.taken { opacity: 0.5; }
-.nssq-slot-picker .slot-cell.mine { border-color: #1a5fb4; }
-
-/* 희소종(GM) */
-.nssq .rare-tools { flex-direction: row; gap: 6px; justify-content: center; }
-.nssq .rare-tools .rare-mark { color: #b8860b; font-weight: bold; }
-.nssq .rare-tools button { width: auto; line-height: 1.6em; font-size: 0.85em; }
-.nssq-combatant-tools .rare-tag { color: #f0c040; font-weight: bold; }
-
-/* v0.5.6: 방어 버튼 켜짐, 표시 묶음, 종료 대기, 정리 표, 희소종 항목 */
-.nssq-combatant-tools .nssq-tool { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 4px; }
-.nssq-combatant-tools .nssq-tool.active { background: #1a5fb4; color: #fff; box-shadow: 0 0 6px #4aa3ff; }
-.nssq-combatant-tools .nssq-tags { display: inline-flex; gap: 4px; align-items: center; }
-.nssq-combatant-tools .guard-tag { color: #fff; background: #1a5fb4; padding: 0 4px; border-radius: 3px; }
-.nssq-phase-bar.over { border-left: 4px solid #f0c040; background: rgba(240, 192, 64, 0.2); }
-.nssq-phase-bar .nssq-end-battle { font-weight: bold; }
-.nssq-cleanup table { width: 100%; border-collapse: collapse; }
-.nssq-cleanup th, .nssq-cleanup td { padding: 2px 4px; border-bottom: 1px solid #c9c7b8; font-size: 0.9em; }
+/* 8 ─ 대화창 내용 */
+.nssq-assign .assign-values { display: flex; justify-content: space-around; font-size: 1.1em; color: var(--nq-gold-l); }
+.nssq-assign .assign-tools { display: flex; gap: 4px; margin-bottom: 4px; }
+.nssq-assign .assign-row select.dup { outline: 2px solid var(--nq-red); }
+.nssq-assign .assign-bonus { flex: 0 0 3em; text-align: right; color: var(--nq-gold-l); }
+.nssq-assign .assign-error { color: var(--nq-red); }
+.nssq-ability-edit .nq-big { font-size: 1.2em; }
+.nssq-ability-edit .nq-big b { font-size: 1.4em; color: var(--nq-gold-l); }
+.nssq-ability-edit .nq-ro { flex: 0 0 5em; text-align: right; color: var(--nq-mu); }
+.nssq-ability-edit input { flex: 0 0 5em; text-align: right; }
+.nssq-overflow table, .nssq-cleanup table { width: 100%; border-collapse: collapse; }
+.nssq-overflow :is(th, td), .nssq-cleanup :is(th, td) { padding: 2px 4px; border-bottom: 1px solid var(--nq-line); text-align: center; }
+.nssq-overflow td.name, .nssq-cleanup td.name { text-align: left; }
+.nssq-overflow input[type="number"] { width: 3.5em; text-align: center; }
+.nssq-overflow h4 { margin: 6px 0 2px; border-bottom: 1px solid var(--nq-line2); color: var(--nq-gold-l); }
+.nssq-overflow table.incoming td.name { color: var(--nq-cy); }
+.nssq-overflow .overflow-status { font-weight: 700; text-align: right; }
+.nssq-overflow .overflow-status.over { color: var(--nq-red); }
 .nssq-cleanup td.scenes { font-size: 0.8em; }
+.nssq-request-form .request-actors { display: flex; flex-direction: column; gap: 2px; max-height: 220px; overflow-y: auto; }
+.nssq-request-form .request-actor { display: flex; align-items: center; gap: 6px; }
+.nssq-request-form .request-actor .owner { margin-left: auto; font-size: 0.85em; color: var(--nq-mu); }
+.nssq-request-popup .request-what { font-size: 1.2em; text-align: center; margin: 6px 0; color: var(--nq-gold-l); }
+.nssq-request-popup .request-formula { text-align: center; color: var(--nq-mu); }
+.nssq-request-popup .request-note { font-style: italic; text-align: center; }
+.nssq-slot-picker .slot-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
+.nssq-slot-picker .row-name { flex: 0 0 3em; font-weight: 700; color: var(--nq-gold-l); }
+.nssq-slot-picker .slot-cell { flex: 1; display: flex; align-items: center; gap: 4px; padding: 6px; border: 1px solid var(--nq-line2); border-radius: 6px; font-size: 0.9em; background: var(--nq-bg2); }
+.nssq-slot-picker .slot-cell.taken { opacity: 0.5; }
+.nssq-slot-picker .slot-cell.mine { border-color: var(--nq-cy); }
+.nssq-battle-start .member { display: flex; align-items: center; gap: 6px; }
+.nssq-battle-start .member .notes { margin-left: auto; }
+.nssq-sell-list { margin: 0 0 6px; padding-left: 1.2em; }
 .rare-boost { display: block; }
 
-/* 트래커: 페이즈 막대가 남는 공간을 차지하지 않게, 전투원 표시는 한 줄로 */
-#combat .nssq-phase-bar { flex: 0 0 auto; }
-#combat li.combatant .token-name .nssq-combatant-tools { flex: 0 0 auto; flex-wrap: nowrap; }
-#combat li.combatant .nssq-combatant-tools .row-tag { display: inline-block; line-height: 1.4; }
+/* 9 ─ 상점 */
+.nssq-shop .window-content { padding: 8px 10px; }
+.nssq-shop .shop { display: flex; flex-direction: column; height: 100%; }
+.nssq-shop .shop-header { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border: 1px solid var(--nq-gold); border-radius: 8px; background: linear-gradient(var(--nq-panel2), var(--nq-panel)); }
+.nssq-shop .shop-header .money { font-size: 1.3em; color: var(--nq-fp); font-weight: 700; }
+.nssq-shop .shop-state { font-weight: 700; color: var(--nq-red); }
+.nssq-shop .shop-state.on { color: var(--nq-green); }
+.nssq-shop .shop-tabs { margin: 6px 0 0; }
+.nssq-shop .shop-tabs .item { padding: 3px 10px; }
+.nssq-shop .shop-tabs .item.service { color: var(--nq-gold-l); }
+.nssq-shop .shop-body { flex: 1; overflow-y: auto; padding-top: 4px; }
+.nssq-shop .shop-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.nssq-shop .shop-row { align-items: center; gap: 6px; padding: 4px 6px; background: var(--nq-bg2); border: 1px solid var(--nq-line); border-radius: 6px; }
+.nssq-shop .shop-row img { flex: 0 0 26px; width: 26px; height: 26px; border-radius: 4px; }
+.nssq-shop .shop-row .name { flex: 1; min-width: 0; }
+.nssq-shop .shop-row .info { font-size: 0.8em; color: var(--nq-mu); }
+.nssq-shop .shop-row .rank, .nssq-shop .shop-row .qty { flex: 0 0 auto; color: var(--nq-mu); }
+.nssq-shop .shop-row :is(.rank, .qty) input { width: 3em; height: 22px; text-align: center; }
+.nssq-shop .shop-row .mats { flex: 0 0 140px; font-size: 0.8em; color: var(--nq-mu); text-align: right; }
+.nssq-shop .shop-row .price { flex: 0 0 64px; text-align: right; font-weight: 700; color: var(--nq-fp); }
+.nssq-shop .shop-row button { flex: 0 0 58px; line-height: 1.6em; }
+.nssq-shop .sell-list .sell-check { flex: 0 0 auto; }
+.nssq-shop .sell-footer { display: flex; align-items: center; gap: 10px; padding-top: 6px; border-top: 1px solid var(--nq-gold); }
+.nssq-shop .sell-footer .sell-total { margin-left: auto; }
+.nssq-shop .sell-footer .sell-total b { color: var(--nq-fp); font-size: 1.2em; }
+.nssq-shop .sell-footer button { flex: 0 0 auto; width: auto; padding: 0 10px; }
+.nssq-shop .sell-footer a { cursor: pointer; font-size: 0.9em; }
+:is(.nssq-shop, .nssq-gm-screen) .custom-tag { font-size: 0.75em; padding: 0 5px; border-radius: 8px; border: 1px solid var(--nq-tp); color: var(--nq-ice); }
+:is(.nssq-shop, .nssq-gm-screen) .hidden-tag { font-size: 0.75em; padding: 0 5px; border-radius: 8px; border: 1px solid var(--nq-red); color: var(--nq-red); }
+
+/* 10 ─ GM 스크린 */
+.nssq-gm-screen .window-content { padding: 8px 10px; }
+.nssq-gm-screen .gm-screen { display: flex; flex-direction: column; height: 100%; }
+.nssq-gm-screen .gm-actions { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; border: 1px solid var(--nq-gold); border-radius: 8px; background: linear-gradient(var(--nq-panel2), var(--nq-panel)); flex: 0 0 auto; }
+.nssq-gm-screen .gm-actions button { flex: 1 1 auto; width: auto; line-height: 2em; padding: 0 8px; }
+.nssq-gm-screen .gm-actions button.on { border-color: var(--nq-green); color: var(--nq-green); }
+.nssq-gm-screen .gm-actions button.battle { font-weight: 700; color: var(--nq-fp); }
+.nssq-gm-screen .gm-actions button.battle.on { border-color: var(--nq-red); color: var(--nq-red); }
+.nssq-gm-screen .gm-tabs { flex: 0 0 auto; margin-top: 6px; }
+.nssq-gm-screen .gm-body { flex: 1; overflow-y: auto; padding-top: 6px; }
+.nssq-gm-screen table { width: 100%; border-collapse: separate; border-spacing: 0 3px; }
+.nssq-gm-screen th { color: var(--nq-mu); font-weight: 400; font-size: 0.85em; text-align: center; }
+.nssq-gm-screen .party td { padding: 4px 6px; text-align: center; vertical-align: middle; background: var(--nq-bg2); border-top: 1px solid var(--nq-line); border-bottom: 1px solid var(--nq-line); }
+.nssq-gm-screen .party td:first-child { border-left: 1px solid var(--nq-line); border-radius: 6px 0 0 6px; text-align: left; }
+.nssq-gm-screen .party td:last-child { border-right: 1px solid var(--nq-line); border-radius: 0 6px 6px 0; }
+.nssq-gm-screen .party .who a { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--nq-gold-l); }
+.nssq-gm-screen .party .who img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--nq-gold); object-fit: cover; }
+.nssq-gm-screen .party .owners { font-size: 0.8em; color: var(--nq-dim); }
+.nssq-gm-screen .party .owners.online { color: var(--nq-green); }
+.nssq-gm-screen .bar { position: relative; height: 16px; min-width: 96px; background: #22344d; border-radius: 4px; overflow: hidden; border: 1px solid #000; }
+.nssq-gm-screen .bar span { position: absolute; inset: 0 auto 0 0; }
+.nssq-gm-screen .bar.hp span { background: linear-gradient(#7cd893, var(--nq-hp)); }
+.nssq-gm-screen .bar.tp span { background: linear-gradient(#7ab8f0, var(--nq-tp)); }
+.nssq-gm-screen .bar b { position: relative; font-size: 0.8em; color: #fff; text-shadow: 0 0 3px #000; }
+.nssq-gm-screen .fp { font-weight: 700; color: var(--nq-fp); }
+.nssq-gm-screen .over { color: var(--nq-red); font-weight: 700; }
+.nssq-gm-screen .npc-tag { font-size: 0.75em; padding: 0 5px; border-radius: 8px; border: 1px solid #c7a6f0; color: #c7a6f0; }
+.nssq-gm-screen .npc-list, .nssq-gm-screen .shop-items { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px 8px; }
+.nssq-gm-screen :is(.npc-list, .shop-items) label { display: flex; align-items: center; gap: 4px; }
+.nssq-gm-screen :is(.npc-list, .shop-items) img { width: 20px; height: 20px; }
+.nssq-gm-screen .shop-items .hidden-item { opacity: 0.5; }
+.nssq-gm-screen :is(.battle-tools, .shop-tools) { display: flex; align-items: center; gap: 8px; margin: 2px 0 6px; flex-wrap: wrap; }
+.nssq-gm-screen :is(.battle-tools, .shop-tools) button { flex: 0 0 auto; width: auto; padding: 0 10px; }
+.nssq-gm-screen .shop-tools input[type="search"] { flex: 0 0 180px; }
+.nssq-gm-screen .shop-group .count { font-family: var(--nq-font); font-size: 0.75em; color: var(--nq-mu); }
+.nssq-gm-screen .shop-group .group-actions { margin-left: auto; font-family: var(--nq-font); font-size: 0.75em; display: flex; gap: 10px; }
+.nssq-gm-screen .shop-group .group-actions a { cursor: pointer; color: var(--nq-mu); }
+.nssq-gm-screen .preset-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.nssq-gm-screen .preset { display: flex; align-items: center; gap: 10px; padding: 6px; border: 1px solid var(--nq-line2); border-radius: 8px; background: var(--nq-bg2); }
+.nssq-gm-screen .preset:hover { border-color: var(--nq-gold); }
+.nssq-gm-screen .preset .thumb { flex: 0 0 110px; height: 62px; border-radius: 6px; background: #1a1a22 center / cover no-repeat; border: 1px solid var(--nq-line); }
+.nssq-gm-screen .preset .info { flex: 1; font-size: 0.9em; color: var(--nq-mu); }
+.nssq-gm-screen .preset .name { font-family: var(--nq-title); font-size: 1.1em; color: var(--nq-gold-l); }
+.nssq-gm-screen .preset .actions { display: flex; align-items: center; gap: 8px; }
+.nssq-gm-screen .preset .actions a { cursor: pointer; color: var(--nq-mu); }
+.nssq-gm-screen .preset .actions button { width: auto; padding: 0 10px; line-height: 1.8em; }
+.nssq-gm-screen .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.nssq-gm-screen .ref td, .nssq-gm-screen .ref th { padding: 3px 6px; background: var(--nq-bg2); }
+.nssq-gm-screen .ref th { width: 3.5em; color: var(--nq-gold-l); font-weight: 700; }
+.nssq-gm-screen .ref td { text-align: left; font-size: 0.9em; }
+.nssq-gm-screen .ref.levels td.note { font-size: 0.8em; color: var(--nq-mu); }
+#actors .nssq-gm-screen-btn { flex: 0 0 100%; margin-top: 4px; border: 1px solid var(--nq-gold); color: var(--nq-gold-l); background: linear-gradient(#1e3a5f, #142a46); font-family: var(--nq-font); }
+
+/* 11 ─ 전투 추적기 */
+#combat .nssq-phase-bar { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 5px 8px; margin: 3px 0; border-radius: 6px; background: linear-gradient(#1a3354, #0f1e33); border: 1px solid var(--nq-gold); color: var(--nq-tx); font-family: var(--nq-font); }
+#combat .nssq-phase-bar .phase-label { font-family: var(--nq-title); color: var(--nq-gold-l); }
+#combat .nssq-phase-bar .phase-hint { font-size: 0.8em; color: var(--nq-mu); flex: 1 1 100%; }
+#combat .nssq-phase-bar.phase-opening { box-shadow: inset 4px 0 0 #3a8fd6; }
+#combat .nssq-phase-bar.phase-main { box-shadow: inset 4px 0 0 #d6a03a; }
+#combat .nssq-phase-bar.phase-end { box-shadow: inset 4px 0 0 #a33a3a; }
+#combat .nssq-phase-bar.over { border-color: var(--nq-fp); box-shadow: inset 4px 0 0 var(--nq-fp); }
+#combat .nssq-phase-bar button { flex: 1 1 auto; line-height: 1.6em; font-size: 0.85em; background: linear-gradient(#1e3a5f, #142a46); border: 1px solid var(--nq-gold); color: var(--nq-gold-l); }
+#combat .nssq-phase-bar .nssq-end-battle { font-weight: 700; color: var(--nq-fp); }
+#combat li.combatant .token-name .nssq-combatant-tools { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; flex-wrap: nowrap; font-size: 0.8em; }
+.nssq-combatant-tools .nssq-tool { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 4px; cursor: pointer; }
+.nssq-combatant-tools .nssq-tool:hover { color: var(--nq-cy); }
+.nssq-combatant-tools .nssq-tool.active { background: #1a5fb4; color: #fff; box-shadow: 0 0 6px #4aa3ff; }
+.nssq-combatant-tools .nssq-tags { display: inline-flex; gap: 4px; align-items: center; }
+.nssq-combatant-tools .row-tag { display: inline-block; line-height: 1.4; padding: 0 4px; border-radius: 3px; background: rgba(255, 255, 255, 0.12); }
+.nssq-combatant-tools .row-tag.back { opacity: 0.7; }
+.nssq-combatant-tools .guard-tag { color: #fff; background: #1a5fb4; padding: 0 4px; border-radius: 3px; }
+.nssq-combatant-tools .rare-tag { color: var(--nq-fp); font-weight: 700; }
+#combat li.combatant.nssq-opened { box-shadow: inset 3px 0 0 #3a8fd6; }
+
+/* 12 ─ 전투 HUD */
+#nssq-hud { position: fixed; inset: 0; pointer-events: none; z-index: 30; font-family: var(--nq-font); color: var(--nq-tx); }
+#nssq-hud .hud-order { position: absolute; top: 46px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(10, 22, 38, 0.88); border: 1px solid var(--nq-gold); border-radius: 18px; max-width: 70vw; overflow: hidden; }
+#nssq-hud .hud-order .phase { font-family: var(--nq-title); color: var(--nq-gold-l); margin-right: 6px; white-space: nowrap; }
+#nssq-hud .hud-order .who { display: flex; align-items: center; gap: 4px; padding: 1px 6px 1px 1px; border-radius: 14px; border: 1px solid var(--nq-line2); background: var(--nq-bg2); font-size: 0.85em; white-space: nowrap; }
+#nssq-hud .hud-order .who img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
+#nssq-hud .hud-order .who.enemy { border-color: rgba(224, 112, 95, 0.6); }
+#nssq-hud .hud-order .who.current { border-color: var(--nq-cy); box-shadow: 0 0 6px var(--nq-cy); color: var(--nq-cy); }
+#nssq-hud .hud-order .who.done { opacity: 0.45; }
+#nssq-hud .hud-order .who.ko { opacity: 0.3; text-decoration: line-through; }
+#nssq-hud .hud-order i.sep { color: var(--nq-dim); font-size: 0.7em; }
+#nssq-hud .hud-party { position: absolute; left: 50%; bottom: 72px; transform: translateX(-50%); display: flex; gap: 8px; pointer-events: auto; }
+#nssq-hud .hud-member { width: 190px; padding: 6px 8px; background: linear-gradient(rgba(24, 49, 82, 0.95), rgba(10, 22, 38, 0.95)); border: 1px solid var(--nq-line2); border-radius: 8px; cursor: pointer; }
+#nssq-hud .hud-member.mine { border-color: var(--nq-gold); }
+#nssq-hud .hud-member.current { box-shadow: 0 0 8px var(--nq-cy); border-color: var(--nq-cy); }
+#nssq-hud .hud-member.ko { opacity: 0.5; filter: grayscale(0.8); }
+#nssq-hud .hud-member .top { display: flex; align-items: center; gap: 6px; }
+#nssq-hud .hud-member img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--nq-gold); object-fit: cover; }
+#nssq-hud .hud-member .name { font-weight: 700; color: var(--nq-gold-l); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#nssq-hud .hud-member .tags { font-size: 0.75em; color: var(--nq-mu); }
+#nssq-hud .hud-member .tags .guard { color: #8fc3ff; }
+#nssq-hud .hud-bar { display: grid; grid-template-columns: 20px minmax(0, 1fr) 44px; gap: 4px; align-items: center; font-size: 0.75em; margin-top: 3px; }
+#nssq-hud .hud-bar .track { height: 7px; background: #22344d; border-radius: 4px; overflow: hidden; border: 1px solid #000; }
+#nssq-hud .hud-bar .track i { display: block; height: 100%; }
+#nssq-hud .hud-bar.hp b { color: var(--nq-hp); }
+#nssq-hud .hud-bar.tp b { color: var(--nq-tp); }
+#nssq-hud .hud-bar.hp .track i { background: var(--nq-hp); }
+#nssq-hud .hud-bar.tp .track i { background: var(--nq-tp); }
+#nssq-hud .hud-bar span { text-align: right; color: var(--nq-mu); }
+#nssq-hud .hud-menu { position: absolute; pointer-events: auto; width: 0; height: 0; }
+#nssq-hud .hud-menu button { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 4px; padding: 4px 10px; white-space: nowrap; background: linear-gradient(#1e3a5f, #142a46); border: 1px solid var(--nq-gold); color: var(--nq-gold-l); border-radius: 16px; font-family: var(--nq-font); font-size: 0.9em; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); cursor: pointer; animation: nq-pop 0.18s ease-out; }
+#nssq-hud .hud-menu button:hover:not(:disabled) { background: linear-gradient(#2a4d7a, #1a3557); color: #fff; box-shadow: 0 0 8px var(--nq-gold-l); }
+#nssq-hud .hud-menu button:disabled { opacity: 0.4; cursor: not-allowed; }
+#nssq-hud .hud-menu button.active { border-color: var(--nq-cy); color: var(--nq-cy); }
+#nssq-hud .hud-hint { position: absolute; left: 50%; bottom: 168px; transform: translateX(-50%); padding: 4px 12px; background: rgba(10, 22, 38, 0.9); border: 1px solid var(--nq-cy); border-radius: 14px; color: var(--nq-cy); font-size: 0.9em; }
+#nssq-hud.compact .hud-member { width: 130px; padding: 4px 6px; }
+#nssq-hud.compact .hud-member img { display: none; }
+#nssq-hud.compact .hud-order .who span { display: none; }
+@keyframes nq-pop { from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }

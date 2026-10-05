@@ -1,12 +1,20 @@
-<form class="{{cssClass}}" autocomplete="off">
-  {{> "systems/nssq/templates/actor/parts/header.hbs"}}
-  <section class="resources grid grid-4col">
-    <label class="stat"><span>{{localize "NSSQ.HP"}}</span>
-      <span class="pair"><input type="number" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number"/> / <input type="number" name="system.hp.max" value="{{system.hp.max}}" data-dtype="Number"/></span></label>
-    <label class="stat"><span>{{localize "NSSQ.Row.label"}}</span>
-      <select name="system.row">{{selectOptions rowChoices selected=system.row localize=true}}</select></label>
-  </section>
-  <section class="sheet-body">
+<form class="{{cssClass}} nq-sheet" autocomplete="off">
+  <header class="nq-head nq-item-head">
+    <img class="nq-portrait" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+    <div class="nq-id">
+      <input class="nq-name" name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'NSSQ.Name'}}"/>
+      <div class="nq-sub">
+        <span class="nq-tag">{{nssqLabel "TYPES.Actor" actor.type}}</span>
+        <select class="nq-row" name="system.row" title="{{localize 'NSSQ.Row.label'}}">{{selectOptions rowChoices selected=system.row localize=true}}</select>
+      </div>
+      <div class="nq-bars">
+        <span class="nq-bar-label hp">HP</span>
+        <div class="nq-bar hp"><i style="width: {{hpPct}}%"></i></div>
+        <span class="nq-bar-val"><input type="number" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number"/> / <input type="number" name="system.hp.max" value="{{system.hp.max}}" data-dtype="Number"/></span>
+      </div>
+    </div>
+  </header>
+  <section class="nq-body nq-description">
     {{editor enrichedDescription target="system.description" button=true editable=editable owner=owner}}
   </section>
 </form>

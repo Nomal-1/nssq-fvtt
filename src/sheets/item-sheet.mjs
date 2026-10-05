@@ -6,9 +6,9 @@ const ELEMENTS = ["slash", "strike", "pierce", "fire", "ice", "volt"];
 export class NssqItemSheet extends ItemSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["nssq", "sheet", "item"],
-      width: 520,
-      height: 480
+      classes: ["nssq", "nq-window", "sheet", "item"],
+      width: 560,
+      height: 600
     });
   }
 

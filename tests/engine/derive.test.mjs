@@ -43,7 +43,7 @@ describe("능력치 출처별 합계", () => {
 
   it("Lv1: 굴림 + 클래스 보정 + 성장 + 장비 + 일시", () => {
     const b = abilityBreakdown({ abilities, classBonus, level: 1, equip: { str: 3 } });
-    expect(b.str).toEqual({ base: 15, class: 7, growth: 1, equip: 3, temp: -2, total: 24 });
+    expect(b.str).toEqual({ base: 15, class: 7, growth: 1, bonus: 0, equip: 3, temp: -2, total: 24 });
     expect(b.luc.total).toBe(12);
   });
 
@@ -53,5 +53,12 @@ describe("능력치 출처별 합계", () => {
 
   it("클래스가 없으면 0", () => {
     expect(abilityBreakdown({ abilities, level: 5 }).agi.total).toBe(9);
+  });
+});
+
+describe("GM 보너스", () => {
+  it("보너스도 최종값에 더한다", () => {
+    const b = abilityBreakdown({ abilities: { str: { base: 10, bonus: 2 } } });
+    expect(b.str).toMatchObject({ bonus: 2, total: 12 });
   });
 });

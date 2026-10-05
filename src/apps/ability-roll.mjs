@@ -6,12 +6,14 @@ import { ABILITIES, deriveCharacter } from "../engine/derive.mjs";
 import {
   applyAssignment, initialMoney, isValidAssignment, orderedAssignment, randomAssignment
 } from "../engine/chargen.mjs";
+import { logCreation } from "../sheets/character.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/ability-roll.hbs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.AbilityRoll.${k}`, d) : game.i18n.localize(`NSSQ.AbilityRoll.${k}`));
 
-/** 3D6을 5번 굴려 채팅에 올리고 배정 창을 연다 */
+/** 3D6을 5번 굴려 채팅에 올리고 배정 창을 연다(작성 잠금 후에는 GM만) */
 export async function rollAbilities(actor) {
+  if (actor.system.creation?.locked && !game.user.isGM) return ui.notifications.warn(L("locked"));
   const rolls = [];
   for (let i = 0; i < 5; i++) rolls.push(await new Roll("3d6").evaluate());
   const results = rolls.map((r) => ({ dice: r.dice[0].results.map((x) => x.result), total: r.total }));
@@ -28,6 +30,7 @@ export async function rollAbilities(actor) {
     sound: CONFIG.sounds.dice,
     flags: { nssq: { abilityRoll: { actorUuid: actor.uuid, totals } } }
   });
+  await logCreation(actor, { type: "roll", totals });
   // 주사위 연출이 끝난 뒤 배정 창
   if (game.dice3d) await game.dice3d.waitFor3DAnimationByMessageID?.(message.id);
   return assignDialog(actor, totals);
@@ -116,6 +119,7 @@ async function apply(actor, totals, root) {
   };
   if (form.querySelector("[name=setMoney]").checked) update["system.money"] = initialMoney(totals);
   await actor.update(update);
+  await logCreation(actor, { type: "assign", totals, abilities });
   ui.notifications.info(L("applied", { name: actor.name }));
   return abilities;
 }
@@ -130,7 +134,7 @@ export function registerAbilityRollHooks() {
     if (!(message.isAuthor || game.user.isGM)) return btn.remove();
     btn.addEventListener("click", async () => {
       const actor = await fromUuid(data.actorUuid);
-      if (actor?.isOwner) assignDialog(actor, data.totals);
+      if (actor?.isOwner && (game.user.isGM || !actor.system.creation?.locked)) assignDialog(actor, data.totals);
     });
   });
 }

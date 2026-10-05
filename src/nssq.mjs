@@ -18,6 +18,7 @@ import { registerApply } from "./combat/apply.mjs";
 import { attackerFromContext, normalAttack, registerAttackHooks } from "./combat/attack.mjs";
 import { registerTracker, rollEscape } from "./combat/tracker.mjs";
 import { registerFormation } from "./combat/formation.mjs";
+import { registerHud } from "./combat/hud.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
 import { createPreset, openEndDialog, openStartDialog, registerBattle } from "./apps/battle.mjs";
 
@@ -60,6 +61,7 @@ Hooks.once("init", () => {
   registerTracker();
   registerBattle();
   registerFormation();
+  registerHud();
   registerEnemyLibrary();
   // 매크로·모듈용 API
   game.nssq = {
@@ -75,3 +77,10 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", () => registerSocket());
+
+// 시스템 대화창(내용에 nssq 클래스가 있는 것)은 창틀도 NSSQ 테마로
+Hooks.on("renderDialog", (app) => {
+  const el = app.element?.[0];
+  if (!el || el.classList.contains("nq-window")) return;
+  if (app.options.classes?.includes("nssq") || el.querySelector("[class*='nssq']")) el.classList.add("nssq", "dialog", "nq-window");
+});

@@ -6,13 +6,14 @@ import { acquireItems } from "../apps/acquire.mjs";
 import { normalAttack } from "../combat/attack.mjs";
 import { makeRare, removeRare } from "../apps/rare.mjs";
 import { isPhysical } from "../engine/equipment.mjs";
+import { characterContext, editAbility, toggleCreationLock } from "./character.mjs";
 
 export class NssqActorSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["nssq", "sheet", "actor"],
-      width: 640,
-      height: 680,
+      classes: ["nssq", "nq-window", "sheet", "actor"],
+      width: 780,
+      height: 780,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "main" }]
     });
   }
@@ -32,6 +33,16 @@ export class NssqActorSheet extends ActorSheet {
     context.canAttack = this.isEditable && (this.actor.type === "character" || this.actor.type === "enemy");
     context.showNpcToggle = game.user.isGM && this.actor.type === "character";
     context.isGM = game.user.isGM;
+    const pct = (r) => (r?.max > 0 ? Math.clamp(Math.round((r.value / r.max) * 100), 0, 100) : 0);
+    context.hpPct = pct(system.hp);
+    if (this.actor.type === "enemy") {
+      const el = (e) => (e === "none" ? game.i18n.localize("NSSQ.Combat.noElement") : game.i18n.localize(`NSSQ.Resist.${e}`));
+      context.attackElementText = (system.attackElements ?? []).map(el).join("·") || "-";
+      context.drops = (system.drops ?? []).map((d) => ({
+        range: d.max === null ? `${d.min}~` : d.min === d.max ? `${d.min}` : `${d.min}~${d.max}`,
+        item: `${d.rank ? `R${d.rank} ` : ""}${d.item}`
+      }));
+    }
     if (this.actor.type === "character") {
       context.abilityRows = ABILITIES.map((k) => ({
         key: k, ...system.abilityParts[k], bonus: system.bonus[k]
@@ -44,6 +55,8 @@ export class NssqActorSheet extends ActorSheet {
       context.subClassKey = sub?.system.key ?? "";
       context.inventory = inventoryContext(this.actor);
       context.isGM = game.user.isGM;
+      context.sheet = characterContext(this.actor);
+      context.tpPct = pct(system.tp);
       context.resistRows = RESISTS.map((k) => ({ key: k, base: system.resist[k], total: system.resistTotal[k], changed: system.resistTotal[k] !== system.resist[k] }));
     }
     context.items = this.actor.items.contents.sort((a, b) => (a.sort || 0) - (b.sort || 0));
@@ -100,6 +113,15 @@ export class NssqActorSheet extends ActorSheet {
     html.on("click", "[data-action=normal-attack]", (ev) => {
       ev.preventDefault();
       normalAttack(this.actor, { ignoreRange: ev.shiftKey && game.user.isGM });
+    });
+    html.on("click", "[data-action=edit-ability]", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      editAbility(this.actor, ev.currentTarget.dataset.ability);
+    });
+    html.on("click", "[data-action=toggle-lock]", (ev) => {
+      ev.preventDefault();
+      toggleCreationLock(this.actor);
     });
     html.on("click", "[data-action=roll-abilities]", (ev) => {
       ev.preventDefault();

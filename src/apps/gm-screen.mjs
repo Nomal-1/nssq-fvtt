@@ -36,8 +36,8 @@ export class GMScreen extends Application {
       classes: ["nssq", "nssq-gm-screen"],
       template: "systems/nssq/templates/apps/gm-screen.hbs",
       title: game.i18n.localize("NSSQ.GMScreen.title"),
-      width: 760,
-      height: 600,
+      width: 860,
+      height: 680,
       resizable: true,
       tabs: [{ navSelector: ".gm-tabs", contentSelector: ".gm-body", initial: "party" }]
     });

@@ -1,27 +1,33 @@
-<section class="skills">
-  <h3>{{localize "TYPES.Item.class"}}</h3>
-  <ol class="item-list">
+<section class="nq-skills">
+  <div class="nq-classes">
     {{#each inventory.classes as |c|}}
-    <li class="item flexrow" data-item-id="{{c.id}}">
-      <img class="item-img" src="{{c.img}}" width="24" height="24"/>
-      <span class="item-name"><a data-action="item-edit">{{c.name}}</a></span>
-      {{#if @root.editable}}<a class="item-control" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>{{/if}}
-    </li>
+    <div class="nq-class-card" data-item-id="{{c.id}}">
+      <img src="{{c.img}}"/>
+      <a data-action="item-edit">{{c.name}}</a>
+      {{#if @root.editable}}<a class="nq-ctl" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-times"></i></a>{{/if}}
+    </div>
     {{else}}
-    <li class="empty">{{localize "NSSQ.Class.dropHint"}}</li>
+    <p class="nq-empty">{{localize "NSSQ.Class.dropHint"}}</p>
     {{/each}}
-  </ol>
-  <h3>{{localize "TYPES.Item.skill"}}</h3>
-  <ol class="item-list">
-    {{#each inventory.skills as |s|}}
-    <li class="item flexrow" data-item-id="{{s.id}}">
-      <img class="item-img" src="{{s.img}}" width="24" height="24"/>
-      <span class="item-name"><a data-action="item-edit">{{s.name}}</a></span>
-      <span class="item-summary">{{s.system.timing}} · SL {{s.system.sl}}</span>
-      {{#if @root.editable}}<a class="item-control" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>{{/if}}
-    </li>
-    {{else}}
-    <li class="empty">{{localize "NSSQ.NoItems"}}</li>
-    {{/each}}
-  </ol>
+  </div>
+
+  {{#each inventory.skillGroups as |g|}}
+  <section class="nq-skill-group {{g.cls}}" data-skill-group="{{g.cls}}">
+    <h3 class="nq-title">{{g.title}} <span class="nq-note">{{g.skills.length}}</span></h3>
+    <ol class="nq-skill-list">
+      {{#each g.skills as |s|}}
+      <li class="nq-skill" data-item-id="{{s.id}}" data-skill-key="{{s.skillKey}}">
+        <img src="{{s.img}}"/>
+        <a class="nq-skill-name" data-action="item-edit">{{#if s.unique}}<span class="nq-unique" title="{{localize 'NSSQ.Skill.unique'}}">★</span>{{/if}}{{s.name}}</a>
+        <span class="nq-timing {{s.timingCls}}">{{s.timing}}</span>
+        {{#if s.cost}}<span class="nq-cost">{{s.cost}}</span>{{/if}}
+        <span class="nq-sl" title="{{#if s.prereq}}{{localize 'NSSQ.Skill.prereq'}}: {{s.prereq}}{{/if}}">SL {{s.sl}}{{#if s.max}}<em>/{{s.max}}</em>{{/if}}</span>
+        {{#if @root.editable}}<a class="nq-ctl" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>{{/if}}
+      </li>
+      {{/each}}
+    </ol>
+  </section>
+  {{else}}
+  <p class="nq-empty">{{localize "NSSQ.Skill.none"}}</p>
+  {{/each}}
 </section>

@@ -46,6 +46,36 @@ function rankLabel(item) {
   return ["weapon", "armor", "material"].includes(item.type) ? `R${item.system.rank}` : "";
 }
 
+/**
+ * 스킬 탭: 클래스별 구역(메인 → 서브 → 커먼 → 그 밖). 스킬 트리 보기를 붙일 수 있도록
+ * 각 스킬에 key·전제(prereqs)·MaxSL을 함께 넘긴다.
+ */
+function skillGroups(actor, items) {
+  const { main, sub } = actor.system.classItems ?? {};
+  const skills = items.filter((i) => i.type === "skill");
+  const timingCls = { 상시: "passive", 주행동: "action", 개막: "opening", 수동: "reaction", 특수: "special" };
+  const row = (s) => ({
+    id: s.id, name: s.name, img: s.img, sl: s.system.sl,
+    max: s.system.classKey === sub?.system.key && s.system.classKey !== main?.system.key ? s.system.maxSL.sub : s.system.maxSL.main,
+    timing: s.system.timing, timingCls: timingCls[s.system.timing] ?? "other",
+    cost: s.system.cost?.tp ? `TP ${s.system.cost.tp}` : s.system.cost?.fp ? `FP ${s.system.cost.fp}` : "",
+    unique: !!s.system.unique, skillKey: s.system.skillKey,
+    prereq: (s.system.prereqs?.all ?? []).map((p) => (p.any ? p.any.map((q) => `${q.skill} ${q.sl}`).join(" / ") : `${p.skill} ${p.sl}`)).join(" + ")
+  });
+  const groups = [];
+  const take = (pred, title, cls) => {
+    const list = skills.filter(pred).sort((a, b) => a.name.localeCompare(b.name, "ko")).map(row);
+    if (list.length) groups.push({ title, cls, skills: list });
+  };
+  const used = new Set();
+  const mark = (pred) => (s) => { if (used.has(s.id) || !pred(s)) return false; used.add(s.id); return true; };
+  if (main) take(mark((s) => s.system.classKey === main.system.key), `${main.name} · ${game.i18n.localize("NSSQ.Class.main")}`, "main");
+  if (sub) take(mark((s) => s.system.classKey === sub.system.key), `${sub.name} · ${game.i18n.localize("NSSQ.Class.sub")}`, "sub");
+  take(mark((s) => s.system.classKey === "common"), game.i18n.localize("NSSQ.Skill.common"), "common");
+  take(mark(() => true), game.i18n.localize("NSSQ.Skill.other"), "other");
+  return groups;
+}
+
 export function inventoryContext(actor) {
   const all = actor.items.contents;
   const items = all.filter((i) => !i.system.stored);
@@ -88,7 +118,7 @@ export function inventoryContext(actor) {
       : weapon?.unarmed ? game.i18n.format("NSSQ.Inventory.unarmed", { type: weapon.weaponType, atk: weapon.physAtk })
         : game.i18n.localize("NSSQ.Inventory.noWeapon"),
     classes: items.filter((i) => i.type === "class"),
-    skills: items.filter((i) => i.type === "skill").sort((a, b) => a.name.localeCompare(b.name, "ko"))
+    skillGroups: skillGroups(actor, items)
   };
 }
 

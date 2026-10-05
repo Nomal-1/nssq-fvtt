@@ -135,8 +135,8 @@ class ShopApp extends Application {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["nssq", "nssq-shop"],
       template: "systems/nssq/templates/apps/shop.hbs",
-      width: 620,
-      height: 640,
+      width: 700,
+      height: 680,
       resizable: true,
       tabs: [{ navSelector: ".shop-tabs", contentSelector: ".shop-body", initial: "weapon" }]
     });

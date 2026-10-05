@@ -6,13 +6,18 @@ import { description, int, resistances, resource, row, str } from "../fields.mjs
 const { SchemaField, ArrayField, StringField } = foundry.data.fields;
 
 /** 능력치 하나의 저장값. 클래스·장비 보정은 저장하지 않고 계산한다 */
-const ability = () => new SchemaField({ base: int(0), growth: int(0), temp: int(0) });
+const ability = () => new SchemaField({ base: int(0), growth: int(0), bonus: int(0), temp: int(0) });
 
 export class CharacterData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       abilities: new SchemaField(Object.fromEntries(ABILITIES.map((k) => [k, ability()]))),
       abilityRolls: new ArrayField(int(0)),
+      // 캐릭터 작성 기록(GM 열람): 능력치 굴리기 결과·배정·GM 수정. 잠그면 「굴림」은 GM만 고친다
+      creation: new SchemaField({
+        locked: new foundry.data.fields.BooleanField({ initial: false }),
+        log: new ArrayField(new foundry.data.fields.ObjectField())
+      }),
       level: int(1, { min: 1 }),
       exp: int(0, { min: 0 }),
       hp: resource(0),

@@ -13,7 +13,7 @@ const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.loc
 
 /* ---------------- 개막 행동 ---------------- */
 
-async function toggleGuard(combatant) {
+export async function toggleGuard(combatant) {
   const on = !combatant.getFlag("nssq", "guarding");
   await combatant.update({ "flags.nssq.guarding": on, "flags.nssq.waiting": on, "flags.nssq.opening": on ? "guard" : null });
   await ChatMessage.create({
@@ -27,7 +27,7 @@ async function toggleRow(combatant) {
 }
 
 /** 무기 슬롯과 기타 슬롯의 무기를 맞바꾼다 */
-async function swapWeapon(combatant) {
+export async function swapWeapon(combatant) {
   const actor = combatant.actor;
   if (actor.type !== "character") return;
   const items = actor.items.contents;
