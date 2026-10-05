@@ -4,6 +4,7 @@ import { NssqItem } from "./documents/item.mjs";
 import { NssqActorSheet } from "./sheets/actor-sheet.mjs";
 import { NssqItemSheet } from "./sheets/item-sheet.mjs";
 import { registerSettings } from "./settings.mjs";
+import { TEMPLATES } from "./templates.mjs";
 
 Hooks.once("init", () => {
   CONFIG.Actor.documentClass = NssqActor;
@@ -24,13 +25,7 @@ Hooks.once("init", () => {
 
   registerSettings();
 
-  loadTemplates([
-    "systems/nssq/templates/actor/character-sheet.hbs",
-    "systems/nssq/templates/actor/enemy-sheet.hbs",
-    "systems/nssq/templates/actor/token-sheet.hbs",
-    "systems/nssq/templates/actor/parts/items.hbs",
-    "systems/nssq/templates/item/item-sheet.hbs"
-  ]);
+  loadTemplates(TEMPLATES);
 
   Handlebars.registerHelper("nssqLabel", (prefix, key) => game.i18n.localize(`${prefix}.${key}`));
   Handlebars.registerHelper("nssqEq", (a, b) => a === b);
