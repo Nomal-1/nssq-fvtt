@@ -145,7 +145,6 @@
       "failure": "실패",
       "absSuccess": "절대 성공",
       "absFailure": "절대 실패",
-      "addDice": "【FP】로 주사위 추가",
       "reroll": "【FP】로 다시 굴리기",
       "contest": "대항 판정",
       "addedNote": "추가 주사위",
@@ -154,7 +153,29 @@
       "notEnoughFP": "【FP】가 부족하다.",
       "noActor": "판정할 캐릭터가 없다. 캐릭터를 지정하거나 토큰을 선택하라.",
       "pickActor": "판정할 캐릭터",
-      "contestWinner": "{name} 승리"
+      "contestWinner": "{name} 승리",
+      "contestTargetNote": "대항 판정: {name}의 달성값 {total}이 목표값이다. 같으면 이쪽이 이긴다.",
+      "contestLine": "{passive} {total} / 목표값 {target}({active}의 달성값)"
+    },
+    "Request": {
+      "title": "판정 요청",
+      "send": "보내기",
+      "characters": "캐릭터",
+      "offline": "접속 안 함",
+      "noOwner": "소유 플레이어 없음(GM이 굴림)",
+      "note": "메모",
+      "notePlaceholder": "예: 무너지는 다리를 건넌다",
+      "rollMode": "공개 범위",
+      "pickOne": "캐릭터를 하나 이상 고르라.",
+      "noCharacters": "캐릭터가 없다.",
+      "sent": "{name}에게 판정을 요청했다: {what}",
+      "modifierShort": "수정",
+      "popupTitle": "판정 요청",
+      "asked": "{gm}이(가) {name}에게 판정을 요청했다.",
+      "accept": "실시",
+      "decline": "거절",
+      "declined": "{user}이(가) {name}의 판정을 거절했다: {what}",
+      "byGM": "GM 요청"
     }
   }
 }

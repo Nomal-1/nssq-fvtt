@@ -26,6 +26,10 @@ function abilityLabel(ability) {
 /** 판정 전 대화창. 취소하면 null */
 export async function promptCheck(actor, { ability = null, contestOf = null } = {}) {
   const fp = actor.system.fp?.value ?? 0;
+  const active = contestOf ? game.messages.get(contestOf) : null;
+  const contestNote = active && stateOf(active)
+    ? `<p class="notes">${game.i18n.format("NSSQ.Check.contestTargetNote", { name: active.speaker.alias, total: resultOf(active).total })}</p>`
+    : "";
   const abilityOptions = ABILITIES.map(
     (k) => `<option value="${k}" ${k === ability ? "selected" : ""}>${abilityLabel(k)} (B ${actor.system.bonus?.[k] ?? 0})</option>`
   ).join("");
@@ -35,6 +39,7 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
         <select name="ability">${abilityOptions}<option value="" ${ability ? "" : "selected"}>${abilityLabel(null)}</option></select></div>
       <div class="form-group"><label>${game.i18n.localize("NSSQ.Check.modifier")}</label>
         <input type="number" name="modifier" value="0"/></div>
+      ${contestNote}
       ${contestOf ? "" : `<div class="form-group"><label>${game.i18n.localize("NSSQ.Check.target")}</label>
         <input type="number" name="target" placeholder="${game.i18n.localize("NSSQ.Check.targetNone")}"/></div>`}
       <div class="form-group"><label>${game.i18n.format("NSSQ.Check.addDiceLabel", { fp })}</label>
@@ -64,13 +69,14 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
  * @param {Actor} actor
  * @param {object} o { ability, modifier, target, addDice, contestOf }
  */
-export async function rollCheck(actor, { ability = null, modifier = 0, target = null, addDice = 0, contestOf = null } = {}) {
+export async function rollCheck(actor, { ability = null, modifier = 0, target = null, addDice = 0, contestOf = null, rollMode = null, request = null } = {}) {
   const bonus = ability ? actor.system.bonus?.[ability] ?? 0 : 0;
   const added = Math.max(0, addDice);
   const { roll, dice } = await rollD6(2 + added);
   const state = {
     actorUuid: actor.uuid, ability, bonus, modifier, target,
-    dice, selected: null, added, rerolled: false, fpGained: 0
+    dice, selected: null, added, rerolled: false, fpGained: 0,
+    request: request ? { note: request.note ?? "" } : null
   };
   const result = evaluateCheck({ ...state, modifier: bonus + modifier });
   state.selected = result.selected;
@@ -79,6 +85,7 @@ export async function rollCheck(actor, { ability = null, modifier = 0, target = 
 
   const flags = { nssq: { check: state } };
   if (contestOf) flags.nssq.contest = { of: contestOf };
+  if (request) flags.nssq.request = request;
   const data = {
     speaker: ChatMessage.getSpeaker({ actor }),
     content: await renderCard(state, { contest: !!contestOf }),
@@ -86,7 +93,7 @@ export async function rollCheck(actor, { ability = null, modifier = 0, target = 
     sound: CONFIG.sounds.dice,
     flags
   };
-  ChatMessage.applyRollMode(data, game.settings.get("core", "rollMode"));
+  ChatMessage.applyRollMode(data, rollMode ?? game.settings.get("core", "rollMode"));
   return ChatMessage.create(data);
 }
 
@@ -102,6 +109,7 @@ async function renderCard(state, { contest = false } = {}) {
   const data = {
     label: abilityLabel(state.ability),
     contest,
+    request: state.request,
     dice: state.dice.map((v, i) => ({
       v, i,
       used: r.selected.includes(i),
@@ -140,34 +148,6 @@ async function updateCard(message, state) {
     content: await renderCard(state, { contest: !!message.getFlag("nssq", "contest") }),
     "flags.nssq.check": state
   });
-}
-
-/** 【FP】로 주사위 추가. 이 판정에서 얻은 【FP】는 돌려놓는다 */
-async function onAddDice(message) {
-  const state = foundry.utils.deepClone(stateOf(message));
-  const actor = await actorOf(state);
-  if (!actor) return;
-  const fp = actor.system.fp?.value ?? 0;
-  const n = await Dialog.prompt({
-    title: game.i18n.localize("NSSQ.Check.addDice"),
-    content: `<form><div class="form-group"><label>${game.i18n.format("NSSQ.Check.addDiceLabel", { fp })}</label>
-      <input type="number" name="n" value="1" min="1" max="${fp}"/></div></form>`,
-    label: game.i18n.localize("NSSQ.Check.roll"),
-    rejectClose: false,
-    callback: (html) => Number(html[0].querySelector("[name=n]").value) || 0
-  });
-  if (!n || n < 1) return;
-  if (n > fp) return ui.notifications.warn(game.i18n.localize("NSSQ.Check.notEnoughFP"));
-  const { roll, dice } = await rollD6(n);
-  await show3d(roll);
-  state.dice = [...state.dice, ...dice];
-  state.added += n;
-  state.selected = null;
-  const r = evaluateCheck({ ...state, modifier: state.bonus + state.modifier });
-  state.selected = r.selected;
-  await changeFP(actor, -n + (r.fpGain - state.fpGained));
-  state.fpGained = r.fpGain;
-  await updateCard(message, state);
 }
 
 /** 【FP】로 다시 굴리기(판정당 1회). 늘린 개수는 유지(FAQ 4) */
@@ -258,7 +238,7 @@ function renderContest(message, el) {
   box.innerHTML = lines.map(({ active, passive, winner }) => {
     const win = winner === "active" ? active.name : passive.name;
     return `<div class="contest-line">
-      <span>${active.name} <b>${active.total}</b></span> vs <span>${passive.name} <b>${passive.total}</b></span>
+      ${game.i18n.format("NSSQ.Check.contestLine", { active: active.name, target: active.total, passive: passive.name, total: passive.total })}
       → <b class="winner">${game.i18n.format("NSSQ.Check.contestWinner", { name: win })}</b></div>`;
   }).join("");
   el.querySelector(".nssq-check")?.append(box);
@@ -278,8 +258,7 @@ export function registerCheckHooks() {
       b.addEventListener("click", (ev) => {
         ev.preventDefault();
         const action = b.dataset.nssqAction;
-        if (action === "add-dice") onAddDice(message);
-        else if (action === "reroll") onReroll(message);
+        if (action === "reroll") onReroll(message);
         else if (action === "select" && canEdit) onSelect(message, Number(b.dataset.index));
         else if (action === "contest") onContest(message);
       });

@@ -6,6 +6,8 @@ import { NssqItemSheet } from "./sheets/item-sheet.mjs";
 import { registerSettings } from "./settings.mjs";
 import { TEMPLATES } from "./templates.mjs";
 import { promptCheck, registerCheckHooks, rollCheck } from "./chat/check.mjs";
+import { openRequestDialog, registerCheckRequest } from "./apps/check-request.mjs";
+import { registerSocket } from "./socket.mjs";
 
 Hooks.once("init", () => {
   CONFIG.Actor.documentClass = NssqActor;
@@ -33,6 +35,9 @@ Hooks.once("init", () => {
   Handlebars.registerHelper("nssqGt", (a, b) => a > b);
 
   registerCheckHooks();
+  registerCheckRequest();
   // 매크로·모듈용 API
-  game.nssq = { promptCheck, rollCheck };
+  game.nssq = { promptCheck, rollCheck, openRequestDialog };
 });
+
+Hooks.once("ready", () => registerSocket());

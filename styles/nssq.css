@@ -52,3 +52,15 @@
 .nssq-check .check-buttons button { flex: 1; line-height: 1.6em; font-size: 0.85em; }
 .nssq-check .nssq-contest { border-top: 1px dashed #999; margin-top: 4px; padding-top: 4px; font-size: 0.9em; }
 .nssq-check .nssq-contest .winner { color: #18762b; }
+
+/* 판정 요청 */
+.nssq-request-form .request-actors { display: flex; flex-direction: column; gap: 2px; max-height: 220px; overflow-y: auto; }
+.nssq-request-form .request-actor { display: flex; align-items: center; gap: 6px; }
+.nssq-request-form .request-actor img { border: none; }
+.nssq-request-form .request-actor .owner { margin-left: auto; font-size: 0.85em; color: #7a7971; }
+.nssq-request-popup .request-what { font-size: 1.2em; text-align: center; margin: 6px 0; }
+.nssq-request-popup .request-formula { text-align: center; color: #555; }
+.nssq-request-popup .request-note { font-style: italic; text-align: center; }
+.nssq-request .dialog-buttons button { line-height: 2.2em; font-size: 1.05em; }
+.nssq-check .check-request { font-size: 0.85em; color: #7a4b00; margin-bottom: 2px; }
+#actors .nssq-request-btn { flex: 0 0 100%; margin-top: 4px; }
