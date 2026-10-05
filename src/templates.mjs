@@ -5,8 +5,11 @@ export const TEMPLATES = [
   "systems/nssq/templates/actor/token-sheet.hbs",
   "systems/nssq/templates/actor/parts/header.hbs",
   "systems/nssq/templates/actor/parts/items.hbs",
+  "systems/nssq/templates/actor/parts/inventory.hbs",
+  "systems/nssq/templates/actor/parts/skills.hbs",
   "systems/nssq/templates/actor/parts/resist.hbs",
   "systems/nssq/templates/item/item-sheet.hbs",
   "systems/nssq/templates/chat/check-card.hbs",
-  "systems/nssq/templates/chat/ability-roll.hbs"
+  "systems/nssq/templates/chat/ability-roll.hbs",
+  "systems/nssq/templates/apps/shop.hbs"
 ];

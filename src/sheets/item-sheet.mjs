@@ -1,3 +1,7 @@
+import tables from "../generated/tables.mjs";
+
+const ELEMENTS = ["slash", "strike", "pierce", "fire", "ice", "volt"];
+
 export class NssqItemSheet extends ItemSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -24,14 +28,50 @@ export class NssqItemSheet extends ItemSheet {
       if (f instanceof StringField) return "StringField";
       return null;
     };
+    const choices = this.fieldChoices();
     context.fields = Object.entries(system.schema.fields)
-      .map(([k, f]) => ({ key: k, name: `system.${k}`, label: `NSSQ.Field.${k}`, value: system[k], type: typeOf(f) }))
+      .map(([k, f]) => ({ key: k, name: `system.${k}`, label: `NSSQ.Field.${k}`, value: system[k], type: typeOf(f), choices: choices[k] }))
       .filter((f) => f.type);
+    // 무기·방어구: 계산된 성능과 제련 목록
+    if (system.stats) {
+      context.stats = Object.entries(system.stats)
+        .filter(([k, v]) => typeof v === "number" && !(k === "price" && !v))
+        .map(([k, v]) => ({ label: `NSSQ.Inventory.${k}`, value: v }));
+    }
+    if (Array.isArray(system.refinements)) {
+      context.refinements = system.refinements.map((k) => ({ key: k, name: tables.refinements.find((r) => r.key === k)?.name ?? k }));
+      context.isGM = game.user.isGM;
+    }
     context.enrichedDescription = await TextEditor.enrichHTML(system.description ?? "", {
       async: true,
       secrets: this.item.isOwner,
       relativeTo: this.item
     });
     return context;
+  }
+
+  /** 선택 상자로 보일 필드 */
+  fieldChoices() {
+    const label = (k) => game.i18n.localize(`NSSQ.Resist.${k}`);
+    const c = {};
+    if (this.item.type === "weapon") {
+      c.weaponType = Object.fromEntries(Object.keys(tables.weapons).map((k) => [k, k]));
+      c.element = { "": game.i18n.localize("NSSQ.Field.elementDefault"), ...Object.fromEntries(ELEMENTS.map((e) => [e, label(e)])) };
+      c.slot = { weapon: game.i18n.localize("NSSQ.Slot.weapon"), other: game.i18n.localize("NSSQ.Slot.other") };
+    }
+    if (this.item.type === "armor") c.armorType = Object.fromEntries(Object.keys(tables.armors).map((k) => [k, k]));
+    if (this.item.type === "material") c.materialType = Object.fromEntries(tables.materials.map((k) => [k, k]));
+    return c;
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    if (!this.isEditable) return;
+    // 제련 지우기(GM): 실수 정정용. 비용·소재는 돌려주지 않는다
+    html.on("click", "[data-action=remove-refinement]", (ev) => {
+      ev.preventDefault();
+      const key = ev.currentTarget.dataset.key;
+      this.item.update({ "system.refinements": this.item.system.refinements.filter((k) => k !== key) });
+    });
   }
 }

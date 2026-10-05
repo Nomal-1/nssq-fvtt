@@ -18,5 +18,5 @@ jobs:
       - run: npm run lint
       # data/*.json이 data/raw와 어긋나지 않았는지 확인
       - run: npm run build:data
-      - run: git diff --exit-code -- data
+      - run: git diff --exit-code -- data src/generated
       - run: npm run build:packs

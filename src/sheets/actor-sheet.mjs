@@ -1,6 +1,7 @@
 import { ABILITIES, RESISTS, SUB_STATS } from "../engine/derive.mjs";
 import { promptCheck, rollCheck } from "../chat/check.mjs";
 import { rollAbilities } from "../apps/ability-roll.mjs";
+import { activateInventoryListeners, inventoryContext } from "./inventory.mjs";
 
 export class NssqActorSheet extends ActorSheet {
   static get defaultOptions() {
@@ -34,6 +35,8 @@ export class NssqActorSheet extends ActorSheet {
       context.subClassChoices = { "": game.i18n.localize("NSSQ.Class.none"), ...Object.fromEntries(all.filter((c) => c !== main).map((c) => [c.system.key, c.name])) };
       context.mainClassKey = main?.system.key ?? "";
       context.subClassKey = sub?.system.key ?? "";
+      context.inventory = inventoryContext(this.actor);
+      context.resistRows = RESISTS.map((k) => ({ key: k, base: system.resist[k], total: system.resistTotal[k], changed: system.resistTotal[k] !== system.resist[k] }));
     }
     context.items = this.actor.items.contents.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     context.enrichedDescription = await TextEditor.enrichHTML(system.description ?? "", {
@@ -78,6 +81,7 @@ export class NssqActorSheet extends ActorSheet {
       this.actor.items.get(id)?.sheet.render(true);
     });
     if (!this.isEditable) return;
+    if (this.actor.type === "character") activateInventoryListeners(this, html);
     html.on("click", "[data-action=roll-abilities]", (ev) => {
       ev.preventDefault();
       rollAbilities(this.actor);

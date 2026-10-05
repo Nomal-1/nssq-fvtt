@@ -412,9 +412,27 @@
   "system": {
    "key": "バックパック",
    "price": 50,
-   "effects": [],
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "carry",
+     "value": 4
+    },
+    {
+     "type": "flag",
+     "flag": "noCarryCount",
+     "value": true
+    },
+    {
+     "type": "flag",
+     "flag": "ownLimit",
+     "value": 1
+    }
+   ],
    "quantity": 1,
-   "description": "<p>아이템 소지 수 +4를 얻는다. 또한 이 아이템은 소지 수를 계산할 때 아이템 1개분으로 계산하지 않는다. 그리고 이 아이템을 2개 이상 소지할 수는 없다.</p>"
+   "description": "<p>아이템 소지 수 +4를 얻는다. 또한 이 아이템은 소지 수를 계산할 때 아이템 1개분으로 계산하지 않는다. 그리고 이 아이템을 2개 이상 소지할 수는 없다.</p>",
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -425,9 +443,17 @@
   "system": {
    "key": "テント",
    "price": 100,
-   "effects": [],
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.campDanger",
+     "value": -1
+    }
+   ],
    "quantity": 1,
-   "description": "<p>캠프 시의 『주변 위험도』를 -1로 취급한다.</p>"
+   "description": "<p>캠프 시의 『주변 위험도』를 -1로 취급한다.</p>",
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -440,7 +466,8 @@
    "price": 80,
    "effects": [],
    "quantity": 1,
-   "description": "<p>커먼 스킬 《회복 요리》《일품 요리》《약효 요리》의 사용에 필요하다.</p>"
+   "description": "<p>커먼 스킬 《회복 요리》《일품 요리》《약효 요리》의 사용에 필요하다.</p>",
+   "review": "todo"
   }
  },
  {
@@ -453,7 +480,8 @@
    "price": 20,
    "effects": [],
    "quantity": 1,
-   "description": "<p>로프워크 전반에 사용할 수 있다.</p>"
+   "description": "<p>로프워크 전반에 사용할 수 있다.</p>",
+   "review": "todo"
   }
  },
  {
@@ -466,7 +494,8 @@
    "price": 5,
    "effects": [],
    "quantity": 1,
-   "description": "<p>단단한 가죽이나 대나무 등으로 만든 500ml 정도의 물통.</p>"
+   "description": "<p>단단한 가죽이나 대나무 등으로 만든 500ml 정도의 물통.</p>",
+   "review": "todo"
   }
  },
  {
@@ -479,7 +508,8 @@
    "price": 5,
    "effects": [],
    "quantity": 1,
-   "description": "<p>아이템 소지 수는 늘어나지 않는다. 어디까지나 포장용.</p>"
+   "description": "<p>아이템 소지 수는 늘어나지 않는다. 어디까지나 포장용.</p>",
+   "review": "todo"
   }
  },
  {
@@ -492,7 +522,8 @@
    "price": 2,
    "effects": [],
    "quantity": 1,
-   "description": "<p>손수건 또는 수건 정도 크기의 천.</p>"
+   "description": "<p>손수건 또는 수건 정도 크기의 천.</p>",
+   "review": "todo"
   }
  },
  {
@@ -505,7 +536,8 @@
    "price": 20,
    "effects": [],
    "quantity": 1,
-   "description": "<p>절단·절삭 작업용의 튼튼한 나이프. 무기로 쓰기에는 부적합하다.</p>"
+   "description": "<p>절단·절삭 작업용의 튼튼한 나이프. 무기로 쓰기에는 부적합하다.</p>",
+   "review": "todo"
   }
  },
  {
@@ -518,7 +550,8 @@
    "price": 20,
    "effects": [],
    "quantity": 1,
-   "description": "<p>주로 못 박기 등의 용도로 쓰는 쇠망치. 무기로 쓰기에는 부적합하다.</p>"
+   "description": "<p>주로 못 박기 등의 용도로 쓰는 쇠망치. 무기로 쓰기에는 부적합하다.</p>",
+   "review": "todo"
   }
  },
  {
@@ -531,7 +564,8 @@
    "price": 1,
    "effects": [],
    "quantity": 1,
-   "description": "<p>소모품. 5개 세트에 1G.</p>"
+   "description": "<p>소모품. 5개 세트에 1G.</p>",
+   "review": "todo"
   }
  },
  {
@@ -544,7 +578,8 @@
    "price": 50,
    "effects": [],
    "quantity": 1,
-   "description": "<p>미용 도구로 써도 좋고, 빛 반사나 시야 확보에 써도 좋다.</p>"
+   "description": "<p>미용 도구로 써도 좋고, 빛 반사나 시야 확보에 써도 좋다.</p>",
+   "review": "todo"
   }
  },
  {
@@ -557,7 +592,8 @@
    "price": 1,
    "effects": [],
    "quantity": 1,
-   "description": "<p>소모품. 일회용 조명 기구. 약 1시간은 간다.</p>"
+   "description": "<p>소모품. 일회용 조명 기구. 약 1시간은 간다.</p>",
+   "review": "todo"
   }
  },
  {
@@ -570,7 +606,8 @@
    "price": 5,
    "effects": [],
    "quantity": 1,
-   "description": "<p>부싯돌과 부시 세트. 즉, 점화 도구.</p>"
+   "description": "<p>부싯돌과 부시 세트. 즉, 점화 도구.</p>",
+   "review": "todo"
   }
  },
  {
@@ -583,7 +620,8 @@
    "price": 20,
    "effects": [],
    "quantity": 1,
-   "description": "<p>셔터로 빛을 켜고 끌 수 있는 칸델라.</p>"
+   "description": "<p>셔터로 빛을 켜고 끌 수 있는 칸델라.</p>",
+   "review": "todo"
   }
  },
  {
@@ -596,7 +634,8 @@
    "price": 20,
    "effects": [],
    "quantity": 1,
-   "description": "<p>소모품. 가격은 랜턴 사용 1회분(12시간) 정도.</p>"
+   "description": "<p>소모품. 가격은 랜턴 사용 1회분(12시간) 정도.</p>",
+   "review": "todo"
   }
  },
  {
@@ -609,7 +648,8 @@
    "price": 10,
    "effects": [],
    "quantity": 1,
-   "description": "<p>불투명한 유리제 작은 병. 『기름(작은 병)』을 사용한 뒤에도 이것이 남는다.</p>"
+   "description": "<p>불투명한 유리제 작은 병. 『기름(작은 병)』을 사용한 뒤에도 이것이 남는다.</p>",
+   "review": "todo"
   }
  }
 ]

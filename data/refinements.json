@@ -7,8 +7,15 @@
    "armor"
   ],
   "price": "(R*R)*50",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "abilities.str",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "TEC1",
@@ -18,8 +25,15 @@
    "armor"
   ],
   "price": "(R*R)*50",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "abilities.tec",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "VIT1",
@@ -29,8 +43,15 @@
    "armor"
   ],
   "price": "(R*R)*50",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "abilities.vit",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "AGI1",
@@ -40,8 +61,15 @@
    "armor"
   ],
   "price": "(R*R)*50",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "abilities.agi",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "LUC1",
@@ -51,8 +79,15 @@
    "armor"
   ],
   "price": "(R*R)*50",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "abilities.luc",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "물리명중1",
@@ -61,8 +96,15 @@
    "weapon"
   ],
   "price": "(R*R)*100",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "physHit",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "속성명중1",
@@ -71,8 +113,15 @@
    "weapon"
   ],
   "price": "(R*R)*100",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "elemHit",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "물리공격1",
@@ -81,8 +130,15 @@
    "weapon"
   ],
   "price": "(R*R)*80",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "physAtk",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "속성공격1",
@@ -91,8 +147,15 @@
    "weapon"
   ],
   "price": "(R*R)*80",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "elemAtk",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "염속성부여",
@@ -101,8 +164,15 @@
    "weapon"
   ],
   "price": "(R*R)*100",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "flag",
+    "flag": "weaponElement",
+    "value": "fire"
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "빙속성부여",
@@ -111,8 +181,15 @@
    "weapon"
   ],
   "price": "(R*R)*100",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "flag",
+    "flag": "weaponElement",
+    "value": "ice"
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "뇌속성부여",
@@ -121,8 +198,15 @@
    "weapon"
   ],
   "price": "(R*R)*100",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "flag",
+    "flag": "weaponElement",
+    "value": "volt"
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "방어1",
@@ -131,8 +215,15 @@
    "armor"
   ],
   "price": "(R*R)*100",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "defense",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "속도2",
@@ -141,8 +232,15 @@
    "armor"
   ],
   "price": "(R*R)*80",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "speed",
+    "value": 2
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "염내성1",
@@ -151,8 +249,15 @@
    "armor"
   ],
   "price": "(R*R)*120",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "resist.fire",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "빙내성1",
@@ -161,8 +266,15 @@
    "armor"
   ],
   "price": "(R*R)*120",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "resist.ice",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  },
  {
   "key": "뇌내성1",
@@ -171,7 +283,14 @@
    "armor"
   ],
   "price": "(R*R)*120",
-  "effects": [],
-  "review": "todo"
+  "effects": [
+   {
+    "type": "modifier",
+    "path": "resist.volt",
+    "value": 1
+   }
+  ],
+  "review": "auto",
+  "effectsSource": "convert"
  }
 ]

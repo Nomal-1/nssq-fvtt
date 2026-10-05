@@ -10,7 +10,9 @@
     {{#each fields as |f|}}
     <label class="stat">
       <span>{{localize f.label}}</span>
-      {{#if (nssqEq f.type "BooleanField")}}
+      {{#if f.choices}}
+      <select name="{{f.name}}">{{selectOptions f.choices selected=f.value}}</select>
+      {{else if (nssqEq f.type "BooleanField")}}
       <input type="checkbox" name="{{f.name}}" {{checked f.value}}/>
       {{else if (nssqEq f.type "NumberField")}}
       <input type="number" name="{{f.name}}" value="{{f.value}}" data-dtype="Number"/>
@@ -20,6 +22,22 @@
     </label>
     {{/each}}
   </section>
+  {{#if stats}}
+  <section class="item-stats">
+    <h3>{{localize "NSSQ.Inventory.stats"}}</h3>
+    <div class="grid grid-3col">
+      {{#each stats as |s|}}<div class="stat"><span>{{localize s.label}}</span><span class="value">{{s.value}}</span></div>{{/each}}
+    </div>
+  </section>
+  {{/if}}
+  {{#if refinements}}
+  <section class="item-refinements">
+    <h3>{{localize "NSSQ.Inventory.refined"}}</h3>
+    <ul>
+      {{#each refinements as |r|}}<li>{{r.name}}{{#if @root.isGM}} <a data-action="remove-refinement" data-key="{{r.key}}" title="{{localize 'NSSQ.Inventory.removeRefinement'}}"><i class="fas fa-times"></i></a>{{/if}}</li>{{/each}}
+    </ul>
+  </section>
+  {{/if}}
   <section class="sheet-body">
     {{editor enrichedDescription target="system.description" button=true editable=editable owner=owner}}
   </section>

@@ -103,3 +103,31 @@
 .nssq .ability-table .final { background: rgba(0, 0, 0, 0.05); font-size: 1.15em; font-weight: bold; }
 .nssq .ability-table .final .rollable { display: block; }
 .nssq .ability-table .bonus { font-weight: bold; }
+
+/* 장비·소지품 */
+.nssq .inventory-header { display: flex; align-items: center; gap: 12px; margin: 4px 0; }
+.nssq .inventory-header .carry.over, .nssq .value.over { color: #b02020; font-weight: bold; }
+.nssq .inventory-header .shop-btn { margin-left: auto; flex: 0 0 auto; width: auto; line-height: 1.6em; }
+.nssq .slot-list, .nssq-shop .shop-list { list-style: none; margin: 0; padding: 0; }
+.nssq .slot { align-items: center; gap: 6px; padding: 3px 0; border-bottom: 1px solid #c9c7b8; min-height: 30px; }
+.nssq .slot .slot-label { flex: 0 0 80px; font-weight: bold; }
+.nssq .slot .slot-empty { color: #7a7971; font-style: italic; }
+.nssq .item-name { flex: 0 0 auto; max-width: 40%; }
+.nssq .item-summary { flex: 1; font-size: 0.85em; color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nssq .item-qty { flex: 0 0 3em; text-align: center; height: 22px; }
+.nssq .weapon-line { font-size: 0.9em; color: #444; margin: 4px 0 8px; }
+.nssq .item-stats .value { font-size: 1.1em; }
+.nssq .item-refinements ul { margin: 0; padding-left: 1.2em; }
+.nssq-shop .shop-header { display: flex; justify-content: space-between; align-items: center; }
+.nssq-shop .shop-header .money { font-size: 1.2em; font-weight: bold; }
+.nssq-shop .shop-body { overflow-y: auto; height: calc(100% - 110px); }
+.nssq-shop .shop-row { align-items: center; gap: 6px; padding: 3px 0; border-bottom: 1px solid #c9c7b8; }
+.nssq-shop .shop-row img { flex: 0 0 24px; border: none; }
+.nssq-shop .shop-row .name { flex: 1; }
+.nssq-shop .shop-row .info { font-size: 0.8em; color: #555; }
+.nssq-shop .shop-row .rank { flex: 0 0 auto; }
+.nssq-shop .shop-row .rank input { width: 3em; text-align: center; }
+.nssq-shop .shop-row .mats { flex: 0 0 150px; font-size: 0.8em; color: #555; text-align: right; }
+.nssq-shop .shop-row .price { flex: 0 0 60px; text-align: right; font-weight: bold; }
+.nssq-shop .shop-row button { flex: 0 0 52px; line-height: 1.5em; }
+.nssq-trade { font-size: 0.95em; }

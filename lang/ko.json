@@ -28,7 +28,7 @@
     "HP": "【HP】",
     "TP": "【TP】",
     "FP": "【FP】",
-    "Carry": "아이템 소지 수 한도",
+    "Carry": "소지 수",
     "FOE": "F.O.E.",
     "Rare": "희소종",
     "Identified": "식별",
@@ -40,7 +40,8 @@
       "main": "능력치",
       "items": "아이템",
       "skills": "스킬",
-      "description": "해설"
+      "description": "해설",
+      "inventory": "장비·소지품"
     },
     "Row": {
       "label": "열",
@@ -91,7 +92,8 @@
       "pierce": "〈돌〉",
       "fire": "〈염〉",
       "ice": "〈빙〉",
-      "volt": "〈뇌〉"
+      "volt": "〈뇌〉",
+      "withEquip": "장비 포함"
     },
     "Field": {
       "key": "키",
@@ -115,7 +117,9 @@
       "price": "가격",
       "quantity": "수량",
       "foodstuff": "식료품",
-      "materialType": "소재 종류"
+      "materialType": "소재 종류",
+      "elementDefault": "기본 속성",
+      "refinements": "제련"
     },
     "Status": {
       "petrify": "석화",
@@ -222,6 +226,71 @@
       "dropHint": "클래스 아이템을 끌어 놓는다",
       "duplicate": "{name}은(는) 이미 가진 클래스다.",
       "tooMany": "클래스는 메인과 서브 2개까지다."
+    },
+    "Slot": {
+      "weapon": "무기",
+      "armor": "갑옷",
+      "other": "기타",
+      "sub": "서브웨펀"
+    },
+    "Inventory": {
+      "carried": "소지",
+      "carryHint": "장비 중인 것은 세지 않는다. 한도 = 【STR】B + 【VIT】B + 3 (+ 백팩 등)",
+      "equipped": "장비",
+      "empty": "비어 있음",
+      "equip": "장비",
+      "equipSub": "기타 슬롯에 서브웨펀으로 장비",
+      "unequip": "장비 해제",
+      "noWeapon": "무기 없음",
+      "elementChoose": "속성 미정",
+      "refined": "제련",
+      "removeRefinement": "제련 지우기(GM, 비용 환불 없음)",
+      "stats": "성능",
+      "physAtk": "물공",
+      "elemAtk": "속공",
+      "physHit": "물명",
+      "elemHit": "속명",
+      "speed": "속도",
+      "defense": "방어",
+      "evasion": "회피",
+      "price": "가격",
+      "reason": {
+        "notEquippable": "{name}은(는) 장비할 수 없다.",
+        "noClass": "클래스가 없어 {name}을(를) 장비할 수 없다. 클래스 아이템을 먼저 끌어 놓으라.",
+        "weaponNotAllowed": "{name}: 메인·서브 클래스 모두 이 무기를 쓸 수 없다. (GM은 Shift+클릭으로 무시)",
+        "shieldNotAllowed": "{name}: 메인·서브 클래스 모두 방패를 쓸 수 없다. (GM은 Shift+클릭으로 무시)",
+        "armorNotAllowed": "{name}: 갑옷은 메인 클래스가 장비할 수 있는 것만 가능하다. (GM은 Shift+클릭으로 무시)"
+      }
+    },
+    "Shop": {
+      "title": "상점",
+      "buy": "구입",
+      "material": "소재",
+      "use": "사용",
+      "creationMode": "캐릭터 작성 중(소재 없이 G만)",
+      "rule": "무기·방어구는 대응 소재 중 하나(R 이상)를, 아이템은 필요 소재를 소모한다. 캐릭터 작성 때만 소재 없이 살 수 있다.",
+      "noPacks": "시스템 컴펜디움(장비·아이템)을 찾을 수 없다.",
+      "noMoney": "소지금이 부족하다({price}G 필요).",
+      "ownLimit": "{name}은(는) 2개 이상 가질 수 없다.",
+      "noMaterial": "필요한 소재가 없다: {need}",
+      "pickMaterial": "소모할 소재 ({need})",
+      "usedMaterial": "소재",
+      "chooseElement": "기본 속성 선택(입수할 때 〈참〉〈괴〉〈돌〉 중 하나)",
+      "bought": "구입: {name} ({price}G)",
+      "sold": "매각: {name} (+{price}G)",
+      "sellTitle": "매각",
+      "sellConfirm": "{name}을(를) {price}G에 판다.",
+      "sellEquipped": "장비 중인 아이템이다.",
+      "sellFor": "매각 {price}G",
+      "refine": "제련",
+      "refineTitle": "제련(대장간)",
+      "refineEffect": "효과",
+      "refineIntro": "{name} R{rank} (제련 {count}/2)",
+      "refineHas": "이미 있음",
+      "refineMaterialNote": "대응 소재 {mats} 중 R{rank} 이상 1개를 소모한다.",
+      "refineFull": "{name}은(는) 이미 제련이 2개다.",
+      "refineNone": "붙일 수 있는 제련이 없다.",
+      "refined": "제련: {name}에 {effect} ({price}G)"
     }
   }
 }

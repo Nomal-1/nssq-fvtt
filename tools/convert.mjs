@@ -33,6 +33,8 @@ const write = (rel, data) => {
   if (fs.existsSync(file)) {
     const old = new Map();
     eachAuthored(JSON.parse(fs.readFileSync(file, "utf8")), (id, h) => {
+      // 변환기가 자동 작성한 효과(effectsSource: "convert")는 매번 새로 만든다
+      if (h.effectsSource === "convert") return;
       if (h.effects.length || (h.review && h.review !== "todo")) old.set(id, h);
     });
     eachAuthored(data, (id, h) => {
@@ -41,6 +43,7 @@ const write = (rel, data) => {
       h.effects = o.effects;
       if (o.review !== undefined) h.review = o.review;
       if (o.effectsNote !== undefined) h.effectsNote = o.effectsNote;
+      delete h.effectsSource;
     });
   }
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -302,6 +305,55 @@ function convertCommonSkills() {
   return skills.length;
 }
 
+/* ---------------- 단순 효과 문장 → effects (장식·제련·기타 아이템) ---------------- */
+const ABILITY_KEY = { STR: "str", TEC: "tec", VIT: "vit", AGI: "agi", LUC: "luc" };
+const SUB_KEY = {
+  "물리 명중": "physHit", "속성 명중": "elemHit", 회피: "evasion", "물리 공격": "physAtk", "속성 공격": "elemAtk",
+  방어: "defense", "억제 공격": "suppAtk", "억제 방어": "suppDef", 속도: "speed", HP: "hpMax", TP: "tpMax"
+};
+const ELEM_KEY = { 염: "fire", 빙: "ice", 뇌: "volt" };
+const EFFECT_PATTERNS = [
+  [/^【(STR|TEC|VIT|AGI|LUC)】\s*\+(\d+)$/, (m) => [{ type: "modifier", path: `abilities.${ABILITY_KEY[m[1]]}`, value: Number(m[2]) }]],
+  [/^【([^】]+)】\s*\+(\d+)$/, (m) => SUB_KEY[m[1]] && [{ type: "modifier", path: SUB_KEY[m[1]], value: Number(m[2]) }]],
+  [/^에너미 식별 판정에 \+(\d+)$/, (m) => [{ type: "modifier", path: "checks.identify", value: Number(m[1]) }]],
+  [/^도주 판정에 \+(\d+)$/, (m) => [{ type: "modifier", path: "checks.escape", value: Number(m[1]) }]],
+  [/^〈(염|빙|뇌)〉 속성 부여$/, (m) => [{ type: "flag", flag: "weaponElement", value: ELEM_KEY[m[1]] }]],
+  [/^〈(염|빙|뇌)〉 내성\s*\+(\d+)$/, (m) => [{ type: "modifier", path: `resist.${ELEM_KEY[m[1]]}`, value: Number(m[2]) }]]
+];
+// 기타 아이템 해설의 문장 단위 패턴(문장 일부만 맞으면 partial)
+const SENTENCE_PATTERNS = [
+  [/^아이템 소지 수 \+(\d+)를 얻는다$/, (m) => [{ type: "modifier", path: "carry", value: Number(m[1]) }]],
+  [/소지 수를 계산할 때 아이템 1개분으로 계산하지 않는다$/, () => [{ type: "flag", flag: "noCarryCount", value: true }]],
+  [/이 아이템을 2개 이상 소지할 수는 없다$/, () => [{ type: "flag", flag: "ownLimit", value: 1 }]],
+  [/^캠프 시의 『주변 위험도』를 -(\d+)로 취급한다$/, (m) => [{ type: "modifier", path: "checks.campDanger", value: -Number(m[1]) }]]
+];
+
+/** 한 줄짜리 효과 문장 → { effects, review } (못 읽으면 todo) */
+function effectsFromPhrase(text, where) {
+  for (const [re, fn] of EFFECT_PATTERNS) {
+    const m = text.trim().match(re);
+    const effects = m && fn(m);
+    if (effects) return { effects, review: "auto", effectsSource: "convert" };
+  }
+  report.add("참고: 효과 자동 작성 실패(단계 7에서 작성)", `${where}: \`${text}\``);
+  return { effects: [], review: "todo" };
+}
+
+/** 해설 문장들 → 맞는 문장만 effects로. 일부만 맞으면 partial, 하나도 없으면 todo */
+function effectsFromSentences(text) {
+  const sentences = text.split(/[.。]\s*/).map((s) => s.trim().replace(/^(또한|그리고)\s*/, "")).filter(Boolean);
+  const effects = [];
+  let matched = 0;
+  for (const s of sentences) {
+    for (const [re, fn] of SENTENCE_PATTERNS) {
+      const m = s.match(re);
+      if (m) { effects.push(...fn(m)); matched++; break; }
+    }
+  }
+  if (!matched) return { effects: [], review: "todo" };
+  return { effects, review: matched === sentences.length ? "auto" : "partial", effectsSource: "convert" };
+}
+
 /* ---------------- 장비 ---------------- */
 function convertEquipment() {
   const md = read("data/무기·방어구.md");
@@ -387,7 +439,7 @@ function convertEquipment() {
       name,
       type: "accessory",
       img: "icons/svg/item-bag.svg",
-      system: { key, effects: [], price: Number(price), description: toHTML(effect), effectText: effect }
+      system: { key, price: Number(price), description: toHTML(effect), effectText: effect, ...effectsFromPhrase(effect, where) }
     };
   });
   write("accessories.json", accessories);
@@ -400,7 +452,7 @@ function convertEquipment() {
     const k = kinds.split("/").map((x) => KIND[x.trim()]);
     if (k.includes(undefined)) report.add("열거형 위반", `${where}: 종류 \`${kinds}\``);
     const key = normalizeKey(effect);
-    return { key, name: effect, kinds: k, price: formula(price), effects: [], review: "todo" };
+    return { key, name: effect, kinds: k, price: formula(price), ...effectsFromPhrase(effect, where) };
   });
   write("refinements.json", refinements);
   report.count("제련", refinements.length);
@@ -432,6 +484,7 @@ function convertItems() {
       const key = keyOf(consumable ? "소모품 아이템" : "기타 아이템", name, where);
       const type = consumable ? "consumable" : "tool";
       const system = { key, price: Number(price), effects: [], quantity: 1, description: toHTML(desc) };
+      if (!consumable) Object.assign(system, effectsFromSentences(desc));
       if (consumable) Object.assign(system, { materials: parseMaterials(mats, where), foodstuff: FOODSTUFF.includes(name) });
       else if (mats !== "-") report.add("파싱 실패", `${where}: 기타 아이템에 필요 소재 \`${mats}\``);
       if (Number.isNaN(system.price)) report.add("파싱 실패", `${where}: 가격 \`${price}\``);
@@ -681,6 +734,22 @@ for (const d of ["skills", "enemies", "tables"]) {
       report.add("참고: 삭제한 이전 산출물", `${d}/${f}`);
     }
   }
+}
+
+// 런타임·테스트가 동기로 쓰는 장비 표 모듈
+{
+  const load = (f) => JSON.parse(fs.readFileSync(path.join(OUT, f), "utf8"));
+  const tables = {
+    weapons: Object.fromEntries(load("weapons.json").map((w) => [w.system.weaponType, { key: w.system.key, element: w.system.element, ...w.system.table }])),
+    armors: Object.fromEntries(load("armors.json").map((a) => [a.system.armorType, { key: a.system.key, ...a.system.table }])),
+    refinements: load("refinements.json").map(({ key, name, kinds, price, effects }) => ({ key, name, kinds, price, effects })),
+    materials: load("materials.json").map((m) => m.name)
+  };
+  const file = path.join(ROOT, "src", "generated", "tables.mjs");
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, `// 자동 생성: tools/convert.mjs (data/*.json). 직접 고치지 않는다.
+export default ${JSON.stringify(tables, null, 1)};
+`);
 }
 
 fs.mkdirSync(path.join(ROOT, "build"), { recursive: true });

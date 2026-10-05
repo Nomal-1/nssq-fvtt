@@ -1,4 +1,6 @@
 import { description, int, str } from "../fields.mjs";
+import { armorStats, weaponStats } from "../../engine/equipment.mjs";
+import tables from "../../generated/tables.mjs";
 
 const { SchemaField, ArrayField, BooleanField, NumberField, ObjectField, StringField } = foundry.data.fields;
 
@@ -55,12 +57,24 @@ export class WeaponData extends NssqItemData {
     return {
       ...super.defineSchema(),
       weaponType: str(""),
-      rank: int(1, { min: 1 }),
+      rank: int(1, { min: 1, max: 15 }),
       element: str(""),
       refinements: refinements(),
       slot: str("weapon", { choices: ["weapon", "other"] }),
       equipped: new BooleanField({ initial: false })
     };
+  }
+
+  /** 종류 표의 R식으로 계산한 성능(주먹은 소유자 Lv) */
+  prepareDerivedData() {
+    const table = tables.weapons[this.weaponType];
+    const actor = this.parent?.actor;
+    const level = actor?.system?.level ?? 1;
+    const altSkill = table?.physAtkAlt?.requires;
+    const hasAltSkill = !!altSkill && !!actor?.items?.some((i) => i.type === "skill" && i.name === altSkill);
+    this.stats = table ? weaponStats(table, { rank: this.rank, level, hasAltSkill }) : null;
+    this.elementChoice = !!table?.elementChoice;
+    this.effectiveElement = this.element || table?.element || "";
   }
 }
 
@@ -69,10 +83,15 @@ export class ArmorData extends NssqItemData {
     return {
       ...super.defineSchema(),
       armorType: str(""),
-      rank: int(1, { min: 1 }),
+      rank: int(1, { min: 1, max: 15 }),
       refinements: refinements(),
       equipped: new BooleanField({ initial: false })
     };
+  }
+
+  prepareDerivedData() {
+    const table = tables.armors[this.armorType];
+    this.stats = table ? armorStats(table, { rank: this.rank }) : null;
   }
 }
 

@@ -19,12 +19,13 @@
     <label class="stat"><span>{{localize "NSSQ.TP"}}</span>
       <span class="pair"><input type="number" name="system.tp.value" value="{{system.tp.value}}" data-dtype="Number"/> / {{system.tp.max}}</span></label>
     <label class="stat"><span>{{localize "NSSQ.FP"}}</span><input type="number" name="system.fp.value" value="{{system.fp.value}}" data-dtype="Number"/></label>
-    <div class="stat"><span>{{localize "NSSQ.Carry"}}</span><span class="value">{{system.carry}}</span></div>
+    <div class="stat"><span>{{localize "NSSQ.Carry"}}</span><span class="value {{#if inventory.over}}over{{/if}}">{{system.carried}} / {{system.carry}}</span></div>
   </section>
 
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="main">{{localize "NSSQ.Tab.main"}}</a>
-    <a class="item" data-tab="items">{{localize "NSSQ.Tab.items"}}</a>
+    <a class="item" data-tab="inventory">{{localize "NSSQ.Tab.inventory"}}</a>
+    <a class="item" data-tab="skills">{{localize "NSSQ.Tab.skills"}}</a>
     <a class="item" data-tab="description">{{localize "NSSQ.Tab.description"}}</a>
   </nav>
 
@@ -72,8 +73,11 @@
       </section>
       {{> "systems/nssq/templates/actor/parts/resist.hbs"}}
     </div>
-    <div class="tab" data-group="primary" data-tab="items">
-      {{> "systems/nssq/templates/actor/parts/items.hbs"}}
+    <div class="tab" data-group="primary" data-tab="inventory">
+      {{> "systems/nssq/templates/actor/parts/inventory.hbs"}}
+    </div>
+    <div class="tab" data-group="primary" data-tab="skills">
+      {{> "systems/nssq/templates/actor/parts/skills.hbs"}}
     </div>
     <div class="tab" data-group="primary" data-tab="description">
       {{editor enrichedDescription target="system.description" button=true editable=editable owner=owner}}

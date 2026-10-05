@@ -6,10 +6,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "厚手の手袋",
-   "effects": [],
    "price": 80,
    "description": "<p>【STR】+1</p>",
-   "effectText": "【STR】+1"
+   "effectText": "【STR】+1",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "abilities.str",
+     "value": 1
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -19,10 +27,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "木彫りの髪飾り",
-   "effects": [],
    "price": 80,
    "description": "<p>【TEC】+1</p>",
-   "effectText": "【TEC】+1"
+   "effectText": "【TEC】+1",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "abilities.tec",
+     "value": 1
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -32,10 +48,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "革のベルト",
-   "effects": [],
    "price": 80,
    "description": "<p>【VIT】+1</p>",
-   "effectText": "【VIT】+1"
+   "effectText": "【VIT】+1",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "abilities.vit",
+     "value": 1
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -45,10 +69,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "ストラップシューズ",
-   "effects": [],
    "price": 80,
    "description": "<p>【AGI】+1</p>",
-   "effectText": "【AGI】+1"
+   "effectText": "【AGI】+1",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "abilities.agi",
+     "value": 1
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -58,10 +90,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "花のお守り",
-   "effects": [],
    "price": 80,
    "description": "<p>【LUC】+1</p>",
-   "effectText": "【LUC】+1"
+   "effectText": "【LUC】+1",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "abilities.luc",
+     "value": 1
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -71,10 +111,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "知識の書",
-   "effects": [],
    "price": 150,
    "description": "<p>에너미 식별 판정에 +1</p>",
-   "effectText": "에너미 식별 판정에 +1"
+   "effectText": "에너미 식별 판정에 +1",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.identify",
+     "value": 1
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -84,10 +132,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "脱兎のお守り",
-   "effects": [],
    "price": 200,
    "description": "<p>도주 판정에 +2</p>",
-   "effectText": "도주 판정에 +2"
+   "effectText": "도주 판정에 +2",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.escape",
+     "value": 2
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -97,10 +153,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "百中ゴーグル",
-   "effects": [],
    "price": 500,
    "description": "<p>【물리 명중】+2</p>",
-   "effectText": "【물리 명중】+2"
+   "effectText": "【물리 명중】+2",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": 2
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -110,10 +174,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "命のベルト",
-   "effects": [],
    "price": 1000,
    "description": "<p>【HP】+8</p>",
-   "effectText": "【HP】+8"
+   "effectText": "【HP】+8",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "hpMax",
+     "value": 8
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -123,10 +195,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "英気のオーブ",
-   "effects": [],
    "price": 1000,
    "description": "<p>【TP】+5</p>",
-   "effectText": "【TP】+5"
+   "effectText": "【TP】+5",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tpMax",
+     "value": 5
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -136,10 +216,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "力の指輪",
-   "effects": [],
    "price": 1000,
    "description": "<p>【STR】+3</p>",
-   "effectText": "【STR】+3"
+   "effectText": "【STR】+3",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "abilities.str",
+     "value": 3
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -149,10 +237,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "知恵のピアス",
-   "effects": [],
    "price": 1000,
    "description": "<p>【TEC】+3</p>",
-   "effectText": "【TEC】+3"
+   "effectText": "【TEC】+3",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "abilities.tec",
+     "value": 3
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -162,10 +258,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "耐力の腕輪",
-   "effects": [],
    "price": 1000,
    "description": "<p>【VIT】+3</p>",
-   "effectText": "【VIT】+3"
+   "effectText": "【VIT】+3",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "abilities.vit",
+     "value": 3
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -175,10 +279,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "俊足のお守り",
-   "effects": [],
    "price": 1000,
    "description": "<p>【AGI】+3</p>",
-   "effectText": "【AGI】+3"
+   "effectText": "【AGI】+3",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "abilities.agi",
+     "value": 3
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  },
  {
@@ -188,10 +300,18 @@
   "img": "icons/svg/item-bag.svg",
   "system": {
    "key": "運のネックレス",
-   "effects": [],
    "price": 1000,
    "description": "<p>【LUC】+3</p>",
-   "effectText": "【LUC】+3"
+   "effectText": "【LUC】+3",
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "abilities.luc",
+     "value": 3
+    }
+   ],
+   "review": "auto",
+   "effectsSource": "convert"
   }
  }
 ]

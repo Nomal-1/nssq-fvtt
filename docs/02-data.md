@@ -159,4 +159,18 @@ data/tables/random-dungeon.json, gathering.json, history-d666.json, level-exp.js
 - 무기·방어구의 `system.table`(R식 표 값)과 장식의 `system.effectText`는 변환 보조 필드다. 컴펜디움에는 넣지 않고(`pack.mjs`가 제거), 런타임은 릴리스 zip에 들어가는 `data/weapons.json` 등을 읽는다.
 - 스킬 키: `skillKey` = glossary `jp` 정규화, `system.key` = `<classKey>.<skillKey>`. 에너미 스킬은 `enemy.<enemyKey>.<skillKey>`이고, 《약점: 머리》처럼 인자가 있는 것은 `弱点.bindHead`처럼 인자를 상태·속성 ID로 붙인다.
 - 스킬 `review` 초깃값은 `"todo"`. 단계 7에서 `auto`(자동 작성·검수 필요)/`done`/`partial`/`custom`으로 바꾼다.
-- CI(`test.yml`)는 `build:data` 뒤 `git diff --exit-code -- data`로 산출물이 원천과 어긋나지 않았는지 확인한다.
+- CI(`test.yml`)는 `build:data` 뒤 `git diff --exit-code -- data src/generated`로 산출물이 원천과 어긋나지 않았는지 확인한다.
+- 장식·제련·기타 아이템의 단순한 효과 문장(「【STR】+1」「아이템 소지 수 +4를 얻는다」 등)은 변환기가 `effects`로 자동 작성하고 `review: "auto"`, `effectsSource: "convert"`를 붙인다. 이 표시가 있는 효과는 재변환 때 새로 만든다. 손으로 고치면 `effectsSource`를 지운다(지우지 않으면 덮어쓰인다).
+- `src/generated/tables.mjs`: 무기·방어구 종류 표, 제련 표(효과 포함), 소재 종류. 런타임(DataModel)과 테스트가 동기로 import한다. 변환기가 만들며 직접 고치지 않는다.
+
+### 5.2 modifier 경로 (단계 3에서 확정)
+| path | 뜻 |
+|---|---|
+| `abilities.<str…luc>` | 능력치(시트 「장비」 열) |
+| `physHit` `elemHit` `evasion` `physAtk` `elemAtk` `defense` `suppAtk` `suppDef` `speed` | 부능력치 |
+| `hpMax` `tpMax` | 【HP】【TP】 최대 |
+| `carry` | 아이템 소지 수 한도 |
+| `resist.<slash…volt>` | 내성 |
+| `checks.<identify\|escape\|campDanger>` | 특정 판정 보정(사용처는 각 단계에서 연결) |
+
+flag: `weaponElement`(제련 속성 부여), `noCarryCount`(소지 수에 안 셈), `ownLimit`(최대 소지 개수).

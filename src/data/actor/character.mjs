@@ -1,4 +1,6 @@
-import { ABILITIES, abilityBreakdown, deriveCharacter } from "../../engine/derive.mjs";
+import { ABILITIES, RESISTS, abilityBreakdown, deriveCharacter } from "../../engine/derive.mjs";
+import { carriedCount, collectEquipment } from "../../engine/equipment.mjs";
+import tables from "../../generated/tables.mjs";
 import { description, int, resistances, resource, row, str } from "../fields.mjs";
 
 const { SchemaField, ArrayField, StringField } = foundry.data.fields;
@@ -44,14 +46,30 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
 
   prepareDerivedData() {
     const { main } = this.classItems;
-    // 장비 보정은 단계 3, 효과에 의한 일시 보정은 단계 5에서 연결한다
+    const items = this.parent?.items?.contents ?? [];
+    // 장비(무기·방어구·장식·제련)와 소지만 해도 되는 기타 아이템의 보정. 효과에 의한 일시 보정은 단계 5
+    const eq = collectEquipment(items, tables, {
+      level: this.level,
+      skillNames: items.filter((i) => i.type === "skill").map((i) => i.name)
+    });
+    this.equipment = eq;
     this.abilityParts = abilityBreakdown({
       abilities: this.abilities,
       classBonus: main?.system.abilityBonus ?? {},
-      level: this.level
+      level: this.level,
+      equip: Object.fromEntries(ABILITIES.map((k) => [k, eq.mods[`abilities.${k}`] ?? 0]))
     });
     this.abilityTotal = Object.fromEntries(ABILITIES.map((k) => [k, this.abilityParts[k].total]));
-    const d = deriveCharacter({ abilities: this.abilityTotal, level: this.level });
+    const d = deriveCharacter({
+      abilities: this.abilityTotal,
+      level: this.level,
+      weapon: eq.weapon ?? {},
+      armor: { defense: eq.armorDefense },
+      mods: eq.mods
+    });
+    // 내성: 저장값(기본 3, GM 지시로 변경) + 장비
+    this.resistTotal = Object.fromEntries(RESISTS.map((k) => [k, (this.resist[k] ?? 0) + (eq.mods[`resist.${k}`] ?? 0)]));
+    this.carried = carriedCount(items);
     this.bonus = d.bonus;
     this.sub = d.sub;
     this.carry = d.carry;

@@ -1,0 +1,29 @@
+<div class="shop">
+  <header class="shop-header">
+    <span class="money"><i class="fas fa-coins"></i> {{money}}G</span>
+    <label class="creation"><input type="checkbox" name="creation" {{checked creation}}/> {{localize "NSSQ.Shop.creationMode"}}</label>
+  </header>
+  <p class="notes">{{localize "NSSQ.Shop.rule"}}</p>
+  {{#if noPacks}}<p class="warn">{{localize "NSSQ.Shop.noPacks"}}</p>{{/if}}
+  <nav class="shop-tabs tabs">
+    {{#each tabs as |t|}}<a class="item" data-tab="{{t.type}}">{{localize t.label}}</a>{{/each}}
+  </nav>
+  <section class="shop-body">
+    {{#each tabs as |t|}}
+    <div class="tab" data-tab="{{t.type}}">
+      <ol class="shop-list">
+        {{#each t.rows as |r|}}
+        <li class="shop-row flexrow">
+          <img src="{{r.img}}" width="24" height="24"/>
+          <span class="name">{{r.name}}{{#if r.info}} <span class="info">{{r.info}}</span>{{/if}}</span>
+          {{#if r.ranked}}<label class="rank">R <input type="number" min="1" max="15" value="{{r.rank}}" data-rank="{{r.id}}"/></label>{{/if}}
+          <span class="mats">{{#if @root.creation}}-{{else}}{{r.materials}}{{/if}}</span>
+          <span class="price">{{r.price}}G</span>
+          <button type="button" data-buy="{{r.id}}">{{localize "NSSQ.Shop.buy"}}</button>
+        </li>
+        {{/each}}
+      </ol>
+    </div>
+    {{/each}}
+  </section>
+</div>

@@ -1,0 +1,27 @@
+<section class="skills">
+  <h3>{{localize "TYPES.Item.class"}}</h3>
+  <ol class="item-list">
+    {{#each inventory.classes as |c|}}
+    <li class="item flexrow" data-item-id="{{c.id}}">
+      <img class="item-img" src="{{c.img}}" width="24" height="24"/>
+      <span class="item-name"><a data-action="item-edit">{{c.name}}</a></span>
+      {{#if @root.editable}}<a class="item-control" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>{{/if}}
+    </li>
+    {{else}}
+    <li class="empty">{{localize "NSSQ.Class.dropHint"}}</li>
+    {{/each}}
+  </ol>
+  <h3>{{localize "TYPES.Item.skill"}}</h3>
+  <ol class="item-list">
+    {{#each inventory.skills as |s|}}
+    <li class="item flexrow" data-item-id="{{s.id}}">
+      <img class="item-img" src="{{s.img}}" width="24" height="24"/>
+      <span class="item-name"><a data-action="item-edit">{{s.name}}</a></span>
+      <span class="item-summary">{{s.system.timing}} · SL {{s.system.sl}}</span>
+      {{#if @root.editable}}<a class="item-control" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>{{/if}}
+    </li>
+    {{else}}
+    <li class="empty">{{localize "NSSQ.NoItems"}}</li>
+    {{/each}}
+  </ol>
+</section>
