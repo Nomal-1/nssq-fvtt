@@ -281,3 +281,22 @@
 .nssq-combatant-tools .nssq-tool { cursor: pointer; }
 .nssq-combatant-tools .nssq-tool:hover { color: #ff6400; }
 #combat li.combatant.nssq-opened { box-shadow: inset 3px 0 0 #3a8fd6; }
+
+/* 전투 프리셋 */
+.nssq-gm-screen .gm-actions button.battle { font-weight: bold; }
+.nssq-gm-screen .gm-actions button.battle.on { background: rgba(176, 32, 32, 0.35); }
+.nssq-gm-screen .battle-tools { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+.nssq-gm-screen .battle-tools button { flex: 0 0 auto; width: auto; }
+.nssq-gm-screen .preset-list { list-style: none; margin: 0; padding: 0; }
+.nssq-gm-screen .preset { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid #c9c7b8; }
+.nssq-gm-screen .preset .thumb { flex: 0 0 96px; height: 54px; border-radius: 4px; background: #1a1a22 center / cover no-repeat; }
+.nssq-gm-screen .preset .info { flex: 1; font-size: 0.9em; }
+.nssq-gm-screen .preset .name { font-weight: bold; font-size: 1.05em; }
+.nssq-gm-screen .preset .actions { display: flex; align-items: center; gap: 8px; }
+.nssq-gm-screen .preset .actions a { cursor: pointer; }
+.nssq-gm-screen .preset .actions button { width: auto; line-height: 1.6em; }
+.nssq-battle-start .member { display: flex; align-items: center; gap: 6px; }
+.nssq-battle-start .member img { border: none; }
+.nssq-battle-start .member .notes { margin-left: auto; }
+.nssq-battle-start-card h3, .nssq-battle-end-card h3 { margin: 0 0 4px; border: none; }
+.nssq-battle-start-card .warn { color: #b02020; font-weight: bold; }

@@ -5,6 +5,7 @@
 import { openRequestDialog } from "./check-request.mjs";
 import { ensureShopFolder, hiddenSet, setHidden, shopCatalog, shopOpen, toggleShop } from "./shop.mjs";
 import { storageActive } from "./acquire.mjs";
+import { battlePresets, createPreset, currentBattle, openEndDialog, openStartDialog } from "./battle.mjs";
 import tables from "../generated/tables.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.GMScreen.${k}`, d) : game.i18n.localize(`NSSQ.GMScreen.${k}`));
@@ -84,8 +85,17 @@ export class GMScreen extends Application {
       }));
       return { type, label, items, selling: items.filter((i) => i.selling).length };
     }).filter((g) => g.items.length);
+    const battle = currentBattle();
+    const presets = battlePresets().map((s) => ({
+      id: s.id, name: s.name, thumb: s.thumb || s.background?.src || "",
+      enemies: s.tokens.filter((t) => t.actor?.type === "enemy").map((t) => t.name).join(", ") || L("noEnemies"),
+      bgm: s.playlistSound?.name ?? s.playlist?.name ?? L("noBgm"),
+      bg: !!s.background?.src
+    }));
     const npcCandidates = gmCharacters().map((a) => ({ id: a.id, name: a.name, img: a.img, npc: !!a.system.npc }));
     return {
+      presets,
+      battle: battle ? { name: battle.getFlag("nssq", "battle").presetName, round: battle.round } : null,
       npcCandidates,
       shopGroups,
       shopFilter: this.shopFilter ?? "",
@@ -115,6 +125,11 @@ export class GMScreen extends Application {
     // 판매 품목 설정: 「상점 품목」 탭으로 이동
     html.on("click", "[data-gm=shop-items]", () => this._tabs?.[0]?.activate("shop"));
     html.on("click", "[data-gm=session-start]", () => this.sessionStart());
+    html.on("click", "[data-gm=battle-start]", (ev) => openStartDialog(ev.currentTarget.dataset.preset || null));
+    html.on("click", "[data-gm=battle-end]", () => openEndDialog());
+    html.on("click", "[data-gm=preset-new]", () => createPreset());
+    html.on("click", "[data-preset-view]", (ev) => game.scenes.get(ev.currentTarget.dataset.presetView)?.view());
+    html.on("click", "[data-preset-config]", (ev) => game.scenes.get(ev.currentTarget.dataset.presetConfig)?.sheet.render(true));
     // 상점 품목: 체크 = 판매, 해제 = 숨김
     html.on("change", "[data-shop-uuid]", (ev) => setHidden([ev.currentTarget.dataset.shopUuid], !ev.currentTarget.checked));
     html.on("click", "[data-shop-all]", (ev) => {
@@ -168,7 +183,8 @@ export function registerGMScreen() {
   });
   // 자동 갱신
   const refresh = foundry.utils.debounce(() => GMScreen.refresh(), 100);
-  for (const hook of ["updateActor", "createActor", "deleteActor", "createItem", "updateItem", "deleteItem", "updateUser", "userConnected"]) {
+  for (const hook of ["updateActor", "createActor", "deleteActor", "createItem", "updateItem", "deleteItem", "updateUser", "userConnected",
+    "createScene", "updateScene", "deleteScene", "createCombat", "deleteCombat", "updateCombat"]) {
     Hooks.on(hook, refresh);
   }
   Hooks.on("updateSetting", (setting) => { if (setting.key?.startsWith("nssq.")) refresh(); });

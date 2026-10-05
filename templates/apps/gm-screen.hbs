@@ -1,5 +1,10 @@
 <div class="gm-screen">
   <header class="gm-actions">
+    {{#if battle}}
+    <button type="button" data-gm="battle-end" class="battle on"><i class="fas fa-flag-checkered"></i> {{localize "NSSQ.Battle.end"}} ({{battle.name}})</button>
+    {{else}}
+    <button type="button" data-gm="battle-start" class="battle"><i class="fas fa-skull-crossbones"></i> {{localize "NSSQ.Battle.start"}}</button>
+    {{/if}}
     <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
     <button type="button" data-gm="shop" class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</button>
     <button type="button" data-gm="shop-items" title="{{localize 'NSSQ.GMScreen.shopItemsHint'}}"><i class="fas fa-eye-slash"></i> {{localize "NSSQ.GMScreen.shopItemsButton"}}</button>
@@ -9,6 +14,7 @@
 
   <nav class="gm-tabs tabs">
     <a class="item" data-tab="party">{{localize "NSSQ.GMScreen.party"}}</a>
+    <a class="item" data-tab="battle">{{localize "NSSQ.Battle.tab"}}</a>
     <a class="item" data-tab="shop">{{localize "NSSQ.GMScreen.shopItems"}}</a>
     <a class="item" data-tab="reference">{{localize "NSSQ.GMScreen.reference"}}</a>
   </nav>
@@ -54,6 +60,32 @@
         {{/each}}
       </ul>
       {{/if}}
+    </div>
+
+    <div class="tab" data-tab="battle">
+      <div class="battle-tools">
+        <button type="button" data-gm="preset-new"><i class="fas fa-plus"></i> {{localize "NSSQ.Battle.newPreset"}}</button>
+        <span class="notes">{{localize "NSSQ.Battle.tabNote"}}</span>
+      </div>
+      <ul class="preset-list">
+        {{#each presets as |p|}}
+        <li class="preset">
+          <div class="thumb" {{#if p.thumb}}style="background-image: url('{{p.thumb}}')"{{/if}}></div>
+          <div class="info">
+            <div class="name">{{p.name}}</div>
+            <div class="enemies"><i class="fas fa-skull"></i> {{p.enemies}}</div>
+            <div class="bgm"><i class="fas fa-music"></i> {{p.bgm}}{{#unless p.bg}} · <i class="fas fa-image"></i> {{localize "NSSQ.Battle.noBackground"}}{{/unless}}</div>
+          </div>
+          <div class="actions">
+            <a data-preset-view="{{p.id}}" title="{{localize 'NSSQ.Battle.viewPreset'}}"><i class="fas fa-eye"></i></a>
+            <a data-preset-config="{{p.id}}" title="{{localize 'NSSQ.Battle.configPreset'}}"><i class="fas fa-cogs"></i></a>
+            {{#unless @root.battle}}<button type="button" data-gm="battle-start" data-preset="{{p.id}}"><i class="fas fa-skull-crossbones"></i> {{localize "NSSQ.Battle.startButton"}}</button>{{/unless}}
+          </div>
+        </li>
+        {{else}}
+        <li class="empty">{{localize "NSSQ.Battle.noPresets"}}</li>
+        {{/each}}
+      </ul>
     </div>
 
     <div class="tab" data-tab="shop">
