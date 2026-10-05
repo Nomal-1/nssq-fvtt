@@ -1,0 +1,1101 @@
+[
+ {
+  "id": "4qbThHX1i5c5yA2r",
+  "name": "백수의 왕기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.百獣の王気",
+   "skillKey": "百獣の王気",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "소환수",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '소환수' 스킬의 토큰을 동시에 최대 2개 유지 가능.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "2o8ZDmx0vMA8QSRy",
+  "name": "수왕 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.獣王マスタリー",
+   "skillKey": "獣王マスタリー",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '소환수' 스킬로 배치한 토큰의 공격에 물리 명중·속성 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "Fi9PXTVSPOUqhH39",
+  "name": "삼종 소형 야수 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.三種小獣招来",
+   "skillKey": "三種小獣招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 《큰 새 소환》《큰 뱀 소환》《두더지 소환》 중 하나로 선언. 지속 3턴 토큰 배치. 토큰은 배치자의 【물리 명중】【물리 공격】으로 적 전열 단일에게 물리 공격. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 봉인. 속성과 봉인 조합은 〈돌〉+[머리] 봉인 / 〈괴〉+[팔] 봉인 / 〈참〉+[다리] 봉인 중 하나로 고정.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "N8v4i9ddQVuDjYPk",
+  "name": "화염도마뱀 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.火炎トカゲ招来",
+   "skillKey": "火炎トカゲ招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【속성 명중】【속성 공격】으로 적 단일에게 〈염〉 속성 공격, 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "OhLdYP6QpBpR2cB3",
+  "name": "눈토끼 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.雪ウサギ招来",
+   "skillKey": "雪ウサギ招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【속성 명중】【속성 공격】으로 적 단일에게 〈빙〉 속성 공격, 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "LnyF9BqqKirmBRF6",
+  "name": "흰여우 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.白狐招来",
+   "skillKey": "白狐招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【속성 명중】【속성 공격】으로 적 단일에게 〈뇌〉 속성 공격, 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "7ck1coN0zNTwvoGw",
+  "name": "독호랑나비 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.毒アゲハ招来",
+   "skillKey": "毒アゲハ招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지속 3턴 토큰 배치. 토큰은 적 열을 대상으로 배치자의 【억제 공격】 대 대상의 【억제 방어】 대항 판정(배치자 측 +(SL)), 이기면 [독].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "Brf7yFRhMZkuUACt",
+  "name": "최면올빼미 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.催眠梟招来",
+   "skillKey": "催眠梟招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지속 3턴 토큰 배치. 토큰은 적 열을 대상으로 배치자의 【억제 공격】 대 대상의 【억제 방어】 대항 판정(배치자 측 +(SL)), 이기면 [수면].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "GM9paYjxxYIKumZt",
+  "name": "난폭한 들소 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.暴れ野牛招来",
+   "skillKey": "暴れ野牛招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【물리 명중】【물리 공격】으로 적 관통 대상 〈돌〉 물리 공격, 대미지 다이스 +(SL×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "SfrmuNd1HqdKbDOL",
+  "name": "거상 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.巨像招来",
+   "skillKey": "巨像招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【물리 명중】【물리 공격】으로 적 전열 대상 〈괴〉 물리 공격, 대미지 다이스 +(SL×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "CKEWqStQmJSQ2YMI",
+  "name": "부정형 생물 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.不定形生物招来",
+   "skillKey": "不定形生物招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지속 3턴 토큰 배치. 토큰은 항상 대기 상태이며, 배치자가 받는 물리 공격을 1턴에 1회 완전 무효화.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "7BT2xiAiy3PfcrsF",
+  "name": "검호랑이 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.剣虎招来",
+   "skillKey": "剣虎招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 6,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【물리 명중】【물리 공격】으로 적 단일에게 〈참〉 물리 공격. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(5+SL))의 억제 방어 롤, 실패하면 [즉사].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "Coj9FzFuKgvhTDm9",
+  "name": "사자왕 소환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.獅子王招来",
+   "skillKey": "獅子王招来",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 7,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【물리 명중】【물리 공격】으로 적 전열 대상 〈참〉 물리 공격, 대미지 다이스 +((SL+1)×3)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "YzNzxq6lTjxh5ZtX",
+  "name": "비스트 귀환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.ビースト送還",
+   "skillKey": "ビースト送還",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '소환수' 토큰 1개를 소멸시키고 자신의 【TP】 (SL) 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "AKIbcU0YcMqkkki7",
+  "name": "야수의 우정",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.獣の友情",
+   "skillKey": "獣の友情",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "소환수",
+   "timing": "수동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '소환수' 토큰 1개를 소멸시키고 자신이 받는 공격 하나를 무효화.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "5D3tHNAkW0AGoVj5",
+  "name": "비스트 로어",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.ビーストロア",
+   "skillKey": "ビーストロア",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약화 효과 『물리 공격 저하: (SL+1)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "P2K1fjahovjChUav",
+  "name": "드러밍",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.ドラミング",
+   "skillKey": "ドラミング",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약화 효과 『물리 방어 저하: (SL+1)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "E3rqCSAIlOEWIPLa",
+  "name": "전서구",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.伝書鳩",
+   "skillKey": "伝書鳩",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "소환수",
+   "timing": "특수",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>위치를 아는 상대에게 편지 1통을 보낸다. 도착 소요 시간은 GM이 정한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "1MtqW2lM0T5MhsIM",
+  "name": "짐 운반 야수",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.駄載獣",
+   "skillKey": "駄載獣",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아이템 7개까지 운반하는 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 아이템 소지 수가 그만큼 늘어난 것으로 취급.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "T37bVUbGjkvkYhoL",
+  "name": "육상 기승수",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.陸上騎獣",
+   "skillKey": "陸上騎獣",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사람보다 빠르게 달리는 탈것 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 빨리 달리기 등의 판정 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "Tyx2tobuLudUXEi6",
+  "name": "수상 기승수",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.水上騎獣",
+   "skillKey": "水上騎獣",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>헤엄치는 탈것 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 수면 위를 이동 가능.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "VkB5OqEcKYT6jGNC",
+  "name": "공중 기승수",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.空中騎獣",
+   "skillKey": "空中騎獣",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "수왕 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>저공 비행하는 탈것 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 저공으로 공중 이동 가능.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "FlX4neHAfXCgeFHN",
+  "name": "야수의 경계",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.獣の警戒",
+   "skillKey": "獣の警戒",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>F.O.E.로부터 도망치기·숨기 등의 판정 +2.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "IR7c3cQB0h1BwY0n",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "6qmnOavWpDBR1jZR",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "2Rlogal08VkxFliQ",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ },
+ {
+  "id": "Ba7hWRWcRVHxSpB1",
+  "name": "억제 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ビーストキング.抑制攻撃ブースト",
+   "skillKey": "抑制攻撃ブースト",
+   "classKey": "ビーストキング",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 공격】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "비스트 킹"
+  }
+ }
+]

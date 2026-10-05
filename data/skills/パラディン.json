@@ -1,0 +1,922 @@
+[
+ {
+  "id": "21vz0Ov3seQcC8ba",
+  "name": "완전 방어",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.完全防御",
+   "skillKey": "完全防御",
+   "classKey": "パラディン",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 0,
+    "fp": 3
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>한 번만, 모든 공격의 대미지를 0으로 한다. 상태 이상 부여 등의 추가 효과도 모두 무효화한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "PfWTCWVrgu96Ac0s",
+  "name": "방패 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.盾マスタリー",
+   "skillKey": "盾マスタリー",
+   "classKey": "パラディン",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 『방어』의 스킬을 사용했을 때의 효과 발동 횟수에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "SrJC1wTtOwXLvENQ",
+  "name": "프런트 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.フロントガード",
+   "skillKey": "フロントガード",
+   "classKey": "パラディン",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 적의 물리 공격 롤에 의해 아군 전위가 받는 대미지를 반감한다. 대기 상태는 누적 (SL)회의 대미지 반감을 하거나, 턴 종료로 해제된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "2GvCY88IHKId1X02",
+  "name": "백 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.バックガード",
+   "skillKey": "バックガード",
+   "classKey": "パラディン",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 적의 물리 공격 롤에 의해 아군 후위가 받는 대미지를 반감한다. 대기 상태는 누적 (SL)회의 대미지 반감을 하거나, 턴 종료로 해제된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "9tbh6ZdxgSiL1Zh2",
+  "name": "디바이드 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.ディバイドガード",
+   "skillKey": "ディバイドガード",
+   "classKey": "パラディン",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 대상이 어떠한 공격 롤의 대상이 되었을 때, 자신이 그 공격 롤을 대신 받는다. 대기 상태는 누적 (SL)회의 대미지 대신 받기를 하거나, 턴 종료로 해제된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "Rkk9aV2CVqz9HjPq",
+  "name": "삼색 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.三色ガード",
+   "skillKey": "三色ガード",
+   "classKey": "パラディン",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [
+    "파이어 가드",
+    "프리즈 가드",
+    "쇼크 가드"
+   ],
+   "sl": 1,
+   "description": "<p>이 스킬을 사용할 때는 아래 중 하나의 명칭으로 선언한다. 《파이어 가드》《프리즈 가드》《쇼크 가드》 자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 아군 전체의 〈염〉〈빙〉〈뇌〉 중 하나의 【내성】을 (+SL) 한다. 대기 상태는 턴 종료로 해제된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "b1ZekThuX1cqe6jF",
+  "name": "실드 스마이트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.シールドスマイト",
+   "skillKey": "シールドスマイト",
+   "classKey": "パラディン",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈괴〉 속성의 물리 공격 롤을 한다. 이때, 대미지 다이스 +3개를 얻는다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [스턴]을 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "MP2jr1ovFl9Wo2tD",
+  "name": "실드 러시",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.シールドラッシュ",
+   "skillKey": "シールドラッシュ",
+   "classKey": "パラディン",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 열",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "실드 스마이트",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈괴〉 속성의 물리 공격 롤을 한다. 이때, 대미지 다이스 +3개를 얻는다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [스턴]을 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "60fRfCpxcBjj76J1",
+  "name": "센티널 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.センチネルガード",
+   "skillKey": "センチネルガード",
+   "classKey": "パラディン",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 대상의 방어력을 스킬 사용자의 것과 같은 값으로 한다. 대기 상태는 누적 (SL)회의 대미지 감소를 하거나, 턴 종료로 해제된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "Vi6HtWmz0E3JpH6B",
+  "name": "올 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.オールガード",
+   "skillKey": "オールガード",
+   "classKey": "パラディン",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 적의 물리 공격 롤에 의해 아군 전원이 받는 대미지를 반감한다. 대기 상태는 누적 (SL)회의 대미지 반감을 하거나, 턴 종료로 해제된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "HWwy9R3LRfXbtbQE",
+  "name": "도발",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.挑発",
+   "skillKey": "挑発",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안, 단일을 대상으로 한 적의 공격 롤의 대상을 누적 (SL+1)회까지 강제로 자신으로 변경한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "OZfljo1QN3Um1mg8",
+  "name": "패링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.パリィ",
+   "skillKey": "パリィ",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "팔",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤에 대해, 【VIT】에 의한 능동 회피를 한다. 또한, 그때의 달성값에 +(SL-1)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "PZZ4TQZMP6D2TQfN",
+  "name": "머티리얼 패링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.マテリアルパリィ",
+   "skillKey": "マテリアルパリィ",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "팔",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>속성 공격 롤에 대해, 【VIT】에 의한 능동 회피를 한다. 또한, 그때의 달성값에 +(SL-1)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "37pq4feTYIAGvmP1",
+  "name": "기사도의 가호",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.騎士道の加護",
+   "skillKey": "騎士道の加護",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『억제 방어 상승: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "noAEs9UJvX6ueJmr",
+  "name": "혼신 디펜스",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.渾身ディフェンス",
+   "skillKey": "渾身ディフェンス",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『물리 방어 상승: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "Q6aYpgqhv7Y551hY",
+  "name": "방어 진형",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.防御陣形",
+   "skillKey": "防御陣形",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "호령",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『방어 상승: (SL×2)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "KCDd0UYfPcYhHNKw",
+  "name": "수호 진형",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.守護陣形",
+   "skillKey": "守護陣形",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "호령",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방어 진형",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『내성 부여: 염빙뇌』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "EEkkDO55Fhzhugw8",
+  "name": "전력 도주",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.全力逃走",
+   "skillKey": "全力逃走",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>도주 판정 때 사용을 선언한다. 도주 판정의 달성값에 +3을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "WAmy0GrZOXw8ZwsR",
+  "name": "행군 수련",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.行軍修練",
+   "skillKey": "行軍修練",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아이템 소지 수에 +4를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "JrfIIyPbA2TqjQIy",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】에 +(SL×2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "OicZOPTXnpA82yKp",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】에 +(SL×2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "BGdH5cI57UBOO5AJ",
+  "name": "물리 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.物理防御ブースト",
+   "skillKey": "物理防御ブースト",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【방어】에 +(SL)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ },
+ {
+  "id": "MJWzP54OoJ6bN3hb",
+  "name": "억제 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パラディン.抑制防御ブースト",
+   "skillKey": "抑制防御ブースト",
+   "classKey": "パラディン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 방어】에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔라딘"
+  }
+ }
+]

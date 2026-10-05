@@ -1,0 +1,961 @@
+[
+ {
+  "id": "KxdWW94cCIC40cJl",
+  "name": "임전 태세",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.常在戦場",
+   "skillKey": "常在戦場",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "백병",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤의 대미지 다이스 항상 +2개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "1SVxr96ZfAa5Tr6h",
+  "name": "검 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.剣マスタリー",
+   "skillKey": "剣マスタリー",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>검 사용 시 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "JmbzjhLOeW53Df7B",
+  "name": "망치 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.鎚マスタリー",
+   "skillKey": "鎚マスタリー",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>망치 사용 시 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "JW2GGxrug0WUV0xF",
+  "name": "브레이크",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.ブレイク",
+   "skillKey": "ブレイク",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "검",
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "KnMXWzivuadKDL1s",
+  "name": "러시",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.ラッシュ",
+   "skillKey": "ラッシュ",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "검",
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 3회, 매 공격마다 대상은 적 중 무작위(같은 에너미는 1회까지만). 대미지 다이스 −(3−SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "G1Mc70EJACF2FD6k",
+  "name": "램페이지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.ランページ",
+   "skillKey": "ランページ",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "검",
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>적 열에 물리 공격 롤, 대미지 다이스 −(3−SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "8W1pv1DMRogZiUxk",
+  "name": "바인드 컷",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.バインドカット",
+   "skillKey": "バインドカット",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "검",
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "브레이크",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL)개. 대상이 어떤 봉인이든 받고 있으면 추가로 대미지 다이스 +(SL×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "OuufQq8NaXbIknRv",
+  "name": "블레이드 레이브",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.ブレイドレイヴ",
+   "skillKey": "ブレイドレイヴ",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "검",
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "러시",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 3회, 매 공격마다 대상은 적 중 무작위. 대미지 다이스 −(4−SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "ZwD94gP4RpRu8kmU",
+  "name": "크래시 블로",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.クラッシュブロー",
+   "skillKey": "クラッシュブロー",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "도끼",
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [혼란].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "9x2WdceAdi139Efr",
+  "name": "암 브레이커",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.アームブレイカー",
+   "skillKey": "アームブレイカー",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "도끼",
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [팔] 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "BYBLp3D1AKjjDTOE",
+  "name": "프리즈 블로",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.フリーズンブロー",
+   "skillKey": "フリーズンブロー",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "도끼",
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈빙〉 속성을 더한 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "7hqrtlzCQPu4kob3",
+  "name": "나인 스매시",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.ナインスマッシュ",
+   "skillKey": "ナインスマッシュ",
+   "classKey": "ウォリアー",
+   "weaponReq": [
+    "도끼",
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 9회. 이 스킬의 명중 판정은 주사위 눈 7 이하가 절대 실패. 명중 판정 달성값 −5, 대미지 다이스 −(4−SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "R7qx1VtEoTniUjvi",
+  "name": "스턴 어택",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.スタンアタック",
+   "skillKey": "スタンアタック",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "물리 공격 부스트",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>크리티컬 히트 시 공격 대상에게 [스턴].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "PfOkLzgLdbLyPKQN",
+  "name": "와이드 이펙트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.ワイドエフェクト",
+   "skillKey": "ワイドエフェクト",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "물리 공격 부스트",
+      "sl": 2
+     },
+     {
+      "skill": "TP 부스트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상이 『적 단일』인 공격에서 크리티컬 히트 시, 대상과 같은 열의 모든 적에게도 같은 공격을 할 수 있다. 추가 TP 소비 없음.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "QRfOoNE6ivWLEkKH",
+  "name": "울프 하울",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.ウルフハウル",
+   "skillKey": "ウルフハウル",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약화 효과 『물리 공격 저하: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "1s7Ts3XJG1AEoET7",
+  "name": "광전사의 맹세",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.狂戦士の誓い",
+   "skillKey": "狂戦士の誓い",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신에게 강화 효과 『물리 공격 상승: (SL+1)』과 약화 효과 『물리 방어 저하: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "F8RBjvWLM3HvZLpd",
+  "name": "무아지경",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.無我の境地",
+   "skillKey": "無我の境地",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "TP 부스트",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신에게 상태 이상이 걸리는 순간 선언, 그 상태 이상을 무효화.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "TsaaLPxtodGdAb4S",
+  "name": "암 리커버리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.アームリカバリ",
+   "skillKey": "アームリカバリ",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "TP 부스트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신에게 [팔] 봉인이 걸리는 순간 선언, 그 [팔] 봉인을 무효화.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "I4wHmDKLIqVkGzyi",
+  "name": "행군 수련",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.行軍修練",
+   "skillKey": "行軍修練",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아이템 소지 수 +4.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "QCTX9dWob5p0wjgh",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "YUf3DXB9IKqjUz5L",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "ZKvwbmICUzTkvUe6",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ },
+ {
+  "id": "8TUKI0S4vdtoJ5zV",
+  "name": "물리 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ウォリアー.物理防御ブースト",
+   "skillKey": "物理防御ブースト",
+   "classKey": "ウォリアー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【방어】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "워리어"
+  }
+ }
+]

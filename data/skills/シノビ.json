@@ -1,0 +1,1030 @@
+[
+ {
+  "id": "GXWyiCxsXwoL3eM2",
+  "name": "연기의 끄트머리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.煙りの末",
+   "skillKey": "煙りの末",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>모든 무기의 사거리를 『원』으로 취급. 그 무기를 쓰는 스킬 공격에도 동일 적용.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "5bK2jHCZ0mHBZMjH",
+  "name": "단검 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.短剣マスタリー",
+   "skillKey": "短剣マスタリー",
+   "classKey": "シノビ",
+   "weaponReq": [
+    "단검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>단검 사용 시 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "R7UVZ4qHvNPQUM4E",
+  "name": "인법 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.忍法マスタリー",
+   "skillKey": "忍法マスタリー",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 『인법』 스킬 공격 롤의 물리 명중·속성 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "LQADQwfLEqKSt12Y",
+  "name": "그림자 꿰기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.影縫",
+   "skillKey": "影縫",
+   "classKey": "シノビ",
+   "weaponReq": [
+    "단검",
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [다리] 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "Fjiv6zkYOrdb4uNN",
+  "name": "족제비",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.飯綱",
+   "skillKey": "飯綱",
+   "classKey": "シノビ",
+   "weaponReq": [
+    "단검",
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(5+SL))의 억제 방어 롤, 실패하면 [석화].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "TqKPJrFt34aclVbN",
+  "name": "매의 날개",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.鷹乃羽",
+   "skillKey": "鷹乃羽",
+   "classKey": "シノビ",
+   "weaponReq": [
+    "단검",
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상에게 물리 공격 롤 2회, 대미지 다이스 −(4−SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "JdBe9yVRtiCF3984",
+  "name": "안개 베기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.霞斬り",
+   "skillKey": "霞斬り",
+   "classKey": "シノビ",
+   "weaponReq": [
+    "단검",
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 3회, 매 공격마다 대상은 적 중 무작위(같은 에너미는 1회까지만). 대미지 다이스 −(3−SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "NNVfW3O8DDqzNzl7",
+  "name": "다원 발도",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.多元抜刀",
+   "skillKey": "多元抜刀",
+   "classKey": "シノビ",
+   "weaponReq": [
+    "단검",
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "인법: 분신",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《인법: 분신》을 쓴 턴에만 사용 가능하며, 그 턴의 주행동 2회를 모두 이 스킬로 써야 한다. 물리 공격 롤, 대미지 다이스 +((SL+2)×3)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "JqjcOlS42vB6Zy8p",
+  "name": "인법: 함침",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.忍法含針",
+   "skillKey": "忍法含針",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "인법",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인법 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈돌〉 속성 물리 공격 롤, 최종 실대미지는 절반으로 계산. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [수면].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "WNYF7IiXs8vpBp97",
+  "name": "인법: 수경",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.忍法水鏡",
+   "skillKey": "忍法水鏡",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "인법",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인법 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>상태 이상 중인 적 1체를 골라 선언. 자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정, 승리 시 대상의 상태 이상을 같은 열의 모든 적에게 옮긴다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "HZo9cY8xzLyJvE3W",
+  "name": "인법: 마름쇠",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.忍法撒菱",
+   "skillKey": "忍法撒菱",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "팔",
+   "category": "인법",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인법 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 대기 상태. 대기 중 아군 전열이 물리 공격을 받으면 공격자에게 물리 공격으로 반격(최종 실대미지 절반). 또한 그 적은 목표값 (시노비 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [독]. 누계 3회 반격 또는 턴 종료 시 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "QbFsZTM5xhzee4xj",
+  "name": "인법: 아지랑이",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.忍法陽炎",
+   "skillKey": "忍法陽炎",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "인법",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 전체",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인법 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안 모든 적은 물리 공격 명중 판정에서 주사위 눈 (SL+3) 이하가 절대 실패.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "RKr4vTGVKwS86yXw",
+  "name": "인법: 분신",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.忍法分身",
+   "skillKey": "忍法分身",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "인법",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인법 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "인법: 아지랑이",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴, 자신은 주행동을 2회 할 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "SpWmoRtVzpV8qR94",
+  "name": "인법: 새 부르기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.忍法招鳥",
+   "skillKey": "忍法招鳥",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "인법",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인법 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아군 1명을 지정해 선언. 그 턴 동안 적의 단일 대상 공격 롤의 대상을 누계 (SL+1)회까지 강제로 지정한 아군으로 바꾼다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "TbApg0RwJQxWHqfg",
+  "name": "인법: 매미 허물",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.忍法空蝉",
+   "skillKey": "忍法空蝉",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "인법",
+   "timing": "수동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인법 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【AGI】로 능동 회피, 달성값 +(SL-1).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "LZZpTRQDrpMYeuYk",
+  "name": "인법: 구름 숨기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.忍法雲隠",
+   "skillKey": "忍法雲隠",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "인법",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인법 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "인법: 매미 허물",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『회피 상승: (SL)』 획득, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "45ihz9zubTbhyFfB",
+  "name": "전력 도주",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.全力逃走",
+   "skillKey": "全力逃走",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>도주 판정 시 선언, 도주 판정 달성값 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "K7wjS6YSF20ETiUU",
+  "name": "참수",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.首切",
+   "skillKey": "首切",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "인법 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>크리티컬 히트 시 대상 즉사. F.O.E. 및 GM이 지정한 보스 에너미에게는 무효.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "6XTbmqyS1kdZ3afc",
+  "name": "물거미",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.水蜘蛛",
+   "skillKey": "水蜘蛛",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물 위를 걸을 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "NX1xXBGkEVOQzz4C",
+  "name": "수둔",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.水遁",
+   "skillKey": "水遁",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>시간 제한 없이 물속에 잠수해 있을 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "ADpR179igMnA7t8P",
+  "name": "날다람쥐",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.ムササビ",
+   "skillKey": "ムササビ",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>높은 곳에서 뛰어내려도 다치지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "S4B39LtAz3lJSbDt",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "Cu4mdPrOKhMP4X6f",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "MbxgFWgmsaMmKd69",
+  "name": "억제 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.抑制攻撃ブースト",
+   "skillKey": "抑制攻撃ブースト",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 공격】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ },
+ {
+  "id": "Vzfq2zFyf4nAyzjd",
+  "name": "속도 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "シノビ.速度ブースト",
+   "skillKey": "速度ブースト",
+   "classKey": "シノビ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【속도】 +(SL×3).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "시노비"
+  }
+ }
+]

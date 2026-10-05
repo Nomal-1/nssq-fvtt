@@ -1,0 +1,177 @@
+[
+ {
+  "key": "STR1",
+  "name": "【STR】+1",
+  "kinds": [
+   "weapon",
+   "armor"
+  ],
+  "price": "(R*R)*50",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "TEC1",
+  "name": "【TEC】+1",
+  "kinds": [
+   "weapon",
+   "armor"
+  ],
+  "price": "(R*R)*50",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "VIT1",
+  "name": "【VIT】+1",
+  "kinds": [
+   "weapon",
+   "armor"
+  ],
+  "price": "(R*R)*50",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "AGI1",
+  "name": "【AGI】+1",
+  "kinds": [
+   "weapon",
+   "armor"
+  ],
+  "price": "(R*R)*50",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "LUC1",
+  "name": "【LUC】+1",
+  "kinds": [
+   "weapon",
+   "armor"
+  ],
+  "price": "(R*R)*50",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "물리명중1",
+  "name": "【물리 명중】+1",
+  "kinds": [
+   "weapon"
+  ],
+  "price": "(R*R)*100",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "속성명중1",
+  "name": "【속성 명중】+1",
+  "kinds": [
+   "weapon"
+  ],
+  "price": "(R*R)*100",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "물리공격1",
+  "name": "【물리 공격】+1",
+  "kinds": [
+   "weapon"
+  ],
+  "price": "(R*R)*80",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "속성공격1",
+  "name": "【속성 공격】+1",
+  "kinds": [
+   "weapon"
+  ],
+  "price": "(R*R)*80",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "염속성부여",
+  "name": "〈염〉 속성 부여",
+  "kinds": [
+   "weapon"
+  ],
+  "price": "(R*R)*100",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "빙속성부여",
+  "name": "〈빙〉 속성 부여",
+  "kinds": [
+   "weapon"
+  ],
+  "price": "(R*R)*100",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "뇌속성부여",
+  "name": "〈뇌〉 속성 부여",
+  "kinds": [
+   "weapon"
+  ],
+  "price": "(R*R)*100",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "방어1",
+  "name": "【방어】+1",
+  "kinds": [
+   "armor"
+  ],
+  "price": "(R*R)*100",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "속도2",
+  "name": "【속도】+2",
+  "kinds": [
+   "armor"
+  ],
+  "price": "(R*R)*80",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "염내성1",
+  "name": "〈염〉 내성+1",
+  "kinds": [
+   "armor"
+  ],
+  "price": "(R*R)*120",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "빙내성1",
+  "name": "〈빙〉 내성+1",
+  "kinds": [
+   "armor"
+  ],
+  "price": "(R*R)*120",
+  "effects": [],
+  "review": "todo"
+ },
+ {
+  "key": "뇌내성1",
+  "name": "〈뇌〉 내성+1",
+  "kinds": [
+   "armor"
+  ],
+  "price": "(R*R)*120",
+  "effects": [],
+  "review": "todo"
+ }
+]

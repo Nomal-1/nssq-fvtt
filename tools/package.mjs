@@ -7,7 +7,9 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REPO = "Nomal-1/nssq-fvtt";
-const INCLUDE = ["system.json", "src", "lang", "templates", "styles", "packs", "assets", "LICENSE", "README.md"];
+// 런타임에 필요한 것만. data/raw(원문)·docs·tools·tests는 넣지 않는다
+const INCLUDE = ["system.json", "src", "lang", "templates", "styles", "packs", "assets", "data", "LICENSE", "README.md"];
+const EXCLUDE = [/^data[\\/]raw([\\/]|$)/, /^packs[\\/]\.gitkeep$/, /[\\/]LOCK$/];
 
 const manifestPath = path.join(root, "system.json");
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
@@ -18,15 +20,23 @@ manifest.download = `https://github.com/${REPO}/releases/download/v${version}/ns
 fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
 
 const dist = path.join(root, "dist");
+const stage = path.join(dist, "nssq");
 fs.rmSync(dist, { recursive: true, force: true });
-fs.mkdirSync(dist);
-const files = INCLUDE.filter((f) => fs.existsSync(path.join(root, f)));
+fs.mkdirSync(stage, { recursive: true });
+for (const f of INCLUDE) {
+  const src = path.join(root, f);
+  if (!fs.existsSync(src)) continue;
+  fs.cpSync(src, path.join(stage, f), {
+    recursive: true,
+    filter: (p) => !EXCLUDE.some((re) => re.test(path.relative(root, p)))
+  });
+}
+
 const zip = path.join(dist, "nssq.zip");
 if (process.platform === "win32") {
-  const list = files.map((f) => `'${path.join(root, f)}'`).join(",");
-  execFileSync("powershell", ["-NoProfile", "-Command", `Compress-Archive -Path ${list} -DestinationPath '${zip}'`], { stdio: "inherit" });
+  execFileSync("powershell", ["-NoProfile", "-Command", `Compress-Archive -Path '${stage}\\*' -DestinationPath '${zip}'`], { stdio: "inherit" });
 } else {
-  execFileSync("zip", ["-r", "-q", zip, ...files, "-x", "packs/.gitkeep"], { cwd: root, stdio: "inherit" });
+  execFileSync("zip", ["-r", "-q", zip, "."], { cwd: stage, stdio: "inherit" });
 }
 fs.copyFileSync(manifestPath, path.join(dist, "system.json"));
 console.log(`dist/nssq.zip, dist/system.json (v${version})`);

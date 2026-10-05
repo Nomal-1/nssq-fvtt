@@ -150,3 +150,11 @@ data/enemies/<lv1|lv2|lv3-4|foe>.json
 data/tables/random-dungeon.json, gathering.json, history-d666.json, level-exp.json
 ```
 `build/report.md`에는 열거형 위반, 파싱 실패, glossary 불일치, effects 미작성·partial 수(클래스별)를 남긴다.
+
+### 5.1 산출물 형식 (단계 1에서 확정)
+- 각 항목은 `{ id, name, type, img, system }`. `id`가 컴펜디움 `_id`다. 에너미는 `items`(임베디드 스킬, `_id`·`_key` 포함)를 가진다.
+- `data/*.json`은 저장소에 커밋한다. **효과(`effects`·`review`·`effectsNote`)는 이 파일에 직접 작성한다.** `convert.mjs`는 다시 돌려도 같은 id(없으면 `key`)의 효과 값을 기존 파일에서 옮겨 오므로 지워지지 않는다.
+- 무기·방어구의 `system.table`(R식 표 값)과 장식의 `system.effectText`는 변환 보조 필드다. 컴펜디움에는 넣지 않고(`pack.mjs`가 제거), 런타임은 릴리스 zip에 들어가는 `data/weapons.json` 등을 읽는다.
+- 스킬 키: `skillKey` = glossary `jp` 정규화, `system.key` = `<classKey>.<skillKey>`. 에너미 스킬은 `enemy.<enemyKey>.<skillKey>`이고, 《약점: 머리》처럼 인자가 있는 것은 `弱点.bindHead`처럼 인자를 상태·속성 ID로 붙인다.
+- 스킬 `review` 초깃값은 `"todo"`. 단계 7에서 `auto`(자동 작성·검수 필요)/`done`/`partial`/`custom`으로 바꾼다.
+- CI(`test.yml`)는 `build:data` 뒤 `git diff --exit-code -- data`로 산출물이 원천과 어긋나지 않았는지 확인한다.

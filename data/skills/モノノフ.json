@@ -1,0 +1,868 @@
+[
+ {
+  "id": "WMeb7w1QFln5IaeB",
+  "name": "무사의 마음가짐",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.武士の心得",
+   "skillKey": "武士の心得",
+   "classKey": "モノノフ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>통상 공격 명중 시 자신의 TP 1 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "7ACB9YIv8iX4e1gX",
+  "name": "망치 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.鎚マスタリー",
+   "skillKey": "鎚マスタリー",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>망치 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "13eIBG0CnlO4aEpi",
+  "name": "도 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.刀マスタリー",
+   "skillKey": "刀マスタリー",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>도 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "4kbxSZPfSq3Qyqqg",
+  "name": "등치기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.峰打",
+   "skillKey": "峰打",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈괴〉 속성 물리 공격 롤 → 명중 시 대상은 억제 방어 롤(목표값: 공격자 【억제 공격】+(7+SL)), 실패하면 [마비].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "1n4a79nJTOZLy6XX",
+  "name": "빙찰",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.氷刹",
+   "skillKey": "氷刹",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈참〉+〈빙〉 속성 물리 공격 롤. 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "QxRJOXPXf8PnpC5W",
+  "name": "호월",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.弧月",
+   "skillKey": "弧月",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "BhQZ5gpmM9hJMcNl",
+  "name": "섬인",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.閃刃",
+   "skillKey": "閃刃",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +((SL+1)×3)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "EyVh0GnYgiGEbFwu",
+  "name": "무쌍 카구라",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.無双神楽",
+   "skillKey": "無双神楽",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 3회, 매회 대상은 적 중 무작위. 대미지 다이스 -(4-SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "HMIciVjAc25sk0Go",
+  "name": "충파",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.衝破",
+   "skillKey": "衝破",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "망치",
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 전체",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 2
+     },
+     {
+      "skill": "망치 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "4ZgCshsmnYXApgJC",
+  "name": "머리 깨기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.頭砕",
+   "skillKey": "頭砕",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 → 명중 시 대상은 억제 방어 롤(목표값: 공격자 【억제 공격】+(7+SL)), 실패하면 [머리] 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "V9DmmcrIPoqMJdEQ",
+  "name": "철화",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.鉄火",
+   "skillKey": "鉄火",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈괴〉+〈염〉 속성 물리 공격 롤. 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "4MFXxx6Y3w5thLcK",
+  "name": "유추충",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.流墜衝",
+   "skillKey": "流墜衝",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "C7DipFILqfQFayrP",
+  "name": "건곤일척",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.乾坤一擲",
+   "skillKey": "乾坤一擲",
+   "classKey": "モノノフ",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +((SL+1)×4)개. 사용 후 자신이 [마비](심도 = 자신 【물리 명중】+7).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "Pdvoyevvg4MSHNrD",
+  "name": "이 악물기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.食いしばり",
+   "skillKey": "食いしばり",
+   "classKey": "モノノフ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>전투 불능이 될 때 1D6, 눈이 (SL) 이하면 전투 불능이 되지 않고 【HP】 1로 버틴다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "Xzf9U62jYkIZ1XzK",
+  "name": "나찰",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.羅刹",
+   "skillKey": "羅刹",
+   "classKey": "モノノフ",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 전투 동안 【물리 공격】【속성 공격】 +(SL+1)(강화 효과가 아니므로 해제당하지 않음). 효과 중에는 공격 롤마다 자신의 대미지 다이스에서 나온 '1'의 개수만큼 【HP】 대미지를 받고 【TP】 1 소모. 종료 페이즈의 대미지 처리 직후에 임의로 해제 가능.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "C2yog0hnLjw5yUpq",
+  "name": "포효",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.咆哮",
+   "skillKey": "咆哮",
+   "classKey": "モノノフ",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "이 악물기",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상의 강화 효과를 최대 (SL)개 소멸.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "4DsOnCITIbwlwOsT",
+  "name": "사자분신",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.獅子奮迅",
+   "skillKey": "獅子奮迅",
+   "classKey": "モノノフ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "이 악물기",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신의 공격 롤 명중 시 자신의 【HP】 (SL) 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "BfI4CUpG813xkbdX",
+  "name": "무사도의 각오",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.士道の覚悟",
+   "skillKey": "士道の覚悟",
+   "classKey": "モノノフ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>'무기'·'기타' 두 슬롯 모두에 무기를 장비하고 있으면 【물리 공격】 +1.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "Kc6jk3xushnEIfeZ",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "モノノフ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "ZcATAcs42egaRgvH",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "モノノフ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ },
+ {
+  "id": "4m7A5OfRAUFfxBY2",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "モノノフ.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "モノノフ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "모노노후"
+  }
+ }
+]

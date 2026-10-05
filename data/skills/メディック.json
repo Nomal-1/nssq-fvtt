@@ -1,0 +1,1117 @@
+[
+ {
+  "id": "NrIqPnaCyxo7TyAm",
+  "name": "초의술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.超医術",
+   "skillKey": "超医術",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 0,
+    "fp": 3
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아군 전원의 HP와 봉인·상태 이상을 완전 회복한다. 전투 불능에서도 부활한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "9pK7A7p2ka9Jffgc",
+  "name": "지팡이 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.杖マスタリー",
+   "skillKey": "杖マスタリー",
+   "classKey": "メディック",
+   "weaponReq": [
+    "지팡이"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지팡이에 의한 물리 명중에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "5kukV2tfzHvoIciy",
+  "name": "회복 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.回復マスタリー",
+   "skillKey": "回復マスタリー",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 『회복』의 스킬 사용 시 회복량 다이스에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "WxHwsert8nhK7igw",
+  "name": "큐어",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.キュア",
+   "skillKey": "キュア",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>회복 롤을 한다. 이때, 회복량 다이스에 +(SL+3)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "646DIRROKEygzdFZ",
+  "name": "에어리어 큐어",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.エリアキュア",
+   "skillKey": "エリアキュア",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>회복 롤을 한다. 이때, 회복량 다이스에 +(SL+3)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "MtysrcHnOPyKa1yx",
+  "name": "힐링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.ヒーリング",
+   "skillKey": "ヒーリング",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "큐어",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>회복 롤을 한다. 이때, 회복량 다이스에 +((SL+1)×3)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "3BDxdCuzD0G6GmkD",
+  "name": "파티 힐",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.パーティヒール",
+   "skillKey": "パーティヒール",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "에어리어 큐어",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>회복 롤을 한다. 이때, 회복량 다이스에 +((SL+1)×3)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "YwX9jBwKRJlHDPIY",
+  "name": "풀 힐링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.フルヒーリング",
+   "skillKey": "フルヒーリング",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "힐링",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】를 전부 회복한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "HgUzvhKiYvWIsamp",
+  "name": "에어리어 풀 힐",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.エリアフルヒール",
+   "skillKey": "エリアフルヒール",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 7,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "파티 힐",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】를 전부 회복한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "Jepmh1co5LSK1IX0",
+  "name": "리프레시",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.リフレッシュ",
+   "skillKey": "リフレッシュ",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상의 상태 이상을 (SL)개까지 해제한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "LoyG2YcSySAKxNN9",
+  "name": "바인드 리커버리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.バインドリカバリ",
+   "skillKey": "バインドリカバリ",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상의 봉인을 (SL)개까지 해제한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "4CskoU1UDS8oNaKK",
+  "name": "트리트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.トリート",
+   "skillKey": "トリート",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상의 약화 효과를 (SL)개까지 해제한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "8KmEg16oOe3QVKJ4",
+  "name": "리저렉션",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.リザレクション",
+   "skillKey": "リザレクション",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>[전투 불능] 상태를 회복한다. 이때, 대상의 【HP】 현재값은 1이 된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "2R2aDPTmoZxzsvd2",
+  "name": "리제너레이트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.リジェネレート",
+   "skillKey": "リジェネレート",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『HP 리젠: (SL+1)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "NsPlues2JT7CpU0f",
+  "name": "의술 방어",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.医術防御",
+   "skillKey": "医術防御",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『억제 방어 상승: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "W2G3TsBgnNhLdzs7",
+  "name": "집중 치료",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.集中治療",
+   "skillKey": "集中治療",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안, 회복 롤을 할 때 3 이상인 눈의 개수가 【HP】 회복량으로 간주되게 된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "JQUtSKASlzgcK8Ms",
+  "name": "일제 구호",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.一斉救護",
+   "skillKey": "一斉救護",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "리프레시",
+      "sl": 2
+     },
+     {
+      "skill": "바인드 리커버리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안, 분류 『회복』, 효과 범위 『아군 단일』인 스킬의 효과 범위를 『아군 열』로 확대한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "KD7NrAqgOa6wzy70",
+  "name": "헤비 스트라이크",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.ヘヴィストライク",
+   "skillKey": "ヘヴィストライク",
+   "classKey": "メディック",
+   "weaponReq": [
+    "지팡이",
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "지팡이 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈괴〉 속성의 물리 공격 롤을 한다. 이때, 대미지 다이스 +((SL+1)×2)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "J89rMG8yDwRvCqcI",
+  "name": "슬립 블로",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.スリープブロー",
+   "skillKey": "スリープブロー",
+   "classKey": "メディック",
+   "weaponReq": [
+    "지팡이",
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "지팡이 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈괴〉 속성의 물리 공격 롤을 한다. 이때, 대미지 다이스 +((SL+1)×2)개를 얻는다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [수면]을 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "3pMmAMRUoKgodG2b",
+  "name": "스타 드롭",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.スタードロップ",
+   "skillKey": "スタードロップ",
+   "classKey": "メディック",
+   "weaponReq": [
+    "지팡이",
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "지팡이 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈괴〉 속성의 물리 공격 롤을 한다. 이때, 대미지 다이스 +((SL+1)×2)개를 얻는다. 명중하면, 대상은 『물리 방어 저하: 2』를 받는다. 이 효과는 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "6bfsHuCxlYe1S3jf",
+  "name": "박식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.博識",
+   "skillKey": "博識",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지식에 관계된 판정에 +3을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "Db9nqaxIjFvERoDf",
+  "name": "위험 식재 처리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.危険食材処理",
+   "skillKey": "危険食材処理",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "-",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>시간을 들여 밑손질을 함으로써, 유독한 식재를 무해한 식재로 만들 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "9mfnBthzbTDPJdYl",
+  "name": "해부학",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.解剖学",
+   "skillKey": "解剖学",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "-",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>드롭 판정의 달성값을 ±1 범위에서 자유롭게 조작할 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "7Xq8U0J0L4LBjVJl",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】에 +(SL×2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "Gn04h2ZLdbeMflIH",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】에 +(SL×2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "1d3rrMhWdLwSwxUC",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】에 +(SL)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ },
+ {
+  "id": "38lxgrZUlccQOH9F",
+  "name": "억제 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "メディック.抑制防御ブースト",
+   "skillKey": "抑制防御ブースト",
+   "classKey": "メディック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 방어】에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "메딕"
+  }
+ }
+]

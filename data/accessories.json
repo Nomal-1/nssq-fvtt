@@ -1,0 +1,197 @@
+[
+ {
+  "id": "FUc8cvXiICqEntDn",
+  "name": "두꺼운 장갑",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "厚手の手袋",
+   "effects": [],
+   "price": 80,
+   "description": "<p>【STR】+1</p>",
+   "effectText": "【STR】+1"
+  }
+ },
+ {
+  "id": "4gfmQ8y1Iq6ASLYE",
+  "name": "나무 머리 장식",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "木彫りの髪飾り",
+   "effects": [],
+   "price": 80,
+   "description": "<p>【TEC】+1</p>",
+   "effectText": "【TEC】+1"
+  }
+ },
+ {
+  "id": "58nF5iqrWGbS63QF",
+  "name": "가죽 벨트",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "革のベルト",
+   "effects": [],
+   "price": 80,
+   "description": "<p>【VIT】+1</p>",
+   "effectText": "【VIT】+1"
+  }
+ },
+ {
+  "id": "8GC883lvQJEyHNxn",
+  "name": "스트랩 슈즈",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "ストラップシューズ",
+   "effects": [],
+   "price": 80,
+   "description": "<p>【AGI】+1</p>",
+   "effectText": "【AGI】+1"
+  }
+ },
+ {
+  "id": "XOuIDcrSAiOjEXBF",
+  "name": "꽃 부적",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "花のお守り",
+   "effects": [],
+   "price": 80,
+   "description": "<p>【LUC】+1</p>",
+   "effectText": "【LUC】+1"
+  }
+ },
+ {
+  "id": "RyGKMkkl741zvwZQ",
+  "name": "지식의 서",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "知識の書",
+   "effects": [],
+   "price": 150,
+   "description": "<p>에너미 식별 판정에 +1</p>",
+   "effectText": "에너미 식별 판정에 +1"
+  }
+ },
+ {
+  "id": "MDXZqmYX7QVC6bis",
+  "name": "삼십육계의 부적",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "脱兎のお守り",
+   "effects": [],
+   "price": 200,
+   "description": "<p>도주 판정에 +2</p>",
+   "effectText": "도주 판정에 +2"
+  }
+ },
+ {
+  "id": "KWlfFmZFKz83O9Sm",
+  "name": "백중 고글",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "百中ゴーグル",
+   "effects": [],
+   "price": 500,
+   "description": "<p>【물리 명중】+2</p>",
+   "effectText": "【물리 명중】+2"
+  }
+ },
+ {
+  "id": "NZo2gkbqbTBESNlU",
+  "name": "삶의 벨트",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "命のベルト",
+   "effects": [],
+   "price": 1000,
+   "description": "<p>【HP】+8</p>",
+   "effectText": "【HP】+8"
+  }
+ },
+ {
+  "id": "QkAIbFahRZLI7lzg",
+  "name": "영기의 오브",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "英気のオーブ",
+   "effects": [],
+   "price": 1000,
+   "description": "<p>【TP】+5</p>",
+   "effectText": "【TP】+5"
+  }
+ },
+ {
+  "id": "YjBXFeRiS6sQKmIt",
+  "name": "힘의 반지",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "力の指輪",
+   "effects": [],
+   "price": 1000,
+   "description": "<p>【STR】+3</p>",
+   "effectText": "【STR】+3"
+  }
+ },
+ {
+  "id": "rPNbssiixWLIRuGG",
+  "name": "지혜의 피어스",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "知恵のピアス",
+   "effects": [],
+   "price": 1000,
+   "description": "<p>【TEC】+3</p>",
+   "effectText": "【TEC】+3"
+  }
+ },
+ {
+  "id": "7M2ye5lBwGRvmMr5",
+  "name": "인내의 팔찌",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "耐力の腕輪",
+   "effects": [],
+   "price": 1000,
+   "description": "<p>【VIT】+3</p>",
+   "effectText": "【VIT】+3"
+  }
+ },
+ {
+  "id": "aTL2pAjRhtM22w5e",
+  "name": "준족의 부적",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "俊足のお守り",
+   "effects": [],
+   "price": 1000,
+   "description": "<p>【AGI】+3</p>",
+   "effectText": "【AGI】+3"
+  }
+ },
+ {
+  "id": "7WAEuuPU4ut75CCC",
+  "name": "운의 네클리스",
+  "type": "accessory",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "運のネックレス",
+   "effects": [],
+   "price": 1000,
+   "description": "<p>【LUC】+3</p>",
+   "effectText": "【LUC】+3"
+  }
+ }
+]

@@ -1,0 +1,912 @@
+[
+ {
+  "id": "F7f7PTWrK4vMZdOM",
+  "name": "자이언트 킬",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.ジャイアントキル",
+   "skillKey": "ジャイアントキル",
+   "classKey": "バリスタ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "사격",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신보다 LV가 높은 에너미에 대한 공격 롤의 대미지 다이스 항상 +4개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "NwSgAX4DlinoZ5sn",
+  "name": "쇠뇌 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.弩マスタリー",
+   "skillKey": "弩マスタリー",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "쇠뇌"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>쇠뇌 공격의 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "GSCC7u1g1v0nK5Ti",
+  "name": "헤비 샷",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.ヘビーショット",
+   "skillKey": "ヘビーショット",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "쇠뇌 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "4oMzYNV2uZaJuQFq",
+  "name": "바인드 스나이핑",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.バインドスナイプ",
+   "skillKey": "バインドスナイプ",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "활",
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "활 마스터리",
+        "sl": 2
+       },
+       {
+        "skill": "쇠뇌 마스터리",
+        "sl": 2
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>후발 행동으로 발동. 메인 페이즈 종료 시점에 봉인을 하나라도 받고 있는 적 전원에게 물리 공격, 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "9Wr3kWhvHnbWeLip",
+  "name": "배드 스나이핑",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.バッドスナイプ",
+   "skillKey": "バッドスナイプ",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "활",
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "활 마스터리",
+        "sl": 2
+       },
+       {
+        "skill": "쇠뇌 마스터리",
+        "sl": 2
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>후발 행동으로 발동. 메인 페이즈 종료 시점에 상태 이상을 하나라도 받고 있는 적 전원에게 물리 공격, 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "YA4eDkZZuGNDXBmW",
+  "name": "랜덤 샷",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.ランダムショット",
+   "skillKey": "ランダムショット",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "쇠뇌 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 3회. 매 회 대상은 적 중 무작위 선택, 같은 에너미는 1회까지만. 【물리 명중】 -3, 대미지 -(3-SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "T0dC9H2zHIu1FFZs",
+  "name": "파이어 버라지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.ファイアバラージ",
+   "skillKey": "ファイアバラージ",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "쇠뇌 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈돌〉+〈염〉 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "C5jOvhlf7Gq1zo5x",
+  "name": "아이스 버라지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.アイスバラージ",
+   "skillKey": "アイスバラージ",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "쇠뇌 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈돌〉+〈빙〉 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "TxIvajV3bHRRGI2u",
+  "name": "선더 버라지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.サンダーバラージ",
+   "skillKey": "サンダーバラージ",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "쇠뇌 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈돌〉+〈뇌〉 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "RNShOjkP7sQbEJcm",
+  "name": "고속 철갑탄",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.高速徹甲弾",
+   "skillKey": "高速徹甲弾",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "쇠뇌 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "헤비 샷",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL×2)개. 대미지 계산 시 강화 효과 『물리 방어 상승』과 『내성 상승: 돌』을 무시.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "5YU49jG2fRF0WL9C",
+  "name": "레인폴",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.レインフォール",
+   "skillKey": "レインフォール",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "쇠뇌 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>다음 턴 후발 행동 타이밍에 지연 공격을 예약. 그 공격은 대상을 적 중 무작위로 정하는 3회 물리 공격이며 대미지 다이스 +(SL×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "3ifHiMlKSE09mXKG",
+  "name": "전진 박격포술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.前陣迫撃砲術",
+   "skillKey": "前陣迫撃砲術",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "쇠뇌 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "물리 공격 부스트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +((SL+1)×4)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "4fFh0pYptVgS7wQJ",
+  "name": "위크 샷",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.ウィークショット",
+   "skillKey": "ウィークショット",
+   "classKey": "バリスタ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "총 마스터리",
+        "sl": 4
+       },
+       {
+        "skill": "활 마스터리",
+        "sl": 4
+       },
+       {
+        "skill": "쇠뇌 마스터리",
+        "sl": 4
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '사격' 공격을 항상 '크리티컬 업' 상태로 취급. 이 효과는 강화 효과로 보지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "Im7ZiPt3yODJ23jG",
+  "name": "더블 액션",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.ダブルアクション",
+   "skillKey": "ダブルアクション",
+   "classKey": "バリスタ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "위크 샷",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>크리티컬 히트 발생 시 원하면 같은 공격으로 같은 대상을 한 번 더 공격(TP도 다시 소비). 주행동 1회당 1번만 발생.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "Q9qDCqvF4Uxkn2Ns",
+  "name": "나이트 비전",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.ナイトビジョン",
+   "skillKey": "ナイトビジョン",
+   "classKey": "バリスタ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>어둠 속에서도 시야 불이익을 받지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "NcEElVEoQL7Y3lwd",
+  "name": "페너트레이터",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.ペネトレイター",
+   "skillKey": "ペネトレイター",
+   "classKey": "バリスタ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "쇠뇌 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상 '단일' 물리 공격이 크리티컬 히트하면 후위 적 1체에게도 같은 공격(스킬 공격이어도 【TP】는 1회분만 소비). 주행동 1회당 1번만 발생.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "DEKqSFQRy8ybBlp0",
+  "name": "조명탄",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.照明弾",
+   "skillKey": "照明弾",
+   "classKey": "バリスタ",
+   "weaponReq": [
+    "쇠뇌",
+    "총"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "쇠뇌 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아군의 약화 효과 『명중 저하』 소멸. 어둠 등에 의한 시야 불이익도 그 전투 동안 무효화.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "8NYhdlfIGywuQGZB",
+  "name": "위험 감지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.危険感知",
+   "skillKey": "危険感知",
+   "classKey": "バリスタ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>다가오는 위험을 알아채는 판정 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "JdH8foYfeLAREATL",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "バリスタ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "Y6EZjOpBNWV7Tqvo",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "バリスタ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ },
+ {
+  "id": "PpmBLSb8ax4fVeiD",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バリスタ.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "バリスタ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "발리스타"
+  }
+ }
+]

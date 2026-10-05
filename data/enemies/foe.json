@@ -1,0 +1,1537 @@
+[
+ {
+  "id": "HTmXv7tUnwICTcfD",
+  "name": "광란의 뿔사슴",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "狂乱の角鹿",
+   "level": 3,
+   "rarity": 13,
+   "attackElements": [
+    "pierce"
+   ],
+   "isFOE": true,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 50,
+    "max": 50
+   },
+   "stats": {
+    "physHit": 9,
+    "elemHit": 0,
+    "evasion": 10,
+    "physAtk": 25,
+    "elemAtk": 0,
+    "defense": 7,
+    "suppAtk": 6,
+    "suppDef": 7,
+    "speed": 22
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 3,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 7,
+     "item": "뿔",
+     "rank": 3
+    },
+    {
+     "min": 8,
+     "max": null,
+     "item": "모피",
+     "rank": 3
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>포효와 발놀림으로 공포·환각을 일으키는 거대 뿔사슴. 초보는 피하는 게 좋고, 신맛 적은 과일로 주의를 끌어 전투를 피할 수 있다. 쓰러뜨리면 초보 졸업으로 여겨지는 등용문 같은 상대. 고기는 스테이크감으로 인기다.</p>"
+  },
+  "items": [
+   {
+    "_id": "5DfqflYJhM5xRTql",
+    "name": "혼란의 울음",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.狂乱の角鹿.惑乱のいななき",
+     "skillKey": "惑乱のいななき",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [혼란]을 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!HTmXv7tUnwICTcfD.5DfqflYJhM5xRTql"
+   },
+   {
+    "_id": "UPWdxqC6Xu7Wiqlp",
+    "name": "곤혹스러운 스텝",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.狂乱の角鹿.困惑のステップ",
+     "skillKey": "困惑のステップ",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [혼란]을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!HTmXv7tUnwICTcfD.UPWdxqC6Xu7Wiqlp"
+   },
+   {
+    "_id": "UvflNKf1FMcyzv6M",
+    "name": "약점: 다리",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.狂乱の角鹿.弱点.bindLeg",
+     "skillKey": "弱点.bindLeg",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[다리] 봉인에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!HTmXv7tUnwICTcfD.UvflNKf1FMcyzv6M"
+   },
+   {
+    "_id": "6AFNgZByyahzwGgN",
+    "name": "내성: 공포",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.狂乱の角鹿.耐性.fear",
+     "skillKey": "耐性.fear",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[공포]에 대한 억제 방어 롤에 항상 +2를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!HTmXv7tUnwICTcfD.6AFNgZByyahzwGgN"
+   },
+   {
+    "_id": "Kh3DSOxLz8XLGAyN",
+    "name": "완전 내성: 혼란",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.狂乱の角鹿.完全耐性.confuse",
+     "skillKey": "完全耐性.confuse",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[혼란]을 받지 않게 된다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!HTmXv7tUnwICTcfD.Kh3DSOxLz8XLGAyN"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=10301",
+   "jp": "狂乱の角鹿"
+  }
+ },
+ {
+  "id": "Gu0koM4qX8QXJnpM",
+  "name": "탐욕스러운 독도마뱀",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "貪欲な毒蜥蜴",
+   "level": 3,
+   "rarity": 14,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": true,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 55,
+    "max": 55
+   },
+   "stats": {
+    "physHit": 9,
+    "elemHit": 7,
+    "evasion": 9,
+    "physAtk": 25,
+    "elemAtk": 0,
+    "defense": 9,
+    "suppAtk": 6,
+    "suppDef": 7,
+    "speed": 18
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 4,
+    "ice": 2,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 8,
+     "item": "비늘",
+     "rank": 3
+    },
+    {
+     "min": 9,
+     "max": null,
+     "item": "이빨",
+     "rank": 3
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>습지·동굴의 몇 미터짜리 독도마뱀. 체액과 이빨의 독이 강하고 자신은 독에 강하다. 악취가 심해 다가오는 걸 알아채기 쉽다. 초보는 맞서지 않는 게 좋다.</p>"
+  },
+  "items": [
+   {
+    "_id": "Or1z4WOHa31FN61d",
+    "name": "탐욕스러운 독니",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.貪欲な毒蜥蜴.貪欲な毒牙",
+     "skillKey": "貪欲な毒牙",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [독]을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Gu0koM4qX8QXJnpM.Or1z4WOHa31FN61d"
+   },
+   {
+    "_id": "GllP63gyiMdzluQ7",
+    "name": "탐욕의 독꼬리",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.貪欲な毒蜥蜴.貪欲な毒尾",
+     "skillKey": "貪欲な毒尾",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+6)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [독]을 받는다. 또한 이때 【물리 명중】에 −5를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Gu0koM4qX8QXJnpM.GllP63gyiMdzluQ7"
+   },
+   {
+    "_id": "NXbN1qG1WmGUUDNb",
+    "name": "완전 내성: 독",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.貪欲な毒蜥蜴.完全耐性.poison",
+     "skillKey": "完全耐性.poison",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[독]을 받지 않게 된다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Gu0koM4qX8QXJnpM.NXbN1qG1WmGUUDNb"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=10302",
+   "jp": "貪欲な毒蜥蜴"
+  }
+ },
+ {
+  "id": "6y5bVXL30jgufs9G",
+  "name": "발칸어",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "バルカンウオ",
+   "level": 3,
+   "rarity": 13,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": true,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 55,
+    "max": 55
+   },
+   "stats": {
+    "physHit": 8,
+    "elemHit": 9,
+    "evasion": 9,
+    "physAtk": 22,
+    "elemAtk": 14,
+    "defense": 8,
+    "suppAtk": 4,
+    "suppDef": 5,
+    "speed": 19
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 5,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": null,
+     "item": "비늘",
+     "rank": 3
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>거대해진 물총고기. 압축한 물탄을 난사해 먹이를 물로 떨어뜨리며, 물고기보다 육지 동물 고기를 좋아한다.</p>"
+  },
+  "items": [
+   {
+    "_id": "W6meehzxK3eYmVIH",
+    "name": "물탄 난사",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.バルカンウオ.水弾乱射",
+     "skillKey": "水弾乱射",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "술식",
+     "timing": "주행동",
+     "range": "원",
+     "target": "특수",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>4회의 〈빙〉 속성 공격 롤을 한다. 이때 대상은 공격 1회마다 적 중에서 무작위로 선택한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!6y5bVXL30jgufs9G.W6meehzxK3eYmVIH"
+   },
+   {
+    "_id": "HdJrwY57JrnYwGLw",
+    "name": "약점: 독",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.バルカンウオ.弱点.poison",
+     "skillKey": "弱点.poison",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[독]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!6y5bVXL30jgufs9G.HdJrwY57JrnYwGLw"
+   },
+   {
+    "_id": "OT33EqdtBSm32ysP",
+    "name": "약점: 마비",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.バルカンウオ.弱点.paralyze",
+     "skillKey": "弱点.paralyze",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[마비]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!6y5bVXL30jgufs9G.OT33EqdtBSm32ysP"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=10303",
+   "jp": "バルカンウオ"
+  }
+ },
+ {
+  "id": "YZm1Vo7AvVLJP6Qg",
+  "name": "사에나 버드",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "サエーナ鳥",
+   "level": 3,
+   "rarity": 13,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": true,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 55,
+    "max": 55
+   },
+   "stats": {
+    "physHit": 8,
+    "elemHit": 9,
+    "evasion": 10,
+    "physAtk": 22,
+    "elemAtk": 15,
+    "defense": 7,
+    "suppAtk": 5,
+    "suppDef": 5,
+    "speed": 27
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 2,
+    "volt": 5
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 7,
+     "item": "날개·깃털",
+     "rank": 3
+    },
+    {
+     "min": 8,
+     "max": 11,
+     "item": "발톱",
+     "rank": 3
+    },
+    {
+     "min": 12,
+     "max": null,
+     "item": "목재",
+     "rank": 4
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>높은 곳에 둥지를 트는 거대한 금빛 맹금. 날개로 벽력을 부려 신조라고도 불린다. 영역 의식이 강해 침입자를 끝까지 쫓는다.</p>"
+  },
+  "items": [
+   {
+    "_id": "4OSTAZUG7VIi3Dkb",
+    "name": "신속일섬",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.サエーナ鳥.神速一閃",
+     "skillKey": "神速一閃",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>전투 턴의 메인 페이즈 시작 시에 사용을 선언한다. 최속 행동으로 물리 공격 롤을 한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!YZm1Vo7AvVLJP6Qg.4OSTAZUG7VIi3Dkb"
+   },
+   {
+    "_id": "3nxyflUhmsmCeUgM",
+    "name": "곤혹의 발톱",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.サエーナ鳥.困惑の爪",
+     "skillKey": "困惑の爪",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [혼란]을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!YZm1Vo7AvVLJP6Qg.3nxyflUhmsmCeUgM"
+   },
+   {
+    "_id": "V7ocDp8irHLtaaZO",
+    "name": "선더 페더",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.サエーナ鳥.サンダーフェザー",
+     "skillKey": "サンダーフェザー",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "술식",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>〈뇌〉 속성 공격 롤을 한다. 또한 이때 【물리 명중】에 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!YZm1Vo7AvVLJP6Qg.V7ocDp8irHLtaaZO"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=10304",
+   "jp": "サエーナ鳥"
+  }
+ },
+ {
+  "id": "5Ht1NBTzpzny8JP4",
+  "name": "배회하는 도약수",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "うろつく跳獣",
+   "level": 4,
+   "rarity": 15,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": true,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 60,
+    "max": 60
+   },
+   "stats": {
+    "physHit": 10,
+    "elemHit": 7,
+    "evasion": 11,
+    "physAtk": 30,
+    "elemAtk": 0,
+    "defense": 9,
+    "suppAtk": 6,
+    "suppDef": 7,
+    "speed": 28
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 2,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 7,
+     "item": "모피",
+     "rank": 4
+    },
+    {
+     "min": 8,
+     "max": null,
+     "item": "뼈",
+     "rank": 4
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>주먹이 발달한 초원의 유대류 짐승. 새끼를 주머니에 넣고 다니며, 침입자와 정면 승부를 즐긴다. 녹황색 채소를 좋아하는 초식성.</p>"
+  },
+  "items": [
+   {
+    "_id": "SqCJnh6QGmou5DEn",
+    "name": "부메랑 훅",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.うろつく跳獣.ブーメランフック",
+     "skillKey": "ブーメランフック",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [마비]를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!5Ht1NBTzpzny8JP4.SqCJnh6QGmou5DEn"
+   },
+   {
+    "_id": "RCjKPWppGdixUe7k",
+    "name": "제트 어퍼",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.うろつく跳獣.ジェットアッパー",
+     "skillKey": "ジェットアッパー",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 이때 대미지 다이스 +8개를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!5Ht1NBTzpzny8JP4.RCjKPWppGdixUe7k"
+   },
+   {
+    "_id": "Mk29WPGMh0HrQ05P",
+    "name": "약점: 다리",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.うろつく跳獣.弱点.bindLeg",
+     "skillKey": "弱点.bindLeg",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[다리] 봉인에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!5Ht1NBTzpzny8JP4.Mk29WPGMh0HrQ05P"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=10401",
+   "jp": "うろつく跳獣"
+  }
+ },
+ {
+  "id": "NX8XH3UWaMR6rogr",
+  "name": "숲의 파괴자",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "森の破壊者",
+   "level": 4,
+   "rarity": 13,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": true,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 60,
+    "max": 60
+   },
+   "stats": {
+    "physHit": 8,
+    "elemHit": 0,
+    "evasion": 10,
+    "physAtk": 31,
+    "elemAtk": 0,
+    "defense": 10,
+    "suppAtk": 6,
+    "suppDef": 6,
+    "speed": 24
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 3,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 7,
+     "item": "모피",
+     "rank": 4
+    },
+    {
+     "min": 8,
+     "max": null,
+     "item": "발톱",
+     "rank": 4
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>긴 발톱과 갑옷 같은 근육의 곰. 영역에 들어오면 맹공하지만 배부를 땐 덜 공격적이다. 연어 같은 생선과 꿀을 좋아한다.</p>"
+  },
+  "items": [
+   {
+    "_id": "ZiEXmVPbEDZzJCT3",
+    "name": "베어 클로",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.森の破壊者.ベアークロー",
+     "skillKey": "ベアークロー",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 이때 【물리 명중】−3으로 취급하고, 대미지 다이스 +7개를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!NX8XH3UWaMR6rogr.ZiEXmVPbEDZzJCT3"
+   },
+   {
+    "_id": "FYq3zlCJpouAjyhi",
+    "name": "공포의 포효",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.森の破壊者.恐怖の咆哮",
+     "skillKey": "恐怖の咆哮",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 전체",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [공포]를 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!NX8XH3UWaMR6rogr.FYq3zlCJpouAjyhi"
+   },
+   {
+    "_id": "ZY6cuNm4Pwk90mmZ",
+    "name": "약점: 혼란",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.森の破壊者.弱点.confuse",
+     "skillKey": "弱点.confuse",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[혼란]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!NX8XH3UWaMR6rogr.ZY6cuNm4Pwk90mmZ"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=10402",
+   "jp": "森の破壊者"
+  }
+ },
+ {
+  "id": "KxYczCGowUEWYbPU",
+  "name": "스노 드리프트",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "スノードリフト",
+   "level": 4,
+   "rarity": 14,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": true,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 70,
+    "max": 70
+   },
+   "stats": {
+    "physHit": 9,
+    "elemHit": 0,
+    "evasion": 11,
+    "physAtk": 32,
+    "elemAtk": 0,
+    "defense": 10,
+    "suppAtk": 6,
+    "suppDef": 6,
+    "speed": 28
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 5,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 6,
+     "item": "모피",
+     "rank": 4
+    },
+    {
+     "min": 7,
+     "max": null,
+     "item": "이빨",
+     "rank": 4
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>설원 늑대들의 왕, 빙설의 마랑. 냉기를 띤 이빨도 무섭지만, 무리를 조직적으로 부리고 웬만한 함정은 간파하는 지능이 더 무섭다.</p>"
+  },
+  "items": [
+   {
+    "_id": "B37KT9ox7r7sNR2J",
+    "name": "공포의 포효",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.スノードリフト.恐怖の咆哮",
+     "skillKey": "恐怖の咆哮",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 전체",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [공포]를 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!KxYczCGowUEWYbPU.B37KT9ox7r7sNR2J"
+   },
+   {
+    "_id": "UT2hmpNg7t78jVqG",
+    "name": "얼어붙는 송곳니",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.スノードリフト.凍てつく牙",
+     "skillKey": "凍てつく牙",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>〈괴+빙〉 속성의 물리 공격 롤을 한다. 이때 대미지 다이스 +5개를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!KxYczCGowUEWYbPU.UT2hmpNg7t78jVqG"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=10403",
+   "jp": "スノードリフト"
+  }
+ },
+ {
+  "id": "TYVdzpsOXjPWjC1F",
+  "name": "맞서는 패왕수",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "迎え撃つ覇王樹",
+   "level": 4,
+   "rarity": 14,
+   "attackElements": [
+    "pierce"
+   ],
+   "isFOE": true,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 70,
+    "max": 70
+   },
+   "stats": {
+    "physHit": 10,
+    "elemHit": 0,
+    "evasion": 11,
+    "physAtk": 29,
+    "elemAtk": 0,
+    "defense": 10,
+    "suppAtk": 5,
+    "suppDef": 6,
+    "speed": 24
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 2,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 4,
+    "volt": 4
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": null,
+     "item": "가시",
+     "rank": 4
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>오래 묵어 의지를 얻은 선인장. 영역 침입자를 공격하지만 불리하면 달아나기도 한다.</p>"
+  },
+  "items": [
+   {
+    "_id": "3gKFgpShLQGHku99",
+    "name": "바늘 지옥",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.迎え撃つ覇王樹.針地獄",
+     "skillKey": "針地獄",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "-",
+     "timing": "개막",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 이 대기 상태 중에 자신에게 '백병' 분류의 물리 공격 롤이 행해지면, 대미지를 받은 뒤 통상 공격 취급의 반격을 한다. 이 반격은 자신이 쓰러진 경우에도 발동한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!TYVdzpsOXjPWjC1F.3gKFgpShLQGHku99"
+   },
+   {
+    "_id": "Ol4CzYTNnmLnleqE",
+    "name": "더블 니들",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.迎え撃つ覇王樹.ダブルニードル",
+     "skillKey": "ダブルニードル",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>2회의 〈돌〉 속성 물리 공격 롤을 한다. 이때 【물리 명중】−5로 취급한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!TYVdzpsOXjPWjC1F.Ol4CzYTNnmLnleqE"
+   },
+   {
+    "_id": "Z5tDZdcx13EeBAZK",
+    "name": "약점: 수면",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.迎え撃つ覇王樹.弱点.sleep",
+     "skillKey": "弱点.sleep",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[수면]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!TYVdzpsOXjPWjC1F.Z5tDZdcx13EeBAZK"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=10404",
+   "jp": "迎え撃つ覇王樹"
+  }
+ },
+ {
+  "id": "O3OBC47ITlvcioJx",
+  "name": "모든 것을 사냥하는 그림자",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "全てを狩る影",
+   "level": 5,
+   "rarity": 14,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": true,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 65,
+    "max": 65
+   },
+   "stats": {
+    "physHit": 12,
+    "elemHit": 0,
+    "evasion": 11,
+    "physAtk": 36,
+    "elemAtk": 0,
+    "defense": 13,
+    "suppAtk": 8,
+    "suppDef": 10,
+    "speed": 32
+   },
+   "resist": {
+    "slash": 4,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 5,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": null,
+     "item": "칼날",
+     "rank": 5
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>2미터 넘는 사신 같은 육식 사마귀. 강철보다 단단한 낫과 날렵한 몸으로 급소를 노린다. 다만 곤충이라 단순하게 먹이를 쫓을 뿐 목표를 바꾸지 않고, 무거운 낫 탓에 오래 달리지 못한다. 죽은 고기나 요리된 고기에도 반응한다.</p>"
+  },
+  "items": [
+   {
+    "_id": "Xn1xvjyEAiX8oVwy",
+    "name": "대낫 난무",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.全てを狩る影.大鎌乱舞",
+     "skillKey": "大鎌乱舞",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "특수",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>2회의 물리 공격 롤을 한다. 이때 대상은 공격 1회마다 적 중에서 무작위로 선택한다. 또한 이때의 대미지 다이스를 −5개 한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!O3OBC47ITlvcioJx.Xn1xvjyEAiX8oVwy"
+   },
+   {
+    "_id": "GXDZ4bbMikpPRx1S",
+    "name": "대절단",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.全てを狩る影.大切断",
+     "skillKey": "大切断",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 전투 불능이 된다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!O3OBC47ITlvcioJx.GXDZ4bbMikpPRx1S"
+   },
+   {
+    "_id": "VTEvGNtK7Cs8OAJH",
+    "name": "내성: 즉사",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.全てを狩る影.耐性.instantDeath",
+     "skillKey": "耐性.instantDeath",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>즉시 전투 불능이 되는 효과에 대한 억제 방어 롤에 항상 +2를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!O3OBC47ITlvcioJx.VTEvGNtK7Cs8OAJH"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=10501",
+   "jp": "全てを狩る影"
+  }
+ }
+]

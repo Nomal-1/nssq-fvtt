@@ -1,0 +1,1066 @@
+[
+ {
+  "id": "Odi8ixEhvomW5WkN",
+  "name": "이도일인",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.二刀一刃",
+   "skillKey": "二刀一刃",
+   "classKey": "ショーグン",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《두 번째 칼》로 도 2자루를 동시 장비 중이면 분류 '백병' 스킬 공격도 2회 가능. 사용한 스킬 2회분 TP 소비. 2회째 스킬 공격을 일부러 발동하지 않는 것도 선택 가능.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "R5Bb4JBEtjxiumVT",
+  "name": "도 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.刀マスタリー",
+   "skillKey": "刀マスタリー",
+   "classKey": "ショーグン",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>도 공격의 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "6ZhS60jHcf5CKKuZ",
+  "name": "두 번째 칼",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.弐の太刀",
+   "skillKey": "弐の太刀",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>종별 '도' 무기를 무기 슬롯과 기타 슬롯에 장비하고, 통상 공격 시 각 무기로 1회씩 공격. 각 공격 【물리 명중】 -3, 【물리 공격】 -(3-SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "NlFI7Dzd4Dkryyop",
+  "name": "등치기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.峰打",
+   "skillKey": "峰打",
+   "classKey": "ショーグン",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈괴〉 속성 물리 공격 롤. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [마비].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "KWxRkf2JtQ3aWTAX",
+  "name": "자루 치기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.柄落とし",
+   "skillKey": "柄落とし",
+   "classKey": "ショーグン",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [팔] 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "9js4lyLin9Yi7hJI",
+  "name": "샛별",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.明星",
+   "skillKey": "明星",
+   "classKey": "ショーグン",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL+1)개. 에너미가 《야행성》을 가졌으면 대미지 다이스 +(SL×2)개 추가.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "MQcDa56tvaFWr1QT",
+  "name": "화각",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.禍刻",
+   "skillKey": "禍刻",
+   "classKey": "ショーグン",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL+1)개. 에너미가 《주행성》을 가졌으면 대미지 다이스 +(SL×2)개 추가.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "RC7uGAJX3uuG0VQf",
+  "name": "오륜의 검",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.五輪の剣",
+   "skillKey": "五輪の剣",
+   "classKey": "ショーグン",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 3회. 매 회 대상은 적 중 무작위 선택. 대미지 다이스 -(5-SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "5YBmwFzRuDyuvEiw",
+  "name": "선봉의 공명",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.先駆けの功名",
+   "skillKey": "先駆けの功名",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴에 아직 메인 페이즈 행동을 하지 않은 적에 대한 공격 롤의 명중 판정과 대미지 다이스 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "PXWt0pCGGVFX8wnQ",
+  "name": "전력 도주",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.全力逃走",
+   "skillKey": "全力逃走",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>도주 판정 시 선언. 도주 판정 달성값 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "Nme99fK9BUS0VU1u",
+  "name": "이 악물기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.食いしばり",
+   "skillKey": "食いしばり",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>전투 불능이 될 때 1D6을 굴려 (SL) 이하이면 전투 불능이 되지 않고 【HP】 1로 버틴다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "VTUmNWBs7MCoRfKv",
+  "name": "정신 통일",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.精神統一",
+   "skillKey": "精神統一",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "이 악물기",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신에게 상태 이상이 부여되는 순간 선언, 그 상태 이상을 무효화.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "EANGUh5xhuEHaaA5",
+  "name": "피에 물든 창",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.血染めの朱槍",
+   "skillKey": "血染めの朱槍",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "정신 통일",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>적을 전투 불능으로 만들면 그 전투 동안 자신의 【물리 공격】 +1(강화 효과로 취급하지 않으며 해제되지 않음). 최대 +(SL+1)까지 누적.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "N6kn8i6hYyx3ubtr",
+  "name": "과감무쌍",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.大武辺者",
+   "skillKey": "大武辺者",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "이 악물기",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안 단일 대상 적 공격 롤의 대상을 누적 (SL+1)회까지 강제로 자신으로 변경. 또한 강화 효과 『물리 공격 상승: (SL+1)』을 얻는다(3턴 지속).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "XIL1VlbyIuqJUCu3",
+  "name": "일기당천",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.一騎当千",
+   "skillKey": "一騎当千",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "팔",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "피에 물든 창",
+      "sl": 3
+     },
+     {
+      "skill": "과감무쌍",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 대기 상태. 대기 중 적에게 공격 롤이 행해지면 자신이 그 적에게 물리 공격으로 추격(대미지 다이스 -(4-SL)개). 누적 3체 추격 또는 턴 종료 시 대기 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "EcbKX1AEy7oVncEg",
+  "name": "장수의 그릇",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.将の器",
+   "skillKey": "将の器",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과를 얻었을 때 선언. 자신 이외 아군의 【TP】 (SL) 회복. 전투당 1회.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "5KKk81sF7WgDm9cW",
+  "name": "선봉의 명예",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.先陣の名誉",
+   "skillKey": "先陣の名誉",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "호령",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "장수의 그릇",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상에게 강화 효과 『물리 공격 상승: (SL+1)』과 『속도 상승: (SL×5)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "A7WC2nkpSn1sUq8b",
+  "name": "후군의 영예",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.殿軍の誉れ",
+   "skillKey": "殿軍の誉れ",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "호령",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "장수의 그릇",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상에게 강화 효과 『물리 방어 상승: (SL+1)』·『내성 상승: 전체』와 약화 효과 『속도 저하: (SL×5)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "BFZ6YN5SBnevQtz9",
+  "name": "노부시의 진형",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.野伏の陣立",
+   "skillKey": "野伏の陣立",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "호령",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "장수의 그릇",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안 대상은 자기 열이 물리 공격을 받으면 공격자에게 물리 공격으로 반격. 반격은 최대 (SL)회.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "9T7gRyxwa8MJPk1I",
+  "name": "일제 사격",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.一斉射撃",
+   "skillKey": "一斉射撃",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "호령",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "장수의 그릇",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>종별 '활'·'쇠뇌'·'총' 중 하나를 장비한 아군을 최대 (SL+1)명 선택, 즉시 적 단일에게 추격시킨다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "a8zMvTq2cybQtRnZ",
+  "name": "난룡의 진",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.乱れ龍の陣",
+   "skillKey": "乱れ龍の陣",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "호령",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "장수의 그릇",
+      "sl": 3
+     },
+     {
+      "skill": "과감무쌍",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아군을 최대 (SL+1)명 선택, 즉시 적 단일에게 추격시킨다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "NTQXwbUvYzxcctdL",
+  "name": "조용히 하라!",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.静まれ",
+   "skillKey": "静まれ",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "임의 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "장수의 그릇",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>말이 통하는 NPC와 【TEC】 대항 판정, 이기면 그 NPC의 대화·행동을 일시적으로 중지시킨다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "EWUebU4TcMKP8im9",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "Czf04i9Qy2SfkEAC",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "AIrQlXTjtb0RTvlH",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ },
+ {
+  "id": "NIQL1s7COf3rmKlr",
+  "name": "속도 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ショーグン.速度ブースト",
+   "skillKey": "速度ブースト",
+   "classKey": "ショーグン",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【속도】 +(SL×3).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "장군"
+  }
+ }
+]

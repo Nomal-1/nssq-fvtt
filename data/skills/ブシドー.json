@@ -1,0 +1,1083 @@
+[
+ {
+  "id": "7PrVQbwYkDFIxIxU",
+  "name": "일도필살",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.一刀必殺",
+   "skillKey": "一刀必殺",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "-",
+   "category": "백병",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>크리티컬 히트 시, 통상 크리티컬 효과에 더해 대미지 다이스 +4개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "KAdPO9CiyiHHGISB",
+  "name": "도 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.刀マスタリー",
+   "skillKey": "刀マスタリー",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>도 사용 시 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "9mDJr2t8xI2dI2PB",
+  "name": "상단의 자세",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.上段の構え",
+   "skillKey": "上段の構え",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>해당 전투 동안 상단 계열 도 스킬 사용 가능. 【물리 공격】 +(SL). 이 보너스는 강화 효과가 아니며 해제되지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "NIkSGvkDc1ACD1EP",
+  "name": "참마",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.斬馬",
+   "skillKey": "斬馬",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "상단의 자세",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《상단의 자세》 상태 한정. 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "NzCLBDODusVnpVvd",
+  "name": "불꽃 떨구기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.卸し焔",
+   "skillKey": "卸し焔",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "상단의 자세",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《상단의 자세》 상태 한정. 〈참〉+〈염〉 속성 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "FP6KgW5yDedQ8cRe",
+  "name": "귀염참",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.鬼炎斬",
+   "skillKey": "鬼炎斬",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "불꽃 떨구기",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《상단의 자세》 상태 한정. 〈참〉+〈염〉 속성 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "UA5ze6rjRCqxWdc6",
+  "name": "제비 되치기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.ツバメ返し",
+   "skillKey": "ツバメ返し",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "상단의 자세",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《상단의 자세》 상태 한정. 물리 공격 롤 2회, 각각 대미지 다이스 +(SL×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "2SlKB36XISK9s3ey",
+  "name": "청안의 자세",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.青眼の構え",
+   "skillKey": "青眼の構え",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>해당 전투 동안 청안 계열 도 스킬 사용 가능. 【물리 방어】 +(SL). 이 보너스는 강화 효과가 아니며 해제되지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "6jAX7wXQiYbFh05V",
+  "name": "손목치기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.小手打ち",
+   "skillKey": "小手打ち",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "청안의 자세",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《청안의 자세》 상태 한정. 〈돌〉 속성 물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [팔] 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "9m8jPSiQXbP1dUR3",
+  "name": "찰나 간파",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.一寸の見切り",
+   "skillKey": "一寸の見切り",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "다리",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "청안의 자세",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《청안의 자세》 상태 한정. 【AGI】로 능동 회피, 달성값 +(SL-1).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "Ag3pc6AA3QrPirqz",
+  "name": "번갯불 찌르기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.雷耀突き",
+   "skillKey": "雷耀突き",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "청안의 자세",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《청안의 자세》 상태 한정. 〈돌〉+〈뇌〉 속성 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "WIQXT5Bhtw2PtjEW",
+  "name": "월영",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.月影",
+   "skillKey": "月影",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "손목치기",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《청안의 자세》 상태 한정. 〈돌〉 속성 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "FeLHwnvLOir1YJAR",
+  "name": "몽상검",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.夢想剣",
+   "skillKey": "夢想剣",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "청안의 자세",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《청안의 자세》 상태 한정. 사용 시 대기 상태가 된다. 대기 상태 중 자신이 물리 공격을 받으면 【AGI】로 능동 회피(달성값 +(SL-1)), 회피 성공 시 공격자에게 물리 공격으로 반격. 대기 상태는 턴 종료 시 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "MEQRl2wghWerIvLw",
+  "name": "발도의 자세",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.居合の構え",
+   "skillKey": "居合の構え",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>해당 전투 동안 거합 계열 도 스킬 사용 가능. 【속도】 +(SL×2). 이 보너스는 강화 효과가 아니며 해제되지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "Dou4uoP1rvdAASxY",
+  "name": "속공",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.早討ち",
+   "skillKey": "早討ち",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "특수",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "발도의 자세",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《발도의 자세》 상태 한정. 메인 페이즈 개시 시 사용 선언, 최속 행동으로 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "XJM63idwTubrvPVc",
+  "name": "발도 빙설",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.抜刀氷雪",
+   "skillKey": "抜刀氷雪",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "발도의 자세",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《발도의 자세》 상태 한정. 〈참〉+〈빙〉 속성 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "C7yEMi7d9zQZwHx5",
+  "name": "가마이타치",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.鎌鼬",
+   "skillKey": "鎌鼬",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "특수",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "속공",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《발도의 자세》 상태 한정. 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "SuunNlPLwLsKONWO",
+  "name": "세설",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.細雪",
+   "skillKey": "細雪",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "발도 빙설",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《발도의 자세》 상태 한정. 〈참〉+〈빙〉 속성 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "CcF2AVTE8gDsunRH",
+  "name": "일섬",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.一閃",
+   "skillKey": "一閃",
+   "classKey": "ブシドー",
+   "weaponReq": [
+    "도"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 열",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "도 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "발도의 자세",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《발도의 자세》 상태 한정. 물리 공격 롤, 대미지 다이스 +(SL×2)개. 명중 시 대상은 목표값 (공격자 【억제 공격】+(6+SL))의 억제 방어 롤, 실패하면 즉사.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "KNlNTCImpX0noHO6",
+  "name": "죽은 자의 법",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.死人の法",
+   "skillKey": "死人の法",
+   "classKey": "ブシドー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신에게 강화 효과 『물리 공격 상승: (SL+1)』과 약화 효과 『물리 방어 저하: (SL)』 부여. 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "3pPFvTPfGuaCLEa3",
+  "name": "불석신명",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.不惜身命",
+   "skillKey": "不惜身命",
+   "classKey": "ブシドー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>남은 【HP】가 절반 이하일 때 【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "MjnKsg5yaaAoa0df",
+  "name": "일의전심",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.一意専心",
+   "skillKey": "一意専心",
+   "classKey": "ブシドー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "죽은 자의 법",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 『백병』 공격은 항상 『크리티컬 업』 상태로 취급. 이는 강화 효과가 아니다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "5eykT6N0rASBRxYr",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ブシドー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "CRigRdNjd4geHFYE",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ブシドー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ },
+ {
+  "id": "2uQdgvBY6EVPnViX",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ブシドー.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "ブシドー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "무사"
+  }
+ }
+]

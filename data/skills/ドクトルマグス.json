@@ -1,0 +1,957 @@
+[
+ {
+  "id": "Hys1AMa73HBNkoYa",
+  "name": "음양검의 힘",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫剣の力",
+   "skillKey": "巫剣の力",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 1
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안 상태 이상이 없는 대상에게도 음양검 스킬의 추가 효과가 발동한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "AAcc3OMZqw6LFFuh",
+  "name": "검 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.剣マスタリー",
+   "skillKey": "剣マスタリー",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [
+    "검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>검 사용 시 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "QrHc8H2G03am1bCd",
+  "name": "회복 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.回復マスタリー",
+   "skillKey": "回復マスタリー",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 『회복』 스킬의 회복량 다이스 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "Fnh5PSEbGfWnbnZ0",
+  "name": "큐어",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.キュア",
+   "skillKey": "キュア",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>회복 롤, 회복량 다이스 +(SL+3).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "OyAiX7IwBKnhDK9G",
+  "name": "에어리어 큐어",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.エリアキュア",
+   "skillKey": "エリアキュア",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>회복 롤, 회복량 다이스 +(SL+3).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "ObLgOjTRqLqy4LSL",
+  "name": "힐링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.ヒーリング",
+   "skillKey": "ヒーリング",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "큐어",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>회복 롤, 회복량 다이스 +((SL+1)×3).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "Yd9jrqIKRPcR2pFQ",
+  "name": "파티 힐",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.パーティヒール",
+   "skillKey": "パーティヒール",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "에어리어 큐어",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>회복 롤, 회복량 다이스 +((SL+1)×3).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "TBhozMmNjGu9UWca",
+  "name": "풀 힐링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.フルヒーリング",
+   "skillKey": "フルヒーリング",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "힐링",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 전부 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "XgwEbSprVyqw2V3K",
+  "name": "음양검: 영봉참",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫剣霊封斬",
+   "skillKey": "巫剣霊封斬",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [
+    "검",
+    "지팡이"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《음양검: 영봉두참》《음양검: 영봉완참》《음양검: 영봉각참》 중 하나로 선언. 물리 공격 롤. 명중 시 대상이 상태 이상 중이면 목표값 (공격자 【억제 공격】+(8+SL))의 억제 방어 롤, 실패하면 선언한 [머리]/[팔]/[다리] 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "7ZJn3PutbKbPbuD5",
+  "name": "음양검: 영공쇠참",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫剣霊攻衰斬",
+   "skillKey": "巫剣霊攻衰斬",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [
+    "검",
+    "지팡이"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중 시 대상이 상태 이상 중이면 약화 효과 『물리 공격 저하: (SL)』.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "6F8VbCAvZz7x0Ka3",
+  "name": "음양검: 영방쇠참",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫剣霊防衰斬",
+   "skillKey": "巫剣霊防衰斬",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [
+    "검",
+    "지팡이"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중 시 대상이 상태 이상 중이면 약화 효과 『물리 방어 저하: (SL)』.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "M8GZjAwvdu5XwZEW",
+  "name": "음양검: 영흡명참",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫剣霊吸命斬",
+   "skillKey": "巫剣霊吸命斬",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [
+    "검",
+    "지팡이"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "음양검: 영공쇠참",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL)개. 명중 시 대상이 상태 이상 중이면 준 대미지의 절반만큼 자신 【HP】 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "RXz00bDLz63WkeHT",
+  "name": "음양검: 영흡심참",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫剣霊吸心斬",
+   "skillKey": "巫剣霊吸心斬",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [
+    "검",
+    "지팡이"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "음양검: 영방쇠참",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL)개. 명중 시 대상이 상태 이상 중이면 대미지 다이스 중 6이 나온 개수만큼 자신 【TP】 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "LCNu0RggMi1JwS1S",
+  "name": "음양검: 영공대참",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫剣霊攻大斬",
+   "skillKey": "巫剣霊攻大斬",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [
+    "검",
+    "지팡이"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중 시 대상이 상태 이상 중이면 이 공격은 무속성으로 취급하고, 이 공격에 한해 【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "9nZpNdYaaJZI8oBn",
+  "name": "음양술: 귀력화",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫術鬼力化",
+   "skillKey": "巫術鬼力化",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『물리 공격 상승: (SL×2)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "XCUR7Ty6x2tVItt0",
+  "name": "음양술: 피부 경화",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫術皮硬化",
+   "skillKey": "巫術皮硬化",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『물리 방어 상승: (SL+2)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "Tny82DOf1CwMYlh4",
+  "name": "음양술: 준족화",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫術俊足化",
+   "skillKey": "巫術俊足化",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『속도 상승: ((SL+1)×4)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "FbGLMOQNeP8WpRx7",
+  "name": "음양술: 정화",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫術祓化",
+   "skillKey": "巫術祓化",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상의 강화 효과를 최대 (SL)개 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "8HkrrQasI7IMg5ak",
+  "name": "음양술: 전환",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.巫術転化",
+   "skillKey": "巫術転化",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "회복 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "음양술: 정화",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상의 【TP】를 (SL+2) 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "JskqMdpG8IAfyUbP",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "ZeH5jejB9RR1mheW",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "QaWmACq0mnwVGDub",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ },
+ {
+  "id": "IIl61o0H6C74W62L",
+  "name": "억제 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ドクトルマグス.抑制防御ブースト",
+   "skillKey": "抑制防御ブースト",
+   "classKey": "ドクトルマグス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 방어】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "닥터 마구스"
+  }
+ }
+]

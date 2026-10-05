@@ -1,0 +1,945 @@
+[
+ {
+  "id": "NSgv8MeIrMeg7BRw",
+  "name": "원 샷 킬",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.ワンショットキル",
+   "skillKey": "ワンショットキル",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "사격",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>크리티컬 히트 시 대미지 다이스: 통상 크리티컬 효과 + 추가로 +4개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "JbfYZ8IiZhYoPmcJ",
+  "name": "활 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.弓マスタリー",
+   "skillKey": "弓マスタリー",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>활 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "CXtfKP2gGdSybIq8",
+  "name": "파워 샷",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.パワーショット",
+   "skillKey": "パワーショット",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "활 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL+1)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "CsboSsH19Ah0OQXL",
+  "name": "삼종 스나이핑",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.三種スナイプ",
+   "skillKey": "三種スナイプ",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활",
+    "총"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "총 마스터리",
+        "sl": 2
+       },
+       {
+        "skill": "활 마스터리",
+        "sl": 2
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 《헤드 스나이핑》《암 스나이핑》《레그 스나이핑》 중 하나로 선언. 물리 공격 롤 → 명중 시 대상은 억제 방어 롤(목표값: 공격자 【억제 공격】+(7+SL)), 실패하면 선언한 부위에 따라 [머리]/[팔]/[다리] 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "MEZtrQNt7FERNJqy",
+  "name": "바인드 스나이핑",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.バインドスナイプ",
+   "skillKey": "バインドスナイプ",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활",
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "활 마스터리",
+        "sl": 2
+       },
+       {
+        "skill": "쇠뇌 마스터리",
+        "sl": 2
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>후발 행동으로 발동. 메인 페이즈 종료 시점에 봉인(종류 불문)을 받고 있는 적 전원에게 물리 공격. 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "T5t4qAmUpodqZlKx",
+  "name": "배드 스나이핑",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.バッドスナイプ",
+   "skillKey": "バッドスナイプ",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활",
+    "쇠뇌"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "활 마스터리",
+        "sl": 2
+       },
+       {
+        "skill": "쇠뇌 마스터리",
+        "sl": 2
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>후발 행동으로 발동. 메인 페이즈 종료 시점에 상태 이상(종류 불문)을 받고 있는 적 전원에게 물리 공격. 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "JTdWH2TGYE9qkWV3",
+  "name": "풀메탈 애로",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.フルメタルアロー",
+   "skillKey": "フルメタルアロー",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 관통",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "활 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>적 전위 1체 + 후위 1체에게 물리 공격 롤. 대미지 다이스 -(3-SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "W2NmLAalIr1K4e1a",
+  "name": "실버 애로",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.シルバーアロー",
+   "skillKey": "シルバーアロー",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "활 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "풀메탈 애로",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL×2)개. 대미지 계산 시 대상의 『물리 방어 상승』·『내성 상승: 돌』 강화 효과 무시.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "HDsFb0bK7XXlBEjv",
+  "name": "임팩트 애로",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.インパクトアロー",
+   "skillKey": "インパクトアロー",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 관통",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "활 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "풀메탈 애로",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>적 전위 1체 + 후위 1체에게 물리 공격 롤. 대미지 다이스 +(SL×3)개. 사용 후 성공 여부와 관계없이 사용자가 [마비].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "L9TMrILnOLAdKncQ",
+  "name": "플랭크 샷",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.フランクショット",
+   "skillKey": "フランクショット",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "활 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>적 1열에 물리 공격 롤. 대미지 다이스 -(3-SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "XCF4VE2D2TyP0wFb",
+  "name": "스콜 샷",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.スコールショット",
+   "skillKey": "スコールショット",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "활 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 6회, 매회 대상은 적 전체 중 무작위. 명중 판정 눈 7 이하는 절대 실패. 명중 달성값 -5, 대미지 다이스 -(4-SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "RZ39FkglHPiABdQD",
+  "name": "헤븐즈 샷",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.ヘブンズショット",
+   "skillKey": "ヘブンズショット",
+   "classKey": "スナイパー",
+   "weaponReq": [
+    "활"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "활 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "삼종 스나이핑",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(대상이 받은 봉인 수×(SL+1))개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "EpdWgRchtGImfoZo",
+  "name": "록온",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.ロックオン",
+   "skillKey": "ロックオン",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『크리티컬 업』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "K88amS7zLVW6LF4O",
+  "name": "관측",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.観測",
+   "skillKey": "観測",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『명중 상승: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "ULAEkcNylEw3fBnz",
+  "name": "저격수의 극의",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.狙撃手の極意",
+   "skillKey": "狙撃手の極意",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "활 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "관측",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>봉인(종류 불문)을 받은 대상에 대한 공격 롤은 항상 『크리티컬 업』 상태로 취급.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "4x69DpBkD2rojVpU",
+  "name": "체이스 바인드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.チェイスバインド",
+   "skillKey": "チェイスバインド",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "물리 공격 부스트",
+      "sl": 2
+     },
+     {
+      "skill": "억제 공격 부스트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신의 주행동으로 봉인을 걸었을 때, 장비 무기가 '사격' 분류면 그 대상에게 통상 공격으로 추격.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "VhEpOhLjQqX9TOzp",
+  "name": "카무플라주",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.カモフラージュ",
+   "skillKey": "カモフラージュ",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>숨기·몰래 접근 등의 판정 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "98QjGcajNOK9ioPM",
+  "name": "스캐빈저",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.スカベンジャー",
+   "skillKey": "スカベンジャー",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "-",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>드롭 판정 달성값을 ±1 범위에서 임의 조정 가능.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "8rae9qweRCObo7H7",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "LdE2tm4FvJX4LEi0",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "BXlIzPk3jJxybcDq",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ },
+ {
+  "id": "6p1GKN4CYXaWJuZ5",
+  "name": "억제 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "スナイパー.抑制攻撃ブースト",
+   "skillKey": "抑制攻撃ブースト",
+   "classKey": "スナイパー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 공격】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "스나이퍼"
+  }
+ }
+]

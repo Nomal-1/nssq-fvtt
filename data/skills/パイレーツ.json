@@ -1,0 +1,1005 @@
+[
+ {
+  "id": "GBg5Em3z7q4j5OBa",
+  "name": "트릭스터",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.トリックスター",
+   "skillKey": "トリックスター",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 1
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>일반 행위 판정 후 성패를 본 뒤 주사위 눈을 뒤집을 수 있다(1↔6, 2↔5, 3↔4). 판정 주사위 2개 모두에 동시 적용.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "VitcJTGGPYSfRoIm",
+  "name": "세검 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.突剣マスタリー",
+   "skillKey": "突剣マスタリー",
+   "classKey": "パイレーツ",
+   "weaponReq": [
+    "세검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>세검 사용 시 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "UjHjNDP2czVNNzh3",
+  "name": "총 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.銃マスタリー",
+   "skillKey": "銃マスタリー",
+   "classKey": "パイレーツ",
+   "weaponReq": [
+    "총"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>총 사용 시 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "XXuRI9IdmxfbESH5",
+  "name": "인 더 다크",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.インザダーク",
+   "skillKey": "インザダーク",
+   "classKey": "パイレーツ",
+   "weaponReq": [
+    "세검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "세검 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [맹목].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "Dn4Qm7kretzYKcM5",
+  "name": "행잉",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.ハンギング",
+   "skillKey": "ハンギング",
+   "classKey": "パイレーツ",
+   "weaponReq": [
+    "세검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "세검 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [머리] 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "TmhHqltm1e09ulnz",
+  "name": "삼색 체이스(세검)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.三色チェイス突剣",
+   "skillKey": "三色チェイス突剣",
+   "classKey": "パイレーツ",
+   "weaponReq": [
+    "세검"
+   ],
+   "part": "팔",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "세검 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《체이스 세이버》《체이스 블로》《체이스 스러스트》 중 하나로 선언. 사용 시 대기 상태, 대기 중 적이 선언한 〈참〉/〈괴〉/〈돌〉을 포함한 공격을 받으면 그 적에게 물리 공격으로 추격(대미지 다이스 −(4−SL)개). 누계 3체 추격 또는 턴 종료 시 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "OEwjV5bdSmh7VNRg",
+  "name": "밀리언 스러스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.ミリオンスラスト",
+   "skillKey": "ミリオンスラスト",
+   "classKey": "パイレーツ",
+   "weaponReq": [
+    "세검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "세검 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 3회, 대미지 다이스 −(5−SL)개. 매 공격마다 대상은 적 전열 중 무작위.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "ZZee7WuSe8fXbQq7",
+  "name": "퀵 드로",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.クイックドロー",
+   "skillKey": "クイックドロー",
+   "classKey": "パイレーツ",
+   "weaponReq": [
+    "총"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "총 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 3회, 매 공격마다 대상은 적 중 무작위(같은 에너미는 1회까지만). 【물리 명중】 −3, 대미지 −(3−SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "M4s3MMVkVB9RXqrM",
+  "name": "래피드 파이어",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.ラピッドファイア",
+   "skillKey": "ラピッドファイア",
+   "classKey": "パイレーツ",
+   "weaponReq": [
+    "총"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "총 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상에게 물리 공격 롤 2회, 대미지 다이스 −(4−SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "1MCJVPBvNa4dVWUy",
+  "name": "삼색 체이스(총)",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.三色チェイス銃",
+   "skillKey": "三色チェイス銃",
+   "classKey": "パイレーツ",
+   "weaponReq": [
+    "총"
+   ],
+   "part": "팔",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "총 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《체이스 파이어》《체이스 아이스》《체이스 선더》 중 하나로 선언. 사용 시 대기 상태, 대기 중 적이 선언한 〈염〉/〈빙〉/〈뇌〉를 포함한 공격을 받으면 그 적에게 물리 공격으로 추격(대미지 다이스 −(4−SL)개). 누계 3체 추격 또는 턴 종료 시 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "5PTtS8ifBJU5pRpZ",
+  "name": "밀리언 불릿",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.ミリオンバレット",
+   "skillKey": "ミリオンバレット",
+   "classKey": "パイレーツ",
+   "weaponReq": [
+    "총"
+   ],
+   "part": "팔",
+   "category": "사격",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "총 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 3회, 대미지 다이스 −(5−SL)개. 매 공격마다 대상은 적 전체 중 무작위.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "Ltkd7D1Fc2GzHInv",
+  "name": "건 소드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.ガンソード",
+   "skillKey": "ガンソード",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "세검 마스터리",
+      "sl": 1
+     },
+     {
+      "skill": "총 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>세검과 총을 무기 슬롯·기타 슬롯에 나눠 장비하고, 통상 공격 때 각 무기로 1회씩 공격할 수 있다. 각 공격은 【물리 명중】 −3, 【물리 공격】 −(3−SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "aHchRmZsy4Msm68y",
+  "name": "전력 도주",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.全力逃走",
+   "skillKey": "全力逃走",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>도주 판정 시 선언, 도주 판정 달성값 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "5nAFq82LYpGDpDDJ",
+  "name": "아류 살법",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.我流殺法",
+   "skillKey": "我流殺法",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "세검 마스터리",
+      "sl": 2
+     },
+     {
+      "skill": "총 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>크리티컬 히트 시 스스로 물리 공격으로 추격. 주행동 1회당 1번만 발생.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "RJCLqWjIrOuJnJjb",
+  "name": "이글 아이",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.イーグルアイ",
+   "skillKey": "イーグルアイ",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약화 효과 『물리 방어 저하: (SL+1)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "GrrtMwpv21OFTTNu",
+  "name": "핫 스타트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.ホットスタート",
+   "skillKey": "ホットスタート",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>시나리오 시작 시 보유 FP +1.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "115T2mgDysToqMqf",
+  "name": "위험 감지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.危険感知",
+   "skillKey": "危険感知",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>다가오는 위험을 알아차리는 판정 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "ZpzTKUXapHawKNTV",
+  "name": "사략의 규율",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.私掠の掟",
+   "skillKey": "私掠の掟",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>드롭 판정 달성값을 ±(SL) 범위에서 자유롭게 조정할 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "2btkwsW8rlZPkAu8",
+  "name": "보물의 후각",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.宝の嗅覚",
+   "skillKey": "宝の嗅覚",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>채집 판정에서 같은 눈(더블)이 나오면 얻는 아이템 랭크 +1.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "XE80jn2fxSYO5Qjh",
+  "name": "행운의 여신",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.幸運の女神",
+   "skillKey": "幸運の女神",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【FP】로 일반 행위 판정을 다시 굴릴 때 달성값 +1.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "LRjqm2BGI0k4qBpL",
+  "name": "해적 수영법",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.海賊泳法",
+   "skillKey": "海賊泳法",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물에 빠져 익사하지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "VhcX4vehVtnOTwW0",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "Skt3Wm7HFrCqrafQ",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "UPYxO5yFeiXzNII8",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ },
+ {
+  "id": "3pB5uoWe2woPkOzg",
+  "name": "억제 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "パイレーツ.抑制攻撃ブースト",
+   "skillKey": "抑制攻撃ブースト",
+   "classKey": "パイレーツ",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 공격】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "파이리츠"
+  }
+ }
+]

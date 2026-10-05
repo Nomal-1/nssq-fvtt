@@ -1,0 +1,3642 @@
+[
+ {
+  "id": "1vHqbeKAbm0BSXku",
+  "name": "가위풍뎅이",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "はさみカブト",
+   "level": 2,
+   "rarity": 11,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 9,
+    "max": 9
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 0,
+    "evasion": 5,
+    "physAtk": 17,
+    "elemAtk": 0,
+    "defense": 10,
+    "suppAtk": 2,
+    "suppDef": 3,
+    "speed": 15
+   },
+   "resist": {
+    "slash": 4,
+    "strike": 3,
+    "pierce": 4,
+    "fire": 2,
+    "ice": 2,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": 8,
+     "item": "껍질",
+     "rank": 2
+    },
+    {
+     "min": 9,
+     "max": null,
+     "item": "칼날",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>앞발이 집게인 큰 갑충. 껍질은 칼도 튕기지만 물리 외 공격엔 약하다.</p>"
+  },
+  "items": [
+   {
+    "_id": "Ax2Mr4YL6xA5D1Z8",
+    "name": "거슬리는 날갯소리",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.はさみカブト.いらつく羽音",
+     "skillKey": "いらつく羽音",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "-",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [머리] 봉인을 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!1vHqbeKAbm0BSXku.Ax2Mr4YL6xA5D1Z8"
+   },
+   {
+    "_id": "1FjdwR0wEDTvsxaZ",
+    "name": "단단한 껍질",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.はさみカブト.堅殻",
+     "skillKey": "堅殻",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "개막",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>『방어 상승: 2』 강화 효과를 부여한다. 3턴 지속된다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!1vHqbeKAbm0BSXku.1FjdwR0wEDTvsxaZ"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=201",
+   "jp": "はさみカブト"
+  }
+ },
+ {
+  "id": "KJE3JPG8ftpdo9iz",
+  "name": "독 뿜는 호랑나비",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "毒噴きアゲハ",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 7,
+    "max": 7
+   },
+   "stats": {
+    "physHit": 5,
+    "elemHit": 0,
+    "evasion": 9,
+    "physAtk": 14,
+    "elemAtk": 0,
+    "defense": 5,
+    "suppAtk": 5,
+    "suppDef": 5,
+    "speed": 19
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 2,
+    "fire": 2,
+    "ice": 3,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": null,
+     "item": "날개·깃털",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>검보라 날개의 호랑나비. 얕봤다가 독 인분에 당하는 초보가 많다.</p>"
+  },
+  "items": [
+   {
+    "_id": "9cfLrL5kaJu0cCn5",
+    "name": "독 인분",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.毒噴きアゲハ.毒リンプン",
+     "skillKey": "毒リンプン",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [독]을 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!KJE3JPG8ftpdo9iz.9cfLrL5kaJu0cCn5"
+   },
+   {
+    "_id": "TOYyZbjrRuBpCVVf",
+    "name": "완전 내성: 독",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.毒噴きアゲハ.完全耐性.poison",
+     "skillKey": "完全耐性.poison",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[독]을 받지 않게 된다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!KJE3JPG8ftpdo9iz.TOYyZbjrRuBpCVVf"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=202",
+   "jp": "毒噴きアゲハ"
+  }
+ },
+ {
+  "id": "Xip3z9ThebqEUPpC",
+  "name": "스라소니",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "オオヤマネコ",
+   "level": 2,
+   "rarity": 11,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 10,
+    "max": 10
+   },
+   "stats": {
+    "physHit": 7,
+    "elemHit": 0,
+    "evasion": 8,
+    "physAtk": 20,
+    "elemAtk": 0,
+    "defense": 6,
+    "suppAtk": 2,
+    "suppDef": 3,
+    "speed": 22
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 3,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": null,
+     "item": "발톱",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>초보 모험가를 가장 많이 죽인다는 맹수. 숙련자에겐 위협이 못 된다.</p>"
+  },
+  "items": [
+   {
+    "_id": "R4iEK7Oji41nmezW",
+    "name": "물어뜯기",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.オオヤマネコ.食いちぎり",
+     "skillKey": "食いちぎり",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 이때 명중 판정의 달성값에 −2, 대미지 다이스 +6개를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Xip3z9ThebqEUPpC.R4iEK7Oji41nmezW"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=203",
+   "jp": "オオヤマネコ"
+  }
+ },
+ {
+  "id": "VthEA1zVPAROc3xs",
+  "name": "거대지네",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "巨大ムカデ",
+   "level": 2,
+   "rarity": 13,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 12,
+    "max": 12
+   },
+   "stats": {
+    "physHit": 7,
+    "elemHit": 0,
+    "evasion": 7,
+    "physAtk": 20,
+    "elemAtk": 0,
+    "defense": 7,
+    "suppAtk": 5,
+    "suppDef": 4,
+    "speed": 15
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 3,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": null,
+     "item": "이빨",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>2미터 넘는 지네. 밤에 덮쳐 휘감고 독을 넣은 뒤 천천히 먹는다.</p>"
+  },
+  "items": [
+   {
+    "_id": "3PuIbbjchTeGrHEH",
+    "name": "독물기",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.巨大ムカデ.毒咬み",
+     "skillKey": "毒咬み",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [독]을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!VthEA1zVPAROc3xs.3PuIbbjchTeGrHEH"
+   },
+   {
+    "_id": "8dhlEMX3886SWY9Q",
+    "name": "백족 구속",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.巨大ムカデ.百足拘束",
+     "skillKey": "百足拘束",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "-",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [팔][다리] 봉인을 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!VthEA1zVPAROc3xs.8dhlEMX3886SWY9Q"
+   },
+   {
+    "_id": "NbxUxKmjXzmH3WbB",
+    "name": "내성: 독",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.巨大ムカデ.耐性.poison",
+     "skillKey": "耐性.poison",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[독]에 대한 억제 방어 롤에 항상 +2를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!VthEA1zVPAROc3xs.NbxUxKmjXzmH3WbB"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=204",
+   "jp": "巨大ムカデ"
+  }
+ },
+ {
+  "id": "30814wUWUZS3b6Cp",
+  "name": "비크 빌",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "ビックビル",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 12,
+    "max": 12
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 0,
+    "evasion": 6,
+    "physAtk": 22,
+    "elemAtk": 0,
+    "defense": 8,
+    "suppAtk": 2,
+    "suppDef": 3,
+    "speed": 16
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 4,
+    "ice": 3,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 10,
+     "item": "날개·깃털",
+     "rank": 2
+    },
+    {
+     "min": 11,
+     "max": null,
+     "item": "뼈",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>뚱뚱한 거대 괴조. 위에서 덮쳐 큰 부리로 사람도 삼킨다.</p>"
+  },
+  "items": [
+   {
+    "_id": "CrSVe1IlapASJlws",
+    "name": "점핑",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ビックビル.ジャンピング",
+     "skillKey": "ジャンピング",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!30814wUWUZS3b6Cp.CrSVe1IlapASJlws"
+   },
+   {
+    "_id": "9uW1odU6og2v5bbK",
+    "name": "대식가",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ビックビル.大食らい",
+     "skillKey": "大食らい",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 이때 명중 판정의 달성값에 −2, 대미지 다이스 +6개를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!30814wUWUZS3b6Cp.9uW1odU6og2v5bbK"
+   },
+   {
+    "_id": "Uebrfsb8YvkwIy6n",
+    "name": "주행성",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ビックビル.昼行性",
+     "skillKey": "昼行性",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>밤에는 모든 행위 판정에 −2의 수정을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!30814wUWUZS3b6Cp.Uebrfsb8YvkwIy6n"
+   },
+   {
+    "_id": "WR158oHSsyLXIaNJ",
+    "name": "약점: 맹목",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ビックビル.弱点.blind",
+     "skillKey": "弱点.blind",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[맹목]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!30814wUWUZS3b6Cp.WR158oHSsyLXIaNJ"
+   },
+   {
+    "_id": "5fBVUiLqD58uaFK6",
+    "name": "약점: 머리",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ビックビル.弱点.bindHead",
+     "skillKey": "弱点.bindHead",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[머리] 봉인에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!30814wUWUZS3b6Cp.5fBVUiLqD58uaFK6"
+   },
+   {
+    "_id": "YaL38M5YPbQKxZau",
+    "name": "약점: 다리",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ビックビル.弱点.bindLeg",
+     "skillKey": "弱点.bindLeg",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[다리] 봉인에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!30814wUWUZS3b6Cp.YaL38M5YPbQKxZau"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=205",
+   "jp": "ビックビル"
+  }
+ },
+ {
+  "id": "ActoXVWsUdsZsVzN",
+  "name": "난폭한 비비",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "荒くれ狒々",
+   "level": 2,
+   "rarity": 13,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 11,
+    "max": 11
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 0,
+    "evasion": 7,
+    "physAtk": 19,
+    "elemAtk": 0,
+    "defense": 6,
+    "suppAtk": 3,
+    "suppDef": 4,
+    "speed": 17
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 3,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 6,
+     "max": 9,
+     "item": "뼈",
+     "rank": 2
+    },
+    {
+     "min": 10,
+     "max": null,
+     "item": "모피",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>숲의 힘센 비비. 흥분하면 돌을 마구 던진다.</p>"
+  },
+  "items": [
+   {
+    "_id": "6MSbbmimv6cHMTkv",
+    "name": "돌팔매",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.荒くれ狒々.つぶて投げ",
+     "skillKey": "つぶて投げ",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "사격",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!ActoXVWsUdsZsVzN.6MSbbmimv6cHMTkv"
+   },
+   {
+    "_id": "7SnYttfi1yOaDHf7",
+    "name": "약점: 혼란",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.荒くれ狒々.弱点.confuse",
+     "skillKey": "弱点.confuse",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[혼란]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!ActoXVWsUdsZsVzN.7SnYttfi1yOaDHf7"
+   },
+   {
+    "_id": "Styhlbcfco97syS8",
+    "name": "약점: 팔",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.荒くれ狒々.弱点.bindArm",
+     "skillKey": "弱点.bindArm",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[팔] 봉인에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!ActoXVWsUdsZsVzN.Styhlbcfco97syS8"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=206",
+   "jp": "荒くれ狒々"
+  }
+ },
+ {
+  "id": "aDozrgMbDOxeahlF",
+  "name": "데스 스토커",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "デスストーカー",
+   "level": 2,
+   "rarity": 13,
+   "attackElements": [
+    "pierce"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 9,
+    "max": 9
+   },
+   "stats": {
+    "physHit": 7,
+    "elemHit": 0,
+    "evasion": 8,
+    "physAtk": 18,
+    "elemAtk": 0,
+    "defense": 7,
+    "suppAtk": 5,
+    "suppDef": 4,
+    "speed": 21
+   },
+   "resist": {
+    "slash": 4,
+    "strike": 3,
+    "pierce": 4,
+    "fire": 3,
+    "ice": 2,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": 9,
+     "item": "가시",
+     "rank": 2
+    },
+    {
+     "min": 10,
+     "max": null,
+     "item": "껍질",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>소리 없이 다가와 마비독 꼬리로 찌르는 거대 전갈.</p>"
+  },
+  "items": [
+   {
+    "_id": "QMaOvmT0Auy5ZdQw",
+    "name": "마비 찌르기",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.デスストーカー.痺れ突き",
+     "skillKey": "痺れ突き",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [마비]를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!aDozrgMbDOxeahlF.QMaOvmT0Auy5ZdQw"
+   },
+   {
+    "_id": "JmdL9guo0D7evPxc",
+    "name": "약점: 석화",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.デスストーカー.弱点.petrify",
+     "skillKey": "弱点.petrify",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[석화]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!aDozrgMbDOxeahlF.JmdL9guo0D7evPxc"
+   },
+   {
+    "_id": "TzV9cRL3gc211I32",
+    "name": "내성: 마비",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.デスストーカー.耐性.paralyze",
+     "skillKey": "耐性.paralyze",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[마비]에 대한 억제 방어 롤에 항상 +2를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!aDozrgMbDOxeahlF.TzV9cRL3gc211I32"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=207",
+   "jp": "デスストーカー"
+  }
+ },
+ {
+  "id": "M7wRu4qy1dB5FrKl",
+  "name": "최면올빼미",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "サイミンフクロウ",
+   "level": 2,
+   "rarity": 13,
+   "attackElements": [
+    "pierce"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 8,
+    "max": 8
+   },
+   "stats": {
+    "physHit": 5,
+    "elemHit": 0,
+    "evasion": 9,
+    "physAtk": 14,
+    "elemAtk": 0,
+    "defense": 5,
+    "suppAtk": 5,
+    "suppDef": 5,
+    "speed": 17
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 2,
+    "fire": 3,
+    "ice": 3,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": 9,
+     "item": "날개·깃털",
+     "rank": 2
+    },
+    {
+     "min": 10,
+     "max": null,
+     "item": "뼈",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>기묘한 무늬의 올빼미. 잠드는 가루를 뿌려 몸을 지킨다.</p>"
+  },
+  "items": [
+   {
+    "_id": "28upK1ussHunjw1E",
+    "name": "수면 가루",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.サイミンフクロウ.眠りの粉",
+     "skillKey": "眠りの粉",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [수면]을 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!M7wRu4qy1dB5FrKl.28upK1ussHunjw1E"
+   },
+   {
+    "_id": "YDsTohwuUqndde6J",
+    "name": "내성: 혼란",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.サイミンフクロウ.耐性.confuse",
+     "skillKey": "耐性.confuse",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[혼란]에 대한 억제 방어 롤에 항상 +2를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!M7wRu4qy1dB5FrKl.YDsTohwuUqndde6J"
+   },
+   {
+    "_id": "EhOvaNrmSdaANNHc",
+    "name": "완전 내성: 수면",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.サイミンフクロウ.完全耐性.sleep",
+     "skillKey": "完全耐性.sleep",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[수면]을 받지 않게 된다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!M7wRu4qy1dB5FrKl.EhOvaNrmSdaANNHc"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=208",
+   "jp": "サイミンフクロウ"
+  }
+ },
+ {
+  "id": "VwK7WHWiUg1d8IR1",
+  "name": "이블 피시",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "イビルフィッシュ",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 9,
+    "max": 9
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 0,
+    "evasion": 8,
+    "physAtk": 19,
+    "elemAtk": 0,
+    "defense": 6,
+    "suppAtk": 3,
+    "suppDef": 5,
+    "speed": 16
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 2,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 3,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 8,
+     "item": "비늘",
+     "rank": 2
+    },
+    {
+     "min": 9,
+     "max": null,
+     "item": "이빨",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>물어뜯치의 친척인 보라 비늘 물고기. 초음파로 무리를 지휘하는 우두머리.</p>"
+  },
+  "items": [
+   {
+    "_id": "6TR0FDlHu6wj3zkn",
+    "name": "예리한 송곳니",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.イビルフィッシュ.鋭い牙",
+     "skillKey": "鋭い牙",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 이때 명중 판정의 달성값에 −2, 대미지 다이스 +2개를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!VwK7WHWiUg1d8IR1.6TR0FDlHu6wj3zkn"
+   },
+   {
+    "_id": "H8AJfWxq3KCjXvR2",
+    "name": "흉어의 향연",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.イビルフィッシュ.凶魚の饗宴",
+     "skillKey": "凶魚の饗宴",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신과 같은 열에 물어뜯치가 2마리 이상 있을 때 사용할 수 있는 연계 공격. 적 전열 전원을 대상으로 한 물리 공격 롤을 한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!VwK7WHWiUg1d8IR1.H8AJfWxq3KCjXvR2"
+   },
+   {
+    "_id": "PuQSFFA2LiTelW0p",
+    "name": "약점: 마비",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.イビルフィッシュ.弱点.paralyze",
+     "skillKey": "弱点.paralyze",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[마비]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!VwK7WHWiUg1d8IR1.PuQSFFA2LiTelW0p"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=209",
+   "jp": "イビルフィッシュ"
+  }
+ },
+ {
+  "id": "Dh53aPcaJPx5600H",
+  "name": "춤추는 무지개도마뱀",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "踊る虹蜥蜴",
+   "level": 2,
+   "rarity": 14,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 8,
+    "max": 8
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 6,
+    "evasion": 9,
+    "physAtk": 13,
+    "elemAtk": 6,
+    "defense": 6,
+    "suppAtk": 3,
+    "suppDef": 5,
+    "speed": 20
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 5,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": 6,
+     "item": "가죽",
+     "rank": 2
+    },
+    {
+     "min": 7,
+     "max": null,
+     "item": "비늘",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>몸 색을 바꿔 숨는 도마뱀. 비웃듯 춤추는 몸짓 때문에 미움받는다.</p>"
+  },
+  "items": [
+   {
+    "_id": "X80Cp8wNV7g8L0wZ",
+    "name": "무지개 미채",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.踊る虹蜥蜴.虹色迷彩",
+     "skillKey": "虹色迷彩",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "개막",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>『회피 상승: 3』 강화 효과를 부여한다. 3턴 지속된다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Dh53aPcaJPx5600H.X80Cp8wNV7g8L0wZ"
+   },
+   {
+    "_id": "Y1e1zH5KmmUzGBGA",
+    "name": "아이시클",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.踊る虹蜥蜴.アイシクル",
+     "skillKey": "アイシクル",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "술식",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>〈빙〉 속성 공격을 한다. 또한 이때 추가 대미지 다이스 +1개를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Dh53aPcaJPx5600H.Y1e1zH5KmmUzGBGA"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=210",
+   "jp": "踊る虹蜥蜴"
+  }
+ },
+ {
+  "id": "RZS8T8rYgwxaJmc3",
+  "name": "무는 풀",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "噛みつき草",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 9,
+    "max": 9
+   },
+   "stats": {
+    "physHit": 7,
+    "elemHit": 0,
+    "evasion": 7,
+    "physAtk": 17,
+    "elemAtk": 0,
+    "defense": 6,
+    "suppAtk": 5,
+    "suppDef": 4,
+    "speed": 16
+   },
+   "resist": {
+    "slash": 2,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 3,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 7,
+     "item": "풀",
+     "rank": 2
+    },
+    {
+     "min": 8,
+     "max": null,
+     "item": "덩굴",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>육식으로 진화한 식물. 지나가는 먹이를 휘감고 문다.</p>"
+  },
+  "items": [
+   {
+    "_id": "NdPqOQQaGHUlUx1i",
+    "name": "맹목의 가시",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.噛みつき草.盲目のトゲ",
+     "skillKey": "盲目のトゲ",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [맹목]을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!RZS8T8rYgwxaJmc3.NdPqOQQaGHUlUx1i"
+   },
+   {
+    "_id": "ArRbNbrm8UoHihu9",
+    "name": "수갑 덩굴",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.噛みつき草.手枷のツタ",
+     "skillKey": "手枷のツタ",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "술식",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [팔] 봉인을 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!RZS8T8rYgwxaJmc3.ArRbNbrm8UoHihu9"
+   },
+   {
+    "_id": "XIVKIeTga7wVPEhn",
+    "name": "족쇄의 덩굴",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.噛みつき草.足枷のツタ",
+     "skillKey": "足枷のツタ",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "술식",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [다리] 봉인을 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!RZS8T8rYgwxaJmc3.XIVKIeTga7wVPEhn"
+   },
+   {
+    "_id": "2RM3aUwAuWu1ctU7",
+    "name": "내성: 맹목",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.噛みつき草.耐性.blind",
+     "skillKey": "耐性.blind",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[맹목]에 대한 억제 방어 롤에 항상 +2를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!RZS8T8rYgwxaJmc3.2RM3aUwAuWu1ctU7"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=211",
+   "jp": "噛みつき草"
+  }
+ },
+ {
+  "id": "ZNXG1cNnQMtsfng0",
+  "name": "거대아나콘다",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "オオアナコンダ",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 9,
+    "max": 9
+   },
+   "stats": {
+    "physHit": 7,
+    "elemHit": 0,
+    "evasion": 9,
+    "physAtk": 18,
+    "elemAtk": 0,
+    "defense": 6,
+    "suppAtk": 5,
+    "suppDef": 4,
+    "speed": 23
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 2,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 7,
+     "item": "비늘",
+     "rank": 2
+    },
+    {
+     "min": 8,
+     "max": null,
+     "item": "이빨",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>이빨과 발톱을 지닌 뱀. 매복했다가 재빨리 졸라 죽인다.</p>"
+  },
+  "items": [
+   {
+    "_id": "CQ8LpKTiPW9K941J",
+    "name": "조르기",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.オオアナコンダ.絞め落とし",
+     "skillKey": "絞め落とし",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [스턴]을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!ZNXG1cNnQMtsfng0.CQ8LpKTiPW9K941J"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=212",
+   "jp": "オオアナコンダ"
+  }
+ },
+ {
+  "id": "FtC4LvBDhGHBbDaJ",
+  "name": "산고래",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "ヤマクジラ",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "pierce"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 12,
+    "max": 12
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 0,
+    "evasion": 6,
+    "physAtk": 20,
+    "elemAtk": 0,
+    "defense": 7,
+    "suppAtk": 3,
+    "suppDef": 4,
+    "speed": 18
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 4,
+    "fire": 2,
+    "ice": 4,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 7,
+     "item": "가죽",
+     "rank": 2
+    },
+    {
+     "min": 8,
+     "max": 8,
+     "item": "고기",
+     "rank": null
+    },
+    {
+     "min": 9,
+     "max": null,
+     "item": "이빨",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>엄니가 긴 근육질 멧돼지 같은 산짐승. 흥분하면 마구 돌진한다. 고기는 질기지만 먹을 만하다.</p>"
+  },
+  "items": [
+   {
+    "_id": "FDhiT32gqvOyy9jN",
+    "name": "떠올리기",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ヤマクジラ.しゃくりあげ",
+     "skillKey": "しゃくりあげ",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>〈돌〉 속성의 물리 공격을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 강제로 후위로 이동한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!FtC4LvBDhGHBbDaJ.FDhiT32gqvOyy9jN"
+   },
+   {
+    "_id": "1J5dcInLAXazgGYk",
+    "name": "저돌희용",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ヤマクジラ.猪突猛進",
+     "skillKey": "猪突猛進",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "특수",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>3회의 〈돌〉 속성 물리 공격 롤을 한다. 이때 대상은 공격 1회마다 적 중에서 무작위로 선택한다. 또한 이때 【물리 명중】에 −5를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!FtC4LvBDhGHBbDaJ.1J5dcInLAXazgGYk"
+   },
+   {
+    "_id": "FKcoqZ8gjGjIZZfJ",
+    "name": "약점: 맹목",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ヤマクジラ.弱点.blind",
+     "skillKey": "弱点.blind",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[맹목]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!FtC4LvBDhGHBbDaJ.FKcoqZ8gjGjIZZfJ"
+   },
+   {
+    "_id": "D26MmcKyVeoOKm9K",
+    "name": "약점: 머리",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ヤマクジラ.弱点.bindHead",
+     "skillKey": "弱点.bindHead",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[머리] 봉인에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!FtC4LvBDhGHBbDaJ.D26MmcKyVeoOKm9K"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=213",
+   "jp": "ヤマクジラ"
+  }
+ },
+ {
+  "id": "L2SncexdkAK2w9gS",
+  "name": "마하 다람쥐",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "マッハロリス",
+   "level": 2,
+   "rarity": 13,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 8,
+    "max": 8
+   },
+   "stats": {
+    "physHit": 7,
+    "elemHit": 0,
+    "evasion": 10,
+    "physAtk": 14,
+    "elemAtk": 0,
+    "defense": 4,
+    "suppAtk": 5,
+    "suppDef": 5,
+    "speed": 25
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 2,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": 8,
+     "item": "발톱",
+     "rank": 2
+    },
+    {
+     "min": 9,
+     "max": null,
+     "item": "모피",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>날렵하고 교활한 다람쥐원숭이. 얼굴을 할퀴고 위급하면 독을 뿜는다.</p>"
+  },
+  "items": [
+   {
+    "_id": "3aoCqME1B5jE7cdr",
+    "name": "얼굴 할퀴기",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.マッハロリス.顔面ひっかき",
+     "skillKey": "顔面ひっかき",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [머리] 봉인을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!L2SncexdkAK2w9gS.3aoCqME1B5jE7cdr"
+   },
+   {
+    "_id": "TejUAAIgUT6VjrZ3",
+    "name": "독샘",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.マッハロリス.毒の腺",
+     "skillKey": "毒の腺",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "-",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [독]을 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!L2SncexdkAK2w9gS.TejUAAIgUT6VjrZ3"
+   },
+   {
+    "_id": "UMhCNj1jZM2k6PUG",
+    "name": "마하 스텝",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.マッハロリス.マッハステップ",
+     "skillKey": "マッハステップ",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "-",
+     "timing": "수동",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>(【회피】−5)에 의한 능동 회피를 한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!L2SncexdkAK2w9gS.UMhCNj1jZM2k6PUG"
+   },
+   {
+    "_id": "EroEPmja07ox4nWO",
+    "name": "약점: 다리",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.マッハロリス.弱点.bindLeg",
+     "skillKey": "弱点.bindLeg",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[다리] 봉인에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!L2SncexdkAK2w9gS.EroEPmja07ox4nWO"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=214",
+   "jp": "マッハロリス"
+  }
+ },
+ {
+  "id": "CdV2WTeVXTFiOB3B",
+  "name": "와일드 윙",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "ワイルドウィング",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "pierce"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 10,
+    "max": 10
+   },
+   "stats": {
+    "physHit": 7,
+    "elemHit": 0,
+    "evasion": 10,
+    "physAtk": 18,
+    "elemAtk": 0,
+    "defense": 6,
+    "suppAtk": 3,
+    "suppDef": 4,
+    "speed": 21
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 2,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": 8,
+     "item": "날개·깃털",
+     "rank": 2
+    },
+    {
+     "min": 9,
+     "max": null,
+     "item": "뼈",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>나는 육식 공룡. 부리는 쇠도 뚫지만 추위에 약하다.</p>"
+  },
+  "items": [
+   {
+    "_id": "DitbJv80mb3tCQTN",
+    "name": "러시 비크",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ワイルドウィング.ラッシュビーク",
+     "skillKey": "ラッシュビーク",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "특수",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>3회의 〈돌〉 속성 물리 공격 롤을 한다. 이때 대상은 공격 1회마다 적 중에서 무작위로 선택한다. 또한 이때 【물리 명중】에 −3을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!CdV2WTeVXTFiOB3B.DitbJv80mb3tCQTN"
+   },
+   {
+    "_id": "CjYPLghbkxbKCTWM",
+    "name": "약점: 맹목",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ワイルドウィング.弱点.blind",
+     "skillKey": "弱点.blind",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[맹목]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!CdV2WTeVXTFiOB3B.CjYPLghbkxbKCTWM"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=215",
+   "jp": "ワイルドウィング"
+  }
+ },
+ {
+  "id": "Y8beYtW24fAiY9qA",
+  "name": "워보어",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "ワーボア",
+   "level": 2,
+   "rarity": 13,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 11,
+    "max": 11
+   },
+   "stats": {
+    "physHit": 7,
+    "elemHit": 0,
+    "evasion": 8,
+    "physAtk": 20,
+    "elemAtk": 0,
+    "defense": 7,
+    "suppAtk": 3,
+    "suppDef": 5,
+    "speed": 16
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 3,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": null,
+     "item": "금속",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>멧돼지 머리에 칼을 든 아인. 성질이 거칠어 보이는 대로 덤빈다.</p>"
+  },
+  "items": [
+   {
+    "_id": "7UdImlI5NItWMtuz",
+    "name": "힘 모으기",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ワーボア.力溜め",
+     "skillKey": "力溜め",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "개막",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>그 턴의 자신의 행동을 후발 행동 취급으로 하고, 그때의 공격력에 +10을 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Y8beYtW24fAiY9qA.7UdImlI5NItWMtuz"
+   },
+   {
+    "_id": "RPtwcDgu9TTwJx5R",
+    "name": "약점: 맹목",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ワーボア.弱点.blind",
+     "skillKey": "弱点.blind",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[맹목]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Y8beYtW24fAiY9qA.RPtwcDgu9TTwJx5R"
+   },
+   {
+    "_id": "18GiH7xd72QdOYtL",
+    "name": "내성: 수면",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ワーボア.耐性.sleep",
+     "skillKey": "耐性.sleep",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[수면]에 대한 억제 방어 롤에 항상 +2를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Y8beYtW24fAiY9qA.18GiH7xd72QdOYtL"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=216",
+   "jp": "ワーボア"
+  }
+ },
+ {
+  "id": "Csxl0xTz3Nwnq7ke",
+  "name": "참개구리",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "トノサマカエル",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 12,
+    "max": 12
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 0,
+    "evasion": 8,
+    "physAtk": 15,
+    "elemAtk": 0,
+    "defense": 8,
+    "suppAtk": 4,
+    "suppDef": 3,
+    "speed": 18
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 2,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": null,
+     "item": "가죽",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>삼림 개구리보다 큰 우두머리 개구리. 덮치기가 강렬하다.</p>"
+  },
+  "items": [
+   {
+    "_id": "WVsm9G6y4LCHNuXz",
+    "name": "늘어나는 혀",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.トノサマカエル.伸びる舌",
+     "skillKey": "伸びる舌",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [팔] 봉인을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Csxl0xTz3Nwnq7ke.WVsm9G6y4LCHNuXz"
+   },
+   {
+    "_id": "VpfmU8O2U9YO1nrn",
+    "name": "점핑",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.トノサマカエル.ジャンピング",
+     "skillKey": "ジャンピング",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!Csxl0xTz3Nwnq7ke.VpfmU8O2U9YO1nrn"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=217",
+   "jp": "トノサマカエル"
+  }
+ },
+ {
+  "id": "47LVKpIRoAkCMGWz",
+  "name": "화염도마뱀",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "火炎トカゲ",
+   "level": 2,
+   "rarity": 13,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 9,
+    "max": 9
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 7,
+    "evasion": 8,
+    "physAtk": 12,
+    "elemAtk": 8,
+    "defense": 5,
+    "suppAtk": 3,
+    "suppDef": 4,
+    "speed": 16
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 6,
+    "ice": 2,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": 7,
+     "item": "발톱",
+     "rank": 2
+    },
+    {
+     "min": 8,
+     "max": null,
+     "item": "비늘",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>불을 뿜는 도마뱀. 길들이는 사람도 생겼다.</p>"
+  },
+  "items": [
+   {
+    "_id": "rtUJb0zmXot4b8Lm",
+    "name": "화염탄",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.火炎トカゲ.火炎弾",
+     "skillKey": "火炎弾",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "술식",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>〈염〉 속성 공격을 한다. 또한 이때 추가 대미지 다이스 +1개를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!47LVKpIRoAkCMGWz.rtUJb0zmXot4b8Lm"
+   },
+   {
+    "_id": "H2vRR2hYHstB8Le1",
+    "name": "내성: 마비",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.火炎トカゲ.耐性.paralyze",
+     "skillKey": "耐性.paralyze",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "-",
+     "category": "-",
+     "timing": "상시",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>[마비]에 대한 억제 방어 롤에 항상 +2를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!47LVKpIRoAkCMGWz.H2vRR2hYHstB8Le1"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=218",
+   "jp": "火炎トカゲ"
+  }
+ },
+ {
+  "id": "MU2vT98Avoh17aTz",
+  "name": "대왕달팽이",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "マイマイダイオウ",
+   "level": 2,
+   "rarity": 11,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 13,
+    "max": 13
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 0,
+    "evasion": 5,
+    "physAtk": 15,
+    "elemAtk": 0,
+    "defense": 10,
+    "suppAtk": 3,
+    "suppDef": 4,
+    "speed": 10
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 3,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 8,
+     "item": "껍질",
+     "rank": 2
+    },
+    {
+     "min": 9,
+     "max": null,
+     "item": "금속",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>숲달팽이 무리의 왕. 금속질 껍질이라 더 단단하고 세다.</p>"
+  },
+  "items": [
+   {
+    "_id": "4x2aoOj8qNGq8BIG",
+    "name": "단단한 껍질",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.マイマイダイオウ.堅殻",
+     "skillKey": "堅殻",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "개막",
+     "range": "-",
+     "target": "자신",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>『방어 상승: 2』 강화 효과를 부여한다. 3턴 지속된다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!MU2vT98Avoh17aTz.4x2aoOj8qNGq8BIG"
+   },
+   {
+    "_id": "QjmyNJgJ1NtPp9EF",
+    "name": "용해액",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.マイマイダイオウ.溶解液",
+     "skillKey": "溶解液",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "사격",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>무속성의 속성 공격을 한다. 이때 공격력을 본래의 절반으로 취급한다. 명중하면 대상은 『물리 방어 저하: 3』 약화 효과를 받는다. 3턴 지속된다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!MU2vT98Avoh17aTz.QjmyNJgJ1NtPp9EF"
+   },
+   {
+    "_id": "Ke2w6j3UbYoLrbcA",
+    "name": "달팽이 행진",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.マイマイダイオウ.マイマイマーチ",
+     "skillKey": "マイマイマーチ",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 열",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신과 같은 열에 숲달팽이가 2마리 이상 있을 때 사용할 수 있는 연계 공격. 적 전열 전원을 대상으로 한 물리 공격 롤을 한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!MU2vT98Avoh17aTz.Ke2w6j3UbYoLrbcA"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=219",
+   "jp": "マイマイダイオウ"
+  }
+ },
+ {
+  "id": "BIRzTll5WgT7FSxr",
+  "name": "베놈 스파이더",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "ベノムスパイダー",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 10,
+    "max": 10
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 0,
+    "evasion": 9,
+    "physAtk": 15,
+    "elemAtk": 0,
+    "defense": 6,
+    "suppAtk": 5,
+    "suppDef": 4,
+    "speed": 21
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 3,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": null,
+     "item": "실",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>거미줄을 치기보다 직접 사냥하러 다니는 거미.</p>"
+  },
+  "items": [
+   {
+    "_id": "8YVW8i9oCIMkCumh",
+    "name": "독물기",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ベノムスパイダー.毒咬み",
+     "skillKey": "毒咬み",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [독]을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!BIRzTll5WgT7FSxr.8YVW8i9oCIMkCumh"
+   },
+   {
+    "_id": "2YtbHlL8cx7TybH2",
+    "name": "포식의 실",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ベノムスパイダー.捕食の糸",
+     "skillKey": "捕食の糸",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "다리",
+     "category": "-",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [팔] 봉인을 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!BIRzTll5WgT7FSxr.2YtbHlL8cx7TybH2"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=220",
+   "jp": "ベノムスパイダー"
+  }
+ },
+ {
+  "id": "IPjPM1o7xdpFhfJx",
+  "name": "워처",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "ウォッチャー",
+   "level": 2,
+   "rarity": 11,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 9,
+    "max": 9
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 6,
+    "evasion": 10,
+    "physAtk": 12,
+    "elemAtk": 7,
+    "defense": 6,
+    "suppAtk": 5,
+    "suppDef": 4,
+    "speed": 20
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 3,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 4,
+     "max": 8,
+     "item": "금속",
+     "rank": 2
+    },
+    {
+     "min": 9,
+     "max": null,
+     "item": "결정",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>고대 유적을 떠다니며 침입자를 요격하는 구체.</p>"
+  },
+  "items": [
+   {
+    "_id": "GR2SnFmeoKzdpNv2",
+    "name": "쇼크 빔",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ウォッチャー.ショックビーム",
+     "skillKey": "ショックビーム",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "술식",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>〈뇌〉 속성 공격을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [마비]를 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!IPjPM1o7xdpFhfJx.GR2SnFmeoKzdpNv2"
+   },
+   {
+    "_id": "JZ8S6WBC0f49mmlb",
+    "name": "타기팅",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ウォッチャー.ターゲッティング",
+     "skillKey": "ターゲッティング",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "개막",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>그 턴, '대상: 적 단일'인 스킬은 사거리 등의 사정으로 불가능한 것을 제외하고 모두 이 스킬의 대상이 된 자를 대상으로 한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!IPjPM1o7xdpFhfJx.JZ8S6WBC0f49mmlb"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=221",
+   "jp": "ウォッチャー"
+  }
+ },
+ {
+  "id": "HB9rajSoDKU9owy3",
+  "name": "가드봇",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "ガードボット",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "strike"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 12,
+    "max": 12
+   },
+   "stats": {
+    "physHit": 7,
+    "elemHit": 0,
+    "evasion": 9,
+    "physAtk": 17,
+    "elemAtk": 0,
+    "defense": 9,
+    "suppAtk": 3,
+    "suppDef": 5,
+    "speed": 17
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 3,
+    "ice": 3,
+    "volt": 2
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": null,
+     "item": "금속",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>양팔이 총인 유적 경비 기계 인형.</p>"
+  },
+  "items": [
+   {
+    "_id": "TQkjde8zdLbrCo9C",
+    "name": "속사",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ガードボット.速射",
+     "skillKey": "速射",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "사격",
+     "timing": "주행동",
+     "range": "원",
+     "target": "특수",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>3회의 〈돌〉 속성 물리 공격 롤을 한다. 이때 대상은 공격 1회마다 적 중에서 무작위로 선택한다. 또한 이때 【물리 명중】에 −3을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!HB9rajSoDKU9owy3.TQkjde8zdLbrCo9C"
+   },
+   {
+    "_id": "PyxQMFzU7RU4aUC6",
+    "name": "저격",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ガードボット.狙撃",
+     "skillKey": "狙撃",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "사격",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>〈돌〉 속성의 물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [팔] 봉인을 받는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!HB9rajSoDKU9owy3.PyxQMFzU7RU4aUC6"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=222",
+   "jp": "ガードボット"
+  }
+ },
+ {
+  "id": "5u1i3REwg7tFm4iF",
+  "name": "기라파 비틀",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "ギラファビートル",
+   "level": 2,
+   "rarity": 12,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 9,
+    "max": 9
+   },
+   "stats": {
+    "physHit": 6,
+    "elemHit": 0,
+    "evasion": 8,
+    "physAtk": 16,
+    "elemAtk": 0,
+    "defense": 8,
+    "suppAtk": 3,
+    "suppDef": 4,
+    "speed": 17
+   },
+   "resist": {
+    "slash": 4,
+    "strike": 4,
+    "pierce": 4,
+    "fire": 3,
+    "ice": 2,
+    "volt": 3
+   },
+   "drops": [
+    {
+     "min": 5,
+     "max": 7,
+     "item": "껍질",
+     "rank": 2
+    },
+    {
+     "min": 8,
+     "max": null,
+     "item": "칼날",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>단단한 갑각과 거대한 집게를 가진 큰 곤충.</p>"
+  },
+  "items": [
+   {
+    "_id": "AMiCEatWGmjr0Btc",
+    "name": "찔러 올리기",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.ギラファビートル.突き上げ",
+     "skillKey": "突き上げ",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "적 단일",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>물리 공격 롤을 한다. 이때 【물리 명중】−2로 취급하고, 대미지 다이스 +4개를 얻는다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!5u1i3REwg7tFm4iF.AMiCEatWGmjr0Btc"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=223",
+   "jp": "ギラファビートル"
+  }
+ },
+ {
+  "id": "XeufLfUtJuVOzE7F",
+  "name": "타이탄 아룸",
+  "type": "enemy",
+  "img": "icons/svg/mystery-man-black.svg",
+  "system": {
+   "key": "タイタンアルム",
+   "level": 2,
+   "rarity": 13,
+   "attackElements": [
+    "slash"
+   ],
+   "isFOE": false,
+   "isRare": false,
+   "identified": false,
+   "hp": {
+    "value": 10,
+    "max": 10
+   },
+   "stats": {
+    "physHit": 7,
+    "elemHit": 0,
+    "evasion": 7,
+    "physAtk": 15,
+    "elemAtk": 0,
+    "defense": 7,
+    "suppAtk": 5,
+    "suppDef": 4,
+    "speed": 14
+   },
+   "resist": {
+    "slash": 3,
+    "strike": 3,
+    "pierce": 3,
+    "fire": 2,
+    "ice": 2,
+    "volt": 4
+   },
+   "drops": [
+    {
+     "min": 6,
+     "max": null,
+     "item": "덩굴",
+     "rank": 2
+    }
+   ],
+   "row": "front",
+   "order": 0,
+   "description": "<p>썩은 내를 풍기는 거대 꽃. 꽃가루 독이 잘 퍼진다.</p>"
+  },
+  "items": [
+   {
+    "_id": "I6UZvtJMOYlNS9EN",
+    "name": "덩굴 난무",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.タイタンアルム.ツタの乱舞",
+     "skillKey": "ツタの乱舞",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "팔",
+     "category": "백병",
+     "timing": "주행동",
+     "range": "근",
+     "target": "특수",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>3회의 물리 공격 롤을 한다. 이때 대상은 공격 1회마다 적 중에서 무작위로 선택한다. 또한 이때의 대미지 다이스를 −4개 한다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!XeufLfUtJuVOzE7F.I6UZvtJMOYlNS9EN"
+   },
+   {
+    "_id": "A2TQlzaw2P03g8s7",
+    "name": "부란의 숨결",
+    "type": "skill",
+    "img": "icons/svg/claw.svg",
+    "system": {
+     "key": "enemy.タイタンアルム.腐乱の吐息",
+     "skillKey": "腐乱の吐息",
+     "classKey": "enemy",
+     "weaponReq": [],
+     "part": "머리",
+     "category": "-",
+     "timing": "주행동",
+     "range": "원",
+     "target": "적 전체",
+     "cost": {
+      "tp": 0,
+      "fp": 0
+     },
+     "maxSL": {
+      "main": 1,
+      "sub": null
+     },
+     "unique": false,
+     "prereqs": {
+      "all": []
+     },
+     "variants": [],
+     "sl": 1,
+     "description": "<p>자신과 같은 열에 괴물두리안이 2마리 이상 있을 때 사용할 수 있는 연계 공격. 자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [독]을 준다.</p>",
+     "effects": [],
+     "review": "todo"
+    },
+    "_key": "!actors.items!XeufLfUtJuVOzE7F.A2TQlzaw2P03g8s7"
+   }
+  ],
+  "_meta": {
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/enemydetail.php?enemyid=224",
+   "jp": "タイタンアルム"
+  }
+ }
+]

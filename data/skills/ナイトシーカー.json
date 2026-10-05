@@ -1,0 +1,930 @@
+[
+ {
+  "id": "GafyIqKnxlqozXpe",
+  "name": "야적의 마음가짐",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.夜賊の心得",
+   "skillKey": "夜賊の心得",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>상태 이상을 하나라도 받고 있는 대상에 대한 공격 롤의 대미지 다이스 +5개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "QhygjmFccHryyPsl",
+  "name": "단검 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.短剣マスタリー",
+   "skillKey": "短剣マスタリー",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>단검 공격의 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "kBlbToUf3R1Fyj09",
+  "name": "검 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.剣マスタリー",
+   "skillKey": "剣マスタリー",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>검 공격의 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "faIotsbFscsCZg0Q",
+  "name": "아이스 브러시",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.アイスブラッシュ",
+   "skillKey": "アイスブラッシュ",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검",
+    "검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈참〉+〈빙〉 속성 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "VkSZFI6qZ0s6qmD4",
+  "name": "딜레이 스탭",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.ディレイスタブ",
+   "skillKey": "ディレイスタブ",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검",
+    "검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 명중했고 그 뒤 메인 페이즈 종료까지 자신이 대미지를 전혀 받지 않았다면, 후발 행동으로 같은 대상에게 물리 공격 롤 1회 추가. 두 공격 모두 대미지 -(3-SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "5ihItHPQotaEidEp",
+  "name": "어새시네이션",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.アサシネイション",
+   "skillKey": "アサシネイション",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검",
+    "검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대상이 상태 이상을 받고 있고 명중하면, 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [즉사].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "GRys64fJISflOnZ9",
+  "name": "섀도 바이트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.シャドウバイト",
+   "skillKey": "シャドウバイト",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검",
+    "검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "어새시네이션",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대상이 상태 이상을 받고 있으면 대미지 다이스 +(SL×3)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "Ir7Vd5W3EjyENeSL",
+  "name": "스위프트 소드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.スウィフトソード",
+   "skillKey": "スウィフトソード",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검",
+    "검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "딜레이 스탭",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대상이 상태 이상을 받고 있으면 물리 공격 롤 2회 추가. 대미지 다이스 -(5-SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "MUmTf7D3QMHJoLA5",
+  "name": "맹목의 투인",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.盲目の投刃",
+   "skillKey": "盲目の投刃",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검"
+   ],
+   "part": "팔",
+   "category": "투인",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 최종 실대미지는 절반으로 계산. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [맹목].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "1RdrMK88MQ9mvWlo",
+  "name": "마비의 투인",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.麻痺の投刃",
+   "skillKey": "麻痺の投刃",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검"
+   ],
+   "part": "팔",
+   "category": "투인",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 최종 실대미지는 절반으로 계산. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [마비].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "5CD8vqNRJiNqYHD8",
+  "name": "수면의 투인",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.睡眠の投刃",
+   "skillKey": "睡眠の投刃",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검"
+   ],
+   "part": "팔",
+   "category": "투인",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 최종 실대미지는 절반으로 계산. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [수면].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "132lvcrDUn1ecYjs",
+  "name": "맹독의 투인",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.猛毒の投刃",
+   "skillKey": "猛毒の投刃",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검"
+   ],
+   "part": "팔",
+   "category": "투인",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 최종 실대미지는 절반으로 계산. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [독].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "KKFWKTI19BMOp12n",
+  "name": "스프레드 스로",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.スプレッドスロー",
+   "skillKey": "スプレッドスロー",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [],
+   "part": "팔",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "단검 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안 분류 '투인' 스킬의 대상 범위를 '적 열'로 확대.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "ZuDxbIxEY0dhSciW",
+  "name": "나이트 비전",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.ナイトビジョン",
+   "skillKey": "ナイトビジョン",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>어둠 속에서도 시야 불이익을 받지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "U18CVJvyEQ4TPuM8",
+  "name": "디코이 사인",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.デコイサイン",
+   "skillKey": "デコイサイン",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아군 1명을 지정해 선언. 그 턴 동안 단일 대상 적 공격 롤의 대상을 누적 (SL+1)회까지 강제로 지정한 아군으로 변경.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "L8NwBHfVvGa7ouvN",
+  "name": "하이드 클로크",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.ハイドクローク",
+   "skillKey": "ハイドクローク",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "디코이 사인",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【AGI】로 능동 회피, 달성값 +(SL-1).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "Br2LbLdHD2TFYyJp",
+  "name": "추영의 칼날",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.追影の刃",
+   "skillKey": "追影の刃",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검",
+    "검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 1
+     },
+     {
+      "skill": "단검 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>종별 '검' 또는 '단검' 무기를 무기 슬롯과 기타 슬롯에 장비하고, 통상 공격 시 각 무기로 1회씩 공격. 각 공격 【물리 명중】 -3, 【물리 공격】 -(3-SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "M1lH44bqD7vHwbXd",
+  "name": "추영의 잔상",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.追影の残滓",
+   "skillKey": "追影の残滓",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [
+    "단검",
+    "검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "추영의 칼날",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《추영의 칼날》로 무기 2개를 동시 장비 중이면 분류 '백병' 스킬 공격도 2회 가능. 사용한 스킬 2회분 TP 소비, 2회째를 일부러 발동하지 않는 것도 선택 가능. 각 공격 【물리 명중】 -(4-SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "7j9KMnfJMdurTgee",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "5OmaCXVuiBofKLAK",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "1l3YuebvCQqSIiWZ",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ },
+ {
+  "id": "QEBMVNJwf2LYyiil",
+  "name": "억제 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ナイトシーカー.抑制攻撃ブースト",
+   "skillKey": "抑制攻撃ブースト",
+   "classKey": "ナイトシーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 공격】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "나이트 시커"
+  }
+ }
+]

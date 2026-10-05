@@ -1,0 +1,47 @@
+{
+ "methods": [
+  {
+   "name": "조금만",
+   "count": 1,
+   "ahh": 3
+  },
+  {
+   "name": "적당히",
+   "count": 2,
+   "ahh": 4
+  },
+  {
+   "name": "잔뜩",
+   "count": 3,
+   "ahh": 5
+  }
+ ],
+ "results": [
+  {
+   "min": null,
+   "max": 5,
+   "logging": "목재",
+   "mining": "석재",
+   "harvest": "풀"
+  },
+  {
+   "min": 6,
+   "max": 8,
+   "logging": "덩굴",
+   "mining": "금속",
+   "harvest": "꽃"
+  },
+  {
+   "min": 9,
+   "max": null,
+   "logging": "가지",
+   "mining": "보석",
+   "harvest": "열매"
+  }
+ ],
+ "columns": {
+  "logging": "벌채",
+  "mining": "채굴",
+  "harvest": "채취"
+ }
+}

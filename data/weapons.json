@@ -1,0 +1,479 @@
+[
+ {
+  "id": "CebVDtpmGP1uiI9Y",
+  "name": "주먹",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "拳",
+   "weaponType": "주먹",
+   "rank": 1,
+   "element": "strike",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "0",
+    "elemHit": "0",
+    "physAtk": "(LV)",
+    "elemAtk": "0",
+    "speed": "0",
+    "price": null,
+    "materials": [],
+    "physAtkAlt": {
+     "formula": "(LV*3)+4",
+     "requires": "주먹 마스터리"
+    }
+   }
+  }
+ },
+ {
+  "id": "Hf96WsXFu0FLi7lJ",
+  "name": "단검",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "短剣",
+   "weaponType": "단검",
+   "rank": 1,
+   "element": "slash",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "0",
+    "elemHit": "0",
+    "physAtk": "(R*3)+3",
+    "elemAtk": "0",
+    "speed": "0",
+    "price": "(R*R)*80",
+    "materials": [
+     "이빨",
+     "발톱",
+     "가시",
+     "칼날"
+    ]
+   }
+  }
+ },
+ {
+  "id": "3MlW8kwQthrVWAh2",
+  "name": "검",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "剣",
+   "weaponType": "검",
+   "rank": 1,
+   "element": "slash",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "0",
+    "elemHit": "0",
+    "physAtk": "(R*3)+5",
+    "elemAtk": "0",
+    "speed": "0",
+    "price": "(R*R)*100",
+    "materials": [
+     "이빨",
+     "칼날",
+     "발톱",
+     "금속"
+    ]
+   }
+  }
+ },
+ {
+  "id": "2xdx5kpgkg6pDVrC",
+  "name": "세검",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "突剣",
+   "weaponType": "세검",
+   "rank": 1,
+   "element": "pierce",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "1",
+    "elemHit": "0",
+    "physAtk": "(R*3)+4",
+    "elemAtk": "0",
+    "speed": "3",
+    "price": "(R*R)*100",
+    "materials": [
+     "뿔",
+     "가시",
+     "금속",
+     "보석"
+    ]
+   }
+  }
+ },
+ {
+  "id": "1JjejU5oW2ekxaP1",
+  "name": "창",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "槍",
+   "weaponType": "창",
+   "rank": 1,
+   "element": "pierce",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "1",
+    "elemHit": "0",
+    "physAtk": "(R*3)+5",
+    "elemAtk": "0",
+    "speed": "-3",
+    "price": "(R*R)*100",
+    "materials": [
+     "뿔",
+     "칼날",
+     "가지",
+     "금속"
+    ]
+   }
+  }
+ },
+ {
+  "id": "1FvKbfV0KKTqa3l1",
+  "name": "도끼",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "斧",
+   "weaponType": "도끼",
+   "rank": 1,
+   "element": "strike",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "-1",
+    "elemHit": "0",
+    "physAtk": "(R*3)+6",
+    "elemAtk": "0",
+    "speed": "-4",
+    "price": "(R*R)*100",
+    "materials": [
+     "뼈",
+     "목재",
+     "석재",
+     "금속"
+    ]
+   }
+  }
+ },
+ {
+  "id": "4YFFI2w3iwB6e8X9",
+  "name": "지팡이",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "杖",
+   "weaponType": "지팡이",
+   "rank": 1,
+   "element": "strike",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "0",
+    "elemHit": "1",
+    "physAtk": "(R*3)+3",
+    "elemAtk": "R+3",
+    "speed": "-4",
+    "price": "(R*R)*100",
+    "materials": [
+     "뿔",
+     "결정",
+     "가지",
+     "보석"
+    ]
+   }
+  }
+ },
+ {
+  "id": "EY3P4NnIjHiYxz9E",
+  "name": "망치",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "鎚",
+   "weaponType": "망치",
+   "rank": 1,
+   "element": "strike",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "-1",
+    "elemHit": "0",
+    "physAtk": "(R*3)+6",
+    "elemAtk": "0",
+    "speed": "-6",
+    "price": "(R*R)*100",
+    "materials": [
+     "뼈",
+     "껍질",
+     "목재",
+     "석재"
+    ]
+   }
+  }
+ },
+ {
+  "id": "B4B20qHAZTptdnfu",
+  "name": "채찍",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "鞭",
+   "weaponType": "채찍",
+   "rank": 1,
+   "element": "slash",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "0",
+    "elemHit": "0",
+    "physAtk": "(R*3)+5",
+    "elemAtk": "0",
+    "speed": "0",
+    "price": "(R*R)*90",
+    "materials": [
+     "가죽",
+     "실",
+     "덩굴"
+    ]
+   }
+  }
+ },
+ {
+  "id": "G49EaYbnm3v3U8bE",
+  "name": "도",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "刀",
+   "weaponType": "도",
+   "rank": 1,
+   "element": "slash",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "0",
+    "elemHit": "0",
+    "physAtk": "(R*3)+6",
+    "elemAtk": "0",
+    "speed": "0",
+    "price": "(R*R)*120",
+    "materials": [
+     "발톱",
+     "칼날",
+     "석재",
+     "금속"
+    ]
+   }
+  }
+ },
+ {
+  "id": "389mDB8qx4YQEhQX",
+  "name": "포검",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "砲剣",
+   "weaponType": "포검",
+   "rank": 1,
+   "element": "slash",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": false,
+    "physHit": "0",
+    "elemHit": "0",
+    "physAtk": "(R*3)+5",
+    "elemAtk": "0",
+    "speed": "0",
+    "price": "(R*R)*110",
+    "materials": [
+     "칼날",
+     "석재",
+     "금속"
+    ]
+   }
+  }
+ },
+ {
+  "id": "FTms50sAC3fB2V1W",
+  "name": "농기구",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "農具",
+   "weaponType": "농기구",
+   "rank": 1,
+   "element": "",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "백병",
+    "range": "근",
+    "elementChoice": true,
+    "physHit": "0",
+    "elemHit": "0",
+    "physAtk": "(R*3)+4",
+    "elemAtk": "0",
+    "speed": "0",
+    "price": "(R*R)*90",
+    "materials": [
+     "가지",
+     "목재",
+     "석재",
+     "금속"
+    ]
+   }
+  }
+ },
+ {
+  "id": "5KLd9v0WJZktsyqd",
+  "name": "활",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "弓",
+   "weaponType": "활",
+   "rank": 1,
+   "element": "pierce",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "사격",
+    "range": "원",
+    "elementChoice": false,
+    "physHit": "0",
+    "elemHit": "0",
+    "physAtk": "(R*3)+4",
+    "elemAtk": "0",
+    "speed": "0",
+    "price": "(R*R)*100",
+    "materials": [
+     "뿔",
+     "날개·깃털",
+     "가지",
+     "덩굴"
+    ]
+   }
+  }
+ },
+ {
+  "id": "YbF42NqlSfY71HGK",
+  "name": "쇠뇌",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "弩",
+   "weaponType": "쇠뇌",
+   "rank": 1,
+   "element": "pierce",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "사격",
+    "range": "원",
+    "elementChoice": false,
+    "physHit": "-1",
+    "elemHit": "0",
+    "physAtk": "(R*3)+6",
+    "elemAtk": "0",
+    "speed": "-8",
+    "price": "(R*R)*110",
+    "materials": [
+     "뿔",
+     "목재",
+     "덩굴",
+     "금속"
+    ]
+   }
+  }
+ },
+ {
+  "id": "9PUDi9m1XBiRXXzM",
+  "name": "총",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+   "key": "銃",
+   "weaponType": "총",
+   "rank": 1,
+   "element": "pierce",
+   "refinements": [],
+   "slot": "weapon",
+   "description": "",
+   "table": {
+    "category": "사격",
+    "range": "원",
+    "elementChoice": false,
+    "physHit": "0",
+    "elemHit": "0",
+    "physAtk": "(R*3)+5",
+    "elemAtk": "0",
+    "speed": "-4",
+    "price": "(R*R)*110",
+    "materials": [
+     "발톱",
+     "결정",
+     "석재",
+     "금속"
+    ]
+   }
+  }
+ }
+]

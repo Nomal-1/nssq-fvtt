@@ -2,7 +2,7 @@
   "id": "nssq",
   "title": "SRS가 아닌 세계수의 미궁 TRPG",
   "description": "팬메이드 TRPG 「SRSじゃない世界樹の迷宮TRPG」(NSSQ) 한국어판 게임 시스템",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "authors": [
     {
       "name": "Nomal-1"
@@ -10,7 +10,7 @@
   ],
   "url": "https://github.com/Nomal-1/nssq-fvtt",
   "manifest": "https://github.com/Nomal-1/nssq-fvtt/releases/latest/download/system.json",
-  "download": "https://github.com/Nomal-1/nssq-fvtt/releases/download/v0.1.0/nssq.zip",
+  "download": "https://github.com/Nomal-1/nssq-fvtt/releases/download/v0.2.0/nssq.zip",
   "compatibility": {
     "minimum": "12",
     "verified": "12.331",
@@ -97,5 +97,80 @@
   },
   "primaryTokenAttribute": "hp",
   "secondaryTokenAttribute": "tp",
-  "packs": []
+  "packs": [
+    {
+      "name": "classes",
+      "label": "클래스",
+      "path": "packs/classes",
+      "type": "Item",
+      "system": "nssq",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "skills",
+      "label": "스킬",
+      "path": "packs/skills",
+      "type": "Item",
+      "system": "nssq",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "equipment",
+      "label": "장비",
+      "path": "packs/equipment",
+      "type": "Item",
+      "system": "nssq",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "items",
+      "label": "아이템·소재",
+      "path": "packs/items",
+      "type": "Item",
+      "system": "nssq",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "enemies",
+      "label": "에너미",
+      "path": "packs/enemies",
+      "type": "Actor",
+      "system": "nssq",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "NSSQ",
+      "sorting": "m",
+      "color": "#2e5e3a",
+      "packs": [
+        "classes",
+        "skills",
+        "equipment",
+        "items",
+        "enemies"
+      ]
+    }
+  ]
 }

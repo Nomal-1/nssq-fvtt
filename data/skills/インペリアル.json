@@ -1,0 +1,838 @@
+[
+ {
+  "id": "R7KarwjRSaojdXV3",
+  "name": "제국 기사의 극의",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.帝国騎士の極意",
+   "skillKey": "帝国騎士の極意",
+   "classKey": "インペリアル",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>포검 드라이브 스킬 사용으로 생기는 오버히트 턴 수 -2.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "4eVgqzF8oHIll1v0",
+  "name": "포검 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.砲剣マスタリー",
+   "skillKey": "砲剣マスタリー",
+   "classKey": "インペリアル",
+   "weaponReq": [
+    "포검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>포검 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "LGkS8dCOZhxorvfn",
+  "name": "어설트 드라이브",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.アサルトドライブ",
+   "skillKey": "アサルトドライブ",
+   "classKey": "インペリアル",
+   "weaponReq": [
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 【물리 공격】에 +((SL-1)×2)한 뒤 2배로 취급. 사용 후 오버히트 7턴.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "WVUeLKBrRQGjcwAz",
+  "name": "삼색 드라이브",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.三色ドライブ",
+   "skillKey": "三色ドライブ",
+   "classKey": "インペリアル",
+   "weaponReq": [
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 《플레임 드라이브》《프리즈 드라이브》《쇼크 드라이브》 중 하나로 선언 → 〈참〉+〈염〉/〈빙〉/〈뇌〉 속성 물리 공격 롤. 【물리 공격】에 +((SL-1)×2)한 뒤 2배로 취급. 사용 후 오버히트 8턴.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "7GNNe5mCeoMvJ6FV",
+  "name": "액셀 드라이브",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.アクセルドライブ",
+   "skillKey": "アクセルドライブ",
+   "classKey": "インペリアル",
+   "weaponReq": [
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>무속성 물리 공격 롤. 【물리 공격】 +(SL×2)로 취급. 사용 후 오버히트 9턴.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "AiBvLuxQ98jQz64O",
+  "name": "오버드라이브",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.オーバードライブ",
+   "skillKey": "オーバードライブ",
+   "classKey": "インペリアル",
+   "weaponReq": [
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 전체",
+   "cost": {
+    "tp": 7,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>무속성 물리 공격 롤. 【물리 공격】 +(SL)로 취급. 사용 후 오버히트 9턴.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "WFQd3ttidvuacG0n",
+  "name": "샤프 에지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.シャープエッジ",
+   "skillKey": "シャープエッジ",
+   "classKey": "インペリアル",
+   "weaponReq": [
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개. 오버히트 1턴 단축.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "LKYhYaeS0cfg6ZWD",
+  "name": "임펄스 에지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.インパルスエッジ",
+   "skillKey": "インパルスエッジ",
+   "classKey": "インペリアル",
+   "weaponReq": [
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 -(4-SL)개. 명중 시 대미지 다이스에서 나온 '6'의 개수만큼 자신의 【TP】 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "OW1W5OoEbieZjDI7",
+  "name": "쿨 에지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.クールエッジ",
+   "skillKey": "クールエッジ",
+   "classKey": "インペリアル",
+   "weaponReq": [
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "샤프 에지",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개. 오버히트 2턴 단축.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "UAeKDhs2N0Bo85Rt",
+  "name": "차지 에지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.チャージエッジ",
+   "skillKey": "チャージエッジ",
+   "classKey": "インペリアル",
+   "weaponReq": [
+    "포검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "임펄스 에지",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개. 다음 턴에 《○○ 드라이브》를 사용하면 그 대미지 다이스 +(SL×3)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "GszSF9H43CRxwJH7",
+  "name": "강제 배기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.強制排熱",
+   "skillKey": "強制排熱",
+   "classKey": "インペリアル",
+   "weaponReq": [
+    "포검"
+   ],
+   "part": "팔",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신의 오버히트 3턴 단축.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "SUZLitip0d8actAt",
+  "name": "와이드 이펙트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.ワイドエフェクト",
+   "skillKey": "ワイドエフェクト",
+   "classKey": "インペリアル",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "물리 공격 부스트",
+      "sl": 2
+     },
+     {
+      "skill": "TP 부스트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상이 '적 단일'인 공격에서 크리티컬 히트 시, 공격 대상과 같은 열의 모든 적에게도 같은 공격 가능(추가 TP 소비 없음).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "MiDB2fVQ3IU6wRwa",
+  "name": "리어 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.リアガード",
+   "skillKey": "リアガード",
+   "classKey": "インペリアル",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 자신의 메인 페이즈 행동을 후발 행동으로 하고, 그 턴 동안 전 속성 내성 +1.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "E669AXQ8j1lBAeul",
+  "name": "피니셔",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.フィニッシャー",
+   "skillKey": "フィニッシャー",
+   "classKey": "インペリアル",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신의 공격으로 적을 전투 불능으로 만들면 자신의 【TP】 (SL) 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "I8TCV4LVVok86SFO",
+  "name": "리미트 오버",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.リミットオーバー",
+   "skillKey": "リミットオーバー",
+   "classKey": "インペリアル",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "포검 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "차지 에지",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴에 자신이 《○○ 드라이브》를 사용하면 대미지 다이스 +20개. 단, 그 드라이브 사용 후 그 전투 동안 오버히트가 전혀 회복되지 않음.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "6Y09ezgowEOt41Xr",
+  "name": "사냥꾼의 후각",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.狩猟者の嗅覚",
+   "skillKey": "狩猟者の嗅覚",
+   "classKey": "インペリアル",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>드롭 판정 후 '고기'·'생선'·'알' 중 하나를 (SL)개 획득. 쓰러뜨린 에너미가 식용에 맞지 않다고 GM이 판단하면 적용되지 않음.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "RvJSfeZsPK2OpbS9",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "インペリアル",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "61ozDmRMrYNCjySr",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "インペリアル",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "8O2jyEDTYkHkJTiS",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "インペリアル",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ },
+ {
+  "id": "ocAQbRA6MlfoxJtI",
+  "name": "물리 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "インペリアル.物理防御ブースト",
+   "skillKey": "物理防御ブースト",
+   "classKey": "インペリアル",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【방어】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "임페리얼"
+  }
+ }
+]

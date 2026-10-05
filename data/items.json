@@ -1,0 +1,615 @@
+[
+ {
+  "id": "aPANsZV0p929z4we",
+  "name": "아리아드네의 실",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "アリアドネの糸",
+   "price": 100,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>미궁에서 긴급 탈출할 수 있다. 전투 중에도 사용 가능.</p>",
+   "materials": [],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "3WyL2HiC4ZhQV6G4",
+  "name": "메디카",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "メディカ",
+   "price": 30,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상의 【HP】를 10 회복한다.</p>",
+   "materials": [],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "egyMjDYIkZERQnjO",
+  "name": "메디카 II",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "メディカII",
+   "price": 300,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상의 【HP】를 20 회복한다.</p>",
+   "materials": [
+    {
+     "type": "풀",
+     "rank": 4
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "R5Y4IXNvmTGJ3PVi",
+  "name": "메디카 III",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "メディカIII",
+   "price": 1500,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상의 【HP】를 30 회복한다.</p>",
+   "materials": [
+    {
+     "type": "풀",
+     "rank": 7
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "YOBtriWfa0IGMNGq",
+  "name": "메디카 IV",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "メディカIV",
+   "price": 4000,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상의 【HP】를 전부 회복한다.</p>",
+   "materials": [
+    {
+     "type": "풀",
+     "rank": 10
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "9a4g8S82skVCXJVF",
+  "name": "암리타",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "アムリタ",
+   "price": 500,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상의 【TP】를 10 회복한다.</p>",
+   "materials": [
+    {
+     "type": "열매",
+     "rank": 4
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "KbeuFKD2W3AvzwCy",
+  "name": "암리타 II",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "アムリタII",
+   "price": 2500,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상의 【TP】를 20 회복한다.</p>",
+   "materials": [
+    {
+     "type": "열매",
+     "rank": 7
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "DAFKRnNufKrAWBTQ",
+  "name": "넥타르",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "ネクタル",
+   "price": 100,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상의 [전투 불능] 상태를 회복하고, 【HP】를 1로 한다.</p>",
+   "materials": [
+    {
+     "type": "꽃",
+     "rank": 1
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "KgPJHvqmyMIgcq6E",
+  "name": "테리아카α",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "テリアカα",
+   "price": 50,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상의 봉인을 전부 회복한다.</p>",
+   "materials": [],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "4FE4L5SFtZX1R6ph",
+  "name": "테리아카β",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "テリアカβ",
+   "price": 50,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상의 상태 이상을 전부 회복한다.</p>",
+   "materials": [],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "FMGmBQr535PThyAs",
+  "name": "테리아카γ",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "テリアカγ",
+   "price": 50,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상의 약화 효과를 전부 회복한다.</p>",
+   "materials": [],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "L1AE1kfgdpmA3dbm",
+  "name": "파이어 오일",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "ファイアオイル",
+   "price": 100,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상에게 『속성 부여: 염』 강화 효과를 준다. 3턴 지속한다.</p>",
+   "materials": [
+    {
+     "type": "열매",
+     "rank": 3
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "JAFt4I3m0mFd11El",
+  "name": "프리즈 오일",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "フリーズオイル",
+   "price": 100,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상에게 『속성 부여: 빙』 강화 효과를 준다. 3턴 지속한다.</p>",
+   "materials": [
+    {
+     "type": "열매",
+     "rank": 3
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "VOyX5Prsp03Pxjlj",
+  "name": "쇼크 오일",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "ショックオイル",
+   "price": 100,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단일 대상에게 『속성 부여: 뇌』 강화 효과를 준다. 3턴 지속한다.</p>",
+   "materials": [
+    {
+     "type": "열매",
+     "rank": 3
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "6U6g8jrv7ZWobE1f",
+  "name": "내화 미스트",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "耐火ミスト",
+   "price": 1000,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>아군 전체에게 『내성 부여: 염』 강화 효과를 준다. 3턴 지속한다.</p>",
+   "materials": [
+    {
+     "type": "열매",
+     "rank": 5
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "UGyvGYUEcSkd68pZ",
+  "name": "내빙 미스트",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "耐氷ミスト",
+   "price": 1000,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>아군 전체에게 『내성 부여: 빙』 강화 효과를 준다. 3턴 지속한다.</p>",
+   "materials": [
+    {
+     "type": "열매",
+     "rank": 5
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "8dR2pMz5z2UiYy5Y",
+  "name": "내뇌 미스트",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "耐雷ミスト",
+   "price": 1000,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>아군 전체에게 『내성 부여: 뇌』 강화 효과를 준다. 3턴 지속한다.</p>",
+   "materials": [
+    {
+     "type": "열매",
+     "rank": 5
+    }
+   ],
+   "foodstuff": false
+  }
+ },
+ {
+  "id": "8qFhb2syu6KREDlc",
+  "name": "고기",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "肉",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>캠프에서의 회복에 사용한다. 또한 F.O.E.의 주의를 끄는 용도 등에도 쓸 수 있다.</p>",
+   "materials": [],
+   "foodstuff": true
+  }
+ },
+ {
+  "id": "OK6VkJiE6qsc4qrO",
+  "name": "생선",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "魚",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>캠프에서의 회복에 사용한다. 또한 F.O.E.의 주의를 끄는 용도 등에도 쓸 수 있다.</p>",
+   "materials": [],
+   "foodstuff": true
+  }
+ },
+ {
+  "id": "JJ00Me0Jwm4qtaJW",
+  "name": "알",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "卵",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>캠프에서의 회복에 사용한다. 또한 F.O.E.의 주의를 끄는 용도 등에도 쓸 수 있다.</p>",
+   "materials": [],
+   "foodstuff": true
+  }
+ },
+ {
+  "id": "A964aNref5Lre2wa",
+  "name": "곡류",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "穀類",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>캠프에서의 회복에 사용한다. 또한 F.O.E.의 주의를 끄는 용도 등에도 쓸 수 있다.</p>",
+   "materials": [],
+   "foodstuff": true
+  }
+ },
+ {
+  "id": "MSwGInhQtAroQotK",
+  "name": "채소",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "野菜",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>캠프에서의 회복에 사용한다. 또한 F.O.E.의 주의를 끄는 용도 등에도 쓸 수 있다.</p>",
+   "materials": [],
+   "foodstuff": true
+  }
+ },
+ {
+  "id": "Psh3u1ntA8GozMFZ",
+  "name": "과일",
+  "type": "consumable",
+  "img": "icons/svg/pill.svg",
+  "system": {
+   "key": "果物",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>캠프에서의 회복에 사용한다. 또한 F.O.E.의 주의를 끄는 용도 등에도 쓸 수 있다.</p>",
+   "materials": [],
+   "foodstuff": true
+  }
+ },
+ {
+  "id": "McPqOiP4ROetFaNq",
+  "name": "백팩",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "バックパック",
+   "price": 50,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>아이템 소지 수 +4를 얻는다. 또한 이 아이템은 소지 수를 계산할 때 아이템 1개분으로 계산하지 않는다. 그리고 이 아이템을 2개 이상 소지할 수는 없다.</p>"
+  }
+ },
+ {
+  "id": "4y2rkHKdQhOibuAk",
+  "name": "텐트",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "テント",
+   "price": 100,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>캠프 시의 『주변 위험도』를 -1로 취급한다.</p>"
+  }
+ },
+ {
+  "id": "2LZS2sQfisA1k78k",
+  "name": "조리기구 세트",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "調理器具セット",
+   "price": 80,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>커먼 스킬 《회복 요리》《일품 요리》《약효 요리》의 사용에 필요하다.</p>"
+  }
+ },
+ {
+  "id": "QURChfCjNNecOsQR",
+  "name": "10m 로프",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "10mロープ",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>로프워크 전반에 사용할 수 있다.</p>"
+  }
+ },
+ {
+  "id": "Rcx2NB9aEJCZ8HPQ",
+  "name": "물통",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "水筒",
+   "price": 5,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>단단한 가죽이나 대나무 등으로 만든 500ml 정도의 물통.</p>"
+  }
+ },
+ {
+  "id": "T4vAVSW9qqpx9nx6",
+  "name": "자루",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "袋",
+   "price": 5,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>아이템 소지 수는 늘어나지 않는다. 어디까지나 포장용.</p>"
+  }
+ },
+ {
+  "id": "TQERNYrI9EIYGr4k",
+  "name": "천",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "布",
+   "price": 2,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>손수건 또는 수건 정도 크기의 천.</p>"
+  }
+ },
+ {
+  "id": "2UR9ZzK0vYBvJIcW",
+  "name": "작업용 나이프",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "作業用ナイフ",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>절단·절삭 작업용의 튼튼한 나이프. 무기로 쓰기에는 부적합하다.</p>"
+  }
+ },
+ {
+  "id": "LbVwVORzWgcNnAZG",
+  "name": "작업용 망치",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "作業用ハンマー",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>주로 못 박기 등의 용도로 쓰는 쇠망치. 무기로 쓰기에는 부적합하다.</p>"
+  }
+ },
+ {
+  "id": "XKz2Z5MyzFctI85S",
+  "name": "못·쐐기",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "釘くさび",
+   "price": 1,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>소모품. 5개 세트에 1G.</p>"
+  }
+ },
+ {
+  "id": "WKOb55RoHwwniZQm",
+  "name": "손거울",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "手鏡",
+   "price": 50,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>미용 도구로 써도 좋고, 빛 반사나 시야 확보에 써도 좋다.</p>"
+  }
+ },
+ {
+  "id": "Zs7usWmPlAvHbgdx",
+  "name": "횃불",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "たいまつ",
+   "price": 1,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>소모품. 일회용 조명 기구. 약 1시간은 간다.</p>"
+  }
+ },
+ {
+  "id": "G9Uz5DGJjc08M9f8",
+  "name": "부싯깃통",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "火口箱",
+   "price": 5,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>부싯돌과 부시 세트. 즉, 점화 도구.</p>"
+  }
+ },
+ {
+  "id": "CiHvfd9nKSAXslMO",
+  "name": "랜턴",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "ランタン",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>셔터로 빛을 켜고 끌 수 있는 칸델라.</p>"
+  }
+ },
+ {
+  "id": "FYQfGyzhkswfRsbI",
+  "name": "기름(작은 병)",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "油小瓶入り",
+   "price": 20,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>소모품. 가격은 랜턴 사용 1회분(12시간) 정도.</p>"
+  }
+ },
+ {
+  "id": "CUp3Kwdy8U1byyDV",
+  "name": "작은 병",
+  "type": "tool",
+  "img": "icons/svg/chest.svg",
+  "system": {
+   "key": "小瓶",
+   "price": 10,
+   "effects": [],
+   "quantity": 1,
+   "description": "<p>불투명한 유리제 작은 병. 『기름(작은 병)』을 사용한 뒤에도 이것이 남는다.</p>"
+  }
+ }
+]

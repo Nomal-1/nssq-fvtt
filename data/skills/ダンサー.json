@@ -1,0 +1,937 @@
+[
+ {
+  "id": "Rw8p4wAUCjgoFnVK",
+  "name": "아름다운 춤",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.美しき舞い",
+   "skillKey": "美しき舞い",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 1
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안 분류 '무용'이면서 대상 '아군 열'인 스킬의 대상을 아군 전체로 변경.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "Kaiueq5dSBwuLPcR",
+  "name": "검 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.剣マスタリー",
+   "skillKey": "剣マスタリー",
+   "classKey": "ダンサー",
+   "weaponReq": [
+    "검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>검 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "WBqyQyL5lRWiMxj8",
+  "name": "무용 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.舞踊マスタリー",
+   "skillKey": "舞踊マスタリー",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '무용' 스킬로 부여한 강화 효과의 지속 턴 수 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "C2t9Ov6Ch0DBQorV",
+  "name": "어택 탱고",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.アタックタンゴ",
+   "skillKey": "アタックタンゴ",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "무용 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『물리 공격 상승: (SL×2)』·『속성 공격 상승: (SL×2)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "JpI89LNTlyTWcRB4",
+  "name": "가드 탱고",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.ガードタンゴ",
+   "skillKey": "ガードタンゴ",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "무용 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『물리 방어 상승: (SL×2)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "T45tiUrW2yNmN8wu",
+  "name": "리제네 왈츠",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.リジェネワルツ",
+   "skillKey": "リジェネワルツ",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "무용 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『HP 리젠: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "WOD2Sb4g5X9cFKBj",
+  "name": "힐링 왈츠",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.ヒーリングワルツ",
+   "skillKey": "ヒーリングワルツ",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "무용 마스터리",
+      "sl": 2
+     },
+     {
+      "skill": "리제네 왈츠",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>회복 롤. 회복량 다이스 +(SL+【AGI】B).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "6PXldkc0JMT4Lpod",
+  "name": "프레시 왈츠",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.フレッシュワルツ",
+   "skillKey": "フレッシュワルツ",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "무용 마스터리",
+      "sl": 2
+     },
+     {
+      "skill": "리제네 왈츠",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상의 상태 이상을 최대 (SL)개 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "KsBReQOn0iLhxSaR",
+  "name": "리커버리 왈츠",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.リカバリワルツ",
+   "skillKey": "リカバリワルツ",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "무용 마스터리",
+      "sl": 2
+     },
+     {
+      "skill": "리제네 왈츠",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상의 봉인을 최대 (SL)개 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "4zsGkGAt8DWWlT4A",
+  "name": "에너지 왈츠",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.エナジーワルツ",
+   "skillKey": "エナジーワルツ",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "무용 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『TP 리젠: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "NWz15lGS5sxftCoG",
+  "name": "카운터 삼바",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.カウンターサンバ",
+   "skillKey": "カウンターサンバ",
+   "classKey": "ダンサー",
+   "weaponReq": [
+    "검"
+   ],
+   "part": "다리",
+   "category": "무용",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 1
+     },
+     {
+      "skill": "무용 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 자신은 대기 상태. 대기 중 자신이 물리 공격을 받으면 공격자에게 물리 공격으로 반격(대미지 다이스 -(3-SL)개). 반격 누계 3회 또는 턴 종료 시 대기 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "XnibRG939tTupqDQ",
+  "name": "체이스 삼바",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.チェイスサンバ",
+   "skillKey": "チェイスサンバ",
+   "classKey": "ダンサー",
+   "weaponReq": [
+    "검"
+   ],
+   "part": "다리",
+   "category": "무용",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 2
+     },
+     {
+      "skill": "무용 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 자신은 대기 상태. 대기 중 자신과 같은 열의 아군이 적에게 물리 공격 롤을 하면, 그 대상에게 물리 공격으로 추격(대미지 다이스 -(4-SL)개). 누계 3체 추격 또는 턴 종료 시 대기 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "Zf2H1T1F4Da8sUi4",
+  "name": "트릭 삼바",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.トリックサンバ",
+   "skillKey": "トリックサンバ",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 2
+     },
+     {
+      "skill": "무용 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『추격: (자신)』을 (SL)명에게 부여, 2턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "1S0rHyLKtWWNDwtG",
+  "name": "러시 댄스",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.ラッシュダンス",
+   "skillKey": "ラッシュダンス",
+   "classKey": "ダンサー",
+   "weaponReq": [
+    "검"
+   ],
+   "part": "다리",
+   "category": "무용",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "체이스 삼바",
+      "sl": 2
+     },
+     {
+      "skill": "무용 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 자신은 대기 상태. 대기 중 적에게 물리 공격 롤이 행해지면(공격자 불문), 그 대상에게 물리 공격으로 추격(대미지 다이스 -(4-SL)개). 누계 3체 추격 또는 턴 종료 시 대기 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "2VnYVtoD7UBU81ts",
+  "name": "부채의 춤",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.扇の舞",
+   "skillKey": "扇の舞",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "수동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "무용 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【AGI】로 능동 회피. 달성값 +(SL-1).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "9xZklABEen9egVlz",
+  "name": "검의 춤",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.剣の舞",
+   "skillKey": "剣の舞",
+   "classKey": "ダンサー",
+   "weaponReq": [
+    "검"
+   ],
+   "part": "다리",
+   "category": "무용",
+   "timing": "수동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "검 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "부채의 춤",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【AGI】로 능동 회피. 달성값 +(SL-1). 회피 성공 시 통상 공격으로 반격.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "IYzg2hpMJIs84SXh",
+  "name": "안개의 춤",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.霞の舞",
+   "skillKey": "霞の舞",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "무용 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "부채의 춤",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>크리티컬 히트 시 대상에게 [스턴].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "BCKYhJbmJkBfMKMb",
+  "name": "핫 스타트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.ホットスタート",
+   "skillKey": "ホットスタート",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>시나리오 시작 시점의 보유 FP +1.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "MFFhQIiazCwf0moL",
+  "name": "매혹의 춤",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.魅惑の舞",
+   "skillKey": "魅惑の舞",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "무용",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "무용 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>춤이 보이는 범위의 모두에게 강한 관심을 일으켜 주목을 끈다. 5분 정도 계속 보고 있던 상대에게만 유효하며, 원칙적으로 전투 중 사용 불가.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "UVnvvSBYYhcKjqHs",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "IXhfsvMA6yw4hjTT",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ },
+ {
+  "id": "FWtKs22vgXjgCGTN",
+  "name": "속도 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダンサー.速度ブースト",
+   "skillKey": "速度ブースト",
+   "classKey": "ダンサー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【속도】 +(SL×3).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "댄서"
+  }
+ }
+]

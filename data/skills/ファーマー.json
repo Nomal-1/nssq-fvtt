@@ -1,0 +1,897 @@
+[
+ {
+  "id": "Y3f0ujg0QvuMaKJS",
+  "name": "대자연의 은혜",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.大自然の恵み",
+   "skillKey": "大自然の恵み",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>시나리오 시작 시 보유 FP +2.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "Y7uFyIhiOXEJ78dI",
+  "name": "이피션트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.エフィシエント",
+   "skillKey": "エフィシエント",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아이템의 회복 효과 항상 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "M721Z3Bct5e1RYQk",
+  "name": "간이 소생",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.簡易蘇生",
+   "skillKey": "簡易蘇生",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "이피션트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>HP 회복계 아이템 사용 시 전투 불능 회복 효과가 추가된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "UJW7ShmuIsKhFtNq",
+  "name": "자장가",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.子守唄",
+   "skillKey": "子守唄",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신의 【억제 공격】 대 대상의 【억제 방어】 대항 판정(자신 +(SL)), 이기면 대상에게 [수면]. 성패와 관계없이 자신도 [수면]을 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "5j3Fft5XNDmUUex3",
+  "name": "모나야 맞을 수 있다",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.鳴かずば討たれず",
+   "skillKey": "鳴かずば討たれず",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 메인 페이즈에 아직 행동하지 않은 상태에서 대상 '단일' 공격 롤의 대상이 되었을 때 선언. 그 공격의 대상을 원하는 아군 1명으로 바꾼다. 대신 자신은 그 턴 메인 페이즈의 주행동 권리를 잃는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "Mh41NHHwAaWvJzu8",
+  "name": "엎친 데 덮치기",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.弱り目に祟り目",
+   "skillKey": "弱り目に祟り目",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "모나야 맞을 수 있다",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>상태 이상을 하나라도 받고 있는 대상에게만 유효. 약화 효과 『물리 공격 저하: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "DpzT5mxJeTx5tuxU",
+  "name": "전화위복",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.怪我の功名",
+   "skillKey": "怪我の功名",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "엎친 데 덮치기",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신이 상태 이상을 받고 있을 때만 사용 가능. 자신의 상태 이상을 최대 (SL)개 대상에게 전염.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "HtnsMyS4Sx9JviRA",
+  "name": "신기한 씨앗",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.不思議な種",
+   "skillKey": "不思議な種",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "팔",
+   "category": "-",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "자장가",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신의 【억제 공격】 대 대상의 【억제 방어】 대항 판정(자신 +(SL-2)), 이기면 [머리]/[팔]/[다리] 중 무작위 1부위 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "AffQmuEEKjfQeOxh",
+  "name": "위험 감지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.危険感知",
+   "skillKey": "危険感知",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>다가오는 위험을 알아채는 판정 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "9813as0VznbygmEP",
+  "name": "채집 마스터",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.採集マスター",
+   "skillKey": "採集マスター",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>벌채·채굴·채취 이벤트에서 통상 횟수에 더해 채집 판정 (SL)회 추가. 추가분의 아앗! 값은 0으로 취급.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "YDg1i3pV9n36APVF",
+  "name": "해체 마스터",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.解体マスター",
+   "skillKey": "解体マスター",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>드롭 판정 달성값을 ±(SL) 범위에서 자유롭게 조정.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "SNNnHt1p9OMC6H8A",
+  "name": "야생의 후각",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.野生の嗅覚",
+   "skillKey": "野生の嗅覚",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "채집 마스터",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>채집 판정 달성값을 ±(SL) 범위에서 자유롭게 조정.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "9jW54gOgEI47m3nQ",
+  "name": "큰 바구니",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.大きな籠",
+   "skillKey": "大きな籠",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "채집 마스터",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아이템 소지 상한 +10.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "YuHaLx8OTLGfjBij",
+  "name": "이모작",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.二毛作",
+   "skillKey": "二毛作",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "채집 마스터",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>채집 판정에서 같은 눈(조로메)이 나오면 해당 소재 1개 추가 입수.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "T4AL9ZqY0VlD05Vu",
+  "name": "캠프 마스터",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.キャンプマスター",
+   "skillKey": "キャンプマスター",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>캠프 회복량 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "SB4xmnD3p5CW9lgR",
+  "name": "사냥꾼의 후각",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.狩猟者の嗅覚",
+   "skillKey": "狩猟者の嗅覚",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>드롭 판정 후 '고기'/'생선'/'알' 중 하나를 (SL)개 획득. 쓰러뜨린 에너미가 식용에 맞지 않는다고 GM이 판단하면 적용되지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "TbIkv2ZeGpfbnvWW",
+  "name": "수확자의 후각",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.収穫者の嗅覚",
+   "skillKey": "収穫者の嗅覚",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>채집 판정 후 '곡류'/'채소'/'과일' 중 하나를 (SL)개 획득. 주변 지형이 식용 식물이 자라기에 명백히 부적합하다고 GM이 판단하면 적용되지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "Ak107QBQhmml1cQP",
+  "name": "카무플라주",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.カモフラージュ",
+   "skillKey": "カモフラージュ",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>숨기·몰래 접근 등의 판정 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "524SbpQLKgYrdK0L",
+  "name": "비에도 지지 않고",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.アメニモマケズ",
+   "skillKey": "アメニモマケズ",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약 5분간 늪 등 발이 묶이는 지형의 영향을 무시.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "S7Ya3tRXW8wICGoN",
+  "name": "풍작 기원",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.豊作祈願",
+   "skillKey": "豊作祈願",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "해체 마스터",
+      "sl": 1
+     },
+     {
+      "skill": "야생의 후각",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>채집 판정·드롭 판정에서 같은 눈이 나오면 입수 아이템 랭크 +1.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "ZQyVX0Sbnh30GdZn",
+  "name": "선제 블록",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.先制ブロック",
+   "skillKey": "先制ブロック",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아앗! 발생 등 기습당한 상황에서 (1D6-1)을 굴려 SL 이하이면 기습에 의한 1턴분 행동 손실을 막는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "SL49vfXALyMdApzi",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ },
+ {
+  "id": "2Ag9ucCXaL4sivIY",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファーマー.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ファーマー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "농부"
+  }
+ }
+]

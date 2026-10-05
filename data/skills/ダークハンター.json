@@ -1,0 +1,1127 @@
+[
+ {
+  "id": "7POkYYb56BQu7pZQ",
+  "name": "트랜스",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.トランス",
+   "skillKey": "トランス",
+   "classKey": "ダークハンター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>어떠한 봉인이 부여된 대상에 대한 공격 롤에서 대미지 다이스에 +5개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "JieOfvypoa9QCU9V",
+  "name": "검 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.剣マスタリー",
+   "skillKey": "剣マスタリー",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>검에 의한 물리 명중에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "59Ol4FC4Y5lWBcfp",
+  "name": "세검 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.突剣マスタリー",
+   "skillKey": "突剣マスタリー",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "세검"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>세검에 의한 물리 명중에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "GNopwAzqhhycIaIH",
+  "name": "채찍 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.鞭マスタリー",
+   "skillKey": "鞭マスタリー",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "채찍"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>채찍에 의한 물리 명중에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "5vTJwCBLPTk39uT4",
+  "name": "삼종 본디지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.三種ボンデージ",
+   "skillKey": "三種ボンデージ",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "채찍"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "채찍 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [
+    "헤드 본디지",
+    "암 본디지",
+    "레그 본디지"
+   ],
+   "sl": 1,
+   "description": "<p>이 스킬을 사용할 때는 아래 중 하나의 명칭으로 선언한다. 《헤드 본디지》《암 본디지》《레그 본디지》 물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [머리] [팔] [다리] 중 하나의 봉인을 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "InobYdXdvIufa0K9",
+  "name": "아나콘다",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.アナコンダ",
+   "skillKey": "アナコンダ",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "채찍"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "채찍 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [독]을 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "BHpkWxQj32R1Bl78",
+  "name": "하트 바인드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.ハートバインド",
+   "skillKey": "ハートバインド",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "채찍"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "채찍 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤을 한다. 명중하면, 대상에게 『속도 저하: (SL×4)』의 약화 효과를 준다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "ZyTfC9YPUsJy51Vv",
+  "name": "엑스터시",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.エクスタシー",
+   "skillKey": "エクスタシー",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "채찍"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "채찍 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "삼종 본디지",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +(대상의 봉인 개수×(SL+1))개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "9GB9esrtHgbBzNz9",
+  "name": "디 엔드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.ジエンド",
+   "skillKey": "ジエンド",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "채찍"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "채찍 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤을 한다. 명중했을 때, 이 공격으로 대미지를 주기 전 대상의 HP 잔량이 최대치의 절반 미만이면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 즉사한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "SRzFZDRM79rpgdHi",
+  "name": "히프노 바이트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.ヒュプノバイト",
+   "skillKey": "ヒュプノバイト",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "검",
+    "세검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "검 마스터리",
+        "sl": 1
+       },
+       {
+        "skill": "세검 마스터리",
+        "sl": 1
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [수면]을 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "QPMOP8G2ueii0Qvv",
+  "name": "쇼크 바이트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.ショックバイト",
+   "skillKey": "ショックバイト",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "검",
+    "세검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "검 마스터리",
+        "sl": 1
+       },
+       {
+        "skill": "세검 마스터리",
+        "sl": 1
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [마비]를 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "JnwAW1GKum2fjR5a",
+  "name": "미라주 바이트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.ミラージュバイト",
+   "skillKey": "ミラージュバイト",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "검",
+    "세검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "검 마스터리",
+        "sl": 1
+       },
+       {
+        "skill": "세검 마스터리",
+        "sl": 1
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [혼란]을 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "AGGTwle0MWdSTPwG",
+  "name": "드레인 바이트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.ドレインバイト",
+   "skillKey": "ドレインバイト",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "검",
+    "세검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "검 마스터리",
+        "sl": 3
+       },
+       {
+        "skill": "세검 마스터리",
+        "sl": 3
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다. 또한, 이때 준 대미지의 절반만큼 자신의 【HP】를 회복한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "1JRoIhQ0l3jVV0uJ",
+  "name": "소울 리버레이트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.ソウルリベレイト",
+   "skillKey": "ソウルリベレイト",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "검",
+    "세검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "검 마스터리",
+        "sl": 4
+       },
+       {
+        "skill": "세검 마스터리",
+        "sl": 4
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다. 대상이 어떠한 상태 이상을 받고 있으면, 추가로 대미지 다이스 +(SL×2)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "MvxsNbLbPnf1ixCu",
+  "name": "카타스트로프",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.カタストロフ",
+   "skillKey": "カタストロフ",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "검",
+    "세검"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "검 마스터리",
+        "sl": 5
+       },
+       {
+        "skill": "세검 마스터리",
+        "sl": 5
+       }
+      ]
+     },
+     {
+      "skill": "드레인 바이트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(6+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [석화]를 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "Gyr49864XSxVYxXw",
+  "name": "트래핑",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.トラッピング",
+   "skillKey": "トラッピング",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "검",
+    "세검",
+    "채찍"
+   ],
+   "part": "팔",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "검 마스터리",
+        "sl": 3
+       },
+       {
+        "skill": "세검 마스터리",
+        "sl": 3
+       },
+       {
+        "skill": "채찍 마스터리",
+        "sl": 3
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 자신을 포함한 열에 물리 공격이 가해지면 자신은 공격자에게 물리 공격으로 반격을 한다. 단, 이때의 대미지 다이스를 -(4-SL)개 한다. 대기 상태는 누적 3회의 반격을 하거나, 턴 종료로 해제된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "5BB5QI7BxkzecrwD",
+  "name": "트래핑 II",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.トラッピングII",
+   "skillKey": "トラッピングII",
+   "classKey": "ダークハンター",
+   "weaponReq": [
+    "검",
+    "세검",
+    "채찍"
+   ],
+   "part": "팔",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "any": [
+       {
+        "skill": "검 마스터리",
+        "sl": 3
+       },
+       {
+        "skill": "세검 마스터리",
+        "sl": 3
+       },
+       {
+        "skill": "채찍 마스터리",
+        "sl": 3
+       }
+      ]
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 자신을 포함한 열에 속성 공격이 가해지면 자신은 공격자에게 물리 공격으로 반격을 한다. 단, 이때의 대미지 다이스를 -(4-SL)개 한다. 대기 상태는 누적 3회의 반격을 하거나, 턴 종료로 해제된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "Cba5qBAEWnqbpZKl",
+  "name": "섀도 엔트리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.シャドウエントリ",
+   "skillKey": "シャドウエントリ",
+   "classKey": "ダークハンター",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『회피 상승: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "P2EIwensLxREEvKi",
+  "name": "퍼니시 모어",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.パニッシュモア",
+   "skillKey": "パニッシュモア",
+   "classKey": "ダークハンター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "물리 공격 부스트",
+      "sl": 2
+     },
+     {
+      "skill": "억제 공격 부스트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신의 주행동으로 봉인을 준 경우, 자신이 장비한 무기가 『백병』 분류의 무기라면 그 대상에게 통상 공격으로 추격을 한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "5J3LX07X2zhUTwbW",
+  "name": "핫 스타트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.ホットスタート",
+   "skillKey": "ホットスタート",
+   "classKey": "ダークハンター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>시나리오 개시 시점에 보유한 FP에 +1을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "DFGL1SQ029MzGB8z",
+  "name": "와이어 스턴트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.ワイヤースタント",
+   "skillKey": "ワイヤースタント",
+   "classKey": "ダークハンター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>로프나 사슬을 사용한 판정 전반에 +3을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "WSW6lt8Mguudbzrz",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ダークハンター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】에 +(SL×2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "O9h4HretBkbNoEsw",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ダークハンター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】에 +(SL×2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "GEubUcNcF7vjmpNm",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "ダークハンター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】에 +(SL)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ },
+ {
+  "id": "RAPc8LY3jXfT0Lhi",
+  "name": "억제 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ダークハンター.抑制攻撃ブースト",
+   "skillKey": "抑制攻撃ブースト",
+   "classKey": "ダークハンター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 공격】에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "다크 헌터"
+  }
+ }
+]

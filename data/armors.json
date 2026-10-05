@@ -1,0 +1,104 @@
+[
+ {
+  "id": "M20OKrrQn42qyxtg",
+  "name": "중갑",
+  "type": "armor",
+  "img": "icons/svg/shield.svg",
+  "system": {
+   "key": "重鎧",
+   "armorType": "중갑",
+   "rank": 1,
+   "refinements": [],
+   "description": "",
+   "table": {
+    "defense": "(R*3)+3",
+    "evasion": "-2",
+    "speed": "-6",
+    "price": "(R*R)*120",
+    "materials": [
+     "비늘",
+     "등딱지",
+     "석재",
+     "금속"
+    ]
+   }
+  }
+ },
+ {
+  "id": "PVJ1VpWITyEjMIsK",
+  "name": "경갑",
+  "type": "armor",
+  "img": "icons/svg/shield.svg",
+  "system": {
+   "key": "軽鎧",
+   "armorType": "경갑",
+   "rank": 1,
+   "refinements": [],
+   "description": "",
+   "table": {
+    "defense": "(R*2)+2",
+    "evasion": "0",
+    "speed": "-3",
+    "price": "(R*R)*100",
+    "materials": [
+     "가죽",
+     "껍질",
+     "비늘",
+     "목재",
+     "금속"
+    ]
+   }
+  }
+ },
+ {
+  "id": "aOATQZx4Pu8aEsEH",
+  "name": "옷",
+  "type": "armor",
+  "img": "icons/svg/shield.svg",
+  "system": {
+   "key": "服",
+   "armorType": "옷",
+   "rank": 1,
+   "refinements": [],
+   "description": "",
+   "table": {
+    "defense": "R+1",
+    "evasion": "0",
+    "speed": "0",
+    "price": "(R*R)*80",
+    "materials": [
+     "가죽",
+     "모피",
+     "날개·깃털",
+     "실",
+     "풀"
+    ]
+   }
+  }
+ },
+ {
+  "id": "MhcOXj3TRV6uHBvo",
+  "name": "방패",
+  "type": "armor",
+  "img": "icons/svg/shield.svg",
+  "system": {
+   "key": "盾",
+   "armorType": "방패",
+   "rank": 1,
+   "refinements": [],
+   "description": "",
+   "table": {
+    "defense": "(R+1)/2",
+    "evasion": "-1",
+    "speed": "-4",
+    "price": "(R*R)*70",
+    "materials": [
+     "껍질",
+     "등딱지",
+     "목재",
+     "금속"
+    ]
+   }
+  }
+ }
+]

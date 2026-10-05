@@ -1,0 +1,1051 @@
+[
+ {
+  "id": "9o5XcoZkJfdbjTw4",
+  "name": "성채 기사의 마음가짐",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.城塞騎士の心得",
+   "skillKey": "城塞騎士の心得",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>적의 공격 롤로 대미지를 받으면 자신의 TP 1 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "JPsQJIyweKb1gLF9",
+  "name": "망치 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.鎚マスタリー",
+   "skillKey": "鎚マスタリー",
+   "classKey": "フォートレス",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>망치 공격의 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "TTA5YqkfkBevCOab",
+  "name": "방패 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.盾マスタリー",
+   "skillKey": "盾マスタリー",
+   "classKey": "フォートレス",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '방어' 스킬의 효과 발동 횟수 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "cQC3nMQBD8vaMoTg",
+  "name": "볼트 스트라이크",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.ボルトストライク",
+   "skillKey": "ボルトストライク",
+   "classKey": "フォートレス",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈괴〉+〈뇌〉 속성 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "7NnQ6C9XFMkNDWHJ",
+  "name": "홀리 배시",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.ホーリーバッシュ",
+   "skillKey": "ホーリーバッシュ",
+   "classKey": "フォートレス",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL)개. 준 대미지의 절반만큼 자신의 【HP】 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "4O5XmQTO8IY5At36",
+  "name": "리벤지 스마이트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.リベンジスマイト",
+   "skillKey": "リベンジスマイト",
+   "classKey": "フォートレス",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 대기 상태. 메인 페이즈 종료 시 후발 행동으로 적 단일에게 물리 공격 롤, 대미지 다이스는 (대기 중 받은 대미지+(SL×2))개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "YZ1IRs4JGRqPGZtY",
+  "name": "어스 브레이크",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.アースブレイク",
+   "skillKey": "アースブレイク",
+   "classKey": "フォートレス",
+   "weaponReq": [
+    "망치"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 열",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "망치 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL×2)개. 공격 롤 종료 후 자신은 [마비].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "6AcsmepIh4DL6QvM",
+  "name": "공방일체",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.攻防一体",
+   "skillKey": "攻防一体",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '방어' 스킬로 대기 상태여도 후발 행동으로 통상 공격 가능.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "WsP3SDpbRLOY70yH",
+  "name": "디바이드 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.ディバイドガード",
+   "skillKey": "ディバイドガード",
+   "classKey": "フォートレス",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 대기 상태. 대기 중 대상이 공격 롤의 대상이 되면 자신이 그 공격 롤을 대신 받는다. 대신 받기 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "3I3bN5FRs87WCz5M",
+  "name": "라인 디바이드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.ラインディバイド",
+   "skillKey": "ラインディバイド",
+   "classKey": "フォートレス",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "디바이드 가드",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 대기 상태. 대기 중 대상 열의 인물이 공격 롤의 대상이 되면 자신이 대신 받는다. 대신 받기 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "N3vVySVhI3On4KGu",
+  "name": "올 디바이드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.オールディバイド",
+   "skillKey": "オールディバイド",
+   "classKey": "フォートレス",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "라인 디바이드",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 대기 상태. 대기 중 아군이 공격 롤의 대상이 되면 자신이 대신 받는다. 대신 받기 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "FBOpYDd62yFeeGFu",
+  "name": "디바이드 모드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.ディバイドモード",
+   "skillKey": "ディバイドモード",
+   "classKey": "フォートレス",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "올 디바이드",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 대기 상태. 대기 중 아군이 공격 롤의 대상이 될 때마다 대신 받을지 선택 가능. 대신 받기 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "GjmfW832wjI5N7rk",
+  "name": "도발",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.挑発",
+   "skillKey": "挑発",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안 단일 대상 적 공격 롤의 대상을 누적 (SL+1)회까지 강제로 자신으로 변경.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "Dfkchpw9IJ8EghNX",
+  "name": "패링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.パリィ",
+   "skillKey": "パリィ",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "팔",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤에 대해 【VIT】로 능동 회피, 달성값 +(SL-1).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "BVb0E2c1GGVBmXTO",
+  "name": "머티리얼 패링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.マテリアルパリィ",
+   "skillKey": "マテリアルパリィ",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "팔",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>속성 공격 롤에 대해 【VIT】로 능동 회피, 달성값 +(SL-1).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "5KyqNJcmYEY9usn9",
+  "name": "기사도의 가호",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.騎士道の加護",
+   "skillKey": "騎士道の加護",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『억제 방어 상승: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "bZEi4y0uZxAKCUjB",
+  "name": "혼신 디펜스",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.渾身ディフェンス",
+   "skillKey": "渾身ディフェンス",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『물리 방어 상승: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "4wvyWDDeBu10tZzr",
+  "name": "방어 진형",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.防御陣形",
+   "skillKey": "防御陣形",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "호령",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『방어 상승: (SL×2)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "5c1r5hLg8srb4Jle",
+  "name": "수호 진형",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.守護陣形",
+   "skillKey": "守護陣形",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "호령",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방어 진형",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『내성 부여: 염빙뇌』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "ToAWXCmMNsw6O93U",
+  "name": "전력 도주",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.全力逃走",
+   "skillKey": "全力逃走",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>도주 판정 시 선언. 도주 판정 달성값 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "Q9mrRZjvIdsfX5J0",
+  "name": "신성한 가호",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.聖なる加護",
+   "skillKey": "聖なる加護",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "기사도의 가호",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『억제 방어 상승: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "DMARIIkfCIbHCmWb",
+  "name": "램파트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.ランパート",
+   "skillKey": "ランパート",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『물리 방어 상승: (SL)』과 『내성 상승: 염빙뇌』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "GbD9OC1gkRSMQm44",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "ZQMGMULPzJQLrmmv",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "6rtUrRCa0pmdc6kq",
+  "name": "물리 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.物理防御ブースト",
+   "skillKey": "物理防御ブースト",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【방어】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ },
+ {
+  "id": "VgA1qZxjWoPbLY6L",
+  "name": "억제 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "フォートレス.抑制防御ブースト",
+   "skillKey": "抑制防御ブースト",
+   "classKey": "フォートレス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 방어】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "포트리스"
+  }
+ }
+]

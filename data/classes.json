@@ -1,0 +1,1056 @@
+[
+ {
+  "id": "16slKH30OoJVkUFl",
+  "name": "프린스/프린세스",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "プリンスプリンセス",
+   "abilityBonus": {
+    "str": 5,
+    "tec": 6,
+    "vit": 6,
+    "agi": 5,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "검",
+    "세검",
+    "지팡이",
+    "채찍"
+   ],
+   "armors": [
+    "중갑",
+    "경갑",
+    "옷",
+    "방패"
+   ],
+   "role": [
+    "만능형"
+   ],
+   "position": "중위",
+   "description": "<p>왕후 귀족의 피를 이은 자들. 영지의 이변 해결이나 가문의 명예 회복을 위해 모험에 몸을 던진다. 카리스마로 동료를 통솔하는 지휘관 역할을 맡으며, 무기·방어구와 가문에 전해지는 마법적 물품으로 초상적인 힘도 휘두를 수 있는 만능형이다.</p>"
+  },
+  "_meta": {
+   "number": 1,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=1"
+  }
+ },
+ {
+  "id": "HUC86M2lbwpn1moq",
+  "name": "소드맨",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ソードマン",
+   "abilityBonus": {
+    "str": 7,
+    "tec": 3,
+    "vit": 6,
+    "agi": 5,
+    "luc": 4
+   },
+   "weapons": [
+    "단검",
+    "검",
+    "세검",
+    "도끼"
+   ],
+   "armors": [
+    "중갑",
+    "경갑",
+    "옷",
+    "방패"
+   ],
+   "role": [
+    "물리 공격형"
+   ],
+   "position": "전위",
+   "description": "<p>괴물을 쓰러뜨리는 데 특화된 전사 중에서도 특히 검을 다루는 데 뛰어난 자. 동료와의 연계 전투가 특기이며, 싸움에서 '공격'의 중심을 맡는다.</p>"
+  },
+  "_meta": {
+   "number": 2,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=2"
+  }
+ },
+ {
+  "id": "QmI04DOievxETLzO",
+  "name": "레인저",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "レンジャー",
+   "abilityBonus": {
+    "str": 5,
+    "tec": 5,
+    "vit": 5,
+    "agi": 7,
+    "luc": 7
+   },
+   "weapons": [
+    "단검",
+    "활"
+   ],
+   "armors": [
+    "경갑",
+    "옷",
+    "방패"
+   ],
+   "role": [
+    "만능형"
+   ],
+   "position": "중위",
+   "description": "<p>수해 같은 천연 미궁 탐색에 숙련된 척후이자 사냥꾼. 활 솜씨보다 위험 예측 능력, 민첩성, 소재·약품 지식에서 나오는 종합적인 생존력이 진짜 강점이다. 유능한 레인저를 들인 길드는 전멸 위험이 크게 줄어든다고 한다.</p>"
+  },
+  "_meta": {
+   "number": 3,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=3"
+  }
+ },
+ {
+  "id": "PD8cnALeG15YOAlk",
+  "name": "팔라딘",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "パラディン",
+   "abilityBonus": {
+    "str": 5,
+    "tec": 5,
+    "vit": 7,
+    "agi": 3,
+    "luc": 5
+   },
+   "weapons": [
+    "단검",
+    "검",
+    "세검",
+    "창",
+    "도끼"
+   ],
+   "armors": [
+    "중갑",
+    "경갑",
+    "옷",
+    "방패"
+   ],
+   "role": [
+    "방어형"
+   ],
+   "position": "전위",
+   "description": "<p>방패를 든 수호의 성기사. 다른 사람을 지키는 기술에 특화된 전사로, 최전선에서 공격을 받아내 파티의 피해를 줄이는 방어의 핵심이다.</p>"
+  },
+  "_meta": {
+   "number": 4,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=4"
+  }
+ },
+ {
+  "id": "HwJruwyug9OtS7bn",
+  "name": "다크 헌터",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ダークハンター",
+   "abilityBonus": {
+    "str": 6,
+    "tec": 5,
+    "vit": 5,
+    "agi": 6,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "검",
+    "세검",
+    "채찍"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "특수 공격형"
+   ],
+   "position": "전위",
+   "description": "<p>적의 힘을 깎아내는 교란 전법이 특기인 전사. 채찍으로 묶거나 정교한 검술로 급소를 찔러 적을 약화시킨다. 가벼운 차림의 사냥꾼이라 힘과 맷집 모두 순수 전사에 못 미치지만, 격이 높은 괴물을 쓰러뜨리는 데는 빠질 수 없는 전법을 쓴다.</p>"
+  },
+  "_meta": {
+   "number": 5,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=5"
+  }
+ },
+ {
+  "id": "aT3ef6D7Ow0KKPaU",
+  "name": "메딕",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "メディック",
+   "abilityBonus": {
+    "str": 5,
+    "tec": 6,
+    "vit": 5,
+    "agi": 4,
+    "luc": 4
+   },
+   "weapons": [
+    "단검",
+    "지팡이",
+    "망치"
+   ],
+   "armors": [
+    "옷"
+   ],
+   "role": [
+    "회복형"
+   ],
+   "position": "후위",
+   "description": "<p>동료의 목숨을 지키는 위생사. 모험에서 피할 수 없는 상처와 독을 의술로 치료하고, 뛰어난 솜씨라면 전투 불능자도 즉시 복귀시킨다. 직접 공격력은 떨어지지만, 특히 긴 던전 잠행에서는 모험의 명암을 가르는 존재다.</p>"
+  },
+  "_meta": {
+   "number": 6,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=6"
+  }
+ },
+ {
+  "id": "CjXPvyvQROVp2uCW",
+  "name": "알케미스트",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "アルケミスト",
+   "abilityBonus": {
+    "str": 3,
+    "tec": 7,
+    "vit": 4,
+    "agi": 4,
+    "luc": 5
+   },
+   "weapons": [
+    "단검",
+    "지팡이"
+   ],
+   "armors": [
+    "옷"
+   ],
+   "role": [
+    "속성 공격형"
+   ],
+   "position": "후위",
+   "description": "<p>옛 영화로운 문명에서 단편적으로 이어진 연금술을 연구·실천하는 학사. 대부분 연구기관에 속하지만 모험가로 활동하는 이단자도 있으며, 장신구에 짜 넣은 연금술 기동 장치로 염·빙·뇌를 다뤄 적을 공격한다.</p>"
+  },
+  "_meta": {
+   "number": 7,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=7"
+  }
+ },
+ {
+  "id": "F6mEMpssCMTpBvLA",
+  "name": "바드",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "バード",
+   "abilityBonus": {
+    "str": 4,
+    "tec": 5,
+    "vit": 4,
+    "agi": 5,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "검",
+    "활"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "지원형"
+   ],
+   "position": "후위",
+   "description": "<p>음유시인. 자신의 전투력은 낮지만 주가(呪歌)로 동료 전체의 능력을 크게 강화한다. 장기전에서 진가를 발휘한다.</p>"
+  },
+  "_meta": {
+   "number": 8,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=8"
+  }
+ },
+ {
+  "id": "PpGKTUXh5PvKULnc",
+  "name": "무사",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ブシドー",
+   "abilityBonus": {
+    "str": 7,
+    "tec": 3,
+    "vit": 4,
+    "agi": 5,
+    "luc": 4
+   },
+   "weapons": [
+    "도",
+    "단검"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "물리 공격형"
+   ],
+   "position": "전위",
+   "description": "<p>동쪽 나라에서 전해진 도술(刀術)의 계승자. 죽음을 두려워하지 않는 파고들기에서 나오는 날카로운 일격과, 자세에 따라 변화무쌍하게 싸우는 것이 특징이다.</p>"
+  },
+  "_meta": {
+   "number": 9,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=9"
+  }
+ },
+ {
+  "id": "8zmjVaggQf4BV8yL",
+  "name": "커스 메이커",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "カースメーカー",
+   "abilityBonus": {
+    "str": 3,
+    "tec": 6,
+    "vit": 4,
+    "agi": 4,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "지팡이"
+   ],
+   "armors": [
+    "옷"
+   ],
+   "role": [
+    "특수 공격형"
+   ],
+   "position": "후위",
+   "description": "<p>저주를 다뤄 적을 약화시키는 직업. 주언(呪言)으로 적의 능력을 빼앗고 오감을 잃게 하며, 때로는 즉시 죽음을 가져온다. 가냘프지만 극히 위험하다.</p>"
+  },
+  "_meta": {
+   "number": 10,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=10"
+  }
+ },
+ {
+  "id": "NsDzPD1j4qUrQFrs",
+  "name": "거너",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ガンナー",
+   "abilityBonus": {
+    "str": 6,
+    "tec": 5,
+    "vit": 4,
+    "agi": 5,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "총"
+   ],
+   "armors": [
+    "옷"
+   ],
+   "role": [
+    "만능형"
+   ],
+   "position": "후위",
+   "description": "<p>총을 다뤄 다채로운 사격으로 여러 적에 대응한다. 속성탄과 저격 등 공격 수단이 풍부하지만 선제를 잡기는 어렵다.</p>"
+  },
+  "_meta": {
+   "number": 11,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=11"
+  }
+ },
+ {
+  "id": "5gjWpBJE36fP698a",
+  "name": "닥터 마구스",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ドクトルマグス",
+   "abilityBonus": {
+    "str": 6,
+    "tec": 6,
+    "vit": 5,
+    "agi": 5,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "검",
+    "지팡이"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "만능형"
+   ],
+   "position": "중위",
+   "description": "<p>자연 숭배와 조령 신앙에서 태어난 샤머니즘 제사. 본래는 고향에 뿌리를 내리고 땅을 지키며 사는 존재지만, 미궁의 피해를 막기 위해 모험가가 되는 경우가 많다. 음양술과 영적 무예로 치유사와 전사 양쪽으로 활약한다.</p>"
+  },
+  "_meta": {
+   "number": 12,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=12"
+  }
+ },
+ {
+  "id": "Nus5hTqrDZTsFnU9",
+  "name": "워리어",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ウォリアー",
+   "abilityBonus": {
+    "str": 7,
+    "tec": 3,
+    "vit": 6,
+    "agi": 4,
+    "luc": 4
+   },
+   "weapons": [
+    "단검",
+    "검",
+    "도끼",
+    "망치"
+   ],
+   "armors": [
+    "경갑",
+    "옷",
+    "방패"
+   ],
+   "role": [
+    "물리 공격형"
+   ],
+   "position": "전위",
+   "description": "<p>투사. 모험가라기보다 순수한 싸움의 전문가인 검투사나 용병에 가깝다. 단련된 육체로 큼직한 만검이나 전투 망치를 힘껏 휘두르며, 갑갑한 중장비는 꺼린다. 초상적인 힘은 없지만 언제든 100%의 힘을 발휘하는 전투의 프로다.</p>"
+  },
+  "_meta": {
+   "number": 13,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=13"
+  }
+ },
+ {
+  "id": "aLzMrpJxb3NNjPM8",
+  "name": "팔랑크스",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ファランクス",
+   "abilityBonus": {
+    "str": 5,
+    "tec": 4,
+    "vit": 7,
+    "agi": 3,
+    "luc": 5
+   },
+   "weapons": [
+    "단검",
+    "검",
+    "창"
+   ],
+   "armors": [
+    "중갑",
+    "경갑",
+    "옷",
+    "방패"
+   ],
+   "role": [
+    "방어형"
+   ],
+   "position": "중위",
+   "description": "<p>전장에서 유래한 중장 보병. 원래 팔랑크스는 무수한 중장 보병이 밀집 진형을 이룬 군단을 뜻한다. 무거운 갑옷과 대형 방패로 몸을 굳히고 긴 창을 내민 채 전진하는 모습은 살아 있는 공격형 방벽 그 자체다.</p>"
+  },
+  "_meta": {
+   "number": 14,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=14"
+  }
+ },
+ {
+  "id": "A0ghBjzNmGak0R3B",
+  "name": "파이리츠",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "パイレーツ",
+   "abilityBonus": {
+    "str": 6,
+    "tec": 5,
+    "vit": 5,
+    "agi": 6,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "세검",
+    "총"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "만능형"
+   ],
+   "position": "중위",
+   "description": "<p>원래 해적을 뜻한다. 넓게는 바다의 악당을 응징해 재물을 되찾는 사략선원이나, 외딴섬의 보물을 찾아 항해하는 트레저 헌터까지 포함한다. 전투와 탐색을 겸업하는 클래스다.</p>"
+  },
+  "_meta": {
+   "number": 15,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=15"
+  }
+ },
+ {
+  "id": "aEo5jxi4x4HVoEtM",
+  "name": "시노비",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "シノビ",
+   "abilityBonus": {
+    "str": 6,
+    "tec": 6,
+    "vit": 3,
+    "agi": 7,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "도"
+   ],
+   "armors": [
+    "옷"
+   ],
+   "role": [
+    "특수형"
+   ],
+   "position": "중위",
+   "description": "<p>그림자라고도 불리며 동쪽 나라의 역사를 뒤에서 떠받쳐 온 존재. 때로는 척후, 때로는 밀정, 때로는 암살자로서 남몰래 역사를 움직여 왔다. 대부분 시노비 마을에서 나고 자라 어릴 때부터 수행하며, 특정 주군 한 사람만을 평생 섬긴다.</p>"
+  },
+  "_meta": {
+   "number": 16,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=16"
+  }
+ },
+ {
+  "id": "76EyUdwV9EhZbIeD",
+  "name": "몽크",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "モンク",
+   "abilityBonus": {
+    "str": 6,
+    "tec": 6,
+    "vit": 5,
+    "agi": 6,
+    "luc": 3
+   },
+   "weapons": [
+    "단검",
+    "지팡이",
+    "망치",
+    "주먹"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "물리 공격형",
+    "회복형"
+   ],
+   "position": "중위",
+   "description": "<p>세속에 관심을 두지 않고 자기 수행에만 생을 바치는 구도자. 심신을 단련하고 생명의 에너지인 '기'를 다루며, 그 힘을 생명 활성화·치료·파괴에 두루 쓴다. 전투와 회복을 겸업한다.</p>"
+  },
+  "_meta": {
+   "number": 17,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=17"
+  }
+ },
+ {
+  "id": "HOvWAJKmOBbRQSxY",
+  "name": "조디악",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ゾディアック",
+   "abilityBonus": {
+    "str": 3,
+    "tec": 6,
+    "vit": 4,
+    "agi": 4,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "지팡이"
+   ],
+   "armors": [
+    "옷"
+   ],
+   "role": [
+    "속성 공격형"
+   ],
+   "position": "후위",
+   "description": "<p>본래 별자리를 뜻하며, 좁게는 이단의 점성술사다. 별의 위치로 운명의 흐름을 읽는 점술사이자, 별의 힘을 끌어내 공격하는 성술(星術)사다.</p>"
+  },
+  "_meta": {
+   "number": 18,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=18"
+  }
+ },
+ {
+  "id": "C0h0iyyVWOtckXPY",
+  "name": "비스트 킹",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ビーストキング",
+   "abilityBonus": {
+    "str": 6,
+    "tec": 5,
+    "vit": 5,
+    "agi": 4,
+    "luc": 7
+   },
+   "weapons": [
+    "단검",
+    "창"
+   ],
+   "armors": [
+    "옷",
+    "방패"
+   ],
+   "role": [
+    "특수 공격형"
+   ],
+   "position": "중위",
+   "description": "<p>새·짐승·벌레·물고기와 뜻을 통하는 존재. 대부분 생활 속에서 짐승의 도움을 받아 살아온 자들로, 말 없는 대화로 짐승을 부린다. '소환수' 스킬로 토큰(짐승)을 배치해 싸운다.</p>"
+  },
+  "_meta": {
+   "number": 19,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=19"
+  }
+ },
+ {
+  "id": "RjJoW0DbQe0yQy48",
+  "name": "발리스타",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "バリスタ",
+   "abilityBonus": {
+    "str": 7,
+    "tec": 3,
+    "vit": 4,
+    "agi": 3,
+    "luc": 5
+   },
+   "weapons": [
+    "단검",
+    "쇠뇌"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "물리 공격형"
+   ],
+   "position": "중위",
+   "description": "<p>본래 거대한 노포를 뜻한다. 성곽에 설치하던 병기를 전투·사냥용으로 소형화한 것을 다루는 사수다. 소형화했다지만 사람 키만큼 크고 무거워 다루기 쉽지 않다.</p>"
+  },
+  "_meta": {
+   "number": 20,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=20"
+  }
+ },
+ {
+  "id": "2vvTSH3VcW229Fm2",
+  "name": "농부",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ファーマー",
+   "abilityBonus": {
+    "str": 4,
+    "tec": 3,
+    "vit": 4,
+    "agi": 3,
+    "luc": 7
+   },
+   "weapons": [
+    "단검",
+    "농기구"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "특수형"
+   ],
+   "position": "후위",
+   "description": "<p>무고한 농민이 모험가가 될 수 있을까? 미궁에는 막대한 현상금과 비보가 따르기 마련이라, 농민 생활에 질렸거나 생활을 버려야 했던 이들이 일확천금을 노리고 미궁에 도전하기도 한다. 탐색·채집 특화 클래스다.</p>"
+  },
+  "_meta": {
+   "number": 21,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=21"
+  }
+ },
+ {
+  "id": "FSFXOAjmcv1qMVqb",
+  "name": "장군",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ショーグン",
+   "abilityBonus": {
+    "str": 7,
+    "tec": 5,
+    "vit": 4,
+    "agi": 6,
+    "luc": 4
+   },
+   "weapons": [
+    "단검",
+    "도"
+   ],
+   "armors": [
+    "옷"
+   ],
+   "role": [
+    "물리 공격형",
+    "지원형"
+   ],
+   "position": "전위",
+   "description": "<p>동쪽 나라에서는 왕후 귀족도 무인·장수로서의 실력을 중시한다. 무사와 모노노후 위에 서는 하타모토·다이묘, 그 정점이 쇼군이다. 전사이자 지휘관이다.</p>"
+  },
+  "_meta": {
+   "number": 22,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=22"
+  }
+ },
+ {
+  "id": "Lz7AGic3u32T7zux",
+  "name": "나이트 시커",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ナイトシーカー",
+   "abilityBonus": {
+    "str": 6,
+    "tec": 5,
+    "vit": 4,
+    "agi": 7,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "검"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "특수 공격형"
+   ],
+   "position": "중위",
+   "description": "<p>어둠 밤에 숨은 암살자. 야적이라고도 불리며 사회의 이면을 오가는 존재다. 재빠른 몸놀림으로 어둠에 섞여 칼날을 휘두르거나 던지며, 독을 바른 칼날로 상대를 약화시켜 몰아붙인다.</p>"
+  },
+  "_meta": {
+   "number": 23,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=23"
+  }
+ },
+ {
+  "id": "Cg0qfyLySEwVsLYU",
+  "name": "포트리스",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "フォートレス",
+   "abilityBonus": {
+    "str": 5,
+    "tec": 5,
+    "vit": 7,
+    "agi": 3,
+    "luc": 5
+   },
+   "weapons": [
+    "단검",
+    "망치"
+   ],
+   "armors": [
+    "중갑",
+    "경갑",
+    "옷",
+    "방패"
+   ],
+   "role": [
+    "방어형"
+   ],
+   "position": "전위",
+   "description": "<p>본래 성채를 뜻하는 말. 성채를 지키는 중장 기사를 가리키며, 모험가로서는 적의 공격을 받아내는 데 특화된 중전사다. 피해를 줄이기보다 스스로 받아내는 철벽의 요새다.</p>"
+  },
+  "_meta": {
+   "number": 24,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=24"
+  }
+ },
+ {
+  "id": "LJdkmrfUELYLOcYf",
+  "name": "스나이퍼",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "スナイパー",
+   "abilityBonus": {
+    "str": 6,
+    "tec": 4,
+    "vit": 4,
+    "agi": 5,
+    "luc": 7
+   },
+   "weapons": [
+    "단검",
+    "활"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "물리 공격형"
+   ],
+   "position": "후위",
+   "description": "<p>글자 그대로 저격수. 종군 궁병, 경기 궁술가, 사냥꾼 등 출신은 다양하지만, 활 솜씨가 괴물과의 싸움에서 큰 힘이 된다는 점은 같다. 전투와 탐색을 겸업한다.</p>"
+  },
+  "_meta": {
+   "number": 25,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=25"
+  }
+ },
+ {
+  "id": "MB9xjsEvlY1hZJUU",
+  "name": "룬 마스터",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ルーンマスター",
+   "abilityBonus": {
+    "str": 3,
+    "tec": 7,
+    "vit": 4,
+    "agi": 4,
+    "luc": 5
+   },
+   "weapons": [
+    "단검",
+    "지팡이"
+   ],
+   "armors": [
+    "옷"
+   ],
+   "role": [
+    "속성 공격형"
+   ],
+   "position": "후위",
+   "description": "<p>세계에 잠들어 있는 신비한 힘의 일단을 알고 다루는 자들. 룬이라 불리는 성인(聖印)에 담긴 마술적 힘을 다루는, 말 그대로 마법사다.</p>"
+  },
+  "_meta": {
+   "number": 26,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=26"
+  }
+ },
+ {
+  "id": "Wu32SZ7RrF9uOhsB",
+  "name": "댄서",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ダンサー",
+   "abilityBonus": {
+    "str": 5,
+    "tec": 5,
+    "vit": 4,
+    "agi": 7,
+    "luc": 5
+   },
+   "weapons": [
+    "단검",
+    "검"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "지원형",
+    "물리 공격형"
+   ],
+   "position": "중위",
+   "description": "<p>무희. 기예로 살아가는 유랑민이 모험가를 겸하는 일은 드물지 않다. 단순한 흥을 돋우는 무희가 아니라, 추는 춤 자체가 무기가 되는 자들이다. 전투와 지원을 겸업한다.</p>"
+  },
+  "_meta": {
+   "number": 27,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=27"
+  }
+ },
+ {
+  "id": "PX4lqiMFOOTsi7Hc",
+  "name": "미스틱",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ミスティック",
+   "abilityBonus": {
+    "str": 3,
+    "tec": 6,
+    "vit": 4,
+    "agi": 4,
+    "luc": 6
+   },
+   "weapons": [
+    "단검",
+    "지팡이"
+   ],
+   "armors": [
+    "옷"
+   ],
+   "role": [
+    "특수 공격형"
+   ],
+   "position": "후위",
+   "description": "<p>술사 중에서도 가장 알려지지 않은 존재. 깊은 숲에 사는 종족들 사이에서만 전해지던 비술 '방진술'의 사용자다. 방진은 숲을 닫고 외부 침입자를 거부하는 데 쓰였다.</p>"
+  },
+  "_meta": {
+   "number": 28,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=28"
+  }
+ },
+ {
+  "id": "AgTQjV8lKwoWZCqh",
+  "name": "모노노후",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "モノノフ",
+   "abilityBonus": {
+    "str": 7,
+    "tec": 3,
+    "vit": 5,
+    "agi": 5,
+    "luc": 5
+   },
+   "weapons": [
+    "단검",
+    "망치",
+    "도"
+   ],
+   "armors": [
+    "경갑",
+    "옷"
+   ],
+   "role": [
+    "물리 공격형"
+   ],
+   "position": "전위",
+   "description": "<p>전장은 사나이의 꽃무대. 그 말을 체현하는 존재가 모노노후다. 동쪽 나라의 무사 계급이지만, 싸우는 모습을 보면 무사와의 차이가 한눈에 보인다. 목숨을 건 무용을 중시한다.</p>"
+  },
+  "_meta": {
+   "number": 29,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=29"
+  }
+ },
+ {
+  "id": "JcOO0S5pmwhFyr8V",
+  "name": "임페리얼",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "インペリアル",
+   "abilityBonus": {
+    "str": 7,
+    "tec": 5,
+    "vit": 7,
+    "agi": 4,
+    "luc": 3
+   },
+   "weapons": [
+    "단검",
+    "검",
+    "포검"
+   ],
+   "armors": [
+    "중갑",
+    "경갑",
+    "옷",
+    "방패"
+   ],
+   "role": [
+    "물리 공격형"
+   ],
+   "position": "전위",
+   "description": "<p>서쪽 대륙 북방, 절계운상역에 있는 하늘의 제국. 고대에서 복각한 기계 문명을 가진 그 제국의 기사, 또는 그 기술을 이은 자들이다. 기사이지만 방어보다 공격에 무게를 둔다. 드라이브 스킬을 쓰면 오버히트가 생긴다('전투 룰' 참조).</p>"
+  },
+  "_meta": {
+   "number": 30,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=30"
+  }
+ },
+ {
+  "id": "47xLLKKV3a5DpOiI",
+  "name": "하이랜더",
+  "type": "class",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+   "key": "ハイランダー",
+   "abilityBonus": {
+    "str": 7,
+    "tec": 3,
+    "vit": 6,
+    "agi": 5,
+    "luc": 4
+   },
+   "weapons": [
+    "단검",
+    "검",
+    "창"
+   ],
+   "armors": [
+    "경갑",
+    "옷",
+    "방패"
+   ],
+   "role": [
+    "물리 공격형"
+   ],
+   "position": "전위",
+   "description": "<p>원래 고원에 사는 민족을 뜻한다. 험준한 지형에서 자란 긍지 높은 전사 민족으로, 창을 쓰면 따를 자가 드물다. 본질은 정의로운 성향과 피(HP)를 대가로 힘을 끌어내는 전법이다.</p>"
+  },
+  "_meta": {
+   "number": 31,
+   "source": "https://yggdrasystem.sakura.ne.jp/nssq/data/classdetail.php?classid=31"
+  }
+ }
+]

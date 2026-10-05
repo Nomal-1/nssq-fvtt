@@ -1,0 +1,631 @@
+[
+ {
+  "id": "JgC1SyD3Q3sYIQvq",
+  "name": "괴물 지식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.怪物知識",
+   "skillKey": "怪物知識",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>에너미 식별 판정에 +2를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "Ly9n3ow749Kv4Ci7",
+  "name": "운동 기술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.運動技術",
+   "skillKey": "運動技術",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>전신 운동에 관한 판정에 +2를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "OT3zEkztQrHgkM8U",
+  "name": "예민한 감각",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.鋭敏感覚",
+   "skillKey": "鋭敏感覚",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>오감을 사용한 감지 등의 판정에 +2를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "X3LmRo27JYDEFgMW",
+  "name": "잠복",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.潜伏",
+   "skillKey": "潜伏",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>몸을 숨기기 위한 판정에 +2를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "NhWVRP4tgXJtYvST",
+  "name": "추적",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.追跡",
+   "skillKey": "追跡",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>발자국 추적이나 미행(원문 표기 '備考') 판정에 +2를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "HM9Rx9Fd40KlvgP2",
+  "name": "지도 작성",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.地図作成",
+   "skillKey": "地図作成",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지도 작성이나 독해 판정에 +2를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "DgPXhW2sG0H5QAqM",
+  "name": "전승 지식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.伝承知識",
+   "skillKey": "伝承知識",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>신화나 전승에 관한 지식 판정에 +2를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "78x9Vv60he4PLaaG",
+  "name": "기승",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.騎乗",
+   "skillKey": "騎乗",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>동물을 능숙하게 타기 위한 판정에 +2를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "CITSrNb8Ix7PsfgU",
+  "name": "조종",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.操縦",
+   "skillKey": "操縦",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>탈것을 능숙하게 다루기 위한 판정에 +2를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "HvyEa5AxIVFxsLdf",
+  "name": "고대 문명학",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.古代文明学",
+   "skillKey": "古代文明学",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>기계나 컴퓨터 조작 판정에 +2를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "IAfbUDPJ0S9betCy",
+  "name": "벌채",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.伐採",
+   "skillKey": "伐採",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>벌채 이벤트에서 통상 횟수에 더해 채취 판정을 (SL)회 추가로 할 수 있다. 이 추가분은 아앗! 값을 0으로 취급한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "PcJvUsTJbnO8lUIj",
+  "name": "채굴",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.採掘",
+   "skillKey": "採掘",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>채굴 이벤트에서 통상 횟수에 더해 채취 판정을 (SL)회 추가로 할 수 있다. 이 추가분은 아앗! 값을 0으로 취급한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "5Foyoms0aDOo7JuN",
+  "name": "채취",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.採取",
+   "skillKey": "採取",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>채취 이벤트에서 통상 횟수에 더해 채취 판정을 (SL)회 추가로 할 수 있다. 이 추가분은 아앗! 값을 0으로 취급한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "P3I00myffe98tIXi",
+  "name": "짐꾼",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.荷役",
+   "skillKey": "荷役",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아이템 소지 수에 +3을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "P7gb8BsiI3jER5zS",
+  "name": "회복 요리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.回復料理",
+   "skillKey": "回復料理",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>캠프 시 【HP】 회복량이 2배가 된다. 『조리기구 세트』가 필요하다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "aSSEHhsDcrbD8E26",
+  "name": "일품 요리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.絶品料理",
+   "skillKey": "絶品料理",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>캠프 시 【TP】 회복량이 2배가 된다. 『조리기구 세트』가 필요하다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ },
+ {
+  "id": "GQyikvtcxnxihxEB",
+  "name": "약효 요리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "common.薬効料理",
+   "skillKey": "薬効料理",
+   "classKey": "common",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>캠프 시 상태 이상이 회복되게 된다. 『조리기구 세트』가 필요하다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커먼"
+  }
+ }
+]

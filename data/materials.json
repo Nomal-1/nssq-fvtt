@@ -1,0 +1,301 @@
+[
+ {
+  "id": "BgL73atEWCL1qU4L",
+  "name": "이빨",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "牙",
+   "materialType": "이빨",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "SvPMcs46aoGtyy1S",
+  "name": "가죽",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "皮",
+   "materialType": "가죽",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "VC1FCdiy69NvsNxu",
+  "name": "모피",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "毛皮",
+   "materialType": "모피",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "OHMXlrFD8gaIOY02",
+  "name": "뿔",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "角",
+   "materialType": "뿔",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "OiR5ev8L6dAbFqRj",
+  "name": "발톱",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "爪",
+   "materialType": "발톱",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "BP6hjBL5AwNqnoI3",
+  "name": "뼈",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "骨",
+   "materialType": "뼈",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "P3noJqBIIgQqni3u",
+  "name": "날개·깃털",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "羽",
+   "materialType": "날개·깃털",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "9srg5rVDknvXdpBg",
+  "name": "껍질",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "殻",
+   "materialType": "껍질",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "4rJXPCeVGBLIN6bq",
+  "name": "가시",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "針",
+   "materialType": "가시",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "MqvLGhSG4j9HBKIF",
+  "name": "칼날",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "刃",
+   "materialType": "칼날",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "ZcBeV6Wft5OyRjNo",
+  "name": "실",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "糸",
+   "materialType": "실",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "9uPyDNzzKuNM9NWN",
+  "name": "비늘",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "鱗",
+   "materialType": "비늘",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "JWSOgmJvd6AlxW8k",
+  "name": "등딱지",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "甲羅",
+   "materialType": "등딱지",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "Qtw67WowX97XXP0t",
+  "name": "결정",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "結晶",
+   "materialType": "결정",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "MdcITadwaR9K5ixv",
+  "name": "목재",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "木材",
+   "materialType": "목재",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "QlJADtF2kTD1m2ZQ",
+  "name": "덩굴",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "蔓",
+   "materialType": "덩굴",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "S7rM76wevh7b3VLl",
+  "name": "가지",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "枝",
+   "materialType": "가지",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "68yTwB68qJdQkpe9",
+  "name": "석재",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "石材",
+   "materialType": "석재",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "VWkFmPgesCHm1jdi",
+  "name": "금속",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "金属",
+   "materialType": "금속",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "OWoQxFXOcdc7SDiy",
+  "name": "보석",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "宝石",
+   "materialType": "보석",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "GR0XASB8trgIJo1T",
+  "name": "풀",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "草",
+   "materialType": "풀",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "DBMHJBdT4TRpF4zP",
+  "name": "꽃",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "花",
+   "materialType": "꽃",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ },
+ {
+  "id": "HcJaMEtc4skzT9RH",
+  "name": "열매",
+  "type": "material",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+   "key": "果実",
+   "materialType": "열매",
+   "rank": 1,
+   "quantity": 1,
+   "description": ""
+  }
+ }
+]

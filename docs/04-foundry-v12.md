@@ -126,7 +126,7 @@ nssq/
 - [ ] #2 Combat/Combatant 하위 타입 데이터모델 지원 여부 → 미지원이면 `flags.nssq`
 - [ ] #3 ActiveEffect 지속 시간 자동 처리를 피하는 방법
 - [ ] #4 `CONFIG.Actor.trackableAttributes` 형식
-- [ ] #5 `compilePack` 옵션(yaml/json 소스 구분)과 `packs` 항목의 `system`/`type` 키
+- [x] #5 `compilePack` 옵션과 `packs` 항목 → `@foundryvtt/foundryvtt-cli` **1.1.0**으로 고정(2.x 이상은 v13용). 소스는 문서당 JSON 1개, 확장자로 yaml/json 구분. 문서마다 `_key` 필수: 최상위 `!items!<id>`·`!actors!<id>`·`!folders!<id>`, 임베디드 `!actors.items!<actorId>.<itemId>`. 액터의 `items`는 객체 배열로 넣으면 CLI가 id 배열로 바꿔 따로 저장한다. `packs` 항목은 `{ name, label, path, type, system, ownership }`, 폴더 묶음은 `packFolders`. `tools/pack.mjs`가 system.json의 두 항목을 다시 쓴다.
 - [ ] #7 `game.users.activeGM` 사용 가능 여부(없으면 활성 GM 중 id가 가장 작은 사용자)
 - [ ] #8 매니페스트 `grid` 키 형식(v12)과 `primaryTokenAttribute` 지원 여부
 - [ ] #6 `renderChatMessage`에서 버튼 이벤트를 위임할 때 메시지 재렌더 시의 중복 바인딩

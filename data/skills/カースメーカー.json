@@ -1,0 +1,1222 @@
+[
+ {
+  "id": "OI5Tn2yco6RJQuyO",
+  "name": "저주의 방울 소리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.呪いの鈴音",
+   "skillKey": "呪いの鈴音",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 3
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 『주언』 스킬 사용 시 선언. 그 억제 공격 달성값 +5.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "IbgV14rvZ3J1l05E",
+  "name": "주언 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.呪言マスタリー",
+   "skillKey": "呪言マスタリー",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 『주언』 스킬이 거는 약화 효과의 지속 턴 수 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "JYdBr02EkJtpqbR0",
+  "name": "탈력의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.力祓いの呪言",
+   "skillKey": "力祓いの呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약화 효과 『물리 공격 저하: (SL+1)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "3kTB3UHUtHWrW3YP",
+  "name": "연체의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.軟身の呪言",
+   "skillKey": "軟身の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약화 효과 『물리 방어 저하: (SL+1)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "IvfIhFEHaUjH4khD",
+  "name": "발 엇갈림의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.脚違えの呪言",
+   "skillKey": "脚違えの呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약화 효과 『속도 저하: (SL×3)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "QLDm8yBfLOvtsY5D",
+  "name": "봉인의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.封の呪言",
+   "skillKey": "封の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 《봉인의 주언: 두부》《봉인의 주언: 상지》《봉인의 주언: 하지》 중 하나로 선언. 자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 선언한 [머리]/[팔]/[다리] 봉인 부여.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "8jdPpiXS3GnsGQL4",
+  "name": "환혹의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.幻惑の呪言",
+   "skillKey": "幻惑の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [맹목] 부여.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "ZL5v3yH7e7ak4gMr",
+  "name": "마비의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.痺縛の呪言",
+   "skillKey": "痺縛の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [마비] 부여.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "2uwevTaJt9xd2qgo",
+  "name": "광란의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.狂乱の呪言",
+   "skillKey": "狂乱の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [혼란] 부여.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "VohxsqSVEcFmr7GQ",
+  "name": "수면의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.睡眠の呪言",
+   "skillKey": "睡眠の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [수면] 부여.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "IO7nTgA7pcZQWBm8",
+  "name": "병독의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.病毒の呪言",
+   "skillKey": "病毒の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [독] 부여.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "6kpp7KWbprA3p8KT",
+  "name": "죄구의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.罪咎の呪言",
+   "skillKey": "罪咎の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [저주] 부여.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "YamkehfDonTdvxWx",
+  "name": "죽음의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.死の呪言",
+   "skillKey": "死の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL-2)), 승리 시 대상 즉사.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "GD70udIKYwMz7e5j",
+  "name": "나를 경외하라",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.畏れよ我を",
+   "skillKey": "畏れよ我を",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [공포] 부여.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "5GzkqhKABGu346sk",
+  "name": "명하노니, 멈추어라",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.命ず言動能わず",
+   "skillKey": "命ず言動能わず",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "나를 경외하라",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴 동안 대상은 어떤 행동도 할 수 없고 【회피】는 0으로 취급.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "IaUfSZqZ9iilEaSL",
+  "name": "명하노니, 상잔하라",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.命ず輩を喰らえ",
+   "skillKey": "命ず輩を喰らえ",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "나를 경외하라",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴, 대상은 자신 이외의 에너미를 공격한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "Cd76dbajnsf3Fmw5",
+  "name": "명하노니, 주인을 감싸라",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.命ず主を庇え",
+   "skillKey": "命ず主を庇え",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "나를 경외하라",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴 동안 사용자가 공격 대상이 되면 이 스킬의 대상이 대신 그 공격을 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "DuyUlCPKROQ03E5u",
+  "name": "명하노니, 자멸하라",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.命ず自ら滅せよ",
+   "skillKey": "命ず自ら滅せよ",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "나를 경외하라",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴, 대상은 자기 자신을 공격한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "T9JpeHuUBuaghOsn",
+  "name": "페인 트레이드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.ペイントレード",
+   "skillKey": "ペイントレード",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>무속성 속성 공격. 이때 자신의 【속성 공격】을 (최대 HP − 현재 HP)÷2만큼 높은 것으로 취급.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "Ncy2dewIMQxe3QCy",
+  "name": "허약의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.虚弱の呪言",
+   "skillKey": "虚弱の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약화 효과 『억제 방어 저하: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "2hdtscDROMyHLTYf",
+  "name": "저주의 침식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.呪いの浸食",
+   "skillKey": "呪いの浸食",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안 자신의 【억제 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "9fZmIYJIyaS9XGfu",
+  "name": "저주 사슬의 은혜",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.呪鎖の恩恵",
+   "skillKey": "呪鎖の恩恵",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신이 어떤 봉인이든 받고 있으면 【억제 공격】 +1.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "KuaNPvzThrKU8hyq",
+  "name": "박식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.博識",
+   "skillKey": "博識",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지식 관련 판정 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "OSM0terIy0Lt9RX5",
+  "name": "사념 송신",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.思念送信",
+   "skillKey": "思念送信",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상이 잠들었을 때 그 꿈에 나타나 메시지를 보낼 수 있다. 일방 송신만 가능하며 대상의 말은 들을 수 없다. 대상의 이름과 있는 곳을 알아야 한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "RlqaXvhh9ryX3SCG",
+  "name": "망각의 주언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.忘却の呪言",
+   "skillKey": "忘却の呪言",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정, 승리 시 대상의 부분적 기억('누구의 거처' 정도)이나 공포 체험을 잊게 한다. 효과는 영구지만 시전자가 암호를 외우면 기억이 돌아온다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "3UREklLRlAOQdCxs",
+  "name": "게아스",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.ギアス",
+   "skillKey": "ギアス",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주언 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정, 승리 시 특정 행동을 금하는 제약 부여. 금지 행동을 시도하면 1D6 실대미지, 계속 어기는 동안 1시간마다 1D6 실대미지. 시전자가 해제할 때까지 영구. 호흡 금지처럼 자살적 결과를 낳는 명령은 불가.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "MIjKnBQtowNjBI64",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "4ypNyTdxbKgoHWIM",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "J70ekPtCEh5udShD",
+  "name": "억제 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.抑制攻撃ブースト",
+   "skillKey": "抑制攻撃ブースト",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 공격】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ },
+ {
+  "id": "P7eupszZcnUwR19Y",
+  "name": "억제 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "カースメーカー.抑制防御ブースト",
+   "skillKey": "抑制防御ブースト",
+   "classKey": "カースメーカー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 방어】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "커스 메이커"
+  }
+ }
+]

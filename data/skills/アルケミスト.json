@@ -1,0 +1,997 @@
+[
+ {
+  "id": "YlsuxMbvORwxVRvq",
+  "name": "금단의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.禁断の術式",
+   "skillKey": "禁断の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 3
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>속성 공격이 명중했을 때 사용을 선언한다. 대미지 다이스에 +10개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "2hXzmD3Y4VNA4qdI",
+  "name": "연금 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.錬金マスタリー",
+   "skillKey": "錬金マスタリー",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 『술식』의 스킬을 사용한 공격 롤의 속성 명중에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "P5x9eyO2PWcSNeiS",
+  "name": "삼색 초급 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.三色初級術式",
+   "skillKey": "三色初級術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [
+    "불꽃의 술식",
+    "얼음의 술식",
+    "번개의 술식"
+   ],
+   "sl": 1,
+   "description": "<p>이 스킬을 사용할 때는 아래 중 하나의 명칭으로 선언한다. 《불꽃의 술식》《얼음의 술식》《번개의 술식》 〈염〉〈빙〉〈뇌〉 중 하나의 속성의 속성 공격을 한다. 또한 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "NBmFcKUH5eUhhn89",
+  "name": "화염의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.火炎の術式",
+   "skillKey": "火炎の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "삼색 초급 술식",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈염〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +((SL+1)×2)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "8YLWDCPzEPMhR7Ee",
+  "name": "빙결의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.氷結の術式",
+   "skillKey": "氷結の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "삼색 초급 술식",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈빙〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +((SL+1)×2)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "58s1DLTUWVnxysew",
+  "name": "뇌격의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.雷撃の術式",
+   "skillKey": "雷撃の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "삼색 초급 술식",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈뇌〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +((SL+1)×2)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "W4PJAZkI1LkQIF3a",
+  "name": "폭염의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.爆炎の術式",
+   "skillKey": "爆炎の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "삼색 초급 술식",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈염〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "IcZwg9xsql1nynZk",
+  "name": "빙람의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.氷嵐の術式",
+   "skillKey": "氷嵐の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "삼색 초급 술식",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈빙〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "4Gq3uhZN2Uoyfh2I",
+  "name": "뇌광의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.雷光の術式",
+   "skillKey": "雷光の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "삼색 초급 술식",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈뇌〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "G94dXYdkuajVe8ra",
+  "name": "대폭염의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.大爆炎の術式",
+   "skillKey": "大爆炎の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 전체",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "폭염의 술식",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈염〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "QboXfTtO21tUNNd0",
+  "name": "대빙람의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.大氷嵐の術式",
+   "skillKey": "大氷嵐の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 전체",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "빙람의 술식",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈빙〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "3vrbJCnC7SpwvvDT",
+  "name": "대뇌광의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.大雷光の術式",
+   "skillKey": "大雷光の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 전체",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "뇌광의 술식",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈뇌〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "7B4U419N7Pgtcaq2",
+  "name": "삼색 물리 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.三色物理術式",
+   "skillKey": "三色物理術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [
+    "참의 술식",
+    "괴의 술식",
+    "돌의 술식"
+   ],
+   "sl": 1,
+   "description": "<p>이 스킬을 사용할 때는 아래 중 하나의 명칭으로 선언한다. 《참의 술식》《괴의 술식》《돌의 술식》 〈참〉〈괴〉〈돌〉 중 하나의 속성의 속성 공격을 한다. 또한 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "KSaULbbb2ch9bwZw",
+  "name": "강참의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.強斬の術式",
+   "skillKey": "強斬の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "삼색 물리 술식",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈참〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "WKdlFQOm43kaYilP",
+  "name": "압괴의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.圧壊の術式",
+   "skillKey": "圧壊の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "삼색 물리 술식",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈괴〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "IQlJGuaI9bscdo6B",
+  "name": "관살의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.貫殺の術式",
+   "skillKey": "貫殺の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "삼색 물리 술식",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈돌〉 속성의 속성 공격을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "FmliwFGD9myx4drr",
+  "name": "정량 분석",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.定量分析",
+   "skillKey": "定量分析",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 2
+     },
+     {
+      "skill": "TP 부스트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴, 자신이 하는 공격 롤은 적의 【내성】을 -1로 취급한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "NHvsW0sTnDOwG0ND",
+  "name": "핵열의 술식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.核熱の術式",
+   "skillKey": "核熱の術式",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "연금 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "TP 부스트",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>무속성의 속성 공격을 한다. 이때, 【속성 공격】을 +(SL×2) 하여 취급한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "UJQZkqQMeHrndw6v",
+  "name": "수해 연금의 지식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.樹海錬金の知識",
+   "skillKey": "樹海錬金の知識",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아이템을 하나 소멸시키고, 아이템 매매 규칙에 따른 판매가의 절반에 해당하는 G를 얻는다. 또한, 이 대상으로 할 수 있는 것은 GM이 허가하는 아이템에 한한다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "FLHRtUGKK8MCjgOL",
+  "name": "박식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.博識",
+   "skillKey": "博識",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지식에 관계된 판정에 +3을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "8VlIpfPVmybMuE8b",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】에 +(SL×2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "KvobIFeYh2GGfMrn",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】에 +(SL×2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ },
+ {
+  "id": "HCvIMhJgAv6gIAnv",
+  "name": "속성 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "アルケミスト.属性攻撃ブースト",
+   "skillKey": "属性攻撃ブースト",
+   "classKey": "アルケミスト",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【속성 공격】에 +(SL)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "알케미스트"
+  }
+ }
+]

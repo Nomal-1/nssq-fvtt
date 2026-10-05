@@ -1,0 +1,874 @@
+[
+ {
+  "id": "AJ7fLockGGFAaoMA",
+  "name": "최종 결전의 군가",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.最終決戦の軍歌",
+   "skillKey": "最終決戦の軍歌",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 3
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>타이밍 『주행동』이면서 종별 『주가』인 스킬을 최대 3개까지, 한 번의 행동으로 일제히 사용할 수 있다. 이때, TP는 소비하지 않는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "Jc8D1asBHa8QTWtO",
+  "name": "주가 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.呪歌マスタリー",
+   "skillKey": "呪歌マスタリー",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 『주가』의 스킬에 의한 강화 효과의 지속 턴 수에 +(SL/2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "RyOeJPCE77Do5who",
+  "name": "맹렬한 전투의 춤곡",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.猛き戦いの舞曲",
+   "skillKey": "猛き戦いの舞曲",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『물리 공격 상승: (SL×2)』 및 『속성 공격 상승: (SL×2)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "PN1uicEMF9Gq3tu8",
+  "name": "삼색 서곡",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.三色序曲",
+   "skillKey": "三色序曲",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "맹렬한 전투의 춤곡",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [
+    "화극의 서곡",
+    "빙극의 서곡",
+    "뇌극의 서곡"
+   ],
+   "sl": 1,
+   "description": "<p>이 스킬을 사용할 때는 아래 중 하나의 명칭으로 선언한다. 《화극의 서곡》《빙극의 서곡》《뇌극의 서곡》 각각 『속성 부여: 염』 『속성 부여: 빙』 『속성 부여: 뇌』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "A0EFUkuIxC9towC8",
+  "name": "삼색 환상곡",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.三色幻想曲",
+   "skillKey": "三色幻想曲",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "삼색 서곡",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [
+    "화막의 환상곡",
+    "빙막의 환상곡",
+    "뇌막의 환상곡"
+   ],
+   "sl": 1,
+   "description": "<p>이 스킬을 사용할 때는 아래 중 하나의 명칭으로 선언한다. 《화막의 환상곡》《빙막의 환상곡》《뇌막의 환상곡》 각각 『내성 상승: 염』 『내성 상승: 빙』 『내성 상승: 뇌』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "VZJt1kgMfiORHozv",
+  "name": "신성한 수호의 춤곡",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.聖なる守護の舞曲",
+   "skillKey": "聖なる守護の舞曲",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『물리 방어 상승: (SL×2)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "ZsQRfAM8YKfWEhXe",
+  "name": "파사의 진혼가",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.破邪の鎮魂歌",
+   "skillKey": "破邪の鎮魂歌",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "신성한 수호의 춤곡",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『억제 방어 상승: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "TjRyCRgoR17xHMQF",
+  "name": "위타천의 춤곡",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.韋駄天の舞曲",
+   "skillKey": "韋駄天の舞曲",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『속도 상승: (SL×3)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "XPniTE4y3CMg1CoJ",
+  "name": "혜안의 선율",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.慧眼の旋律",
+   "skillKey": "慧眼の旋律",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『물리 명중 상승: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "OV9uxNZwSAaNhDGc",
+  "name": "경쾌한 선율",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.軽快の旋律",
+   "skillKey": "軽快の旋律",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『회피 상승: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "KZgtmjwa39hCxFuM",
+  "name": "치유의 자장가",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.癒しの子守唄",
+   "skillKey": "癒しの子守唄",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『HP 리젠: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "4OeccWRVx7f2e9L6",
+  "name": "평온한 자장가",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.安らぎの子守唄",
+   "skillKey": "安らぎの子守唄",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "치유의 자장가",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>『TP 리젠: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "SQP1CdUkqc6DPSZ0",
+  "name": "차분한 기상곡",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.沈静なる奇想曲",
+   "skillKey": "沈静なる奇想曲",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>적 전체의 강화 효과를 소멸시킨다. 1체당 (SL)개까지 소멸시킬 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "ZCVzieGEXGjI4YaD",
+  "name": "끝없는 원무곡",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.終わり無き円舞曲",
+   "skillKey": "終わり無き円舞曲",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>이 스킬은 후발 행동으로 사용한다. 메인 페이즈 행동을 마친 아군 한 명을, 후발 행동 취급으로 다시 행동하게 할 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "TQ0T4MW0ZkAiwCKw",
+  "name": "초인의 주명곡",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.招引の奏鳴曲",
+   "skillKey": "招引の奏鳴曲",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>소리가 들리는 범위의 전원에게 강한 호기심을 품게 하여, 주목을 모을 수 있다. 단, 5분 정도 계속해서 듣고 있는 상대에게만 효과가 있으며, 원칙적으로 전투 중에는 사용할 수 없다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "XtyLTib9zNHH1L2p",
+  "name": "매혹의 소야곡",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.魅惑の小夜曲",
+   "skillKey": "魅惑の小夜曲",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>소리가 들리는 범위의 전원에게 우호적인 감정을 품게 할 수 있다. 단, 5분 정도 계속해서 듣고 있는 상대에게만 효과가 있으며, 원칙적으로 전투 중에는 사용할 수 없다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "SRK6E6P1Gkx6PFtu",
+  "name": "모두를 위한 자장가",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.全てへの子守唄",
+   "skillKey": "全てへの子守唄",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주가",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "주가 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>소리가 들리는 범위의 전원에게 강한 졸음을 느끼게 할 수 있다. 단, 5분 정도 계속해서 듣고 있는 상대에게만 효과가 있으며, 원칙적으로 전투 중에는 사용할 수 없다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "XeqrZNEAnWo8mNLl",
+  "name": "홀리 기프트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.ホーリーギフト",
+   "skillKey": "ホーリーギフト",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>채집 판정의 달성값을 ±1 범위에서 자유롭게 조작할 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "3yZTvQJnQy2oYcSJ",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】에 +(SL×2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "BAcPHgN3TwojatyE",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】에 +(SL×2)를 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ },
+ {
+  "id": "Aek6vnBfvOoeXCXH",
+  "name": "속도 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "バード.速度ブースト",
+   "skillKey": "速度ブースト",
+   "classKey": "バード",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【속도】에 +(SL×3)을 얻는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "바드"
+  }
+ }
+]

@@ -1,0 +1,895 @@
+[
+ {
+  "id": "OHeWp6MI34flOjAw",
+  "name": "다중 방진",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.多重方陣",
+   "skillKey": "多重方陣",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "방진",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '방진' 스킬의 토큰을 동시에 최대 2개까지 유지 가능.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "EtLR7BxcpQliNFNe",
+  "name": "방진 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.方陣マスタリー",
+   "skillKey": "方陣マスタリー",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '방진' 스킬로 배치한 토큰의 지속 턴 수 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "HRSOhueyFNFxR4gE",
+  "name": "독의 방진",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.毒の方陣",
+   "skillKey": "毒の方陣",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "방진",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>효과 시간 3턴의 토큰 배치. 토큰은 적 전체에 대해 술자 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)), 승리 시 대상에게 [독].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "IN77M5yaG6jVJOes",
+  "name": "마비의 방진",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.麻痺の方陣",
+   "skillKey": "麻痺の方陣",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "방진",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>효과 시간 3턴의 토큰 배치. 토큰은 적 전체에 대해 술자 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)), 승리 시 대상에게 [마비].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "XZKSRFE3hhRyqYcU",
+  "name": "봉인의 방진",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.封の方陣",
+   "skillKey": "封の方陣",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "방진",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 《머리 봉인의 방진》《팔 봉인의 방진》《다리 봉인의 방진》 중 하나로 선언. 효과 시간 3턴의 토큰 배치. 토큰은 적 전체에 대해 술자 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)), 승리 시 선언한 [머리]/[팔]/[다리] 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "H8RXudKRbNXfzMrA",
+  "name": "환혹의 방진",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.幻惑の方陣",
+   "skillKey": "幻惑の方陣",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "방진",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>효과 시간 3턴의 토큰 배치. 토큰은 적 전체에 대해 술자 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)), 승리 시 대상에게 [혼란].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "A8gsY5T2I2n33Crv",
+  "name": "최면의 방진",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.催眠の方陣",
+   "skillKey": "催眠の方陣",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "방진",
+   "timing": "주행동",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>효과 시간 3턴의 토큰 배치. 토큰은 적 전체에 대해 술자 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)), 승리 시 대상에게 [수면].</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "14coehwhv5pg6iSp",
+  "name": "진 회복",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.陣回復",
+   "skillKey": "陣回復",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>전투 중 '방진' 토큰이 있는 상태로 종료 페이즈를 맞으면 아군 전원 【HP】 (SL) 회복. 《다중 방진》으로 토큰이 여러 개여도 중복 발생하지 않음.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "NhOCGuxFP5EUQhzM",
+  "name": "파진: 명맥 활성",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.破陣命脈活性",
+   "skillKey": "破陣命脈活性",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "회복",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 2
+     },
+     {
+      "skill": "진 회복",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>'방진' 토큰 1개를 소멸시키고 회복 롤. 회복량 다이스 +((SL+1)×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "F7IulYCYZGgIYtJH",
+  "name": "파진: 아공 교파",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.破陣亜空絞破",
+   "skillKey": "破陣亜空絞破",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>무속성 속성 공격. 이때 【속성 공격】을 -(3-SL)으로 취급.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "NP0FN6xPDoygyN8w",
+  "name": "파진: 아공 명동",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.破陣亜空鳴動",
+   "skillKey": "破陣亜空鳴動",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>무속성 속성 공격. 이때 【속성 공격】을 -(3-SL)으로 취급.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "79X2kNAx0xYhZuww",
+  "name": "진 환원",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.陣還元",
+   "skillKey": "陣還元",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>전투 중 '방진' 토큰이 어떤 이유로든 소멸하면 자신의 【TP】 1 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "GybvaChJvyEnrzKw",
+  "name": "매료의 사안",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.魅了の邪眼",
+   "skillKey": "魅了の邪眼",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약화 효과 『물리 공격 저하: (SL+2)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "aTtiz0QbDm6ky5PT",
+  "name": "쇠신의 사안",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.衰身の邪眼",
+   "skillKey": "衰身の邪眼",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약화 효과 『물리 방어 저하: (SL+2)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "N5OjKGxJWQ9CyKZm",
+  "name": "해마의 부적",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.解魔の札",
+   "skillKey": "解魔の札",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>대상의 강화 효과를 최대 (SL)개 소멸.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "Pf8zE64vipLq1Y5K",
+  "name": "퇴마의 안개",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.退魔の霧",
+   "skillKey": "退魔の霧",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『억제 방어 상승: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "3pI5IFIXR7xBeg2s",
+  "name": "박식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.博識",
+   "skillKey": "博識",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지식 관련 판정 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "O9YnzNVrRPPTbMIr",
+  "name": "지맥 조작",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.地脈操作",
+   "skillKey": "地脈操作",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방진 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>약 5분간 용암·바늘산 등의 위를 피해 없이 걸을 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "V2AxUFUEof6zOZsc",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "9XxDUd1DOQP2KPKm",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "HgqMRW7Xzjun8OtJ",
+  "name": "억제 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.抑制攻撃ブースト",
+   "skillKey": "抑制攻撃ブースト",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 공격】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ },
+ {
+  "id": "AOQlQty2CzyQWqYP",
+  "name": "억제 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ミスティック.抑制防御ブースト",
+   "skillKey": "抑制防御ブースト",
+   "classKey": "ミスティック",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 방어】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "미스틱"
+  }
+ }
+]

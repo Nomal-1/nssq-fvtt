@@ -1,0 +1,881 @@
+[
+ {
+  "id": "FuqBdM97GjmhafgS",
+  "name": "가디언",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.ガーディアン",
+   "skillKey": "ガーディアン",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 0,
+    "fp": 1
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>개막 페이즈에 선언하며, 타이밍 『개막』 스킬과 함께 쓸 수 있다. 자신과 같은 열의 아군은 턴 종료까지 〈참〉〈괴〉〈돌〉 내성 +1.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "4ZDRfqeBCYsCVge2",
+  "name": "창 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.槍マスタリー",
+   "skillKey": "槍マスタリー",
+   "classKey": "ファランクス",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>창 사용 시 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "LVuJcgxVYoT9aksN",
+  "name": "방패 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.盾マスタリー",
+   "skillKey": "盾マスタリー",
+   "classKey": "ファランクス",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 『방어』 스킬의 효과 발동 횟수 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "5rz5vTCDH0C8xKRA",
+  "name": "롱 스러스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.ロングスラスト",
+   "skillKey": "ロングスラスト",
+   "classKey": "ファランクス",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "창 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "DZxaL75uqCXxDFiM",
+  "name": "블리츠 리터",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.ブリッツリッター",
+   "skillKey": "ブリッツリッター",
+   "classKey": "ファランクス",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "창 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈돌〉+〈뇌〉 속성 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "FXHpenwFJAXV1Oit",
+  "name": "딥 스트라이드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.ディープストライド",
+   "skillKey": "ディープストライド",
+   "classKey": "ファランクス",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "창 마스터리",
+      "sl": 4
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤, 대미지 다이스 +(SL)개. 자신이 후열이면 추가로 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "Ds2LXo0UaUKX8vq9",
+  "name": "체인지 스텝",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.チェンジステップ",
+   "skillKey": "チェンジステップ",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "라인 가드",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>전투 중 원하는 타이밍에 자신의 배치를 전위↔후위로 바꿀 수 있으며, 이때 동료 1명과 자리를 맞바꿀 수도 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "Ck1vtnV7gNUKMJTS",
+  "name": "디바이드 체인지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.ディバイドチェンジ",
+   "skillKey": "ディバイドチェンジ",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "디바이드 가드",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《디바이드 가드》 대기 상태 중 원하는 타이밍에 그 대상을 바꿀 수 있다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "JTMiqnouHyCjwfx8",
+  "name": "디바이드 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.ディバイドガード",
+   "skillKey": "ディバイドガード",
+   "classKey": "ファランクス",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 대기 상태. 대기 중 대상이 공격 롤의 대상이 되면 자신이 대신 받는다. 대신 받은 대미지가 누계 (SL)회에 이르거나 턴 종료 시 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "N8rTvVLabQHHaNOS",
+  "name": "삼색 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.三色ガード",
+   "skillKey": "三色ガード",
+   "classKey": "ファランクス",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《파이어 가드》《프리즈 가드》《쇼크 가드》 중 하나로 선언. 사용 시 대기 상태, 대기 중 아군 전체의 해당 〈염〉/〈빙〉/〈뇌〉 【내성】 +(SL). 턴 종료 시 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "NYK6mafd2m7rS3cG",
+  "name": "라인 가드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.ラインガード",
+   "skillKey": "ラインガード",
+   "classKey": "ファランクス",
+   "weaponReq": [
+    "방패"
+   ],
+   "part": "팔",
+   "category": "방어",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "방패 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 대기 상태. 대기 중 자신이 있는 열의 아군이 적의 물리 공격 롤로 받는 대미지 절반. 절반 처리가 누계 (SL)회에 이르거나 턴 종료 시 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "HnKBhl1EXZN2Tyls",
+  "name": "도발",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.挑発",
+   "skillKey": "挑発",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>그 턴 동안 적의 단일 대상 공격 롤의 대상을 누계 (SL+1)회까지 강제로 자신으로 바꾼다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "NpQFIpb4EJNd4ZvA",
+  "name": "패링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.パリィ",
+   "skillKey": "パリィ",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "팔",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤에 대해 【VIT】로 능동 회피, 달성값 +(SL-1).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "SEJzIwrNbtXz2k7h",
+  "name": "머티리얼 패링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.マテリアルパリィ",
+   "skillKey": "マテリアルパリィ",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "팔",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>속성 공격 롤에 대해 【VIT】로 능동 회피, 달성값 +(SL-1).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "7m7DyJ6siN92geUl",
+  "name": "혼신 디펜스",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.渾身ディフェンス",
+   "skillKey": "渾身ディフェンス",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『물리 방어 상승: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "QnzOb1DiI610DjE9",
+  "name": "전력 도주",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.全力逃走",
+   "skillKey": "全力逃走",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "다리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>도주 판정 시 선언, 도주 판정 달성값 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "7Yhum5rtnKFtMUAb",
+  "name": "와이드 패링",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.ワイドパリィ",
+   "skillKey": "ワイドパリィ",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "패링",
+      "sl": 1
+     },
+     {
+      "skill": "머티리얼 패링",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>같은 열 아군이 공격 롤을 받을 때 《패링》《머티리얼 패링》로 대신 능동 회피 판정을 할 수 있다. 그 아군이 아직 능동 회피 판정을 하지 않았을 때만 가능.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "ASYO5VXOvlX6R2YB",
+  "name": "행군 수련",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.行軍修練",
+   "skillKey": "行軍修練",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>아이템 소지 수 +4.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "3cyZKsuQweIs82Sr",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "HMIqsNo3SkxBShU8",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "30zvnUgVeq1yFP7P",
+  "name": "물리 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.物理防御ブースト",
+   "skillKey": "物理防御ブースト",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【방어】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ },
+ {
+  "id": "8w4VAR3sUmwdKfxI",
+  "name": "억제 방어 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ファランクス.抑制防御ブースト",
+   "skillKey": "抑制防御ブースト",
+   "classKey": "ファランクス",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 4,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【억제 방어】 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "팔랑크스"
+  }
+ }
+]

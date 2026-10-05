@@ -1,0 +1,954 @@
+[
+ {
+  "id": "WJ0GCTXzEWD1Uj21",
+  "name": "피의 폭주",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.血の暴走",
+   "skillKey": "血の暴走",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 1
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신의 【HP】가 감소했을 때 선언(적의 공격이든 자발적 소모든 무관). 적 단일에게 추격 취급 물리 공격 롤.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "FhmLMsOHhwZhlV4V",
+  "name": "창 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.槍マスタリー",
+   "skillKey": "槍マスタリー",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>창 물리 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "OdPlHGuUhSYxCWvL",
+  "name": "롱 스러스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.ロングスラスト",
+   "skillKey": "ロングスラスト",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "창 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "KdQBwARCKsKR223z",
+  "name": "브레인 렌드",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.ブレインレンド",
+   "skillKey": "ブレインレンド",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "창 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤 → 명중 시 대상은 억제 방어 롤(목표값: 공격자 【억제 공격】+(7+SL)), 실패하면 [머리] 봉인.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "Dzr7bSZJTEG5aaE8",
+  "name": "싱글 스러스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.シングルスラスト",
+   "skillKey": "シングルスラスト",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "창 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 -(3-SL)개. 사용 후 자신이 대미지 다이스의 '1' 눈 개수만큼 대미지를 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "QWLGcEvWghmHH2uU",
+  "name": "싱글 버스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.シングルバースト",
+   "skillKey": "シングルバースト",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 전체",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "싱글 스러스트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 -(3-SL)개. 사용 후 자신이 대미지 다이스의 '1' 눈 개수만큼 대미지를 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "DeAuI3fyKFcMFq4O",
+  "name": "레기온 스러스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.レギオンスラスト",
+   "skillKey": "レギオンスラスト",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "창 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL+아군 인원수-3)개. 사용 후 자신 외의 아군 전원이 대미지 다이스의 '1' 눈 개수만큼 대미지를 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "9DLBWxW5FYlDlcQ6",
+  "name": "레기온 버스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.レギオンバースト",
+   "skillKey": "レギオンバースト",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 전체",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "레기온 스러스트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +(SL+아군 인원수-3)개. 사용 후 자신 외의 아군 전원이 대미지 다이스의 '1' 눈 개수만큼 대미지를 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "v5Vx2JDBDi79iHd8",
+  "name": "스피어 인볼브",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.スピアインボルブ",
+   "skillKey": "スピアインボルブ",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "창 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>후발 행동으로 물리 공격 롤. 대미지 다이스 +(SL×2)개. 그 턴에 이미 〈염〉〈빙〉〈뇌〉 중 하나를 포함한 공격이 있었다면 그 속성을 자신의 공격에 부가.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "BUb5eYSOw7Cv4kZl",
+  "name": "딜레이 차지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.ディレイチャージ",
+   "skillKey": "ディレイチャージ",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "창 마스터리",
+      "sl": 5
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>다음 턴 후발 행동 타이밍의 지연 공격을 예약. 이 공격은 통상 공격에 대미지 다이스 +((SL+1)×3)개를 더한 물리 공격 롤. 이때 자신은 대미지 다이스의 '1' 눈 개수만큼 대미지를 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "C5cORE52XlfCxVEc",
+  "name": "크로스 차지",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.クロスチャージ",
+   "skillKey": "クロスチャージ",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "특수",
+   "range": "근",
+   "target": "적 단일",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "딜레이 차지",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>《딜레이 차지》 명중 시 선언. 그 《딜레이 차지》에 이어 자신의 물리 공격으로 추격.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "JTDn3IfeuhosVOdv",
+  "name": "게 볼그",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.ゲイボルグ",
+   "skillKey": "ゲイボルグ",
+   "classKey": "ハイランダー",
+   "weaponReq": [
+    "창"
+   ],
+   "part": "팔",
+   "category": "백병",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 전체",
+   "cost": {
+    "tp": 6,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "창 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "레기온 버스트",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>물리 공격 롤. 대미지 다이스 +((SL+1)×2)개. 사용 후 아군 전원이 대미지 다이스의 '1' 눈 개수만큼 대미지를 받는다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "MXjxeTxSa8pZT5Cl",
+  "name": "하베스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.ハーベスト",
+   "skillKey": "ハーベスト",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신의 공격으로 적을 전투 불능으로 만들면 아군 전체 【HP】 (SL) 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "MrblMPWUVwRgKYXS",
+  "name": "보이지 않는 영혼 방패",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.不可視の霊盾",
+   "skillKey": "不可視の霊盾",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『내성 부여: 염빙뇌』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "Sf33QpKTPQNiS2ZI",
+  "name": "블러드 웨펀",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.ブラッドウェポン",
+   "skillKey": "ブラッドウェポン",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "하베스트",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『물리 공격 상승: (SL×2)』『속성 공격 상승: (SL+1)』『HP 리젠: -2』 3종 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "KLMOcatnoBKpYzUB",
+  "name": "스티그마",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.スティグマ",
+   "skillKey": "スティグマ",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "하베스트",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)). 승리 시 [머리]/[팔]/[다리] 중 원하는 부위 (SL)곳을 봉인. 봉인 성공 시 자신도 같은 부위 봉인을 받으며, 그 심도는 자신의 달성값과 같다.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "Bx2oR1xubu6vievl",
+  "name": "블랙 사바스",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.ブラックサバス",
+   "skillKey": "ブラックサバス",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "주언",
+   "timing": "주행동",
+   "range": "-",
+   "target": "적 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "스티그마",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>무속성 속성 공격. 대미지 다이스 +(SL)개. 대미지 다이스 중 대미지를 주는 데 성공한 개수만큼 아군 전체 【HP】 회복.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "IRjiLO93YShZDt8b",
+  "name": "굿 럭",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.グッドラック",
+   "skillKey": "グッドラック",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 4,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 2,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "TP 부스트",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『억제 공격 상승: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "VraEiXn8MFTcB4CX",
+  "name": "방위 본능",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.防衛本能",
+   "skillKey": "防衛本能",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "TP 부스트",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『억제 방어 상승: (SL)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "IKf6idlmSTC5jy5S",
+  "name": "사냥꾼의 후각",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.狩猟者の嗅覚",
+   "skillKey": "狩猟者の嗅覚",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>드롭 판정 후 '고기'·'생선'·'알' 중 하나를 (SL)개 획득. 쓰러뜨린 에너미가 식용에 맞지 않다고 GM이 판단하면 적용되지 않음.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "797wjFCx5VQ5iENJ",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "15Rodf5P5X91Dx61",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ },
+ {
+  "id": "ziMu1mXKCzBlfJeD",
+  "name": "물리 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ハイランダー.物理攻撃ブースト",
+   "skillKey": "物理攻撃ブースト",
+   "classKey": "ハイランダー",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【물리 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "하이랜더"
+  }
+ }
+]

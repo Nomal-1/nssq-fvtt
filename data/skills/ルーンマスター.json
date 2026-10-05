@@ -1,0 +1,1012 @@
+[
+ {
+  "id": "Pf71LCqYhr0P5YYp",
+  "name": "성인의 가호",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.聖印の加護",
+   "skillKey": "聖印の加護",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 0,
+    "fp": 1
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": true,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>개막 페이즈에 사용 선언(타이밍 '개막' 스킬과 병용 가능). 자신과 같은 열의 아군은 턴 종료까지 〈염〉〈빙〉〈뇌〉 내성 +1.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "WRdQTtN3d9ffK8HT",
+  "name": "인술 마스터리",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.印術マスタリー",
+   "skillKey": "印術マスタリー",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 5,
+    "sub": 3
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>분류 '술식' 스킬의 공격 롤 속성 명중 +(SL/2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "4OE654cDlsSCsPku",
+  "name": "삼색 초급 인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.三色初級印術",
+   "skillKey": "三色初級印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 《불꽃의 인술》《얼음의 인술》《번개의 인술》 중 하나로 선언 → 각각 〈염〉/〈빙〉/〈뇌〉 속성 공격. 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "IQAZ3YEbPHdFWR3R",
+  "name": "화구의 인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.火球の印術",
+   "skillKey": "火球の印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "삼색 초급 인술",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>같은 열의 적 2체를 대상으로 선언, 〈염〉 속성 공격. 대미지 다이스 +(SL-2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "NcjC8WwxXBcYfiPh",
+  "name": "빙창의 인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.氷槍の印術",
+   "skillKey": "氷槍の印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 관통",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "삼색 초급 인술",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>적 전위 1체 + 후위 1체에게 〈빙〉 속성 공격 롤. 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "NM8dJ5JvfhSeMdyz",
+  "name": "뇌격의 인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.雷撃の印術",
+   "skillKey": "雷撃の印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "삼색 초급 인술",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈뇌〉 속성 공격. 대미지 다이스 +(SL-3)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "BrfexmDpc9A9kW1i",
+  "name": "폭염의 인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.爆炎の印術",
+   "skillKey": "爆炎の印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 열",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "화구의 인술",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈염〉 속성 공격. 대미지 다이스 +(SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "SwPzJ1RAdjB8ML5u",
+  "name": "동아의 인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.凍牙の印術",
+   "skillKey": "凍牙の印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "빙창의 인술",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈빙〉 속성 공격 2회, 매회 대상은 적 전체 중 무작위. 대미지 다이스 -(4-SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "ZyTR8nsmVhjXgX4c",
+  "name": "벽력의 인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.稲妻の印術",
+   "skillKey": "稲妻の印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 3
+     },
+     {
+      "skill": "뇌격의 인술",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈뇌〉 속성 공격. 대미지 다이스 +((SL+1)×2)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "CXVBAkDniEhtFqMj",
+  "name": "겁화의 대인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.劫火の大印術",
+   "skillKey": "劫火の大印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 단일",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "화구의 인술",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈염〉 속성 공격. 대미지 다이스 +((SL+2)×3)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "Ru5VdZdBcFwsYvVo",
+  "name": "설풍의 대인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.吹雪の大印術",
+   "skillKey": "吹雪の大印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 전체",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "빙창의 인술",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈빙〉 속성 공격. 대미지 다이스 -(3-SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "8PL2kszgsxTu7MS3",
+  "name": "천뢰의 대인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.天雷の大印術",
+   "skillKey": "天雷の大印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "특수",
+   "cost": {
+    "tp": 5,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "뇌격의 인술",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>〈뇌〉 속성 공격 3회, 매회 대상은 적 전체 중 무작위. 대미지 다이스 -(4-SL)개.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "DbD1nzDaq0do7AV7",
+  "name": "원시의 인술",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.始原の印術",
+   "skillKey": "始原の印術",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "술식",
+   "timing": "주행동",
+   "range": "원",
+   "target": "적 전체",
+   "cost": {
+    "tp": 6,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 5
+     },
+     {
+      "skill": "룬의 인도",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>무속성 속성 공격. 이때 【속성 공격】을 -(3-SL)으로 취급.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "RkPCPqOWQbQK5RI6",
+  "name": "삼색 성인",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.三色聖印",
+   "skillKey": "三色聖印",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "주행동",
+   "range": "-",
+   "target": "아군 열",
+   "cost": {
+    "tp": 2,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 《불꽃의 성인》《얼음의 성인》《번개의 성인》 중 하나로 선언 → 각각 『내성 상승: 염』/『내성 상승: 빙』/『내성 상승: 뇌』 강화 효과 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "LWvnlIFdYwTHmcVp",
+  "name": "룬의 광휘",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.ルーンの輝き",
+   "skillKey": "ルーンの輝き",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>강화 효과 『속성 공격 상승: (SL×2)』 부여, 3턴 지속.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "Po4SZhh8UtHPHMXN",
+  "name": "룬의 방패",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.ルーンの盾",
+   "skillKey": "ルーンの盾",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "수동",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TEC】로 능동 회피. 달성값 +(SL-1).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "GqsxKMnOgJiOPiZ6",
+  "name": "룬의 인도",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.ルーンの導き",
+   "skillKey": "ルーンの導き",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신의 공격 시 적의 【내성】 2는 1로, 1은 0으로 취급. 【내성】 3 이상에는 효과 없음.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "UDkJ0WU3FpO3A6f6",
+  "name": "룬의 장벽",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.ルーンの障壁",
+   "skillKey": "ルーンの障壁",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "개막",
+   "range": "-",
+   "target": "아군 전체",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 4
+     },
+     {
+      "skill": "룬의 방패",
+      "sl": 2
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>사용 시 자신은 대기 상태. 대기 상태 동안 아군 전체의 〈염〉〈빙〉〈뇌〉 【내성】 +(SL). 대기 상태는 턴 종료 시 해제.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "7ygIEHrm6HFCoxF6",
+  "name": "박식",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.博識",
+   "skillKey": "博識",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": null
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>지식 관련 판정 +3.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "UiSkLZ2YUjVACSby",
+  "name": "룬의 자물쇠",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.ルーンの鍵",
+   "skillKey": "ルーンの鍵",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 1,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 1
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>문 또는 그에 준하는 것을 열리지 않게 한다. 발동 시 해제 암호를 소리 내어 정해야 하며, 룬을 만진 자가 그 암호를 말하면 효과 소멸. 그 외에도 12시간 경과 시 자연 소멸.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "WJxtvalAeKni3Yko",
+  "name": "룬의 결계",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.ルーンの結界",
+   "skillKey": "ルーンの結界",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "머리",
+   "category": "-",
+   "timing": "특수",
+   "range": "-",
+   "target": "특수",
+   "cost": {
+    "tp": 3,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 1,
+    "sub": 1
+   },
+   "unique": false,
+   "prereqs": {
+    "all": [
+     {
+      "skill": "인술 마스터리",
+      "sl": 3
+     }
+    ]
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>자신을 중심으로 반경 5m 반원형 결계 생성. 공기 외 모든 것의 통과를 막고, 공격 롤·스킬 등의 영향도 일절 통하지 않음. 결계는 이동 불가. 발동 시 해제 암호를 소리 내어 정해야 하며, 룬을 만진 자가 그 암호를 말하면 효과 소멸. 그 외에도 30분 경과 시 자연 소멸.</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "PTTg3oMMuqpBfAdg",
+  "name": "HP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.HPブースト",
+   "skillKey": "HPブースト",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【HP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "G9w07yQsSjC6oHIo",
+  "name": "TP 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.TPブースト",
+   "skillKey": "TPブースト",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【TP】 +(SL×2).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ },
+ {
+  "id": "QxjkZPT1pJmehoMX",
+  "name": "속성 공격 부스트",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+   "key": "ルーンマスター.属性攻撃ブースト",
+   "skillKey": "属性攻撃ブースト",
+   "classKey": "ルーンマスター",
+   "weaponReq": [],
+   "part": "-",
+   "category": "-",
+   "timing": "상시",
+   "range": "-",
+   "target": "자신",
+   "cost": {
+    "tp": 0,
+    "fp": 0
+   },
+   "maxSL": {
+    "main": 3,
+    "sub": 2
+   },
+   "unique": false,
+   "prereqs": {
+    "all": []
+   },
+   "variants": [],
+   "sl": 1,
+   "description": "<p>【속성 공격】 +(SL).</p>",
+   "effects": [],
+   "review": "todo"
+  },
+  "_meta": {
+   "className": "룬 마스터"
+  }
+ }
+]
