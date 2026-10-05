@@ -127,6 +127,34 @@
         "name": "세션 시작 【FP】",
         "hint": "세션을 시작할 때 각 캐릭터의 【FP】."
       }
+    },
+    "Check": {
+      "title": "일반 행위 판정",
+      "contestTitle": "대항 판정",
+      "custom": "수정치만",
+      "ability": "능력치",
+      "modifier": "수정치",
+      "target": "목표값",
+      "targetNone": "없음",
+      "addDiceLabel": "【FP】로 추가할 주사위 (현재 【FP】 {fp})",
+      "addDiceHint": "추가한 판정에서는 굴린 주사위 중 2개를 골라 쓰고, 1이 나와도 【FP】를 얻지 않는다.",
+      "roll": "굴리기",
+      "rollHint": "클릭: 판정 / Shift+클릭: 바로 굴리기",
+      "diceSum": "2D6",
+      "success": "성공",
+      "failure": "실패",
+      "absSuccess": "절대 성공",
+      "absFailure": "절대 실패",
+      "addDice": "【FP】로 주사위 추가",
+      "reroll": "【FP】로 다시 굴리기",
+      "contest": "대항 판정",
+      "addedNote": "추가 주사위",
+      "rerolledNote": "다시 굴림",
+      "selectHint": "이 주사위를 사용한다",
+      "notEnoughFP": "【FP】가 부족하다.",
+      "noActor": "판정할 캐릭터가 없다. 캐릭터를 지정하거나 토큰을 선택하라.",
+      "pickActor": "판정할 캐릭터",
+      "contestWinner": "{name} 승리"
     }
   }
 }

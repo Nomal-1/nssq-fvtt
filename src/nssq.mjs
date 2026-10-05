@@ -5,6 +5,7 @@ import { NssqActorSheet } from "./sheets/actor-sheet.mjs";
 import { NssqItemSheet } from "./sheets/item-sheet.mjs";
 import { registerSettings } from "./settings.mjs";
 import { TEMPLATES } from "./templates.mjs";
+import { promptCheck, registerCheckHooks, rollCheck } from "./chat/check.mjs";
 
 Hooks.once("init", () => {
   CONFIG.Actor.documentClass = NssqActor;
@@ -29,4 +30,9 @@ Hooks.once("init", () => {
 
   Handlebars.registerHelper("nssqLabel", (prefix, key) => game.i18n.localize(`${prefix}.${key}`));
   Handlebars.registerHelper("nssqEq", (a, b) => a === b);
+  Handlebars.registerHelper("nssqGt", (a, b) => a > b);
+
+  registerCheckHooks();
+  // 매크로·모듈용 API
+  game.nssq = { promptCheck, rollCheck };
 });

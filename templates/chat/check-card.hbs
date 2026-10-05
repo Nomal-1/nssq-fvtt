@@ -1,0 +1,38 @@
+<div class="nssq-check">
+  <header class="check-header">
+    <span class="check-label">{{label}}</span>
+    <span class="check-kind">{{#if contest}}{{localize "NSSQ.Check.contestTitle"}}{{else}}{{localize "NSSQ.Check.title"}}{{/if}}</span>
+  </header>
+
+  <ol class="check-dice">
+    {{#each dice as |d|}}
+    <li class="die{{#if d.used}} used{{/if}}{{#if d.one}} one{{/if}}{{#if d.six}} six{{/if}}"
+        {{#if @root.many}}data-nssq-action="select" data-index="{{d.i}}" title="{{localize 'NSSQ.Check.selectHint'}}"{{/if}}>{{d.v}}</li>
+    {{/each}}
+  </ol>
+
+  <div class="check-total">
+    <span class="formula">{{localize "NSSQ.Check.diceSum"}} + B {{bonus}}{{#if modifier}} {{#if (nssqGt modifier 0)}}+{{/if}}{{modifier}}{{/if}}</span>
+    <span class="total">{{total}}</span>
+    {{#if hasTarget}}<span class="target">/ {{localize "NSSQ.Check.target"}} {{target}}</span>{{/if}}
+  </div>
+
+  {{#if absSuccess}}<div class="check-result success">{{localize "NSSQ.Check.absSuccess"}}</div>
+  {{else if absFailure}}<div class="check-result failure">{{localize "NSSQ.Check.absFailure"}}</div>
+  {{else if hasTarget}}
+    {{#if success}}<div class="check-result success">{{localize "NSSQ.Check.success"}}</div>
+    {{else}}<div class="check-result failure">{{localize "NSSQ.Check.failure"}}</div>{{/if}}
+  {{/if}}
+
+  <div class="check-notes">
+    {{#if fpGained}}<span class="fp-gain">{{localize "NSSQ.FP"}} +{{fpGained}}</span>{{/if}}
+    {{#if added}}<span>{{localize "NSSQ.Check.addedNote"}} +{{added}}</span>{{/if}}
+    {{#if rerolled}}<span>{{localize "NSSQ.Check.rerolledNote"}}</span>{{/if}}
+  </div>
+
+  <div class="check-buttons">
+    <button type="button" data-nssq-action="add-dice" data-owner-only>{{localize "NSSQ.Check.addDice"}}</button>
+    {{#if canReroll}}<button type="button" data-nssq-action="reroll" data-owner-only>{{localize "NSSQ.Check.reroll"}}</button>{{/if}}
+    {{#unless contest}}<button type="button" data-nssq-action="contest">{{localize "NSSQ.Check.contest"}}</button>{{/unless}}
+  </div>
+</div>

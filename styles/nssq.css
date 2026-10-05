@@ -25,3 +25,30 @@
 .nssq .item-list .item-img { flex: 0 0 24px; border: none; }
 .nssq .item-list .item-type { flex: 0 0 90px; font-size: 0.85em; }
 .nssq .item-list .item-control { flex: 0 0 18px; text-align: center; }
+
+/* 능력치 판정 */
+.nssq .rollable { cursor: pointer; }
+.nssq .rollable:hover { color: var(--color-text-hyperlink, #ff6400); text-shadow: 0 0 6px var(--color-shadow-primary, #ff0000); }
+
+/* 판정 카드 */
+.nssq-check .check-header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid #c9c7b8; margin-bottom: 4px; }
+.nssq-check .check-label { font-weight: bold; font-size: 1.1em; }
+.nssq-check .check-kind { font-size: 0.85em; color: #7a7971; }
+.nssq-check .check-dice { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 4px 0; padding: 0; }
+.nssq-check .die { width: 26px; height: 26px; line-height: 26px; text-align: center; font-weight: bold; border: 1px solid #999; border-radius: 4px; opacity: 0.45; }
+.nssq-check .die.used { opacity: 1; background: rgba(255, 255, 255, 0.6); }
+.nssq-check .die.one { color: #b02020; }
+.nssq-check .die.six { color: #18762b; }
+.nssq-check .die[data-nssq-action] { cursor: pointer; }
+.nssq-check .check-total { display: flex; align-items: baseline; gap: 6px; }
+.nssq-check .check-total .formula { font-size: 0.85em; color: #555; }
+.nssq-check .check-total .total { font-size: 1.6em; font-weight: bold; }
+.nssq-check .check-result { text-align: center; font-weight: bold; padding: 2px; margin: 4px 0; border-radius: 3px; }
+.nssq-check .check-result.success { background: rgba(24, 118, 43, 0.15); color: #18762b; }
+.nssq-check .check-result.failure { background: rgba(176, 32, 32, 0.12); color: #b02020; }
+.nssq-check .check-notes { display: flex; gap: 8px; font-size: 0.85em; }
+.nssq-check .check-notes .fp-gain { color: #1a5fb4; font-weight: bold; }
+.nssq-check .check-buttons { display: flex; gap: 4px; margin-top: 4px; }
+.nssq-check .check-buttons button { flex: 1; line-height: 1.6em; font-size: 0.85em; }
+.nssq-check .nssq-contest { border-top: 1px dashed #999; margin-top: 4px; padding-top: 4px; font-size: 0.9em; }
+.nssq-check .nssq-contest .winner { color: #18762b; }

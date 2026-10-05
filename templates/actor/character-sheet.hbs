@@ -26,11 +26,11 @@
         <h3>{{localize "NSSQ.Ability.label"}}</h3>
         <div class="grid grid-5col">
           {{#each abilityKeys as |k|}}
-          <label class="stat">
-            <span>{{nssqLabel "NSSQ.Ability" k}}</span>
+          <div class="stat">
+            <a class="rollable" data-action="roll-ability" data-ability="{{k}}" title="{{localize 'NSSQ.Check.rollHint'}}"><i class="fas fa-dice-d6"></i> {{nssqLabel "NSSQ.Ability" k}}</a>
             <input type="number" name="system.abilities.{{k}}" value="{{lookup @root.system.abilities k}}" data-dtype="Number"/>
             <span class="bonus">B {{lookup @root.system.bonus k}}</span>
-          </label>
+          </div>
           {{/each}}
         </div>
       </section>

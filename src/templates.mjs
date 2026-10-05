@@ -6,5 +6,6 @@ export const TEMPLATES = [
   "systems/nssq/templates/actor/parts/header.hbs",
   "systems/nssq/templates/actor/parts/items.hbs",
   "systems/nssq/templates/actor/parts/resist.hbs",
-  "systems/nssq/templates/item/item-sheet.hbs"
+  "systems/nssq/templates/item/item-sheet.hbs",
+  "systems/nssq/templates/chat/check-card.hbs"
 ];

@@ -1,4 +1,5 @@
 import { ABILITIES, RESISTS, SUB_STATS } from "../engine/derive.mjs";
+import { promptCheck, rollCheck } from "../chat/check.mjs";
 
 export class NssqActorSheet extends ActorSheet {
   static get defaultOptions() {
@@ -38,6 +39,13 @@ export class NssqActorSheet extends ActorSheet {
       this.actor.items.get(id)?.sheet.render(true);
     });
     if (!this.isEditable) return;
+    // 능력치 판정: 클릭하면 대화창, Shift+클릭하면 바로 굴린다
+    html.on("click", "[data-action=roll-ability]", async (ev) => {
+      ev.preventDefault();
+      const ability = ev.currentTarget.dataset.ability;
+      const opts = ev.shiftKey ? { ability } : await promptCheck(this.actor, { ability });
+      if (opts) await rollCheck(this.actor, opts);
+    });
     html.on("click", "[data-action=item-delete]", (ev) => {
       const id = ev.currentTarget.closest("[data-item-id]")?.dataset.itemId;
       this.actor.items.get(id)?.deleteDialog();
