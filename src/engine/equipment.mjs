@@ -193,6 +193,31 @@ export function itemMaterialCandidates(items, requirement) {
   return items.filter((i) => i.type === "material" && !isStored(i) && i.system.materialType === requirement.type && i.system.rank === requirement.rank && (i.system.quantity ?? 1) > 0);
 }
 
+/**
+ * 소재 n개를 후보에서 배정한다. R이 낮은 것부터(아까운 소재를 덜 쓰도록), 같은 R이면 앞의 것부터.
+ * @param {object[]} candidates 소재 아이템
+ * @param {number} n 필요한 개수
+ * @param {object} [already] 이미 다른 요구에 배정한 { itemId: 개수 }
+ * @returns {{item: object, n: number}[]|null} 모자라면 null
+ */
+export function allocateMaterials(candidates, n, already = {}) {
+  const sorted = candidates
+    .map((item, i) => ({ item, i }))
+    .sort((a, b) => a.item.system.rank - b.item.system.rank || a.i - b.i)
+    .map((x) => x.item);
+  const out = [];
+  let left = n;
+  for (const item of sorted) {
+    if (left <= 0) break;
+    const free = (item.system.quantity ?? 1) - (already[item.id] ?? 0);
+    if (free <= 0) continue;
+    const take = Math.min(free, left);
+    out.push({ item, n: take });
+    left -= take;
+  }
+  return left > 0 ? null : out;
+}
+
 /* ---------------- 제련 ---------------- */
 
 /**

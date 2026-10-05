@@ -1,6 +1,7 @@
 <div class="shop">
   <header class="shop-header">
     <span class="money"><i class="fas fa-coins"></i> {{money}}G</span>
+    {{#if isGM}}<span class="shop-state {{#if open}}on{{/if}}">{{#if open}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</span>{{/if}}
     <label class="creation"><input type="checkbox" name="creation" {{checked creation}}/> {{localize "NSSQ.Shop.creationMode"}}</label>
   </header>
   <p class="notes">{{localize "NSSQ.Shop.rule"}}</p>
@@ -15,10 +16,11 @@
         {{#each t.rows as |r|}}
         <li class="shop-row flexrow">
           <img src="{{r.img}}" width="24" height="24"/>
-          <span class="name">{{r.name}}{{#if r.info}} <span class="info">{{r.info}}</span>{{/if}}</span>
+          <span class="name">{{r.name}}{{#if r.custom}} <span class="custom-tag">{{localize "NSSQ.Shop.custom"}}</span>{{/if}}{{#if r.info}} <span class="info">{{r.info}}</span>{{/if}}</span>
           {{#if r.ranked}}<label class="rank">R <input type="number" min="1" max="15" value="{{r.rank}}" data-rank="{{r.id}}"/></label>{{/if}}
           <span class="mats">{{#if @root.creation}}-{{else}}{{r.materials}}{{/if}}</span>
-          <span class="price">{{r.price}}G</span>
+          <span class="price" title="{{r.unit}}G × {{r.qty}}">{{r.price}}G</span>
+          <label class="qty">× <input type="number" min="1" max="99" value="{{r.qty}}" data-qty="{{r.id}}"/></label>
           <button type="button" data-buy="{{r.id}}">{{localize "NSSQ.Shop.buy"}}</button>
         </li>
         {{/each}}

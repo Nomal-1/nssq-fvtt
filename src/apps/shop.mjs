@@ -6,7 +6,8 @@
  * 거래는 채팅에 기록한다.
  */
 import {
-  MAX_RANK, buyPrice, canRefine, equipmentMaterialCandidates, exceedsOwnLimit, itemMaterialCandidates, refinePrice, sellPrice
+  MAX_RANK, allocateMaterials, buyPrice, canRefine, equipmentMaterialCandidates, exceedsOwnLimit, itemMaterialCandidates,
+  refinePrice, sellPrice, stackKey
 } from "../engine/equipment.mjs";
 import tables from "../generated/tables.mjs";
 import { acquireItems } from "./acquire.mjs";
@@ -30,10 +31,10 @@ async function log(actor, text) {
   });
 }
 
-/** 소재 1개 소모 */
-async function consumeMaterial(material) {
+/** 소재 n개 소모 */
+async function consumeMaterial(material, n = 1) {
   const q = material.system.quantity ?? 1;
-  if (q > 1) await material.update({ "system.quantity": q - 1 });
+  if (q > n) await material.update({ "system.quantity": q - n });
   else await material.delete();
 }
 
@@ -55,12 +56,50 @@ async function pickMaterial(candidates, title) {
 
 /* ---------------- 상점 ---------------- */
 
+const SHOP_FOLDER_NAME = () => L("folderName");
+
+/** 상점이 열려 있는가(GM이 여닫는다). GM은 언제나 열 수 있다 */
+export function shopOpen() {
+  return !!game.settings.get("nssq", "shopOpen");
+}
+
+/** 「상점 추가 품목」 폴더(하위 폴더 포함)의 월드 아이템 */
+function customItems() {
+  const folder = game.folders.get(game.settings.get("nssq", "shopFolder"));
+  if (!folder) return [];
+  const ids = new Set([folder.id, ...folder.getSubfolders(true).map((f) => f.id)]);
+  return game.items.filter((i) => i.folder && ids.has(i.folder.id));
+}
+
+/** GM: 「상점 추가 품목」 폴더를 찾거나 만든다 */
+export async function ensureShopFolder() {
+  if (!game.user.isGM) return null;
+  let folder = game.folders.get(game.settings.get("nssq", "shopFolder"));
+  if (!folder) {
+    folder = await Folder.create({ name: SHOP_FOLDER_NAME(), type: "Item", sorting: "a" });
+    await game.settings.set("nssq", "shopFolder", folder.id);
+    ui.notifications.info(L("folderCreated", { name: folder.name }));
+  } else ui.notifications.info(L("folderExists", { name: folder.name }));
+  ui.sidebar.activateTab("items");
+  return folder;
+}
+
+/** GM: 상점 열기·닫기 */
+export async function toggleShop(open = !shopOpen()) {
+  if (!game.user.isGM) return;
+  await game.settings.set("nssq", "shopOpen", open);
+}
+
+const isRanked = (d) => d.type === "armor" || (d.type === "weapon" && !!tables.weapons[d.system.weaponType]?.price);
+const tableOf = (d) => (d.type === "weapon" ? tables.weapons[d.system.weaponType] : d.type === "armor" ? tables.armors[d.system.armorType] : null);
+
 class ShopApp extends Application {
   constructor(actor, options) {
     super(options);
     this.actor = actor;
     this.creation = false;
     this.ranks = {};
+    this.qty = {};
     this.docs = null;
   }
 
@@ -68,8 +107,8 @@ class ShopApp extends Application {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["nssq", "nssq-shop"],
       template: "systems/nssq/templates/apps/shop.hbs",
-      width: 560,
-      height: 620,
+      width: 620,
+      height: 640,
       resizable: true,
       tabs: [{ navSelector: ".shop-tabs", contentSelector: ".shop-body", initial: "weapon" }]
     });
@@ -84,8 +123,11 @@ class ShopApp extends Application {
     const docs = [];
     for (const id of PACKS) {
       const pack = game.packs.get(id);
-      if (pack) docs.push(...(await pack.getDocuments()));
+      // 시스템 품목: 소재는 팔지 않고, 가격 식이 없는 무기(주먹)도 팔지 않는다
+      if (pack) docs.push(...(await pack.getDocuments()).filter((d) => d.type !== "material" && (d.type !== "weapon" || isRanked(d))));
     }
+    // 추가 품목: 소재는 가격이 없으므로 팔지 않는다
+    for (const d of customItems()) if (d.type !== "material" && TABS.some(([t]) => t === d.type)) docs.push(Object.assign(d, { nssqCustom: true }));
     this.docs = docs;
     return docs;
   }
@@ -95,14 +137,17 @@ class ShopApp extends Application {
     const level = this.actor.system.level;
     const rankDefault = Math.min(MAX_RANK, Math.max(1, level));
     const rowFor = (d) => {
-      const ranked = (d.type === "weapon" || d.type === "armor") && (d.type === "armor" || tables.weapons[d.system.weaponType]?.price);
-      const rank = ranked ? (this.ranks[d.id] ?? rankDefault) : null;
+      const ranked = isRanked(d);
+      const rank = ranked ? (this.ranks[d.id] ?? (d.nssqCustom ? d.system.rank : rankDefault)) : null;
       const probe = { type: d.type, system: { ...d.system, rank } };
-      const table = d.type === "weapon" ? tables.weapons[d.system.weaponType] : d.type === "armor" ? tables.armors[d.system.armorType] : null;
+      const table = tableOf(d);
       const mats = table ? (table.materials ?? []).join("/") : (d.system.materials ?? []).map((m) => `${m.type} R${m.rank}`).join(", ");
+      const qty = this.qty[d.id] ?? 1;
+      const unit = buyPrice(probe, tables, { level });
       return {
-        id: d.id, name: d.name, img: d.img, ranked, rank,
-        price: buyPrice(probe, tables, { level }),
+        id: d.id, name: d.name, img: d.img, ranked, rank, qty, unit,
+        price: unit * qty,
+        custom: !!d.nssqCustom,
         materials: mats && (table ? `${mats} R${rank}+` : mats),
         info: d.system.effectText ?? ""
       };
@@ -110,10 +155,9 @@ class ShopApp extends Application {
     return {
       money: this.actor.system.money,
       creation: this.creation,
-      tabs: TABS.map(([type, label]) => ({
-        type, label,
-        rows: docs.filter((d) => d.type === type && (type !== "weapon" || tables.weapons[d.system.weaponType]?.price)).map(rowFor)
-      })),
+      isGM: game.user.isGM,
+      open: shopOpen(),
+      tabs: TABS.map(([type, label]) => ({ type, label, rows: docs.filter((d) => d.type === type).map(rowFor) })),
       noPacks: !docs.length
     };
   }
@@ -122,28 +166,38 @@ class ShopApp extends Application {
     super.activateListeners(html);
     html.on("change", "[name=creation]", (ev) => { this.creation = ev.currentTarget.checked; this.render(); });
     html.on("change", "[data-rank]", (ev) => {
-      const id = ev.currentTarget.dataset.rank;
-      this.ranks[id] = Math.clamp(Number(ev.currentTarget.value) || 1, 1, MAX_RANK);
+      this.ranks[ev.currentTarget.dataset.rank] = Math.clamp(Number(ev.currentTarget.value) || 1, 1, MAX_RANK);
+      this.render();
+    });
+    html.on("change", "[data-qty]", (ev) => {
+      this.qty[ev.currentTarget.dataset.qty] = Math.clamp(Number(ev.currentTarget.value) || 1, 1, 99);
       this.render();
     });
     html.on("click", "[data-buy]", (ev) => this.buy(ev.currentTarget.dataset.buy));
   }
 
   async buy(id) {
+    if (!shopOpen() && !game.user.isGM) return ui.notifications.warn(L("closed"));
     const doc = this.docs.find((d) => d.id === id);
     if (!doc) return;
     const actor = this.actor;
+    const qty = this.qty[id] ?? 1;
     const data = doc.toObject();
     delete data._id;
+    delete data.folder;
     const level = actor.system.level;
-    if (data.type === "weapon" || data.type === "armor") data.system.rank = this.ranks[id] ?? Math.min(MAX_RANK, Math.max(1, level));
-    const price = buyPrice(data, tables, { level });
-    if (actor.system.money < price) return ui.notifications.warn(L("noMoney", { price }));
-    if (exceedsOwnLimit(actor.items.contents, data)) return ui.notifications.warn(L("ownLimit", { name: data.name }));
+    const ranked = isRanked(doc);
+    if (ranked) data.system.rank = this.ranks[id] ?? (doc.nssqCustom ? doc.system.rank : Math.min(MAX_RANK, Math.max(1, level)));
+    const unit = buyPrice(data, tables, { level });
+    const total = unit * qty;
+    if (actor.system.money < total) return ui.notifications.warn(L("noMoney", { price: total }));
+    if (exceedsOwnLimit(actor.items.contents, { ...data, system: { ...data.system, quantity: qty } })) {
+      return ui.notifications.warn(L("ownLimit", { name: data.name }));
+    }
 
-    // 농기구 등: 입수할 때 기본 속성 선택
-    const table = data.type === "weapon" ? tables.weapons[data.system.weaponType] : data.type === "armor" ? tables.armors[data.system.armorType] : null;
-    if (table?.elementChoice) {
+    // 농기구 등: 입수할 때 기본 속성 선택(여러 개면 같은 속성)
+    const table = tableOf(doc);
+    if (table?.elementChoice && !data.system.element) {
       const element = await Dialog.prompt({
         title: L("chooseElement"),
         content: `<form><div class="form-group"><select name="e">${["slash", "strike", "pierce"].map((e) => `<option value="${e}">${game.i18n.localize(`NSSQ.Resist.${e}`)}</option>`).join("")}</select></div></form>`,
@@ -154,42 +208,94 @@ class ShopApp extends Application {
       data.system.element = element;
     }
 
-    // 소재
-    const used = [];
+    // 소재 배정: 개당 1개씩(무기·방어구는 대응 소재 R 이상, 아이템은 필요 소재와 같은 R). R이 낮은 것부터
+    const allocation = [];
     if (!this.creation) {
       const items = actor.items.contents;
       const reqs = table ? [{ table, rank: data.system.rank }] : (data.system.materials ?? []).map((r) => ({ req: r }));
+      const used = {};
       for (const r of reqs) {
         const cands = r.table ? equipmentMaterialCandidates(items, r.table, r.rank) : itemMaterialCandidates(items, r.req);
-        const need = r.table ? `${r.table.materials.join("/")} R${r.rank}+` : `${r.req.type} R${r.req.rank}+`;
-        if (!cands.length) return ui.notifications.warn(L("noMaterial", { need }));
-        const m = await pickMaterial(cands.filter((c) => !used.includes(c) || (c.system.quantity ?? 1) > 1), L("pickMaterial", { need }));
-        if (!m) return;
-        used.push(m);
+        const need = r.table ? `${r.table.materials.join("/")} R${r.rank}+` : `${r.req.type} R${r.req.rank}`;
+        const a = allocateMaterials(cands, qty, used);
+        if (!a) return ui.notifications.warn(L("noMaterial", { need: `${need} ×${qty}` }));
+        for (const x of a) used[x.item.id] = (used[x.item.id] ?? 0) + x.n;
+        allocation.push(...a);
       }
     }
 
-    // 받기(같은 묶음은 합침). 소지 수를 넘으면 정리 창 — 상점에서는 창고로 보낼 수도 있다
-    data.system.quantity = 1;
-    const reserved = used.reduce((m, x) => ({ ...m, [x.id]: (m[x.id] ?? 0) + 1 }), {});
-    const { taken } = await acquireItems(actor, [data], { source: "shop", delegate: false, reserved });
-    if (!taken.length) return;
-    for (const m of used) {
-      const fresh = actor.items.get(m.id);
-      if (fresh) await consumeMaterial(fresh);
-    }
-    await actor.update({ "system.money": actor.system.money - price });
+    // 확인
+    const name = `${esc(data.name)}${ranked ? ` R${data.system.rank}` : ""}`;
+    const matText = allocation.length ? allocation.map((x) => `${esc(x.item.name)} R${x.item.system.rank} ×${x.n}`).join(", ") : this.creation ? L("creationMode") : L("noMaterialNeeded");
+    const ok = await Dialog.confirm({
+      title: L("confirmTitle"),
+      content: `<p>${L("confirmBody", { name, qty, unit, total })}</p><p>${L("usedMaterial")}: ${matText}</p><p class="notes">${L("confirmMoney", { before: actor.system.money, after: actor.system.money - total })}</p>`,
+      rejectClose: false
+    });
+    if (!ok) return;
 
-    const rank = data.system.rank && (data.type === "weapon" || data.type === "armor") ? ` R${data.system.rank}` : "";
-    const matText = used.length ? ` · ${L("usedMaterial")}: ${used.map((m) => `${m.name} R${m.system.rank}`).join(", ")}` : this.creation ? ` · ${L("creationMode")}` : "";
-    await log(actor, L("bought", { name: `${esc(data.name)}${rank}`, price }) + matText);
+    // 받기: 쌓이는 것은 한 묶음, 무기·방어구 등은 개수만큼. 넘치면 정리 창(창고 가능, 전부 아니면 취소)
+    const stackable = !!stackKey(data);
+    const dataList = stackable
+      ? [{ ...data, system: { ...data.system, quantity: qty } }]
+      : Array.from({ length: qty }, () => ({ ...data, system: { ...data.system, quantity: 1 } }));
+    const reserved = allocation.reduce((m, x) => ({ ...m, [x.item.id]: (m[x.item.id] ?? 0) + x.n }), {});
+    const { taken } = await acquireItems(actor, dataList, { source: "shop", delegate: false, reserved });
+    if (!taken.length) return;
+    for (const x of allocation) {
+      const fresh = actor.items.get(x.item.id);
+      if (fresh) await consumeMaterial(fresh, x.n);
+    }
+    await actor.update({ "system.money": actor.system.money - total });
+    await log(actor, L("bought", { name: `${name}${qty > 1 ? ` ×${qty}` : ""}`, price: total }) + ` · ${L("usedMaterial")}: ${matText}`);
     this.render();
   }
 }
 
+/** 상점 열기: 플레이어는 GM이 상점을 열었을 때만 */
 export function openShop(actor) {
   if (!actor?.isOwner) return;
+  if (!shopOpen() && !game.user.isGM) return ui.notifications.warn(L("closed"));
+  const existing = Object.values(ui.windows).find((w) => w instanceof ShopApp && w.actor === actor);
+  if (existing) return existing.render(true, { focus: true });
   new ShopApp(actor).render(true);
+}
+
+/** 상점이 닫히면 플레이어의 상점 창을 닫고, 시트의 버튼 상태를 갱신한다 */
+export function onShopToggle(open) {
+  for (const w of Object.values(ui.windows)) {
+    if (w instanceof ShopApp && !open && !game.user.isGM) w.close();
+    else if (w.actor?.type === "character" || w instanceof ShopApp) w.render(false);
+  }
+  ui.notifications.info(open ? L("openedNotice") : L("closedNotice"));
+  ui.actors?.render();
+}
+
+export function registerShopHooks() {
+  // GM 도구: 토큰 컨트롤의 상점 토글
+  Hooks.on("getSceneControlButtons", (controls) => {
+    if (!game.user.isGM) return;
+    controls.find((c) => c.name === "token")?.tools.push({
+      name: "nssq-shop",
+      title: "NSSQ.Shop.toggle",
+      icon: "fas fa-store",
+      toggle: true,
+      active: shopOpen(),
+      onClick: (toggled) => toggleShop(toggled)
+    });
+  });
+  // GM 도구: 액터 탭 머리의 상점 열기·닫기, 추가 품목 폴더
+  Hooks.on("renderActorDirectory", (app, html) => {
+    if (!game.user.isGM) return;
+    const open = shopOpen();
+    const box = $(`<div class="nssq-shop-gm flexrow">
+      <button type="button" class="shop-toggle ${open ? "on" : ""}"><i class="fas fa-store${open ? "" : "-slash"}"></i> ${open ? L("isOpen") : L("isClosed")}</button>
+      <button type="button" class="shop-folder"><i class="fas fa-folder-plus"></i> ${L("folderButton")}</button>
+    </div>`);
+    box.find(".shop-toggle").on("click", () => toggleShop());
+    box.find(".shop-folder").on("click", () => ensureShopFolder());
+    html.find(".directory-header .header-actions").after(box);
+  });
 }
 
 /* ---------------- 매각 ---------------- */

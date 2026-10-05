@@ -3,7 +3,7 @@
  */
 import { canEquip, equippedSlot, sellPrice, slotOccupant, slotsFor } from "../engine/equipment.mjs";
 import tables from "../generated/tables.mjs";
-import { openRefineDialog, openShop, sellItem } from "../apps/shop.mjs";
+import { openRefineDialog, openShop, sellItem, shopOpen } from "../apps/shop.mjs";
 import { retrieveItem, storageActive, storeItem } from "../apps/acquire.mjs";
 
 const GROUPS = [
@@ -76,6 +76,7 @@ export function inventoryContext(actor) {
   const stored = all.filter((i) => i.system.stored).sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name, "ko")).map(row);
   return {
     storage, stored,
+    shopAvailable: shopOpen() || game.user.isGM,
     // 창고 기능이 꺼져 있으면 구역 자체를 숨긴다(물건은 그대로 보관, 소지 수에는 안 들어감)
     showStorage: storage,
     storageSetting: !!game.settings.get("nssq", "storage"),

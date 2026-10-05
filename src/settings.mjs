@@ -1,3 +1,5 @@
+import { onShopToggle } from "./apps/shop.mjs";
+
 export function registerSettings() {
   game.settings.register("nssq", "autoApply", {
     name: "NSSQ.Settings.autoApply.name",
@@ -21,6 +23,12 @@ export function registerSettings() {
     default: false,
     onChange: () => Object.values(ui.windows).filter((w) => w.actor?.type === "character").forEach((w) => w.render(false))
   });
+  // 상점 열림 여부(GM이 액터 탭·토큰 도구로 여닫음)와 추가 품목 폴더
+  game.settings.register("nssq", "shopOpen", {
+    scope: "world", config: false, type: Boolean, default: false,
+    onChange: (v) => onShopToggle(v)
+  });
+  game.settings.register("nssq", "shopFolder", { scope: "world", config: false, type: String, default: "" });
   game.settings.register("nssq", "fpStart", {
     name: "NSSQ.Settings.fpStart.name",
     hint: "NSSQ.Settings.fpStart.hint",

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import tables from "../../src/generated/tables.mjs";
 import {
-  armorStats, buyPrice, canEquip, canRefine, carriedCount, checkOverflowPlan, collectEquipment, equipmentMaterialCandidates, splitIncoming, stackKey,
+  allocateMaterials, armorStats, buyPrice, canEquip, canRefine, carriedCount, checkOverflowPlan, collectEquipment, equipmentMaterialCandidates, splitIncoming, stackKey,
   equippedSlot, exceedsOwnLimit, itemMaterialCandidates, refinePrice, sellPrice, slotOccupant, slotsFor, weaponStats
 } from "../../src/engine/equipment.mjs";
 
@@ -224,5 +224,20 @@ describe("창고·소지 수 초과", () => {
     expect(stackKey(material("풀", 2))).toBe("material:풀:2");
     expect(stackKey({ type: "consumable", system: { key: "メディカ" } })).toBe("consumable:メディカ");
     expect(stackKey(weapon("검"))).toBeNull();
+  });
+});
+
+describe("소재 배정(수량 구입)", () => {
+  const m = (id, rank, quantity) => ({ id, type: "material", system: { materialType: "금속", rank, quantity } });
+  it("R이 낮은 것부터 필요한 개수만큼", () => {
+    const r = allocateMaterials([m("a", 3, 1), m("b", 1, 2), m("c", 2, 5)], 4);
+    expect(r.map((x) => [x.item.id, x.n])).toEqual([["b", 2], ["c", 2]]);
+  });
+  it("모자라면 null", () => {
+    expect(allocateMaterials([m("a", 1, 2)], 3)).toBeNull();
+  });
+  it("이미 배정한 개수는 빼고 센다", () => {
+    expect(allocateMaterials([m("a", 1, 2)], 2, { a: 1 })).toBeNull();
+    expect(allocateMaterials([m("a", 1, 2)], 1, { a: 1 }).map((x) => x.n)).toEqual([1]);
   });
 });

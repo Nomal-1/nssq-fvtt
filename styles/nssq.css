@@ -144,3 +144,14 @@
 .nssq-overflow .incoming { color: #1a5fb4; }
 .nssq-overflow h4 { margin: 6px 0 2px; border-bottom: 1px solid #999; }
 .nssq-overflow table.incoming td.name { color: #1a5fb4; }
+
+/* 상점 GM 도구·수량 */
+#actors .nssq-shop-gm { gap: 4px; margin: 4px 0 0; flex: 0 0 100%; }
+#actors .nssq-shop-gm button { line-height: 1.6em; font-size: 0.9em; }
+#actors .nssq-shop-gm .shop-toggle.on { background: rgba(24, 118, 43, 0.35); }
+.nssq-shop .shop-state { font-weight: bold; color: #b02020; }
+.nssq-shop .shop-state.on { color: #18762b; }
+.nssq-shop .shop-row .qty input { width: 2.8em; text-align: center; }
+.nssq-shop .shop-row .qty { flex: 0 0 auto; }
+.nssq-shop .custom-tag { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: rgba(26, 95, 180, 0.2); }
+.nssq .inventory-header .shop-btn:disabled { opacity: 0.5; cursor: not-allowed; }
