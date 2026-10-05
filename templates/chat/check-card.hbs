@@ -33,7 +33,7 @@
   </div>
 
   <div class="check-buttons">
-    {{#if canReroll}}<button type="button" data-nssq-action="reroll" data-owner-only>{{localize "NSSQ.Check.reroll"}}</button>{{/if}}
+    {{#if canReroll}}<button type="button" data-nssq-action="reroll" data-owner-only title="{{localize 'NSSQ.Check.rerollHint'}}">{{localize "NSSQ.Check.reroll"}}</button>{{/if}}
     {{#unless contest}}<button type="button" data-nssq-action="contest">{{localize "NSSQ.Check.contest"}}</button>{{/unless}}
   </div>
 </div>

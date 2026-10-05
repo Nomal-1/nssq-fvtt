@@ -3,10 +3,9 @@
  * 계산은 전부 engine/check.mjs가 한다.
  */
 import { ABILITIES } from "../engine/derive.mjs";
-import { contestWinner, evaluateCheck } from "../engine/check.mjs";
+import { REROLL_COST, canReroll, contestWinner, evaluateCheck, rerollFPDelta } from "../engine/check.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/check-card.hbs";
-const REROLL_COST = 1; // OPEN-QUESTION #18
 
 /** n개의 D6을 Foundry Roll로 굴린다(Dice So Nice 등이 보이도록) */
 async function rollD6(n) {
@@ -156,7 +155,9 @@ async function onReroll(message) {
   if (state.rerolled) return;
   const actor = await actorOf(state);
   if (!actor) return;
-  if ((actor.system.fp?.value ?? 0) < REROLL_COST) return ui.notifications.warn(game.i18n.localize("NSSQ.Check.notEnoughFP"));
+  if (!canReroll(state, actor.system.fp?.value ?? 0)) {
+    return ui.notifications.warn(game.i18n.format("NSSQ.Check.notEnoughFPReroll", { cost: REROLL_COST, gained: state.fpGained }));
+  }
   const { roll, dice } = await rollD6(state.dice.length);
   await show3d(roll);
   state.dice = dice;
@@ -164,7 +165,7 @@ async function onReroll(message) {
   state.selected = null;
   const r = evaluateCheck({ ...state, modifier: state.bonus + state.modifier });
   state.selected = r.selected;
-  await changeFP(actor, -REROLL_COST + (r.fpGain - state.fpGained));
+  await changeFP(actor, rerollFPDelta(state, r.fpGain));
   state.fpGained = r.fpGain;
   await updateCard(message, state);
 }

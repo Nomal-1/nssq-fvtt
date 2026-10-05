@@ -60,9 +60,19 @@ export function contestWinner(active, passive) {
   return passive.total >= active.total ? "passive" : "active";
 }
 
-/** 판정 상태에 대해 【FP】 사용이 가능한지 */
-export function canReroll(state, fp, cost = 1) {
-  return !state.rerolled && fp >= cost;
+export const REROLL_COST = 1; // OPEN-QUESTION #18
+
+/**
+ * 다시 굴리기 가능 여부. 이 판정의 1로 얻은 【FP】(fpGained)는 다시 굴리면 회수되므로
+ * 그것을 뺀 【FP】로 비용을 낼 수 있어야 한다.
+ */
+export function canReroll(state, fp, cost = REROLL_COST) {
+  return !state.rerolled && fp - (state.fpGained ?? 0) >= cost;
+}
+
+/** 다시 굴릴 때의 【FP】 변화: 비용 + 이 판정에서 얻었던 【FP】 회수 (+ 다시 굴린 뒤 획득, 원문상 항상 0) */
+export function rerollFPDelta(state, newGain = 0, cost = REROLL_COST) {
+  return -cost - (state.fpGained ?? 0) + newGain;
 }
 
 export function canAddDice(fp, n = 1) {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canAddDice, canReroll, contestWinner, defaultSelection, evaluateCheck, rollDice } from "../../src/engine/check.mjs";
+import { canAddDice, canReroll, contestWinner, defaultSelection, evaluateCheck, rerollFPDelta, rollDice } from "../../src/engine/check.mjs";
 
 describe("일반 행위 판정 (01 §2, 05 필수 케이스)", () => {
   it("2D6 + 수정 = 달성값, 목표값 이상이면 성공", () => {
@@ -71,6 +71,26 @@ describe("일반 행위 판정 (01 §2, 05 필수 케이스)", () => {
     expect(canReroll({ rerolled: false }, 0)).toBe(false);
     expect(canAddDice(2, 2)).toBe(true);
     expect(canAddDice(1, 2)).toBe(false);
+  });
+});
+
+describe("다시 굴리기와 【FP】", () => {
+  it("이번 판정의 1로 얻은 【FP】로는 다시 굴릴 수 없다", () => {
+    // 【FP】 0에서 [1,4] → 1 획득 → 현재 1. 그 1은 회수 대상
+    expect(canReroll({ rerolled: false, fpGained: 1 }, 1)).toBe(false);
+    // 원래 1이 있었다면 [1,4] 후 2 → 다시 굴릴 수 있다
+    expect(canReroll({ rerolled: false, fpGained: 1 }, 2)).toBe(true);
+  });
+
+  it("다시 굴리면 비용 1 + 얻었던 【FP】 회수", () => {
+    // 【FP】 1에서 [1,1] → 3. 다시 굴리면 -1 -2 = 0
+    expect(rerollFPDelta({ fpGained: 2 })).toBe(-3);
+    expect(rerollFPDelta({ fpGained: 0 })).toBe(-1);
+  });
+
+  it("추가한 판정은 얻은 【FP】가 없으므로 비용만", () => {
+    const r = evaluateCheck({ dice: [1, 1, 3], added: 1 });
+    expect(rerollFPDelta({ fpGained: r.fpGain })).toBe(-1);
   });
 });
 
