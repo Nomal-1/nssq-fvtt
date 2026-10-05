@@ -16,30 +16,46 @@ export function isActiveGM() {
   return !!gm && gm.id === game.user.id;
 }
 
-/** 전투 불능 표시·해제, 전위 전멸 시 열 교대, 진영 전멸 알림 (GM에서만) */
+/** 전투에서 빠진 상태: 【HP】 0 이하, 또는 GM이 「쓰러짐으로 표시」한 전투원 */
+const isOut = (c) => !!c.defeated || (c.actor?.system.hp?.value ?? 0) <= 0;
+const sideKey = (actor) => (sideOf(actor) === "enemy" ? "enemy" : "party");
+
+/**
+ * 【HP】가 바뀌었을 때: 【HP】 0 이하면 쓰러짐 표시를 붙이고(시스템이 붙였다고 기록),
+ * 되살아나면 시스템이 붙인 표시만 뗀다(GM이 직접 붙인 표시는 그대로). 그다음 진영 검사.
+ */
 async function afterHpChange(actor) {
   const ko = (actor.system.hp?.value ?? 0) <= 0;
   const combat = game.combat;
   const combatant = combat?.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor.uuid);
-  if (combatant && combatant.defeated !== ko) await combatant.update({ defeated: ko });
   const dead = CONFIG.specialStatusEffects.DEFEATED;
-  if (actor.statuses?.has(dead) !== ko) await actor.toggleStatusEffect(dead, { active: ko, overlay: true });
-  if (!combat || !combatant) return;
+  const setOverlay = async (on) => { if (actor.statuses?.has(dead) !== on) await actor.toggleStatusEffect(dead, { active: on, overlay: true }); };
+  if (combatant) {
+    const auto = !!combatant.getFlag("nssq", "autoDefeated");
+    if (ko && !combatant.defeated) {
+      await combatant.update({ defeated: true, "flags.nssq.autoDefeated": true }, { nssqAuto: true });
+      await setOverlay(true);
+    } else if (!ko && combatant.defeated && auto) {
+      await combatant.update({ defeated: false, "flags.nssq.-=autoDefeated": null }, { nssqAuto: true });
+      await setOverlay(false);
+    }
+  } else await setOverlay(ko);
+  if (combat && combatant) await checkSides(combat, sideKey(actor));
+}
 
-  const side = sideOf(actor) === "enemy" ? "enemy" : "party";
-  const members = combat.combatants.filter((c) => c.actor && (sideOf(c.actor) === "enemy" ? "enemy" : "party") === side);
-  const units = members.map((c) => ({ id: c.id, row: c.actor.system.row ?? "front", ko: (c.actor.system.hp?.value ?? 0) <= 0 }));
-  const swaps = rowSwap(units);
-  if (swaps.length) {
-    for (const s of swaps) await combat.combatants.get(s.id).actor.update({ "system.row": s.row });
-    await ChatMessage.create({ content: `<div class="nssq-combat-note"><i class="fas fa-exchange-alt"></i> ${L(side === "enemy" ? "rowSwapEnemy" : "rowSwapParty")}</div>` });
+/** 전위 전멸 교대(그 진영), 진영 전멸이면 종료 대기. 쓰러짐 표시를 바꿨을 때도 부른다 */
+async function checkSides(combat, changedSide = null) {
+  for (const side of changedSide ? [changedSide] : ["party", "enemy"]) {
+    const members = combat.combatants.filter((c) => c.actor && sideKey(c.actor) === side);
+    const swaps = rowSwap(members.map((c) => ({ id: c.id, row: c.actor.system.row ?? "front", ko: isOut(c) })));
+    if (swaps.length) {
+      for (const s of swaps) await combat.combatants.get(s.id).actor.update({ "system.row": s.row });
+      await ChatMessage.create({ content: `<div class="nssq-combat-note"><i class="fas fa-exchange-alt"></i> ${L(side === "enemy" ? "rowSwapEnemy" : "rowSwapParty")}</div>` });
+    }
   }
-  // 전멸 판정: 한 진영이 전멸하면 전투를 「종료 대기」로(되살아나면 해제)
-  const sideUnits = (pred) => combat.combatants.filter((c) => c.actor && pred(c.actor))
-    .map((c) => ({ ko: (c.actor.system.hp?.value ?? 0) <= 0 }));
-  const enemiesDown = sideDefeated(sideUnits((a) => sideOf(a) === "enemy"));
-  const partyDown = sideDefeated(sideUnits((a) => sideOf(a) !== "enemy"));
-  const over = enemiesDown ? "victory" : partyDown ? "defeat" : null;
+  // 전멸 판정: 한 진영이 전원 빠지면 「종료 대기」(되살아나면 해제)
+  const unitsOf = (side) => combat.combatants.filter((c) => c.actor && sideKey(c.actor) === side).map((c) => ({ ko: isOut(c) }));
+  const over = sideDefeated(unitsOf("enemy")) ? "victory" : sideDefeated(unitsOf("party")) ? "defeat" : null;
   const before = combat.getFlag("nssq", "over") ?? null;
   if (over !== before) {
     await combat.setFlag("nssq", "over", over);
@@ -90,6 +106,13 @@ export async function autoApplyCard(message) {
 export function registerApply() {
   onSocket("applyAttack", (p) => { if (isActiveGM()) gmApply(p); });
   Hooks.on("createChatMessage", (message) => { if (message.getFlag("nssq", "attack")) autoApplyCard(message); });
+  // 전투 추적기의 「쓰러짐으로 표시」를 켜고 끌 때도 진영 검사(손으로 켜면 시스템 표시가 아니므로 기록을 지운다)
+  Hooks.on("updateCombatant", (combatant, changes, options) => {
+    if (!isActiveGM() || !("defeated" in changes) || !combatant.actor) return;
+    if (options?.nssqAuto) return;
+    if (combatant.getFlag("nssq", "autoDefeated") && !changes.flags?.nssq?.autoDefeated) combatant.unsetFlag("nssq", "autoDefeated");
+    checkSides(combatant.combat, sideKey(combatant.actor));
+  });
   // HP를 손으로 고쳐도 전투 불능 표시를 맞춘다
   Hooks.on("updateActor", (actor, changes) => {
     if (!isActiveGM() || foundry.utils.getProperty(changes, "system.hp.value") === undefined) return;
