@@ -198,6 +198,28 @@ export function registerTracker() {
     });
   });
 
+  // 메인 페이즈: 전투 참가 플레이어는 「타겟 선택」 도구로, 끝나면 「토큰 선택」으로
+  const syncTool = (combat) => {
+    if (game.user.isGM || !canvas?.ready || !combat?.started) return;
+    if (combat.scene && canvas.scene?.id !== combat.scene.id) return;
+    const mine = combat.combatants.some((c) => c.actor?.isOwner);
+    if (!mine) return;
+    const want = combat.getFlag("nssq", "phase") === "main" && !combat.getFlag("nssq", "over") ? "target" : "select";
+    if (ui.controls.activeControl === "token" && ui.controls.activeTool === want) return;
+    ui.controls.initialize({ control: "token", tool: want });
+    canvas.tokens.activate({ tool: want });
+  };
+  Hooks.on("updateCombat", (combat, changes) => {
+    if (foundry.utils.hasProperty(changes, "flags.nssq.phase") || foundry.utils.hasProperty(changes, "flags.nssq.over")) syncTool(combat);
+  });
+  Hooks.on("deleteCombat", () => {
+    if (game.user.isGM || !canvas?.ready || ui.controls.activeTool !== "target") return;
+    ui.controls.initialize({ control: "token", tool: "select" });
+    canvas.tokens.activate({ tool: "select" });
+  });
+  // 메인 페이즈 도중에 접속하거나 씬이 바뀌어도 맞춘다
+  Hooks.on("canvasReady", () => syncTool(game.combat));
+
   // 전투 중에 추가된 전투원도 【속도】로 이니셔티브
   Hooks.on("createCombatant", (combatant) => {
     if (game.user.isGM && combatant.combat?.started) combatant.combat.rollInitiative([combatant.id]);

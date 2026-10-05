@@ -325,3 +325,8 @@
 .nssq-cleanup th, .nssq-cleanup td { padding: 2px 4px; border-bottom: 1px solid #c9c7b8; font-size: 0.9em; }
 .nssq-cleanup td.scenes { font-size: 0.8em; }
 .rare-boost { display: block; }
+
+/* 트래커: 페이즈 막대가 남는 공간을 차지하지 않게, 전투원 표시는 한 줄로 */
+#combat .nssq-phase-bar { flex: 0 0 auto; }
+#combat li.combatant .token-name .nssq-combatant-tools { flex: 0 0 auto; flex-wrap: nowrap; }
+#combat li.combatant .nssq-combatant-tools .row-tag { display: inline-block; line-height: 1.4; }
