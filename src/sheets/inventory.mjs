@@ -1,9 +1,10 @@
 /**
  * 캐릭터 시트의 장비·소지품 탭: 표시 데이터와 동작(장비·해제·매각·제련·상점)
  */
-import { canEquip, equippedSlot, isUsable, sellPrice, slotOccupant, slotsFor, useOnce } from "../engine/equipment.mjs";
+import { canEquip, equippedSlot, isUsable, slotOccupant, slotsFor, useOnce } from "../engine/equipment.mjs";
 import tables from "../generated/tables.mjs";
-import { openRefineDialog, openShop, sellItem, shopOpen } from "../apps/shop.mjs";
+import { openShop, shopOpen } from "../apps/shop.mjs";
+import { refinementBadges } from "./badges.mjs";
 import { retrieveItem, storageActive, storeItem } from "../apps/acquire.mjs";
 
 const GROUPS = [
@@ -36,8 +37,6 @@ function summary(item) {
   } else if (item.type === "accessory") {
     parts.push(item.system.effectText || "");
   }
-  const refs = (item.system.refinements ?? []).map((k) => tables.refinements.find((r) => r.key === k)?.name).filter(Boolean);
-  if (refs.length) parts.push(`${game.i18n.localize("NSSQ.Inventory.refined")}: ${refs.join(", ")}`);
   return parts.filter(Boolean).join(" · ");
 }
 
@@ -51,7 +50,6 @@ export function inventoryContext(actor) {
   const all = actor.items.contents;
   const items = all.filter((i) => !i.system.stored);
   const storage = storageActive(actor);
-  const level = actor.system.level;
   const row = (i) => ({
     id: i.id, name: i.name, img: i.img, type: i.type,
     rank: rankLabel(i),
@@ -62,9 +60,8 @@ export function inventoryContext(actor) {
     summary: summary(i),
     equippable: slotsFor(i).length > 0,
     canSub: i.type === "weapon",
-    refinable: (i.type === "weapon" || i.type === "armor") && !i.system.stored,
+    refine: refinementBadges(i),
     canStore: storage && !i.system.equipped,
-    sell: sellPrice(i, tables, { level })
   });
   const slots = ["weapon", "armor", "other"].map((slot) => {
     const it = slotOccupant(items, slot);
@@ -143,16 +140,6 @@ export function activateInventoryListeners(sheet, html) {
   html.on("click", "[data-action=unequip]", (ev) => {
     ev.preventDefault();
     itemOf(ev)?.update({ "system.equipped": false });
-  });
-  html.on("click", "[data-action=sell]", (ev) => {
-    ev.preventDefault();
-    const item = itemOf(ev);
-    if (item) sellItem(actor, item);
-  });
-  html.on("click", "[data-action=refine]", (ev) => {
-    ev.preventDefault();
-    const item = itemOf(ev);
-    if (item) openRefineDialog(actor, item);
   });
   html.on("click", "[data-action=use]", (ev) => {
     ev.preventDefault();

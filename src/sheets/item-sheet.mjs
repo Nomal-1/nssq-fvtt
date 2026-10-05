@@ -1,4 +1,5 @@
 import tables from "../generated/tables.mjs";
+import { badgeFor } from "./badges.mjs";
 
 const ELEMENTS = ["slash", "strike", "pierce", "fire", "ice", "volt"];
 
@@ -38,8 +39,12 @@ export class NssqItemSheet extends ItemSheet {
         .filter(([k, v]) => typeof v === "number" && !(k === "price" && !v))
         .map(([k, v]) => ({ label: `NSSQ.Inventory.${k}`, value: v }));
     }
-    if (Array.isArray(system.refinements)) {
-      context.refinements = system.refinements.map((k) => ({ key: k, name: tables.refinements.find((r) => r.key === k)?.name ?? k }));
+    if (Array.isArray(system.refinements) && (this.item.type === "weapon" || this.item.type === "armor")) {
+      context.refinements = system.refinements.map((k) => {
+        const r = tables.refinements.find((x) => x.key === k);
+        return { key: k, name: r?.name ?? k, badge: r ? badgeFor(r) : null };
+      });
+      context.refineSlots = Math.max(0, 2 - system.refinements.length);
       context.isGM = game.user.isGM;
     }
     context.enrichedDescription = await TextEditor.enrichHTML(system.description ?? "", {

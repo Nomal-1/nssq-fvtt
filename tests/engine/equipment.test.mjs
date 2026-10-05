@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import tables from "../../src/generated/tables.mjs";
 import {
-  allocateMaterials, armorStats, isUsable, useOnce, buyPrice, canEquip, canRefine, carriedCount, checkOverflowPlan, collectEquipment, equipmentMaterialCandidates, splitIncoming, stackKey,
+  allocateMaterials, armorStats, isUsable, refinementBadge, useOnce, buyPrice, canEquip, canRefine, carriedCount, checkOverflowPlan, collectEquipment, equipmentMaterialCandidates, splitIncoming, stackKey,
   equippedSlot, exceedsOwnLimit, itemMaterialCandidates, refinePrice, sellPrice, slotOccupant, slotsFor, weaponStats
 } from "../../src/engine/equipment.mjs";
 
@@ -266,5 +266,17 @@ describe("사용(n회분)", () => {
     expect(isUsable(by("횃불"))).toBe(true);
     expect(isUsable(by("기름(작은 병)"))).toBe(true);
     expect(isUsable(by("10m 로프"))).toBe(false);
+  });
+});
+
+describe("제련 배지", () => {
+  it("모든 제련 효과가 배지로 표시된다(other 없음)", () => {
+    for (const r of tables.refinements) expect(refinementBadge(r).kind, r.name).not.toBe("other");
+  });
+  it("종류별", () => {
+    expect(refinementBadge(ref("【STR】+1"))).toEqual({ kind: "ability", key: "str", value: 1 });
+    expect(refinementBadge(ref("【속도】+2"))).toEqual({ kind: "sub", key: "speed", value: 2 });
+    expect(refinementBadge(ref("〈빙〉 내성+1"))).toEqual({ kind: "resist", key: "ice", value: 1 });
+    expect(refinementBadge(ref("〈뇌〉 속성 부여"))).toEqual({ kind: "imbue", key: "volt" });
   });
 });

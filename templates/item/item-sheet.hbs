@@ -32,9 +32,9 @@
   {{/if}}
   {{#if refinements}}
   <section class="item-refinements">
-    <h3>{{localize "NSSQ.Inventory.refined"}}</h3>
+    <h3>{{localize "NSSQ.Inventory.refined"}} ({{refinements.length}}/2)</h3>
     <ul>
-      {{#each refinements as |r|}}<li>{{r.name}}{{#if @root.isGM}} <a data-action="remove-refinement" data-key="{{r.key}}" title="{{localize 'NSSQ.Inventory.removeRefinement'}}"><i class="fas fa-times"></i></a>{{/if}}</li>{{/each}}
+      {{#each refinements as |r|}}<li>{{#if r.badge}}<span class="refine-badge {{r.badge.cls}}"><i class="fas {{r.badge.icon}}"></i> {{r.badge.text}}</span>{{/if}} {{r.name}}{{#if @root.isGM}} <a data-action="remove-refinement" data-key="{{r.key}}" title="{{localize 'NSSQ.Inventory.removeRefinement'}}"><i class="fas fa-times"></i></a>{{/if}}</li>{{/each}}
     </ul>
   </section>
   {{/if}}

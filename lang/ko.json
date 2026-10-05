@@ -93,7 +93,10 @@
       "fire": "〈염〉",
       "ice": "〈빙〉",
       "volt": "〈뇌〉",
-      "withEquip": "장비 포함"
+      "base": "기본",
+      "final": "최종",
+      "baseHint": "PC는 GM 지시가 없으면 3",
+      "finalHint": "기본 + 장비(제련 등)"
     },
     "Field": {
       "key": "키",
@@ -274,7 +277,9 @@
       "usesLeft": "이 세트 {value}/{max} 남음, 세트 {qty}개",
       "qtyLeft": "{qty}개 남음",
       "usedUp": "다 썼다",
-      "useManual": "효과는 GM이 적용한다(자동 적용은 이후 단계)."
+      "useManual": "효과는 GM이 적용한다(자동 적용은 이후 단계).",
+      "hpMax": "HP",
+      "tpMax": "TP"
     },
     "Shop": {
       "title": "상점",
@@ -293,9 +298,7 @@
       "bought": "구입: {name} ({price}G)",
       "sold": "매각: {name} (+{price}G)",
       "sellTitle": "매각",
-      "sellConfirm": "{name}을(를) {price}G에 판다.",
-      "sellEquipped": "장비 중인 아이템이다.",
-      "sellFor": "매각 {price}G",
+      "sellEquipped": "장비 중인 아이템이 포함되어 있다.",
       "refine": "제련",
       "refineTitle": "제련(대장간)",
       "refineEffect": "효과",
@@ -320,7 +323,18 @@
       "confirmTitle": "구입 확인",
       "confirmBody": "{name} × {qty} — 개당 {unit}G, 합계 {total}G",
       "confirmMoney": "소지금 {before}G → {after}G",
-      "hiddenTag": "숨김"
+      "hiddenTag": "숨김",
+      "sellTab": "매각",
+      "refineTab": "제련",
+      "sellRule": "판매가는 구입가의 50%, 소재는 (R의 제곱)×50G. 팔 것을 체크하고 수량을 정한다.",
+      "sellTotal": "합계",
+      "sellSelected": "고른 것 매각",
+      "selectMaterials": "소재 전부 고르기",
+      "equippedTag": "장비 중",
+      "refineRule": "무기·방어구 하나에 2개까지, 같은 효과는 중복 불가. 대응 소재(R 이상) 1개와 효과별 가격이 든다.",
+      "refineNoItems": "제련할 수 있는 무기·방어구가 없다.",
+      "itemName": "이름",
+      "itemNameHint": "비워 두면 원래 이름. 여러 개를 사면 모두 같은 이름이 된다."
     },
     "Storage": {
       "title": "창고",
@@ -369,6 +383,10 @@
       "sellAll": "전부 판매",
       "hideAll": "전부 숨김",
       "shopItemsNote": "체크한 품목만 플레이어 상점에 나온다. GM이 연 상점에는 숨긴 것도 「숨김」으로 보인다."
+    },
+    "Badge": {
+      "resist": "내",
+      "empty": "빈 제련 칸"
     }
   }
 }

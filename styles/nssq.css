@@ -200,3 +200,34 @@
 .nssq-gm-screen .shop-items img { border: none; }
 .nssq-gm-screen .shop-items .hidden-item { opacity: 0.55; }
 .nssq-gm-screen .custom-tag { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: rgba(26, 95, 180, 0.2); }
+
+/* 제련 배지 */
+.nssq .refine-badges, .nssq-shop .refine-badges { display: inline-flex; gap: 2px; vertical-align: middle; }
+.refine-badge { display: inline-flex; align-items: center; gap: 2px; font-size: 0.75em; line-height: 1.5; padding: 0 4px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.25); background: rgba(0, 0, 0, 0.06); white-space: nowrap; }
+.refine-badge.imbue.fire, .refine-badge.resist.fire { background: rgba(214, 64, 32, 0.18); color: #a3301a; }
+.refine-badge.imbue.ice, .refine-badge.resist.ice { background: rgba(32, 128, 214, 0.18); color: #1a5fb4; }
+.refine-badge.imbue.volt, .refine-badge.resist.volt { background: rgba(214, 180, 32, 0.25); color: #806400; }
+.refine-badge.resist { border-style: dashed; }
+.refine-badge.ability { background: rgba(24, 118, 43, 0.15); color: #18762b; }
+.refine-badge.sub { background: rgba(110, 60, 160, 0.15); color: #5e2f8f; }
+.refine-empty { font-size: 0.8em; color: #9a9890; }
+
+/* 내성 기본·최종 */
+.nssq .resist-table { width: 100%; border-collapse: collapse; text-align: center; }
+.nssq .resist-table th, .nssq .resist-table td { padding: 2px; border-bottom: 1px solid #c9c7b8; }
+.nssq .resist-table thead th { font-weight: normal; }
+.nssq .resist-table tbody th { text-align: left; font-size: 0.85em; width: 3em; }
+.nssq .resist-table input { width: 3em; text-align: center; }
+.nssq .resist-table tr.final td { font-weight: bold; font-size: 1.1em; }
+.nssq .resist-table tr.final td.changed { color: #1a5fb4; }
+
+/* 상점 매각·제련 탭 */
+.nssq-shop .shop-tabs .item.service { font-weight: bold; }
+.nssq-shop .sell-list .sell-check { flex: 0 0 auto; margin: 0 2px; }
+.nssq-shop .sell-footer { display: flex; align-items: center; gap: 10px; padding-top: 6px; border-top: 1px solid #999; }
+.nssq-shop .sell-footer .sell-total { margin-left: auto; }
+.nssq-shop .sell-footer button { flex: 0 0 auto; width: auto; }
+.nssq-shop .sell-footer a { cursor: pointer; font-size: 0.9em; }
+.nssq-shop .shop-row .name .refine-badges { margin-left: 4px; }
+.nssq-sell-list { margin: 0 0 6px; padding-left: 1.2em; }
+.nssq-buy-confirm .notes.warn, .notes.warn { color: #b02020; }

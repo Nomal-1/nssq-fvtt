@@ -7,9 +7,10 @@
  */
 import {
   MAX_RANK, allocateMaterials, buyPrice, canRefine, equipmentMaterialCandidates, exceedsOwnLimit, itemMaterialCandidates,
-  refinePrice, sellPrice, stackKey
+  isPhysical, isStored, refinePrice, sellPrice, stackKey
 } from "../engine/equipment.mjs";
 import tables from "../generated/tables.mjs";
+import { refinementBadges } from "../sheets/badges.mjs";
 import { acquireItems } from "./acquire.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Shop.${k}`, d) : game.i18n.localize(`NSSQ.Shop.${k}`));
@@ -173,7 +174,29 @@ class ShopApp extends Application {
         info: d.system.effectText ?? ""
       };
     };
+    const actor = this.actor;
+    const rankLabel = (i) => (["weapon", "armor", "material"].includes(i.type) && (i.type !== "weapon" || isRanked(i)) ? `R${i.system.rank}` : "");
+    // 매각: 창고에 없는 물건. 장비 중인 것은 표시만 하고 팔 수 있다
+    const sellRows = actor.items.contents.filter((i) => isPhysical(i) && !isStored(i))
+      .sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name, "ko"))
+      .map((i) => ({
+        id: i.id, name: i.name, img: i.img, type: i.type, rank: rankLabel(i),
+        unit: sellPrice(i, tables, { level }),
+        quantity: i.system.quantity ?? 1,
+        multi: (i.system.quantity ?? 1) > 1,
+        equipped: !!i.system.equipped,
+        refine: refinementBadges(i)
+      }));
+    // 제련: 창고에 없는 무기(가격 식이 있는 것)·방어구
+    const refineRows = actor.items.contents.filter((i) => !isStored(i) && (i.type === "armor" || (i.type === "weapon" && isRanked(i))))
+      .map((i) => ({
+        id: i.id, name: i.name, img: i.img, rank: i.system.rank, equipped: !!i.system.equipped,
+        refine: refinementBadges(i),
+        canRefine: (i.system.refinements ?? []).length < 2,
+        materials: `${(tableOf(i)?.materials ?? []).join("/")} R${i.system.rank}+`
+      }));
     return {
+      sellRows, refineRows,
       money: this.actor.system.money,
       creation: this.creation,
       isGM: game.user.isGM,
@@ -195,6 +218,50 @@ class ShopApp extends Application {
       this.render();
     });
     html.on("click", "[data-buy]", (ev) => this.buy(ev.currentTarget.dataset.buy));
+    // 매각 탭: 고른 것의 합계를 다시 그리지 않고 갱신
+    const root = html[0];
+    const refreshTotal = () => {
+      let total = 0;
+      let count = 0;
+      root.querySelectorAll("[data-sell-row]").forEach((li) => {
+        if (!li.querySelector(".sell-check").checked) return;
+        const n = Number(li.querySelector(".sell-qty")?.value ?? 1) || 0;
+        total += n * Number(li.dataset.unit);
+        count += n;
+      });
+      const t = root.querySelector(".sell-total b");
+      if (t) t.textContent = String(total);
+      const btn = root.querySelector("[data-sell-selected]");
+      if (btn) btn.disabled = count === 0;
+    };
+    html.on("change input", ".sell-check, .sell-qty", (ev) => {
+      const q = ev.currentTarget.classList.contains("sell-qty") ? ev.currentTarget : null;
+      if (q) {
+        q.value = String(Math.clamp(Number(q.value) || 1, 1, Number(q.max)));
+        q.closest("li").querySelector(".sell-check").checked = true;
+      }
+      refreshTotal();
+    });
+    html.on("click", "[data-sell-select]", (ev) => {
+      ev.preventDefault();
+      const type = ev.currentTarget.dataset.sellSelect;
+      const rows = this.actor.items;
+      root.querySelectorAll("[data-sell-row]").forEach((li) => {
+        if (rows.get(li.dataset.sellRow)?.type === type) li.querySelector(".sell-check").checked = true;
+      });
+      refreshTotal();
+    });
+    html.on("click", "[data-sell-selected]", () => {
+      const picks = [...root.querySelectorAll("[data-sell-row]")]
+        .filter((li) => li.querySelector(".sell-check").checked)
+        .map((li) => ({ item: this.actor.items.get(li.dataset.sellRow), n: Number(li.querySelector(".sell-qty")?.value ?? 1) || 1 }))
+        .filter((p) => p.item);
+      sellItems(this.actor, picks).then(() => this.render());
+    });
+    html.on("click", "[data-refine]", (ev) => {
+      const item = this.actor.items.get(ev.currentTarget.dataset.refine);
+      if (item) openRefineDialog(this.actor, item, { creation: this.creation }).then(() => this.render());
+    });
   }
 
   async buy(id) {
@@ -245,15 +312,26 @@ class ShopApp extends Application {
       }
     }
 
-    // 확인
-    const name = `${esc(data.name)}${ranked ? ` R${data.system.rank}` : ""}`;
+    // 확인. 무기·방어구는 이름을 정할 수 있다(비워 두면 원래 이름)
+    const named = data.type === "weapon" || data.type === "armor";
+    const baseName = data.name;
+    const shown = `${esc(baseName)}${ranked ? ` R${data.system.rank}` : ""}`;
     const matText = allocation.length ? allocation.map((x) => `${esc(x.item.name)} R${x.item.system.rank} ×${x.n}`).join(", ") : this.creation ? L("creationMode") : L("noMaterialNeeded");
-    const ok = await Dialog.confirm({
+    const confirmed = await Dialog.prompt({
       title: L("confirmTitle"),
-      content: `<p>${L("confirmBody", { name, qty, unit, total })}</p><p>${L("usedMaterial")}: ${matText}</p><p class="notes">${L("confirmMoney", { before: actor.system.money, after: actor.system.money - total })}</p>`,
-      rejectClose: false
+      content: `<form class="nssq-buy-confirm">
+        <p>${L("confirmBody", { name: shown, qty, unit, total })}</p>
+        ${named ? `<div class="form-group"><label>${L("itemName")}</label><input type="text" name="name" value="${esc(baseName)}" placeholder="${esc(baseName)}"/></div><p class="notes">${L("itemNameHint")}</p>` : ""}
+        <p>${L("usedMaterial")}: ${matText}</p>
+        <p class="notes">${L("confirmMoney", { before: actor.system.money, after: actor.system.money - total })}</p>
+      </form>`,
+      label: L("buy"),
+      rejectClose: false,
+      callback: (html) => ({ name: html[0].querySelector("[name=name]")?.value.trim() || baseName })
     });
-    if (!ok) return;
+    if (!confirmed) return;
+    data.name = confirmed.name;
+    const name = `${esc(data.name)}${ranked ? ` R${data.system.rank}` : ""}`;
 
     // 받기: 쌓이는 것은 한 묶음, 무기·방어구 등은 개수만큼. 넘치면 정리 창(창고 가능, 전부 아니면 취소)
     const stackable = !!stackKey(data);
@@ -315,25 +393,44 @@ export function registerShopHooks() {
 
 /* ---------------- 매각 ---------------- */
 
-export async function sellItem(actor, item) {
-  const price = sellPrice(item, tables, { level: actor.system.level });
-  const qty = item.system.quantity ?? 1;
+/**
+ * 여러 물건을 한 번에 판다(상점 「매각」 탭)
+ * @param {Actor} actor
+ * @param {{item: Item, n: number}[]} picks
+ */
+export async function sellItems(actor, picks) {
+  if (!shopOpen() && !game.user.isGM) return ui.notifications.warn(L("closed"));
+  const level = actor.system.level;
+  const lines = picks.map(({ item, n }) => {
+    const qty = item.system.quantity ?? 1;
+    const count = Math.clamp(n, 1, qty);
+    return { item, count, price: sellPrice(item, tables, { level }) * count };
+  });
+  if (!lines.length) return;
+  const total = lines.reduce((a, l) => a + l.price, 0);
+  const label = (l) => `${esc(l.item.name)}${["weapon", "armor", "material"].includes(l.item.type) ? ` R${l.item.system.rank}` : ""}${l.count > 1 ? ` ×${l.count}` : ""}`;
+  const equipped = lines.some((l) => l.item.system.equipped);
   const ok = await Dialog.confirm({
     title: L("sellTitle"),
-    content: `<p>${L("sellConfirm", { name: esc(item.name), price })}</p>${item.system.equipped ? `<p class="notes">${L("sellEquipped")}</p>` : ""}`,
+    content: `<ul class="nssq-sell-list">${lines.map((l) => `<li>${label(l)} — ${l.price}G</li>`).join("")}</ul>
+      <p><b>${L("sellTotal")} ${total}G</b> (${actor.system.money}G → ${actor.system.money + total}G)</p>
+      ${equipped ? `<p class="notes warn">${L("sellEquipped")}</p>` : ""}`,
     rejectClose: false
   });
   if (!ok) return;
-  if (qty > 1 && ["consumable", "tool", "material"].includes(item.type)) await item.update({ "system.quantity": qty - 1 });
-  else await item.delete();
-  await actor.update({ "system.money": actor.system.money + price });
-  const rank = ["weapon", "armor", "material"].includes(item.type) ? ` R${item.system.rank}` : "";
-  await log(actor, L("sold", { name: `${esc(item.name)}${rank}`, price }));
+  for (const l of lines) {
+    const qty = l.item.system.quantity ?? 1;
+    if (l.count < qty) await l.item.update({ "system.quantity": qty - l.count });
+    else await l.item.delete();
+  }
+  await actor.update({ "system.money": actor.system.money + total });
+  await log(actor, L("sold", { name: lines.map(label).join(", "), price: total }));
 }
 
 /* ---------------- 제련 ---------------- */
 
-export async function openRefineDialog(actor, item) {
+export async function openRefineDialog(actor, item, { creation = false } = {}) {
+  if (!shopOpen() && !game.user.isGM) return ui.notifications.warn(L("closed"));
   const rank = item.system.rank;
   const table = item.type === "weapon" ? tables.weapons[item.system.weaponType] : tables.armors[item.system.armorType];
   const options = tables.refinements.map((r) => ({ r, check: canRefine(item, r), price: refinePrice(r, rank) }))
@@ -346,7 +443,7 @@ export async function openRefineDialog(actor, item) {
       <div class="form-group"><label>${L("refineEffect")}</label><select name="r">
         ${options.map((o) => `<option value="${o.r.key}" ${o.check.ok ? "" : "disabled"}>${esc(o.r.name)} — ${o.price}G${o.check.ok ? "" : ` (${L("refineHas")})`}</option>`).join("")}
       </select></div>
-      <div class="form-group"><label><input type="checkbox" name="creation"/> ${L("creationMode")}</label></div>
+      <div class="form-group"><label><input type="checkbox" name="creation" ${creation ? "checked" : ""}/> ${L("creationMode")}</label></div>
       <p class="notes">${L("refineMaterialNote", { mats: (table?.materials ?? []).join("/"), rank })}</p>
     </form>`;
   const pick = await Dialog.prompt({

@@ -4,14 +4,16 @@
     {{#if isGM}}<span class="shop-state {{#if open}}on{{/if}}">{{#if open}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</span>{{/if}}
     <label class="creation"><input type="checkbox" name="creation" {{checked creation}}/> {{localize "NSSQ.Shop.creationMode"}}</label>
   </header>
-  <p class="notes">{{localize "NSSQ.Shop.rule"}}</p>
   {{#if noPacks}}<p class="warn">{{localize "NSSQ.Shop.noPacks"}}</p>{{/if}}
   <nav class="shop-tabs tabs">
     {{#each tabs as |t|}}<a class="item" data-tab="{{t.type}}">{{localize t.label}}</a>{{/each}}
+    <a class="item service" data-tab="sell"><i class="fas fa-coins"></i> {{localize "NSSQ.Shop.sellTab"}}</a>
+    <a class="item service" data-tab="refine"><i class="fas fa-hammer"></i> {{localize "NSSQ.Shop.refineTab"}}</a>
   </nav>
   <section class="shop-body">
     {{#each tabs as |t|}}
     <div class="tab" data-tab="{{t.type}}">
+      <p class="notes">{{localize "NSSQ.Shop.rule"}}</p>
       <ol class="shop-list">
         {{#each t.rows as |r|}}
         <li class="shop-row flexrow">
@@ -27,5 +29,45 @@
       </ol>
     </div>
     {{/each}}
+
+    <div class="tab" data-tab="sell">
+      <p class="notes">{{localize "NSSQ.Shop.sellRule"}}</p>
+      <ol class="shop-list sell-list">
+        {{#each sellRows as |r|}}
+        <li class="shop-row flexrow" data-sell-row="{{r.id}}" data-unit="{{r.unit}}">
+          <input type="checkbox" class="sell-check"/>
+          <img src="{{r.img}}" width="24" height="24"/>
+          <span class="name">{{r.name}} {{r.rank}}{{#if r.equipped}} <span class="hidden-tag">{{localize "NSSQ.Shop.equippedTag"}}</span>{{/if}}
+            {{> "systems/nssq/templates/actor/parts/refine-badges.hbs" refine=r.refine}}</span>
+          <span class="price">{{r.unit}}G</span>
+          {{#if r.multi}}<label class="qty">× <input type="number" class="sell-qty" min="1" max="{{r.quantity}}" value="{{r.quantity}}"/> / {{r.quantity}}</label>{{else}}<span class="qty">× 1</span>{{/if}}
+        </li>
+        {{else}}
+        <li class="empty">{{localize "NSSQ.NoItems"}}</li>
+        {{/each}}
+      </ol>
+      <footer class="sell-footer">
+        <a data-sell-select="material"><i class="fas fa-check-double"></i> {{localize "NSSQ.Shop.selectMaterials"}}</a>
+        <span class="sell-total">{{localize "NSSQ.Shop.sellTotal"}} <b>0</b>G</span>
+        <button type="button" data-sell-selected disabled><i class="fas fa-coins"></i> {{localize "NSSQ.Shop.sellSelected"}}</button>
+      </footer>
+    </div>
+
+    <div class="tab" data-tab="refine">
+      <p class="notes">{{localize "NSSQ.Shop.refineRule"}}</p>
+      <ol class="shop-list">
+        {{#each refineRows as |r|}}
+        <li class="shop-row flexrow">
+          <img src="{{r.img}}" width="24" height="24"/>
+          <span class="name">{{r.name}} R{{r.rank}}{{#if r.equipped}} <span class="custom-tag">{{localize "NSSQ.Shop.equippedTag"}}</span>{{/if}}
+            {{> "systems/nssq/templates/actor/parts/refine-badges.hbs" refine=r.refine}}</span>
+          <span class="mats">{{r.materials}}</span>
+          <button type="button" data-refine="{{r.id}}" {{#unless r.canRefine}}disabled{{/unless}}><i class="fas fa-hammer"></i> {{localize "NSSQ.Shop.refine"}}</button>
+        </li>
+        {{else}}
+        <li class="empty">{{localize "NSSQ.Shop.refineNoItems"}}</li>
+        {{/each}}
+      </ol>
+    </div>
   </section>
 </div>

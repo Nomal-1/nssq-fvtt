@@ -261,6 +261,21 @@ export function canRefine(item, refinement) {
   return { ok: true };
 }
 
+/**
+ * 제련 배지(아이콘 표시용)를 효과 데이터에서 만든다. 이름으로 분기하지 않는다.
+ * @returns {{ kind: "ability"|"sub"|"resist"|"imbue"|"other", key?: string, value?: number }}
+ */
+export function refinementBadge(refinement) {
+  const e = refinement?.effects?.[0];
+  if (!e) return { kind: "other" };
+  if (e.type === "flag" && e.flag === "weaponElement") return { kind: "imbue", key: e.value };
+  if (e.type !== "modifier") return { kind: "other" };
+  const value = typeof e.value === "number" ? e.value : null;
+  if (e.path.startsWith("abilities.")) return { kind: "ability", key: e.path.slice(10), value };
+  if (e.path.startsWith("resist.")) return { kind: "resist", key: e.path.slice(7), value };
+  return { kind: "sub", key: e.path, value };
+}
+
 export function refinePrice(refinement, rank) {
   return evaluate(refinement.price, { R: rank });
 }

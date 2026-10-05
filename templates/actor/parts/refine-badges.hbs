@@ -1,0 +1,1 @@
+{{#if refine}}<span class="refine-badges">{{#each refine.badges as |b|}}<span class="refine-badge {{b.cls}}" title="{{b.title}}"><i class="fas {{b.icon}}"></i> {{b.text}}</span>{{/each}}{{#each refine.empty}}<span class="refine-empty" title="{{localize 'NSSQ.Badge.empty'}}">○</span>{{/each}}</span>{{/if}}
