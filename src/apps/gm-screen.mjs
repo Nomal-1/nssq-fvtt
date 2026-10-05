@@ -6,6 +6,7 @@ import { openRequestDialog } from "./check-request.mjs";
 import { ensureShopFolder, hiddenSet, setHidden, shopCatalog, shopOpen, toggleShop } from "./shop.mjs";
 import { storageActive } from "./acquire.mjs";
 import { battlePresets, createPreset, currentBattle, openEndDialog, openStartDialog } from "./battle.mjs";
+import { cleanupEnemies } from "./enemy-library.mjs";
 import tables from "../generated/tables.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.GMScreen.${k}`, d) : game.i18n.localize(`NSSQ.GMScreen.${k}`));
@@ -128,6 +129,7 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=battle-start]", (ev) => openStartDialog(ev.currentTarget.dataset.preset || null));
     html.on("click", "[data-gm=battle-end]", () => openEndDialog());
     html.on("click", "[data-gm=preset-new]", () => createPreset());
+    html.on("click", "[data-gm=enemy-cleanup]", () => cleanupEnemies());
     html.on("click", "[data-preset-view]", (ev) => game.scenes.get(ev.currentTarget.dataset.presetView)?.view());
     html.on("click", "[data-preset-config]", (ev) => game.scenes.get(ev.currentTarget.dataset.presetConfig)?.sheet.render(true));
     // 상점 품목: 체크 = 판매, 해제 = 숨김

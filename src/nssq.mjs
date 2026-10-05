@@ -17,6 +17,7 @@ import { registerApply } from "./combat/apply.mjs";
 import { attackerFromContext, normalAttack, registerAttackHooks } from "./combat/attack.mjs";
 import { registerTracker, rollEscape } from "./combat/tracker.mjs";
 import { registerFormation } from "./combat/formation.mjs";
+import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
 import { createPreset, openEndDialog, openStartDialog, registerBattle } from "./apps/battle.mjs";
 
 Hooks.once("init", () => {
@@ -57,6 +58,7 @@ Hooks.once("init", () => {
   registerTracker();
   registerBattle();
   registerFormation();
+  registerEnemyLibrary();
   // 매크로·모듈용 API
   game.nssq = {
     promptCheck, rollCheck, openRequestDialog, rollAbilities, acquireItems, openShop, toggleShop,
@@ -65,7 +67,8 @@ Hooks.once("init", () => {
     rollEscape: () => rollEscape(game.combat),
     startBattle: openStartDialog,
     endBattle: openEndDialog,
-    createBattlePreset: createPreset
+    createBattlePreset: createPreset,
+    cleanupEnemies
   };
 });
 
