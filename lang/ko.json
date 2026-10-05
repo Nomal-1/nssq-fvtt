@@ -119,7 +119,9 @@
       "foodstuff": "식료품",
       "materialType": "소재 종류",
       "elementDefault": "기본 속성",
-      "refinements": "제련"
+      "refinements": "제련",
+      "uses": "사용 횟수",
+      "consumable": "소모품"
     },
     "Status": {
       "petrify": "석화",
@@ -265,7 +267,14 @@
         "shieldNotAllowed": "{name}: 메인·서브 클래스 모두 방패를 쓸 수 없다. (GM은 Shift+클릭으로 무시)",
         "armorNotAllowed": "{name}: 갑옷은 메인 클래스가 장비할 수 있는 것만 가능하다. (GM은 Shift+클릭으로 무시)"
       },
-      "unarmed": "맨손({type}) · 물공 {atk}"
+      "unarmed": "맨손({type}) · 물공 {atk}",
+      "use": "사용(1회분)",
+      "usesHint": "남은 사용 횟수 / 1세트",
+      "usedItem": "{name} 사용",
+      "usesLeft": "이 세트 {value}/{max} 남음, 세트 {qty}개",
+      "qtyLeft": "{qty}개 남음",
+      "usedUp": "다 썼다",
+      "useManual": "효과는 GM이 적용한다(자동 적용은 이후 단계)."
     },
     "Shop": {
       "title": "상점",
@@ -336,6 +345,24 @@
       "leaveAll": "전부 두고 가기",
       "delegateTimeout": "{user}의 응답이 없어 받지 않은 것으로 처리했다.",
       "delegateCancelled": "GM 쪽에서 시간이 지나 이 정리 요청은 취소됐다."
+    },
+    "GMScreen": {
+      "title": "GM 스크린",
+      "party": "파티",
+      "reference": "참고표",
+      "noParty": "캐릭터가 없다.",
+      "partyNote": "플레이어가 소유한 캐릭터. ●는 접속하지 않은 플레이어. 이름을 누르면 시트가 열린다.",
+      "sessionStart": "세션 시작",
+      "sessionStartConfirm": "파티 전원({names})의 【FP】를 {fp}로 한다.",
+      "sessionStarted": "세션 시작: 파티 전원의 【FP】를 {fp}로 했다.",
+      "targets": "목표값 기준",
+      "abilityUses": "능력치별 판정",
+      "traps": "트랩 대미지 기준",
+      "trapsText": "【HP】 대미지: 던전 레벨×3 정도 / 【TP】 대미지: 던전 레벨×2 정도 (던전 탐색 룰)",
+      "sessionExp": "세션 경험점",
+      "levels": "레벨표",
+      "need": "필요",
+      "total": "누계"
     }
   }
 }

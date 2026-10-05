@@ -11,6 +11,7 @@ import { registerSocket } from "./socket.mjs";
 import { registerAbilityRollHooks, rollAbilities } from "./apps/ability-roll.mjs";
 import { acquireItems, registerAcquire } from "./apps/acquire.mjs";
 import { openShop, registerShopHooks, toggleShop } from "./apps/shop.mjs";
+import { GMScreen, registerGMScreen } from "./apps/gm-screen.mjs";
 
 Hooks.once("init", () => {
   CONFIG.Actor.documentClass = NssqActor;
@@ -43,8 +44,9 @@ Hooks.once("init", () => {
   registerAbilityRollHooks();
   registerAcquire();
   registerShopHooks();
+  registerGMScreen();
   // 매크로·모듈용 API
-  game.nssq = { promptCheck, rollCheck, openRequestDialog, rollAbilities, acquireItems, openShop, toggleShop };
+  game.nssq = { promptCheck, rollCheck, openRequestDialog, rollAbilities, acquireItems, openShop, toggleShop, openGMScreen: () => GMScreen.open() };
 });
 
 Hooks.once("ready", () => registerSocket());

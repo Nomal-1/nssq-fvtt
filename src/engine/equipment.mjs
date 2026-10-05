@@ -164,6 +164,33 @@ export function splitIncoming(dataList, leave = []) {
   return { take, left };
 }
 
+/* ---------------- 사용(소모) ---------------- */
+
+/** [사용]할 수 있는 물건: 소모품, 「소모품」이라고 적힌 기타 아이템, 사용 횟수가 있는 것 */
+export function isUsable(item) {
+  if (isStored(item)) return false;
+  return item.type === "consumable" || (item.type === "tool" && (!!item.system?.consumable || (item.system?.uses?.max ?? 0) > 0));
+}
+
+/**
+ * 1회 사용 뒤의 상태.
+ * - 사용 횟수가 있으면(못·쐐기 5개 세트) 횟수 −1, 0이 되면 수량 −1하고 횟수를 다시 채운다
+ * - 없으면 수량 −1
+ * @returns {{ quantity: number, usesValue: number|null, remove: boolean }}
+ */
+export function useOnce(item) {
+  const qty = Math.max(0, item.system?.quantity ?? 1);
+  const max = item.system?.uses?.max ?? 0;
+  if (max > 0) {
+    const value = Math.max(0, item.system.uses.value ?? max) - 1;
+    if (value > 0) return { quantity: qty, usesValue: value, remove: false };
+    const q = qty - 1;
+    return { quantity: q, usesValue: q > 0 ? max : 0, remove: q <= 0 };
+  }
+  const q = qty - 1;
+  return { quantity: q, usesValue: null, remove: q <= 0 };
+}
+
 /* ---------------- 가격 ---------------- */
 
 /** 구입 가격. 무기·방어구는 종류 표의 R식, 그 외는 아이템 가격 */

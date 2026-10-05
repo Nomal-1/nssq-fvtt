@@ -1,7 +1,7 @@
 /**
  * 캐릭터 시트의 장비·소지품 탭: 표시 데이터와 동작(장비·해제·매각·제련·상점)
  */
-import { canEquip, equippedSlot, sellPrice, slotOccupant, slotsFor } from "../engine/equipment.mjs";
+import { canEquip, equippedSlot, isUsable, sellPrice, slotOccupant, slotsFor, useOnce } from "../engine/equipment.mjs";
 import tables from "../generated/tables.mjs";
 import { openRefineDialog, openShop, sellItem, shopOpen } from "../apps/shop.mjs";
 import { retrieveItem, storageActive, storeItem } from "../apps/acquire.mjs";
@@ -57,6 +57,8 @@ export function inventoryContext(actor) {
     rank: rankLabel(i),
     quantity: i.system.quantity ?? 1,
     stackable: ["consumable", "tool", "material"].includes(i.type),
+    usable: isUsable(i),
+    uses: (i.system.uses?.max ?? 0) > 0 ? `${i.system.uses.value}/${i.system.uses.max}` : "",
     summary: summary(i),
     equippable: slotsFor(i).length > 0,
     canSub: i.type === "weapon",
@@ -91,6 +93,26 @@ export function inventoryContext(actor) {
     classes: items.filter((i) => i.type === "class"),
     skills: items.filter((i) => i.type === "skill").sort((a, b) => a.name.localeCompare(b.name, "ko"))
   };
+}
+
+/** [사용]: 1회분 줄이고 채팅에 해설을 보인다(효과 자동 적용은 단계 6) */
+async function useItem(actor, item) {
+  const next = useOnce(item);
+  const name = item.name;
+  const desc = item.system.description ?? "";
+  if (next.remove) await item.delete();
+  else {
+    const u = { "system.quantity": next.quantity };
+    if (next.usesValue !== null) u["system.uses.value"] = next.usesValue;
+    await item.update(u);
+  }
+  const left = next.remove ? game.i18n.localize("NSSQ.Inventory.usedUp")
+    : next.usesValue !== null ? game.i18n.format("NSSQ.Inventory.usesLeft", { value: next.usesValue, max: item.system.uses.max, qty: next.quantity })
+      : game.i18n.format("NSSQ.Inventory.qtyLeft", { qty: next.quantity });
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="nssq-use"><b><i class="fas fa-hand-sparkles"></i> ${game.i18n.format("NSSQ.Inventory.usedItem", { name })}</b> <span class="left">(${left})</span>${desc}<p class="notes">${game.i18n.localize("NSSQ.Inventory.useManual")}</p></div>`
+  });
 }
 
 /** 장비: 장비 가능 판정 → 같은 슬롯 비우기 → 장비. GM은 Shift로 판정 무시 */
@@ -131,6 +153,11 @@ export function activateInventoryListeners(sheet, html) {
     ev.preventDefault();
     const item = itemOf(ev);
     if (item) openRefineDialog(actor, item);
+  });
+  html.on("click", "[data-action=use]", (ev) => {
+    ev.preventDefault();
+    const item = itemOf(ev);
+    if (item) useItem(actor, item);
   });
   html.on("click", "[data-action=store]", (ev) => {
     ev.preventDefault();

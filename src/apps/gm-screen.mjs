@@ -1,0 +1,127 @@
+/**
+ * GM 스크린: 파티 현황·빠른 조작·참고표를 한 창에 모은다(GM 전용).
+ * 던전(단계 9)·전투(단계 4·5) 탭은 해당 단계에서 붙인다.
+ */
+import { openRequestDialog } from "./check-request.mjs";
+import { ensureShopFolder, shopOpen, toggleShop } from "./shop.mjs";
+import { storageActive } from "./acquire.mjs";
+import tables from "../generated/tables.mjs";
+
+const L = (k, d) => (d ? game.i18n.format(`NSSQ.GMScreen.${k}`, d) : game.i18n.localize(`NSSQ.GMScreen.${k}`));
+
+/** 파티: 플레이어(GM 아닌 사용자)가 소유한 캐릭터. 없으면 모든 캐릭터 */
+export function partyActors() {
+  const chars = game.actors.filter((a) => a.type === "character");
+  const owned = chars.filter((a) => game.users.some((u) => !u.isGM && a.testUserPermission(u, "OWNER")));
+  return owned.length ? owned : chars;
+}
+
+const pct = (v, max) => (max > 0 ? Math.clamp(Math.round((v / max) * 100), 0, 100) : 0);
+
+export class GMScreen extends Application {
+  static instance = null;
+
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      id: "nssq-gm-screen",
+      classes: ["nssq", "nssq-gm-screen"],
+      template: "systems/nssq/templates/apps/gm-screen.hbs",
+      title: game.i18n.localize("NSSQ.GMScreen.title"),
+      width: 760,
+      height: 600,
+      resizable: true,
+      tabs: [{ navSelector: ".gm-tabs", contentSelector: ".gm-body", initial: "party" }]
+    });
+  }
+
+  static open() {
+    if (!game.user.isGM) return;
+    GMScreen.instance ??= new GMScreen();
+    GMScreen.instance.render(true, { focus: true });
+  }
+
+  /** 열려 있으면 다시 그린다(액터·아이템·설정이 바뀔 때) */
+  static refresh() {
+    if (GMScreen.instance?.rendered) GMScreen.instance.render(false);
+  }
+
+  getData() {
+    const storageSetting = !!game.settings.get("nssq", "storage");
+    const party = partyActors().map((a) => {
+      const s = a.system;
+      const owners = game.users.filter((u) => !u.isGM && a.testUserPermission(u, "OWNER"));
+      return {
+        id: a.id, name: a.name, img: a.img, level: s.level,
+        owners: owners.map((u) => `${u.name}${u.active ? "" : " ●"}`).join(", ") || "-",
+        online: owners.some((u) => u.active),
+        hp: { value: s.hp.value, max: s.hp.max, pct: pct(s.hp.value, s.hp.max) },
+        tp: { value: s.tp.value, max: s.tp.max, pct: pct(s.tp.value, s.tp.max) },
+        fp: s.fp.value,
+        carried: s.carried, carry: s.carry, over: s.carried > s.carry,
+        money: s.money,
+        row: game.i18n.localize(`NSSQ.Row.${s.row}`),
+        storageEnabled: !!s.storageEnabled,
+        storageActive: storageActive(a)
+      };
+    });
+    const lv = tables.levelExp;
+    return {
+      party,
+      storageSetting,
+      shopOpen: shopOpen(),
+      fpStart: game.settings.get("nssq", "fpStart"),
+      targets: tables.check.targets,
+      abilityUses: tables.check.abilityUses,
+      levels: lv.levels,
+      sessionExp: lv.sessionExp
+    };
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    html.on("click", "[data-open-actor]", (ev) => game.actors.get(ev.currentTarget.dataset.openActor)?.sheet.render(true));
+    html.on("change", "[data-storage-actor]", (ev) => {
+      game.actors.get(ev.currentTarget.dataset.storageActor)?.update({ "system.storageEnabled": ev.currentTarget.checked });
+    });
+    html.on("click", "[data-gm=request]", () => openRequestDialog());
+    html.on("click", "[data-gm=shop]", () => toggleShop());
+    html.on("click", "[data-gm=shop-folder]", () => ensureShopFolder());
+    html.on("click", "[data-gm=session-start]", () => this.sessionStart());
+  }
+
+  /** 세션 시작: 파티 전원의 【FP】를 설정값(기본 1)으로 */
+  async sessionStart() {
+    const fp = game.settings.get("nssq", "fpStart");
+    const party = partyActors();
+    const ok = await Dialog.confirm({
+      title: L("sessionStart"),
+      content: `<p>${L("sessionStartConfirm", { fp, names: party.map((a) => a.name).join(", ") })}</p>`,
+      rejectClose: false
+    });
+    if (!ok) return;
+    for (const a of party) await a.update({ "system.fp.value": fp });
+    await ChatMessage.create({ content: `<div class="nssq-trade"><i class="fas fa-flag"></i> ${L("sessionStarted", { fp })}</div>` });
+  }
+}
+
+export function registerGMScreen() {
+  // 열기: 액터 탭 머리 버튼, 토큰 도구
+  Hooks.on("renderActorDirectory", (app, html) => {
+    if (!game.user.isGM) return;
+    const btn = $(`<button type="button" class="nssq-gm-screen-btn"><i class="fas fa-book-open"></i> ${L("title")}</button>`);
+    btn.on("click", () => GMScreen.open());
+    html.find(".directory-header .header-actions").append(btn);
+  });
+  Hooks.on("getSceneControlButtons", (controls) => {
+    if (!game.user.isGM) return;
+    controls.find((c) => c.name === "token")?.tools.push({
+      name: "nssq-gm-screen", title: "NSSQ.GMScreen.title", icon: "fas fa-book-open", button: true, onClick: () => GMScreen.open()
+    });
+  });
+  // 자동 갱신
+  const refresh = foundry.utils.debounce(() => GMScreen.refresh(), 100);
+  for (const hook of ["updateActor", "createActor", "deleteActor", "createItem", "updateItem", "deleteItem", "updateUser", "userConnected"]) {
+    Hooks.on(hook, refresh);
+  }
+  Hooks.on("updateSetting", (setting) => { if (setting.key?.startsWith("nssq.")) refresh(); });
+}

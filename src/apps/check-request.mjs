@@ -168,7 +168,7 @@ export function registerCheckRequest() {
     ui.notifications.info(L("declined", { user: game.users.get(by)?.name ?? "?", name, what }));
   });
 
-  // GM 도구: 토큰 컨트롤과 액터 탭 머리
+  // GM 도구: 토큰 컨트롤(액터 탭에서는 GM 스크린에서 연다)
   Hooks.on("getSceneControlButtons", (controls) => {
     if (!game.user.isGM) return;
     controls.find((c) => c.name === "token")?.tools.push({
@@ -180,10 +180,4 @@ export function registerCheckRequest() {
     });
   });
 
-  Hooks.on("renderActorDirectory", (app, html) => {
-    if (!game.user.isGM) return;
-    const btn = $(`<button type="button" class="nssq-request-btn"><i class="fas fa-dice-d6"></i> ${L("title")}</button>`);
-    btn.on("click", () => openRequestDialog());
-    html.find(".directory-header .header-actions").append(btn);
-  });
 }

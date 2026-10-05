@@ -155,3 +155,35 @@
 .nssq-shop .shop-row .qty { flex: 0 0 auto; }
 .nssq-shop .custom-tag { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: rgba(26, 95, 180, 0.2); }
 .nssq .inventory-header .shop-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* 사용 */
+.nssq .item-uses { flex: 0 0 auto; font-size: 0.85em; padding: 0 4px; border: 1px solid #999; border-radius: 3px; }
+.nssq-use .left { font-size: 0.85em; color: #555; }
+
+/* GM 스크린 */
+#actors .nssq-gm-screen-btn { flex: 0 0 100%; margin-top: 4px; }
+.nssq-gm-screen .window-content { display: flex; flex-direction: column; }
+.nssq-gm-screen .gm-screen { display: flex; flex-direction: column; height: 100%; }
+.nssq-gm-screen .gm-actions { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; flex: 0 0 auto; }
+.nssq-gm-screen .gm-actions button { flex: 1 1 auto; width: auto; line-height: 1.8em; }
+.nssq-gm-screen .gm-actions button.on { background: rgba(24, 118, 43, 0.35); }
+.nssq-gm-screen .gm-tabs { flex: 0 0 auto; }
+.nssq-gm-screen .gm-body { flex: 1; overflow-y: auto; }
+.nssq-gm-screen table { width: 100%; border-collapse: collapse; }
+.nssq-gm-screen th, .nssq-gm-screen td { padding: 3px 4px; border-bottom: 1px solid #c9c7b8; text-align: center; vertical-align: middle; }
+.nssq-gm-screen .party .who { text-align: left; }
+.nssq-gm-screen .party .who a { display: flex; align-items: center; gap: 6px; font-weight: bold; cursor: pointer; }
+.nssq-gm-screen .party .who img { border: none; }
+.nssq-gm-screen .party .owners { font-size: 0.8em; color: #7a7971; }
+.nssq-gm-screen .party .owners.online { color: #18762b; }
+.nssq-gm-screen .bar { position: relative; height: 18px; min-width: 90px; background: rgba(0, 0, 0, 0.12); border-radius: 3px; overflow: hidden; }
+.nssq-gm-screen .bar span { position: absolute; left: 0; top: 0; bottom: 0; }
+.nssq-gm-screen .bar.hp span { background: rgba(176, 32, 32, 0.55); }
+.nssq-gm-screen .bar.tp span { background: rgba(26, 95, 180, 0.55); }
+.nssq-gm-screen .bar b { position: relative; font-size: 0.85em; }
+.nssq-gm-screen .fp { font-weight: bold; color: #1a5fb4; }
+.nssq-gm-screen .over { color: #b02020; font-weight: bold; }
+.nssq-gm-screen .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.nssq-gm-screen .ref th { width: 3.5em; }
+.nssq-gm-screen .ref td { text-align: left; font-size: 0.9em; }
+.nssq-gm-screen .ref.levels td.note { font-size: 0.8em; color: #555; }

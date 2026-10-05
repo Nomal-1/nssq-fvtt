@@ -135,8 +135,8 @@ row, order
 | `weapon` | weaponType, rank, element(농기구는 선택값), refinements[≤2], slot("weapon"/"other") — 수치는 종류 표의 R식으로 계산 |
 | `armor` | armorType, rank, refinements[≤2] |
 | `accessory` | effects[], price |
-| `consumable` | price, materials[], description, effects[], quantity, foodstuff(bool) |
-| `tool` | 기타 아이템. effects[], price |
+| `consumable` | price, materials[], description, effects[], quantity, uses{value,max}, stored, foodstuff(bool) |
+| `tool` | 기타 아이템. effects[], price, quantity, consumable(bool: 해설이 「소모품.」으로 시작), uses{value,max}(「n개 세트」→ n회), stored |
 | `material` | materialType, rank, quantity |
 
 - 장비 가능 판정: 무기·방패는 메인 또는 서브 클래스, 갑옷은 메인 클래스.

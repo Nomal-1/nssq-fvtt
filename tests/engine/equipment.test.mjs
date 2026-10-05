@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import tables from "../../src/generated/tables.mjs";
 import {
-  allocateMaterials, armorStats, buyPrice, canEquip, canRefine, carriedCount, checkOverflowPlan, collectEquipment, equipmentMaterialCandidates, splitIncoming, stackKey,
+  allocateMaterials, armorStats, isUsable, useOnce, buyPrice, canEquip, canRefine, carriedCount, checkOverflowPlan, collectEquipment, equipmentMaterialCandidates, splitIncoming, stackKey,
   equippedSlot, exceedsOwnLimit, itemMaterialCandidates, refinePrice, sellPrice, slotOccupant, slotsFor, weaponStats
 } from "../../src/engine/equipment.mjs";
 
@@ -239,5 +239,32 @@ describe("소재 배정(수량 구입)", () => {
   it("이미 배정한 개수는 빼고 센다", () => {
     expect(allocateMaterials([m("a", 1, 2)], 2, { a: 1 })).toBeNull();
     expect(allocateMaterials([m("a", 1, 2)], 1, { a: 1 }).map((x) => x.n)).toEqual([1]);
+  });
+});
+
+describe("사용(n회분)", () => {
+  const nails = (quantity, value) => ({ type: "tool", system: { quantity, consumable: true, uses: { value, max: 5 } } });
+  it("못·쐐기 5개 세트: 횟수만 줄고, 다 쓰면 수량 −1·횟수 다시 5", () => {
+    expect(useOnce(nails(2, 5))).toEqual({ quantity: 2, usesValue: 4, remove: false });
+    expect(useOnce(nails(2, 1))).toEqual({ quantity: 1, usesValue: 5, remove: false });
+    expect(useOnce(nails(1, 1))).toEqual({ quantity: 0, usesValue: 0, remove: true });
+  });
+  it("횟수가 없으면 수량 −1, 0이면 없어진다", () => {
+    expect(useOnce({ type: "consumable", system: { quantity: 3 } })).toEqual({ quantity: 2, usesValue: null, remove: false });
+    expect(useOnce({ type: "consumable", system: { quantity: 1 } }).remove).toBe(true);
+  });
+  it("[사용] 대상: 소모품, 「소모품」 기타 아이템, 횟수 있는 것. 로프·창고 안의 것은 아님", () => {
+    expect(isUsable({ type: "consumable", system: {} })).toBe(true);
+    expect(isUsable({ type: "tool", system: { consumable: true } })).toBe(true);
+    expect(isUsable({ type: "tool", system: { consumable: false, uses: { max: 0 } } })).toBe(false);
+    expect(isUsable({ type: "consumable", system: { stored: true } })).toBe(false);
+  });
+  it("데이터: 못·쐐기 5회, 횃불·기름은 소모품, 10m 로프는 아님", async () => {
+    const items = (await import("../../data/items.json", { with: { type: "json" } })).default;
+    const by = (n) => items.find((i) => i.name === n);
+    expect(by("못·쐐기").system.uses).toEqual({ value: 5, max: 5 });
+    expect(isUsable(by("횃불"))).toBe(true);
+    expect(isUsable(by("기름(작은 병)"))).toBe(true);
+    expect(isUsable(by("10m 로프"))).toBe(false);
   });
 });

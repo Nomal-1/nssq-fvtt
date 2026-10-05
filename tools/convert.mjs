@@ -484,7 +484,15 @@ function convertItems() {
       const key = keyOf(consumable ? "소모품 아이템" : "기타 아이템", name, where);
       const type = consumable ? "consumable" : "tool";
       const system = { key, price: Number(price), effects: [], quantity: 1, description: toHTML(desc) };
-      if (!consumable) Object.assign(system, effectsFromSentences(desc));
+      if (!consumable) {
+        Object.assign(system, effectsFromSentences(desc));
+        // 「소모품.」으로 시작하는 기타 아이템(못·쐐기, 횃불, 기름)은 쓰면 줄어든다
+        system.consumable = /^소모품\./.test(desc);
+      }
+      // 「5개 세트」: 아이템 1개(소지 수 1)에 사용 횟수 n
+      const setMatch = desc.match(/(\d+)개 세트/);
+      system.uses = setMatch ? { value: Number(setMatch[1]), max: Number(setMatch[1]) } : { value: 0, max: 0 };
+      if (setMatch) report.add("참고: 사용 횟수(n회분) 아이템", `${where}: ${setMatch[1]}회`);
       if (consumable) Object.assign(system, { materials: parseMaterials(mats, where), foodstuff: FOODSTUFF.includes(name) });
       else if (mats !== "-") report.add("파싱 실패", `${where}: 기타 아이템에 필요 소재 \`${mats}\``);
       if (Number.isNaN(system.price)) report.add("파싱 실패", `${where}: 가격 \`${price}\``);
@@ -708,6 +716,12 @@ function convertTables() {
   const exp = gr.find((t) => t.header[0] === "항목").rows.map(([item, value]) => ({ item, value }));
   write("tables/level-exp.json", { levels, sessionExp: exp });
 
+  const ck = parseTables(read("rules/일반-행위-판정.md"));
+  const targets = ck.find((t) => t.header[0] === "목표값").rows.map(([value, text]) => ({ value: Number(value), text }));
+  const abilityUses = ck.find((t) => t.header[0] === "능력치").rows.map(([ability, text]) => ({ ability, text }));
+  write("tables/check.json", { targets, abilityUses });
+  report.count("목표값 기준", targets.length);
+
   report.count("랜덤 던전 이벤트", events.length);
   report.count("경력표(D666)", history.length);
   report.count("레벨표", levels.length);
@@ -745,7 +759,10 @@ for (const d of ["skills", "enemies", "tables"]) {
     refinements: load("refinements.json").map(({ key, name, kinds, price, effects }) => ({ key, name, kinds, price, effects })),
     materials: load("materials.json").map((m) => m.name),
     // 가격 식이 없는 무기 종류(주먹) = 무기 슬롯이 비었을 때의 맨손(07 #20)
-    unarmed: load("weapons.json").find((w) => !w.system.table.price)?.system.weaponType ?? null
+    unarmed: load("weapons.json").find((w) => !w.system.table.price)?.system.weaponType ?? null,
+    // GM 스크린 참고표
+    check: load("tables/check.json"),
+    levelExp: load("tables/level-exp.json")
   };
   const file = path.join(ROOT, "src", "generated", "tables.mjs");
   fs.mkdirSync(path.dirname(file), { recursive: true });

@@ -1,0 +1,76 @@
+<div class="gm-screen">
+  <header class="gm-actions">
+    <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
+    <button type="button" data-gm="shop" class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</button>
+    <button type="button" data-gm="shop-folder"><i class="fas fa-folder-plus"></i> {{localize "NSSQ.Shop.folderButton"}}</button>
+    <button type="button" data-gm="session-start"><i class="fas fa-flag"></i> {{localize "NSSQ.GMScreen.sessionStart"}} ({{localize "NSSQ.FP"}} {{fpStart}})</button>
+  </header>
+
+  <nav class="gm-tabs tabs">
+    <a class="item" data-tab="party">{{localize "NSSQ.GMScreen.party"}}</a>
+    <a class="item" data-tab="reference">{{localize "NSSQ.GMScreen.reference"}}</a>
+  </nav>
+
+  <section class="gm-body">
+    <div class="tab" data-tab="party">
+      <table class="party">
+        <thead>
+          <tr>
+            <th>{{localize "NSSQ.Name"}}</th><th>{{localize "NSSQ.Level"}}</th><th>{{localize "NSSQ.HP"}}</th><th>{{localize "NSSQ.TP"}}</th>
+            <th>{{localize "NSSQ.FP"}}</th><th>{{localize "NSSQ.Carry"}}</th><th>G</th><th>{{localize "NSSQ.Row.label"}}</th>
+            {{#if storageSetting}}<th>{{localize "NSSQ.Storage.title"}}</th>{{/if}}
+          </tr>
+        </thead>
+        <tbody>
+          {{#each party as |p|}}
+          <tr>
+            <td class="who">
+              <a data-open-actor="{{p.id}}"><img src="{{p.img}}" width="28" height="28"/> {{p.name}}</a>
+              <div class="owners {{#if p.online}}online{{/if}}">{{p.owners}}</div>
+            </td>
+            <td>{{p.level}}</td>
+            <td><div class="bar hp"><span style="width: {{p.hp.pct}}%"></span><b>{{p.hp.value}} / {{p.hp.max}}</b></div></td>
+            <td><div class="bar tp"><span style="width: {{p.tp.pct}}%"></span><b>{{p.tp.value}} / {{p.tp.max}}</b></div></td>
+            <td class="fp">{{p.fp}}</td>
+            <td class="{{#if p.over}}over{{/if}}">{{p.carried}} / {{p.carry}}</td>
+            <td>{{p.money}}</td>
+            <td>{{p.row}}</td>
+            {{#if @root.storageSetting}}<td><input type="checkbox" data-storage-actor="{{p.id}}" {{checked p.storageEnabled}} title="{{localize 'NSSQ.Storage.enableForActor'}}"/></td>{{/if}}
+          </tr>
+          {{else}}
+          <tr><td colspan="9" class="empty">{{localize "NSSQ.GMScreen.noParty"}}</td></tr>
+          {{/each}}
+        </tbody>
+      </table>
+      <p class="notes">{{localize "NSSQ.GMScreen.partyNote"}}</p>
+    </div>
+
+    <div class="tab" data-tab="reference">
+      <div class="ref-grid">
+        <section>
+          <h3>{{localize "NSSQ.GMScreen.targets"}}</h3>
+          <table class="ref">
+            {{#each targets as |t|}}<tr><th>{{t.value}}</th><td>{{t.text}}</td></tr>{{/each}}
+          </table>
+          <h3>{{localize "NSSQ.GMScreen.abilityUses"}}</h3>
+          <table class="ref">
+            {{#each abilityUses as |a|}}<tr><th>{{a.ability}}</th><td>{{a.text}}</td></tr>{{/each}}
+          </table>
+          <h3>{{localize "NSSQ.GMScreen.traps"}}</h3>
+          <p>{{localize "NSSQ.GMScreen.trapsText"}}</p>
+        </section>
+        <section>
+          <h3>{{localize "NSSQ.GMScreen.sessionExp"}}</h3>
+          <table class="ref">
+            {{#each sessionExp as |e|}}<tr><td>{{e.item}}</td><th>{{e.value}}</th></tr>{{/each}}
+          </table>
+          <h3>{{localize "NSSQ.GMScreen.levels"}}</h3>
+          <table class="ref levels">
+            <thead><tr><th>Lv</th><th>{{localize "NSSQ.GMScreen.need"}}</th><th>{{localize "NSSQ.GMScreen.total"}}</th><th></th></tr></thead>
+            {{#each levels as |l|}}<tr><th>{{l.level}}</th><td>{{l.need}}</td><td>{{l.total}}</td><td class="note">{{l.note}}</td></tr>{{/each}}
+          </table>
+        </section>
+      </div>
+    </div>
+  </section>
+</div>

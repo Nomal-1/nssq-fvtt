@@ -284,18 +284,6 @@ export function registerShopHooks() {
       onClick: (toggled) => toggleShop(toggled)
     });
   });
-  // GM 도구: 액터 탭 머리의 상점 열기·닫기, 추가 품목 폴더
-  Hooks.on("renderActorDirectory", (app, html) => {
-    if (!game.user.isGM) return;
-    const open = shopOpen();
-    const box = $(`<div class="nssq-shop-gm flexrow">
-      <button type="button" class="shop-toggle ${open ? "on" : ""}"><i class="fas fa-store${open ? "" : "-slash"}"></i> ${open ? L("isOpen") : L("isClosed")}</button>
-      <button type="button" class="shop-folder"><i class="fas fa-folder-plus"></i> ${L("folderButton")}</button>
-    </div>`);
-    box.find(".shop-toggle").on("click", () => toggleShop());
-    box.find(".shop-folder").on("click", () => ensureShopFolder());
-    html.find(".directory-header .header-actions").after(box);
-  });
 }
 
 /* ---------------- 매각 ---------------- */
