@@ -4,17 +4,17 @@
 
 /**
  * @param {{hp: {value, max}, stats: object, resist: object}} enemy 에너미 system
- * @param {{multiplier?: 2|3, boost?: boolean}} [opts]
+ * @param {{multiplier?: 2|3, boost?: boolean|string[]}} [opts] boost: true면 여섯 항목 전부, 배열이면 고른 항목만
  * @returns {object} 바꿀 값 { hp, stats, resist }
  */
+export const RARE_BOOST = { physHit: 1, elemHit: 1, evasion: 1, physAtk: 2, elemAtk: 2, defense: 2 };
+
 export function rareTransform(enemy, { multiplier = 2, boost = false } = {}) {
   const max = enemy.hp.max * multiplier;
   const resist = Object.fromEntries(Object.entries(enemy.resist).map(([k, v]) => [k, v === 0 ? 1 : v === 1 ? 2 : v]));
   const stats = { ...enemy.stats };
-  if (boost) {
-    for (const k of ["physHit", "elemHit", "evasion"]) stats[k] += 1;
-    for (const k of ["physAtk", "elemAtk", "defense"]) stats[k] += 2;
-  }
+  const keys = boost === true ? Object.keys(RARE_BOOST) : Array.isArray(boost) ? boost : [];
+  for (const k of keys) if (k in RARE_BOOST) stats[k] += RARE_BOOST[k];
   return { hp: { value: max, max }, stats, resist };
 }
 

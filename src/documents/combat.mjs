@@ -7,6 +7,7 @@
  */
 import { initiativeValue } from "../engine/combat.mjs";
 import { combatProfile } from "../combat/profile.mjs";
+import { openEndDialog } from "../apps/battle.mjs";
 
 export class NssqCombat extends Combat {
   get phase() {
@@ -74,6 +75,13 @@ export class NssqCombat extends Combat {
 
   async nextTurn() {
     if (!game.user.isGM) return this;
+    // 한 진영이 전멸했으면 턴을 넘기지 않고 종료 창(결과 미리 선택)
+    const over = this.getFlag("nssq", "over");
+    if (over) {
+      if (this.getFlag("nssq", "battle")) openEndDialog(over);
+      else ui.notifications.info(game.i18n.localize(over === "victory" ? "NSSQ.Combat.enemyDefeated" : "NSSQ.Combat.partyDefeated"));
+      return this;
+    }
     switch (this.phase) {
       case "opening": {
         // 개막 → 메인: 【속도】를 다시 계산하고 첫 행동자부터

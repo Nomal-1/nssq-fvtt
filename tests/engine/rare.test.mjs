@@ -14,7 +14,12 @@ describe("희소종 (01 §3.14)", () => {
     expect(r.resist).toEqual({ slash: 3, strike: 3, pierce: 3, fire: 1, ice: 2, volt: 2 });
     expect(r.stats).toEqual(rat.stats);
   });
-  it("GM 재량 강화: 명중·회피 +1, 공격·방어 +2", () => {
+  it("GM 재량 강화는 항목별로 고른다", () => {
+    const r = rareTransform(rat, { boost: ["evasion", "defense"] });
+    expect(r.stats).toMatchObject({ physHit: 3, evasion: 8, physAtk: 10, defense: 5 });
+  });
+
+  it("GM 재량 강화 전부: 명중·회피 +1, 공격·방어 +2", () => {
     const r = rareTransform(rat, { multiplier: 2, boost: true });
     expect(r.hp.max).toBe(10);
     expect(r.stats).toMatchObject({ physHit: 4, elemHit: 1, evasion: 8, physAtk: 12, elemAtk: 2, defense: 5, suppAtk: 2, speed: 15 });

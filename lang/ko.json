@@ -36,7 +36,7 @@
       "off": "희소종 해제",
       "onHint": "원문 희소종 규칙을 적용한다. 토큰 시트에서 누르면 그 토큰만 바뀐다",
       "hpMultiplier": "【HP】 배수",
-      "boost": "GM 재량 강화: 【물리 명중】【속성 명중】【회피】 +1, 【물리 공격】【속성 공격】【방어】 +2",
+      "boost": "GM 재량 강화(고른 항목만)",
       "rule": "내성 0은 1, 1은 2가 된다. 해제하면 원래 값으로 돌아간다.",
       "gmOnly": "희소종 표시(★)는 GM에게만 보인다. 이름은 바꾸지 않는다(식별 판정으로 간파, 단계 5)."
     },
@@ -421,7 +421,7 @@
       "targetKO": "{name}은(는) 이미 전투 불능이다.",
       "friendlyTarget": "같은 편을 공격하려 한다. GM은 Shift+클릭으로 강행할 수 있다.",
       "outOfRange": "사거리 「{range}」: 근접 공격은 자신과 {target}이(가) 모두 전위여야 한다.",
-      "notMainPhase": "메인 페이즈가 아니다(공격은 처리한다).",
+      "notMainPhase": "메인 페이즈가 아니다.",
       "hitCheck": "명중",
       "evasion": "회피",
       "hit": "명중",
@@ -439,8 +439,8 @@
       "noGM": "접속한 GM이 없어 적용할 수 없다.",
       "rowSwapParty": "파티 전위가 전멸해 전위·후위가 교대했다.",
       "rowSwapEnemy": "에너미 전위가 전멸해 전위·후위가 교대했다.",
-      "enemyDefeated": "에너미 전멸. 전투 종료(드롭 판정은 이후 단계).",
-      "partyDefeated": "파티 전멸. 처리는 GM 판단.",
+      "enemyDefeated": "에너미 전멸 — 전투를 끝낸다",
+      "partyDefeated": "파티 전멸 — 전투를 끝낸다",
       "phase": {
         "opening": "개막 페이즈",
         "main": "메인 페이즈",
@@ -476,7 +476,14 @@
       "enemyOrderHint": "에너미는 같은 열에서 순서대로 왼쪽부터 늘어선다.",
       "slotPickerHint": "자기 자신만 옮길 수 있다. 다른 사람이 있는 칸은 고를 수 없다.",
       "slotSelf": "(지금 자리)",
-      "slotEmpty": "빈 칸"
+      "slotEmpty": "빈 칸",
+      "guardRelease": "방어 전념 해제(다시 누르면 해제)",
+      "guardShort": "방어",
+      "endVictory": "전투 종료(승리)",
+      "endDefeat": "전투 종료(전멸)",
+      "notYourTurn": "{name}의 차례가 아니다(지금은 {current}의 차례).",
+      "gmForce": "GM은 그래도 공격할 수 있다. 공격할까?",
+      "appliedHidden": "적용됨"
     },
     "Battle": {
       "tab": "전투",
@@ -528,10 +535,23 @@
       "cleanup": "에너미 정리",
       "cleanupHint": "이름·이미지·능력치까지 완전히 같은 에너미 액터만 하나로 합치고(토큰은 그 하나를 쓰게, 토큰별 수정은 유지), 어느 씬에서도 쓰지 않는 시스템 에너미는 확인 후 지운다. 복제해서 바꾼 변형은 건드리지 않는다",
       "cleanupTitle": "에너미 정리",
-      "cleanupUnused": "어느 씬에서도 쓰지 않는 시스템 에너미 액터가 {n}개 있다. 지울까?",
-      "cleanupUnusedNote": "컴펜디움에서 다시 끌어 놓으면 언제든 다시 생긴다. GM이 직접 만든(컴펜디움에서 오지 않은) 에너미는 건드리지 않는다.",
       "cleanupDone": "에너미 정리: 중복 {merged}개 합침, 안 쓰는 것 {removed}개 지움",
-      "presetNoLink": "프리셋 씬의 에너미 토큰은 액터와 연결할 수 없다(프리셋에서 고친 값이 액터 원본에 들어가지 않도록). 여러 프리셋에서 같은 변형을 쓰려면 액터를 복제해서 고친 뒤 끌어 놓는다."
+      "presetNoLink": "프리셋 씬의 에너미 토큰은 액터와 연결할 수 없다(프리셋에서 고친 값이 액터 원본에 들어가지 않도록). 여러 프리셋에서 같은 변형을 쓰려면 액터를 복제해서 고친 뒤 끌어 놓는다.",
+      "identify": "식별",
+      "identifyUnknown": "식별 전(에너미 【HP】 변화 숨김)",
+      "identifySuccess": "식별 성공(공개)",
+      "identifyHint": "식별하지 못한 에너미는 공격 카드의 【HP】 변화가 플레이어에게 보이지 않는다(내성은 보인다). 에너미 시트의 「식별」 체크로 바꿀 수 있다. 식별 판정 굴리기는 단계 5.",
+      "cleanupMerged": "완전히 같은 중복 {merged}개를 합쳤다.",
+      "cleanupTableNote": "남은 에너미 액터. 씬에서 쓰고 있는 것은 지울 수 없다(그 씬을 먼저 지운다). 쓰지 않는 시스템 에너미는 미리 체크해 두었다.",
+      "del": "삭제",
+      "enemyName": "이름",
+      "kind": "종류",
+      "usedIn": "쓰는 씬",
+      "unusedHere": "안 씀",
+      "kindLibrary": "기본",
+      "kindVariant": "변형",
+      "kindCustom": "직접 만듦",
+      "deleteChecked": "체크한 것 삭제"
     }
   }
 }

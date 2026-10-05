@@ -70,6 +70,8 @@ export async function createPreset() {
   const scene = await Scene.create({
     name, folder: folder.id, navigation: false,
     width: SCENE_W, height: SCENE_H, padding: 0, backgroundColor: "#1a1a22",
+    // 토큰과 관계없이 모두가 전체를 본다
+    tokenVision: false, fog: { exploration: false },
     grid: { size: GRID, type: 1 },
     initial: { x: CENTER_X, y: SCENE_H / 2, scale: 0.5 },
     flags: { nssq: { battlePreset: true } }
@@ -106,6 +108,12 @@ export async function openStartDialog(presetId = null) {
           <img src="${a.img}" width="24" height="24"/> ${esc(a.name)}${a.system.npc ? ` <span class="npc-tag">NPC</span>` : ""}
           <span class="notes">${game.i18n.localize(`NSSQ.Row.${a.system.row ?? "front"}`)} · 【HP】 ${a.system.hp?.value ?? 0}/${a.system.hp?.max ?? 0}</span></label>`).join("")}
       </fieldset>
+      <div class="form-group"><label>${L("identify")}</label>
+        <select name="identify">
+          <option value="unknown">${L("identifyUnknown")}</option>
+          <option value="success">${L("identifySuccess")}</option>
+        </select></div>
+      <p class="notes">${L("identifyHint")}</p>
       <div class="form-group"><label>${L("surprise")}</label>
         <select name="surprise">
           <option value="none">${L("surpriseNone")}</option>
@@ -125,7 +133,8 @@ export async function openStartDialog(presetId = null) {
       return {
         presetId: f.preset.value,
         members: [...f.querySelectorAll("[name=member]:checked")].map((i) => i.value),
-        surprise: f.surprise.value
+        surprise: f.surprise.value,
+        identified: f.identify.value === "success"
       };
     }
   });
@@ -147,7 +156,7 @@ async function resumeSounds(list) {
   for (const { playlist, sound } of list) await game.playlists.get(playlist)?.sounds.get(sound)?.update({ playing: true });
 }
 
-export async function startBattle({ presetId, members, surprise = "none" }) {
+export async function startBattle({ presetId, members, surprise = "none", identified = false }) {
   if (!game.user.isGM) return;
   const preset = game.scenes.get(presetId);
   if (!preset) return;
@@ -159,7 +168,8 @@ export async function startBattle({ presetId, members, surprise = "none" }) {
   const copy = await preset.clone({
     name: L("copyName", { name: preset.name }),
     folder: folder.id, navigation: false, active: false,
-    flags: { nssq: { battlePreset: false, battleCopy: { presetId, origin } } }
+    flags: { nssq: { battlePreset: false, battleCopy: { presetId, origin } } },
+    tokenVision: false, fog: { exploration: false }
   }, { save: true });
 
   // 2) 에너미 토큰: 액터 연결을 풀고(원본 액터 보호), 놓인 위치로 전위·후위
@@ -176,7 +186,8 @@ export async function startBattle({ presetId, members, surprise = "none" }) {
   const enemyTokens = copy.tokens.filter((t) => t.actor?.type === "enemy").sort((a, b) => a.x - b.x);
   for (const [i, t] of enemyTokens.entries()) {
     const cy = t.y + (t.height * GRID) / 2;
-    await t.actor.update({ "system.row": cy < ENEMY_MID ? "back" : "front", "system.order": i });
+    // 식별(단계 5에서 판정 연결): 식별 전에는 에너미 【HP】 변화를 플레이어에게 숨긴다
+    await t.actor.update({ "system.row": cy < ENEMY_MID ? "back" : "front", "system.order": i, "system.identified": identified });
   }
   if (relinked) ui.notifications.warn(L("relinked", { n: relinked }));
 
@@ -219,18 +230,17 @@ export async function startBattle({ presetId, members, surprise = "none" }) {
 
 let ending = false;
 
-/** GM: 결과를 고르고 정리한다 */
-export async function openEndDialog() {
+/** GM: 결과를 고르고 정리한다. preset: 미리 고를 결과(전멸 판정) */
+export async function openEndDialog(preset = null) {
   if (!game.user.isGM) return;
   const combat = currentBattle();
   if (!combat) return ui.notifications.warn(L("noBattle"));
+  const pick = preset ?? combat.getFlag("nssq", "over") ?? "victory";
+  const opt = (v) => `<option value="${v}" ${v === pick ? "selected" : ""}>${L(`result${v[0].toUpperCase()}${v.slice(1)}`)}</option>`;
   const result = await Dialog.prompt({
     title: L("end"),
     content: `<form><div class="form-group"><label>${L("result")}</label><select name="r">
-      <option value="victory">${L("resultVictory")}</option>
-      <option value="escape">${L("resultEscape")}</option>
-      <option value="defeat">${L("resultDefeat")}</option>
-      <option value="abort">${L("resultAbort")}</option>
+      ${["victory", "escape", "defeat", "abort"].map(opt).join("")}
     </select></div><p class="notes">${L("endHint")}</p></form>`,
     label: L("endButton"),
     rejectClose: false,
@@ -269,6 +279,7 @@ export function registerBattle() {
     if (!game.user.isGM || ending || !combat.getFlag("nssq", "battle")) return;
     const info = combat.getFlag("nssq", "battle");
     if (!game.scenes.get(info.copy)) return;
-    endBattle(combat, "abort");
+    // 전멸로 끝난 전투를 기본 [전투 종료]로 닫으면 그 결과로 기록
+    endBattle(combat, combat.getFlag("nssq", "over") ?? "abort");
   });
 }

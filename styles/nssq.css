@@ -313,3 +313,15 @@
 .nssq .rare-tools .rare-mark { color: #b8860b; font-weight: bold; }
 .nssq .rare-tools button { width: auto; line-height: 1.6em; font-size: 0.85em; }
 .nssq-combatant-tools .rare-tag { color: #f0c040; font-weight: bold; }
+
+/* v0.5.6: 방어 버튼 켜짐, 표시 묶음, 종료 대기, 정리 표, 희소종 항목 */
+.nssq-combatant-tools .nssq-tool { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 4px; }
+.nssq-combatant-tools .nssq-tool.active { background: #1a5fb4; color: #fff; box-shadow: 0 0 6px #4aa3ff; }
+.nssq-combatant-tools .nssq-tags { display: inline-flex; gap: 4px; align-items: center; }
+.nssq-combatant-tools .guard-tag { color: #fff; background: #1a5fb4; padding: 0 4px; border-radius: 3px; }
+.nssq-phase-bar.over { border-left: 4px solid #f0c040; background: rgba(240, 192, 64, 0.2); }
+.nssq-phase-bar .nssq-end-battle { font-weight: bold; }
+.nssq-cleanup table { width: 100%; border-collapse: collapse; }
+.nssq-cleanup th, .nssq-cleanup td { padding: 2px 4px; border-bottom: 1px solid #c9c7b8; font-size: 0.9em; }
+.nssq-cleanup td.scenes { font-size: 0.8em; }
+.rare-boost { display: block; }

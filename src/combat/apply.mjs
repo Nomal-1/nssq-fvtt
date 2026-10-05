@@ -34,8 +34,18 @@ async function afterHpChange(actor) {
     for (const s of swaps) await combat.combatants.get(s.id).actor.update({ "system.row": s.row });
     await ChatMessage.create({ content: `<div class="nssq-combat-note"><i class="fas fa-exchange-alt"></i> ${L(side === "enemy" ? "rowSwapEnemy" : "rowSwapParty")}</div>` });
   }
-  if (ko && sideDefeated(units)) {
-    await ChatMessage.create({ content: `<div class="nssq-combat-note end"><i class="fas fa-flag-checkered"></i> ${L(side === "enemy" ? "enemyDefeated" : "partyDefeated")}</div>` });
+  // 전멸 판정: 한 진영이 전멸하면 전투를 「종료 대기」로(되살아나면 해제)
+  const sideUnits = (pred) => combat.combatants.filter((c) => c.actor && pred(c.actor))
+    .map((c) => ({ ko: (c.actor.system.hp?.value ?? 0) <= 0 }));
+  const enemiesDown = sideDefeated(sideUnits((a) => sideOf(a) === "enemy"));
+  const partyDown = sideDefeated(sideUnits((a) => sideOf(a) !== "enemy"));
+  const over = enemiesDown ? "victory" : partyDown ? "defeat" : null;
+  const before = combat.getFlag("nssq", "over") ?? null;
+  if (over !== before) {
+    await combat.setFlag("nssq", "over", over);
+    if (over) {
+      await ChatMessage.create({ content: `<div class="nssq-combat-note end"><i class="fas fa-flag-checkered"></i> ${L(over === "victory" ? "enemyDefeated" : "partyDefeated")}</div>` });
+    }
   }
 }
 

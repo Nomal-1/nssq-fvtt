@@ -50,21 +50,34 @@ async function placeEnemy(scene, data) {
   await scene.createEmbeddedDocuments("Token", [td.toObject()]);
 }
 
-/** 정리: 중복 합치기 + 안 쓰는 것 지우기 */
+/** 시스템 에너미 팩의 이름 → uuid (원본 표시가 없는 예전 액터를 알아보는 데 쓴다) */
+async function systemEnemyIndex() {
+  const pack = game.packs.get("nssq.enemies");
+  if (!pack) return new Map();
+  const index = await pack.getIndex({ fields: ["type"] });
+  return new Map(index.filter((e) => e.type === "enemy").map((e) => [e.name, e.uuid ?? `Compendium.nssq.enemies.Actor.${e._id}`]));
+}
+
+/**
+ * 정리
+ * 1) 같은 원본에서 온, 이름·이미지·능력치까지 완전히 같은 중복을 하나로 합친다(토큰은 그 하나로)
+ * 2) 남은 에너미 액터를 표로 보여 준다: 출처, 쓰는 씬. 쓰지 않는 시스템 에너미는 기본 체크 → 확인 후 삭제
+ */
 export async function cleanupEnemies() {
   if (!game.user.isGM) return;
-  const enemies = game.actors.filter((a) => a.type === "enemy");
+  const byName = await systemEnemyIndex();
+  const srcOf = (a) => sourceOf(a) ?? byName.get(a.name) ?? null;
+  const folder = await enemyFolder();
+
   const groups = new Map();
-  for (const a of enemies) {
-    const src = sourceOf(a);
+  for (const a of game.actors.filter((x) => x.type === "enemy")) {
+    const src = srcOf(a);
     if (!src) continue;
     if (!groups.has(src)) groups.set(src, []);
     groups.get(src).push(a);
   }
-  const folder = await enemyFolder();
-  // 1) 완전히 같은 중복만 합친다(변형은 그대로). 기본 액터(library)를 대표로
   let merged = 0;
-  for (const list of groups.values()) {
+  for (const [src, list] of groups) {
     const clusters = [];
     for (const actor of list) {
       const data = actor.toObject();
@@ -81,31 +94,48 @@ export async function cleanupEnemies() {
           const updates = scene.tokens.filter((t) => dropIds.has(t.actorId)).map((t) => ({ _id: t.id, actorId: keep.id, actorLink: false }));
           if (updates.length) await scene.updateEmbeddedDocuments("Token", updates);
         }
-        for (const x of drop) await x.delete();
+        await Actor.deleteDocuments(drop.map((x) => x.id));
         merged += drop.length;
       }
       const upd = {};
       if (keep.folder?.id !== folder.id) upd.folder = folder.id;
-      // 원본 그대로인 것만 재사용 대상(기본 액터)으로 표시
-      const src = await fromUuid(sourceOf(keep));
-      if (src && keep.name === src.name && !keep.getFlag("nssq", "library") && !keep.system.isRare) upd["flags.nssq.library"] = sourceOf(keep);
+      if (!sourceOf(keep)) upd["_stats.compendiumSource"] = src;
+      const original = await fromUuid(src);
+      if (original && keep.name === original.name && !keep.system.isRare && !keep.getFlag("nssq", "library")) upd["flags.nssq.library"] = src;
       if (Object.keys(upd).length) await keep.update(upd);
     }
   }
-  // 2) 어느 씬의 토큰도 쓰지 않는 시스템 에너미(컴펜디움에서 온 것)
-  const used = new Set(game.scenes.flatMap((s) => s.tokens.map((t) => t.actorId)));
-  const unused = game.actors.filter((a) => a.type === "enemy" && sourceOf(a)?.startsWith("Compendium.nssq.") && !used.has(a.id));
+
+  // 표: 남은 에너미 액터
+  const rows = game.actors.filter((x) => x.type === "enemy").map((a) => {
+    const scenes = game.scenes.filter((s) => s.tokens.some((t) => t.actorId === a.id)).map((s) => s.name);
+    const fromSystem = !!srcOf(a)?.startsWith("Compendium.nssq.");
+    return { a, scenes, fromSystem, suggest: !scenes.length && fromSystem };
+  }).sort((x, y) => Number(y.suggest) - Number(x.suggest) || x.a.name.localeCompare(y.a.name, "ko"));
+  if (!rows.length) return ui.notifications.info(L("cleanupDone", { merged, removed: 0 }));
+  const table = rows.map((r) => `
+    <tr>
+      <td><input type="checkbox" name="del" value="${r.a.id}" ${r.suggest ? "checked" : ""} ${r.scenes.length ? "disabled" : ""}/></td>
+      <td class="name">${esc(r.a.name)}${r.a.system.isRare ? " ★" : ""}</td>
+      <td>${r.fromSystem ? (r.a.getFlag("nssq", "library") ? L("kindLibrary") : L("kindVariant")) : L("kindCustom")}</td>
+      <td class="scenes">${r.scenes.length ? esc(r.scenes.join(", ")) : `<span class="notes">${L("unusedHere")}</span>`}</td>
+    </tr>`).join("");
+  const ids = await Dialog.prompt({
+    title: L("cleanupTitle"),
+    content: `<form class="nssq-cleanup">
+      <p>${L("cleanupMerged", { merged })}</p>
+      <p class="notes">${L("cleanupTableNote")}</p>
+      <table><thead><tr><th>${L("del")}</th><th>${L("enemyName")}</th><th>${L("kind")}</th><th>${L("usedIn")}</th></tr></thead><tbody>${table}</tbody></table>
+    </form>`,
+    label: L("deleteChecked"),
+    rejectClose: false,
+    options: { width: 560 },
+    callback: (html) => [...html[0].querySelectorAll("[name=del]:checked")].map((i) => i.value)
+  });
   let removed = 0;
-  if (unused.length) {
-    const ok = await Dialog.confirm({
-      title: L("cleanupTitle"),
-      content: `<p>${L("cleanupUnused", { n: unused.length })}</p><ul>${unused.map((a) => `<li>${esc(a.name)}</li>`).join("")}</ul><p class="notes">${L("cleanupUnusedNote")}</p>`,
-      rejectClose: false
-    });
-    if (ok) {
-      await Actor.deleteDocuments(unused.map((a) => a.id));
-      removed = unused.length;
-    }
+  if (ids?.length) {
+    await Actor.deleteDocuments(ids);
+    removed = ids.length;
   }
   ui.notifications.info(L("cleanupDone", { merged, removed }));
 }

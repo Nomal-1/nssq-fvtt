@@ -13,6 +13,7 @@ import { acquireItems, registerAcquire } from "./apps/acquire.mjs";
 import { openShop, registerShopHooks, toggleShop } from "./apps/shop.mjs";
 import { GMScreen, registerGMScreen } from "./apps/gm-screen.mjs";
 import { NssqCombat } from "./documents/combat.mjs";
+import { NssqToken } from "./canvas/token.mjs";
 import { registerApply } from "./combat/apply.mjs";
 import { attackerFromContext, normalAttack, registerAttackHooks } from "./combat/attack.mjs";
 import { registerTracker, rollEscape } from "./combat/tracker.mjs";
@@ -24,6 +25,7 @@ Hooks.once("init", () => {
   CONFIG.Actor.documentClass = NssqActor;
   CONFIG.Item.documentClass = NssqItem;
   CONFIG.Combat.documentClass = NssqCombat;
+  CONFIG.Token.objectClass = NssqToken;
   Object.assign(CONFIG.Actor.dataModels, actorModels);
   Object.assign(CONFIG.Item.dataModels, itemModels);
 

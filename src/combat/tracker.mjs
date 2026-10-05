@@ -93,10 +93,20 @@ export function registerTracker() {
     // 페이즈 표시와 GM 버튼
     if (started) {
       const bar = document.createElement("div");
-      bar.className = `nssq-phase-bar phase-${phase}`;
-      bar.innerHTML = `<span class="phase-label">${L("roundPhase", { round: combat.round, phase: L(`phase.${phase}`) })}</span>
+      const over = combat.getFlag("nssq", "over");
+      bar.className = `nssq-phase-bar phase-${phase}${over ? " over" : ""}`;
+      bar.innerHTML = over
+        ? `<span class="phase-label">${L(over === "victory" ? "enemyDefeated" : "partyDefeated")}</span>`
+        : `<span class="phase-label">${L("roundPhase", { round: combat.round, phase: L(`phase.${phase}`) })}</span>
         <span class="phase-hint">${L(`phaseHint.${phase}`)}</span>`;
-      if (game.user.isGM) {
+      if (game.user.isGM && over) {
+        const end = document.createElement("button");
+        end.type = "button";
+        end.className = "nssq-end-battle";
+        end.innerHTML = `<i class="fas fa-flag-checkered"></i> ${L(over === "victory" ? "endVictory" : "endDefeat")}`;
+        end.addEventListener("click", () => combat.nextTurn());
+        bar.append(end);
+      } else if (game.user.isGM) {
         const next = document.createElement("button");
         next.type = "button";
         next.className = "nssq-next-phase";
@@ -115,35 +125,44 @@ export function registerTracker() {
       header?.after(bar);
     }
 
-    // 전투원별: 열, 방어 전념, 개막 행동, 통상 공격
+    // 전투원별: 버튼(위치 고정) → 표시(열·희소종·방어)
     root.querySelectorAll("li.combatant").forEach((li) => {
       const c = combat.combatants.get(li.dataset.combatantId);
       if (!c?.actor) return;
       const actor = c.actor;
+      // 에너미의 이니셔티브 값은 플레이어에게 숨긴다
+      if (!game.user.isGM && actor.type === "enemy") {
+        const init = li.querySelector(".token-initiative");
+        if (init) init.innerHTML = "";
+      }
       const box = document.createElement("div");
       box.className = "nssq-combatant-tools";
-      const row = actor.system.row === "back" ? "back" : "front";
-      const tags = [`<span class="row-tag ${row}" title="${L("rowTitle")}">${game.i18n.localize(`NSSQ.Row.${row}`)}</span>`];
-      if (game.user.isGM && actor.type === "enemy" && actor.system.isRare) tags.push(`<span class="rare-tag" title="${game.i18n.localize("NSSQ.Rare.gmOnly")}">★</span>`);
-      if (c.getFlag("nssq", "guarding")) tags.push(`<span class="guard-tag" title="${L("guardTitle")}"><i class="fas fa-shield-alt"></i></span>`);
-      box.innerHTML = tags.join("");
       const owner = actor.isOwner;
-      const btn = (icon, title, fn) => {
+      const guarding = !!c.getFlag("nssq", "guarding");
+      const btn = (icon, title, fn, active = false) => {
         const a = document.createElement("a");
-        a.className = "nssq-tool";
+        a.className = `nssq-tool${active ? " active" : ""}`;
         a.title = title;
         a.innerHTML = `<i class="fas ${icon}"></i>`;
         a.addEventListener("click", (ev) => { ev.stopPropagation(); fn(ev); });
         box.append(a);
       };
       if (owner && started && phase === "opening" && !c.defeated) {
-        btn("fa-shield-alt", L("guard"), () => toggleGuard(c));
+        btn("fa-shield-alt", guarding ? L("guardRelease") : L("guard"), () => toggleGuard(c), guarding);
         btn("fa-arrows-alt-v", L("changeRow"), () => toggleRow(c));
         if (actor.type === "character") btn("fa-exchange-alt", L("swapWeapon"), () => swapWeapon(c));
       }
       if (owner && started && phase === "main" && !c.defeated) {
         btn("fa-fist-raised", L("normalAttack"), (ev) => normalAttack(actor, { ignoreRange: ev.shiftKey && game.user.isGM }));
       }
+      const row = actor.system.row === "back" ? "back" : "front";
+      const tags = document.createElement("span");
+      tags.className = "nssq-tags";
+      tags.innerHTML = `<span class="row-tag ${row}" title="${L("rowTitle")}">${game.i18n.localize(`NSSQ.Row.${row}`)}</span>`
+        + (game.user.isGM && actor.type === "enemy" && actor.system.isRare ? `<span class="rare-tag" title="${game.i18n.localize("NSSQ.Rare.gmOnly")}">★</span>` : "")
+        // 방어 전념 표시: 버튼이 보이는 개막 페이즈에는 버튼이 켜진 것으로 대신한다
+        + (guarding && !(owner && phase === "opening") ? `<span class="guard-tag" title="${L("guardTitle")}"><i class="fas fa-shield-alt"></i> ${L("guardShort")}</span>` : "");
+      box.append(tags);
       if (c.getFlag("nssq", "opening")) li.classList.add("nssq-opened");
       const name = li.querySelector(".token-name") ?? li;
       name.append(box);

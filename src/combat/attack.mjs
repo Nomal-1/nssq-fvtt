@@ -44,8 +44,18 @@ export async function normalAttack(attacker, { ignoreRange = false } = {}) {
   if (!ignoreRange && !inRange(a.range, a.row, d.row)) {
     return ui.notifications.warn(L("outOfRange", { range: a.range, target: target.name }));
   }
-  if (game.combat?.getFlag("nssq", "phase") && game.combat.getFlag("nssq", "phase") !== "main") {
-    ui.notifications.info(L("notMainPhase"));
+  // 차례 확인: 진행 중인 전투의 참가자라면 메인 페이즈의 자기 차례에만. GM은 확인 후 강행할 수 있다
+  const combat = game.combat;
+  const me = combatantOf(attacker);
+  if (combat?.started && me) {
+    const phase = combat.getFlag("nssq", "phase");
+    const myTurn = phase === "main" && combat.combatant?.id === me.id;
+    if (!myTurn) {
+      const reason = phase !== "main" ? L("notMainPhase") : L("notYourTurn", { name: me.name, current: combat.combatant?.name ?? "-" });
+      if (!game.user.isGM) return ui.notifications.warn(reason);
+      const go = await Dialog.confirm({ title: L("normalAttack"), content: `<p>${reason}</p><p>${L("gmForce")}</p>`, rejectClose: false });
+      if (!go) return;
+    }
   }
 
   // 주사위는 Foundry Roll로(Dice So Nice 표시), 계산은 엔진
@@ -119,7 +129,13 @@ export function registerAttackHooks() {
       const status = row.querySelector(".apply-status");
       const buttons = row.querySelector(".apply-buttons");
       if (!t?.hit) return buttons?.remove();
-      if (status) status.textContent = t.applied ? L("appliedHp", { before: t.before, after: t.after }) : autoApplyMode() === "off" ? L("manualApply") : "";
+      // 【HP】 변화: GM, 또는 대상이 PC·식별된 에너미일 때만
+      const target = fromUuidSync(t.actorUuid);
+      const reveal = game.user.isGM || target?.type !== "enemy" || !!target?.system?.identified;
+      if (status) {
+        status.textContent = t.applied ? (reveal ? L("appliedHp", { before: t.before, after: t.after }) : L("appliedHidden"))
+          : autoApplyMode() === "off" ? L("manualApply") : "";
+      }
       if (!buttons) return;
       if (!game.user.isGM) return buttons.remove();
       const apply = buttons.querySelector("[data-apply]");
