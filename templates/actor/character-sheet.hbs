@@ -47,7 +47,9 @@
     <div class="tab" data-group="primary" data-tab="main">
       <div class="nq-cols">
         <div class="nq-col">
-          <h3 class="nq-title">{{localize "NSSQ.Ability.label"}} <span class="nq-note">{{localize "NSSQ.Sheet.abilityNote"}}</span></h3>
+          <h3 class="nq-title">{{localize "NSSQ.Ability.label"}} <span class="nq-note">{{localize "NSSQ.Sheet.abilityNote"}}</span>
+            {{#if editable}}<button type="button" class="nq-title-btn" data-action="edit-abilities" title="{{localize 'NSSQ.Sheet.editAbilitiesHint'}}"><i class="fas fa-pen"></i> {{localize "NSSQ.Sheet.editAbilities"}}</button>{{/if}}
+          </h3>
           <div class="nq-ability-cards">
             {{#each sheet.abilityCards as |a|}}
             <div class="nq-ability {{#if a.boosted}}boosted{{/if}}" title="{{a.tooltip}}">
@@ -56,7 +58,6 @@
                 <b class="nq-ability-val">{{a.total}}</b>
                 <span class="nq-ability-b">B {{a.b}}</span>
               </a>
-              {{#if @root.editable}}<a class="nq-ability-edit" data-action="edit-ability" data-ability="{{a.key}}" title="{{localize 'NSSQ.Sheet.editAbility'}}"><i class="fas fa-pen"></i></a>{{/if}}
             </div>
             {{/each}}
           </div>
@@ -102,16 +103,21 @@
           </div>
 
           <h3 class="nq-title">{{localize "NSSQ.Inventory.equipped"}}</h3>
-          <ul class="nq-equip">
+          <div class="nq-equip">
             {{#each sheet.equip as |e|}}
-            <li {{#if e.item}}data-item-id="{{e.item.id}}"{{/if}}>
-              <i class="fas {{e.icon}}" title="{{e.label}}"></i>
-              {{#if e.item}}<a data-action="item-edit">{{e.item.name}}</a> <span class="nq-rank">{{e.item.rank}}</span>
-                {{> "systems/nssq/templates/actor/parts/refine-badges.hbs" refine=e.item.refine}}
-              {{else}}<span class="nq-empty">{{#if (nssqEq e.slot "weapon")}}{{#if @root.sheet.weaponLine}}{{@root.sheet.weaponLine}}{{else}}{{localize "NSSQ.Inventory.empty"}}{{/if}}{{else}}{{localize "NSSQ.Inventory.empty"}}{{/if}}</span>{{/if}}
-            </li>
+            <div class="nq-equip-card {{e.slot}} {{#if e.item}}filled{{/if}}" {{#if e.item}}data-item-id="{{e.item.id}}"{{/if}}>
+              <span class="nq-equip-slot"><i class="fas {{e.icon}}"></i> {{e.label}}</span>
+              {{#if e.item}}
+              <a class="nq-equip-img" data-action="item-edit" title="{{e.item.name}}"><img src="{{e.item.img}}"/>{{#if e.item.rank}}<span class="nq-rank">{{e.item.rank}}</span>{{/if}}</a>
+              <a class="nq-equip-name" data-action="item-edit" title="{{e.item.name}}">{{e.item.name}}</a>
+              {{> "systems/nssq/templates/actor/parts/refine-badges.hbs" refine=e.item.refine}}
+              {{else}}
+              <span class="nq-equip-img empty"><i class="fas {{e.icon}}"></i></span>
+              <span class="nq-equip-name nq-empty">{{#if (nssqEq e.slot "weapon")}}{{#if @root.sheet.weaponLine}}{{@root.sheet.weaponLine}}{{else}}{{localize "NSSQ.Inventory.empty"}}{{/if}}{{else}}{{localize "NSSQ.Inventory.empty"}}{{/if}}</span>
+              {{/if}}
+            </div>
             {{/each}}
-          </ul>
+          </div>
         </div>
       </div>
     </div>

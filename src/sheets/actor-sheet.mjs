@@ -6,7 +6,8 @@ import { acquireItems } from "../apps/acquire.mjs";
 import { normalAttack } from "../combat/attack.mjs";
 import { makeRare, removeRare } from "../apps/rare.mjs";
 import { isPhysical } from "../engine/equipment.mjs";
-import { characterContext, editAbility, toggleCreationLock } from "./character.mjs";
+import { characterContext, editAbilities, toggleCreationLock } from "./character.mjs";
+import { SkillTree } from "../apps/skill-tree.mjs";
 
 export class NssqActorSheet extends ActorSheet {
   static get defaultOptions() {
@@ -53,7 +54,7 @@ export class NssqActorSheet extends ActorSheet {
       context.subClassChoices = { "": game.i18n.localize("NSSQ.Class.none"), ...Object.fromEntries(all.filter((c) => c !== main).map((c) => [c.system.key, c.name])) };
       context.mainClassKey = main?.system.key ?? "";
       context.subClassKey = sub?.system.key ?? "";
-      context.inventory = inventoryContext(this.actor);
+      context.inventory = inventoryContext(this.actor, { skillFilter: this._skillFilter ?? "all" });
       context.isGM = game.user.isGM;
       context.sheet = characterContext(this.actor);
       context.tpPct = pct(system.tp);
@@ -105,6 +106,16 @@ export class NssqActorSheet extends ActorSheet {
       const id = ev.currentTarget.closest("[data-item-id]")?.dataset.itemId;
       this.actor.items.get(id)?.sheet.render(true);
     });
+    // 스킬 탭: 전체/전투/비전투 분류(보는 사람마다), 스킬 트리(보기는 누구나, 습득은 소유자)
+    html.on("click", "[data-action=skill-filter]", (ev) => {
+      ev.preventDefault();
+      this._skillFilter = ev.currentTarget.dataset.filter;
+      this.render(false);
+    });
+    html.on("click", "[data-action=skill-tree]", (ev) => {
+      ev.preventDefault();
+      SkillTree.open(this.actor);
+    });
     if (!this.isEditable) return;
     if (this.actor.type === "character") activateInventoryListeners(this, html);
     // 통상 공격: 지정(타깃)한 토큰 1개. GM은 Shift로 사거리·아군 확인 무시
@@ -114,10 +125,9 @@ export class NssqActorSheet extends ActorSheet {
       ev.preventDefault();
       normalAttack(this.actor, { ignoreRange: ev.shiftKey && game.user.isGM });
     });
-    html.on("click", "[data-action=edit-ability]", (ev) => {
+    html.on("click", "[data-action=edit-abilities]", (ev) => {
       ev.preventDefault();
-      ev.stopPropagation();
-      editAbility(this.actor, ev.currentTarget.dataset.ability);
+      editAbilities(this.actor);
     });
     html.on("click", "[data-action=toggle-lock]", (ev) => {
       ev.preventDefault();

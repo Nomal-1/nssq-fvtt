@@ -1,0 +1,43 @@
+<div class="nq-tree-app">
+  <nav class="nq-tree-tabs">
+    {{#each tabs as |t|}}<a class="{{t.key}} {{#if t.active}}active{{/if}}" data-tab-key="{{t.key}}">{{t.label}}</a>{{/each}}
+  </nav>
+  <div class="nq-tree-info">
+    <span class="nq-tree-budget {{#if (nssqGt 0 budget.left)}}over{{/if}}" title="{{localize 'NSSQ.Skill.budgetHint'}}"><i class="fas fa-coins"></i> {{budgetText}}</span>
+    <span class="nq-note">{{capText}}</span>
+    <span class="nq-spacer"></span>
+    {{#if editable}}<span class="nq-note">{{localize "NSSQ.Skill.help"}}</span>{{/if}}
+  </div>
+
+  <div class="nq-tree-body">
+    {{#if noPack}}<p class="nq-empty">{{localize "NSSQ.Skill.noPack"}}</p>{{/if}}
+    {{#if noClass}}<p class="nq-empty">{{localize "NSSQ.Skill.noClass"}}</p>{{/if}}
+
+    {{#if hasTree}}
+    <div class="nq-tree" style="width: {{width}}px; height: {{height}}px;">
+      <svg class="nq-tree-edges" width="{{width}}" height="{{height}}">
+        {{#each edges as |e|}}<path class="{{#if e.met}}met{{/if}} {{#if e.any}}any{{/if}}" d="{{e.d}}"/>{{/each}}
+      </svg>
+      {{#each edges as |e|}}<span class="nq-edge-sl {{#if e.met}}met{{/if}}" style="left: {{e.lx}}px; top: {{e.ly}}px;">{{e.sl}}</span>{{/each}}
+      {{#each nodes as |n|}}
+      <a class="nq-node {{n.state}} {{#if n.canRaise}}can{{/if}}" data-skill-id="{{n.id}}" style="left: {{n.x}}px; top: {{n.y}}px;" title="{{n.tip}}">
+        <span class="nq-node-name">{{#if n.unique}}<i class="nq-unique">★</i>{{/if}}{{n.name}}</span>
+        <span class="nq-node-sl">{{#if n.current}}<b>{{n.current}}</b>{{/if}}<em>{{n.maxText}}</em></span>
+      </a>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if independent.length}}
+    <h3 class="nq-title">{{localize "NSSQ.Skill.independent"}}</h3>
+    <div class="nq-tree-free">
+      {{#each independent as |n|}}
+      <a class="nq-node {{n.state}} {{#if n.canRaise}}can{{/if}}" data-skill-id="{{n.id}}" title="{{n.tip}}">
+        <span class="nq-node-name">{{#if n.unique}}<i class="nq-unique">★</i>{{/if}}{{n.name}}</span>
+        <span class="nq-node-sl">{{#if n.current}}<b>{{n.current}}</b>{{/if}}<em>{{n.maxText}}</em></span>
+      </a>
+      {{/each}}
+    </div>
+    {{/if}}
+  </div>
+</div>

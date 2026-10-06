@@ -1,5 +1,6 @@
 import tables from "../generated/tables.mjs";
 import { badgeFor } from "./badges.mjs";
+import { skillUsage } from "../engine/skills.mjs";
 
 const ELEMENTS = ["slash", "strike", "pierce", "fire", "ice", "volt"];
 
@@ -65,6 +66,11 @@ export class NssqItemSheet extends ItemSheet {
       c.slot = { weapon: game.i18n.localize("NSSQ.Slot.weapon"), other: game.i18n.localize("NSSQ.Slot.other") };
     }
     if (this.item.type === "armor") c.armorType = Object.fromEntries(Object.keys(tables.armors).map((k) => [k, k]));
+    if (this.item.type === "skill") {
+      const u = (k) => game.i18n.localize(`NSSQ.Skill.usage.${k}`);
+      const auto = skillUsage({ ...this.item.system, usage: "" });
+      c.usage = { "": `${u("auto")} (${u(auto)})`, combat: u("combat"), explore: u("explore") };
+    }
     if (this.item.type === "material") c.materialType = Object.fromEntries(tables.materials.map((k) => [k, k]));
     return c;
   }

@@ -11,6 +11,14 @@
     {{/each}}
   </div>
 
+  <div class="nq-skill-bar">
+    <div class="nq-seg">
+      {{#each inventory.skillFilters as |f|}}<a class="{{#if f.active}}active{{/if}}" data-action="skill-filter" data-filter="{{f.key}}">{{f.label}} <em>{{f.count}}</em></a>{{/each}}
+    </div>
+    <span class="nq-spacer"></span>
+    <button type="button" data-action="skill-tree" title="{{localize 'NSSQ.Skill.treeHint'}}"><i class="fas fa-sitemap"></i> {{localize "NSSQ.Skill.tree"}}</button>
+  </div>
+
   {{#each inventory.skillGroups as |g|}}
   <section class="nq-skill-group {{g.cls}}" data-skill-group="{{g.cls}}">
     <h3 class="nq-title">{{g.title}} <span class="nq-note">{{g.skills.length}}</span></h3>
@@ -19,6 +27,7 @@
       <li class="nq-skill" data-item-id="{{s.id}}" data-skill-key="{{s.skillKey}}">
         <img src="{{s.img}}"/>
         <a class="nq-skill-name" data-action="item-edit">{{#if s.unique}}<span class="nq-unique" title="{{localize 'NSSQ.Skill.unique'}}">★</span>{{/if}}{{s.name}}</a>
+        {{#if (nssqEq s.usage "explore")}}<span class="nq-usage explore" title="{{localize 'NSSQ.Skill.filterExplore'}}"><i class="fas fa-compass"></i></span>{{/if}}
         <span class="nq-timing {{s.timingCls}}">{{s.timing}}</span>
         {{#if s.cost}}<span class="nq-cost">{{s.cost}}</span>{{/if}}
         <span class="nq-sl" title="{{#if s.prereq}}{{localize 'NSSQ.Skill.prereq'}}: {{s.prereq}}{{/if}}">SL {{s.sl}}{{#if s.max}}<em>/{{s.max}}</em>{{/if}}</span>
@@ -28,6 +37,6 @@
     </ol>
   </section>
   {{else}}
-  <p class="nq-empty">{{localize "NSSQ.Skill.none"}}</p>
+  <p class="nq-empty">{{#if inventory.skillCount}}{{localize "NSSQ.Skill.noneFiltered"}}{{else}}{{localize "NSSQ.Skill.none"}}{{/if}}</p>
   {{/each}}
 </section>

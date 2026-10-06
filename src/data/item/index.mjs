@@ -48,6 +48,8 @@ export class SkillData extends NssqItemData {
       prereqs: new ObjectField(),
       variants: new ArrayField(str("")),
       sl: int(1, { min: 0 }),
+      // 전투/비전투: ""이면 자동 판정(engine skillUsage), GM이 스킬 시트에서 고칠 수 있다
+      usage: str("", { choices: ["", "combat", "explore"] }),
       effects: effects(),
       review: new StringField({ required: true, blank: true, initial: "" })
     };

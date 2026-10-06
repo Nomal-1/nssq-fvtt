@@ -11,5 +11,6 @@ export const TEMPLATES = [
   "systems/nssq/templates/chat/ability-roll.hbs",
   "systems/nssq/templates/chat/attack-card.hbs",
   "systems/nssq/templates/apps/shop.hbs",
-  "systems/nssq/templates/apps/gm-screen.hbs"
+  "systems/nssq/templates/apps/gm-screen.hbs",
+  "systems/nssq/templates/apps/skill-tree.hbs"
 ];

@@ -5,7 +5,10 @@ import { description, int, resistances, resource, row, str } from "../fields.mjs
 
 const { SchemaField, ArrayField, StringField } = foundry.data.fields;
 
-/** 능력치 하나의 저장값. 클래스·장비 보정은 저장하지 않고 계산한다 */
+/**
+ * 능력치 하나의 저장값. 클래스·장비 보정은 저장하지 않고 계산한다.
+ * temp: v0.6.0까지의 「일시」. 이제 쓰지 않고 GM 보너스에 합산해 보인다(편집 창에서 저장하면 bonus로 옮겨지고 0이 된다)
+ */
 const ability = () => new SchemaField({ base: int(0), growth: int(0), bonus: int(0), temp: int(0) });
 
 export class CharacterData extends foundry.abstract.TypeDataModel {
@@ -40,7 +43,7 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
   /** v0.3.x까지의 abilities.str = 숫자 → { base: 숫자 } */
   static migrateData(source) {
     const a = source.abilities;
-    if (a) for (const k of ABILITIES) if (typeof a[k] === "number") a[k] = { base: a[k], growth: 0, temp: 0 };
+    if (a) for (const k of ABILITIES) if (typeof a[k] === "number") a[k] = { base: a[k], growth: 0, bonus: 0, temp: 0 };
     return super.migrateData(source);
   }
 

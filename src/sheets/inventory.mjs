@@ -6,6 +6,7 @@ import tables from "../generated/tables.mjs";
 import { openShop, shopOpen } from "../apps/shop.mjs";
 import { refinementBadges } from "./badges.mjs";
 import { retrieveItem, storageActive, storeItem } from "../apps/acquire.mjs";
+import { skillUsage } from "../engine/skills.mjs";
 
 const GROUPS = [
   ["weapon", "TYPES.Item.weapon"],
@@ -50,16 +51,16 @@ function rankLabel(item) {
  * 스킬 탭: 클래스별 구역(메인 → 서브 → 커먼 → 그 밖). 스킬 트리 보기를 붙일 수 있도록
  * 각 스킬에 key·전제(prereqs)·MaxSL을 함께 넘긴다.
  */
-function skillGroups(actor, items) {
+function skillGroups(actor, items, filter = "all") {
   const { main, sub } = actor.system.classItems ?? {};
-  const skills = items.filter((i) => i.type === "skill");
+  const skills = items.filter((i) => i.type === "skill" && (filter === "all" || skillUsage(i.system) === filter));
   const timingCls = { 상시: "passive", 주행동: "action", 개막: "opening", 수동: "reaction", 특수: "special" };
   const row = (s) => ({
     id: s.id, name: s.name, img: s.img, sl: s.system.sl,
     max: s.system.classKey === sub?.system.key && s.system.classKey !== main?.system.key ? s.system.maxSL.sub : s.system.maxSL.main,
     timing: s.system.timing, timingCls: timingCls[s.system.timing] ?? "other",
     cost: s.system.cost?.tp ? `TP ${s.system.cost.tp}` : s.system.cost?.fp ? `FP ${s.system.cost.fp}` : "",
-    unique: !!s.system.unique, skillKey: s.system.skillKey,
+    unique: !!s.system.unique, skillKey: s.system.skillKey, usage: skillUsage(s.system),
     prereq: (s.system.prereqs?.all ?? []).map((p) => (p.any ? p.any.map((q) => `${q.skill} ${q.sl}`).join(" / ") : `${p.skill} ${p.sl}`)).join(" + ")
   });
   const groups = [];
@@ -76,7 +77,11 @@ function skillGroups(actor, items) {
   return groups;
 }
 
-export function inventoryContext(actor) {
+/**
+ * @param {Actor} actor
+ * @param {{skillFilter?: "all"|"combat"|"explore"}} [opts] 스킬 탭 분류(보는 사람마다, 시트 인스턴스에 기억)
+ */
+export function inventoryContext(actor, { skillFilter = "all" } = {}) {
   const all = actor.items.contents;
   const items = all.filter((i) => !i.system.stored);
   const storage = storageActive(actor);
@@ -118,7 +123,14 @@ export function inventoryContext(actor) {
       : weapon?.unarmed ? game.i18n.format("NSSQ.Inventory.unarmed", { type: weapon.weaponType, atk: weapon.physAtk })
         : game.i18n.localize("NSSQ.Inventory.noWeapon"),
     classes: items.filter((i) => i.type === "class"),
-    skillGroups: skillGroups(actor, items)
+    skillGroups: skillGroups(actor, items, skillFilter),
+    skillFilter,
+    skillCount: items.filter((i) => i.type === "skill").length,
+    skillFilters: ["all", "combat", "explore"].map((k) => ({
+      key: k, active: k === skillFilter,
+      label: game.i18n.localize(`NSSQ.Skill.filter${k[0].toUpperCase()}${k.slice(1)}`),
+      count: k === "all" ? items.filter((i) => i.type === "skill").length : items.filter((i) => i.type === "skill" && skillUsage(i.system) === k).length
+    }))
   };
 }
 

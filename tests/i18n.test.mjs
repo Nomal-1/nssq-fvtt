@@ -19,6 +19,11 @@ describe("lang/ko.json", () => {
     for (const f of files) {
       const src = fs.readFileSync(f, "utf8");
       for (const m of src.matchAll(/["'`](NSSQ(?:\.[A-Za-z0-9]+)+)["'`]/g)) if (!has(m[1])) missing.push(`${path.relative(root, f)}: ${m[1]}`);
+      // 파일마다 L("key") 줄임: const L = … `NSSQ.<Group>.${k}`
+      const group = src.match(/const L = [^\n]*`NSSQ\.([A-Za-z]+)\.\$\{k\}`/)?.[1];
+      if (group && !f.endsWith("check-request.mjs")) {
+        for (const m of src.matchAll(/\bL\("([A-Za-z]+)"/g)) if (!has(`NSSQ.${group}.${m[1]}`)) missing.push(`${path.relative(root, f)}: NSSQ.${group}.${m[1]}`);
+      }
       // check-request.mjs의 L("key") 줄임
       if (f.endsWith("check-request.mjs")) {
         for (const m of src.matchAll(/\bL\("([A-Za-z]+)"/g)) if (!has(`NSSQ.Request.${m[1]}`)) missing.push(`${path.relative(root, f)}: NSSQ.Request.${m[1]}`);
@@ -31,6 +36,8 @@ describe("lang/ko.json", () => {
     const { ABILITIES, SUB_STATS, RESISTS } = await import("../src/engine/derive.mjs");
     for (const k of ABILITIES) expect(has(`NSSQ.Ability.${k}`), k).toBe(true);
     for (const k of SUB_STATS) expect(has(`NSSQ.Sub.${k}`), k).toBe(true);
+    // 시트 부능력치 칸·제련 배지가 쓰는 짧은 라벨
+    for (const k of SUB_STATS) expect(has(`NSSQ.Inventory.${k}`), `Inventory.${k}`).toBe(true);
     for (const k of RESISTS) expect(has(`NSSQ.Resist.${k}`), k).toBe(true);
   });
 });

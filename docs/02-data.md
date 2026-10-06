@@ -101,7 +101,7 @@ DROP: 4\~7 R1 이빨 / 8\~ R1 가죽     ← 2D6 범위, R, 소재. "8 고기"�
 ### 4.1 Actor
 **character**
 ```
-abilities: { str: { base, growth, bonus, temp }, … }   # 굴림·성장·GM 보너스·일시. v0.3.x의 숫자 값은 migrateData가 base로 옮긴다
+abilities: { str: { base, growth, bonus, temp }, … }   # 굴림·성장·GM 보너스. temp는 v0.6.0의 「일시」로 bonus에 합산해 보이고, 편집 창에서 저장하면 bonus로 옮겨진다. v0.3.x의 숫자 값은 migrateData가 base로 옮긴다
 creation: { locked, log[] }                  # 캐릭터 작성 잠금(잠그면 굴림은 GM만), 작성 기록(능력치 굴리기·배정·GM 수정·잠금)
 abilityRolls: [n×5]                          # 작성 시 3D6 결과(초기 소지금 계산)
 level, exp
@@ -113,7 +113,7 @@ money                                       # G
 history: [string]                           # 경력표
 ```
 파생치는 `prepareDerivedData`에서 엔진 `derive.mjs`를 호출해 계산한다(01 §1.2).
-- 능력치 최종값 = 굴림 + 클래스(메인 클래스 보정 × Lv) + 성장 + GM 보너스 + 장비 + 일시 (`abilityBreakdown`). 클래스·장비는 저장하지 않고 계산하며, 결과는 `system.abilityParts`·`system.abilityTotal`.
+- 능력치 최종값 = 굴림 + 클래스(메인 클래스 보정 × Lv) + 성장 + GM 보너스 + 장비 (`abilityBreakdown`). 룰에서 능력치(【STR】 등)를 바꾸는 것은 장식·제련뿐이고 강화·약화 효과는 부능력치를 바꾸므로 「일시」 출처는 두지 않는다. 클래스·장비는 저장하지 않고 계산하며, 결과는 `system.abilityParts`·`system.abilityTotal`.
 - 메인·서브 클래스는 캐릭터가 가진 클래스 아이템(최대 2개)이다. `mainClass`·`subClass`에는 그 아이템의 `system.key`를 둔다. `mainClass`가 맞는 아이템이 없으면 첫 클래스 아이템을 메인으로 본다.
 
 **enemy**
@@ -132,7 +132,7 @@ row, order
 | 타입 | 주요 필드 |
 |---|---|
 | `class` | key, abilityBonus{…}, weapons[], armors[], role[], position, description |
-| `skill` | key, skillKey, classKey, weaponReq[], part, category, timing, range, target, cost{tp,fp}, maxSL{main, sub|null}, unique, prereqs[], variants[], sl, description, **effects[]**, review |
+| `skill` | key, skillKey, classKey, weaponReq[], part, category, timing, range, target, cost{tp,fp}, maxSL{main, sub|null}, unique, prereqs[], variants[], sl, usage(""=자동·combat·explore), description, **effects[]**, review |
 | `weapon` | weaponType, rank, element(농기구는 선택값), refinements[≤2], slot("weapon"/"other") — 수치는 종류 표의 R식으로 계산 |
 | `armor` | armorType, rank, refinements[≤2] |
 | `accessory` | effects[], price |

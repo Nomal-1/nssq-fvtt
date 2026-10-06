@@ -18,7 +18,7 @@ export function badgeFor(refinement) {
   const el = (k) => game.i18n.localize(`NSSQ.Resist.${k}`);
   switch (b.kind) {
     case "imbue":
-      return { icon: ELEMENT_ICON[b.key] ?? "fa-magic", text: el(b.key), cls: `imbue ${b.key}`, title: refinement.name };
+      return { icon: ELEMENT_ICON[b.key] ?? "fa-magic", text: game.i18n.format("NSSQ.Badge.imbue", { el: el(b.key) }), cls: `imbue ${b.key}`, title: refinement.name };
     case "resist":
       return { icon: ELEMENT_ICON[b.key] ?? "fa-shield-alt", text: `${el(b.key)}${game.i18n.localize("NSSQ.Badge.resist")}${sign(b.value)}`, cls: `resist ${b.key}`, title: refinement.name };
     case "ability":
