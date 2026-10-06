@@ -700,7 +700,10 @@
       "finish": "전투 종료",
       "finishHint": "결과를 고르고 전투를 끝낸다",
       "toggleDefeated": "쓰러짐 표시 켜기/끄기",
-      "openSheet": "시트 열기"
+      "openSheet": "시트 열기",
+      "turnOf": "{name}의 차례",
+      "miss": "MISS",
+      "critical": "CRITICAL!"
     },
     "Growth": {
       "button": "성장 굴리기",

@@ -5,6 +5,8 @@
  * - 맨 아래(전체 폭): 파티 패널 3칸 × 2줄(전열·후열). 빈 칸도 자리를 지켜 카드가 움직이지 않는다
  * - [맵 보기]로 접으면 아래 필드 맵을 그대로 쓸 수 있다(보는 사람마다)
  * 전투원 데이터는 화면에 띄우지 않는 전투 사본 씬의 토큰에 있다(battle.mjs).
+ * 다시 그릴 때는 바뀐 곳만 고치고(morph.mjs), 자리를 옮긴 카드는 미끄러지게, 페이즈·차례가 바뀌면 배너,
+ * 공격·【HP】 변화에는 피격 이펙트를 띄운다.
  */
 import { inRange } from "../engine/combat.mjs";
 import { normalAttack } from "./attack.mjs";
@@ -16,14 +18,21 @@ import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "./apply.mjs";
 import { enemyArtFor } from "../apps/enemy-art.mjs";
 import { bustStyle, faceStyle } from "../apps/art-config.mjs";
+import { flip, morph, snapshot } from "./morph.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const pct = (r) => (r?.max > 0 ? Math.clamp(Math.round((r.value / r.max) * 100), 0, 100) : 0);
 
 let root = null;
+let fxLayer = null;
 let pending = null; // "attack" | null
 let collapsed = false;
+let banner = null; // { id, text, cls }
+let bannerSeq = 0;
+let lastPhaseKey = null;
+let lastTurnKey = null;
+const lastHp = new Map(); // combatant id → 【HP】(피격 숫자용)
 
 /** 진행 중인 NSSQ 전투(전투 개시로 만든 것) */
 export const battleCombat = () => game.combats.find((c) => c.getFlag("nssq", "battle") && c.started) ?? null;
@@ -38,7 +47,17 @@ function ensureRoot() {
   root.id = "nssq-battle";
   document.body.append(root);
   bindDrop(root);
+  bindClicks(root);
   return root;
+}
+
+/** 이펙트(피격 숫자·MISS)를 띄우는 층. 전투 화면 위, 클릭은 통과 */
+function ensureFx() {
+  if (fxLayer?.isConnected) return fxLayer;
+  fxLayer = document.createElement("div");
+  fxLayer.id = "nssq-battle-fx";
+  document.body.append(fxLayer);
+  return fxLayer;
 }
 
 /**
@@ -71,7 +90,12 @@ function bindDrop(el) {
 export function clearHud() {
   root?.remove();
   root = null;
+  fxLayer?.remove();
+  fxLayer = null;
   pending = null;
+  banner = null;
+  lastPhaseKey = lastTurnKey = null;
+  lastHp.clear();
 }
 
 /** 사이드바를 가리지 않게 오른쪽 끝을 맞춘다 */
@@ -91,7 +115,7 @@ function orderStrip(combat) {
     const cls = [sideOf(c.actor) === "enemy" ? "enemy" : "", phase === "main" && i === curIdx ? "current" : "", phase === "main" && i < curIdx ? "done" : "", isKO(c) ? "ko" : ""].join(" ");
     const init = c.initiative !== null && c.initiative !== undefined && (game.user.isGM || sideOf(c.actor) !== "enemy")
       ? `<em class="init" title="${esc(L("initiative"))}">${Math.round(c.initiative * 10) / 10}</em>` : "";
-    return `<span class="who ${cls}"><img src="${esc(c.img)}"/><span>${esc(c.name)}</span>${init}</span>`;
+    return `<span class="who ${cls}" data-key="o-${c.id}" data-flip><img src="${esc(c.img)}"/><span>${esc(c.name)}</span>${init}</span>`;
   }).join('<i class="fas fa-chevron-right sep"></i>');
   return `<div class="nb-order">${items}</div>`;
 }
@@ -144,7 +168,7 @@ function enemyCard(c, combat, targetable) {
       <a data-tool="defeated" class="${c.defeated ? "on" : ""}" title="${esc(L("toggleDefeated"))}"><i class="fas fa-skull"></i></a>
       <a data-tool="sheet" title="${esc(L("openSheet"))}"><i class="fas fa-id-card"></i></a>
     </div>` : "";
-  return `<div class="${cls}" data-combatant="${c.id}" title="${esc(c.name)}">
+  return `<div class="${cls}" data-combatant="${c.id}" data-key="e-${c.id}" data-flip title="${esc(c.name)}">
     ${tools}
     <div class="art"><img src="${esc(enemyImage(c))}"/></div>
     <div class="name">${game.user.isGM && s.isRare ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
@@ -159,7 +183,7 @@ function partyCard(c, combat, targetable) {
   const guard = c.getFlag("nssq", "guarding");
   const bar = (k, r) => `<div class="nb-bar ${k}"><b>${k.toUpperCase()}</b><i style="width:${pct(r)}%"></i><span>${r?.value ?? 0}/${r?.max ?? 0}</span></div>`;
   const classes = ["nb-member", isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", a.isOwner && !game.user.isGM ? "mine" : "", targetable ? "targetable" : ""].join(" ");
-  return `<div class="${classes}" data-combatant="${c.id}">
+  return `<div class="${classes}" data-combatant="${c.id}" data-key="p-${c.id}" data-flip>
     <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}"></div>
     <div class="info">
       <div class="line"><span class="name">${esc(c.name)}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}
@@ -212,7 +236,7 @@ function commandWindow(combat) {
   return `<div class="nb-command">
     <div class="head"><span class="phase">${phaseLabel(combat)}</span></div>
     ${gm ? `<div class="gm">${gm}</div>` : ""}
-    <div class="body">${commandBody(combat)}</div>
+    <div class="body"><div class="body-in" data-key="body-${combat.round}-${combat.getFlag("nssq", "phase")}-${combat.turn}-${combat.getFlag("nssq", "over") ?? ""}">${commandBody(combat)}</div></div>
   </div>`;
 }
 
@@ -225,11 +249,108 @@ export function renderHud() {
   fitToViewport(el);
   el.classList.toggle("collapsed", collapsed);
   if (collapsed) {
-    el.innerHTML = `<button type="button" class="nb-open" data-ui="toggle"><i class="fas fa-skull-crossbones"></i> ${L("openBattle")}</button>`;
-    return bind(el, combat);
+    morph(el, `<button type="button" class="nb-open" data-ui="toggle"><i class="fas fa-skull-crossbones"></i> ${L("openBattle")}</button>`);
+    return;
   }
-  el.innerHTML = battleHtml(combat);
-  bind(el, combat);
+  updateBanner(combat);
+  const hpChanges = diffHp(combat);
+  const before = snapshot(el);
+  morph(el, battleHtml(combat));
+  flip(el, before);
+  for (const h of hpChanges) hpEffect(h.id, h.delta);
+}
+
+/** 페이즈·차례가 바뀌면 화면 가운데에 배너(처음 그릴 때는 없음) */
+function updateBanner(combat) {
+  const phase = combat.getFlag("nssq", "phase") ?? "opening";
+  const over = combat.getFlag("nssq", "over");
+  const phaseKey = `${combat.round}:${phase}:${over ?? ""}`;
+  const turnKey = phase === "main" ? `${phaseKey}:${combat.combatant?.id ?? ""}` : null;
+  let next = null;
+  if (lastPhaseKey !== null && phaseKey !== lastPhaseKey) next = { text: phaseLabel(combat), cls: over ? "big over" : "big" };
+  else if (lastTurnKey !== null && turnKey && turnKey !== lastTurnKey && combat.combatant) next = { text: L("turnOf", { name: combat.combatant.name }), cls: sideOf(combat.combatant.actor) === "enemy" ? "small enemy" : "small" };
+  lastPhaseKey = phaseKey;
+  lastTurnKey = turnKey;
+  if (!next) return;
+  const id = ++bannerSeq;
+  banner = { id, ...next };
+  setTimeout(() => {
+    if (banner?.id !== id) return;
+    banner = null;
+    rerender();
+  }, next.cls.includes("big") ? 1700 : 1100);
+}
+
+/** 지난번과 비교한 【HP】 변화(쓰러진 뒤 회복 등 포함) */
+function diffHp(combat) {
+  const out = [];
+  for (const c of combat.combatants) {
+    const hp = c.actor?.system.hp?.value;
+    if (hp === undefined) continue;
+    const prev = lastHp.get(c.id);
+    if (prev !== undefined && prev !== hp) out.push({ id: c.id, delta: hp - prev });
+    lastHp.set(c.id, hp);
+  }
+  return out;
+}
+
+/* ---------------- 이펙트 ---------------- */
+
+const cardEl = (combatantId) => root?.querySelector(`[data-key="e-${combatantId}"], [data-key="p-${combatantId}"]`);
+
+/** 카드 위에 떠오르는 글자 */
+function popText(card, text, cls) {
+  if (!card) return;
+  const fx = ensureFx();
+  const r = card.getBoundingClientRect();
+  const n = document.createElement("div");
+  n.className = `nb-pop ${cls}`;
+  n.textContent = text;
+  n.style.left = `${r.left + r.width / 2}px`;
+  n.style.top = `${r.top + Math.min(r.height * 0.45, 120)}px`;
+  fx.append(n);
+  n.addEventListener("animationend", () => n.remove());
+}
+
+/** 맞은 카드: 흔들림 + 붉은 번쩍임(속성은 건드리지 않는 Web Animations) */
+function hitShake(card, strong = false) {
+  if (!card) return;
+  const a = strong ? 10 : 6;
+  card.animate([
+    { transform: "translateX(0)" }, { transform: `translateX(-${a}px)` }, { transform: `translateX(${a}px)` },
+    { transform: `translateX(-${a / 2}px)` }, { transform: `translateX(${a / 2}px)` }, { transform: "translateX(0)" }
+  ], { duration: 360, easing: "ease-out" });
+  const target = card.querySelector(".art img, .portrait") ?? card;
+  target.animate([
+    { filter: "brightness(2.2) saturate(0.4) drop-shadow(0 0 12px #ff4a3a)" },
+    { filter: "brightness(1)" }
+  ], { duration: 420, easing: "ease-out" });
+}
+
+function hpEffect(combatantId, delta) {
+  const card = cardEl(combatantId);
+  if (delta < 0) {
+    hitShake(card, delta <= -10);
+    popText(card, `${delta}`, "dmg");
+  } else popText(card, `+${delta}`, "heal");
+}
+
+/** 공격 카드가 올라오면: 맞았으면 흔들림(크리티컬은 크게), 빗나갔으면 MISS */
+async function attackEffect(message) {
+  const card = message.getFlag("nssq", "attack");
+  const combat = battleCombat();
+  if (!card || !combat || collapsed) return;
+  if (game.dice3d) await game.dice3d.waitFor3DAnimationByMessageID?.(message.id);
+  for (const t of card.targets ?? []) {
+    const c = combat.combatants.find((x) => x.actor?.uuid === t.actorUuid);
+    const el = c && cardEl(c.id);
+    if (!el) continue;
+    if (!t.hit) popText(el, L("miss"), "miss");
+    else {
+      hitShake(el, t.crit);
+      if (t.crit) popText(el, L("critical"), "crit");
+    }
+  }
 }
 
 /** 메인 페이즈에 행동하는 캐릭터(플레이어·동료 NPC)의 상반신. 에너미 차례에는 없다 */
@@ -237,7 +358,7 @@ function bust(combat) {
   if (combat.getFlag("nssq", "phase") !== "main" || combat.getFlag("nssq", "over")) return "";
   const c = combat.combatant;
   if (!c?.actor || c.actor.type !== "character" || isKO(c)) return "";
-  return `<div class="nb-bust" style="${bustStyle(c.actor)}"><span class="nb-bust-name">${esc(c.name)}</span></div>`;
+  return `<div class="nb-bust" data-key="bust-${c.id}" style="${bustStyle(c.actor)}"><span class="nb-bust-name">${esc(c.name)}</span></div>`;
 }
 
 /** 펼친 전투 화면의 HTML */
@@ -253,7 +374,7 @@ export function battleHtml(combat, { attack = pending === "attack" } = {}) {
     .sort((a, b) => (a.token?.x ?? 0) - (b.token?.x ?? 0));
   const slots = (row) => {
     const cards = party.filter((c) => (c.actor.system.row ?? "front") === row).map((c) => partyCard(c, combat, targets.has(c.id)));
-    while (cards.length < 3) cards.push(`<div class="nb-member empty"></div>`);
+    while (cards.length < 3) cards.push(`<div class="nb-member empty" data-key="empty-${row}-${cards.length}"></div>`);
     return cards.join("");
   };
 
@@ -272,6 +393,7 @@ export function battleHtml(combat, { attack = pending === "attack" } = {}) {
       ${commandWindow(combat)}
       ${bust(combat)}
       ${game.user.isGM ? `<div class="nb-drop">${L("dropHint")}</div>` : ""}
+      ${banner ? `<div class="nb-banner ${banner.cls}" data-key="banner-${banner.id}"><span>${esc(banner.text)}</span></div>` : ""}
     </div>
     <div class="nb-party">
       <div class="nb-row front"><span class="label">${L("front")}</span>${slots("front")}</div>
@@ -279,57 +401,66 @@ export function battleHtml(combat, { attack = pending === "attack" } = {}) {
     </div>`;
 }
 
-function bind(el, combat) {
-  el.querySelectorAll("[data-ui=toggle]").forEach((b) => b.addEventListener("click", () => {
-    collapsed = !collapsed;
-    renderHud();
-  }));
-  el.querySelectorAll("[data-gm]").forEach((b) => b.addEventListener("click", () => {
-    switch (b.dataset.gm) {
-      case "next": return combat.nextPhase();
-      case "end": return combat.nextTurn();
-      case "escape": return rollEscape(combat);
-      case "shuffle": return shuffleRowsDialog(combat);
-      case "finish": return openEndDialog();
-      case "identifyAll": return setIdentified(combat.combatants.filter((c) => c.actor?.type === "enemy").map((c) => c.actor), true);
+/** 클릭은 루트에 한 번만 붙여 위임한다(바뀐 곳만 고치므로 요소마다 붙이면 겹친다) */
+function bindClicks(el) {
+  el.addEventListener("click", async (ev) => {
+    const combat = battleCombat();
+    if (!combat) return;
+    const hit = (sel) => ev.target.closest(sel);
+    let t;
+    if ((t = hit("[data-ui=toggle]"))) {
+      collapsed = !collapsed;
+      return renderHud();
     }
-  }));
-  el.querySelectorAll("[data-cmd]").forEach((b) => b.addEventListener("click", async (ev) => {
-    ev.stopPropagation();
-    const c = combat.combatants.get(b.closest("[data-combatant]")?.dataset.combatant);
-    if (!c) return;
-    switch (b.dataset.cmd) {
-      case "attack": pending = pending === "attack" ? null : "attack"; return renderHud();
-      case "end": return requestEndTurn(combat);
-      case "guard": return toggleGuard(c);
-      case "row": return toggleRow(c);
-      case "swap": return swapWeapon(c);
+    if ((t = hit("[data-gm]"))) {
+      switch (t.dataset.gm) {
+        case "next": return combat.nextPhase();
+        case "end": return combat.nextTurn();
+        case "escape": return rollEscape(combat);
+        case "shuffle": return shuffleRowsDialog(combat);
+        case "finish": return openEndDialog();
+        case "identifyAll": return setIdentified(combat.combatants.filter((c) => c.actor?.type === "enemy").map((c) => c.actor), true);
+      }
+      return;
     }
-  }));
-  // GM: 에너미 카드 도구
-  el.querySelectorAll(".nb-enemy [data-tool]").forEach((t) => t.addEventListener("click", (ev) => {
-    ev.stopPropagation();
-    const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
-    if (!c?.actor) return;
-    switch (t.dataset.tool) {
-      case "identify": return setIdentified([c.actor], !c.actor.system.identified);
-      case "row": return changePosition(c);
-      case "defeated": return c.update({ defeated: !c.defeated });
-      case "sheet": return c.actor.sheet.render(true);
+    if ((t = hit("[data-cmd]"))) {
+      if (t.disabled) return;
+      const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
+      if (!c) return;
+      switch (t.dataset.cmd) {
+        case "attack": pending = pending === "attack" ? null : "attack"; return renderHud();
+        case "end": return requestEndTurn(combat);
+        case "guard": return toggleGuard(c);
+        case "row": return toggleRow(c);
+        case "swap": return swapWeapon(c);
+      }
+      return;
     }
-  }));
-  // 대상 고르기(공격 중) / 그 밖에는 시트 열기(권한이 있을 때)
-  el.querySelectorAll(".nb-enemy, .nb-member:not(.empty)").forEach((card) => card.addEventListener("click", async () => {
-    const c = combat.combatants.get(card.dataset.combatant);
-    if (!c) return;
-    if (pending === "attack" && card.classList.contains("targetable")) {
-      const attacker = combat.combatant.actor;
-      pending = null;
-      renderHud();
-      return normalAttack(attacker, { target: c.token });
+    // GM: 에너미 카드 도구
+    if ((t = hit(".nb-enemy [data-tool]"))) {
+      const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
+      if (!c?.actor) return;
+      switch (t.dataset.tool) {
+        case "identify": return setIdentified([c.actor], !c.actor.system.identified);
+        case "row": return changePosition(c);
+        case "defeated": return c.update({ defeated: !c.defeated });
+        case "sheet": return c.actor.sheet.render(true);
+      }
+      return;
     }
-    if (c.actor?.isOwner) c.actor.sheet.render(true);
-  }));
+    // 대상 고르기(공격 중) / 그 밖에는 시트 열기(권한이 있을 때)
+    if ((t = hit(".nb-enemy, .nb-member:not(.empty)"))) {
+      const c = combat.combatants.get(t.dataset.combatant);
+      if (!c) return;
+      if (pending === "attack" && t.classList.contains("targetable")) {
+        const attacker = combat.combatant.actor;
+        pending = null;
+        renderHud();
+        return normalAttack(attacker, { target: c.token });
+      }
+      if (c.actor?.isOwner) c.actor.sheet.render(true);
+    }
+  });
 }
 
 /** 턴 종료: GM은 바로, 플레이어는 GM에게 부탁 */
@@ -360,4 +491,5 @@ export function registerHud() {
     if (foundry.utils.hasProperty(changes, "started") && changes.started) collapsed = false;
   });
   Hooks.on("deleteCombat", () => setTimeout(renderHud, 50));
+  Hooks.on("createChatMessage", (message) => attackEffect(message));
 }

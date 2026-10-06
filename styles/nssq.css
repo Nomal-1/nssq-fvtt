@@ -646,8 +646,30 @@
 .nssq-art-config .art-row button:last-child { flex: 0 0 32px; width: 32px; }
 .nssq-art-config .art-path { align-self: stretch; font-size: 0.75em; color: var(--nq-mu); word-break: break-all; }
 /* 전투 화면 오른쪽 상반신(원작풍) */
-#nssq-battle .nb-bust { position: absolute; right: 0; bottom: 0; top: 4%; width: min(34%, 46vh); z-index: 3; background-repeat: no-repeat; pointer-events: none; animation: nb-bust-in 0.35s ease-out;
+#nssq-battle .nb-bust { position: absolute; right: 0; bottom: 0; top: 4%; width: min(34%, 46vh); z-index: 3; background-repeat: no-repeat; pointer-events: none; animation: nb-bust-in 0.45s cubic-bezier(.2,.8,.2,1);
   -webkit-mask-image: linear-gradient(to left, #000 75%, transparent), linear-gradient(to top, transparent, #000 12%); -webkit-mask-composite: source-in; mask-image: linear-gradient(to left, #000 75%, transparent); }
 #nssq-battle .nb-bust-name { position: absolute; right: 12px; bottom: 12px; padding: 2px 14px; font-family: var(--nq-title); font-size: 1.2em; color: var(--nq-gold-l); background: rgba(10, 22, 38, 0.85); border: 1px solid var(--nq-gold); border-radius: 4px; }
 #nssq-battle .nb-enemies.has-bust .nb-erow { right: min(30%, 40vh); }
+#nssq-battle .nb-erow { transition: right 0.45s cubic-bezier(.2,.8,.2,1), top 0.45s cubic-bezier(.2,.8,.2,1); }
 @keyframes nb-bust-in { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+
+/* 15 ─ 전투 화면 움직임: 막대·상태 전환, 커맨드 창, 배너, 피격 이펙트 */
+#nssq-battle .nb-bar > i { transition: width 0.55s cubic-bezier(.2,.8,.2,1); }
+#nssq-battle :is(.nb-enemy, .nb-member) { transition: opacity 0.45s, filter 0.45s, box-shadow 0.3s, border-color 0.3s, background 0.3s; }
+#nssq-battle .nb-command .body-in { display: flex; flex-direction: column; gap: 6px; animation: nb-fade-in 0.35s ease-out; }
+#nssq-battle .nb-hint { animation: nb-fade-in 0.25s ease-out; }
+@keyframes nb-fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+#nssq-battle .nb-banner { position: absolute; left: 0; right: 0; top: 34%; z-index: 5; display: flex; justify-content: center; pointer-events: none; }
+#nssq-battle .nb-banner span { padding: 6px 60px; font-family: var(--nq-title); color: var(--nq-gold-l); background: linear-gradient(90deg, transparent, rgba(10, 22, 38, 0.92) 18%, rgba(10, 22, 38, 0.92) 82%, transparent); border-top: 1px solid var(--nq-gold); border-bottom: 1px solid var(--nq-gold); text-shadow: 0 0 8px rgba(0, 0, 0, 0.8); }
+#nssq-battle .nb-banner.big span { font-size: 2em; letter-spacing: 0.08em; animation: nb-banner 1.7s ease-in-out forwards; }
+#nssq-battle .nb-banner.small span { font-size: 1.3em; animation: nb-banner 1.1s ease-in-out forwards; }
+#nssq-battle .nb-banner.enemy span { color: #ffb4a8; border-color: var(--nq-red); }
+#nssq-battle .nb-banner.over span { color: #fff; }
+@keyframes nb-banner { 0% { opacity: 0; transform: scaleX(0.6); } 18% { opacity: 1; transform: none; } 78% { opacity: 1; } 100% { opacity: 0; transform: translateY(-8px); } }
+#nssq-battle-fx { position: fixed; inset: 0; z-index: 45; pointer-events: none; }
+#nssq-battle-fx .nb-pop { position: absolute; transform: translate(-50%, -50%); font-family: var(--nq-title); font-weight: 700; white-space: nowrap; text-shadow: 0 0 4px #000, 0 2px 0 #000; animation: nb-pop 1.1s ease-out forwards; }
+#nssq-battle-fx .nb-pop.dmg { font-size: 2.2em; color: #ff6a5a; }
+#nssq-battle-fx .nb-pop.heal { font-size: 1.9em; color: #8ff0a8; }
+#nssq-battle-fx .nb-pop.miss { font-size: 1.6em; color: #d8e4f0; letter-spacing: 0.1em; }
+#nssq-battle-fx .nb-pop.crit { font-size: 1.4em; color: var(--nq-gold-l); margin-top: -34px; }
+@keyframes nb-pop { 0% { opacity: 0; transform: translate(-50%, -20%) scale(0.6); } 15% { opacity: 1; transform: translate(-50%, -60%) scale(1.15); } 30% { transform: translate(-50%, -60%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -160%); } }
