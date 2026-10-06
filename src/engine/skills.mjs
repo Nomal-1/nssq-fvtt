@@ -3,17 +3,18 @@
  */
 
 /** 이 말이 해설에 있으면 전투 스킬로 본다 */
-const COMBAT_WORDS = /【(물리 명중|속성 명중|물리 공격|속성 공격|방어|회피|억제 공격|억제 방어|속도|HP|TP)】|내성|대미지|공격 롤|전투|명중|강화 효과|약화 효과|상태 이상|봉인|크리티컬|추격|반격|회복량|회복 효과|분류|토큰|오버히트|대기 상태|스킬 공격|방진|라운드|턴/;
+const COMBAT_WORDS = /【(물리 명중|속성 명중|물리 공격|속성 공격|방어|회피|억제 공격|억제 방어|속도|HP|TP)】|내성|대미지|공격 롤|전투|명중|강화 효과|약화 효과|상태 이상|봉인|크리티컬|추격|반격|회복량|회복 효과|분류|토큰|오버히트|대기 상태|스킬 공격|방진|라운드|턴|도주|능동 회피/;
 
 /**
  * 전투 스킬인가 비전투(탐색) 스킬인가. GM이 스킬 시트에서 정한 값(usage)이 있으면 그것.
- * 자동 판정: 커먼 스킬은 비전투. 그 밖에는 타이밍이 「상시」이고 해설에 전투 관련 말이 없으면 비전투.
+ * 자동 판정: 커먼 스킬은 비전투. 그 밖에는 타이밍이 「상시」·「특수」이고 해설에 전투 관련 말이 없으면 비전투.
  * @returns {"combat"|"explore"}
  */
 export function skillUsage({ usage = "", timing = "", description = "", classKey = "" } = {}) {
   if (usage === "combat" || usage === "explore") return usage;
   if (classKey === "common") return "explore"; // 커먼 스킬은 지식·채집·요리
-  if (timing !== "상시") return "combat";
+  // 「상시」「특수」는 해설로 판정(특수는 탐색·교섭용이 많다). 주행동·개막·수동은 전투
+  if (timing !== "상시" && timing !== "특수") return "combat";
   const text = String(description).replace(/<[^>]*>/g, " ");
   return COMBAT_WORDS.test(text) ? "combat" : "explore";
 }

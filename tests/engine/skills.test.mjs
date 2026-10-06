@@ -8,8 +8,12 @@ describe("전투/비전투 분류", () => {
   it("커먼 스킬은 비전투", () => {
     expect(skillUsage({ classKey: "common", timing: "상시", description: "HP를 회복" })).toBe("explore");
   });
-  it("상시가 아니면 전투", () => {
+  it("주행동·개막·수동은 전투", () => {
     expect(skillUsage({ timing: "개막", description: "판정 +3" })).toBe("combat");
+  });
+  it("특수는 해설로 판정: 탐색 판정이면 비전투, 도주면 전투", () => {
+    expect(skillUsage({ timing: "특수", description: "로프나 사슬을 사용한 판정 전반에 +3" })).toBe("explore");
+    expect(skillUsage({ timing: "특수", description: "도주 판정 달성값 +3" })).toBe("combat");
   });
   it("상시라도 전투 관련 말이 있으면 전투", () => {
     expect(skillUsage({ timing: "상시", description: "<p>【물리 공격】 +(SL)</p>" })).toBe("combat");
