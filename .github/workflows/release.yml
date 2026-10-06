@@ -3,6 +3,8 @@ name: Release
 on:
   push:
     tags: ["v*"]
+  # Actions → Release → Run workflow: main의 package.json 버전으로 태그와 릴리스를 만든다
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -12,15 +14,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: 태그 정하기
+        id: tag
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            TAG="${GITHUB_REF_NAME}"
+          else
+            TAG="v$(node -p "require('./package.json').version")"
+            if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+              echo "::error::${TAG} 태그가 이미 있다. package.json 버전을 올린 뒤 다시 실행한다."
+              exit 1
+            fi
+          fi
+          echo "name=${TAG}" >> "$GITHUB_OUTPUT"
       - run: npm ci
       - run: npm test
       - run: npm run build:packs
-      - run: node tools/package.mjs "${GITHUB_REF_NAME}"
+      - run: node tools/package.mjs "${{ steps.tag.outputs.name }}"
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.tag.outputs.name }}
+          target_commitish: ${{ github.sha }}
           files: |
             dist/nssq.zip
             dist/system.json

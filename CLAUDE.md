@@ -30,7 +30,7 @@
 5. **규칙 엔진(`src/engine/`)은 Foundry를 import하지 않는 순수 JS.** 주사위는 주입받은 RNG로 굴린다. 엔진을 바꾸면 `npm test`가 통과해야 한다.
 6. **룰이 애매하면 추측해서 구현하지 않는다.** 07에 질문을 추가하고, 채팅 카드에 "GM 판단 필요" 안내와 수동 적용 버튼을 두는 폴백으로 처리한다.
 7. **자동 적용은 GM이 통제할 수 있어야 한다.** 설정 `autoApply`(끔/확인 후 적용/즉시 적용)를 모든 HP·TP·상태 변경에 적용한다. 플레이어가 소유하지 않은 문서의 변경은 소켓으로 GM에게 위임한다.
-8. **공개 배포.** 저장소 `Nomal-1/nssq-fvtt`(공개)의 GitHub Releases로 배포한다. 매니페스트 URL은 `https://github.com/Nomal-1/nssq-fvtt/releases/latest/download/system.json`. `system.json`의 `manifest`·`download`는 `tools/package.mjs`가 버전에 맞춰 고친다. 릴리스는 `v*` 태그를 push하면 `.github/workflows/release.yml`이 만든다.
+8. **공개 배포.** 저장소 `Nomal-1/nssq-fvtt`(공개)의 GitHub Releases로 배포한다. 매니페스트 URL은 `https://github.com/Nomal-1/nssq-fvtt/releases/latest/download/system.json`. `system.json`의 `manifest`·`download`는 `tools/package.mjs`가 버전에 맞춰 고친다. 릴리스는 `v*` 태그를 push하면 `.github/workflows/release.yml`이 만든다. 태그를 push할 수 없으면 버전을 올린 커밋을 main에 push한 뒤 사용자에게 https://github.com/Nomal-1/nssq-fvtt/actions/workflows/release.yml 의 [Run workflow]를 눌러 달라고 링크를 준다(package.json 버전으로 태그·릴리스를 만든다).
 
 ## 명령어
 
