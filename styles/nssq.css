@@ -751,3 +751,32 @@
 #nssq-status-pop .eff { font-size: 0.88em; color: var(--nq-tx); opacity: 0.9; }
 #nssq-status-pop .none { color: var(--nq-mu); margin: 4px 0; }
 .nssq .nq-eff { margin-left: 4px; color: #2a6fc0; font-weight: 700; white-space: nowrap; }
+/* 에너미 자세히 보기(원작풍 정보 화면) */
+#nssq-status-pop.analysis { width: 660px; max-width: calc(100vw - 16px); }
+#nssq-status-pop header .lv { color: var(--nq-tx); font-size: 0.95em; }
+#nssq-status-pop header .rare { color: var(--nq-fp); margin-right: 3px; }
+#nssq-status-pop header .foe { padding: 0 6px; font-size: 0.8em; color: #ffb4a8; border: 1px solid var(--nq-red); border-radius: 8px; }
+#nssq-status-pop header .gm-note { font-size: 0.78em; color: var(--nq-mu); }
+#nssq-status-pop .an-cols { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 10px; }
+#nssq-status-pop .an-col { min-width: 0; }
+#nssq-status-pop .an-hp { display: flex; justify-content: space-between; padding: 3px 6px; border-bottom: 1px solid var(--nq-line2); }
+#nssq-status-pop .an-hp b { letter-spacing: 0.05em; }
+#nssq-status-pop .an-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; }
+#nssq-status-pop .an-stat, #nssq-status-pop .an-res { display: flex; flex-direction: column; align-items: center; padding: 2px 0; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--nq-line2); border-radius: 4px; }
+#nssq-status-pop .an-stat span, #nssq-status-pop .an-res span { font-size: 0.75em; color: var(--nq-mu); }
+#nssq-status-pop .an-stat b, #nssq-status-pop .an-res b { font-size: 1em; }
+#nssq-status-pop b.changed { color: #8fc1ff; }
+#nssq-status-pop .an-resists { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 3px; }
+#nssq-status-pop .an-res.fire span { color: #ff8a6a; }
+#nssq-status-pop .an-res.ice span { color: #8fd3ff; }
+#nssq-status-pop .an-res.volt span { color: #ffe06a; }
+#nssq-status-pop .an-note { margin: 4px 0 0; font-size: 0.78em; color: var(--nq-mu); }
+#nssq-status-pop .an-list, #nssq-status-pop .an-slots { list-style: none; margin: 0; padding: 0; }
+#nssq-status-pop .an-list li, #nssq-status-pop .an-slots li { display: flex; align-items: baseline; gap: 6px; margin: 2px 0; padding: 3px 8px; background: rgba(36, 70, 120, 0.55); border: none; border-radius: 3px; }
+#nssq-status-pop .an-list li small, #nssq-status-pop .an-slots li small { margin-left: auto; font-size: 0.78em; color: var(--nq-mu); white-space: nowrap; }
+#nssq-status-pop .an-list li.q { justify-content: center; letter-spacing: 0.2em; }
+#nssq-status-pop .an-list li.empty, #nssq-status-pop .an-slots li.slot { justify-content: center; color: var(--nq-mu); background: rgba(0, 0, 0, 0.2); }
+#nssq-status-pop .an-slots li.buff { border-left: 3px solid #2460b2; }
+#nssq-status-pop .an-slots li.debuff { border-left: 3px solid #6e3296; }
+#nssq-status-pop .an-slots li.ailment { border-left: 3px solid #b02828; }
+#nssq-status-pop .an-slots li.bind { border-left: 3px solid #c46e14; }

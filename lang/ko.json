@@ -900,6 +900,26 @@
       "none": "걸려 있는 상태 이상·강화·약화가 없다.",
       "close": "닫기",
       "hint": "카드를 누르면 상태 이상·강화·약화를 자세히 본다"
+    },
+    "Analysis": {
+      "stats": "부능력치",
+      "resist": "내성",
+      "conditions": "상태 이상·봉인",
+      "none": "없음",
+      "turns": "{n}턴",
+      "unknownNote": "식별하지 못한 에너미: 내성은 최소 3으로 취급한다",
+      "gmHidden": "식별 전 — 플레이어에게는 ???",
+      "short": {
+        "physHit": "물명",
+        "elemHit": "속명",
+        "evasion": "회피",
+        "physAtk": "물공",
+        "elemAtk": "속공",
+        "defense": "방어",
+        "suppAtk": "억공",
+        "suppDef": "억방",
+        "speed": "속도"
+      }
     }
   }
 }

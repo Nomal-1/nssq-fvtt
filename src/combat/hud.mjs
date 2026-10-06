@@ -22,6 +22,7 @@ import { flip, morph, snapshot } from "./morph.mjs";
 import { identifyDialog } from "./identify.mjs";
 import { randomEnemyAction } from "./enemy-ai.mjs";
 import { StatusApp, statusChips, statusDetailHtml } from "./status.mjs";
+import { enemyAnalysisHtml } from "./analysis.mjs";
 import { actionState, confusedAction } from "./turn-status.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
@@ -112,7 +113,7 @@ function togglePop(combat, c, card) {
     document.body.append(popEl);
     popEl.addEventListener("click", (ev) => { if (ev.target.closest("[data-pop-close]")) closePop(); });
   }
-  popEl.innerHTML = statusDetailHtml(c.actor, c.name);
+  fillPop(c);
   const r = card.getBoundingClientRect();
   const w = popEl.offsetWidth || 300;
   const h = popEl.offsetHeight || 200;
@@ -123,12 +124,19 @@ function togglePop(combat, c, card) {
   popEl.style.top = `${top}px`;
 }
 
+/** 에너미는 원작풍 정보 화면(식별에 따라 ???), 아군은 상태 자세히 */
+function fillPop(c) {
+  const enemy = c.actor?.type === "enemy";
+  popEl.classList.toggle("analysis", enemy);
+  popEl.innerHTML = enemy ? enemyAnalysisHtml(c.actor, c.name) : statusDetailHtml(c.actor, c.name);
+}
+
 /** 다시 그릴 때 열려 있는 창의 내용도 맞춘다 */
 function refreshPop(combat) {
   if (!popId || !popEl) return;
   const c = combat.combatants.get(popId);
   if (!c?.actor) return closePop();
-  popEl.innerHTML = statusDetailHtml(c.actor, c.name);
+  fillPop(c);
 }
 
 export function clearHud() {
