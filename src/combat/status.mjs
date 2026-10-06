@@ -4,7 +4,7 @@
  * 스킬 효과로 자동 부여하는 것은 단계 6. 지금은 GM이 전투 화면 카드의 [상태]로 건다.
  */
 import { CONDITIONS, CONDITION_IDS, addCondition, contestInflict, removeCondition, resistCheck } from "../engine/conditions.mjs";
-import { BUFFS, BUFF_IDS, IMBUE_ELEMENTS, addBuff, removeBuff } from "../engine/buffs.mjs";
+import { BUFFS, BUFF_IDS, IMBUE_ELEMENTS, addBuff, canonicalBuff, paramElements, removeBuff } from "../engine/buffs.mjs";
 import { RESISTS } from "../engine/derive.mjs";
 import { combatProfile } from "./profile.mjs";
 
@@ -22,14 +22,18 @@ export function conditionLabel(c) {
   return c.depth === null || c.depth === undefined ? name : `${name} (${game.i18n.format("NSSQ.StatusHint.depth", { n: c.depth })})`;
 }
 
+/** 속성 param 표기: 〈염〉 / 〈염〉〈빙〉〈뇌〉 / 전체 */
+const elementText = (param) => (param === "all" ? loc("NSSQ.Buff.paramAll") : paramElements(param).map((k) => loc(`NSSQ.Resist.${k}`)).join(""));
+
 const paramText = (b) => {
   const def = BUFFS[b.id];
   if (!def?.param || !b.param) return "";
-  return def.param === "text" ? b.param : loc(`NSSQ.Resist.${b.param}`);
+  return def.param === "text" ? b.param : elementText(b.param);
 };
 
 /** 「물리 공격 상승: 2」·「내성 부여: 〈염〉」 */
-export function buffLabel(b) {
+export function buffLabel(raw) {
+  const b = { ...raw, id: canonicalBuff(raw.id) };
   const def = BUFFS[b.id];
   const name = loc(`NSSQ.Buff.${b.id}`);
   const extra = def?.param ? paramText(b) : def?.value ? String(b.value) : "";
@@ -190,7 +194,7 @@ export class StatusApp extends Application {
       ...(s.buffs ?? []).map((b, i) => `<li class="${BUFFS[b.id]?.kind ?? ""}"><span>${esc(buffLabel(b))} · ${esc(game.i18n.format("NSSQ.Buff.turns", { n: b.turns }))}</span><a data-remove-buff="${i}" title="${esc(L("remove"))}"><i class="fas fa-times"></i></a></li>`)
     ];
     const sources = this.sources();
-    const groups = ["buff", "debuff"].map((kind) => `<optgroup label="${esc(loc(`NSSQ.Buff.${kind}`))}">${BUFF_IDS.filter((id) => BUFFS[id].kind === kind).map((id) => opt(id, loc(`NSSQ.Buff.${id}`))).join("")}</optgroup>`).join("");
+    const groups = ["buff", "debuff"].map((kind) => `<optgroup label="${esc(loc(`NSSQ.Buff.${kind}`))}">${BUFF_IDS.filter((id) => BUFFS[id].kind === kind && !BUFFS[id].custom).map((id) => opt(id, loc(`NSSQ.Buff.${id}`))).join("")}</optgroup>`).join("");
     const html = `<div class="nssq-status-form">
       <h3>${esc(L("current"))}</h3>
       <ul class="status-current">${current.join("") || `<li class="none">${esc(L("none"))}</li>`}</ul>
@@ -207,7 +211,7 @@ export class StatusApp extends Application {
       <form data-form="buff">
         <div class="form-group"><label>${esc(L("buff"))}</label><select name="kind">${groups}</select></div>
         <div class="form-group" data-buff-value><label>${esc(L("value"))}</label><input type="number" name="amount" value="1"/></div>
-        <div class="form-group" data-buff-param="element"><label>${esc(L("param"))}</label><select name="paramElement">${RESISTS.map((k) => opt(k, loc(`NSSQ.Resist.${k}`))).join("")}</select></div>
+        <div class="form-group" data-buff-param="element"><label>${esc(L("param"))}</label><select name="paramElement">${[...RESISTS, IMBUE_ELEMENTS.join(","), "all"].map((k) => opt(k, elementText(k))).join("")}</select></div>
         <div class="form-group" data-buff-param="imbue"><label>${esc(L("param"))}</label><select name="paramImbue">${IMBUE_ELEMENTS.map((k) => opt(k, loc(`NSSQ.Resist.${k}`))).join("")}</select></div>
         <div class="form-group" data-buff-param="text"><label>${esc(L("paramText"))}</label><input type="text" name="paramText" value=""/></div>
         <div class="form-group"><label>${esc(L("turns"))}</label><input type="number" name="turns" value="3" min="1"/></div>

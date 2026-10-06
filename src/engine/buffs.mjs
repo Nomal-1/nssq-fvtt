@@ -2,8 +2,12 @@
  * 강화 효과·약화 효과 (01 §3.10). Foundry 비의존 순수 함수.
  * 저장 모양: { id, value, turns, param } — param은 속성(내성 부여 등)이나 추격 대상 문구
  *
- * 01 표 밖의 이름(공격 상승·물리 명중 상승·물리 방어 상승·억제 공격 상승·내성 상승·내성 저하)은
- * 07 #11·#39 임시 처리. 「완전 내성: ○」은 강화가 아니라 에너미의 상시 스킬(그 상태 이상을 받지 않음)이라 여기 없다.
+ * 01 표 밖의 이름(07 #39, 사용자 결정)
+ * - 『물리 방어 상승』·『물리 방어 저하』는 『방어 상승』·『방어 저하』와 같은 것(ALIASES로 바꿔 저장)
+ * - 『공격 상승』·『물리 명중 상승』·『억제 공격 상승』·『내성 상승』·『내성 저하』는 원문 스킬·에너미에 나온다
+ * - 『공격 저하』·『물리 명중 저하』·『억제 공격 저하』는 원문에 없다. 기능·대항은 넣되 custom(커스텀 스킬 전용):
+ *   GM [상태] 창 목록에 나오지 않고, 효과 데이터(단계 6~)에서만 쓴다
+ * 「완전 내성: ○」은 강화가 아니라 에너미의 상시 스킬(그 상태 이상을 받지 않음)이라 여기 없다.
  */
 import { RESISTS } from "./derive.mjs";
 
@@ -12,10 +16,10 @@ export const MAX_KINDS = 3;
 
 /**
  * kind: buff/debuff, value: 수치가 있는가, stats: 더할 부능력치, counter: 대항 id,
- * param: "element"(내성 6종)·"imbue"(염·빙·뇌)·"text"(자유 문구)
+ * param: "element"(속성 1개·여러 개·전체)·"imbue"(염·빙·뇌)·"text"(자유 문구), custom: 기본 룰에 없음
  */
-const up = (stats, counter) => ({ kind: "buff", value: true, stats, counter });
-const down = (stats, counter) => ({ kind: "debuff", value: true, stats, counter, sign: -1 });
+const up = (stats, counter, extra = {}) => ({ kind: "buff", value: true, stats, counter, ...extra });
+const down = (stats, counter, extra = {}) => ({ kind: "debuff", value: true, stats, counter, sign: -1, ...extra });
 export const BUFFS = {
   // 강화
   elemImbue: { kind: "buff", value: false, param: "imbue" },
@@ -25,7 +29,6 @@ export const BUFFS = {
   physAtkUp: up(["physAtk"], "physAtkDown"),
   elemAtkUp: up(["elemAtk"], "elemAtkDown"),
   defenseUp: up(["defense"], "defenseDown"),
-  physDefUp: up(["defense"], "physDefDown"),
   speedUp: up(["speed"], "speedDown"),
   hitUp: up(["physHit", "elemHit"], "hitDown"),
   physHitUp: up(["physHit"], "physHitDown"),
@@ -38,21 +41,33 @@ export const BUFFS = {
   chase: { kind: "buff", value: false, param: "text" },
   critUp: { kind: "buff", value: false },
   // 약화
-  atkDown: down(["physAtk", "elemAtk"], "atkUp"),
+  atkDown: down(["physAtk", "elemAtk"], "atkUp", { custom: true }),
   physAtkDown: down(["physAtk"], "physAtkUp"),
   elemAtkDown: down(["elemAtk"], "elemAtkUp"),
   defenseDown: down(["defense"], "defenseUp"),
-  physDefDown: down(["defense"], "physDefUp"),
   speedDown: down(["speed"], "speedUp"),
   hitDown: down(["physHit", "elemHit"], "hitUp"),
-  physHitDown: down(["physHit"], "physHitUp"),
+  physHitDown: down(["physHit"], "physHitUp", { custom: true }),
   evasionDown: down(["evasion"], "evasionUp"),
-  suppAtkDown: down(["suppAtk"], "suppAtkUp"),
+  suppAtkDown: down(["suppAtk"], "suppAtkUp", { custom: true }),
   suppDefDown: down(["suppDef"], "suppDefUp"),
   resistDown: { kind: "debuff", value: false, param: "element", counter: "resistUp" },
   weaknessGrant: { kind: "debuff", value: false, param: "element", counter: "resistGrant" }
 };
 export const BUFF_IDS = Object.keys(BUFFS);
+
+/** 원문의 다른 이름 → 같은 효과(07 #39) */
+export const ALIASES = { physDefUp: "defenseUp", physDefDown: "defenseDown" };
+export const canonicalBuff = (id) => ALIASES[id] ?? id;
+
+/**
+ * 속성 param: "fire" 한 개, "fire,ice,volt"(염빙뇌) 같은 여러 개, "all"(전체).
+ * 여러 속성이어도 강화 1종류로 센다(07 #39). 내성 증감은 속성마다 ±1
+ */
+export function paramElements(param) {
+  if (param === "all") return [...RESISTS];
+  return String(param ?? "").split(",").map((x) => x.trim()).filter((x) => RESISTS.includes(x));
+}
 
 const keyOf = (b) => `${b.id}|${BUFFS[b.id]?.param ? b.param ?? "" : ""}`;
 
@@ -69,6 +84,7 @@ function stronger(a, b) {
  *  - countered: 대항 효과와 함께 둘 다 소멸 / rejected: 같은 분류 4종류째(07 #7)
  */
 export function addBuff(list, { id, value = 0, turns = 1, param = "" }) {
+  id = canonicalBuff(id);
   const def = BUFFS[id];
   const cur = list ?? [];
   if (!def) return { list: [...cur], result: "ignored" };
@@ -102,17 +118,15 @@ export function buffMods(list) {
   const elements = [];
   const regen = { hp: 0, tp: 0 };
   let critUp = false;
-  for (const b of list ?? []) {
+  for (const raw of list ?? []) {
+    const b = { ...raw, id: canonicalBuff(raw.id) };
     const def = BUFFS[b.id];
     if (!def) continue;
     const v = Number(b.value) || 0;
     for (const k of def.stats ?? []) add[k] = (add[k] ?? 0) + (def.sign ?? 1) * v;
-    const el = RESISTS.includes(b.param) ? b.param : null;
-    if (b.id === "resistGrant" && el) resistAdd[el] = (resistAdd[el] ?? 0) + 1;
-    if (b.id === "weaknessGrant" && el) resistAdd[el] = (resistAdd[el] ?? 0) - 1;
-    // 내성 상승·저하: 원문 용례에 수치가 없다(『내성 상승: 염』) → ±1(07 #39 임시)
-    if (b.id === "resistUp" && el) resistAdd[el] = (resistAdd[el] ?? 0) + 1;
-    if (b.id === "resistDown" && el) resistAdd[el] = (resistAdd[el] ?? 0) - 1;
+    // 내성 부여·내성 상승 +1, 약점 부여·내성 저하 −1(내성 상승·저하는 원문에 수치가 없어 ±1, 07 #39). 지정 속성마다
+    const delta = { resistGrant: 1, resistUp: 1, weaknessGrant: -1, resistDown: -1 }[b.id];
+    if (delta) for (const el of paramElements(b.param)) resistAdd[el] = (resistAdd[el] ?? 0) + delta;
     if (b.id === "elemImbue" && IMBUE_ELEMENTS.includes(b.param) && !elements.includes(b.param)) elements.push(b.param);
     if (b.id === "critUp") critUp = true;
     if (b.id === "hpRegen") regen.hp += v;

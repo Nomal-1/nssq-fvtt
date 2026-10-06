@@ -799,7 +799,8 @@
       "suppDefDown": "억제 방어 저하",
       "resistDown": "내성 저하",
       "weaknessGrant": "약점 부여",
-      "turns": "{n}턴"
+      "turns": "{n}턴",
+      "paramAll": "전체"
     },
     "StatusHint": {
       "petrify": "모든 행동 불가, 【회피】 0. 심도 없음",

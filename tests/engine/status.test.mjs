@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { addCondition, conditionMods, contestInflict, openingRollFails, removeCondition, resistCheck } from "../../src/engine/conditions.mjs";
-import { addBuff, applyMods, buffMods, tickBuffs } from "../../src/engine/buffs.mjs";
+import { BUFFS, addBuff, applyMods, buffMods, tickBuffs } from "../../src/engine/buffs.mjs";
 import { effectiveResist, judgeDamage } from "../../src/engine/combat.mjs";
 
 const SUB = { physHit: 5, elemHit: 4, evasion: 8, physAtk: 9, elemAtk: 3, defense: 3, suppAtk: 4, suppDef: 4, speed: 12 };
@@ -124,6 +124,34 @@ describe("강화·약화", () => {
     expect(r.hpMax).toBe(25);
     expect(m.elements).toEqual(["volt"]);
     expect(m.critUp).toBe(true);
+  });
+
+  it("『물리 방어 상승』은 『방어 상승』과 같은 종류(07 #39): 큰 쪽만, 『방어 저하』·『물리 방어 저하』와 대항", () => {
+    let { list } = addBuff([], { id: "defenseUp", value: 4, turns: 3 });
+    const r = addBuff(list, { id: "physDefUp", value: 2, turns: 3 });
+    expect(r.result).toBe("ignored");
+    ({ list } = addBuff(list, { id: "physDefUp", value: 6, turns: 3 }));
+    expect(list).toEqual([{ id: "defenseUp", value: 6, turns: 3, param: "" }]);
+    expect(addBuff(list, { id: "physDefDown", value: 1, turns: 3 }).result).toBe("countered");
+    expect(applyMods({ sub: SUB, resist: RES }, [buffMods(list)]).sub.defense).toBe(9);
+  });
+
+  it("『내성 상승: 전체』·『염빙뇌』는 강화 1종류, 지정 속성마다 +1(07 #39)", () => {
+    let { list } = addBuff([], { id: "resistUp", param: "all", turns: 3 });
+    ({ list } = addBuff(list, { id: "resistGrant", param: "fire,ice,volt", turns: 3 }));
+    ({ list } = addBuff(list, { id: "physAtkUp", value: 1, turns: 3 }));
+    expect(list).toHaveLength(3);
+    const { resist } = applyMods({ sub: SUB, resist: RES }, [buffMods(list)]);
+    expect(resist).toEqual({ slash: 4, strike: 4, pierce: 4, fire: 5, ice: 5, volt: 5 });
+  });
+
+  it("커스텀 전용(원문에 없는 『공격 저하』 등)도 기능·대항은 동작", () => {
+    expect(BUFFS.atkDown.custom).toBe(true);
+    expect(BUFFS.physAtkDown.custom).toBeUndefined();
+    const a = addBuff([], { id: "atkUp", value: 3, turns: 3 });
+    expect(addBuff(a.list, { id: "atkDown", value: 1, turns: 3 }).result).toBe("countered");
+    const { sub } = applyMods({ sub: SUB, resist: RES }, [buffMods(addBuff([], { id: "suppAtkDown", value: 2, turns: 1 }).list)]);
+    expect(sub.suppAtk).toBe(2);
   });
 
   it("종료 페이즈: 남은 턴 −1, 0이면 소멸", () => {
