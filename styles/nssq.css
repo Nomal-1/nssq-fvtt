@@ -502,10 +502,9 @@
 #nssq-battle button.active { background: var(--nq-cy); color: #0a1626; border-color: var(--nq-cy); font-weight: 700; }
 #nssq-battle button[disabled] { opacity: 0.45; cursor: default; }
 #nssq-battle .nb-open { font-size: 1.05em; padding: 2px 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); }
-/* 위: 맵 보기 · 행동 순서 · GM 진행 */
-#nssq-battle .nb-top { display: flex; align-items: center; gap: 8px; padding: 8px 10px 4px; }
+/* 위: 맵 보기 · 행동 순서 */
+#nssq-battle .nb-top { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 8px 10px 4px; }
 #nssq-battle .nb-order { flex: 1; min-width: 0; display: flex; align-items: center; gap: 4px; padding: 3px 10px; background: rgba(10, 22, 38, 0.88); border: 1px solid var(--nq-gold); border-radius: 18px; overflow: hidden; }
-#nssq-battle .nb-order .phase { font-family: var(--nq-title); color: var(--nq-gold-l); margin-right: 6px; white-space: nowrap; }
 #nssq-battle .nb-order .who { display: inline-flex; align-items: center; gap: 3px; padding: 1px 6px 1px 1px; border-radius: 12px; border: 1px solid var(--nq-line2); font-size: 0.85em; white-space: nowrap; }
 #nssq-battle .nb-order .who img { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; border: none; }
 #nssq-battle .nb-order .who.enemy { border-color: var(--nq-red); }
@@ -513,12 +512,12 @@
 #nssq-battle .nb-order .who.done { opacity: 0.45; }
 #nssq-battle .nb-order .who.ko { text-decoration: line-through; opacity: 0.4; }
 #nssq-battle .nb-order .sep { font-size: 0.6em; color: var(--nq-dim); }
-#nssq-battle .nb-gm { display: flex; gap: 6px; }
-/* 에너미 줄 */
-#nssq-battle .nb-enemies { flex: 1 1 auto; min-height: 0; display: flex; align-items: flex-end; justify-content: center; gap: 18px; padding: 10px 16px 6px; }
+/* 가운데: 에너미(커맨드 창은 왼쪽 아래에 겹쳐 고정) */
+#nssq-battle .nb-field { position: relative; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+#nssq-battle .nb-enemies { flex: 1 1 auto; min-height: 0; display: flex; align-items: flex-end; justify-content: center; gap: 18px; padding: 10px 20px 8px 270px; }
 #nssq-battle .nb-enemy { flex: 0 1 220px; min-width: 90px; max-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; transition: transform 0.15s; }
 #nssq-battle .nb-enemy .art { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
-#nssq-battle .nb-enemy .art img { max-width: 100%; max-height: 38vh; object-fit: contain; border: none; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7)); }
+#nssq-battle .nb-enemy .art img { max-width: 100%; max-height: 40vh; object-fit: contain; border: none; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7)); }
 #nssq-battle .nb-enemy.back { transform: scale(0.82); }
 #nssq-battle .nb-enemy.back .art img { filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7)) brightness(0.85); }
 #nssq-battle .nb-enemy .name { font-size: 0.95em; padding: 0 10px; background: rgba(10, 22, 38, 0.85); border: 1px solid var(--nq-line2); border-radius: 10px; white-space: nowrap; }
@@ -529,45 +528,52 @@
 #nssq-battle .nb-enemy.targetable .art img { filter: drop-shadow(0 0 10px var(--nq-cy)) drop-shadow(0 0 4px var(--nq-cy)); }
 #nssq-battle .nb-enemy.targetable .name { border-color: var(--nq-cy); color: var(--nq-cy); }
 #nssq-battle .nb-enemy.targetable:hover { transform: translateY(-4px); }
-#nssq-battle .nb-hint { align-self: center; margin: 2px 0 4px; padding: 3px 14px; background: rgba(10, 22, 38, 0.9); border: 1px solid var(--nq-cy); border-radius: 14px; color: var(--nq-cy); font-size: 0.9em; }
+#nssq-battle .nb-hint { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); padding: 3px 14px; background: rgba(10, 22, 38, 0.9); border: 1px solid var(--nq-cy); border-radius: 14px; color: var(--nq-cy); font-size: 0.9em; white-space: nowrap; }
 /* 막대 */
-#nssq-battle .nb-bar { position: relative; height: 12px; display: flex; align-items: center; background: #1b2a40; border: 1px solid #000; border-radius: 6px; overflow: hidden; }
+#nssq-battle .nb-bar { position: relative; flex: 1; height: 12px; display: flex; align-items: center; background: #1b2a40; border: 1px solid #000; border-radius: 6px; overflow: hidden; }
 #nssq-battle .nb-bar > i { position: absolute; inset: 0 auto 0 0; display: block; }
 #nssq-battle .nb-bar.hp > i { background: linear-gradient(#7cd893, var(--nq-hp)); }
 #nssq-battle .nb-bar.tp > i { background: linear-gradient(#7ab8f0, var(--nq-tp)); }
 #nssq-battle .nb-bar.unknown > i { background: repeating-linear-gradient(45deg, #34465f 0 6px, #2a3a50 6px 12px); }
 #nssq-battle .nb-bar b { position: relative; font-size: 9px; padding-left: 4px; color: #fff; text-shadow: 0 0 2px #000; }
 #nssq-battle .nb-bar span { position: relative; margin-left: auto; padding-right: 5px; font-size: 10px; line-height: 12px; color: #fff; text-shadow: 0 0 2px #000, 0 0 2px #000; }
-/* 아래: 커맨드 창 + 파티 */
-#nssq-battle .nb-bottom { flex: 0 0 auto; display: flex; align-items: flex-end; gap: 10px; padding: 6px 10px 10px; }
-#nssq-battle .nb-command { flex: 0 0 190px; align-self: stretch; display: flex; flex-direction: column; gap: 5px; padding: 8px; background: linear-gradient(var(--nq-panel2), var(--nq-bg)); border: 1.5px solid var(--nq-gold); border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.6); }
-#nssq-battle .nb-command .title { font-family: var(--nq-title); color: var(--nq-gold-l); border-bottom: 1px solid var(--nq-line2); padding-bottom: 3px; margin-bottom: 2px; }
-#nssq-battle .nb-command > button { text-align: left; font-size: 1.05em; }
-#nssq-battle .nb-command.idle { justify-content: center; text-align: center; color: var(--nq-mu); }
-#nssq-battle .nb-command.opening { flex-basis: 300px; }
-#nssq-battle .nb-command .opening-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 3px 0; border-bottom: 1px dashed var(--nq-line); }
-#nssq-battle .nb-command .opening-row .who { flex: 1 0 100%; font-size: 0.9em; color: var(--nq-gold-l); }
-#nssq-battle .nb-command .opening-row button { font-size: 0.85em; padding: 0 8px; }
-#nssq-battle .nb-party { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
-#nssq-battle .nb-row { display: flex; align-items: stretch; gap: 8px; min-height: 30px; }
-#nssq-battle .nb-row .label { flex: 0 0 2.2em; writing-mode: vertical-rl; text-align: center; font-size: 0.8em; color: var(--nq-gold-l); border: 1px solid var(--nq-line2); border-radius: 6px; background: rgba(10, 22, 38, 0.7); }
-#nssq-battle .nb-member { flex: 0 1 230px; min-width: 150px; display: flex; gap: 6px; padding: 5px; background: linear-gradient(var(--nq-panel2), var(--nq-bg)); border: 1px solid var(--nq-line2); border-radius: 8px; cursor: pointer; }
+/* 커맨드 창: 왼쪽 아래 고정, 크기 고정 */
+#nssq-battle .nb-command { position: absolute; left: 10px; bottom: 8px; width: 250px; height: 270px; display: flex; flex-direction: column; background: linear-gradient(rgba(24, 49, 82, 0.96), rgba(15, 30, 51, 0.96)); border: 1.5px solid var(--nq-gold); border-radius: 8px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.7); overflow: hidden; }
+#nssq-battle .nb-command .head { flex: 0 0 auto; padding: 5px 10px; font-family: var(--nq-title); color: var(--nq-gold-l); background: rgba(201, 162, 74, 0.12); border-bottom: 1px solid var(--nq-gold); }
+#nssq-battle .nb-command .gm { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 4px; padding: 5px 8px; border-bottom: 1px solid var(--nq-line2); }
+#nssq-battle .nb-command .gm button { flex: 1 1 auto; font-size: 0.85em; padding: 0 6px; }
+#nssq-battle .nb-command .body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; }
+#nssq-battle .nb-command .who { font-size: 0.9em; color: var(--nq-gold-l); }
+#nssq-battle .nb-command .wait { margin: auto 0; text-align: center; color: var(--nq-mu); }
+#nssq-battle .nb-command .cmds { display: flex; flex-direction: column; gap: 3px; }
+#nssq-battle .nb-command .cmd { text-align: left; font-size: 1.1em; letter-spacing: 0.04em; padding: 1px 12px; border-radius: 4px; }
+#nssq-battle .nb-command .opening-row { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; padding: 3px 0; border-bottom: 1px dashed var(--nq-line); }
+#nssq-battle .nb-command .opening-row .name { flex: 1 0 100%; font-size: 0.85em; color: var(--nq-tx); }
+#nssq-battle .nb-command .opening-row button { font-size: 0.8em; padding: 0 6px; }
+/* 맨 아래: 파티 패널(전체 폭, 3칸 × 2줄 고정) */
+#nssq-battle .nb-party { flex: 0 0 auto; display: flex; flex-direction: column; gap: 4px; padding: 6px 10px 10px; background: linear-gradient(rgba(10, 22, 38, 0.6), rgba(10, 22, 38, 0.95)); border-top: 1px solid var(--nq-gold); }
+#nssq-battle .nb-row { display: grid; grid-template-columns: 2em repeat(3, minmax(0, 1fr)); gap: 6px; }
+#nssq-battle .nb-row .label { writing-mode: vertical-rl; display: flex; align-items: center; justify-content: center; font-size: 0.8em; color: var(--nq-gold-l); border: 1px solid var(--nq-line2); border-radius: 6px; background: rgba(10, 22, 38, 0.7); }
+#nssq-battle .nb-member { height: 52px; display: flex; align-items: center; gap: 8px; padding: 4px 8px 4px 4px; background: linear-gradient(90deg, rgba(24, 49, 82, 0.95), rgba(15, 30, 51, 0.95)); border: 1px solid var(--nq-line2); border-radius: 6px; cursor: pointer; }
+#nssq-battle .nb-member.empty { background: rgba(10, 22, 38, 0.35); border-style: dashed; border-color: var(--nq-line); cursor: default; }
 #nssq-battle .nb-member.mine { border-color: var(--nq-gold); }
-#nssq-battle .nb-member.current { border-color: var(--nq-cy); box-shadow: 0 0 10px rgba(111, 211, 230, 0.6); }
+#nssq-battle .nb-member.current { border-color: var(--nq-cy); box-shadow: 0 0 10px rgba(111, 211, 230, 0.6); background: linear-gradient(90deg, rgba(40, 90, 120, 0.95), rgba(15, 30, 51, 0.95)); }
 #nssq-battle .nb-member.ko { filter: grayscale(1); opacity: 0.55; }
 #nssq-battle .nb-member.targetable { border-color: var(--nq-red); box-shadow: 0 0 10px var(--nq-red); }
-#nssq-battle .nb-member .portrait { position: relative; flex: 0 0 58px; height: 64px; border-radius: 6px; overflow: hidden; border: 1px solid var(--nq-line2); background: var(--nq-bg2); }
+#nssq-battle .nb-member .portrait { flex: 0 0 44px; height: 44px; border-radius: 4px; overflow: hidden; border: 1px solid var(--nq-line2); background: var(--nq-bg2); }
 #nssq-battle .nb-member .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center top; border: none; }
-#nssq-battle .nb-member .portrait .guard { position: absolute; left: 0; right: 0; bottom: 0; font-size: 10px; text-align: center; background: rgba(111, 211, 230, 0.85); color: #0a1626; }
-#nssq-battle .nb-member .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+#nssq-battle .nb-member .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+#nssq-battle .nb-member .line { display: flex; align-items: baseline; gap: 5px; min-width: 0; }
 #nssq-battle .nb-member .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#nssq-battle .nb-member .name em { font-style: normal; font-size: 0.75em; padding: 0 4px; border-radius: 6px; border: 1px solid #c7a6f0; color: #c7a6f0; }
-#nssq-battle .nb-member .cls { font-size: 0.75em; color: var(--nq-mu); }
-#nssq-battle .nb-member .nb-bar b { font-size: 9px; }
+#nssq-battle .nb-member em { flex: 0 0 auto; font-style: normal; font-size: 0.72em; padding: 0 4px; border-radius: 6px; }
+#nssq-battle .nb-member em.npc { border: 1px solid #c7a6f0; color: #c7a6f0; }
+#nssq-battle .nb-member em.guard { background: rgba(111, 211, 230, 0.85); color: #0a1626; }
+#nssq-battle .nb-member .cls { margin-left: auto; font-size: 0.75em; color: var(--nq-mu); white-space: nowrap; }
+#nssq-battle .nb-member .bars { display: flex; gap: 6px; }
 /* 좁은 화면 */
-#nssq-battle.compact .nb-command { flex-basis: 150px; }
-#nssq-battle.compact .nb-member { min-width: 120px; }
-#nssq-battle.compact .nb-member .portrait { flex-basis: 40px; height: 48px; }
+#nssq-battle.compact .nb-command { width: 200px; height: 230px; }
+#nssq-battle.compact .nb-enemies { padding-left: 215px; }
+#nssq-battle.compact .nb-member .cls { display: none; }
 #nssq-battle.compact .nb-order .who span { display: none; }
 
 /* 13 ─ 추가: 성장·작성 기록·스킬 트리 보너스·채팅 메시지 틀 */

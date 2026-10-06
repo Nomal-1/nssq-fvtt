@@ -9,9 +9,28 @@ import ART from "../generated/enemy-art.mjs";
 const DEFAULT_IMGS = new Set(["icons/svg/mystery-man-black.svg", "icons/svg/mystery-man.svg", ""]);
 const isDefault = (src) => DEFAULT_IMGS.has(src ?? "");
 
-/** 이 에너미의 일러스트(없으면 null) */
+const PATHS = new Set(Object.values(ART));
+
+/** 이 이름의 에너미 일러스트(없으면 null) */
 export function enemyArt(name) {
   return ART[name] ?? null;
+}
+
+/**
+ * 액터의 일러스트: 이름 → (이름을 바꿨으면) 컴펜디움 원본 id.
+ * 일러스트 파일 이름이 원본 에너미 id라서 원본만 알면 찾을 수 있다
+ */
+export function enemyArtFor(actor) {
+  if (!actor) return null;
+  const base = actor.isToken ? game.actors.get(actor.token?.actorId) ?? actor : actor;
+  for (const a of [actor, base]) {
+    if (ART[a.name]) return ART[a.name];
+    const src = a._stats?.compendiumSource ?? a.flags?.core?.sourceId ?? a.flags?.nssq?.library ?? "";
+    const id = String(src).split(".").pop();
+    const path = id ? `systems/nssq/assets/enemies/${id}.webp` : null;
+    if (path && PATHS.has(path)) return path;
+  }
+  return null;
 }
 
 /** 액터·그 액터의 토큰 중 기본 아이콘인 것에 일러스트를 넣는다 */
@@ -19,7 +38,7 @@ export async function applyEnemyArt() {
   if (!game.user.isGM) return 0;
   let n = 0;
   for (const a of game.actors.filter((a) => a.type === "enemy")) {
-    const art = enemyArt(a.name);
+    const art = enemyArtFor(a);
     if (!art) continue;
     const u = {};
     if (isDefault(a.img)) u.img = art;
@@ -31,8 +50,8 @@ export async function applyEnemyArt() {
   }
   for (const scene of game.scenes) {
     const updates = scene.tokens
-      .filter((t) => t.actor?.type === "enemy" && isDefault(t.texture.src) && enemyArt(t.actor.name))
-      .map((t) => ({ _id: t.id, "texture.src": enemyArt(t.actor.name) }));
+      .filter((t) => t.actor?.type === "enemy" && isDefault(t.texture.src) && enemyArtFor(t.actor))
+      .map((t) => ({ _id: t.id, "texture.src": enemyArtFor(t.actor) }));
     if (updates.length) {
       await scene.updateEmbeddedDocuments("Token", updates);
       n += updates.length;

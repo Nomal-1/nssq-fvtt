@@ -676,7 +676,8 @@
       "acting": "{name}의 행동 중",
       "whoseAction": "{name}의 행동",
       "openingTitle": "개막 행동",
-      "openingWait": "개막 페이즈: 다른 전투원의 개막 행동을 기다린다"
+      "openingWait": "개막 페이즈: 다른 전투원의 개막 행동을 기다린다",
+      "swapShort": "교체"
     },
     "Growth": {
       "button": "성장 굴리기",
