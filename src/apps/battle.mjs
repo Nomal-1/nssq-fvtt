@@ -221,7 +221,8 @@ export async function startBattle({ presetId, members, surprise = "none", identi
     .map((t) => ({ tokenId: t.id, sceneId: copy.id, actorId: t.actorId, hidden: t.hidden }));
   await combat.createEmbeddedDocuments("Combatant", combatants);
   await combat.startCombat();
-  ui.sidebar.activateTab("combat");
+  // 대미지 적용 등은 채팅 카드에서 하므로 전투 중에도 채팅을 연다(인카운터 기능은 전투 화면에 있다)
+  ui.sidebar.activateTab("chat");
 
   const surpriseText = surprise === "party" ? L("surprisedEnemy") : surprise === "enemy" ? L("surprisedParty") : "";
   await ChatMessage.create({

@@ -10,8 +10,8 @@ import { inRange } from "../engine/combat.mjs";
 import { normalAttack } from "./attack.mjs";
 import { combatProfile, friendly, sideOf } from "./profile.mjs";
 import { changePosition, shuffleRowsDialog } from "./formation.mjs";
-import { joinBattle } from "../apps/battle.mjs";
-import { rollEscape, swapWeapon, toggleGuard } from "./tracker.mjs";
+import { joinBattle, openEndDialog } from "../apps/battle.mjs";
+import { rollEscape, setIdentified, swapWeapon, toggleGuard, toggleRow } from "./tracker.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "./apply.mjs";
 import { enemyArtFor } from "../apps/enemy-art.mjs";
@@ -88,7 +88,9 @@ function orderStrip(combat) {
   const curIdx = combat.turn ?? -1;
   const items = combat.turns.map((c, i) => {
     const cls = [sideOf(c.actor) === "enemy" ? "enemy" : "", phase === "main" && i === curIdx ? "current" : "", phase === "main" && i < curIdx ? "done" : "", isKO(c) ? "ko" : ""].join(" ");
-    return `<span class="who ${cls}"><img src="${esc(c.img)}"/><span>${esc(c.name)}</span></span>`;
+    const init = c.initiative !== null && c.initiative !== undefined && (game.user.isGM || sideOf(c.actor) !== "enemy")
+      ? `<em class="init" title="${esc(L("initiative"))}">${Math.round(c.initiative * 10) / 10}</em>` : "";
+    return `<span class="who ${cls}"><img src="${esc(c.img)}"/><span>${esc(c.name)}</span>${init}</span>`;
   }).join('<i class="fas fa-chevron-right sep"></i>');
   return `<div class="nb-order">${items}</div>`;
 }
@@ -107,7 +109,10 @@ function gmControls(combat) {
   const over = combat.getFlag("nssq", "over");
   const C = (k) => game.i18n.localize(`NSSQ.Combat.${k}`);
   if (over) return `<button type="button" data-gm="end"><i class="fas fa-flag-checkered"></i> ${C(over === "victory" ? "endVictory" : "endDefeat")}</button>`;
-  return `${phase === "opening" ? `<button type="button" data-gm="escape"><i class="fas fa-running"></i> ${C("escape")}</button>` : ""}
+  const unknown = combat.combatants.some((c) => c.actor?.type === "enemy" && !c.actor.system.identified);
+  return `${unknown ? `<button type="button" data-gm="identifyAll" title="${esc(C("identifyAllHint"))}"><i class="fas fa-eye"></i> ${C("identifyAll")}</button>` : ""}
+    <button type="button" data-gm="finish" title="${esc(L("finishHint"))}"><i class="fas fa-flag-checkered"></i> ${L("finish")}</button>
+    ${phase === "opening" ? `<button type="button" data-gm="escape"><i class="fas fa-running"></i> ${C("escape")}</button>` : ""}
     <button type="button" data-gm="shuffle" title="${esc(L("shuffleHint"))}"><i class="fas fa-random"></i> ${L("shuffle")}</button>
     <button type="button" data-gm="next"><i class="fas fa-forward"></i> ${phase === "main" ? C("nextTurn") : C("nextPhase")}</button>`;
 }
@@ -132,9 +137,16 @@ function enemyCard(c, combat, targetable) {
   const s = a.system;
   const showHp = game.user.isGM || s.identified;
   const cls = ["nb-enemy", s.row === "back" ? "back" : "front", isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", targetable ? "targetable" : ""].join(" ");
+  const tools = game.user.isGM ? `<div class="gm-tools">
+      <a data-tool="identify" class="${s.identified ? "on" : ""}" title="${esc(game.i18n.localize(s.identified ? "NSSQ.Combat.identifiedOn" : "NSSQ.Combat.identifiedOff"))}"><i class="fas ${s.identified ? "fa-eye" : "fa-eye-slash"}"></i></a>
+      <a data-tool="row" title="${esc(game.i18n.localize("NSSQ.Combat.changeRow"))}"><i class="fas fa-arrows-alt-v"></i></a>
+      <a data-tool="defeated" class="${c.defeated ? "on" : ""}" title="${esc(L("toggleDefeated"))}"><i class="fas fa-skull"></i></a>
+      <a data-tool="sheet" title="${esc(L("openSheet"))}"><i class="fas fa-id-card"></i></a>
+    </div>` : "";
   return `<div class="${cls}" data-combatant="${c.id}" title="${esc(c.name)}">
+    ${tools}
     <div class="art"><img src="${esc(enemyImage(c))}"/></div>
-    <div class="name">${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
+    <div class="name">${game.user.isGM && s.isRare ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
     <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
   </div>`;
 }
@@ -176,13 +188,14 @@ function commandBody(combat) {
       </div>`;
   }
   if (phase === "opening") {
-    // 플레이어: 자기 캐릭터. GM: 동료 NPC(에너미의 개막 행동은 전투 추적기에서)
-    const mine = (c) => (game.user.isGM ? sideOf(c.actor) === "ally" : c.actor.isOwner && sideOf(c.actor) !== "enemy");
-    const list = combat.turns.filter((c) => c.actor && mine(c) && !isKO(c));
+    // 플레이어: 자기 캐릭터. GM: 동료 NPC, 그 아래 에너미
+    const mine = (c) => (game.user.isGM ? sideOf(c.actor) !== "pc" : c.actor.isOwner && sideOf(c.actor) !== "enemy");
+    const list = combat.turns.filter((c) => c.actor && mine(c) && !isKO(c))
+      .sort((a, b) => (sideOf(a.actor) === "enemy") - (sideOf(b.actor) === "enemy"));
     if (!list.length) return `<p class="wait">${L("openingWait")}</p>`;
     return `<div class="who">${L("openingTitle")}</div>` + list.map((c) => {
       const guarding = !!c.getFlag("nssq", "guarding");
-      return `<div class="opening-row" data-combatant="${c.id}"><span class="name">${esc(c.name)}</span>
+      return `<div class="opening-row ${sideOf(c.actor) === "enemy" ? "enemy" : ""} ${c.getFlag("nssq", "opening") ? "done" : ""}" data-combatant="${c.id}"><span class="name">${esc(c.name)}</span>
         <button type="button" data-cmd="guard" class="${guarding ? "active" : ""}" title="${guarding ? L("guardOff") : L("guard")}"><i class="fas fa-shield-alt"></i> ${L("guard")}</button>
         <button type="button" data-cmd="row" title="${L("row")}"><i class="fas fa-arrows-alt-v"></i> ${L("row")}</button>
         ${c.actor.type === "character" ? `<button type="button" data-cmd="swap" title="${L("swap")}"><i class="fas fa-exchange-alt"></i> ${L("swapShort")}</button>` : ""}
@@ -264,6 +277,8 @@ function bind(el, combat) {
       case "end": return combat.nextTurn();
       case "escape": return rollEscape(combat);
       case "shuffle": return shuffleRowsDialog(combat);
+      case "finish": return openEndDialog();
+      case "identifyAll": return setIdentified(combat.combatants.filter((c) => c.actor?.type === "enemy").map((c) => c.actor), true);
     }
   }));
   el.querySelectorAll("[data-cmd]").forEach((b) => b.addEventListener("click", async (ev) => {
@@ -274,8 +289,20 @@ function bind(el, combat) {
       case "attack": pending = pending === "attack" ? null : "attack"; return renderHud();
       case "end": return requestEndTurn(combat);
       case "guard": return toggleGuard(c);
-      case "row": return changePosition(c);
+      case "row": return toggleRow(c);
       case "swap": return swapWeapon(c);
+    }
+  }));
+  // GM: 에너미 카드 도구
+  el.querySelectorAll(".nb-enemy [data-tool]").forEach((t) => t.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
+    if (!c?.actor) return;
+    switch (t.dataset.tool) {
+      case "identify": return setIdentified([c.actor], !c.actor.system.identified);
+      case "row": return changePosition(c);
+      case "defeated": return c.update({ defeated: !c.defeated });
+      case "sheet": return c.actor.sheet.render(true);
     }
   }));
   // 대상 고르기(공격 중) / 그 밖에는 시트 열기(권한이 있을 때)

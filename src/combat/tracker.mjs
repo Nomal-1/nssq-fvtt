@@ -22,7 +22,7 @@ export async function toggleGuard(combatant) {
   });
 }
 
-async function toggleRow(combatant) {
+export async function toggleRow(combatant) {
   if (await changePosition(combatant)) await combatant.setFlag("nssq", "opening", "row");
 }
 
@@ -45,7 +45,7 @@ export async function swapWeapon(combatant) {
 /* ---------------- 식별(GM이 언제든) ---------------- */
 
 /** 에너미 식별 상태를 바꾼다. 식별하면 모두에게 알린다 */
-async function setIdentified(actors, on) {
+export async function setIdentified(actors, on) {
   const changed = actors.filter((a) => a?.type === "enemy" && !!a.system.identified !== on);
   for (const a of changed) await a.update({ "system.identified": on });
   if (on && changed.length) {

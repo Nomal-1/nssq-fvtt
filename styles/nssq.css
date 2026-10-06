@@ -573,6 +573,17 @@
 #nssq-battle .nb-member .nb-bar { height: 18px; border-radius: 8px; }
 #nssq-battle .nb-member .nb-bar b { font-size: 12px; padding-left: 6px; }
 #nssq-battle .nb-member .nb-bar span { font-size: 13px; line-height: 18px; padding-right: 7px; }
+/* 인카운터 기능: 이니셔티브, GM 에너미 도구, 희소종, 개막 행동 표시 */
+#nssq-battle .nb-order .who .init { font-style: normal; font-size: 0.8em; padding: 0 4px; margin-left: 2px; border-radius: 8px; background: rgba(201, 162, 74, 0.25); color: var(--nq-gold-l); }
+#nssq-battle .nb-enemy { position: relative; }
+#nssq-battle .nb-enemy .gm-tools { position: absolute; top: 0; right: 0; z-index: 2; display: flex; gap: 2px; opacity: 0.35; transition: opacity 0.15s; }
+#nssq-battle .nb-enemy:hover .gm-tools { opacity: 1; }
+#nssq-battle .nb-enemy .gm-tools a { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(10, 22, 38, 0.9); border: 1px solid var(--nq-line2); color: var(--nq-mu); font-size: 0.8em; }
+#nssq-battle .nb-enemy .gm-tools a:hover { border-color: var(--nq-cy); color: var(--nq-cy); }
+#nssq-battle .nb-enemy .gm-tools a.on { border-color: var(--nq-gold); color: var(--nq-gold-l); }
+#nssq-battle .nb-enemy .name .rare { color: var(--nq-fp); margin-right: 3px; }
+#nssq-battle .nb-command .opening-row.enemy .name { color: var(--nq-red); }
+#nssq-battle .nb-command .opening-row.done .name::after { content: " ✓"; color: var(--nq-green); }
 /* 난입: GM이 끌고 있을 때 */
 #nssq-battle .nb-drop { display: none; position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); padding: 14px 24px; font-size: 1.2em; color: var(--nq-gold-l); background: rgba(10, 22, 38, 0.92); border: 2px dashed var(--nq-gold); border-radius: 12px; pointer-events: none; }
 #nssq-battle.dropping .nb-drop { display: block; }
