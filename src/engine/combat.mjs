@@ -136,8 +136,30 @@ export const isKO = (hp) => hp <= 0;
 export function rowSwap(units) {
   const front = units.filter((u) => u.row === "front");
   const back = units.filter((u) => u.row === "back");
-  if (!front.length || front.some((u) => !u.ko) || !back.some((u) => !u.ko)) return [];
+  // 전열에 살아 있는 전투원이 없고(비어 있어도) 후열에 살아 있는 전투원이 있으면 교대
+  if (front.some((u) => !u.ko) || !back.some((u) => !u.ko)) return [];
   return units.map((u) => ({ id: u.id, row: u.row === "front" ? "back" : "front" }));
+}
+
+/**
+ * 식별(01 §3.1): 【TEC】 판정 달성값 ≥ 에너미 【희소도】면 성공. 희소종은 【희소도】+2 이상이어야 간파
+ * @returns {{identified: boolean, rareRevealed: boolean}}
+ */
+export function identifyResult(value, { rarity = 0, isRare = false } = {}) {
+  // 비어 있으면 아직 굴리지 않은 것
+  const v = value === "" || value === null || value === undefined ? NaN : Number(value);
+  if (!Number.isFinite(v)) return { identified: false, rareRevealed: false };
+  return { identified: v >= rarity, rareRevealed: !!isRare && v >= rarity + 2 };
+}
+
+/** 식별 실패한 에너미의 내성은 최소 3으로 취급(약점이 드러나지 않는다) */
+export function unidentifiedResist(resist) {
+  return Object.fromEntries(Object.entries(resist ?? {}).map(([k, v]) => [k, Math.max(3, Number(v) || 0)]));
+}
+
+/** 목록에서 하나를 같은 확률로(비어 있으면 null) */
+export function pickRandom(list, rng = Math.random) {
+  return list.length ? list[Math.min(list.length - 1, Math.floor(rng() * list.length))] : null;
 }
 
 /** 진영 전멸: 전원 전투 불능 또는 [석화] */

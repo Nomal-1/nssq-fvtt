@@ -44,7 +44,7 @@ async function afterHpChange(actor) {
 }
 
 /** 전위 전멸 교대(그 진영), 진영 전멸이면 종료 대기. 쓰러짐 표시를 바꿨을 때도 부른다 */
-async function checkSides(combat, changedSide = null) {
+export async function checkSides(combat, changedSide = null) {
   for (const side of changedSide ? [changedSide] : ["party", "enemy"]) {
     const members = combat.combatants.filter((c) => c.actor && sideKey(c.actor) === side);
     const swaps = rowSwap(members.map((c) => ({ id: c.id, row: c.actor.system.row ?? "front", ko: isOut(c) })));
@@ -112,6 +112,11 @@ export function registerApply() {
     if (options?.nssqAuto) return;
     if (combatant.getFlag("nssq", "autoDefeated") && !changes.flags?.nssq?.autoDefeated) combatant.unsetFlag("nssq", "autoDefeated");
     checkSides(combatant.combat, sideKey(combatant.actor));
+  });
+  // 페이즈가 바뀌거나 메인 페이즈 차례가 넘어갈 때도 전열이 비었는지 본다(섞기·난입·배치 변경 뒤 등)
+  Hooks.on("updateCombat", (combat, changes) => {
+    if (!isActiveGM() || !combat.getFlag("nssq", "battle")) return;
+    if (foundry.utils.hasProperty(changes, "turn") || foundry.utils.hasProperty(changes, "round") || foundry.utils.hasProperty(changes, "flags.nssq.phase")) checkSides(combat);
   });
   // HP를 손으로 고쳐도 전투 불능 표시를 맞춘다
   Hooks.on("updateActor", (actor, changes) => {

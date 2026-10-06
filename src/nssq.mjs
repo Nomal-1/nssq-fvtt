@@ -26,6 +26,16 @@ import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
 import { createPreset, openEndDialog, openStartDialog, registerBattle } from "./apps/battle.mjs";
 
 Hooks.once("init", () => {
+  // 단축키: GM 스크린(설정 → 조작 설정에서 바꿀 수 있다)
+  game.keybindings.register("nssq", "openGMScreen", {
+    name: "NSSQ.GMScreen.keybinding",
+    editable: [{ key: "KeyG", modifiers: ["Shift"] }],
+    restricted: true,
+    onDown: () => {
+      GMScreen.open();
+      return true;
+    }
+  });
   CONFIG.Actor.documentClass = NssqActor;
   CONFIG.Item.documentClass = NssqItem;
   CONFIG.Combat.documentClass = NssqCombat;

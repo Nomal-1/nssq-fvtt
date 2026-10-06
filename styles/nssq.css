@@ -660,7 +660,7 @@
 #nssq-battle .nb-hint { animation: nb-fade-in 0.25s ease-out; }
 @keyframes nb-fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 #nssq-battle .nb-banner { position: absolute; left: 0; right: 0; top: 34%; z-index: 5; display: flex; justify-content: center; pointer-events: none; }
-#nssq-battle .nb-banner span { padding: 6px 60px; font-family: var(--nq-title); color: var(--nq-gold-l); background: linear-gradient(90deg, transparent, rgba(10, 22, 38, 0.92) 18%, rgba(10, 22, 38, 0.92) 82%, transparent); border-top: 1px solid var(--nq-gold); border-bottom: 1px solid var(--nq-gold); text-shadow: 0 0 8px rgba(0, 0, 0, 0.8); }
+#nssq-battle .nb-banner span { padding: 14px 70px; font-family: var(--nq-title); color: var(--nq-gold-l); background: linear-gradient(90deg, transparent, rgba(10, 22, 38, 0.92) 18%, rgba(10, 22, 38, 0.92) 82%, transparent); border-top: 1px solid var(--nq-gold); border-bottom: 1px solid var(--nq-gold); text-shadow: 0 0 8px rgba(0, 0, 0, 0.8); }
 #nssq-battle .nb-banner.big span { font-size: 2em; letter-spacing: 0.08em; animation: nb-banner 1.7s ease-in-out forwards; }
 #nssq-battle .nb-banner.small span { font-size: 1.3em; animation: nb-banner 1.1s ease-in-out forwards; }
 #nssq-battle .nb-banner.enemy span { color: #ffb4a8; border-color: var(--nq-red); }
@@ -673,3 +673,10 @@
 #nssq-battle-fx .nb-pop.miss { font-size: 1.6em; color: #d8e4f0; letter-spacing: 0.1em; }
 #nssq-battle-fx .nb-pop.crit { font-size: 1.4em; color: var(--nq-gold-l); margin-top: -34px; }
 @keyframes nb-pop { 0% { opacity: 0; transform: translate(-50%, -20%) scale(0.6); } 15% { opacity: 1; transform: translate(-50%, -60%) scale(1.15); } 30% { transform: translate(-50%, -60%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -160%); } }
+
+/* 16 ─ 식별 카드·에너미 랜덤 행동 */
+.nssq-identify ul { list-style: none; margin: 4px 0; padding: 0; }
+.nssq-identify li.ok { color: var(--nq-green); }
+.nssq-identify li.ng { color: var(--nq-mu); }
+.nssq-identify .rare { color: var(--nq-fp); }
+.nssq-enemy-skill p { margin: 3px 0; }

@@ -19,6 +19,8 @@ import { isActiveGM } from "./apply.mjs";
 import { enemyArtFor } from "../apps/enemy-art.mjs";
 import { bustStyle, faceStyle } from "../apps/art-config.mjs";
 import { flip, morph, snapshot } from "./morph.mjs";
+import { identifyDialog } from "./identify.mjs";
+import { randomEnemyAction } from "./enemy-ai.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -134,8 +136,8 @@ function gmControls(combat) {
   const over = combat.getFlag("nssq", "over");
   const C = (k) => game.i18n.localize(`NSSQ.Combat.${k}`);
   if (over) return `<button type="button" data-gm="end"><i class="fas fa-flag-checkered"></i> ${C(over === "victory" ? "endVictory" : "endDefeat")}</button>`;
-  const unknown = combat.combatants.some((c) => c.actor?.type === "enemy" && !c.actor.system.identified);
-  return `${unknown ? `<button type="button" data-gm="identifyAll" title="${esc(C("identifyAllHint"))}"><i class="fas fa-eye"></i> ${C("identifyAll")}</button>` : ""}
+  const idValue = combat.getFlag("nssq", "battle")?.identifyValue;
+  return `<button type="button" data-gm="identify" title="${esc(game.i18n.localize("NSSQ.Identify.hint"))}"><i class="fas fa-search"></i> ${game.i18n.localize("NSSQ.Identify.title")}${idValue !== null && idValue !== undefined ? ` (${idValue})` : ""}</button>
     <button type="button" data-gm="finish" title="${esc(L("finishHint"))}"><i class="fas fa-flag-checkered"></i> ${L("finish")}</button>
     ${phase === "opening" ? `<button type="button" data-gm="escape"><i class="fas fa-running"></i> ${C("escape")}</button>` : ""}
     <button type="button" data-gm="shuffle" title="${esc(L("shuffleHint"))}"><i class="fas fa-random"></i> ${L("shuffle")}</button>
@@ -171,7 +173,7 @@ function enemyCard(c, combat, targetable) {
   return `<div class="${cls}" data-combatant="${c.id}" data-key="e-${c.id}" data-flip title="${esc(c.name)}">
     ${tools}
     <div class="art"><img src="${esc(enemyImage(c))}"/></div>
-    <div class="name">${game.user.isGM && s.isRare ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
+    <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
     <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
   </div>`;
 }
@@ -206,6 +208,7 @@ function commandBody(combat) {
       `<button type="button" data-cmd="${id}" class="cmd ${active ? "active" : ""}" ${disabled ? "disabled" : ""} title="${esc(title || label)}"><i class="fas ${icon}"></i> ${esc(label)}</button>`;
     return `<div class="who">${L("whoseAction", { name: esc(c.name) })}</div>
       <div class="cmds" data-combatant="${c.id}">
+        ${game.user.isGM && sideOf(c.actor) === "enemy" ? cmd("random", "fa-dice", L("randomAction"), { title: L("randomActionHint") }) : ""}
         ${cmd("attack", "fa-fist-raised", L("attack"), { active: pending === "attack" })}
         ${cmd("skill", "fa-magic", L("skill"), { disabled: true, title: L("later") })}
         ${cmd("item", "fa-flask", L("item"), { disabled: true, title: L("later") })}
@@ -302,12 +305,14 @@ const cardEl = (combatantId) => root?.querySelector(`[data-key="e-${combatantId}
 function popText(card, text, cls) {
   if (!card) return;
   const fx = ensureFx();
-  const r = card.getBoundingClientRect();
+  // 에너미는 실제 그림, 파티는 얼굴 칸의 가운데(카드 위쪽 빈 공간에 뜨지 않게)
+  const pic = card.querySelector(".art img") ?? card.querySelector(".portrait") ?? card;
+  const r = pic.getBoundingClientRect();
   const n = document.createElement("div");
   n.className = `nb-pop ${cls}`;
   n.textContent = text;
   n.style.left = `${r.left + r.width / 2}px`;
-  n.style.top = `${r.top + Math.min(r.height * 0.45, 120)}px`;
+  n.style.top = `${r.top + r.height * (pic === card ? 0.45 : 0.55)}px`;
   fx.append(n);
   n.addEventListener("animationend", () => n.remove());
 }
@@ -428,7 +433,7 @@ function bindClicks(el) {
         case "escape": return rollEscape(combat);
         case "shuffle": return shuffleRowsDialog(combat);
         case "finish": return openEndDialog();
-        case "identifyAll": return setIdentified(combat.combatants.filter((c) => c.actor?.type === "enemy").map((c) => c.actor), true);
+        case "identify": return identifyDialog(combat);
       }
       return;
     }
@@ -439,6 +444,7 @@ function bindClicks(el) {
       switch (t.dataset.cmd) {
         case "attack": pending = pending === "attack" ? null : "attack"; return renderHud();
         case "end": return requestEndTurn(combat);
+        case "random": pending = null; return randomEnemyAction(combat);
         case "guard": return toggleGuard(c);
         case "row": return toggleRow(c);
         case "swap": return swapWeapon(c);

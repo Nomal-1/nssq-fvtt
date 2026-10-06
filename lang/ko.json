@@ -439,7 +439,13 @@
       "shopItemsButton": "판매 품목 설정",
       "shopItemsHint": "상점에 내놓을 품목과 플레이어에게 감출 품목을 고른다(「상점 품목」 탭)",
       "noEnemies": "에너미 없음",
-      "noBgm": "BGM 없음"
+      "noBgm": "BGM 없음",
+      "macro": "핫바에 매크로",
+      "macroHint": "GM 스크린을 여는 매크로를 핫바 빈 칸에 넣는다. 단축키 Shift+G로도 열린다(설정 → 조작 설정)",
+      "macroAdded": "핫바 {slot}번에 GM 스크린 매크로를 넣었다.",
+      "macroExists": "이미 핫바 {slot}번에 있다.",
+      "macroNoSlot": "핫바에 빈 칸이 없다.",
+      "keybinding": "NSSQ: GM 스크린 열기"
     },
     "Badge": {
       "resist": "내",
@@ -597,10 +603,10 @@
       "cleanupTitle": "에너미 정리",
       "cleanupDone": "에너미 정리: 중복 {merged}개 합침, 안 쓰는 것 {removed}개 지움",
       "presetNoLink": "프리셋 씬의 에너미 토큰은 액터와 연결할 수 없다(프리셋에서 고친 값이 액터 원본에 들어가지 않도록). 여러 프리셋에서 같은 변형을 쓰려면 액터를 복제해서 고친 뒤 끌어 놓는다.",
-      "identify": "식별",
+      "identify": "식별 달성값",
       "identifyUnknown": "식별 전(에너미 【HP】 변화 숨김)",
       "identifySuccess": "식별 성공(공개)",
-      "identifyHint": "식별하지 못한 에너미는 공격 카드의 【HP】 변화가 플레이어에게 보이지 않는다(내성은 보인다). 전투 중에도 GM이 전투 추적기의 눈 아이콘이나 [모두 식별]로 언제든 식별한 것으로 할 수 있다. 식별 판정 굴리기는 단계 5.",
+      "identifyHint": "플레이어 식별 판정의 최고 달성값을 넣으면 에너미마다 【희소도】와 비교해 식별한다. 비워 두면 모두 식별 전으로 시작한다.",
       "cleanupMerged": "완전히 같은 중복 {merged}개를 합쳤다.",
       "cleanupTableNote": "남은 에너미 액터. 씬에서 쓰고 있는 것은 지울 수 없다(그 씬을 먼저 지운다). 쓰지 않는 시스템 에너미는 미리 체크해 두었다.",
       "del": "삭제",
@@ -616,7 +622,8 @@
       "joinActorOnly": "에너미나 캐릭터 액터만 난입시킬 수 있다.",
       "joinAlready": "{name}은(는) 이미 전투 중이다.",
       "joinedEnemy": "{name} 난입!",
-      "joinedAlly": "{name}이(가) 전투에 합류했다."
+      "joinedAlly": "{name}이(가) 전투에 합류했다.",
+      "identifyLater": "비우면 나중에(커맨드 창 [식별 판정])"
     },
     "Skill": {
       "common": "커먼 스킬",
@@ -703,7 +710,9 @@
       "openSheet": "시트 열기",
       "turnOf": "{name}의 차례",
       "miss": "MISS",
-      "critical": "CRITICAL!"
+      "critical": "CRITICAL!",
+      "randomAction": "랜덤 행동",
+      "randomActionHint": "통상 공격과 「주행동」 스킬 중 하나, 대상도 사거리 안에서 무작위로 고른다"
     },
     "Growth": {
       "button": "성장 굴리기",
@@ -732,6 +741,26 @@
       "token": "필드 토큰",
       "tokenHint": "원형으로 잘라 저장한다. 테두리: 금색 = 전열, 하늘색 = 후열(열이 바뀌면 자동으로 바뀜)",
       "tokenUploadFailed": "필드 토큰 그림을 저장하지 못했다(파일 올리기 권한 필요). 상반신·얼굴 설정은 저장했다."
+    },
+    "Identify": {
+      "title": "식별 판정",
+      "button": "판정",
+      "value": "식별 달성값(최고값)",
+      "hint": "플레이어가 굴린 【TEC】 식별 판정 중 가장 높은 달성값. 에너미마다 【희소도】 이상이면 식별, 희소종은 【희소도】+2 이상이면 간파한다",
+      "result": "식별 판정 — 달성값 {value}",
+      "success": "식별",
+      "failure": "식별 실패",
+      "rare": "희소종",
+      "failNote": "식별 실패한 에너미는 내성을 최소 3으로 취급한다. 눈 아이콘으로 하나씩 바꿀 수도 있다."
+    },
+    "EnemyAI": {
+      "chosenAttack": "{name}의 랜덤 행동: 통상 공격 → {target}",
+      "chosenSkill": "{name}의 랜덤 행동: 《{skill}》",
+      "target": "대상",
+      "range": "사거리",
+      "noOne": "대상 없음",
+      "noTarget": "{name}: 사거리 안에 공격할 대상이 없다",
+      "manual": "스킬 효과는 아직 자동 적용되지 않는다. 해설대로 GM이 처리한다."
     }
   }
 }

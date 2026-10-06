@@ -9,6 +9,7 @@ import { partyActors } from "./gm-screen.mjs";
 import { LAYOUT } from "../engine/formation.mjs";
 import { relayout } from "../combat/formation.mjs";
 import { enemyActorFor } from "./enemy-library.mjs";
+import { applyIdentify, identifyEnemy } from "../combat/identify.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -111,10 +112,7 @@ export async function openStartDialog(presetId = null) {
           <span class="notes">${game.i18n.localize(`NSSQ.Row.${a.system.row ?? "front"}`)} · 【HP】 ${a.system.hp?.value ?? 0}/${a.system.hp?.max ?? 0}</span></label>`).join("")}
       </fieldset>
       <div class="form-group"><label>${L("identify")}</label>
-        <select name="identify">
-          <option value="unknown">${L("identifyUnknown")}</option>
-          <option value="success">${L("identifySuccess")}</option>
-        </select></div>
+        <input type="number" name="identify" value="" placeholder="${L("identifyLater")}"/></div>
       <p class="notes">${L("identifyHint")}</p>
       <div class="form-group"><label>${L("surprise")}</label>
         <select name="surprise">
@@ -136,7 +134,7 @@ export async function openStartDialog(presetId = null) {
         presetId: f.preset.value,
         members: [...f.querySelectorAll("[name=member]:checked")].map((i) => i.value),
         surprise: f.surprise.value,
-        identified: f.identify.value === "success"
+        identifyValue: f.identify.value === "" ? null : Number(f.identify.value)
       };
     }
   });
@@ -158,7 +156,7 @@ async function resumeSounds(list) {
   for (const { playlist, sound } of list) await game.playlists.get(playlist)?.sounds.get(sound)?.update({ playing: true });
 }
 
-export async function startBattle({ presetId, members, surprise = "none", identified = false }) {
+export async function startBattle({ presetId, members, surprise = "none", identifyValue = null }) {
   if (!game.user.isGM) return;
   const preset = game.scenes.get(presetId);
   if (!preset) return;
@@ -191,7 +189,8 @@ export async function startBattle({ presetId, members, surprise = "none", identi
   for (const [i, t] of enemyTokens.entries()) {
     const cy = t.y + (t.height * GRID) / 2;
     // 식별(단계 5에서 판정 연결): 식별 전에는 에너미 【HP】 변화를 플레이어에게 숨긴다
-    await t.actor.update({ "system.row": cy < ENEMY_MID ? "back" : "front", "system.order": i, "system.identified": identified });
+    // 식별은 전투가 만들어진 뒤 달성값으로 판정(아래). 처음엔 식별 전
+    await t.actor.update({ "system.row": cy < ENEMY_MID ? "back" : "front", "system.order": i, "system.identified": false, "system.rareKnown": false });
   }
   if (relinked) ui.notifications.warn(L("relinked", { n: relinked }));
 
@@ -215,12 +214,13 @@ export async function startBattle({ presetId, members, surprise = "none", identi
   // 5) 전투: 어느 씬을 보든 보이도록 씬에 묶지 않는다(전투원은 사본 씬의 토큰)
   const combat = await Combat.create({
     scene: null, active: true,
-    flags: { nssq: { battle: { presetId, presetName: preset.name, origin, copy: copy.id, previousSounds, surprise, identified } } }
+    flags: { nssq: { battle: { presetId, presetName: preset.name, origin, copy: copy.id, previousSounds, surprise, identifyValue } } }
   });
   const combatants = copy.tokens.filter((t) => t.actor && ["character", "enemy", "token"].includes(t.actor.type))
     .map((t) => ({ tokenId: t.id, sceneId: copy.id, actorId: t.actorId, hidden: t.hidden }));
   await combat.createEmbeddedDocuments("Combatant", combatants);
   await combat.startCombat();
+  if (identifyValue !== null && identifyValue !== undefined) await applyIdentify(combat, identifyValue);
   // 대미지 적용 등은 채팅 카드에서 하므로 전투 중에도 채팅을 연다(인카운터 기능은 전투 화면에 있다)
   ui.sidebar.activateTab("chat");
 
@@ -261,7 +261,9 @@ export async function joinBattle(combat, uuid, { row = "front" } = {}) {
   const [token] = await copy.createEmbeddedDocuments("Token", [td.toObject()]);
   if (enemy) {
     const order = Math.max(-1, ...copy.tokens.filter((t) => t.actor?.type === "enemy" && t.id !== token.id).map((t) => t.actor.system.order ?? 0)) + 1;
-    await token.actor.update({ "system.row": row, "system.order": order, "system.identified": !!info.identified });
+    await token.actor.update({ "system.row": row, "system.order": order, "system.identified": false, "system.rareKnown": false });
+    // 이 전투에서 이미 식별 판정을 했다면 그 달성값으로
+    if (info.identifyValue !== null && info.identifyValue !== undefined) await identifyEnemy(token.actor, info.identifyValue);
   }
   await relayout(copy);
   await combat.createEmbeddedDocuments("Combatant", [{ tokenId: token.id, sceneId: copy.id, actorId: token.actorId, hidden: token.hidden }]);

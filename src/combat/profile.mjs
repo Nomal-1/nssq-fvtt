@@ -2,6 +2,7 @@
  * 전투에 쓰는 값을 액터 종류와 관계없이 한 모양으로 모은다.
  */
 import { RESISTS } from "../engine/derive.mjs";
+import { unidentifiedResist } from "../engine/combat.mjs";
 
 /** 진영: 에너미 → enemy, 「동료 NPC」 캐릭터 → ally, 그 밖의 캐릭터 → pc */
 export function sideOf(actor) {
@@ -52,7 +53,8 @@ export function combatProfile(actor, combatant = null) {
       physHit: st.physHit, elemHit: st.elemHit, evasion: st.evasion,
       physAtk: st.physAtk, elemAtk: st.elemAtk, defense: st.defense,
       suppAtk: st.suppAtk, suppDef: st.suppDef,
-      resist: Object.fromEntries(RESISTS.map((k) => [k, s.resist[k]])),
+      // 식별 실패한 에너미는 내성 최소 3(약점이 드러나지 않는다, 01 §3.1)
+      resist: s.identified ? Object.fromEntries(RESISTS.map((k) => [k, s.resist[k]])) : unidentifiedResist(Object.fromEntries(RESISTS.map((k) => [k, s.resist[k]]))),
       elements: s.attackElements?.length ? s.attackElements : ["none"],
       weaponName: "",
       // 에너미 통상 공격의 사거리는 데이터에 없다(07 #25)

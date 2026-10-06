@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   damageDiceCount, effectiveResist, escapeSucceeds, fpFromHitChecks, halve, inRange, initiativeValue, judgeDamage,
-  resolveAttack, rowFull, rowSwap, sideDefeated, turnOrder
+  identifyResult, pickRandom, resolveAttack, rowFull, rowSwap, sideDefeated, turnOrder, unidentifiedResist
 } from "../../src/engine/combat.mjs";
 
 const seq = (...xs) => () => {
@@ -122,6 +122,9 @@ describe("전투 불능·열 교대·전멸", () => {
     expect(rowSwap([{ id: "a", row: "front", ko: false }, { id: "c", row: "back", ko: false }])).toEqual([]);
     expect(rowSwap([{ id: "a", row: "front", ko: true }, { id: "c", row: "back", ko: true }])).toEqual([]);
   });
+  it("전열이 비어 있어도(섞기·난입 등) 후열에 살아 있는 전투원이 있으면 끌어온다", () => {
+    expect(rowSwap([{ id: "c", row: "back", ko: false }, { id: "d", row: "back", ko: true }])).toEqual([{ id: "c", row: "front" }, { id: "d", row: "front" }]);
+  });
   it("전원 전투 불능 또는 [석화]면 전멸", () => {
     expect(sideDefeated([{ ko: true }, { petrified: true }])).toBe(true);
     expect(sideDefeated([{ ko: true }, { ko: false }])).toBe(false);
@@ -137,5 +140,23 @@ describe("도주", () => {
     expect(escapeSucceeds([10, 14], [13])).toBe(true);
     expect(escapeSucceeds([13], [13, 5])).toBe(false);
     expect(escapeSucceeds([], [3])).toBe(false);
+  });
+});
+
+describe("식별·무작위", () => {
+  it("달성값 ≥ 희소도면 식별, 희소종은 +2 이상이어야 간파", () => {
+    expect(identifyResult(5, { rarity: 5 })).toEqual({ identified: true, rareRevealed: false });
+    expect(identifyResult(4, { rarity: 5 })).toEqual({ identified: false, rareRevealed: false });
+    expect(identifyResult(6, { rarity: 5, isRare: true })).toEqual({ identified: true, rareRevealed: false });
+    expect(identifyResult(7, { rarity: 5, isRare: true })).toEqual({ identified: true, rareRevealed: true });
+    expect(identifyResult("", { rarity: 0 }).identified).toBe(false);
+  });
+  it("식별 실패 에너미의 내성은 최소 3", () => {
+    expect(unidentifiedResist({ slash: 1, fire: 5, ice: 3 })).toEqual({ slash: 3, fire: 5, ice: 3 });
+  });
+  it("무작위로 하나", () => {
+    expect(pickRandom(["a", "b", "c"], () => 0.99)).toBe("c");
+    expect(pickRandom(["a", "b", "c"], () => 0)).toBe("a");
+    expect(pickRandom([], () => 0.5)).toBe(null);
   });
 });

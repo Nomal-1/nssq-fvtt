@@ -25,6 +25,23 @@ export function gmCharacters() {
   return game.actors.filter((a) => a.type === "character" && !playerOwned(a));
 }
 
+/** GM 스크린 여는 매크로를 만들어(이미 있으면 그것) 핫바의 빈 칸에 넣는다 */
+export async function createGMScreenMacro() {
+  if (!game.user.isGM) return;
+  let macro = game.macros.find((m) => m.getFlag("nssq", "gmScreen"));
+  macro ??= await Macro.create({
+    name: L("title"), type: "script", img: "icons/svg/book.svg",
+    command: "game.nssq.openGMScreen();", flags: { nssq: { gmScreen: true } }
+  });
+  const used = Object.entries(game.user.hotbar ?? {}).find(([, id]) => id === macro.id);
+  if (used) return ui.notifications.info(L("macroExists", { slot: used[0] }));
+  let slot = 1;
+  while (slot <= 50 && game.user.hotbar?.[slot]) slot++;
+  if (slot > 50) return ui.notifications.warn(L("macroNoSlot"));
+  await game.user.assignHotbarMacro(macro, slot);
+  ui.notifications.info(L("macroAdded", { slot }));
+}
+
 const pct = (v, max) => (max > 0 ? Math.clamp(Math.round((v / max) * 100), 0, 100) : 0);
 
 export class GMScreen extends Application {
@@ -126,6 +143,7 @@ export class GMScreen extends Application {
     // 판매 품목 설정: 「상점 품목」 탭으로 이동
     html.on("click", "[data-gm=shop-items]", () => this._tabs?.[0]?.activate("shop"));
     html.on("click", "[data-gm=session-start]", () => this.sessionStart());
+    html.on("click", "[data-gm=macro]", () => createGMScreenMacro());
     html.on("click", "[data-gm=battle-start]", (ev) => openStartDialog(ev.currentTarget.dataset.preset || null));
     html.on("click", "[data-gm=battle-end]", () => openEndDialog());
     html.on("click", "[data-gm=preset-new]", () => createPreset());

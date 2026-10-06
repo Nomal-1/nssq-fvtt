@@ -13,6 +13,8 @@ export class EnemyData extends foundry.abstract.TypeDataModel {
       isFOE: new BooleanField({ initial: false }),
       isRare: new BooleanField({ initial: false }),
       identified: new BooleanField({ initial: false }),
+      // 식별 달성값이 【희소도】+2 이상이라 플레이어가 희소종임을 안다
+      rareKnown: new BooleanField({ initial: false }),
       hp: resource(1),
       stats: new SchemaField(Object.fromEntries(SUB_STATS.map((k) => [k, int(0)]))),
       resist: resistances(),
