@@ -54,6 +54,10 @@ export class NssqActorSheet extends ActorSheet {
       context.subClassChoices = { "": game.i18n.localize("NSSQ.Class.none"), ...Object.fromEntries(all.filter((c) => c !== main).map((c) => [c.system.key, c.name])) };
       context.mainClassKey = main?.system.key ?? "";
       context.subClassKey = sub?.system.key ?? "";
+      // 선택 상자가 이름을 자르지 않도록 이름 길이에 맞춘 너비(em)
+      const emWidth = (name) => Math.max(4, [...(name ?? "")].reduce((w, ch) => w + (/[ㄱ-힝]/.test(ch) ? 1.05 : 0.6), 0) + 2.2).toFixed(1);
+      context.mainClassWidth = emWidth(main?.name);
+      context.subClassWidth = emWidth(sub?.name ?? game.i18n.localize("NSSQ.Class.none"));
       context.inventory = inventoryContext(this.actor, { skillFilter: this._skillFilter ?? "all" });
       context.isGM = game.user.isGM;
       context.sheet = characterContext(this.actor);

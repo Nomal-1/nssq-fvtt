@@ -36,25 +36,50 @@ export function prereqsMet(prereqs, slOf) {
 /**
  * 스킬 트리 배치. 전제 조건이 있는 스킬은 왼쪽(뿌리)에서 오른쪽으로 깊이별 열에 놓고,
  * 전제도 없고 다른 스킬의 전제도 아닌 스킬은 「독립 스킬」로 따로 뺀다.
+ * 「A 또는 B 또는 C」 전제는 「또는」 분기점(kind "or") 하나로 묶는다. 같은 후보 묶음을 쓰는 스킬들은 분기점을 함께 쓴다
+ * (예: 다크 헌터의 검·세검·채찍 마스터리 → 분기점 → 각 스킬).
  * @param {{name, prereqs}[]} skills 한 클래스의 스킬(데이터 순서)
- * @returns {{nodes: {name, col, row}[], edges: {from, to, sl, any}[], independent: string[], cols, rows, outside: {[name]: {skill, sl}[]}}}
+ * @returns {{
+ *   nodes: {id, kind: "skill"|"or", name?, alts?: {skill, sl}[], col, row}[],
+ *   edges: {from, to, sl: number|null, any}[],
+ *   independent: string[], cols, rows, outside: {[name]: {skill, sl}[]}
+ * }}
  */
 export function treeLayout(skills) {
   const names = new Set(skills.map((s) => s.name));
   const edges = [];
   const outside = {};
+  const ors = new Map();
   for (const s of skills) {
-    for (const p of prereqList(s.prereqs)) {
-      if (names.has(p.skill) && p.skill !== s.name) edges.push({ from: p.skill, to: s.name, sl: p.sl, any: p.any });
-      else (outside[s.name] ??= []).push({ skill: p.skill, sl: p.sl });
+    for (const p of s.prereqs?.all ?? []) {
+      if (!p.any) {
+        if (names.has(p.skill) && p.skill !== s.name) edges.push({ from: p.skill, to: s.name, sl: p.sl, any: false });
+        else (outside[s.name] ??= []).push({ skill: p.skill, sl: p.sl });
+        continue;
+      }
+      const alts = p.any.filter((q) => names.has(q.skill) && q.skill !== s.name);
+      for (const q of p.any.filter((q) => !alts.includes(q))) (outside[s.name] ??= []).push({ skill: q.skill, sl: q.sl });
+      if (!alts.length) continue;
+      if (alts.length === 1) {
+        edges.push({ from: alts[0].skill, to: s.name, sl: alts[0].sl, any: true });
+        continue;
+      }
+      const sameSL = alts.every((q) => q.sl === alts[0].sl);
+      const key = `or:${alts.map((q) => (sameSL ? q.skill : `${q.skill}@${q.sl}`)).sort().join("|")}`;
+      if (!ors.has(key)) ors.set(key, { id: key, kind: "or", alts: alts.map((q) => ({ skill: q.skill, sl: sameSL ? null : q.sl })), sameSL });
+      edges.push({ from: key, to: s.name, sl: sameSL ? alts[0].sl : null, any: true });
     }
   }
+  for (const o of ors.values()) for (const q of o.alts) edges.push({ from: q.skill, to: o.id, sl: q.sl, any: true });
+
   const linked = new Set(edges.flatMap((e) => [e.from, e.to]));
   const independent = skills.filter((s) => !linked.has(s.name)).map((s) => s.name);
-  const tree = skills.filter((s) => linked.has(s.name)).map((s) => s.name);
+  const tree = [...skills.filter((s) => linked.has(s.name)).map((s) => s.name), ...ors.keys()];
 
   // 깊이 = 가장 긴 전제 사슬
-  const parents = (n) => edges.filter((e) => e.to === n).map((e) => e.from);
+  const parentsOf = {};
+  for (const e of edges) (parentsOf[e.to] ??= []).push(e.from);
+  const parents = (n) => parentsOf[n] ?? [];
   const depth = {};
   const visit = (n, seen = new Set()) => {
     if (depth[n] !== undefined) return depth[n];
@@ -67,25 +92,49 @@ export function treeLayout(skills) {
   tree.forEach((n) => visit(n));
   const cols = tree.length ? Math.max(...tree.map((n) => depth[n])) + 1 : 0;
 
-  // 행: 뿌리는 데이터 순서, 그 뒤 열은 부모 행의 평균에 가깝게(겹치지 않게 아래로 민다)
+  // 행: 뿌리는 데이터 순서(자식을 함께 쓰는 뿌리끼리 붙인다), 그 뒤 열은 부모 행의 평균에 가깝게
   const row = {};
   let rows = 0;
+  const childrenOf = (n) => edges.filter((e) => e.from === n).map((e) => e.to);
   for (let c = 0; c < cols; c++) {
-    const inCol = tree.filter((n) => depth[n] === c);
+    let inCol = tree.filter((n) => depth[n] === c);
     const want = (n) => {
       const ps = parents(n).filter((p) => row[p] !== undefined);
       return ps.length ? ps.reduce((a, p) => a + row[p], 0) / ps.length : Infinity;
     };
-    const order = c === 0 ? inCol : [...inCol].sort((a, b) => want(a) - want(b) || tree.indexOf(a) - tree.indexOf(b));
+    if (c === 0) {
+      // 같은 자식(또는 분기점)을 가진 뿌리를 이어 놓는다
+      const ordered = [];
+      for (const n of inCol) {
+        if (ordered.includes(n)) continue;
+        ordered.push(n);
+        const kids = new Set(childrenOf(n));
+        for (const m of inCol) if (!ordered.includes(m) && childrenOf(m).some((k) => kids.has(k))) ordered.push(m);
+      }
+      inCol = ordered;
+    } else inCol = [...inCol].sort((a, b) => want(a) - want(b) || tree.indexOf(a) - tree.indexOf(b));
     let next = 0;
-    for (const n of order) {
+    for (const n of inCol) {
       const w = want(n);
       row[n] = c === 0 ? next : Math.max(next, Number.isFinite(w) ? Math.round(w) : next);
       next = row[n] + 1;
     }
+    // 한 덩어리로 아래로 밀렸으면 원하는 위치의 가운데로 끌어올린다
+    if (c > 0 && inCol.length) {
+      const wanted = inCol.map(want).filter(Number.isFinite);
+      if (wanted.length) {
+        const shift = Math.round(wanted.reduce((a, b) => a + b, 0) / wanted.length - inCol.reduce((a, n) => a + row[n], 0) / inCol.length);
+        const up = Math.max(shift, -Math.min(...inCol.map((n) => row[n])));
+        if (up < 0) for (const n of inCol) row[n] += up;
+        next = Math.max(...inCol.map((n) => row[n])) + 1;
+      }
+    }
     rows = Math.max(rows, next);
   }
-  return { nodes: tree.map((n) => ({ name: n, col: depth[n], row: row[n] })), edges, independent, cols, rows, outside };
+  const nodes = tree.map((id) => (ors.has(id)
+    ? { id, kind: "or", alts: ors.get(id).alts, col: depth[id], row: row[id] }
+    : { id, kind: "skill", name: id, col: depth[id], row: row[id] }));
+  return { nodes, edges, independent, cols, rows, outside };
 }
 
 /** 한 스킬이 가질 수 있는 최대 SL: Lv1은 2, 레벨업마다 1씩(한 번에 1까지) → Lv + 1 */

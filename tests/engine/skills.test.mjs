@@ -27,22 +27,36 @@ const D = { name: "D", prereqs: { all: [] } };
 
 describe("스킬 트리 배치", () => {
   const t = treeLayout([A, B, C, D]);
+  const node = (id) => t.nodes.find((n) => n.id === id);
   it("전제 사슬 깊이별로 열을 나눈다", () => {
-    expect(t.nodes.find((n) => n.name === "A").col).toBe(0);
-    expect(t.nodes.find((n) => n.name === "B").col).toBe(1);
-    expect(t.nodes.find((n) => n.name === "C").col).toBe(2);
+    expect(node("A").col).toBe(0);
+    expect(node("B").col).toBe(1);
+    expect(node("C").col).toBe(2);
     expect(t.cols).toBe(3);
   });
   it("전제도 없고 전제로도 쓰이지 않는 스킬은 독립 스킬", () => {
     expect(t.independent).toEqual(["D"]);
   });
-  it("「또는」 전제는 any 표시, 트리 밖 전제는 outside", () => {
-    expect(t.edges.find((e) => e.from === "A" && e.to === "C").any).toBe(true);
+  it("트리 안 후보가 하나뿐인 「또는」은 바로 잇고(any), 트리 밖 후보는 outside", () => {
+    expect(t.edges.find((e) => e.from === "A" && e.to === "C")).toEqual({ from: "A", to: "C", sl: 3, any: true });
     expect(t.outside.C).toEqual([{ skill: "X", sl: 1 }]);
   });
   it("같은 열에서 행이 겹치지 않는다", () => {
     const seen = new Set(t.nodes.map((n) => `${n.col}:${n.row}`));
     expect(seen.size).toBe(t.nodes.length);
+  });
+  it("같은 「또는」 묶음은 분기점 하나를 함께 쓰고, 필요한 SL은 분기점→스킬 선에", () => {
+    const or = (sl) => ({ all: [{ any: [{ skill: "검", sl }, { skill: "채찍", sl }] }] });
+    const u = treeLayout([
+      { name: "검", prereqs: { all: [] } }, { name: "채찍", prereqs: { all: [] } },
+      { name: "P", prereqs: or(1) }, { name: "Q", prereqs: or(3) }
+    ]);
+    const ors = u.nodes.filter((n) => n.kind === "or");
+    expect(ors).toHaveLength(1);
+    expect(ors[0].col).toBe(1);
+    expect(u.edges.filter((e) => e.to === ors[0].id).map((e) => [e.from, e.sl])).toEqual([["검", null], ["채찍", null]]);
+    expect(u.edges.filter((e) => e.from === ors[0].id).map((e) => [e.to, e.sl])).toEqual([["P", 1], ["Q", 3]]);
+    expect(u.nodes.find((n) => n.id === "P").col).toBe(2);
   });
 });
 

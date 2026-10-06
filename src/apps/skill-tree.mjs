@@ -14,10 +14,13 @@ const plain = (html, n = 160) => {
   return t.length > n ? `${t.slice(0, n)}…` : t;
 };
 
-const COL_W = 200;
-const ROW_H = 46;
+const GAP = 64;
+const LANE = 12;
+const ROW_H = 42;
 const NODE_W = 164;
-const NODE_H = 32;
+const NODE_H = 30;
+const OR_W = 46;
+const OR_H = 22;
 const PAD = 12;
 
 /** 스킬 팩 색인(한 번만 읽는다) */
@@ -124,29 +127,72 @@ export class SkillTree extends Application {
 
     const layout = treeLayout(list.map((e) => ({ name: e.name, prereqs: e.system.prereqs })));
     const byName = new Map(list.map((e) => [e.name, e]));
-    const pos = new Map(layout.nodes.map((n) => [n.name, { x: PAD + n.col * COL_W, y: PAD + n.row * ROW_H }]));
-    const nodes = layout.nodes.map((n) => ({ ...nodeData(byName.get(n.name)), x: pos.get(n.name).x, y: pos.get(n.name).y }));
+
+    // 열 너비: 스킬이 있는 열은 NODE_W, 「또는」 분기점만 있는 열은 OR_W. 열 사이 GAP
+    const colW = Array.from({ length: layout.cols }, (_, c) => (layout.nodes.some((n) => n.col === c && n.kind === "skill") ? NODE_W : OR_W));
+    const colX = [];
+    // 열 사이 간격: 그 열에서 갈라지는 부모 수만큼 세로 통로를 둔다
+    const colOf = new Map(layout.nodes.map((n) => [n.id, n.col]));
+    const srcCount = colW.map((_, c) => new Set(layout.edges.filter((e) => colOf.get(e.from) === c).map((e) => e.from)).size);
+    const gapAfter = srcCount.map((n) => Math.max(GAP, 44 + LANE * Math.max(0, n - 1)));
+    colW.forEach((w, c) => colX.push(c ? colX[c - 1] + colW[c - 1] + gapAfter[c - 1] : PAD));
+    const box = new Map(layout.nodes.map((n) => {
+      const or = n.kind === "or";
+      const h = or ? OR_H : NODE_H;
+      return [n.id, { x: colX[n.col], y: PAD + n.row * ROW_H + (NODE_H - h) / 2, w: or ? OR_W : NODE_W, h, col: n.col }];
+    }));
+    const keyOf = new Map(layout.nodes.map((n, i) => [n.id, `n${i}`]));
+    const orMet = (n) => n.alts.some((q) => st.slOf(q.skill) >= (q.sl ?? 1));
+    const nodes = layout.nodes.map((n) => {
+      const b = box.get(n.id);
+      if (n.kind === "or") {
+        return { key: keyOf.get(n.id), or: true, x: b.x, y: b.y, met: orMet(n), tip: `${L("or")}: ${n.alts.map((q) => `${q.skill}${q.sl ? ` SL${q.sl}` : ""}`).join(" / ")}` };
+      }
+      return { ...nodeData(byName.get(n.name)), key: keyOf.get(n.id), x: b.x, y: b.y };
+    });
+
+    // 선: 부모 오른쪽 → 부모 열 뒤의 세로 통로(부모마다 자기 줄) → 자식 왼쪽. 자식에 들어오는 선이 여럿이면 높이를 나눈다
+    const sourcesByCol = {};
+    for (const e of layout.edges) {
+      const c = box.get(e.from).col;
+      sourcesByCol[c] ??= [];
+      if (!sourcesByCol[c].includes(e.from)) sourcesByCol[c].push(e.from);
+    }
+    for (const srcs of Object.values(sourcesByCol)) srcs.sort((p, q) => box.get(p).y - box.get(q).y);
+    const incoming = {};
+    for (const e of layout.edges) (incoming[e.to] ??= []).push(e);
+    for (const ins of Object.values(incoming)) ins.sort((p, q) => box.get(p.from).y - box.get(q.from).y);
     const edges = layout.edges.map((e) => {
-      const a = pos.get(e.from);
-      const b = pos.get(e.to);
-      const x1 = a.x + NODE_W;
-      const y1 = a.y + NODE_H / 2;
+      const a = box.get(e.from);
+      const b = box.get(e.to);
+      const srcs = sourcesByCol[a.col];
+      const lane = srcs.indexOf(e.from);
+      const mx = Math.round(colX[a.col] + colW[a.col] + 14 + lane * LANE);
+      const ins = incoming[e.to];
+      const k = ins.indexOf(e);
+      const spread = ins.length > 1 ? Math.min(8, (b.h - 8) / (ins.length - 1)) : 0;
+      const x1 = a.x + a.w;
+      const y1 = Math.round(a.y + a.h / 2);
       const x2 = b.x;
-      const y2 = b.y + NODE_H / 2;
-      const dx = Math.max(24, (x2 - x1) / 2);
-      // SL 배지는 곡선의 70% 지점(자식 쪽)에. 부모가 여럿이어도 겹치지 않는다
-      const t = 0.7;
-      const bz = (p0, p1, p2, p3) => (1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t ** 2 * p2 + t ** 3 * p3;
+      const y2 = Math.round(b.y + b.h / 2 + (k - (ins.length - 1) / 2) * spread);
+      const met = e.from.startsWith("or:")
+        ? orMet(layout.nodes.find((n) => n.id === e.from))
+        : st.slOf(e.from) >= (e.sl ?? 1);
       return {
-        d: `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`,
-        lx: Math.round(bz(x1, x1 + dx, x2 - dx, x2)) - 8, ly: Math.round(bz(y1, y1, y2, y2)) - 8,
-        sl: e.sl, any: e.any, met: st.slOf(e.from) >= e.sl
+        d: `M ${x1} ${y1} H ${mx} V ${y2} H ${x2}`,
+        from: keyOf.get(e.from), to: keyOf.get(e.to),
+        sl: e.sl, any: e.any, met,
+        // 부모마다 조금씩 다른 색(아직 못 채운 선). 채운 선은 금색
+        hue: (205 + lane * 47) % 360,
+        lx: x2 - 20 - (ins.length - 1 - k) * 18, ly: y2 - 8
       };
     });
+    const right = layout.cols ? colX[layout.cols - 1] + colW[layout.cols - 1] : 0;
+    this._links = edges.map((e) => [e.from, e.to]);
     return {
       tabs: st.tabs.map((t) => ({ ...t, active: t.key === st.tab.key })),
       nodes, edges,
-      width: PAD * 2 + Math.max(0, layout.cols - 1) * COL_W + NODE_W,
+      width: right + PAD,
       height: PAD * 2 + Math.max(0, layout.rows - 1) * ROW_H + NODE_H,
       hasTree: nodes.length > 0,
       independent: layout.independent.map((n) => nodeData(byName.get(n))),
@@ -168,6 +214,35 @@ export class SkillTree extends Application {
       this.tab = ev.currentTarget.dataset.tabKey;
       this.render(false);
     });
+    // 마우스를 올린 스킬의 선행(조상)·후속(자손) 사슬만 밝히고 나머지는 흐리게
+    const tree = html[0].querySelector(".nq-tree");
+    if (tree) {
+      const walk = (start, forward) => {
+        const seen = new Set([start]);
+        const stack = [start];
+        while (stack.length) {
+          const n = stack.pop();
+          for (const [a, b] of this._links ?? []) {
+            const [from, to] = forward ? [a, b] : [b, a];
+            if (from === n && !seen.has(to)) {
+              seen.add(to);
+              stack.push(to);
+            }
+          }
+        }
+        return seen;
+      };
+      tree.querySelectorAll("[data-key]").forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          const k = el.dataset.key;
+          const on = new Set([...walk(k, false), ...walk(k, true)]);
+          tree.classList.add("focus");
+          tree.querySelectorAll("[data-key]").forEach((n) => n.classList.toggle("hl", on.has(n.dataset.key)));
+          tree.querySelectorAll("[data-from]").forEach((p) => p.classList.toggle("hl", on.has(p.dataset.from) && on.has(p.dataset.to)));
+        });
+        el.addEventListener("mouseleave", () => tree.classList.remove("focus"));
+      });
+    }
     if (!this.actor.isOwner) return;
     html.on("click", ".nq-node[data-skill-id]", (ev) => {
       ev.preventDefault();

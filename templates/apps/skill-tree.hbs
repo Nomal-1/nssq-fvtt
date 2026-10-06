@@ -16,14 +16,18 @@
     {{#if hasTree}}
     <div class="nq-tree" style="width: {{width}}px; height: {{height}}px;">
       <svg class="nq-tree-edges" width="{{width}}" height="{{height}}">
-        {{#each edges as |e|}}<path class="{{#if e.met}}met{{/if}} {{#if e.any}}any{{/if}}" d="{{e.d}}"/>{{/each}}
+        {{#each edges as |e|}}<path class="{{#if e.met}}met{{/if}}" style="--lane: hsl({{e.hue}} 38% 52%)" data-from="{{e.from}}" data-to="{{e.to}}" d="{{e.d}}"/>{{/each}}
       </svg>
-      {{#each edges as |e|}}<span class="nq-edge-sl {{#if e.met}}met{{/if}}" style="left: {{e.lx}}px; top: {{e.ly}}px;">{{e.sl}}</span>{{/each}}
+      {{#each edges as |e|}}{{#if e.sl}}<span class="nq-edge-sl {{#if e.met}}met{{/if}}" data-from="{{e.from}}" data-to="{{e.to}}" style="left: {{e.lx}}px; top: {{e.ly}}px;">{{e.sl}}</span>{{/if}}{{/each}}
       {{#each nodes as |n|}}
-      <a class="nq-node {{n.state}} {{#if n.canRaise}}can{{/if}}" data-skill-id="{{n.id}}" style="left: {{n.x}}px; top: {{n.y}}px;" title="{{n.tip}}">
+      {{#if n.or}}
+      <span class="nq-or {{#if n.met}}met{{/if}}" data-key="{{n.key}}" style="left: {{n.x}}px; top: {{n.y}}px;" title="{{n.tip}}">{{localize "NSSQ.Skill.or"}}</span>
+      {{else}}
+      <a class="nq-node {{n.state}} {{#if n.canRaise}}can{{/if}}" data-key="{{n.key}}" data-skill-id="{{n.id}}" style="left: {{n.x}}px; top: {{n.y}}px;" title="{{n.tip}}">
         <span class="nq-node-name">{{#if n.unique}}<i class="nq-unique">★</i>{{/if}}{{n.name}}</span>
         <span class="nq-node-sl">{{#if n.current}}<b>{{n.current}}</b>{{/if}}<em>{{n.maxText}}</em></span>
       </a>
+      {{/if}}
       {{/each}}
     </div>
     {{/if}}

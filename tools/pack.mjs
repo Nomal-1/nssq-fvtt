@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { compilePack } from "@foundryvtt/foundryvtt-cli";
 import { makeId } from "./lib/util.mjs";
+import ENEMY_ART from "../src/generated/enemy-art.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = path.join(ROOT, "data");
@@ -31,9 +32,11 @@ function itemDoc(e, { folder = null, sort = 0 } = {}) {
 
 function actorDoc(e, { folder = null, sort = 0 } = {}) {
   const _id = e.id;
+  // 에너미 일러스트(tools/enemy-art.py). 토큰도 같은 그림
+  const img = ENEMY_ART[e.name] ?? e.img;
   return {
     _id, _key: `!actors!${_id}`,
-    name: e.name, type: e.type, img: e.img, system: e.system,
+    name: e.name, type: e.type, img, system: e.system,
     items: e.items.map((i, n) => {
       const d = itemDoc(i, { sort: (n + 1) * 100 });
       delete d.folder;
@@ -42,7 +45,7 @@ function actorDoc(e, { folder = null, sort = 0 } = {}) {
     effects: [], folder, sort, ownership: { default: 0 }, flags: {}, _stats: STATS,
     prototypeToken: {
       name: e.name, actorLink: false, disposition: -1, displayBars: 20, displayName: 20,
-      bar1: { attribute: "hp" }, bar2: { attribute: null }
+      bar1: { attribute: "hp" }, bar2: { attribute: null }, texture: { src: img }
     }
   };
 }

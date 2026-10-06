@@ -1,3 +1,4 @@
+import { migrateEnemyArt } from "./apps/enemy-art.mjs";
 import { actorModels, itemModels } from "./data/_module.mjs";
 import { NssqActor } from "./documents/actor.mjs";
 import { NssqItem } from "./documents/item.mjs";
@@ -76,7 +77,10 @@ Hooks.once("init", () => {
   };
 });
 
-Hooks.once("ready", () => registerSocket());
+Hooks.once("ready", () => {
+  registerSocket();
+  migrateEnemyArt();
+});
 
 // 시스템 대화창(내용에 nssq 클래스가 있는 것)은 창틀도 NSSQ 테마로
 Hooks.on("renderDialog", (app) => {

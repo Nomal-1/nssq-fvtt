@@ -586,7 +586,8 @@
       "kindLibrary": "기본",
       "kindVariant": "변형",
       "kindCustom": "직접 만듦",
-      "deleteChecked": "체크한 것 삭제"
+      "deleteChecked": "체크한 것 삭제",
+      "artApplied": "에너미 일러스트를 월드의 에너미 액터·토큰 {n}개에 적용했다."
     },
     "Skill": {
       "common": "커먼 스킬",

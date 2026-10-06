@@ -1,6 +1,8 @@
 import { onShopHiddenChange, onShopToggle } from "./apps/shop.mjs";
 
 export function registerSettings() {
+  // 에너미 일러스트를 월드 액터·토큰에 적용한 표시(그림 표 크기:버전)
+  game.settings.register("nssq", "enemyArtApplied", { scope: "world", config: false, type: String, default: "" });
   game.settings.register("nssq", "autoApply", {
     name: "NSSQ.Settings.autoApply.name",
     hint: "NSSQ.Settings.autoApply.hint",
