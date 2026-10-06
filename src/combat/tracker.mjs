@@ -9,6 +9,7 @@ import { slotOccupant } from "../engine/equipment.mjs";
 import { normalAttack } from "./attack.mjs";
 import { combatProfile } from "./profile.mjs";
 import { actionState } from "./turn-status.mjs";
+import { recordBestiary } from "./bestiary.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 
@@ -48,7 +49,10 @@ export async function swapWeapon(combatant) {
 /** 에너미 식별 상태를 바꾼다. 식별하면 모두에게 알린다 */
 export async function setIdentified(actors, on) {
   const changed = actors.filter((a) => a?.type === "enemy" && !!a.system.identified !== on);
-  for (const a of changed) await a.update({ "system.identified": on });
+  for (const a of changed) {
+    await a.update({ "system.identified": on });
+    if (on) await recordBestiary(a, { identified: true });
+  }
   if (on && changed.length) {
     await ChatMessage.create({
       speaker: { alias: L("tracker") },

@@ -9,7 +9,7 @@
     <div class="hit-line">
       <span class="label">{{localize "NSSQ.Combat.hitCheck"}}</span>
       <span class="dice">{{#each t.hitDice as |d|}}<span class="die-s {{#if (nssqEq d 1)}}one{{/if}}{{#if (nssqEq d 6)}}six{{/if}}">{{d}}</span>{{/each}}</span>
-      <span>+ {{@root.hitStat}} = <b>{{t.hitTotal}}</b> / {{localize "NSSQ.Combat.evasion"}} {{t.evasion}}</span>
+      <span>+ <span data-mask="atk">{{@root.hitStat}}</span> = <b data-mask="atk">{{t.hitTotal}}</b> / {{localize "NSSQ.Combat.evasion"}} <span data-mask="def">{{t.evasion}}</span></span>
       {{#if t.absSuccess}}<span class="tag success">{{localize "NSSQ.Check.absSuccess"}}</span>{{/if}}
       {{#if t.absFailure}}<span class="tag failure">{{localize "NSSQ.Check.absFailure"}}</span>{{/if}}
       <span class="result {{#if t.hit}}success{{else}}failure{{/if}}">{{#if t.hit}}{{localize "NSSQ.Combat.hit"}}{{else}}{{localize "NSSQ.Combat.miss"}}{{/if}}</span>
@@ -17,7 +17,7 @@
     {{#if t.hit}}
     <div class="dmg-line">
       <span class="label">{{localize "NSSQ.Combat.damageDice"}} {{t.diceCount}}D6</span>
-      <span class="calc">({{@root.physAtk}} − {{localize "NSSQ.Combat.defense"}} {{@root.defense}}) · {{localize "NSSQ.Combat.resist"}} {{t.resist}}</span>
+      <span class="calc">(<span data-mask="atk">{{@root.physAtk}}</span> − {{localize "NSSQ.Combat.defense"}} <span data-mask="def">{{@root.defense}}</span>) · {{localize "NSSQ.Combat.resist"}} {{t.resist}}</span>
     </div>
     <div class="dmg-dice">
       {{#each t.dmg as |d|}}<span class="die-s {{#if d.over}}over{{/if}} {{#if d.six}}six{{/if}} {{#if d.one}}one{{/if}}">{{d.v}}</span>{{else}}<span class="notes">-</span>{{/each}}

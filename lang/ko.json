@@ -907,8 +907,8 @@
       "conditions": "상태 이상·봉인",
       "none": "없음",
       "turns": "{n}턴",
-      "unknownNote": "식별하지 못한 에너미: 내성은 최소 3으로 취급한다",
-      "gmHidden": "식별 전 — 플레이어에게는 ???",
+      "unknownNote": "이번 전투에서 식별하지 못함: 내성은 최소 3으로 취급한다",
+      "gmHidden": "플레이어는 모름 — ???",
       "short": {
         "physHit": "물명",
         "elemHit": "속명",
@@ -919,7 +919,13 @@
         "suppAtk": "억공",
         "suppDef": "억방",
         "speed": "속도"
-      }
+      },
+      "gmBook": "플레이어가 앎(도감 처치 {n})",
+      "hiddenFromPlayers": "플레이어에게는 ???",
+      "revealToggle": "식별하면 플레이어에게 공개(끄면 실제로 쓸 때까지 ???)",
+      "forget": "도감 기록 지우기",
+      "forgetConfirm": "「{name}」의 도감 기록(식별·처치·본 스킬·얻은 DROP)을 지운다.",
+      "bookLine": "도감: 식별 {identified} · 처치 {defeated} · 본 스킬 {skills} · 얻은 DROP {drops}"
     }
   }
 }

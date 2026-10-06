@@ -15,6 +15,7 @@ const art = JSON.parse(fs.readFileSync("src/generated/enemy-art.mjs", "utf8").re
 globalThis.game = {
   i18n: { localize: loc, format: (k, d) => loc(k).replace(/\{(\w+)\}/g, (_, x) => d[x]) },
   user: { isGM: process.argv[2] === "gm" },
+  settings: { get: () => ({}) },
   scenes: { get: () => ({ background: { src: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=1600" } }) }
 };
 const sampleSkills = [{ type: "skill", name: "갉아먹기", system: { timing: "주행동", range: "근", target: "적 단일", description: "<p>물리 공격 롤. 명중하면 [독].</p>" } }, { type: "skill", name: "약점: 혼란", system: { timing: "상시", range: "-", target: "자신", description: "" } }];

@@ -5,6 +5,7 @@
 import { inRange, resolveAttack } from "../engine/combat.mjs";
 import { autoApplyMode, requestApply } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
+import { knowsEnemy } from "./bestiary.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/attack-card.hbs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
@@ -134,6 +135,10 @@ export function registerAttackHooks() {
   Hooks.on("updateActor", (actor, changes) => {
     if (foundry.utils.getProperty(changes, "system.identified") !== undefined) rerenderCardsFor(actor);
   });
+  // 도감이 바뀌면(식별·처치 기록) 지난 카드도 다시 그린다
+  Hooks.on("nssqBestiary", () => {
+    for (const m of game.messages.contents.slice(-100)) if (m.getFlag("nssq", "attack")) ui.chat.updateMessage(m);
+  });
   Hooks.on("updateToken", (token, changes) => {
     if (foundry.utils.getProperty(changes, "delta.system.identified") !== undefined && token.actor) rerenderCardsFor(token.actor);
   });
@@ -141,6 +146,15 @@ export function registerAttackHooks() {
     const card = message.getFlag("nssq", "attack");
     if (!card) return;
     const el = html[0];
+    // 플레이어가 모르는 에너미(식별·도감 기록 없음)의 수치는 ?로(07 #47)
+    if (!game.user.isGM) {
+      const attacker = card.attackerUuid ? fromUuidSync(card.attackerUuid) : null;
+      if (attacker && !knowsEnemy(attacker)) el.querySelectorAll("[data-mask=atk]").forEach((x) => { x.textContent = "?"; });
+      el.querySelectorAll(".attack-target").forEach((row) => {
+        const target = fromUuidSync(card.targets[Number(row.dataset.index)]?.actorUuid ?? "");
+        if (target && !knowsEnemy(target)) row.querySelectorAll("[data-mask=def]").forEach((x) => { x.textContent = "?"; });
+      });
+    }
     el.querySelectorAll(".attack-target").forEach((row) => {
       const i = Number(row.dataset.index);
       const t = card.targets[i];
@@ -149,7 +163,7 @@ export function registerAttackHooks() {
       if (!t?.hit) return buttons?.remove();
       // 【HP】 변화: GM, 또는 대상이 PC·식별된 에너미일 때만
       const target = fromUuidSync(t.actorUuid);
-      const reveal = game.user.isGM || target?.type !== "enemy" || !!target?.system?.identified;
+      const reveal = game.user.isGM || knowsEnemy(target);
       if (status) {
         status.textContent = t.applied ? (reveal ? L("appliedHp", { before: t.before, after: t.after }) : L("appliedHidden"))
           : autoApplyMode() === "off" ? L("manualApply") : "";

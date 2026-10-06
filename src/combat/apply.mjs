@@ -6,6 +6,7 @@ import { halve, rowSwap, sideDefeated } from "../engine/combat.mjs";
 import { removeCondition } from "../engine/conditions.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { sideOf } from "./profile.mjs";
+import { recordBestiary } from "./bestiary.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 
@@ -36,6 +37,8 @@ async function afterHpChange(actor) {
     if (ko && !combatant.defeated) {
       await combatant.update({ defeated: true, "flags.nssq.autoDefeated": true }, { nssqAuto: true });
       await setOverlay(true);
+      // 도감: 처치 기록(정보 공개, 07 #47)
+      if (actor.type === "enemy") await recordBestiary(actor, { defeated: 1 });
     } else if (!ko && combatant.defeated && auto) {
       await combatant.update({ defeated: false, "flags.nssq.-=autoDefeated": null }, { nssqAuto: true });
       await setOverlay(false);

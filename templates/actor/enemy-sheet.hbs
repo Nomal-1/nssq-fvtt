@@ -78,12 +78,14 @@
           <img src="{{item.img}}"/>
           <a class="nq-skill-name" data-action="item-edit">{{item.name}}</a>
           {{#if item.system.timing}}<span class="nq-timing">{{item.system.timing}}</span>{{/if}}
+          {{#if (nssqEq item.type "skill")}}{{#if @root.isGM}}<a class="nq-ctl" data-action="skill-reveal" title="{{localize 'NSSQ.Analysis.revealToggle'}}"><i class="fas {{#if item.system.reveal}}fa-eye{{else}}fa-eye-slash{{/if}}"></i></a>{{/if}}{{/if}}
           {{#if @root.editable}}<a class="nq-ctl" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>{{/if}}
         </li>
         {{else}}
         <li class="nq-empty">{{localize "NSSQ.NoItems"}}</li>
         {{/each}}
       </ol>
+      {{#if isGM}}{{#if bestiary}}<p class="nq-note nq-bestiary">{{bestiary}} <a data-action="bestiary-forget"><i class="fas fa-eraser"></i> {{localize "NSSQ.Analysis.forget"}}</a></p>{{/if}}{{/if}}
     </div>
     <div class="tab nq-description" data-group="primary" data-tab="description">
       {{editor enrichedDescription target="system.description" button=true editable=editable owner=owner}}

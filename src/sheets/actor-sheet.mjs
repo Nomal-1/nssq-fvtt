@@ -1,6 +1,7 @@
 import { ABILITIES, RESISTS, SUB_STATS } from "../engine/derive.mjs";
 import { unidentifiedResist } from "../engine/combat.mjs";
 import { statusListOf } from "../combat/status.mjs";
+import { bestiaryEntry, forgetBestiary } from "../combat/bestiary.mjs";
 import { promptCheck, rollCheck } from "../chat/check.mjs";
 import { rollAbilities } from "../apps/ability-roll.mjs";
 import { activateInventoryListeners, inventoryContext } from "./inventory.mjs";
@@ -47,6 +48,12 @@ export class NssqActorSheet extends ActorSheet {
       context.effResist = Object.fromEntries(RESISTS.map((k) => [k, { value: system.resistTotal?.[k], changed: system.resistTotal?.[k] !== base[k] }]));
       context.effHpMax = system.hp.max !== system.hpMaxBase ? system.hp.max : null;
       context.statusList = statusListOf(this.actor);
+      // 도감 기록 요약(GM)
+      const book = bestiaryEntry(this.actor);
+      context.bestiary = Object.keys(book).length ? game.i18n.format("NSSQ.Analysis.bookLine", {
+        identified: book.identified ? "O" : "X", defeated: book.defeated ?? 0,
+        skills: (book.skills ?? []).join(", ") || "-", drops: (book.drops ?? []).join(", ") || "-"
+      }) : "";
     }
     if (this.actor.type === "enemy") {
       const el = (e) => (e === "none" ? game.i18n.localize("NSSQ.Combat.noElement") : game.i18n.localize(`NSSQ.Resist.${e}`));
@@ -136,6 +143,16 @@ export class NssqActorSheet extends ActorSheet {
     if (this.actor.type === "character") activateInventoryListeners(this, html);
     // 통상 공격: 지정(타깃)한 토큰 1개. GM은 Shift로 사거리·아군 확인 무시
     html.on("click", "[data-action=rare-on]", () => makeRare(this.actor));
+    // 에너미 스킬: 식별 시 공개 켜고 끄기(GM)
+    html.on("click", "[data-action=skill-reveal]", (ev) => {
+      const item = this.actor.items.get(ev.currentTarget.closest("[data-item-id]")?.dataset.itemId);
+      if (item && game.user.isGM) item.update({ "system.reveal": !item.system.reveal });
+    });
+    html.on("click", "[data-action=bestiary-forget]", async () => {
+      const ok = await Dialog.confirm({ title: game.i18n.localize("NSSQ.Analysis.forget"), content: `<p>${game.i18n.format("NSSQ.Analysis.forgetConfirm", { name: this.actor.name })}</p>`, rejectClose: false });
+      if (ok) await forgetBestiary(this.actor);
+      this.render();
+    });
     html.on("click", "[data-action=rare-off]", () => removeRare(this.actor));
     html.on("click", "[data-action=normal-attack]", (ev) => {
       ev.preventDefault();

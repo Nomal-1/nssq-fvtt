@@ -4,6 +4,7 @@
  * 식별 실패한 에너미는 내성을 최소 3으로 취급한다(profile.mjs). 눈 아이콘으로 하나씩 바꾸는 것도 그대로 된다.
  */
 import { identifyResult } from "../engine/combat.mjs";
+import { recordBestiary } from "./bestiary.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Identify.${k}`, d) : game.i18n.localize(`NSSQ.Identify.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -16,6 +17,7 @@ export async function identifyEnemy(actor, value) {
   if (!!s.identified !== r.identified) u["system.identified"] = r.identified;
   if (!!s.rareKnown !== r.rareRevealed) u["system.rareKnown"] = r.rareRevealed;
   if (Object.keys(u).length) await actor.update(u);
+  if (r.identified) await recordBestiary(actor, { identified: true });
   return r;
 }
 

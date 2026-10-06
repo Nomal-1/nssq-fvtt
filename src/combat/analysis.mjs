@@ -1,14 +1,17 @@
 /**
  * 에너미 「자세히 보기」(원작의 에너미 정보 화면처럼): 전투 화면에서 에너미 카드를 누르면 뜬다.
- * 식별(01 §3.1)에 따라 공개 범위가 다르다.
- * - 식별 전: Lv·【HP】·부능력치·내성·스킬·DROP은 ???. 지금 걸린 상태 이상·강화·약화는 보인다(눈에 보이는 것)
- * - 식별 후: 모두 공개(내성은 상태·강화를 반영한 지금 값)
- * - GM: 언제나 모두 보이고, 식별 전이면 「플레이어에게는 ???」 표시
+ * 공개 범위(07 #47, 사용자 결정)
+ * - 「안다」 = 이번 전투에서 식별했거나 도감에 식별·처치 기록이 있다(combat/bestiary.mjs)
+ * - 모르면: Lv·【HP】·부능력치·내성은 ???. 지금 걸린 상태 이상·강화·약화는 보인다(눈에 보이는 것)
+ * - 스킬: 알고 + 스킬의 「식별 시 공개」가 켜져 있으면, 또는 전투에서 쓴 적이 있으면 이름. 나머지는 ???
+ * - DROP: 실제로 얻은 것만(도감). 나머지는 ???
+ * - GM: 언제나 모두 보이고, 플레이어에게 감춰진 것은 표시
  */
 import { SUB_STATS, RESISTS } from "../engine/derive.mjs";
 import { CONDITIONS } from "../engine/conditions.mjs";
 import { BUFFS, MAX_KINDS, canonicalBuff } from "../engine/buffs.mjs";
 import { buffEffectText, buffLabel, conditionName } from "./status.mjs";
+import { bestiaryEntry, knowsEnemy } from "./bestiary.mjs";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const loc = (k) => game.i18n.localize(k);
@@ -22,8 +25,9 @@ const dropText = (d) => `${d.max === null || d.max === undefined ? `${d.min}~` :
 export function enemyAnalysisHtml(actor, name) {
   const s = actor?.system ?? {};
   const gm = game.user.isGM;
-  const known = !!s.identified;
+  const known = knowsEnemy(actor);
   const show = gm || known;
+  const book = bestiaryEntry(actor);
   const rare = s.isRare && (gm || s.rareKnown);
 
   // 왼쪽: Lv·HP·부능력치·내성
@@ -34,26 +38,35 @@ export function enemyAnalysisHtml(actor, name) {
     return `<div class="an-stat"><span>${esc(A(`short.${k}`))}</span><b class="${show && changed ? "changed" : ""}">${show ? esc(v) : Q}</b></div>`;
   };
   const resist = (k) => {
-    const v = s.resistTotal?.[k];
-    const changed = v !== s.resist?.[k] && known;
+    // 이번 전투에서 식별했으면 지금 값(상태·강화 반영), 도감으로만 알면 원래 값(전투 처리는 최소 3)
+    const v = s.identified ? s.resistTotal?.[k] : s.resist?.[k];
+    const changed = v !== s.resist?.[k] && !!s.identified;
     return `<div class="an-res ${k}"><span>${esc(loc(`NSSQ.Resist.${k}`))}</span><b class="${show && changed ? "changed" : ""}">${show ? esc(v) : Q}</b></div>`;
   };
   const left = `
     <div class="an-hp"><span>HP</span><b>${show ? `${esc(s.hp?.value)} / ${esc(s.hp?.max)}` : Q}</b></div>
     <h4>${esc(A("stats"))}</h4><div class="an-stats">${SUB_STATS.map(stat).join("")}</div>
     <h4>${esc(A("resist"))}</h4><div class="an-resists">${RESISTS.map(resist).join("")}</div>
-    ${!known ? `<p class="an-note">${esc(A("unknownNote"))}</p>` : ""}`;
+    ${!s.identified ? `<p class="an-note">${esc(A("unknownNote"))}</p>` : ""}`;
 
   // 가운데: 스킬·DROP
   const skills = (actor?.items?.contents ?? []).filter((i) => i.type === "skill");
-  const skillRows = show
-    ? skills.map((i) => `<li title="${esc([i.system.timing, i.system.range, i.system.target].filter((x) => x && x !== "-").join(" / ") + (i.system.description ? ` — ${plain(i.system.description)}` : ""))}">${esc(i.name)}<small>${esc(i.system.timing ?? "")}</small></li>`)
-    : Array.from({ length: 3 }, () => `<li class="q">${Q}</li>`);
+  // 스킬: 이름이 보이는가(플레이어). GM은 모두 보이고 감춰진 것에 눈 표시
+  const seen = (i) => (book.skills ?? []).includes(i.name);
+  const visible = (i) => seen(i) || (known && i.system.reveal !== false);
+  const skillLine = (i) => `<li title="${esc([i.system.timing, i.system.range, i.system.target].filter((x) => x && x !== "-").join(" / ") + (i.system.description ? ` — ${plain(i.system.description)}` : ""))}">${gm && !visible(i) ? `<i class="fas fa-eye-slash" title="${esc(A("hiddenFromPlayers"))}"></i> ` : ""}${esc(i.name)}<small>${esc(i.system.timing ?? "")}</small></li>`;
+  const qRow = `<li class="q">${Q}</li>`;
+  const skillRows = gm ? skills.map(skillLine)
+    : known ? skills.map((i) => (visible(i) ? skillLine(i) : qRow))
+      // 모르면 쓴 것만 보이고, 칸 수는 고정(개수도 알 수 없게)
+      : [...skills.filter(seen).map(skillLine), ...Array.from({ length: Math.max(0, 3 - skills.filter(seen).length) }, () => qRow)];
+  // DROP: 실제로 얻은 것만
   const drops = s.drops ?? [];
-  // 식별 전에는 개수도 알 수 없게 칸 수를 고정
-  const dropRows = show
-    ? drops.map((d) => `<li>${esc(dropText(d))}</li>`)
-    : Array.from({ length: 2 }, () => `<li class="q">${Q}</li>`);
+  const got = (d) => (book.drops ?? []).includes(`${d.rank ? `R${d.rank} ` : ""}${d.item}`);
+  const dropLine = (d) => `<li>${gm && !got(d) ? `<i class="fas fa-eye-slash" title="${esc(A("hiddenFromPlayers"))}"></i> ` : ""}${esc(dropText(d))}</li>`;
+  const dropRows = gm ? drops.map(dropLine)
+    : known ? drops.map((d) => (got(d) ? dropLine(d) : qRow))
+      : Array.from({ length: 2 }, () => qRow);
   const middle = `
     <h4>SKILL</h4><ul class="an-list">${skillRows.join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>
     <h4>DROP</h4><ul class="an-list">${dropRows.join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>`;
@@ -81,7 +94,7 @@ export function enemyAnalysisHtml(actor, name) {
   return `<header>
       <span class="name">${rare ? `<span class="rare">★</span>` : ""}${esc(name)}</span>
       <span class="lv">Lv ${show ? esc(s.level) : Q}</span>${s.isFOE ? `<span class="foe">F.O.E.</span>` : ""}
-      ${gm && !known ? `<span class="gm-note">${esc(A("gmHidden"))}</span>` : ""}
+      ${gm ? `<span class="gm-note">${esc(known ? A("gmBook", { n: book.defeated ?? 0 }) : A("gmHidden"))}</span>` : ""}
       <a data-pop-close title="${esc(loc("NSSQ.StatusPanel.close"))}"><i class="fas fa-times"></i></a>
     </header>
     <div class="an-cols"><div class="an-col left">${left}</div><div class="an-col mid">${middle}</div><div class="an-col right">${right}</div></div>`;

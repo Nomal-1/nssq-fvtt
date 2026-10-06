@@ -23,6 +23,7 @@ import { identifyDialog } from "./identify.mjs";
 import { randomEnemyAction } from "./enemy-ai.mjs";
 import { StatusApp, statusChips, statusDetailHtml } from "./status.mjs";
 import { enemyAnalysisHtml } from "./analysis.mjs";
+import { knowsEnemy } from "./bestiary.mjs";
 import { actionState, confusedAction } from "./turn-status.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
@@ -213,7 +214,7 @@ function enemyImage(c) {
 function enemyCard(c, combat, targetable) {
   const a = c.actor;
   const s = a.system;
-  const showHp = game.user.isGM || s.identified;
+  const showHp = game.user.isGM || knowsEnemy(a);
   const cls = ["nb-enemy", s.row === "back" ? "back" : "front", isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", targetable ? "targetable" : ""].join(" ");
   const tools = game.user.isGM ? `<div class="gm-tools">
       <a data-tool="identify" class="${s.identified ? "on" : ""}" title="${esc(game.i18n.localize(s.identified ? "NSSQ.Combat.identifiedOn" : "NSSQ.Combat.identifiedOff"))}"><i class="fas ${s.identified ? "fa-eye" : "fa-eye-slash"}"></i></a>
@@ -589,5 +590,6 @@ export function registerHud() {
     if (foundry.utils.hasProperty(changes, "started") && changes.started) collapsed = false;
   });
   Hooks.on("deleteCombat", () => setTimeout(renderHud, 50));
+  Hooks.on("nssqBestiary", rerender);
   Hooks.on("createChatMessage", (message) => attackEffect(message));
 }

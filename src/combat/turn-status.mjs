@@ -13,6 +13,7 @@ import { normalAttack } from "./attack.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 import { buffLabel, conditionName } from "./status.mjs";
 import { emit, onSocket } from "../socket.mjs";
+import { knowsEnemy } from "./bestiary.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Turn.${k}`, d) : game.i18n.localize(`NSSQ.Turn.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -121,7 +122,7 @@ function poisonPower(combat, cond) {
   return src ? combatProfile(src.actor, src).suppAtk : cond.sourceSuppAtk;
 }
 
-const isHidden = (actor) => actor.type === "enemy" && !actor.system.identified;
+const isHidden = (actor) => !knowsEnemy(actor);
 
 function logLine(entry) {
   switch (entry.step) {
