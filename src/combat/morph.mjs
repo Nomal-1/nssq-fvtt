@@ -10,8 +10,18 @@ function syncAttrs(from, to) {
 }
 
 const keyOf = (n) => (n.nodeType === 1 ? n.getAttribute("data-key") : null);
+/** 요소 사이의 빈 글자(줄바꿈·들여쓰기)는 비교에서 뺀다. 순서가 엇갈려 요소를 다시 끼우게 되면 CSS 애니메이션이 처음부터 다시 돈다 */
+const isBlank = (n) => n.nodeType === 3 && !n.nodeValue.trim();
+
+function stripBlank(node) {
+  for (const n of [...node.childNodes]) {
+    if (isBlank(n) || n.nodeType === 8) n.remove();
+    else if (n.nodeType === 1) stripBlank(n.tagName === "TEMPLATE" ? n.content : n);
+  }
+}
 
 function morphChildren(from, to) {
+  for (const n of [...from.childNodes]) if (isBlank(n) || n.nodeType === 8) n.remove();
   const oldKids = [...from.childNodes];
   const keyed = new Map(oldKids.filter(keyOf).map((n) => [keyOf(n), n]));
   const used = new Set();
@@ -41,6 +51,7 @@ function morphChildren(from, to) {
     } else result.push(nn);
   }
   for (const o of oldKids) if (!used.has(o)) o.remove();
+  // 자리 맞추기: 이미 있는 요소를 옮기는 대신 그 앞에 끼워 넣는 쪽으로(상반신 등은 움직이지 않는다)
   result.forEach((n, idx) => {
     if (from.childNodes[idx] !== n) from.insertBefore(n, from.childNodes[idx] ?? null);
   });
@@ -55,6 +66,7 @@ function morphElement(from, to) {
 export function morph(root, html) {
   const tpl = document.createElement("template");
   tpl.innerHTML = html;
+  stripBlank(tpl.content);
   morphChildren(root, tpl.content);
 }
 

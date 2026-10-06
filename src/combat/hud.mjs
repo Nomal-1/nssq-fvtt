@@ -233,7 +233,7 @@ function commandBody(combat) {
 /** 커맨드 창(항상 같은 자리·크기): 머리 = 페이즈 + GM 진행 버튼 */
 function commandWindow(combat) {
   const gm = gmControls(combat);
-  return `<div class="nb-command">
+  return `<div class="nb-command" data-key="command">
     <div class="head"><span class="phase">${phaseLabel(combat)}</span></div>
     ${gm ? `<div class="gm">${gm}</div>` : ""}
     <div class="body"><div class="body-in" data-key="body-${combat.round}-${combat.getFlag("nssq", "phase")}-${combat.turn}-${combat.getFlag("nssq", "over") ?? ""}">${commandBody(combat)}</div></div>
@@ -312,7 +312,16 @@ function popText(card, text, cls) {
   n.addEventListener("animationend", () => n.remove());
 }
 
-/** 맞은 카드: 흔들림 + 붉은 번쩍임(속성은 건드리지 않는 Web Animations) */
+/** 명중 순간: 붉은 번쩍임만(흔들림은 대미지가 들어갈 때) */
+function hitFlash(card) {
+  const target = card?.querySelector(".art img, .portrait") ?? card;
+  target?.animate([
+    { filter: "brightness(2.2) saturate(0.4) drop-shadow(0 0 12px #ff4a3a)" },
+    { filter: "brightness(1)" }
+  ], { duration: 380, easing: "ease-out" });
+}
+
+/** 대미지: 흔들림 + 붉은 번쩍임(속성은 건드리지 않는 Web Animations) */
 function hitShake(card, strong = false) {
   if (!card) return;
   const a = strong ? 10 : 6;
@@ -335,7 +344,7 @@ function hpEffect(combatantId, delta) {
   } else popText(card, `+${delta}`, "heal");
 }
 
-/** 공격 카드가 올라오면: 맞았으면 흔들림(크리티컬은 크게), 빗나갔으면 MISS */
+/** 공격 카드가 올라오면: 맞았으면 번쩍임(크리티컬은 글자도), 빗나갔으면 MISS. 흔들림은 【HP】가 깎일 때 */
 async function attackEffect(message) {
   const card = message.getFlag("nssq", "attack");
   const combat = battleCombat();
@@ -347,7 +356,7 @@ async function attackEffect(message) {
     if (!el) continue;
     if (!t.hit) popText(el, L("miss"), "miss");
     else {
-      hitShake(el, t.crit);
+      hitFlash(el);
       if (t.crit) popText(el, L("critical"), "crit");
     }
   }
@@ -379,25 +388,25 @@ export function battleHtml(combat, { attack = pending === "attack" } = {}) {
   };
 
   return `
-    <div class="nb-bg" ${bg ? `style="background-image:url('${esc(bg)}')"` : ""}></div>
-    <div class="nb-top">
+    <div class="nb-bg" data-key="bg" ${bg ? `style="background-image:url('${esc(bg)}')"` : ""}></div>
+    <div class="nb-top" data-key="top">
       <button type="button" class="nb-map" data-ui="toggle" title="${esc(L("mapHint"))}"><i class="fas fa-map"></i> ${L("showMap")}</button>
       ${orderStrip(combat)}
     </div>
-    <div class="nb-field">
-      <div class="nb-enemies ${enemies.some((c) => c.actor.system.row === "back") ? "has-back" : ""} ${bust(combat) ? "has-bust" : ""}">
-        <div class="nb-erow back">${enemies.filter((c) => c.actor.system.row === "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
-        <div class="nb-erow front">${enemies.filter((c) => c.actor.system.row !== "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
+    <div class="nb-field" data-key="field">
+      <div data-key="enemies" class="nb-enemies ${enemies.some((c) => c.actor.system.row === "back") ? "has-back" : ""} ${bust(combat) ? "has-bust" : ""}">
+        <div class="nb-erow back" data-key="erow-back">${enemies.filter((c) => c.actor.system.row === "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
+        <div class="nb-erow front" data-key="erow-front">${enemies.filter((c) => c.actor.system.row !== "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
       </div>
-      ${attacker ? `<div class="nb-hint">${targets.size ? L("pickTarget") : L("noTarget")}</div>` : ""}
+      ${attacker ? `<div class="nb-hint" data-key="hint">${targets.size ? L("pickTarget") : L("noTarget")}</div>` : ""}
       ${commandWindow(combat)}
       ${bust(combat)}
-      ${game.user.isGM ? `<div class="nb-drop">${L("dropHint")}</div>` : ""}
+      ${game.user.isGM ? `<div class="nb-drop" data-key="drop">${L("dropHint")}</div>` : ""}
       ${banner ? `<div class="nb-banner ${banner.cls}" data-key="banner-${banner.id}"><span>${esc(banner.text)}</span></div>` : ""}
     </div>
-    <div class="nb-party">
-      <div class="nb-row front"><span class="label">${L("front")}</span>${slots("front")}</div>
-      <div class="nb-row back"><span class="label">${L("back")}</span>${slots("back")}</div>
+    <div class="nb-party" data-key="party">
+      <div class="nb-row front" data-key="prow-front"><span class="label">${L("front")}</span>${slots("front")}</div>
+      <div class="nb-row back" data-key="prow-back"><span class="label">${L("back")}</span>${slots("back")}</div>
     </div>`;
 }
 
