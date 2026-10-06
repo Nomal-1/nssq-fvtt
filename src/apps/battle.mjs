@@ -10,7 +10,7 @@ import { LAYOUT } from "../engine/formation.mjs";
 import { relayout } from "../combat/formation.mjs";
 import { enemyActorFor } from "./enemy-library.mjs";
 import { applyIdentify, identifyEnemy } from "../combat/identify.mjs";
-import { applyAutoIdentify } from "../combat/bestiary.mjs";
+import { applyAutoIdentify, recordBestiary, recordSeen } from "../combat/bestiary.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -193,6 +193,8 @@ export async function startBattle({ presetId, members, surprise = "none", identi
     // 식별은 전투가 만들어진 뒤 달성값으로 판정(아래). 처음엔 식별 전
     await t.actor.update({ "system.row": cy < ENEMY_MID ? "back" : "front", "system.order": i, "system.identified": false, "system.rareKnown": false });
   }
+  // 도감: 만난 종
+  await recordSeen(enemyTokens.map((t) => t.actor));
   if (relinked) ui.notifications.warn(L("relinked", { n: relinked }));
 
   // 3) 파티 토큰: 액터와 연결(【HP】가 캐릭터에 남도록). 자리는 칸 배치(전위·후위 각 3칸)가 정한다
@@ -268,6 +270,7 @@ export async function joinBattle(combat, uuid, { row = "front" } = {}) {
     // 이 전투에서 이미 식별 판정을 했다면 그 달성값으로
     if (info.identifyValue !== null && info.identifyValue !== undefined) await identifyEnemy(token.actor, info.identifyValue);
     else await applyAutoIdentify(combat);
+    await recordBestiary(token.actor, { seen: true });
   }
   await relayout(copy);
   await combat.createEmbeddedDocuments("Combatant", [{ tokenId: token.id, sceneId: copy.id, actorId: token.actorId, hidden: token.hidden }]);

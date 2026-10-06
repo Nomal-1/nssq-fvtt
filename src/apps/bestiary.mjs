@@ -1,18 +1,20 @@
 /**
  * 몬스터 도감 창
  * - GM: 모든 종(시스템 에너미 팩 + 월드의 에너미 액터). 식별 여부·처치 수·본 스킬·얻은 DROP을 언제든 고친다
- * - 플레이어(설정 「도감을 플레이어에게 보이기」가 켜져 있을 때): 아는 종(식별·처치 기록)만, 자세히 보기와 같은 공개 범위
+ * - 플레이어(설정 「도감을 플레이어에게 보이기」가 켜져 있을 때, 전투 중에는 열 수 없음). 단계별 공개(07 #48)
+ *   0 만난 적 없음: 목록에 없음 / 1 만남: 모습·이름만 / 2 식별한 적 있음: 「식별 시 공개」 스킬과 쓴 액티브 스킬의 이름·의존 부위,
+ *   얻은 DROP(부능력치·내성·패시브·스킬 사양은 없음) / 3 처치 수가 자동 식별 기준 이상: 전부(모든 스킬 사양·모든 DROP)
  * 기록은 combat/bestiary.mjs(월드 설정 nssq.bestiary)
  */
 import { SUB_STATS, RESISTS } from "../engine/derive.mjs";
-import { autoIdentifyKills, bestiaryEntry, bestiaryKey, forgetBestiary, setBestiaryEntry } from "../combat/bestiary.mjs";
+import { autoIdentifyKills, bestiaryEntry, bestiaryKey, bestiaryTier, forgetBestiary, setBestiaryEntry } from "../combat/bestiary.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Bestiary.${k}`, d) : game.i18n.localize(`NSSQ.Bestiary.${k}`));
 const A = (k) => game.i18n.localize(`NSSQ.Analysis.${k}`);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const dropName = (d) => `${d.rank ? `R${d.rank} ` : ""}${d.item}`;
 const dropRange = (d) => (d.max === null || d.max === undefined ? `${d.min}~` : d.min === d.max ? `${d.min}` : `${d.min}~${d.max}`);
-const known = (e) => !!e.identified || (e.defeated ?? 0) > 0;
+const inBattle = () => game.combats.some((c) => c.started && c.getFlag("nssq", "battle"));
 
 export const bestiaryForPlayers = () => !!game.settings.get("nssq", "bestiaryPlayers");
 
@@ -31,6 +33,7 @@ export class BestiaryApp extends Application {
 
   static open() {
     if (!game.user.isGM && !bestiaryForPlayers()) return ui.notifications.warn(L("closed"));
+    if (!game.user.isGM && inBattle()) return ui.notifications.warn(L("inBattle"));
     app ??= new BestiaryApp();
     app.render(true);
   }
@@ -57,11 +60,12 @@ export class BestiaryApp extends Application {
   async _renderInner() {
     const gm = game.user.isGM;
     const all = (await this.species()).map((s) => ({ ...s, entry: bestiaryEntry({ system: { key: s.key }, name: s.name }) }));
-    const list = gm ? all : all.filter((s) => known(s.entry));
+    for (const x of all) x.tier = bestiaryTier(x.entry);
+    const list = gm ? all : all.filter((x) => x.tier > 0);
     if (!list.some((s) => s.key === this.selected)) this.selected = list[0]?.key ?? null;
     const q = (this.filter ?? "").trim();
-    const rows = list.map((s) => `<li class="${s.key === this.selected ? "active" : ""} ${known(s.entry) ? "known" : ""}" data-key="${esc(s.key)}" data-name="${esc(s.name)}" ${q && !s.name.includes(q) ? "hidden" : ""}>
-        <img src="${esc(s.img)}"/><span class="nm">${esc(s.name)}</span><small>Lv${esc(s.level ?? "?")}${s.foe ? " · F.O.E." : ""}</small>
+    const rows = list.map((s) => `<li class="${s.key === this.selected ? "active" : ""} ${s.tier > 0 ? "known" : ""}" data-key="${esc(s.key)}" data-name="${esc(s.name)}" ${q && !s.name.includes(q) ? "hidden" : ""}>
+        <img src="${esc(s.img)}"/><span class="nm">${esc(s.name)}</span><small>${gm || s.tier >= 3 ? `Lv${esc(s.level ?? "?")}` : ""}${s.foe ? " · F.O.E." : ""}</small>
         ${(s.entry.defeated ?? 0) > 0 ? `<b class="kills" title="${esc(L("kills"))}">${s.entry.defeated}</b>` : ""}${s.entry.identified ? `<i class="fas fa-eye" title="${esc(L("identified"))}"></i>` : ""}</li>`).join("");
     const sel = list.find((s) => s.key === this.selected);
     const detail = sel ? await this.detailHtml(sel) : `<p class="none">${esc(gm ? L("empty") : L("emptyPlayer"))}</p>`;
@@ -88,7 +92,9 @@ export class BestiaryApp extends Application {
       const auto = autoIdentifyKills();
       return `${head}
         <form class="bestiary-edit" data-key="${esc(sel.key)}">
-          <div class="row"><label><input type="checkbox" name="identified" ${e.identified ? "checked" : ""}/> ${esc(L("identified"))}</label>
+          <p class="notes">${esc(L("tierNow", { tier: L(`tier${sel.tier}`) }))}</p>
+          <div class="row"><label><input type="checkbox" name="seen" ${e.seen ? "checked" : ""}/> ${esc(L("seen"))}</label>
+            <label><input type="checkbox" name="identified" ${e.identified ? "checked" : ""}/> ${esc(L("identified"))}</label>
             <label>${esc(L("kills"))} <input type="number" name="defeated" min="0" value="${e.defeated ?? 0}"/></label>
             ${auto ? `<span class="notes">${esc((e.defeated ?? 0) >= auto ? L("autoMet") : L("autoLeft", { n: auto - (e.defeated ?? 0) }))}</span>` : ""}</div>
           <h4>${esc(L("seenSkills"))}</h4>
@@ -99,10 +105,23 @@ export class BestiaryApp extends Application {
         </form>
         <h4>${esc(L("data"))}</h4>${stats}`;
     }
-    // 플레이어: 아는 종만 여기까지 온다
-    const visible = (i) => (e.skills ?? []).includes(i.name) || i.system.reveal !== false;
-    return `${head}<p class="notes">${esc(L("record", { kills: e.defeated ?? 0 }))}</p>${stats}
-      <h4>SKILL</h4><ul class="an-list">${skills.map((i) => (visible(i) ? `<li title="${esc(String(i.system.description ?? "").replace(/<[^>]+>/g, " "))}">${esc(i.name)}<small>${esc(i.system.timing ?? "")}</small></li>` : `<li class="q">???</li>`)).join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>
+    // 플레이어: 단계별
+    const tier = sel.tier;
+    const kills = `<p class="notes">${esc(L("record", { kills: e.defeated ?? 0 }))}</p>`;
+    if (tier <= 1) return `<header><img src="${esc(sel.img)}"/><div><h2>${esc(sel.name)}</h2></div></header><p class="notes">${esc(L("tier1Note"))}</p>`;
+    const spec = (i) => [i.system.timing, i.system.range, i.system.target].filter((x) => x && x !== "-").join(" / ");
+    const part = (i) => game.i18n.format("NSSQ.Analysis.part", { part: i.system.part && i.system.part !== "-" ? i.system.part : A("noPart") });
+    if (tier >= 3) {
+      return `${head}${kills}${stats}
+        <h4>SKILL</h4><ul class="an-list">${skills.map((i) => `<li class="spec"><b>${esc(i.name)}</b><small>${esc(spec(i))}</small><div class="desc">${esc(String(i.system.description ?? "").replace(/<[^>]+>/g, " ").trim())}</div></li>`).join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>
+        <h4>DROP</h4><ul class="an-list">${drops.map((d) => `<li>${esc(dropRange(d))} ${esc(dropName(d))}</li>`).join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>`;
+    }
+    // 단계 2: 이름·모습, 「식별 시 공개」 스킬과 쓴 액티브 스킬의 이름·의존 부위(패시브·사양 없음), 얻은 DROP
+    const passive = (i) => i.system.timing === "상시";
+    const shown = (i) => !passive(i) && (i.system.reveal !== false || (e.skills ?? []).includes(i.name));
+    return `<header><img src="${esc(sel.img)}"/><div><h2>${esc(sel.name)}</h2></div></header>${kills}
+      <p class="notes">${esc(L("tier2Note"))}</p>
+      <h4>SKILL</h4><ul class="an-list">${skills.map((i) => (shown(i) ? `<li>${esc(i.name)}<small>${esc(part(i))}</small></li>` : `<li class="q">???</li>`)).join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>
       <h4>DROP</h4><ul class="an-list">${drops.map((d) => ((e.drops ?? []).includes(dropName(d)) ? `<li>${esc(dropRange(d))} ${esc(dropName(d))}</li>` : `<li class="q">???</li>`)).join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>`;
   }
 
@@ -122,6 +141,7 @@ export class BestiaryApp extends Application {
     if (!form) return;
     const save = () => {
       const entry = {
+        seen: form.seen.checked,
         identified: form.identified.checked,
         defeated: Math.max(0, Number(form.defeated.value) || 0),
         skills: [...form.querySelectorAll("[name=skill]:checked")].map((x) => x.value),
@@ -151,6 +171,10 @@ export function registerBestiaryApp() {
     controls.find((c) => c.name === "token")?.tools.push({
       name: "nssq-bestiary", title: "NSSQ.Bestiary.title", icon: "fas fa-dragon", button: true, onClick: () => BestiaryApp.open()
     });
+  });
+  // 플레이어는 전투 중에 도감을 볼 수 없다(전투가 시작되면 닫는다)
+  Hooks.on("updateCombat", (combat, changes) => {
+    if (!game.user.isGM && changes.started && combat.getFlag("nssq", "battle") && app?.rendered) app.close();
   });
   // 기록이 바뀌면 열린 창을 다시 그린다
   Hooks.on("nssqBestiary", () => { if (app?.rendered) app.render(); });

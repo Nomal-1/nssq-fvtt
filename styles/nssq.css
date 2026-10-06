@@ -811,3 +811,5 @@
 .nssq-bestiary .an-list li small { margin-left: auto; color: #888; }
 .nssq-bestiary .an-list li.q { justify-content: center; letter-spacing: 0.2em; color: #888; }
 .nssq-bestiary .none { color: #888; }
+.nssq-bestiary .an-list li.spec { flex-wrap: wrap; }
+.nssq-bestiary .an-list li.spec .desc { flex: 1 0 100%; font-size: 0.88em; color: #555; }
