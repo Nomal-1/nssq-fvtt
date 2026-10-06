@@ -272,8 +272,12 @@
 .nssq .nq-sl em { font-style: normal; color: var(--nq-dim); }
 
 /* 6 ─ 에너미·토큰·아이템 시트 */
-.nssq .nq-stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
-.nssq .nq-stat-grid .nq-sub-stat input { width: 3.2em; height: 22px; text-align: right; }
+.nssq .nq-stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+/* 에너미 시트 부능력치: 이름이 잘리지 않게 이름은 줄이지 않고, 입력칸·바뀐 값은 오른쪽 */
+.nssq .nq-stat-grid .nq-sub-stat { align-items: center; gap: 3px; padding: 5px 6px; }
+.nssq .nq-stat-grid .nq-sub-stat span { flex: 1 0 auto; overflow: visible; font-size: 0.85em; }
+.nssq .nq-stat-grid .nq-sub-stat .nq-eff { flex: 0 0 auto; margin-left: 0; font-size: 0.9em; }
+.nssq .nq-stat-grid .nq-sub-stat input { width: 2.8em; flex: 0 0 auto; height: 22px; text-align: right; }
 .nssq .nq-enemy-flags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .nssq .nq-rare { color: var(--nq-fp); font-weight: 700; }
 .nssq .nq-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 10px; }
@@ -692,8 +696,9 @@
 #nssq-battle .nb-chip.buff { background: rgba(36, 96, 178, 0.92); }
 #nssq-battle .nb-chip.debuff { background: rgba(110, 50, 150, 0.92); }
 #nssq-battle .nb-member { position: relative; }
-#nssq-battle .nb-member .nb-status-tool { position: absolute; top: 3px; right: 5px; font-size: 0.8em; color: var(--nq-mu); }
-#nssq-battle .nb-member .nb-status-tool:hover { color: var(--nq-gold-l); }
+#nssq-battle .nb-member .nb-member-tools { position: absolute; top: 3px; right: 5px; display: flex; gap: 8px; font-size: 0.8em; }
+#nssq-battle .nb-member .nb-member-tools a { color: var(--nq-mu); }
+#nssq-battle .nb-member .nb-member-tools a:hover { color: var(--nq-gold-l); }
 .nssq-status-app .window-content { padding: 8px 10px; }
 .nssq-status-form h3 { margin: 8px 0 4px; font-size: 1.05em; border-bottom: 1px solid var(--nq-line2, #999); }
 .nssq-status-form .status-current { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }

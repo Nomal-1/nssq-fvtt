@@ -237,7 +237,7 @@ function partyCard(c, combat, targetable) {
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
       <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) : ""}</div>
     </div>
-    ${game.user.isGM ? `<a class="nb-status-tool" data-tool="status" title="${esc(game.i18n.localize("NSSQ.Conditions.button"))}"><i class="fas fa-heartbeat"></i></a>` : ""}
+    <span class="nb-member-tools">${a.isOwner ? `<a data-tool="sheet" title="${esc(L("openSheet"))}"><i class="fas fa-id-card"></i></a>` : ""}${game.user.isGM ? `<a data-tool="status" title="${esc(game.i18n.localize("NSSQ.Conditions.button"))}"><i class="fas fa-heartbeat"></i></a>` : ""}</span>
   </div>`;
 }
 
@@ -526,9 +526,10 @@ function bindClicks(el) {
       }
       return;
     }
-    // GM: 파티 카드의 [상태]
-    if ((t = hit(".nb-member [data-tool=status]"))) {
+    // 파티 카드 도구: 시트(소유자), [상태](GM)
+    if ((t = hit(".nb-member [data-tool]"))) {
       const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
+      if (t.dataset.tool === "sheet") return c?.actor?.sheet.render(true);
       return StatusApp.open(c?.actor);
     }
     // 대상 고르기(공격 중) / 그 밖에는 시트 열기(권한이 있을 때)
@@ -541,9 +542,8 @@ function bindClicks(el) {
         renderHud();
         return normalAttack(attacker, { target: c.token });
       }
-      // 에너미·남의 캐릭터: 상태 자세히 / 내 캐릭터(GM은 아군 전부): 시트
-      if (t.classList.contains("nb-enemy") || !c.actor?.isOwner) return togglePop(combat, c, t);
-      c.actor.sheet.render(true);
+      // 어느 카드든 누르면 상태 자세히(시트는 카드의 신분증 아이콘)
+      return togglePop(combat, c, t);
     }
   });
 }
