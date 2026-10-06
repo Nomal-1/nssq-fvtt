@@ -780,3 +780,34 @@
 #nssq-status-pop .an-slots li.debuff { border-left: 3px solid #6e3296; }
 #nssq-status-pop .an-slots li.ailment { border-left: 3px solid #b02828; }
 #nssq-status-pop .an-slots li.bind { border-left: 3px solid #c46e14; }
+/* 몬스터 도감 */
+.nssq-bestiary .window-content { padding: 0; }
+.nssq-bestiary .bestiary-root { display: grid; grid-template-columns: 240px 1fr; height: 100%; min-height: 0; }
+.nssq-bestiary aside { display: flex; flex-direction: column; min-height: 0; padding: 6px; border-right: 1px solid var(--nq-line2, #999); }
+.nssq-bestiary aside input[type=search] { margin-bottom: 4px; }
+.nssq-bestiary .species { flex: 1; overflow-y: auto; list-style: none; margin: 0; padding: 0; }
+.nssq-bestiary .species li { display: flex; align-items: center; gap: 6px; padding: 3px 4px; cursor: pointer; border-radius: 4px; color: #888; }
+.nssq-bestiary .species li.known { color: inherit; }
+.nssq-bestiary .species li.active { background: rgba(201, 162, 74, 0.25); }
+.nssq-bestiary .species li img { width: 28px; height: 28px; object-fit: contain; border: none; }
+.nssq-bestiary .species li .nm { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nssq-bestiary .species li small { font-size: 0.8em; color: #888; white-space: nowrap; }
+.nssq-bestiary .species li .kills { font-size: 0.8em; padding: 0 5px; border-radius: 8px; background: #8a2a2a; color: #fff; }
+.nssq-bestiary .detail { overflow-y: auto; padding: 8px 12px; }
+.nssq-bestiary .detail header { display: flex; gap: 10px; align-items: center; }
+.nssq-bestiary .detail header img { width: 72px; height: 72px; object-fit: contain; border: none; }
+.nssq-bestiary .detail header h2 { margin: 0; border: none; }
+.nssq-bestiary .detail h4 { margin: 8px 0 3px; border-bottom: 1px solid var(--nq-line2, #999); }
+.nssq-bestiary .bestiary-edit .row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 8px; }
+.nssq-bestiary .bestiary-edit input[type=number] { width: 4em; }
+.nssq-bestiary .checks { list-style: none; margin: 0; padding: 0; columns: 2; }
+.nssq-bestiary .checks small { color: #888; }
+.nssq-bestiary .an-stats { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 3px; }
+.nssq-bestiary .an-resists { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 3px; margin-top: 3px; }
+.nssq-bestiary .an-stat, .nssq-bestiary .an-res { display: flex; flex-direction: column; align-items: center; padding: 2px 0; border: 1px solid var(--nq-line2, #999); border-radius: 4px; }
+.nssq-bestiary .an-stat span, .nssq-bestiary .an-res span { font-size: 0.75em; color: #888; }
+.nssq-bestiary .an-list { list-style: none; margin: 0; padding: 0; }
+.nssq-bestiary .an-list li { display: flex; gap: 6px; padding: 2px 6px; border-bottom: 1px dashed var(--nq-line, #ccc); }
+.nssq-bestiary .an-list li small { margin-left: auto; color: #888; }
+.nssq-bestiary .an-list li.q { justify-content: center; letter-spacing: 0.2em; color: #888; }
+.nssq-bestiary .none { color: #888; }

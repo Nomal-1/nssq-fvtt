@@ -10,6 +10,7 @@ import { LAYOUT } from "../engine/formation.mjs";
 import { relayout } from "../combat/formation.mjs";
 import { enemyActorFor } from "./enemy-library.mjs";
 import { applyIdentify, identifyEnemy } from "../combat/identify.mjs";
+import { applyAutoIdentify } from "../combat/bestiary.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -221,6 +222,8 @@ export async function startBattle({ presetId, members, surprise = "none", identi
   await combat.createEmbeddedDocuments("Combatant", combatants);
   await combat.startCombat();
   if (identifyValue !== null && identifyValue !== undefined) await applyIdentify(combat, identifyValue);
+  // 도감 처치 수가 기준 이상인 종은 판정 전에도 식별 상태
+  await applyAutoIdentify(combat);
   // 대미지 적용 등은 채팅 카드에서 하므로 전투 중에도 채팅을 연다(인카운터 기능은 전투 화면에 있다)
   ui.sidebar.activateTab("chat");
 
@@ -264,6 +267,7 @@ export async function joinBattle(combat, uuid, { row = "front" } = {}) {
     await token.actor.update({ "system.row": row, "system.order": order, "system.identified": false, "system.rareKnown": false });
     // 이 전투에서 이미 식별 판정을 했다면 그 달성값으로
     if (info.identifyValue !== null && info.identifyValue !== undefined) await identifyEnemy(token.actor, info.identifyValue);
+    else await applyAutoIdentify(combat);
   }
   await relayout(copy);
   await combat.createEmbeddedDocuments("Combatant", [{ tokenId: token.id, sceneId: copy.id, actorId: token.actorId, hidden: token.hidden }]);
