@@ -21,7 +21,7 @@ import { bustStyle, faceStyle } from "../apps/art-config.mjs";
 import { flip, morph, snapshot } from "./morph.mjs";
 import { identifyDialog } from "./identify.mjs";
 import { randomEnemyAction } from "./enemy-ai.mjs";
-import { StatusApp, statusChips } from "./status.mjs";
+import { StatusApp, statusChips, statusDetailHtml } from "./status.mjs";
 import { actionState, confusedAction } from "./turn-status.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
@@ -91,7 +91,48 @@ function bindDrop(el) {
   });
 }
 
+/* ---------------- 상태 자세히(카드를 누르면) ---------------- */
+
+let popId = null;
+let popEl = null;
+
+function closePop() {
+  popId = null;
+  popEl?.remove();
+  popEl = null;
+}
+
+/** 카드 옆에 상태 이상·강화·약화 자세히(플레이어도). 같은 카드를 다시 누르면 닫힌다 */
+function togglePop(combat, c, card) {
+  if (popId === c.id) return closePop();
+  popId = c.id;
+  if (!popEl) {
+    popEl = document.createElement("div");
+    popEl.id = "nssq-status-pop";
+    document.body.append(popEl);
+    popEl.addEventListener("click", (ev) => { if (ev.target.closest("[data-pop-close]")) closePop(); });
+  }
+  popEl.innerHTML = statusDetailHtml(c.actor, c.name);
+  const r = card.getBoundingClientRect();
+  const w = popEl.offsetWidth || 300;
+  const h = popEl.offsetHeight || 200;
+  let left = r.right + 8;
+  if (left + w > window.innerWidth - 8) left = Math.max(8, r.left - w - 8);
+  const top = Math.min(Math.max(8, r.top), window.innerHeight - h - 8);
+  popEl.style.left = `${left}px`;
+  popEl.style.top = `${top}px`;
+}
+
+/** 다시 그릴 때 열려 있는 창의 내용도 맞춘다 */
+function refreshPop(combat) {
+  if (!popId || !popEl) return;
+  const c = combat.combatants.get(popId);
+  if (!c?.actor) return closePop();
+  popEl.innerHTML = statusDetailHtml(c.actor, c.name);
+}
+
 export function clearHud() {
+  closePop();
   root?.remove();
   root = null;
   fxLayer?.remove();
@@ -279,6 +320,7 @@ export function renderHud() {
   const before = snapshot(el);
   morph(el, battleHtml(combat));
   flip(el, before);
+  refreshPop(combat);
   for (const h of hpChanges) hpEffect(h.id, h.delta);
 }
 
@@ -499,7 +541,9 @@ function bindClicks(el) {
         renderHud();
         return normalAttack(attacker, { target: c.token });
       }
-      if (c.actor?.isOwner) c.actor.sheet.render(true);
+      // 에너미·남의 캐릭터: 상태 자세히 / 내 캐릭터(GM은 아군 전부): 시트
+      if (t.classList.contains("nb-enemy") || !c.actor?.isOwner) return togglePop(combat, c, t);
+      c.actor.sheet.render(true);
     }
   });
 }
@@ -523,6 +567,11 @@ export function registerHud() {
     if (combat?.combatant?.id === combatantId) combat.nextTurn();
   });
   Hooks.once("ready", () => renderHud());
+  // 창 밖을 누르거나 Esc면 닫는다
+  document.addEventListener("mousedown", (ev) => {
+    if (popEl && !ev.target.closest("#nssq-status-pop, .nb-enemy, .nb-member")) closePop();
+  });
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") closePop(); });
   window.addEventListener("resize", rerender);
   Hooks.on("collapseSidebar", () => setTimeout(renderHud, 250));
   for (const hook of ["updateCombat", "createCombat", "updateCombatant", "createCombatant", "deleteCombatant", "updateActor", "updateToken", "createItem", "updateItem", "deleteItem"]) Hooks.on(hook, rerender);

@@ -12,7 +12,7 @@
       <div class="nq-bars">
         <span class="nq-bar-label hp">HP</span>
         <div class="nq-bar hp"><i style="width: {{hpPct}}%"></i></div>
-        <span class="nq-bar-val"><input type="number" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number"/> / <input type="number" name="system.hp.max" value="{{system.hpMaxBase}}" data-dtype="Number"/></span>
+        <span class="nq-bar-val"><input type="number" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number"/> / <input type="number" name="system.hp.max" value="{{system.hpMaxBase}}" data-dtype="Number"/>{{#if effHpMax}}<b class="nq-eff" title="{{localize "NSSQ.Sheet.statusMod"}}">→ {{effHpMax}}</b>{{/if}}</span>
       </div>
     </div>
     <div class="nq-side">
@@ -44,9 +44,15 @@
           <h3 class="nq-title">{{localize "NSSQ.Sub.label"}}</h3>
           <div class="nq-stat-grid">
             {{#each subKeys as |k|}}
-            <label class="nq-sub-stat"><span>{{nssqLabel "NSSQ.Sub" k}}</span><input type="number" name="system.stats.{{k}}" value="{{lookup @root.system.stats k}}" data-dtype="Number"/></label>
+            <label class="nq-sub-stat"><span>{{nssqLabel "NSSQ.Sub" k}}</span><input type="number" name="system.stats.{{k}}" value="{{lookup @root.system.stats k}}" data-dtype="Number"/>{{#with (lookup @root.effStats k)}}{{#if changed}}<b class="nq-eff" title="{{localize "NSSQ.Sheet.statusMod"}}">→ {{value}}</b>{{/if}}{{/with}}</label>
             {{/each}}
           </div>
+          {{#if statusList.length}}
+          <h3 class="nq-title">{{localize "NSSQ.Sheet.statusTitle"}}</h3>
+          <ul class="nq-status-list">
+            {{#each statusList as |st|}}<li class="{{st.cls}}" title="{{st.hint}}">{{st.label}}</li>{{/each}}
+          </ul>
+          {{/if}}
         </div>
         <div class="nq-col">
           <h3 class="nq-title">{{localize "NSSQ.Resist.label"}}</h3>
@@ -54,7 +60,7 @@
             {{#each resistKeys as |k|}}
             <div class="nq-resist {{k}}">
               <span class="nq-resist-name">{{nssqLabel "NSSQ.Resist" k}}</span>
-              <input type="number" name="system.resist.{{k}}" value="{{lookup @root.system.resist k}}" data-dtype="Number" style="width:3em;height:24px;font-size:1.1em"/>
+              <input type="number" name="system.resist.{{k}}" value="{{lookup @root.system.resist k}}" data-dtype="Number" style="width:3em;height:24px;font-size:1.1em"/>{{#with (lookup @root.effResist k)}}{{#if changed}}<b class="nq-eff" title="{{localize "NSSQ.Sheet.statusMod"}}">→ {{value}}</b>{{/if}}{{/with}}
             </div>
             {{/each}}
           </div>

@@ -308,6 +308,15 @@ export async function endBattle(combat, result = "abort") {
       content: `<div class="nssq-battle-end-card"><h3><i class="fas fa-flag-checkered"></i> ${L("ended", { name: esc(info.presetName ?? "") })}: ${L(`result${result[0].toUpperCase()}${result.slice(1)}`)}</h3>
         ${result === "victory" ? `<p class="notes">${L("dropLater")}</p>` : ""}</div>`
     });
+    // 전투가 끝나면 아군(연결된 캐릭터)의 상태 이상·봉인·강화·약화를 푼다. [석화]만 남긴다(07 #46)
+    for (const c of combat.combatants) {
+      const a = c.actor;
+      if (!a || !c.token?.actorLink) continue;
+      const conds = (a.system.conditions ?? []).filter((x) => x.id === "petrify");
+      if (conds.length !== (a.system.conditions ?? []).length || (a.system.buffs ?? []).length) {
+        await a.update({ "system.conditions": conds, "system.buffs": [] });
+      }
+    }
     // 전투 BGM 정지 → 원래 씬·음악
     if (copy?.playlist) await copy.playlist.stopAll();
     if (game.combats.has(combat.id)) await combat.delete();

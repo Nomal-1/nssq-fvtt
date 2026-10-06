@@ -41,6 +41,58 @@ export function buffLabel(raw) {
   return extra ? `${name}: ${extra}` : name;
 }
 
+/** 강화·약화가 실제로 하는 일: 「【물리 공격】 +2」·「〈염〉 내성 +1」 등 */
+export function buffEffectText(raw) {
+  const b = { ...raw, id: canonicalBuff(raw.id) };
+  const def = BUFFS[b.id];
+  if (!def) return "";
+  const B = (k, d) => game.i18n.format(`NSSQ.Buff.${k}`, d);
+  const signed = (n) => (n >= 0 ? `+${n}` : `−${Math.abs(n)}`);
+  const v = (def.sign ?? 1) * (Number(b.value) || 0);
+  if (def.stats) return def.stats.map((k) => (k === "hpMax" ? B("effHpMax", { n: signed(v) }) : B("effStat", { stat: loc(`NSSQ.Sub.${k}`), n: signed(v) }))).join(" · ");
+  const delta = { resistGrant: 1, resistUp: 1, weaknessGrant: -1, resistDown: -1 }[b.id];
+  if (delta) return B("effResist", { el: elementText(b.param), n: signed(delta) });
+  if (b.id === "elemImbue") return B("effImbue", { el: elementText(b.param) });
+  if (b.id === "hpRegen" || b.id === "tpRegen") return B("effRegen", { res: b.id === "hpRegen" ? "【HP】" : "【TP】", n: b.value });
+  if (b.id === "chase") return B("effChase", { target: b.param || "-" });
+  if (b.id === "critUp") return B("effCrit");
+  return "";
+}
+
+/** 전투원 상태 자세히(전투 화면에서 카드를 누르면 뜨는 창의 내용) */
+export function statusDetailHtml(actor, name) {
+  const s = actor?.system ?? {};
+  const T = (k, d) => (d ? game.i18n.format(`NSSQ.StatusPanel.${k}`, d) : game.i18n.localize(`NSSQ.StatusPanel.${k}`));
+  const conds = (s.conditions ?? []).filter((c) => CONDITIONS[c.id]);
+  const buffs = (s.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]);
+  const section = (title, cls, rows) => (rows.length ? `<h4 class="${cls}">${esc(title)}</h4><ul>${rows.join("")}</ul>` : "");
+  const condRows = (kind) => conds.filter((c) => CONDITIONS[c.id].kind === kind).map((c) =>
+    `<li class="${kind}"><b>${esc(kind === "bind" ? conditionName(c.id) : `[${conditionName(c.id)}]`)}</b>${c.depth === null || c.depth === undefined ? "" : ` <span class="meta">${esc(game.i18n.format("NSSQ.StatusHint.depth", { n: c.depth }))}</span>`}<div class="eff">${esc(loc(`NSSQ.StatusHint.${c.id}`))}</div></li>`);
+  const buffRows = (kind) => buffs.filter((b) => BUFFS[canonicalBuff(b.id)].kind === kind).map((b) =>
+    `<li class="${kind}"><b>『${esc(buffLabel(b))}』</b> <span class="meta">${esc(T("turnsLeft", { n: b.turns }))}</span><div class="eff">${esc(buffEffectText(b))}</div></li>`);
+  const body = [
+    section(T("ailments"), "ailment", condRows("ailment")),
+    section(T("binds"), "bind", condRows("bind")),
+    section(T("buffs"), "buff", buffRows("buff")),
+    section(T("debuffs"), "debuff", buffRows("debuff"))
+  ].join("");
+  return `<header><span class="name">${esc(name)}</span><a data-pop-close title="${esc(T("close"))}"><i class="fas fa-times"></i></a></header>
+    ${body || `<p class="none">${esc(T("none"))}</p>`}`;
+}
+
+/** 시트용 목록: { cls, label, hint } */
+export function statusListOf(actor) {
+  const s = actor?.system ?? {};
+  return [
+    ...(s.conditions ?? []).filter((c) => CONDITIONS[c.id]).map((c) => ({ cls: CONDITIONS[c.id].kind, label: conditionLabel(c), hint: loc(`NSSQ.StatusHint.${c.id}`) })),
+    ...(s.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]).map((b) => ({
+      cls: BUFFS[canonicalBuff(b.id)].kind,
+      label: `${buffLabel(b)} · ${game.i18n.format("NSSQ.Buff.turns", { n: b.turns })}`,
+      hint: buffEffectText(b)
+    }))
+  ];
+}
+
 /* ---------------- 칩(전투 화면·시트) ---------------- */
 
 /** 상태 칩 HTML. 상태 이상(빨강)·봉인(주황)·강화(파랑)·약화(보라) */
@@ -58,7 +110,7 @@ export function statusChips(actor) {
     const def = BUFFS[b.id];
     if (!def) continue;
     const turns = game.i18n.format("NSSQ.Buff.turns", { n: b.turns });
-    chips.push(`<span class="nb-chip ${def.kind}" title="${esc(`${loc(`NSSQ.Buff.${def.kind}`)}: ${buffLabel(b)} (${turns})`)}">${esc(buffLabel(b))}<b>${esc(turns)}</b></span>`);
+    chips.push(`<span class="nb-chip ${def.kind}" title="${esc(`${loc(`NSSQ.Buff.${def.kind}`)}: ${buffLabel(b)} (${turns}) — ${buffEffectText(b)}`)}">${esc(buffLabel(b))}<b>${esc(turns)}</b></span>`);
   }
   return chips.length ? `<div class="nb-chips">${chips.join("")}</div>` : "";
 }
@@ -76,15 +128,16 @@ const nameOf = (actor) => actor.token?.name ?? actor.name;
 export async function inflictCondition(actor, { id, depth = null, source = null, rollText = "" }) {
   const suppAtk = source ? combatProfile(source).suppAtk : 0;
   const r = addCondition(actor.system.conditions, { id, depth, source: source?.uuid ?? "", sourceSuppAtk: suppAtk });
-  if (r.result !== "ignored") await actor.update({ "system.conditions": r.list });
+  const changed = !["ignored", "blocked"].includes(r.result);
+  if (changed) await actor.update({ "system.conditions": r.list });
   const label = conditionName(id);
-  const line = r.result === "ignored"
-    ? L("ignored", { name: esc(nameOf(actor)) })
-    : L("inflicted", { name: esc(nameOf(actor)), label: esc(label), depth: CONDITIONS[id]?.depth ? depth : "-" })
-      + (r.replaced ? ` ${L("replaced", { label: esc(conditionName(r.replaced.id)) })}` : "");
+  const line = r.result === "ignored" ? L("ignored", { name: esc(nameOf(actor)) })
+    : r.result === "blocked" ? L("blocked", { name: esc(nameOf(actor)), label: esc(label), by: esc(conditionName(r.blockedBy.id)) })
+      : L("inflicted", { name: esc(nameOf(actor)), label: esc(label), depth: CONDITIONS[id]?.depth ? depth : "-" })
+        + (r.replaced ? ` ${L("replaced", { label: esc(conditionName(r.replaced.id)) })}` : "");
   await note(`<i class="fas fa-skull-crossbones"></i> ${line}${rollText ? `<p class="notes">${rollText}</p>` : ""}`);
   // 부여 순간의 1D6([혼란]·[마비]·[공포]), [스턴]의 대기 취소
-  if (r.result !== "ignored") await onInflicted(actor, id);
+  if (changed) await onInflicted(actor, id);
   return r;
 }
 

@@ -1,4 +1,6 @@
 import { ABILITIES, RESISTS, SUB_STATS } from "../engine/derive.mjs";
+import { unidentifiedResist } from "../engine/combat.mjs";
+import { statusListOf } from "../combat/status.mjs";
 import { promptCheck, rollCheck } from "../chat/check.mjs";
 import { rollAbilities } from "../apps/ability-roll.mjs";
 import { activateInventoryListeners, inventoryContext } from "./inventory.mjs";
@@ -38,6 +40,14 @@ export class NssqActorSheet extends ActorSheet {
     context.isGM = game.user.isGM;
     const pct = (r) => (r?.max > 0 ? Math.clamp(Math.round((r.value / r.max) * 100), 0, 100) : 0);
     context.hpPct = pct(system.hp);
+    if (this.actor.type === "enemy") {
+      // 상태 이상·강화·약화로 바뀐 값(파란 숫자, 단계 5). 미식별 내성 최소 3은 바뀐 것으로 치지 않는다
+      const base = system.identified ? system.resist : unidentifiedResist(system.resist);
+      context.effStats = Object.fromEntries(SUB_STATS.map((k) => [k, { value: system.combatStats?.[k], changed: system.combatStats?.[k] !== system.stats[k] }]));
+      context.effResist = Object.fromEntries(RESISTS.map((k) => [k, { value: system.resistTotal?.[k], changed: system.resistTotal?.[k] !== base[k] }]));
+      context.effHpMax = system.hp.max !== system.hpMaxBase ? system.hp.max : null;
+      context.statusList = statusListOf(this.actor);
+    }
     if (this.actor.type === "enemy") {
       const el = (e) => (e === "none" ? game.i18n.localize("NSSQ.Combat.noElement") : game.i18n.localize(`NSSQ.Resist.${e}`));
       context.attackElementText = (system.attackElements ?? []).map(el).join("·") || "-";

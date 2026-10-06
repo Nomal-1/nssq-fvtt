@@ -40,7 +40,10 @@ const combat = {
 const { battleHtml } = await import("../../src/combat/hud.mjs");
 const css = fs.readFileSync("styles/nssq.css", "utf8");
 const html = battleHtml(combat, { attack: process.argv[4] === "attack" });
+// 「상태 자세히」 창 견본(node … gm main pop)
+const { statusDetailHtml } = await import("../../src/combat/status.mjs");
+const pop = process.argv[4] === "pop" ? `<div id="nssq-status-pop" style="left:820px;top:380px">${statusDetailHtml(turns[1].actor, turns[1].name)}</div>` : "";
 fs.writeFileSync("build/battle-preview.html", `<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>${css}
 body{margin:0;background:#556;font-family:sans-serif} #sidebar-mock{position:fixed;right:0;top:0;bottom:0;width:300px;background:#222;color:#ccc;padding:8px}</style>
-<div id="sidebar-mock">sidebar</div><div id="nssq-battle">${html}</div>`);
+<div id="sidebar-mock">sidebar</div><div id="nssq-battle">${html}</div>${pop}`);
 console.log("build/battle-preview.html");

@@ -802,7 +802,14 @@
       "resistDown": "내성 저하",
       "weaknessGrant": "약점 부여",
       "turns": "{n}턴",
-      "paramAll": "전체"
+      "paramAll": "전체",
+      "effStat": "{stat} {n}",
+      "effHpMax": "【HP】 최대값 {n}",
+      "effResist": "{el} 내성 {n}",
+      "effImbue": "공격의 기본 속성에 {el}이(가) 더해진다",
+      "effRegen": "종료 페이즈에 {res} {n} 회복",
+      "effChase": "「{target}」이(가) 공격 롤을 하면 추격할 수 있다",
+      "effCrit": "대미지 다이스의 6이 1보다 1개 이상만 많아도 크리티컬 히트"
     },
     "StatusHint": {
       "petrify": "모든 행동 불가, 【회피】 0. 심도 없음",
@@ -852,7 +859,8 @@
       "fixedRoll": "억제 방어 롤 {dice} + {mod} = {total} / 목표값 {target}",
       "contestRoll": "{atk}: {atkDice} + {atkMod} = {atkTotal} vs {def}: {defDice} + {defMod} = {defTotal}",
       "replaced": "([{label}]은(는) 덧씌워져 사라짐)",
-      "buffReplaced": "{name}: {kind}는 3종류까지라 {other}이(가) 사라지고 {label}이(가) 걸렸다"
+      "buffReplaced": "{name}: {kind}는 3종류까지라 {other}이(가) 사라지고 {label}이(가) 걸렸다",
+      "blocked": "{name}: [{by}] 중이라 [{label}]은(는) 걸리지 않는다"
     },
     "Turn": {
       "openingTitle": "개막 페이즈 판정([혼란]·[마비]·[공포])",
@@ -882,6 +890,16 @@
       "undo": "되돌리기",
       "applied": "적용함",
       "notApplied": "아직 적용하지 않음"
+    },
+    "StatusPanel": {
+      "ailments": "상태 이상",
+      "binds": "봉인",
+      "buffs": "강화 효과",
+      "debuffs": "약화 효과",
+      "turnsLeft": "남은 {n}턴",
+      "none": "걸려 있는 상태 이상·강화·약화가 없다.",
+      "close": "닫기",
+      "hint": "카드를 누르면 상태 이상·강화·약화를 자세히 본다"
     }
   }
 }

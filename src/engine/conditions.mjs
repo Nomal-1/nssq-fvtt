@@ -35,7 +35,8 @@ export const hasCondition = (list, id) => (list ?? []).some((c) => c.id === id);
  * 상태 이상·봉인 부여.
  * - 같은 것이 이미 있으면 심도가 더 높을 때만 갱신(07 #5)
  * - 상태 이상은 하나만: 다른 상태 이상이 걸리면 새 것으로 덧씌운다(07 #35, 사용자 결정). [스턴]과 봉인은 따로(함께 걸림)
- * @returns {{list: object[], result: "added"|"updated"|"replaced"|"ignored", replaced?: object}}
+ * - [석화] 중에는 다른 상태 이상이 걸리지 않는다([스턴]·봉인은 걸린다)
+ * @returns {{list: object[], result: "added"|"updated"|"replaced"|"ignored"|"blocked", replaced?: object}}
  */
 export function addCondition(list, { id, depth = null, source = "", sourceSuppAtk = 0 }) {
   const def = CONDITIONS[id];
@@ -46,6 +47,8 @@ export function addCondition(list, { id, depth = null, source = "", sourceSuppAt
   if (i < 0) {
     const slot = (d) => d?.kind === "ailment" && !d.separate;
     const old = slot(def) ? cur.find((c) => slot(CONDITIONS[c.id])) : null;
+    // [석화]는 다른 상태 이상으로 덧씌워지지 않는다([스턴]만 함께 걸린다, 07 #35)
+    if (old?.id === "petrify") return { list: [...cur], result: "blocked", blockedBy: old };
     if (old) return { list: [...cur.filter((c) => c !== old), entry], result: "replaced", replaced: old };
     return { list: [...cur, entry], result: "added" };
   }

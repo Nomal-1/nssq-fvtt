@@ -105,7 +105,7 @@ export function isInferior(existing, incoming) {
  * - 대항 효과가 있으면 둘 다 소멸(countered)
  * - 같은 종류면 큰 효과 하나만(07 #36, 3종류가 차 있어도 같음)
  * - 같은 분류가 이미 3종류면(07 #7, 사용자 결정): 새 효과의 하위 호환인 것이 있으면 그것을,
- *   없으면 가장 나중에 걸린 것을 지우고 새 효과를 건다(replaced)
+ *   없으면 가장 먼저 걸린 것(갱신된 것은 갱신한 때 걸린 것으로 본다)을 지우고 새 효과를 건다(replaced)
  * @returns {{list: object[], result: "added"|"updated"|"ignored"|"countered"|"replaced", removed?: object}}
  */
 export function addBuff(list, { id, value = 0, turns = 1, param = "" }) {
@@ -127,7 +127,7 @@ export function addBuff(list, { id, value = 0, turns = 1, param = "" }) {
   }
   const same = cur.filter((b) => BUFFS[b.id]?.kind === def.kind);
   if (new Set(same.map(keyOf)).size < MAX_KINDS) return { list: [...cur, entry], result: "added" };
-  const out = same.find((b) => isInferior(b, entry)) ?? same[same.length - 1];
+  const out = same.find((b) => isInferior(b, entry)) ?? same[0];
   return { list: [...cur.filter((b) => b !== out), entry], result: "replaced", removed: out };
 }
 

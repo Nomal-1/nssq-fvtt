@@ -5,9 +5,7 @@
  * - 「GM 보너스」: GM만(플레이어에게는 값이 보인다)
  */
 import { ABILITIES, RESISTS, SUB_STATS, growthAvailable, subStatBreakdown } from "../engine/derive.mjs";
-import { CONDITIONS } from "../engine/conditions.mjs";
-import { BUFFS } from "../engine/buffs.mjs";
-import { buffLabel, conditionLabel } from "../combat/status.mjs";
+import { statusListOf } from "../combat/status.mjs";
 import { initialMoney } from "../engine/chargen.mjs";
 import { refinementBadges } from "./badges.mjs";
 import { slotOccupant } from "../engine/equipment.mjs";
@@ -93,10 +91,7 @@ export function characterContext(actor) {
   const growth = growthAvailable({ exp: s.exp, abilities: s.abilities });
   return {
     abilityCards, subStats, resist, equip, weaponLine, creation, growth,
-    status: [
-      ...(s.conditions ?? []).map((c) => ({ cls: CONDITIONS[c.id]?.kind ?? "", label: conditionLabel(c), hint: game.i18n.localize(`NSSQ.StatusHint.${c.id}`) })),
-      ...(s.buffs ?? []).map((b) => ({ cls: BUFFS[b.id]?.kind ?? "", label: `${buffLabel(b)} · ${game.i18n.format("NSSQ.Buff.turns", { n: b.turns })}`, hint: game.i18n.localize(`NSSQ.Buff.${BUFFS[b.id]?.kind ?? "buff"}`) }))
-    ],
+    status: statusListOf(actor),
     canRollAbilities: game.user.isGM || !s.creation?.locked
   };
 }
