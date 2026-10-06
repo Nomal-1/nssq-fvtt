@@ -3,11 +3,12 @@
  * - 이니셔티브는 굴리지 않는다: 【속도】(최속 +1000, 후발 −1000, 동률 PC → 아군 NPC → 에너미)
  * - 메인 페이즈만 Foundry의 턴을 쓰고, 전투 불능·대기 상태는 건너뛴다
  * - 개막·종료 페이즈에서 [다음]을 누르면 페이즈가 넘어간다
- * - 종료 페이즈 처리(독·자연 회복·강화 감소 등)는 단계 5
+ * - 개막 페이즈 시작: [혼란]·[마비]·[공포] 1D6, 종료 페이즈 시작: 독·리젠·자연 회복·턴 감소(combat/turn-status.mjs)
  */
 import { initiativeValue } from "../engine/combat.mjs";
 import { combatProfile } from "../combat/profile.mjs";
 import { openEndDialog } from "../apps/battle.mjs";
+import { actionState, openingRolls, runEndPhase } from "../combat/turn-status.mjs";
 
 export class NssqCombat extends Combat {
   get phase() {
@@ -42,10 +43,11 @@ export class NssqCombat extends Combat {
     return this;
   }
 
-  /** 메인 페이즈에서 행동할 수 있는가: 전투 불능·대기 상태·이미 행동함은 건너뜀 */
+  /** 메인 페이즈에서 행동할 수 있는가: 전투 불능·대기 상태·행동 불가 상태 이상([석화]·[수면]·[스턴]·판정 실패)은 건너뜀 */
   canAct(combatant) {
     if (!combatant || combatant.defeated || combatant.isDefeated) return false;
     if (combatant.getFlag("nssq", "waiting")) return false;
+    if (actionState(combatant).noAction) return false;
     return true;
   }
 
@@ -60,7 +62,9 @@ export class NssqCombat extends Combat {
       _id: c.id,
       "flags.nssq.-=guarding": null,
       "flags.nssq.-=waiting": null,
-      "flags.nssq.-=opening": null
+      "flags.nssq.-=opening": null,
+      "flags.nssq.-=disabled": null,
+      "flags.nssq.-=confused": null
     }));
     if (updates.length) await this.updateEmbeddedDocuments("Combatant", updates);
   }
@@ -71,6 +75,9 @@ export class NssqCombat extends Combat {
       speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
       content: `<div class="nssq-phase phase-${phase}"><i class="fas fa-hourglass-half"></i> ${game.i18n.format("NSSQ.Combat.phaseStart", { round: this.round, phase: game.i18n.localize(`NSSQ.Combat.phase.${phase}`) })}</div>`
     });
+    // 상태 이상의 턴 처리(단계 5)
+    if (phase === "opening") await openingRolls(this);
+    if (phase === "end") await runEndPhase(this);
   }
 
   async nextTurn() {

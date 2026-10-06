@@ -551,7 +551,9 @@
       "shuffleFlip": "전열 ↔ 후열 뒤집기",
       "shuffleButton": "섞기",
       "shuffleHint": "파티는 열마다 3칸. 살아 있는 전투원이 있으면 전열이 비지 않게 한다. 결과는 채팅에 남는다.",
-      "shuffled": "진형 변화: {side} — {mode}"
+      "shuffled": "진형 변화: {side} — {mode}",
+      "sleepWoke": "{name}: [수면]에서 깨어났다",
+      "curseBack": "[저주]: {name}에게 실대미지 {n} 반사"
     },
     "Battle": {
       "tab": "전투",
@@ -851,6 +853,35 @@
       "contestRoll": "{atk}: {atkDice} + {atkMod} = {atkTotal} vs {def}: {defDice} + {defMod} = {defTotal}",
       "replaced": "([{label}]은(는) 덧씌워져 사라짐)",
       "buffReplaced": "{name}: {kind}는 3종류까지라 {other}이(가) 사라지고 {label}이(가) 걸렸다"
+    },
+    "Turn": {
+      "openingTitle": "개막 페이즈 판정([혼란]·[마비]·[공포])",
+      "inflictTitle": "부여 순간 판정",
+      "rollOk": "이번 턴은 행동할 수 있다",
+      "disabledFail": "이번 턴 모든 행동 불가, 【회피】 0(대기 취소)",
+      "confusedFail": "이번 턴 개막 행동 불가, 메인 페이즈에 같은 열 아군을 공격",
+      "cannotAct": "{name}: 행동 불가 — [{reason}]",
+      "noOpening": "행동 불가 — [{reason}]",
+      "confusedHint": "[혼란]: 자신을 뺀 같은 열 아군 중 무작위 하나에게 통상 공격을 한다.",
+      "confusedButton": "혼란 행동",
+      "confusedNone": "{name}: [혼란] — 공격할 같은 열 아군이 없어 아무것도 하지 않았다",
+      "confusedAttack": "{name}: [혼란] — {target}을(를) 공격한다",
+      "endTitle": "{round}턴 종료 페이즈",
+      "delayedNone": "1. 지연 공격: 없음(지연 공격은 이후 단계에서 연결)",
+      "endNothing": "처리할 독·리젠·상태 이상·강화·약화가 없다.",
+      "logPoison": "[독] 실대미지 {n}",
+      "logRegenHp": "HP 리젠 +{n}",
+      "logRegenTp": "TP 리젠 +{n}",
+      "logRecovered": "[{label}] 자연 회복: {dice}+억제 방어 = {total} ≥ 심도 {depth} → 회복",
+      "logNotRecovered": "[{label}] 자연 회복 실패: {dice}+억제 방어 = {total} < 심도 {depth}",
+      "logExpired": "{label} 효과가 끝났다",
+      "logStunEnd": "[스턴]이 끝났다",
+      "logDepth": "[{label}] 심도 {from} → {to}",
+      "hpLine": "【HP】 {before} → {after}",
+      "apply": "적용",
+      "undo": "되돌리기",
+      "applied": "적용함",
+      "notApplied": "아직 적용하지 않음"
     }
   }
 }

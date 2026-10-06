@@ -7,6 +7,7 @@ import { CONDITIONS, CONDITION_IDS, addCondition, contestInflict, removeConditio
 import { BUFFS, BUFF_IDS, IMBUE_ELEMENTS, addBuff, canonicalBuff, paramElements, removeBuff } from "../engine/buffs.mjs";
 import { RESISTS } from "../engine/derive.mjs";
 import { combatProfile } from "./profile.mjs";
+import { onInflicted } from "./turn-status.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Conditions.${k}`, d) : game.i18n.localize(`NSSQ.Conditions.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -82,6 +83,8 @@ export async function inflictCondition(actor, { id, depth = null, source = null,
     : L("inflicted", { name: esc(nameOf(actor)), label: esc(label), depth: CONDITIONS[id]?.depth ? depth : "-" })
       + (r.replaced ? ` ${L("replaced", { label: esc(conditionName(r.replaced.id)) })}` : "");
   await note(`<i class="fas fa-skull-crossbones"></i> ${line}${rollText ? `<p class="notes">${rollText}</p>` : ""}`);
+  // 부여 순간의 1D6([혼란]·[마비]·[공포]), [스턴]의 대기 취소
+  if (r.result !== "ignored") await onInflicted(actor, id);
   return r;
 }
 

@@ -18,6 +18,7 @@ import { GMScreen, registerGMScreen } from "./apps/gm-screen.mjs";
 import { NssqCombat } from "./documents/combat.mjs";
 import { NssqToken } from "./canvas/token.mjs";
 import { registerApply } from "./combat/apply.mjs";
+import { registerTurnStatus } from "./combat/turn-status.mjs";
 import { attackerFromContext, normalAttack, registerAttackHooks } from "./combat/attack.mjs";
 import { registerTracker, rollEscape } from "./combat/tracker.mjs";
 import { registerFormation } from "./combat/formation.mjs";
@@ -70,6 +71,7 @@ Hooks.once("init", () => {
   registerShopHooks();
   registerGMScreen();
   registerApply();
+  registerTurnStatus();
   registerAttackHooks();
   registerTracker();
   registerBattle();

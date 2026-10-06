@@ -2,7 +2,8 @@
  * 【HP】 변경 적용·되돌리기. 설정 autoApply(off/confirm/auto)를 따르고,
  * 소유하지 않은 액터는 소켓으로 활성 GM에게 맡긴다(04 §5.5).
  */
-import { rowSwap, sideDefeated } from "../engine/combat.mjs";
+import { halve, rowSwap, sideDefeated } from "../engine/combat.mjs";
+import { removeCondition } from "../engine/conditions.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { sideOf } from "./profile.mjs";
 
@@ -74,16 +75,36 @@ async function gmApply({ messageId, index, undo = false }) {
   const actor = await fromUuid(t.actorUuid);
   if (!actor) return;
   const targets = foundry.utils.deepClone(card.targets);
+  const attacker = card.attackerUuid ? await fromUuid(card.attackerUuid) : null;
   if (!undo) {
     if (t.applied) return;
     const before = actor.system.hp.value;
     const after = before - (t.finalDamage ?? 0);
-    await actor.update({ "system.hp.value": after });
-    targets[index] = { ...t, applied: true, before, after };
+    const upd = { "system.hp.value": after };
+    // [수면]: 명중한 공격의 처리 직후 풀린다(07 #37)
+    const sleep = t.hit ? (actor.system.conditions ?? []).find((c) => c.id === "sleep") : null;
+    if (sleep) upd["system.conditions"] = removeCondition(actor.system.conditions, "sleep");
+    await actor.update(upd);
+    const entry = { ...t, applied: true, before, after, sleepEntry: sleep ?? null, curse: null };
+    // [저주]: 실대미지의 절반(버림)이 공격자에게(방어·내성 무시, 쓰러질 수 있다 07 #44)
+    const back = card.curse && attacker ? halve(t.finalDamage ?? 0) : 0;
+    if (back > 0) {
+      const cb = attacker.system.hp.value;
+      await attacker.update({ "system.hp.value": cb - back });
+      entry.curse = { before: cb, after: cb - back, amount: back };
+    }
+    targets[index] = entry;
+    const notes = [];
+    if (sleep) notes.push(L("sleepWoke", { name: t.name }));
+    if (back > 0) notes.push(L("curseBack", { name: attacker.token?.name ?? attacker.name, n: back }));
+    if (notes.length) await ChatMessage.create({ speaker: { alias: L("tracker") }, content: `<div class="nssq-combat-note nssq-status-note">${notes.join("<br>")}</div>` });
   } else {
     if (!t.applied) return;
-    await actor.update({ "system.hp.value": t.before });
-    targets[index] = { ...t, applied: false, after: null };
+    const upd = { "system.hp.value": t.before };
+    if (t.sleepEntry && !(actor.system.conditions ?? []).some((c) => c.id === "sleep")) upd["system.conditions"] = [...(actor.system.conditions ?? []), t.sleepEntry];
+    await actor.update(upd);
+    if (t.curse && attacker) await attacker.update({ "system.hp.value": t.curse.before });
+    targets[index] = { ...t, applied: false, after: null, sleepEntry: null, curse: null };
   }
   await message.update({ "flags.nssq.attack.targets": targets });
   // 전투 불능·열 교대는 updateActor 훅(afterHpChange)이 처리한다

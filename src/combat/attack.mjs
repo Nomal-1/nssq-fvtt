@@ -92,7 +92,9 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
       attack: {
         attackerUuid: attacker.uuid, kind: "physical", label: L("normalAttack"),
         weapon: a.weaponName, elements: a.elements, physAtk: a.physAtk, defense: d.defense,
-        hitStat: a.physHit, fpGain: r.fpGain, targets: [targetEntry]
+        hitStat: a.physHit, fpGain: r.fpGain, targets: [targetEntry],
+        // [저주]: 공격자가 공격 시점에 [저주]면 실대미지 절반을 되돌려 받는다(적용할 때)
+        curse: a.conditions.some((c) => c.id === "curse")
       }
     }
   };

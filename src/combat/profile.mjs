@@ -33,6 +33,8 @@ export function combatProfile(actor, combatant = null) {
     petrified: (s.conditions ?? []).some((x) => x.id === "petrify"),
     critUp: !!s.statusMods?.buffs?.critUp
   };
+  // [마비]·[공포] 판정에 실패한 턴은 【회피】 0(전투원 플래그, combat/turn-status.mjs)
+  const disabled = !!combatant?.getFlag("nssq", "disabled");
   // 속성 부여: 공격의 기본 속성에 더한다(복합 속성 → 내성은 최저, 07 #24)
   const withImbue = (els) => [...new Set([...els.filter((e) => e !== "none"), ...(s.statusMods?.buffs?.elements ?? [])])];
   if (actor.type === "character") {
@@ -41,7 +43,7 @@ export function combatProfile(actor, combatant = null) {
     return {
       ...base,
       speed: s.sub.speed,
-      physHit: s.sub.physHit, elemHit: s.sub.elemHit, evasion: s.sub.evasion,
+      physHit: s.sub.physHit, elemHit: s.sub.elemHit, evasion: disabled ? 0 : s.sub.evasion,
       physAtk: s.sub.physAtk, elemAtk: s.sub.elemAtk, defense: s.sub.defense,
       suppAtk: s.sub.suppAtk, suppDef: s.sub.suppDef,
       resist: s.resistTotal ?? s.resist,
@@ -55,7 +57,7 @@ export function combatProfile(actor, combatant = null) {
     return {
       ...base,
       speed: Math.max(0, st.speed),
-      physHit: st.physHit, elemHit: st.elemHit, evasion: st.evasion,
+      physHit: st.physHit, elemHit: st.elemHit, evasion: disabled ? 0 : st.evasion,
       physAtk: st.physAtk, elemAtk: st.elemAtk, defense: st.defense,
       suppAtk: st.suppAtk, suppDef: st.suppDef,
       // 식별 실패한 에너미의 내성 최소 3(01 §3.1)은 enemy.mjs에서 반영

@@ -22,6 +22,7 @@ import { flip, morph, snapshot } from "./morph.mjs";
 import { identifyDialog } from "./identify.mjs";
 import { randomEnemyAction } from "./enemy-ai.mjs";
 import { StatusApp, statusChips } from "./status.mjs";
+import { actionState, confusedAction } from "./turn-status.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -210,6 +211,17 @@ function commandBody(combat) {
     if (!c.actor.isOwner || isKO(c)) return `<p class="wait">${L("acting", { name: esc(c.name) })}</p>`;
     const cmd = (id, icon, label, { active = false, disabled = false, title = "" } = {}) =>
       `<button type="button" data-cmd="${id}" class="cmd ${active ? "active" : ""}" ${disabled ? "disabled" : ""} title="${esc(title || label)}"><i class="fas ${icon}"></i> ${esc(label)}</button>`;
+    // [혼란] 판정 실패: 같은 열 아군에게 통상 공격만(수동 스킬은 가능)
+    const st = actionState(c);
+    if (st.confused) {
+      return `<div class="who">${L("whoseAction", { name: esc(c.name) })}</div>
+      <p class="notes">${esc(game.i18n.localize("NSSQ.Turn.confusedHint"))}</p>
+      <div class="cmds" data-combatant="${c.id}">
+        ${cmd("confused", "fa-dizzy", game.i18n.localize("NSSQ.Turn.confusedButton"))}
+        ${cmd("end", "fa-forward", L("endTurn"))}
+      </div>`;
+    }
+    if (st.noAction) return `<p class="wait">${esc(game.i18n.format("NSSQ.Turn.cannotAct", { name: c.name, reason: st.reason }))}</p>`;
     return `<div class="who">${L("whoseAction", { name: esc(c.name) })}</div>
       <div class="cmds" data-combatant="${c.id}">
         ${game.user.isGM && sideOf(c.actor) === "enemy" ? cmd("random", "fa-dice", L("randomAction"), { title: L("randomActionHint") }) : ""}
@@ -226,6 +238,9 @@ function commandBody(combat) {
       .sort((a, b) => (sideOf(a.actor) === "enemy") - (sideOf(b.actor) === "enemy"));
     if (!list.length) return `<p class="wait">${L("openingWait")}</p>`;
     return `<div class="who">${L("openingTitle")}</div>` + list.map((c) => {
+      // 행동 불가·혼란 판정 실패는 개막 행동 없음
+      const st = actionState(c);
+      if (st.noOpening) return `<div class="opening-row disabled" data-combatant="${c.id}"><span class="name">${esc(c.name)}</span><span class="notes">${esc(game.i18n.format("NSSQ.Turn.noOpening", { reason: st.reason }))}</span></div>`;
       const guarding = !!c.getFlag("nssq", "guarding");
       return `<div class="opening-row ${sideOf(c.actor) === "enemy" ? "enemy" : ""} ${c.getFlag("nssq", "opening") ? "done" : ""}" data-combatant="${c.id}"><span class="name">${esc(c.name)}</span>
         <button type="button" data-cmd="guard" class="${guarding ? "active" : ""}" title="${guarding ? L("guardOff") : L("guard")}"><i class="fas fa-shield-alt"></i> ${L("guard")}</button>
@@ -449,6 +464,7 @@ function bindClicks(el) {
         case "attack": pending = pending === "attack" ? null : "attack"; return renderHud();
         case "end": return requestEndTurn(combat);
         case "random": pending = null; return randomEnemyAction(combat);
+        case "confused": pending = null; return confusedAction(combat, c);
         case "guard": return toggleGuard(c);
         case "row": return toggleRow(c);
         case "swap": return swapWeapon(c);

@@ -8,6 +8,7 @@ import { evaluateCheck } from "../engine/check.mjs";
 import { slotOccupant } from "../engine/equipment.mjs";
 import { normalAttack } from "./attack.mjs";
 import { combatProfile } from "./profile.mjs";
+import { actionState } from "./turn-status.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 
@@ -171,12 +172,13 @@ export function registerTracker() {
         a.addEventListener("click", (ev) => { ev.stopPropagation(); fn(ev); });
         box.append(a);
       };
-      if (owner && started && phase === "opening" && !c.defeated) {
+      const st = actionState(c);
+      if (owner && started && phase === "opening" && !c.defeated && !st.noOpening) {
         btn("fa-shield-alt", guarding ? L("guardRelease") : L("guard"), () => toggleGuard(c), guarding);
         btn("fa-arrows-alt-v", L("changeRow"), () => toggleRow(c));
         if (actor.type === "character") btn("fa-exchange-alt", L("swapWeapon"), () => swapWeapon(c));
       }
-      if (owner && started && phase === "main" && !c.defeated) {
+      if (owner && started && phase === "main" && !c.defeated && !st.noAction && !st.confused) {
         btn("fa-fist-raised", L("normalAttack"), (ev) => normalAttack(actor, { ignoreRange: ev.shiftKey && game.user.isGM }));
       }
       // GM: 에너미 식별 전환(감은 눈 = 식별 전, 뜬 눈 = 식별됨)
