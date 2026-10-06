@@ -680,3 +680,35 @@
 .nssq-identify li.ng { color: var(--nq-mu); }
 .nssq-identify .rare { color: var(--nq-fp); }
 .nssq-enemy-skill p { margin: 3px 0; }
+
+/* 17 ─ 상태 이상·봉인·강화·약화 칩, GM 상태 창 (단계 5) */
+#nssq-battle .nb-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; max-width: 100%; }
+/* 파티 카드: 이름 줄을 밀지 않도록 카드 위 테두리에 걸쳐 띄운다 */
+#nssq-battle .nb-member .nb-chips { position: absolute; left: 80px; right: 26px; top: -10px; z-index: 2; flex-wrap: nowrap; overflow: hidden; justify-content: flex-start; pointer-events: auto; }
+#nssq-battle .nb-chip { display: inline-flex; align-items: center; gap: 3px; padding: 0 6px; font-size: 12px; line-height: 18px; white-space: nowrap; color: #fff; border-radius: 9px; border: 1px solid rgba(255, 255, 255, 0.35); text-shadow: 0 1px 1px #000; cursor: help; }
+#nssq-battle .nb-chip b { font-weight: 700; font-size: 11px; padding: 0 4px; border-radius: 7px; background: rgba(0, 0, 0, 0.35); }
+#nssq-battle .nb-chip.ailment { background: rgba(176, 40, 40, 0.92); }
+#nssq-battle .nb-chip.bind { background: rgba(196, 110, 20, 0.92); }
+#nssq-battle .nb-chip.buff { background: rgba(36, 96, 178, 0.92); }
+#nssq-battle .nb-chip.debuff { background: rgba(110, 50, 150, 0.92); }
+#nssq-battle .nb-member { position: relative; }
+#nssq-battle .nb-member .nb-status-tool { position: absolute; top: 3px; right: 5px; font-size: 0.8em; color: var(--nq-mu); }
+#nssq-battle .nb-member .nb-status-tool:hover { color: var(--nq-gold-l); }
+.nssq-status-app .window-content { padding: 8px 10px; }
+.nssq-status-form h3 { margin: 8px 0 4px; font-size: 1.05em; border-bottom: 1px solid var(--nq-line2, #999); }
+.nssq-status-form .status-current { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.nssq-status-form .status-current li { display: flex; align-items: center; gap: 6px; padding: 2px 6px; border-left: 4px solid #888; background: rgba(0, 0, 0, 0.05); }
+.nssq-status-form .status-current li span { flex: 1; }
+.nssq-status-form .status-current li.ailment { border-color: #b02828; }
+.nssq-status-form .status-current li.bind { border-color: #c46e14; }
+.nssq-status-form .status-current li.buff { border-color: #2460b2; }
+.nssq-status-form .status-current li.debuff { border-color: #6e3296; }
+.nssq-status-form .status-current li.none { border: none; color: #777; }
+.nssq-status-form form button { margin-top: 4px; }
+.nssq .nq-sub-stat.changed b { color: #2a6fc0; }
+.nssq .nq-status-list { list-style: none; margin: 2px 0 6px; padding: 0; display: flex; flex-wrap: wrap; gap: 3px; }
+.nssq .nq-status-list li { padding: 0 6px; font-size: 0.9em; color: #fff; border-radius: 8px; background: #888; cursor: help; }
+.nssq .nq-status-list li.ailment { background: #b02828; }
+.nssq .nq-status-list li.bind { background: #c46e14; }
+.nssq .nq-status-list li.buff { background: #2460b2; }
+.nssq .nq-status-list li.debuff { background: #6e3296; }

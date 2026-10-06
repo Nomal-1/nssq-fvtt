@@ -1,8 +1,6 @@
 /**
  * 전투에 쓰는 값을 액터 종류와 관계없이 한 모양으로 모은다.
  */
-import { RESISTS } from "../engine/derive.mjs";
-import { unidentifiedResist } from "../engine/combat.mjs";
 
 /** 진영: 에너미 → enemy, 「동료 NPC」 캐릭터 → ally, 그 밖의 캐릭터 → pc */
 export function sideOf(actor) {
@@ -28,8 +26,15 @@ export function combatProfile(actor, combatant = null) {
     row: s.row ?? "front",
     hp: s.hp?.value ?? 0, hpMax: s.hp?.max ?? 0,
     guarding,
-    ko: (s.hp?.value ?? 0) <= 0
+    ko: (s.hp?.value ?? 0) <= 0,
+    // 상태 이상·봉인·강화(단계 5): 부능력치·내성에는 액터 데이터에서 이미 반영됨
+    conditions: s.conditions ?? [],
+    buffs: s.buffs ?? [],
+    petrified: (s.conditions ?? []).some((x) => x.id === "petrify"),
+    critUp: !!s.statusMods?.buffs?.critUp
   };
+  // 속성 부여: 공격의 기본 속성에 더한다(복합 속성 → 내성은 최저, 07 #24)
+  const withImbue = (els) => [...new Set([...els.filter((e) => e !== "none"), ...(s.statusMods?.buffs?.elements ?? [])])];
   if (actor.type === "character") {
     const w = s.equipment?.weapon;
     const elements = [w?.element, w?.imbue].filter(Boolean);
@@ -40,22 +45,22 @@ export function combatProfile(actor, combatant = null) {
       physAtk: s.sub.physAtk, elemAtk: s.sub.elemAtk, defense: s.sub.defense,
       suppAtk: s.sub.suppAtk, suppDef: s.sub.suppDef,
       resist: s.resistTotal ?? s.resist,
-      elements: elements.length ? elements : ["strike"],
+      elements: withImbue(elements.length ? elements : ["strike"]),
       weaponName: w?.item?.name ?? (w?.unarmed ? game.i18n.format("NSSQ.Combat.unarmed", { type: w.weaponType }) : ""),
       range: w?.range ?? "근"
     };
   }
   if (actor.type === "enemy") {
-    const st = s.stats;
+    const st = s.combatStats ?? s.stats;
     return {
       ...base,
       speed: Math.max(0, st.speed),
       physHit: st.physHit, elemHit: st.elemHit, evasion: st.evasion,
       physAtk: st.physAtk, elemAtk: st.elemAtk, defense: st.defense,
       suppAtk: st.suppAtk, suppDef: st.suppDef,
-      // 식별 실패한 에너미는 내성 최소 3(약점이 드러나지 않는다, 01 §3.1)
-      resist: s.identified ? Object.fromEntries(RESISTS.map((k) => [k, s.resist[k]])) : unidentifiedResist(Object.fromEntries(RESISTS.map((k) => [k, s.resist[k]]))),
-      elements: s.attackElements?.length ? s.attackElements : ["none"],
+      // 식별 실패한 에너미의 내성 최소 3(01 §3.1)은 enemy.mjs에서 반영
+      resist: s.resistTotal ?? s.resist,
+      elements: (() => { const e = withImbue(s.attackElements ?? []); return e.length ? e : ["none"]; })(),
       weaponName: "",
       // 에너미 통상 공격의 사거리는 데이터에 없다(07 #25)
       range: "근"

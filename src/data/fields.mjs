@@ -17,3 +17,19 @@ export const resistances = () =>
   });
 
 export const row = () => str("front", { choices: ["front", "back"] });
+
+/** 상태 이상·봉인(engine/conditions.mjs): 심도, 건 자(독 대미지용 【억제 공격】) */
+export const conditions = () => new foundry.data.fields.ArrayField(new SchemaField({
+  id: str(""),
+  depth: new NumberField({ required: true, nullable: true, integer: true, initial: null }),
+  source: str(""),
+  sourceSuppAtk: int(0)
+}));
+
+/** 강화·약화(engine/buffs.mjs): 수치, 남은 턴, 속성 등 */
+export const buffs = () => new foundry.data.fields.ArrayField(new SchemaField({
+  id: str(""),
+  value: int(0),
+  turns: int(1),
+  param: str("")
+}));

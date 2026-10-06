@@ -23,8 +23,8 @@ const mk = (id, name, type, sys, extra = {}) => {
 };
 const portrait = "https://api.dicebear.com/7.x/adventurer/svg?seed=";
 const turns = [
-  mk("p1", "플레이어2", "character", { classItems: { main: { name: "다크 헌터" } } }, { img: "https://api.dicebear.com/7.x/personas/svg?seed=hero&body=squared", owner: true }),
-  mk("e1", "숲쥐", "enemy", { identified: true, hp: { value: 6, max: 9 }, order: 0 }),
+  mk("p1", "플레이어2", "character", { classItems: { main: { name: "다크 헌터" } }, conditions: [{ id: "blind", depth: 10 }], buffs: [{ id: "physAtkUp", value: 2, turns: 2 }, { id: "resistGrant", param: "fire", turns: 3 }] }, { img: "https://api.dicebear.com/7.x/personas/svg?seed=hero&body=squared", owner: true }),
+  mk("e1", "숲쥐", "enemy", { identified: true, hp: { value: 6, max: 9 }, order: 0, conditions: [{ id: "poison", depth: 12 }, { id: "bindLeg", depth: 9 }], buffs: [{ id: "defenseDown", value: 2, turns: 3 }] }),
   mk("e2", "숲쥐", "enemy", { identified: false, hp: { value: 9, max: 9 }, order: 1 }),
   mk("n1", "동료2", "character", { npc: true, classItems: { main: { name: "몽크" } } }, { img: portrait + "b", guard: true }),
   mk("e3", "광란의 뿔사슴", "enemy", { row: "back", identified: true, isRare: true, hp: { value: 20, max: 30 }, order: 2 }),

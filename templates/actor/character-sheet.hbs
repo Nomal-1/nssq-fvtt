@@ -103,9 +103,15 @@
           <h3 class="nq-title">{{localize "NSSQ.Sub.label"}}</h3>
           <div class="nq-subs">
             {{#each sheet.subStats as |s|}}
-            <div class="nq-sub-stat" title="{{s.tooltip}}"><span>{{s.label}}</span><b>{{s.value}}</b></div>
+            <div class="nq-sub-stat {{#if s.changed}}changed{{/if}}" title="{{s.tooltip}}"><span>{{s.label}}</span><b>{{s.value}}</b></div>
             {{/each}}
           </div>
+          {{#if sheet.status.length}}
+          <h3 class="nq-title">{{localize "NSSQ.Sheet.statusTitle"}}</h3>
+          <ul class="nq-status-list">
+            {{#each sheet.status as |st|}}<li class="{{st.cls}}" title="{{st.hint}}">{{st.label}}</li>{{/each}}
+          </ul>
+          {{/if}}
 
           <h3 class="nq-title">{{localize "NSSQ.Inventory.equipped"}}</h3>
           <ul class="nq-equip">

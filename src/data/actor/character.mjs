@@ -1,7 +1,9 @@
 import { ABILITIES, RESISTS, abilityBreakdown, deriveCharacter } from "../../engine/derive.mjs";
 import { carriedCount, collectEquipment } from "../../engine/equipment.mjs";
 import tables from "../../generated/tables.mjs";
-import { description, int, resistances, resource, row, str } from "../fields.mjs";
+import { buffs, conditions, description, int, resistances, resource, row, str } from "../fields.mjs";
+import { conditionMods } from "../../engine/conditions.mjs";
+import { applyMods, buffMods } from "../../engine/buffs.mjs";
 
 const { SchemaField, ArrayField, StringField } = foundry.data.fields;
 
@@ -37,6 +39,8 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       mainClass: str(""),
       subClass: new StringField({ required: true, nullable: true, initial: null }),
       resist: resistances(),
+      conditions: conditions(),
+      buffs: buffs(),
       row: row(),
       order: int(0),
       money: int(0, { min: 0 }),
@@ -99,12 +103,17 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       mods: eq.mods
     });
     // 내성: 저장값(기본 3, GM 지시로 변경) + 장비
-    this.resistTotal = Object.fromEntries(RESISTS.map((k) => [k, (this.resist[k] ?? 0) + (eq.mods[`resist.${k}`] ?? 0)]));
+    const resist = Object.fromEntries(RESISTS.map((k) => [k, (this.resist[k] ?? 0) + (eq.mods[`resist.${k}`] ?? 0)]));
+    // 상태 이상·봉인·강화·약화(단계 5): 장비까지 더한 값 위에 적용. subBase는 시트 비교용
+    this.subBase = d.sub;
+    this.statusMods = { conditions: conditionMods(this.conditions), buffs: buffMods(this.buffs) };
+    const m = applyMods({ sub: d.sub, resist, hpMax: d.hpMax }, [this.statusMods.conditions, this.statusMods.buffs]);
+    this.resistTotal = m.resist;
     this.carried = carriedCount(items);
     this.bonus = d.bonus;
-    this.sub = d.sub;
+    this.sub = m.sub;
     this.carry = d.carry;
-    this.hp.max = d.hpMax;
+    this.hp.max = m.hpMax;
     this.tp.max = d.tpMax;
   }
 }

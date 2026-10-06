@@ -67,7 +67,7 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
     return r.dice[0].results.map((x) => x.result);
   };
   const r = await resolveAttack({
-    attacker: { hit: a.physHit, physAtk: a.physAtk, elemAtk: a.elemAtk, elements: a.elements },
+    attacker: { hit: a.physHit, physAtk: a.physAtk, elemAtk: a.elemAtk, elements: a.elements, critUp: a.critUp },
     target: { evasion: d.evasion, defense: d.defense, resist: d.resist, guarding: d.guarding },
     kind: "physical",
     rollDice

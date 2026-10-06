@@ -1,4 +1,4 @@
-import { description, int, resource, row, str } from "../fields.mjs";
+import { buffs, conditions, description, int, resource, row, str } from "../fields.mjs";
 
 const { ArrayField, ObjectField } = foundry.data.fields;
 
@@ -10,6 +10,8 @@ export class TokenData extends foundry.abstract.TypeDataModel {
       hp: resource(1),
       action: new ArrayField(new ObjectField()),
       speedFrom: str("owner", { choices: ["owner"] }),
+      conditions: conditions(),
+      buffs: buffs(),
       row: row(),
       order: int(0),
       description: description()

@@ -5,6 +5,9 @@
  * - 「GM 보너스」: GM만(플레이어에게는 값이 보인다)
  */
 import { ABILITIES, RESISTS, SUB_STATS, growthAvailable, subStatBreakdown } from "../engine/derive.mjs";
+import { CONDITIONS } from "../engine/conditions.mjs";
+import { BUFFS } from "../engine/buffs.mjs";
+import { buffLabel, conditionLabel } from "../combat/status.mjs";
 import { initialMoney } from "../engine/chargen.mjs";
 import { refinementBadges } from "./badges.mjs";
 import { slotOccupant } from "../engine/equipment.mjs";
@@ -55,9 +58,11 @@ export function characterContext(actor) {
       game.i18n.localize(`NSSQ.Sub.${k}`),
       `${L("subFormula")}: ${formulaText(b.formula)}${mods ? ` + ${L("subPart.mods")}` : ""}${b.formula.includes("÷") ? ` ${L("roundDown")}` : ""}`,
       `${L("subCalc")}: ${calc} = ${b.total}`,
-      ...(k === "speed" && b.total === 0 ? [L("speedFloor")] : [])
+      ...(k === "speed" && b.total === 0 ? [L("speedFloor")] : []),
+      // 상태 이상·봉인·강화·약화(단계 5)
+      ...(s.sub[k] !== b.total ? [`${L("statusMod")}: ${b.total} → ${s.sub[k]}`] : [])
     ].join("\n");
-    return { key: k, label: game.i18n.localize(`NSSQ.Inventory.${k}`), value: s.sub[k], tooltip };
+    return { key: k, label: game.i18n.localize(`NSSQ.Inventory.${k}`), value: s.sub[k], tooltip, changed: s.sub[k] !== b.total };
   });
   const resist = RESISTS.map((k) => ({ key: k, label: game.i18n.localize(`NSSQ.Resist.${k}`), base: s.resist[k], total: s.resistTotal[k], changed: s.resistTotal[k] !== s.resist[k] }));
   const items = actor.items.contents;
@@ -88,6 +93,10 @@ export function characterContext(actor) {
   const growth = growthAvailable({ exp: s.exp, abilities: s.abilities });
   return {
     abilityCards, subStats, resist, equip, weaponLine, creation, growth,
+    status: [
+      ...(s.conditions ?? []).map((c) => ({ cls: CONDITIONS[c.id]?.kind ?? "", label: conditionLabel(c), hint: game.i18n.localize(`NSSQ.StatusHint.${c.id}`) })),
+      ...(s.buffs ?? []).map((b) => ({ cls: BUFFS[b.id]?.kind ?? "", label: `${buffLabel(b)} · ${game.i18n.format("NSSQ.Buff.turns", { n: b.turns })}`, hint: game.i18n.localize(`NSSQ.Buff.${BUFFS[b.id]?.kind ?? "buff"}`) }))
+    ],
     canRollAbilities: game.user.isGM || !s.creation?.locked
   };
 }

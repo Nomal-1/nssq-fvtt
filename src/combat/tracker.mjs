@@ -69,8 +69,8 @@ export async function rollEscape(combat) {
     if (!c.actor || c.defeated) continue;
     const p = combatProfile(c.actor, c);
     if (p.ko) continue;
-    // [다리] 봉인은 도주 판정에 참가하지 않는다(단계 5에서 상태 연결)
-    if (c.actor.statuses?.has("bindLeg")) continue;
+    // [다리] 봉인은 도주 판정에 참가하지 않는다(01 §3.9)
+    if (p.conditions.some((x) => x.id === "bindLeg")) continue;
     const roll = await new Roll("2d6").evaluate();
     rolls.push(roll);
     const r = evaluateCheck({ dice: roll.dice[0].results.map((x) => x.result), modifier: p.evasion });

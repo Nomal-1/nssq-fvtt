@@ -21,6 +21,7 @@ import { bustStyle, faceStyle } from "../apps/art-config.mjs";
 import { flip, morph, snapshot } from "./morph.mjs";
 import { identifyDialog } from "./identify.mjs";
 import { randomEnemyAction } from "./enemy-ai.mjs";
+import { StatusApp, statusChips } from "./status.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -168,6 +169,7 @@ function enemyCard(c, combat, targetable) {
       <a data-tool="identify" class="${s.identified ? "on" : ""}" title="${esc(game.i18n.localize(s.identified ? "NSSQ.Combat.identifiedOn" : "NSSQ.Combat.identifiedOff"))}"><i class="fas ${s.identified ? "fa-eye" : "fa-eye-slash"}"></i></a>
       <a data-tool="row" title="${esc(game.i18n.localize("NSSQ.Combat.changeRow"))}"><i class="fas fa-arrows-alt-v"></i></a>
       <a data-tool="defeated" class="${c.defeated ? "on" : ""}" title="${esc(L("toggleDefeated"))}"><i class="fas fa-skull"></i></a>
+      <a data-tool="status" title="${esc(game.i18n.localize("NSSQ.Conditions.button"))}"><i class="fas fa-heartbeat"></i></a>
       <a data-tool="sheet" title="${esc(L("openSheet"))}"><i class="fas fa-id-card"></i></a>
     </div>` : "";
   return `<div class="${cls}" data-combatant="${c.id}" data-key="e-${c.id}" data-flip title="${esc(c.name)}">
@@ -175,6 +177,7 @@ function enemyCard(c, combat, targetable) {
     <div class="art"><img src="${esc(enemyImage(c))}"/></div>
     <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
     <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
+    ${statusChips(a)}
   </div>`;
 }
 
@@ -188,10 +191,11 @@ function partyCard(c, combat, targetable) {
   return `<div class="${classes}" data-combatant="${c.id}" data-key="p-${c.id}" data-flip>
     <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}"></div>
     <div class="info">
-      <div class="line"><span class="name">${esc(c.name)}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}
+      <div class="line"><span class="name">${esc(c.name)}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${statusChips(a)}
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
       <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) : ""}</div>
     </div>
+    ${game.user.isGM ? `<a class="nb-status-tool" data-tool="status" title="${esc(game.i18n.localize("NSSQ.Conditions.button"))}"><i class="fas fa-heartbeat"></i></a>` : ""}
   </div>`;
 }
 
@@ -460,8 +464,14 @@ function bindClicks(el) {
         case "row": return changePosition(c);
         case "defeated": return c.update({ defeated: !c.defeated });
         case "sheet": return c.actor.sheet.render(true);
+        case "status": return StatusApp.open(c.actor);
       }
       return;
+    }
+    // GM: 파티 카드의 [상태]
+    if ((t = hit(".nb-member [data-tool=status]"))) {
+      const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
+      return StatusApp.open(c?.actor);
     }
     // 대상 고르기(공격 중) / 그 밖에는 시트 열기(권한이 있을 때)
     if ((t = hit(".nb-enemy, .nb-member:not(.empty)"))) {
