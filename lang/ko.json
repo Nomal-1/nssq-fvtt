@@ -770,7 +770,6 @@
       "elemImbue": "속성 부여",
       "resistGrant": "내성 부여",
       "resistUp": "내성 상승",
-      "fullResist": "완전 내성",
       "atkUp": "공격 상승",
       "physAtkUp": "물리 공격 상승",
       "elemAtkUp": "속성 공격 상승",
@@ -849,7 +848,8 @@
       "resisted": "{name}: 억제 방어 성공 — {label}을(를) 막았다",
       "inflicted": "{name}: {label} (심도 {depth})",
       "fixedRoll": "억제 방어 롤 {dice} + {mod} = {total} / 목표값 {target}",
-      "contestRoll": "{atk}: {atkDice} + {atkMod} = {atkTotal} vs {def}: {defDice} + {defMod} = {defTotal}"
+      "contestRoll": "{atk}: {atkDice} + {atkMod} = {atkTotal} vs {def}: {defDice} + {defMod} = {defTotal}",
+      "replaced": "([{label}]은(는) 덧씌워져 사라짐)"
     }
   }
 }

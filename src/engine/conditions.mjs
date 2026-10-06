@@ -31,9 +31,10 @@ const SLEEP_RESISTS = ["slash", "strike", "pierce"];
 export const hasCondition = (list, id) => (list ?? []).some((c) => c.id === id);
 
 /**
- * 상태 이상·봉인 부여. 이미 같은 것이 있으면 심도가 더 높을 때만 갱신(07 #5).
- * 서로 다른 상태 이상은 함께 걸린다(07 #35).
- * @returns {{list: object[], result: "added"|"updated"|"ignored"}}
+ * 상태 이상·봉인 부여.
+ * - 같은 것이 이미 있으면 심도가 더 높을 때만 갱신(07 #5)
+ * - 상태 이상은 하나만: 다른 상태 이상이 걸리면 새 것으로 덧씌운다(07 #35, 사용자 결정). 봉인은 부위마다 따로
+ * @returns {{list: object[], result: "added"|"updated"|"replaced"|"ignored", replaced?: object}}
  */
 export function addCondition(list, { id, depth = null, source = "", sourceSuppAtk = 0 }) {
   const def = CONDITIONS[id];
@@ -41,7 +42,11 @@ export function addCondition(list, { id, depth = null, source = "", sourceSuppAt
   const entry = { id, depth: def.depth ? Math.max(0, Number(depth) || 0) : null, source, sourceSuppAtk: Number(sourceSuppAtk) || 0 };
   const cur = list ?? [];
   const i = cur.findIndex((c) => c.id === id);
-  if (i < 0) return { list: [...cur, entry], result: "added" };
+  if (i < 0) {
+    const old = def.kind === "ailment" ? cur.find((c) => CONDITIONS[c.id]?.kind === "ailment") : null;
+    if (old) return { list: [...cur.filter((c) => c !== old), entry], result: "replaced", replaced: old };
+    return { list: [...cur, entry], result: "added" };
+  }
   if (!def.depth || (entry.depth ?? 0) <= (cur[i].depth ?? 0)) return { list: [...cur], result: "ignored" };
   return { list: cur.map((c, j) => (j === i ? entry : c)), result: "updated" };
 }

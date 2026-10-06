@@ -75,7 +75,8 @@ export async function inflictCondition(actor, { id, depth = null, source = null,
   const label = conditionName(id);
   const line = r.result === "ignored"
     ? L("ignored", { name: esc(nameOf(actor)) })
-    : L("inflicted", { name: esc(nameOf(actor)), label: esc(label), depth: CONDITIONS[id]?.depth ? depth : "-" });
+    : L("inflicted", { name: esc(nameOf(actor)), label: esc(label), depth: CONDITIONS[id]?.depth ? depth : "-" })
+      + (r.replaced ? ` ${L("replaced", { label: esc(conditionName(r.replaced.id)) })}` : "");
   await note(`<i class="fas fa-skull-crossbones"></i> ${line}${rollText ? `<p class="notes">${rollText}</p>` : ""}`);
   return r;
 }

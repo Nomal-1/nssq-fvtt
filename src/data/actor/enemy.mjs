@@ -46,6 +46,8 @@ export class EnemyData extends foundry.abstract.TypeDataModel {
       { sub: { ...this.stats }, resist: this.identified ? base : unidentifiedResist(base), hpMax: this.hp.max },
       [this.statusMods.conditions, this.statusMods.buffs]
     );
+    // 시트의 최대 HP 입력칸은 보정 전 값(최대 HP 강화가 걸린 채 저장해도 원래 값이 바뀌지 않게)
+    this.hpMaxBase = this.hp.max;
     this.combatStats = m.sub;
     this.resistTotal = m.resist;
     this.hp.max = m.hpMax;

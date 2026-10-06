@@ -2,8 +2,8 @@
  * 강화 효과·약화 효과 (01 §3.10). Foundry 비의존 순수 함수.
  * 저장 모양: { id, value, turns, param } — param은 속성(내성 부여 등)이나 추격 대상 문구
  *
- * 01 표 밖의 이름(공격 상승·물리 명중 상승·물리 방어 상승·억제 공격 상승·내성 상승·완전 내성)은
- * 07 #11대로 '상승'=강화, '저하'=약화, 대항은 같은 수치의 상승↔저하. 완전 내성은 강화·대항 없음.
+ * 01 표 밖의 이름(공격 상승·물리 명중 상승·물리 방어 상승·억제 공격 상승·내성 상승·내성 저하)은
+ * 07 #11·#39 임시 처리. 「완전 내성: ○」은 강화가 아니라 에너미의 상시 스킬(그 상태 이상을 받지 않음)이라 여기 없다.
  */
 import { RESISTS } from "./derive.mjs";
 
@@ -20,8 +20,7 @@ export const BUFFS = {
   // 강화
   elemImbue: { kind: "buff", value: false, param: "imbue" },
   resistGrant: { kind: "buff", value: false, param: "element", counter: "weaknessGrant" },
-  resistUp: { kind: "buff", value: true, param: "element", counter: "resistDown" },
-  fullResist: { kind: "buff", value: false, param: "element" },
+  resistUp: { kind: "buff", value: false, param: "element", counter: "resistDown" },
   atkUp: up(["physAtk", "elemAtk"], "atkDown"),
   physAtkUp: up(["physAtk"], "physAtkDown"),
   elemAtkUp: up(["elemAtk"], "elemAtkDown"),
@@ -50,7 +49,7 @@ export const BUFFS = {
   evasionDown: down(["evasion"], "evasionUp"),
   suppAtkDown: down(["suppAtk"], "suppAtkUp"),
   suppDefDown: down(["suppDef"], "suppDefUp"),
-  resistDown: { kind: "debuff", value: true, param: "element", counter: "resistUp" },
+  resistDown: { kind: "debuff", value: false, param: "element", counter: "resistUp" },
   weaknessGrant: { kind: "debuff", value: false, param: "element", counter: "resistGrant" }
 };
 export const BUFF_IDS = Object.keys(BUFFS);
@@ -111,10 +110,9 @@ export function buffMods(list) {
     const el = RESISTS.includes(b.param) ? b.param : null;
     if (b.id === "resistGrant" && el) resistAdd[el] = (resistAdd[el] ?? 0) + 1;
     if (b.id === "weaknessGrant" && el) resistAdd[el] = (resistAdd[el] ?? 0) - 1;
-    if (b.id === "resistUp" && el) resistAdd[el] = (resistAdd[el] ?? 0) + v;
-    if (b.id === "resistDown" && el) resistAdd[el] = (resistAdd[el] ?? 0) - v;
-    // 완전 내성: 내성 6(모든 눈이 막힌다, 07 #39)
-    if (b.id === "fullResist" && el) resistSet[el] = 6;
+    // 내성 상승·저하: 원문 용례에 수치가 없다(『내성 상승: 염』) → ±1(07 #39 임시)
+    if (b.id === "resistUp" && el) resistAdd[el] = (resistAdd[el] ?? 0) + 1;
+    if (b.id === "resistDown" && el) resistAdd[el] = (resistAdd[el] ?? 0) - 1;
     if (b.id === "elemImbue" && IMBUE_ELEMENTS.includes(b.param) && !elements.includes(b.param)) elements.push(b.param);
     if (b.id === "critUp") critUp = true;
     if (b.id === "hpRegen") regen.hp += v;

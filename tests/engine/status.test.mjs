@@ -15,11 +15,16 @@ describe("상태 이상·봉인", () => {
     expect(list[0].depth).toBe(12);
   });
 
-  it("서로 다른 상태 이상·봉인은 함께 걸린다(07 #35)", () => {
+  it("상태 이상은 하나만: 다른 상태 이상은 새 것으로 덧씌운다(07 #35). 봉인은 부위마다 함께", () => {
     let list = addCondition([], { id: "poison", depth: 10 }).list;
-    list = addCondition(list, { id: "blind", depth: 8 }).list;
     list = addCondition(list, { id: "bindArm", depth: 9 }).list;
-    expect(list.map((c) => c.id)).toEqual(["poison", "blind", "bindArm"]);
+    list = addCondition(list, { id: "bindLeg", depth: 7 }).list;
+    const r = addCondition(list, { id: "blind", depth: 8 });
+    expect(r.result).toBe("replaced");
+    expect(r.replaced.id).toBe("poison");
+    expect(r.list.map((c) => c.id)).toEqual(["bindArm", "bindLeg", "blind"]);
+    // 심도가 낮아도 다른 상태 이상이면 덧씌운다
+    expect(addCondition(r.list, { id: "stun" }).list.map((c) => c.id)).toEqual(["bindArm", "bindLeg", "stun"]);
   });
 
   it("석화·스턴은 심도를 기록하지 않는다", () => {
