@@ -1,0 +1,43 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../../styles/nssq.css"><body><div id="nssq-battle"></div><pre id="out" style="position:fixed;bottom:0;left:0;background:#fff;z-index:99"></pre>
+<script type="module">
+const ko = await (await fetch("../../lang/ko.json")).json();
+const loc = (k) => k.split(".").reduce((o, x) => o?.[x], ko) ?? k;
+Object.assign(globalThis, {
+  foundry: { utils: { debounce: (f) => f, mergeObject: (a, b) => ({ ...a, ...b }), hasProperty: () => false } },
+  Hooks: { on() {}, once() {} }, CONFIG: {},
+  Application: class { static get defaultOptions() { return {}; } }
+});
+globalThis.FormApplication = globalThis.Dialog = globalThis.Application;
+Math.clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+globalThis.game = { i18n: { localize: loc, format: (k, d) => loc(k).replace(/\{(\w+)\}/g, (_, x) => d[x]) }, user: { isGM: false }, scenes: { get: () => null }, actors: { get: () => null } };
+const mk = (id, name, type, sys, extra = {}) => {
+  const actor = { id, name, type, uuid: id, img: "../../assets/enemies/9OhjQfv4rD99lj98.webp", isOwner: extra.owner ?? false, system: { row: "front", hp: { value: 10, max: 14 }, tp: { value: 5, max: 7 }, level: 1, sub: {}, stats: {}, equipment: { weapon: { range: "근" } }, art: {}, ...sys } };
+  return { id, name, actor, img: actor.img, defeated: false, initiative: 10, token: { x: 0, texture: { src: actor.img } }, getFlag: () => null };
+};
+const turns = [mk("p1", "플레이어2", "character", {}, { owner: true }), mk("e1", "숲쥐", "enemy", { identified: true })];
+const combat = { round: 1, turn: 0, turns, combatant: turns[0], combatants: Object.assign(turns, { get: (id) => turns.find((t) => t.id === id) }), getFlag: (s, k) => ({ phase: "main", battle: {} })[k] ?? null };
+const { battleHtml } = await import("../../src/combat/hud.mjs");
+const { morph } = await import("../../src/combat/morph.mjs");
+const root = document.getElementById("nssq-battle");
+const log = [];
+morph(root, battleHtml(combat, { attack: false }));
+const bust = root.querySelector(".nb-bust");
+let starts = 0;
+root.addEventListener("animationstart", (e) => log.push("animationstart: " + e.target.className + " / " + e.animationName));
+await new Promise((r) => setTimeout(r, 600)); log.length = 0;
+const a0 = bust.getAnimations()[0];
+log.push("idle anims: " + bust.getAnimations().length + " cmd anims: " + root.querySelector(".body-in").getAnimations().length);
+morph(root, battleHtml(combat, { attack: true }));   // [공격] 누름
+log.push("after attack-click: bust " + bust.getAnimations().length + " / body-in " + root.querySelector(".body-in").getAnimations().length + " / erow " + root.querySelector(".nb-erow.front").getAnimations().length);
+await new Promise((r) => setTimeout(r, 300));
+morph(root, battleHtml(combat, { attack: false }));  // 대상 클릭 → 공격 끝
+log.push("after target-click: bust " + bust.getAnimations().length + " / body-in " + root.querySelector(".body-in").getAnimations().length);
+await new Promise((r) => setTimeout(r, 300));
+turns[1].actor.system.hp.value = 4;                  // 대미지 적용
+morph(root, battleHtml(combat, { attack: false }));
+log.push("after damage: bust " + bust.getAnimations().length);
+await new Promise((r) => setTimeout(r, 300));
+log.push("same bust animation object: " + (bust.getAnimations()[0] === a0));
+log.push("bust same element: " + (bust === root.querySelector(".nb-bust")));
+document.getElementById("out").textContent = log.join("\n");
+</script>

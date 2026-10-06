@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><body><div id="r"></div><pre id="out"></pre>
+<script type="module">
+import { morph, snapshot, flip } from "../../src/combat/morph.mjs";
+const r = document.getElementById("r"); const log = [];
+const v1 = `<div class="rows"><div class="back"><b data-key="e-1" data-flip style="display:inline-block;width:50px">A</b></div><div class="front"><b data-key="e-2" data-flip style="display:inline-block;width:80px">B</b><b data-key="e-3" data-flip style="display:inline-block;width:80px">C</b></div></div><div class="bust" data-key="bust-x">bust</div><i style="width:30%">hp</i>`;
+const v2 = `<div class="rows"><div class="back"><b data-key="e-1" data-flip style="display:inline-block;width:50px">A</b><b data-key="e-3" data-flip style="display:inline-block;width:50px">C</b></div><div class="front"><b data-key="e-2" data-flip style="display:inline-block;width:80px">B</b></div></div><div class="bust" data-key="bust-x">bust</div><i style="width:10%">hp</i>`;
+morph(r, v1);
+const bust1 = r.querySelector(".bust"), b1 = r.querySelector('[data-key="e-2"]'), hp1 = r.querySelector("i");
+let anims = 0; const orig = Element.prototype.animate; Element.prototype.animate = function (...a) { anims++; return orig.apply(this, a); };
+const before = snapshot(r); morph(r, v2); flip(r, before);
+log.push("bust kept: " + (bust1 === r.querySelector(".bust")));
+log.push("B kept: " + (b1 === r.querySelector('[data-key="e-2"]')));
+log.push("hp kept, width: " + (hp1 === r.querySelector("i")) + " " + r.querySelector("i").style.width);
+log.push("C in back: " + !!r.querySelector('.back [data-key="e-3"]') + ", count C: " + r.querySelectorAll('[data-key="e-3"]').length);
+log.push("animations: " + anims);
+morph(r, v2); log.push("idempotent bust: " + (bust1 === r.querySelector(".bust")) + ", html same: " + (r.innerHTML.length > 0));
+document.getElementById("out").textContent = log.join("\n");
+</script>
