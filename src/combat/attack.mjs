@@ -27,11 +27,12 @@ export function attackerFromContext(actor) {
 /**
  * 통상 공격
  * @param {Actor} attacker
- * @param {{ ignoreRange?: boolean }} [opts] GM은 Shift로 사거리 무시
+ * @param {{ ignoreRange?: boolean, target?: TokenDocument }} [opts] GM은 Shift로 사거리 무시.
+ *   target: 전투 화면에서 고른 대상(없으면 캔버스에서 지정한 타깃 1개)
  */
-export async function normalAttack(attacker, { ignoreRange = false } = {}) {
+export async function normalAttack(attacker, { ignoreRange = false, target: picked = null } = {}) {
   if (!attacker) return;
-  const targets = [...game.user.targets];
+  const targets = picked ? [picked] : [...game.user.targets];
   if (targets.length !== 1) return ui.notifications.warn(L("pickOneTarget"));
   const targetToken = targets[0];
   const target = targetToken.actor;

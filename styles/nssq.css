@@ -491,45 +491,84 @@
 .nssq-combatant-tools .rare-tag { color: var(--nq-fp); font-weight: 700; }
 #combat li.combatant.nssq-opened { box-shadow: inset 3px 0 0 #3a8fd6; }
 
-/* 12 ─ 전투 HUD */
-#nssq-hud { position: fixed; inset: 0; pointer-events: none; z-index: 30; font-family: var(--nq-font); color: var(--nq-tx); }
-#nssq-hud .hud-order { position: absolute; top: 46px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(10, 22, 38, 0.88); border: 1px solid var(--nq-gold); border-radius: 18px; max-width: 70vw; overflow: hidden; }
-#nssq-hud .hud-order .phase { font-family: var(--nq-title); color: var(--nq-gold-l); margin-right: 6px; white-space: nowrap; }
-#nssq-hud .hud-order .who { display: flex; align-items: center; gap: 4px; padding: 1px 6px 1px 1px; border-radius: 14px; border: 1px solid var(--nq-line2); background: var(--nq-bg2); font-size: 0.85em; white-space: nowrap; }
-#nssq-hud .hud-order .who img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
-#nssq-hud .hud-order .who.enemy { border-color: rgba(224, 112, 95, 0.6); }
-#nssq-hud .hud-order .who.current { border-color: var(--nq-cy); box-shadow: 0 0 6px var(--nq-cy); color: var(--nq-cy); }
-#nssq-hud .hud-order .who.done { opacity: 0.45; }
-#nssq-hud .hud-order .who.ko { opacity: 0.3; text-decoration: line-through; }
-#nssq-hud .hud-order i.sep { color: var(--nq-dim); font-size: 0.7em; }
-#nssq-hud .hud-party { position: absolute; left: 50%; bottom: 72px; transform: translateX(-50%); display: flex; gap: 8px; pointer-events: auto; }
-#nssq-hud .hud-member { width: 190px; padding: 6px 8px; background: linear-gradient(rgba(24, 49, 82, 0.95), rgba(10, 22, 38, 0.95)); border: 1px solid var(--nq-line2); border-radius: 8px; cursor: pointer; }
-#nssq-hud .hud-member.mine { border-color: var(--nq-gold); }
-#nssq-hud .hud-member.current { box-shadow: 0 0 8px var(--nq-cy); border-color: var(--nq-cy); }
-#nssq-hud .hud-member.ko { opacity: 0.5; filter: grayscale(0.8); }
-#nssq-hud .hud-member .top { display: flex; align-items: center; gap: 6px; }
-#nssq-hud .hud-member img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--nq-gold); object-fit: cover; }
-#nssq-hud .hud-member .name { font-weight: 700; color: var(--nq-gold-l); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#nssq-hud .hud-member .tags { font-size: 0.75em; color: var(--nq-mu); }
-#nssq-hud .hud-member .tags .guard { color: #8fc3ff; }
-#nssq-hud .hud-bar { display: grid; grid-template-columns: 20px minmax(0, 1fr) 44px; gap: 4px; align-items: center; font-size: 0.75em; margin-top: 3px; }
-#nssq-hud .hud-bar .track { height: 7px; background: #22344d; border-radius: 4px; overflow: hidden; border: 1px solid #000; }
-#nssq-hud .hud-bar .track i { display: block; height: 100%; }
-#nssq-hud .hud-bar.hp b { color: var(--nq-hp); }
-#nssq-hud .hud-bar.tp b { color: var(--nq-tp); }
-#nssq-hud .hud-bar.hp .track i { background: var(--nq-hp); }
-#nssq-hud .hud-bar.tp .track i { background: var(--nq-tp); }
-#nssq-hud .hud-bar span { text-align: right; color: var(--nq-mu); }
-#nssq-hud .hud-menu { position: absolute; pointer-events: auto; width: 0; height: 0; }
-#nssq-hud .hud-menu button { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 4px; padding: 4px 10px; white-space: nowrap; background: linear-gradient(#1e3a5f, #142a46); border: 1px solid var(--nq-gold); color: var(--nq-gold-l); border-radius: 16px; font-family: var(--nq-font); font-size: 0.9em; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); cursor: pointer; animation: nq-pop 0.18s ease-out; }
-#nssq-hud .hud-menu button:hover:not(:disabled) { background: linear-gradient(#2a4d7a, #1a3557); color: #fff; box-shadow: 0 0 8px var(--nq-gold-l); }
-#nssq-hud .hud-menu button:disabled { opacity: 0.4; cursor: not-allowed; }
-#nssq-hud .hud-menu button.active { border-color: var(--nq-cy); color: var(--nq-cy); }
-#nssq-hud .hud-hint { position: absolute; left: 50%; bottom: 168px; transform: translateX(-50%); padding: 4px 12px; background: rgba(10, 22, 38, 0.9); border: 1px solid var(--nq-cy); border-radius: 14px; color: var(--nq-cy); font-size: 0.9em; }
-#nssq-hud.compact .hud-member { width: 130px; padding: 4px 6px; }
-#nssq-hud.compact .hud-member img { display: none; }
-#nssq-hud.compact .hud-order .who span { display: none; }
-@keyframes nq-pop { from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+/* 12 ─ 원작풍 전투 화면(필드 씬 위에 덮는다) */
+#nssq-battle { position: fixed; top: 0; left: 0; bottom: 0; right: 310px; z-index: 40; display: flex; flex-direction: column; font-family: var(--nq-font); color: var(--nq-tx); background: #0a1322; border-right: 1px solid var(--nq-gold); overflow: hidden; }
+#nssq-battle.collapsed { inset: 6px auto auto 50% !important; transform: translateX(-50%); bottom: auto; background: none; border: none; overflow: visible; }
+#nssq-battle .nb-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.55; z-index: 0; }
+#nssq-battle .nb-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(6, 12, 24, 0.25), rgba(6, 12, 24, 0.15) 45%, rgba(6, 12, 24, 0.85) 70%, rgba(6, 12, 24, 0.95)); }
+#nssq-battle > :not(.nb-bg) { position: relative; z-index: 1; }
+#nssq-battle button { width: auto; flex: 0 0 auto; line-height: 1.8em; padding: 0 12px; color: var(--nq-tx); background: linear-gradient(var(--nq-panel2), var(--nq-panel)); border: 1px solid var(--nq-gold); border-radius: 6px; font-family: var(--nq-font); cursor: pointer; }
+#nssq-battle button:hover:not([disabled]) { box-shadow: 0 0 6px var(--nq-cy); border-color: var(--nq-cy); }
+#nssq-battle button.active { background: var(--nq-cy); color: #0a1626; border-color: var(--nq-cy); font-weight: 700; }
+#nssq-battle button[disabled] { opacity: 0.45; cursor: default; }
+#nssq-battle .nb-open { font-size: 1.05em; padding: 2px 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); }
+/* 위: 맵 보기 · 행동 순서 · GM 진행 */
+#nssq-battle .nb-top { display: flex; align-items: center; gap: 8px; padding: 8px 10px 4px; }
+#nssq-battle .nb-order { flex: 1; min-width: 0; display: flex; align-items: center; gap: 4px; padding: 3px 10px; background: rgba(10, 22, 38, 0.88); border: 1px solid var(--nq-gold); border-radius: 18px; overflow: hidden; }
+#nssq-battle .nb-order .phase { font-family: var(--nq-title); color: var(--nq-gold-l); margin-right: 6px; white-space: nowrap; }
+#nssq-battle .nb-order .who { display: inline-flex; align-items: center; gap: 3px; padding: 1px 6px 1px 1px; border-radius: 12px; border: 1px solid var(--nq-line2); font-size: 0.85em; white-space: nowrap; }
+#nssq-battle .nb-order .who img { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; border: none; }
+#nssq-battle .nb-order .who.enemy { border-color: var(--nq-red); }
+#nssq-battle .nb-order .who.current { border-color: var(--nq-cy); background: rgba(111, 211, 230, 0.2); }
+#nssq-battle .nb-order .who.done { opacity: 0.45; }
+#nssq-battle .nb-order .who.ko { text-decoration: line-through; opacity: 0.4; }
+#nssq-battle .nb-order .sep { font-size: 0.6em; color: var(--nq-dim); }
+#nssq-battle .nb-gm { display: flex; gap: 6px; }
+/* 에너미 줄 */
+#nssq-battle .nb-enemies { flex: 1 1 auto; min-height: 0; display: flex; align-items: flex-end; justify-content: center; gap: 18px; padding: 10px 16px 6px; }
+#nssq-battle .nb-enemy { flex: 0 1 220px; min-width: 90px; max-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; transition: transform 0.15s; }
+#nssq-battle .nb-enemy .art { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
+#nssq-battle .nb-enemy .art img { max-width: 100%; max-height: 38vh; object-fit: contain; border: none; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7)); }
+#nssq-battle .nb-enemy.back { transform: scale(0.82); }
+#nssq-battle .nb-enemy.back .art img { filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7)) brightness(0.85); }
+#nssq-battle .nb-enemy .name { font-size: 0.95em; padding: 0 10px; background: rgba(10, 22, 38, 0.85); border: 1px solid var(--nq-line2); border-radius: 10px; white-space: nowrap; }
+#nssq-battle .nb-enemy .name em { font-style: normal; font-size: 0.8em; color: var(--nq-mu); }
+#nssq-battle .nb-enemy .nb-bar { width: 80%; }
+#nssq-battle .nb-enemy.current .name { border-color: var(--nq-red); box-shadow: 0 0 8px var(--nq-red); }
+#nssq-battle .nb-enemy.ko { opacity: 0.25; filter: grayscale(1); }
+#nssq-battle .nb-enemy.targetable .art img { filter: drop-shadow(0 0 10px var(--nq-cy)) drop-shadow(0 0 4px var(--nq-cy)); }
+#nssq-battle .nb-enemy.targetable .name { border-color: var(--nq-cy); color: var(--nq-cy); }
+#nssq-battle .nb-enemy.targetable:hover { transform: translateY(-4px); }
+#nssq-battle .nb-hint { align-self: center; margin: 2px 0 4px; padding: 3px 14px; background: rgba(10, 22, 38, 0.9); border: 1px solid var(--nq-cy); border-radius: 14px; color: var(--nq-cy); font-size: 0.9em; }
+/* 막대 */
+#nssq-battle .nb-bar { position: relative; height: 12px; display: flex; align-items: center; background: #1b2a40; border: 1px solid #000; border-radius: 6px; overflow: hidden; }
+#nssq-battle .nb-bar > i { position: absolute; inset: 0 auto 0 0; display: block; }
+#nssq-battle .nb-bar.hp > i { background: linear-gradient(#7cd893, var(--nq-hp)); }
+#nssq-battle .nb-bar.tp > i { background: linear-gradient(#7ab8f0, var(--nq-tp)); }
+#nssq-battle .nb-bar.unknown > i { background: repeating-linear-gradient(45deg, #34465f 0 6px, #2a3a50 6px 12px); }
+#nssq-battle .nb-bar b { position: relative; font-size: 9px; padding-left: 4px; color: #fff; text-shadow: 0 0 2px #000; }
+#nssq-battle .nb-bar span { position: relative; margin-left: auto; padding-right: 5px; font-size: 10px; line-height: 12px; color: #fff; text-shadow: 0 0 2px #000, 0 0 2px #000; }
+/* 아래: 커맨드 창 + 파티 */
+#nssq-battle .nb-bottom { flex: 0 0 auto; display: flex; align-items: flex-end; gap: 10px; padding: 6px 10px 10px; }
+#nssq-battle .nb-command { flex: 0 0 190px; align-self: stretch; display: flex; flex-direction: column; gap: 5px; padding: 8px; background: linear-gradient(var(--nq-panel2), var(--nq-bg)); border: 1.5px solid var(--nq-gold); border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.6); }
+#nssq-battle .nb-command .title { font-family: var(--nq-title); color: var(--nq-gold-l); border-bottom: 1px solid var(--nq-line2); padding-bottom: 3px; margin-bottom: 2px; }
+#nssq-battle .nb-command > button { text-align: left; font-size: 1.05em; }
+#nssq-battle .nb-command.idle { justify-content: center; text-align: center; color: var(--nq-mu); }
+#nssq-battle .nb-command.opening { flex-basis: 300px; }
+#nssq-battle .nb-command .opening-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 3px 0; border-bottom: 1px dashed var(--nq-line); }
+#nssq-battle .nb-command .opening-row .who { flex: 1 0 100%; font-size: 0.9em; color: var(--nq-gold-l); }
+#nssq-battle .nb-command .opening-row button { font-size: 0.85em; padding: 0 8px; }
+#nssq-battle .nb-party { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+#nssq-battle .nb-row { display: flex; align-items: stretch; gap: 8px; min-height: 30px; }
+#nssq-battle .nb-row .label { flex: 0 0 2.2em; writing-mode: vertical-rl; text-align: center; font-size: 0.8em; color: var(--nq-gold-l); border: 1px solid var(--nq-line2); border-radius: 6px; background: rgba(10, 22, 38, 0.7); }
+#nssq-battle .nb-member { flex: 0 1 230px; min-width: 150px; display: flex; gap: 6px; padding: 5px; background: linear-gradient(var(--nq-panel2), var(--nq-bg)); border: 1px solid var(--nq-line2); border-radius: 8px; cursor: pointer; }
+#nssq-battle .nb-member.mine { border-color: var(--nq-gold); }
+#nssq-battle .nb-member.current { border-color: var(--nq-cy); box-shadow: 0 0 10px rgba(111, 211, 230, 0.6); }
+#nssq-battle .nb-member.ko { filter: grayscale(1); opacity: 0.55; }
+#nssq-battle .nb-member.targetable { border-color: var(--nq-red); box-shadow: 0 0 10px var(--nq-red); }
+#nssq-battle .nb-member .portrait { position: relative; flex: 0 0 58px; height: 64px; border-radius: 6px; overflow: hidden; border: 1px solid var(--nq-line2); background: var(--nq-bg2); }
+#nssq-battle .nb-member .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center top; border: none; }
+#nssq-battle .nb-member .portrait .guard { position: absolute; left: 0; right: 0; bottom: 0; font-size: 10px; text-align: center; background: rgba(111, 211, 230, 0.85); color: #0a1626; }
+#nssq-battle .nb-member .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+#nssq-battle .nb-member .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#nssq-battle .nb-member .name em { font-style: normal; font-size: 0.75em; padding: 0 4px; border-radius: 6px; border: 1px solid #c7a6f0; color: #c7a6f0; }
+#nssq-battle .nb-member .cls { font-size: 0.75em; color: var(--nq-mu); }
+#nssq-battle .nb-member .nb-bar b { font-size: 9px; }
+/* 좁은 화면 */
+#nssq-battle.compact .nb-command { flex-basis: 150px; }
+#nssq-battle.compact .nb-member { min-width: 120px; }
+#nssq-battle.compact .nb-member .portrait { flex-basis: 40px; height: 48px; }
+#nssq-battle.compact .nb-order .who span { display: none; }
 
 /* 13 ─ 추가: 성장·작성 기록·스킬 트리 보너스·채팅 메시지 틀 */
 .nssq .nq-growth-btn { border-color: var(--nq-green) !important; color: var(--nq-green) !important; }

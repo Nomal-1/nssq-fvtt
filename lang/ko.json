@@ -666,8 +666,17 @@
       "victory": "에너미 전멸",
       "defeat": "파티 전멸",
       "round": "턴",
-      "pickTarget": "공격할 대상을 고른다(빛나는 이름을 클릭). 다시 [공격]을 누르면 취소",
-      "noTarget": "사거리 안에 공격할 수 있는 대상이 없다"
+      "pickTarget": "공격할 대상을 고른다(빛나는 카드를 클릭). 다시 [공격]을 누르면 취소",
+      "noTarget": "사거리 안에 공격할 수 있는 대상이 없다",
+      "showMap": "맵 보기",
+      "mapHint": "전투 화면을 접고 아래의 필드 맵을 본다(나만)",
+      "openBattle": "전투 화면",
+      "front": "전열",
+      "back": "후열",
+      "acting": "{name}의 행동 중",
+      "whoseAction": "{name}의 행동",
+      "openingTitle": "개막 행동",
+      "openingWait": "개막 페이즈: 다른 전투원의 개막 행동을 기다린다"
     },
     "Growth": {
       "button": "성장 굴리기",

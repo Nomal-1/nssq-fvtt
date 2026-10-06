@@ -198,10 +198,11 @@ export function registerTracker() {
     });
   });
 
-  // 메인 페이즈: 전투 참가 플레이어는 「타겟 선택」 도구로, 끝나면 「토큰 선택」으로
+  // 메인 페이즈: 전투 씬을 보고 있는 플레이어는 「타겟 선택」 도구로, 끝나면 「토큰 선택」으로
+  // (v0.8.0부터 전투 씬으로 옮기지 않으므로 예전 방식 전투에만 해당)
   const syncTool = (combat) => {
     if (game.user.isGM || !canvas?.ready || !combat?.started) return;
-    if (combat.scene && canvas.scene?.id !== combat.scene.id) return;
+    if (!canvas.scene?.getFlag("nssq", "battleCopy")) return;
     const mine = combat.combatants.some((c) => c.actor?.isOwner);
     if (!mine) return;
     const want = combat.getFlag("nssq", "phase") === "main" && !combat.getFlag("nssq", "over") ? "target" : "select";

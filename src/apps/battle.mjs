@@ -1,8 +1,9 @@
 /**
  * 전투 프리셋·전투 개시·전투 종료.
  * - 프리셋 = 「전투 프리셋」 폴더의 씬(flags.nssq.battlePreset). 배경·BGM(씬의 재생목록)·에너미 토큰을 GM이 넣어 둔다
- * - 개시: 프리셋 사본 씬 생성 → 파티 토큰 배치 → 이전 음악 정지 → 사본 활성화(모두의 화면 전환, BGM) → 전투 시작
- * - 종료: 결과 기록 → 사본의 음악 정지 → 원래 씬·음악으로 → 전투·사본 삭제
+ * - 개시: 프리셋 사본 씬 생성(전투원 데이터용, 화면에는 띄우지 않음) → 파티 토큰 배치 → 이전 음악 정지 → 프리셋 BGM
+ *   → 전투 시작. 모두 지금 보던 씬(필드)에 머물고, 원작풍 전투 화면(combat/hud.mjs)이 그 위를 덮는다
+ * - 종료: 결과 기록 → 전투 BGM 정지 → 이전 음악 → 전투·사본 삭제
  */
 import { partyActors } from "./gm-screen.mjs";
 import { LAYOUT } from "../engine/formation.mjs";
@@ -169,7 +170,9 @@ export async function startBattle({ presetId, members, surprise = "none", identi
     name: L("copyName", { name: preset.name }),
     folder: folder.id, navigation: false, active: false,
     flags: { nssq: { battlePreset: false, battleCopy: { presetId, origin } } },
-    tokenVision: false, fog: { exploration: false }
+    tokenVision: false, fog: { exploration: false },
+    // 화면에 띄우지 않지만 플레이어도 전투원(토큰) 데이터를 읽는다
+    ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED }
   }, { save: true });
 
   // 2) 에너미 토큰: 액터 연결을 풀고(원본 액터 보호), 놓인 위치로 전위·후위
@@ -201,13 +204,16 @@ export async function startBattle({ presetId, members, surprise = "none", identi
   await copy.createEmbeddedDocuments("Token", tokenData);
   await relayout(copy);
 
-  // 4) 음악 전환·화면 전환(씬에 연결된 BGM은 활성화 때 재생된다)
+  // 4) 음악 전환: 씬은 바꾸지 않으므로 프리셋 씬에 연결된 BGM을 직접 튼다
   await stopSounds(previousSounds);
-  await copy.activate();
+  if (copy.playlist) {
+    if (copy.playlistSound) await copy.playlist.playSound(copy.playlistSound);
+    else await copy.playlist.playAll();
+  }
 
-  // 5) 전투
+  // 5) 전투: 어느 씬을 보든 보이도록 씬에 묶지 않는다(전투원은 사본 씬의 토큰)
   const combat = await Combat.create({
-    scene: copy.id, active: true,
+    scene: null, active: true,
     flags: { nssq: { battle: { presetId, presetName: preset.name, origin, copy: copy.id, previousSounds, surprise } } }
   });
   const combatants = copy.tokens.filter((t) => t.actor && ["character", "enemy", "token"].includes(t.actor.type))
@@ -264,8 +270,9 @@ export async function endBattle(combat, result = "abort") {
     // 전투 BGM 정지 → 원래 씬·음악
     if (copy?.playlist) await copy.playlist.stopAll();
     if (game.combats.has(combat.id)) await combat.delete();
+    // 예전 방식(사본 씬으로 이동한 전투)이면 원래 씬으로 되돌린다
     const origin = game.scenes.get(info.origin);
-    if (origin) await origin.activate();
+    if (origin && game.scenes.active?.id === copy?.id) await origin.activate();
     await resumeSounds(info.previousSounds ?? []);
     if (copy) await copy.delete();
   } finally {
