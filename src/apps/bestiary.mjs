@@ -2,8 +2,8 @@
  * 몬스터 도감 창
  * - GM: 모든 종(시스템 에너미 팩 + 월드의 에너미 액터). 식별 여부·처치 수·본 스킬·얻은 DROP을 언제든 고친다
  * - 플레이어(설정 「도감을 플레이어에게 보이기」가 켜져 있을 때, 전투 중에는 열 수 없음). 단계별 공개(07 #48)
- *   0 만난 적 없음: 목록에 없음 / 1 만남: 모습·이름만 / 2 식별한 적 있음: 「식별 시 공개」 스킬과 쓴 액티브 스킬의 이름·의존 부위,
- *   얻은 DROP(부능력치·내성·패시브·스킬 사양은 없음) / 3 처치 수가 자동 식별 기준 이상: 전부(모든 스킬 사양·모든 DROP)
+ *   0 만난 적 없음: 목록에 없음 / 1 만남: 모습·이름만 / 2 식별한 적 있음: Lv, 「식별 시 공개」 스킬(패시브 포함)과 쓴 스킬의 이름·의존 부위,
+ *   얻은 DROP(부능력치·내성·스킬 사양은 없음) / 3 처치 수가 자동 식별 기준 이상: 전부(모든 스킬 사양·모든 DROP)
  * 기록은 combat/bestiary.mjs(월드 설정 nssq.bestiary)
  */
 import { SUB_STATS, RESISTS } from "../engine/derive.mjs";
@@ -65,7 +65,7 @@ export class BestiaryApp extends Application {
     if (!list.some((s) => s.key === this.selected)) this.selected = list[0]?.key ?? null;
     const q = (this.filter ?? "").trim();
     const rows = list.map((s) => `<li class="${s.key === this.selected ? "active" : ""} ${s.tier > 0 ? "known" : ""}" data-key="${esc(s.key)}" data-name="${esc(s.name)}" ${q && !s.name.includes(q) ? "hidden" : ""}>
-        <img src="${esc(s.img)}"/><span class="nm">${esc(s.name)}</span><small>${gm || s.tier >= 3 ? `Lv${esc(s.level ?? "?")}` : ""}${s.foe ? " · F.O.E." : ""}</small>
+        <img src="${esc(s.img)}"/><span class="nm">${esc(s.name)}</span><small>${gm || s.tier >= 2 ? `Lv${esc(s.level ?? "?")}` : ""}${s.foe ? " · F.O.E." : ""}</small>
         ${(s.entry.defeated ?? 0) > 0 ? `<b class="kills" title="${esc(L("kills"))}">${s.entry.defeated}</b>` : ""}${s.entry.identified ? `<i class="fas fa-eye" title="${esc(L("identified"))}"></i>` : ""}</li>`).join("");
     const sel = list.find((s) => s.key === this.selected);
     const detail = sel ? await this.detailHtml(sel) : `<p class="none">${esc(gm ? L("empty") : L("emptyPlayer"))}</p>`;
@@ -116,10 +116,10 @@ export class BestiaryApp extends Application {
         <h4>SKILL</h4><ul class="an-list">${skills.map((i) => `<li class="spec"><b>${esc(i.name)}</b><small>${esc(spec(i))}</small><div class="desc">${esc(String(i.system.description ?? "").replace(/<[^>]+>/g, " ").trim())}</div></li>`).join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>
         <h4>DROP</h4><ul class="an-list">${drops.map((d) => `<li>${esc(dropRange(d))} ${esc(dropName(d))}</li>`).join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>`;
     }
-    // 단계 2: 이름·모습, 「식별 시 공개」 스킬과 쓴 액티브 스킬의 이름·의존 부위(패시브·사양 없음), 얻은 DROP
-    const passive = (i) => i.system.timing === "상시";
-    const shown = (i) => !passive(i) && (i.system.reveal !== false || (e.skills ?? []).includes(i.name));
-    return `<header><img src="${esc(sel.img)}"/><div><h2>${esc(sel.name)}</h2></div></header>${kills}
+    // 단계 2: 이름·모습·Lv, 「식별 시 공개」 스킬(패시브 포함)과 쓴 스킬의 이름·의존 부위(사양 없음), 얻은 DROP
+    // 전투 중 자세히 보기의 식별 성공과 같은 범위(부능력치·내성은 없음)
+    const shown = (i) => i.system.reveal !== false || (e.skills ?? []).includes(i.name);
+    return `<header><img src="${esc(sel.img)}"/><div><h2>${esc(sel.name)}</h2><span>Lv ${esc(s.level ?? "?")}</span></div></header>${kills}
       <p class="notes">${esc(L("tier2Note"))}</p>
       <h4>SKILL</h4><ul class="an-list">${skills.map((i) => (shown(i) ? `<li>${esc(i.name)}<small>${esc(part(i))}</small></li>` : `<li class="q">???</li>`)).join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>
       <h4>DROP</h4><ul class="an-list">${drops.map((d) => ((e.drops ?? []).includes(dropName(d)) ? `<li>${esc(dropRange(d))} ${esc(dropName(d))}</li>` : `<li class="q">???</li>`)).join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>`;
