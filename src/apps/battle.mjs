@@ -8,6 +8,7 @@
 import { partyActors } from "./gm-screen.mjs";
 import { LAYOUT } from "../engine/formation.mjs";
 import { relayout } from "../combat/formation.mjs";
+import { enemyActorFor } from "./enemy-library.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -214,7 +215,7 @@ export async function startBattle({ presetId, members, surprise = "none", identi
   // 5) 전투: 어느 씬을 보든 보이도록 씬에 묶지 않는다(전투원은 사본 씬의 토큰)
   const combat = await Combat.create({
     scene: null, active: true,
-    flags: { nssq: { battle: { presetId, presetName: preset.name, origin, copy: copy.id, previousSounds, surprise } } }
+    flags: { nssq: { battle: { presetId, presetName: preset.name, origin, copy: copy.id, previousSounds, surprise, identified } } }
   });
   const combatants = copy.tokens.filter((t) => t.actor && ["character", "enemy", "token"].includes(t.actor.type))
     .map((t) => ({ tokenId: t.id, sceneId: copy.id, actorId: t.actorId, hidden: t.hidden }));
@@ -230,6 +231,43 @@ export async function startBattle({ presetId, members, surprise = "none", identi
       ${surpriseText ? `<p class="warn">${surpriseText}</p>` : ""}</div>`
   });
   return combat;
+}
+
+/* ---------------- 난입 ---------------- */
+
+/**
+ * GM: 진행 중인 전투에 액터 하나를 끼워 넣는다(프리셋은 바뀌지 않는다, 이 전투의 사본 씬에만).
+ * - 에너미: 컴펜디움 것은 「프리셋 에너미」 폴더의 액터를 재사용, 비연결 토큰으로. row = 놓은 위치(위쪽 절반이면 후열)
+ * - 캐릭터: 연결 토큰, 아군으로(자기 열·칸)
+ * 이니셔티브는 전투원 추가 때 자동으로 굴린다(tracker)
+ */
+export async function joinBattle(combat, uuid, { row = "front" } = {}) {
+  if (!game.user.isGM || !combat) return;
+  const info = combat.getFlag("nssq", "battle") ?? {};
+  const copy = game.scenes.get(info.copy);
+  if (!copy) return;
+  const doc = await fromUuid(uuid);
+  if (!doc || doc.documentName !== "Actor") return ui.notifications.warn(L("joinActorOnly"));
+  if (!["enemy", "character"].includes(doc.type)) return ui.notifications.warn(L("joinActorOnly"));
+  const enemy = doc.type === "enemy";
+  const actor = enemy && doc.pack ? await enemyActorFor(uuid) : doc;
+  if (!actor) return;
+  if (!enemy && copy.tokens.some((t) => t.actorLink && t.actorId === actor.id)) return ui.notifications.warn(L("joinAlready", { name: actor.name }));
+  const td = await actor.getTokenDocument({
+    x: 0, y: 0, actorLink: !enemy,
+    disposition: enemy ? CONST.TOKEN_DISPOSITIONS.HOSTILE : CONST.TOKEN_DISPOSITIONS.FRIENDLY
+  });
+  const [token] = await copy.createEmbeddedDocuments("Token", [td.toObject()]);
+  if (enemy) {
+    const order = Math.max(-1, ...copy.tokens.filter((t) => t.actor?.type === "enemy" && t.id !== token.id).map((t) => t.actor.system.order ?? 0)) + 1;
+    await token.actor.update({ "system.row": row, "system.order": order, "system.identified": !!info.identified });
+  }
+  await relayout(copy);
+  await combat.createEmbeddedDocuments("Combatant", [{ tokenId: token.id, sceneId: copy.id, actorId: token.actorId, hidden: token.hidden }]);
+  await ChatMessage.create({
+    speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
+    content: `<div class="nssq-combat-note"><i class="fas fa-bolt"></i> ${L(enemy ? "joinedEnemy" : "joinedAlly", { name: esc(token.name) })}</div>`
+  });
 }
 
 /* ---------------- 종료 ---------------- */

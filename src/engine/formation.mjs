@@ -92,3 +92,46 @@ export function formationPositions({ party = [], enemies = [] }, layout = LAYOUT
   }
   return out;
 }
+
+/**
+ * 전후열 섞기(기믹용).
+ * - flip: 전열 ↔ 후열을 통째로 바꾼다(칸은 그대로)
+ * - random: 무작위로 다시 배치. slotsPerRow가 있으면(파티 3칸) 6칸 중에서 고르고, 없으면(에너미) 열마다 무작위
+ * 섞은 뒤 살아 있는 전투원이 있는데 전열에 아무도 없으면, 살아 있는 하나를 전열로 보낸다(전열이 빈 진형은 만들지 않는다)
+ * @param {{id, row: "front"|"back", order?: number, ko?: boolean}[]} units
+ * @param {{mode?: "random"|"flip", slotsPerRow?: number|null, rng?: () => number}} [opts]
+ * @returns {{id, row: "front"|"back", order: number}[]}
+ */
+export function shuffleFormation(units, { mode = "random", slotsPerRow = null, rng = Math.random } = {}) {
+  if (mode === "flip") return units.map((u, i) => ({ id: u.id, row: u.row === "back" ? "front" : "back", order: u.order ?? i }));
+  const pick = (n) => Math.floor(rng() * n);
+  const shuffled = (arr) => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = pick(i + 1);
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+  let out;
+  if (slotsPerRow) {
+    const spots = shuffled([...Array(slotsPerRow * 2).keys()]).slice(0, units.length);
+    out = units.map((u, i) => ({ id: u.id, row: spots[i] < slotsPerRow ? "front" : "back", order: spots[i] % slotsPerRow }));
+  } else {
+    const order = shuffled([...units.keys()]);
+    out = units.map((u, i) => ({ id: u.id, row: rng() < 0.5 ? "front" : "back", order: order[i] }));
+  }
+  const alive = new Set(units.filter((u) => !u.ko).map((u) => u.id));
+  if (alive.size && !out.some((o) => o.row === "front" && alive.has(o.id))) {
+    const living = out.filter((o) => alive.has(o.id));
+    const mover = living[pick(living.length)];
+    if (slotsPerRow) {
+      // 전열 칸 하나와 자리를 바꾼다(그 칸이 비어 있으면 그냥 들어간다)
+      const index = pick(slotsPerRow);
+      const occupant = out.find((o) => o.row === "front" && o.order === index);
+      if (occupant) Object.assign(occupant, { row: mover.row, order: mover.order });
+      Object.assign(mover, { row: "front", order: index });
+    } else mover.row = "front";
+  }
+  return out;
+}

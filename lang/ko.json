@@ -532,7 +532,18 @@
       "identifyAllHint": "남은 에너미를 전부 식별한 것으로 한다(전투 중 무엇을 알게 된 경우 등)",
       "identifiedOn": "식별됨 — 누르면 식별 전으로",
       "identifiedOff": "식별 전 — 누르면 식별한 것으로(【HP】 변화가 플레이어에게 보인다)",
-      "identified": "{names}을(를) 식별했다."
+      "identified": "{names}을(를) 식별했다.",
+      "shuffleTitle": "전후열 섞기",
+      "shuffleSide": "대상",
+      "shuffleParty": "파티",
+      "shuffleEnemy": "에너미",
+      "shuffleBoth": "양쪽",
+      "shuffleMode": "방식",
+      "shuffleRandom": "무작위로 섞기",
+      "shuffleFlip": "전열 ↔ 후열 뒤집기",
+      "shuffleButton": "섞기",
+      "shuffleHint": "파티는 열마다 3칸. 살아 있는 전투원이 있으면 전열이 비지 않게 한다. 결과는 채팅에 남는다.",
+      "shuffled": "진형 변화: {side} — {mode}"
     },
     "Battle": {
       "tab": "전투",
@@ -601,7 +612,11 @@
       "kindVariant": "변형",
       "kindCustom": "직접 만듦",
       "deleteChecked": "체크한 것 삭제",
-      "artApplied": "에너미 일러스트를 월드의 에너미 액터·토큰 {n}개에 적용했다."
+      "artApplied": "에너미 일러스트를 월드의 에너미 액터·토큰 {n}개에 적용했다.",
+      "joinActorOnly": "에너미나 캐릭터 액터만 난입시킬 수 있다.",
+      "joinAlready": "{name}은(는) 이미 전투 중이다.",
+      "joinedEnemy": "{name} 난입!",
+      "joinedAlly": "{name}이(가) 전투에 합류했다."
     },
     "Skill": {
       "common": "커먼 스킬",
@@ -677,7 +692,10 @@
       "whoseAction": "{name}의 행동",
       "openingTitle": "개막 행동",
       "openingWait": "개막 페이즈: 다른 전투원의 개막 행동을 기다린다",
-      "swapShort": "교체"
+      "swapShort": "교체",
+      "shuffle": "전후열 섞기",
+      "shuffleHint": "기믹용: 파티·에너미의 전열/후열을 무작위로 섞거나 뒤집는다",
+      "dropHint": "에너미·캐릭터를 여기에 끌어 놓으면 이 전투에만 난입한다(위쪽 절반에 놓으면 후열)"
     },
     "Growth": {
       "button": "성장 굴리기",

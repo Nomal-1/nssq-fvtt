@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LAYOUT, assignPartySlots, enemySlotX, formationPositions, partyRowSlots, partySlotX } from "../../src/engine/formation.mjs";
+import { LAYOUT, assignPartySlots, enemySlotX, formationPositions, partyRowSlots, partySlotX, shuffleFormation } from "../../src/engine/formation.mjs";
 
 describe("파티 칸", () => {
   it("칸 0·1·2는 가운데를 기준으로 좌·중·우", () => {
@@ -56,5 +56,39 @@ describe("진형 좌표", () => {
     expect(pos.p2).toMatchObject({ y: LAYOUT.lanes.partyBack, index: 2 });
     expect(pos.e1.x).toBeLessThan(pos.e2.x);
     expect(pos.e3).toMatchObject({ y: LAYOUT.lanes.enemyBack, x: LAYOUT.width / 2 });
+  });
+});
+
+describe("전후열 섞기", () => {
+  const units = [
+    { id: "a", row: "front", order: 0 }, { id: "b", row: "front", order: 1 },
+    { id: "c", row: "back", order: 0 }, { id: "d", row: "back", order: 1, ko: true }
+  ];
+  const seq = (...xs) => { let i = 0; return () => xs[i++ % xs.length]; };
+  it("flip: 열만 맞바꾸고 칸은 그대로", () => {
+    expect(shuffleFormation(units, { mode: "flip" })).toEqual([
+      { id: "a", row: "back", order: 0 }, { id: "b", row: "back", order: 1 },
+      { id: "c", row: "front", order: 0 }, { id: "d", row: "front", order: 1 }
+    ]);
+  });
+  it("파티(3칸): 칸이 겹치지 않고 열마다 3명 이하", () => {
+    for (let k = 0; k < 50; k++) {
+      const r = shuffleFormation(units, { slotsPerRow: 3 });
+      const keys = r.map((o) => `${o.row}:${o.order}`);
+      expect(new Set(keys).size).toBe(units.length);
+      expect(r.every((o) => o.order >= 0 && o.order < 3)).toBe(true);
+    }
+  });
+  it("살아 있는 전투원이 있으면 전열이 비지 않는다", () => {
+    for (let k = 0; k < 100; k++) {
+      const r = shuffleFormation(units, { slotsPerRow: 3 });
+      expect(r.some((o) => o.row === "front" && o.id !== "d")).toBe(true);
+      const e = shuffleFormation(units);
+      expect(e.some((o) => o.row === "front" && o.id !== "d")).toBe(true);
+    }
+  });
+  it("에너미(칸 제한 없음): 모두 후열로 나와도 하나를 전열로", () => {
+    const r = shuffleFormation(units, { rng: seq(0.9, 0.9, 0.9, 0.9, 0.9, 0.1) });
+    expect(r.filter((o) => o.row === "front").length).toBeGreaterThan(0);
   });
 });

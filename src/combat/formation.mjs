@@ -2,7 +2,7 @@
  * 전투 씬의 칸 배치: 토큰 좌표를 (진영, 열, 칸)으로 계산하고 잠근다.
  * 열·칸이 바뀌면(배치 변경, 전위 전멸 교대) 다시 배치한다. GM 클라이언트에서만 움직인다.
  */
-import { LAYOUT, assignPartySlots, formationPositions, partyRowSlots } from "../engine/formation.mjs";
+import { LAYOUT, PARTY_SLOTS, assignPartySlots, formationPositions, partyRowSlots, shuffleFormation } from "../engine/formation.mjs";
 import { isActiveGM } from "./apply.mjs";
 import { sideOf } from "./profile.mjs";
 
@@ -116,6 +116,48 @@ export async function changePosition(combatant) {
   if (row === actor.system.row && Number(index) === actor.system.order) return false;
   await actor.update({ "system.row": row, "system.order": Number(index) });
   return true;
+}
+
+/* ---------------- 전후열 섞기(GM, 기믹용) ---------------- */
+
+/**
+ * GM: 파티·에너미의 전열/후열을 무작위로 섞거나 통째로 뒤집는다(engine shuffleFormation).
+ * 파티는 열마다 3칸, 전열이 빈 진형은 만들지 않는다.
+ */
+export async function shuffleRowsDialog(combat) {
+  if (!game.user.isGM || !combat) return;
+  const info = combat.getFlag("nssq", "battle") ?? {};
+  const scene = game.scenes.get(info.copy);
+  if (!scene) return;
+  const choice = await Dialog.prompt({
+    title: L("shuffleTitle"),
+    content: `<form>
+      <div class="form-group"><label>${L("shuffleSide")}</label><select name="side">
+        <option value="party">${L("shuffleParty")}</option><option value="enemy">${L("shuffleEnemy")}</option><option value="both">${L("shuffleBoth")}</option></select></div>
+      <div class="form-group"><label>${L("shuffleMode")}</label><select name="mode">
+        <option value="random">${L("shuffleRandom")}</option><option value="flip">${L("shuffleFlip")}</option></select></div>
+      <p class="notes">${L("shuffleHint")}</p></form>`,
+    label: L("shuffleButton"),
+    rejectClose: false,
+    callback: (html) => ({ side: html[0].querySelector("[name=side]").value, mode: html[0].querySelector("[name=mode]").value })
+  });
+  if (!choice) return;
+  const { party, enemies } = unitsOf(scene);
+  const ko = (a) => (a.system.hp?.value ?? 0) <= 0;
+  const apply = async (units, slotsPerRow) => {
+    const plan = shuffleFormation(units.map((u) => ({ id: u.id, row: u.row, order: u.order, ko: ko(u.actor) })), { mode: choice.mode, slotsPerRow });
+    for (const p of plan) {
+      const u = units.find((x) => x.id === p.id);
+      await u.actor.update({ "system.row": p.row, "system.order": p.order }, { nssqLayout: true });
+    }
+  };
+  if (choice.side !== "enemy") await apply(party, PARTY_SLOTS);
+  if (choice.side !== "party") await apply(enemies, null);
+  await relayout(scene);
+  await ChatMessage.create({
+    speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
+    content: `<div class="nssq-combat-note"><i class="fas fa-random"></i> ${L("shuffled", { side: L(`shuffle${choice.side[0].toUpperCase()}${choice.side.slice(1)}`), mode: L(choice.mode === "flip" ? "shuffleFlip" : "shuffleRandom") })}</div>`
+  });
 }
 
 export function registerFormation() {

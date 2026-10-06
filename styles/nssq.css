@@ -573,6 +573,10 @@
 #nssq-battle .nb-member .nb-bar { height: 18px; border-radius: 8px; }
 #nssq-battle .nb-member .nb-bar b { font-size: 12px; padding-left: 6px; }
 #nssq-battle .nb-member .nb-bar span { font-size: 13px; line-height: 18px; padding-right: 7px; }
+/* 난입: GM이 끌고 있을 때 */
+#nssq-battle .nb-drop { display: none; position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); padding: 14px 24px; font-size: 1.2em; color: var(--nq-gold-l); background: rgba(10, 22, 38, 0.92); border: 2px dashed var(--nq-gold); border-radius: 12px; pointer-events: none; }
+#nssq-battle.dropping .nb-drop { display: block; }
+#nssq-battle.dropping .nb-enemies { outline: 2px dashed var(--nq-gold); outline-offset: -6px; }
 /* 좁은 화면 */
 #nssq-battle.compact .nb-command { width: 240px; height: 320px; font-size: 1em; }
 #nssq-battle.compact .nb-enemies { padding-left: 260px; }

@@ -9,7 +9,8 @@
 import { inRange } from "../engine/combat.mjs";
 import { normalAttack } from "./attack.mjs";
 import { combatProfile, friendly, sideOf } from "./profile.mjs";
-import { changePosition } from "./formation.mjs";
+import { changePosition, shuffleRowsDialog } from "./formation.mjs";
+import { joinBattle } from "../apps/battle.mjs";
 import { rollEscape, swapWeapon, toggleGuard } from "./tracker.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "./apply.mjs";
@@ -35,7 +36,35 @@ function ensureRoot() {
   root = document.createElement("div");
   root.id = "nssq-battle";
   document.body.append(root);
+  bindDrop(root);
   return root;
+}
+
+/**
+ * GM: 액터(컴펜디움·액터 목록)를 끌어 놓으면 이 전투에만 난입. 에너미 줄 위쪽 절반에 놓으면 후열.
+ * 루트 요소에 한 번만 붙인다(다시 그릴 때마다 붙이면 한 번 놓아도 여러 번 난입한다)
+ */
+function bindDrop(el) {
+  const allowed = () => game.user.isGM && !collapsed && battleCombat();
+  el.addEventListener("dragover", (ev) => {
+    if (!allowed()) return;
+    ev.preventDefault();
+    el.classList.add("dropping");
+  });
+  el.addEventListener("dragleave", (ev) => {
+    if (!el.contains(ev.relatedTarget)) el.classList.remove("dropping");
+  });
+  el.addEventListener("drop", async (ev) => {
+    el.classList.remove("dropping");
+    const combat = allowed();
+    if (!combat) return;
+    ev.preventDefault();
+    const data = TextEditor.getDragEventData(ev);
+    if (data?.type !== "Actor" || !data.uuid) return ui.notifications.warn(game.i18n.localize("NSSQ.Battle.joinActorOnly"));
+    const area = el.querySelector(".nb-enemies")?.getBoundingClientRect();
+    const row = area && ev.clientY < area.top + area.height / 2 ? "back" : "front";
+    await joinBattle(combat, data.uuid, { row });
+  });
 }
 
 export function clearHud() {
@@ -79,6 +108,7 @@ function gmControls(combat) {
   const C = (k) => game.i18n.localize(`NSSQ.Combat.${k}`);
   if (over) return `<button type="button" data-gm="end"><i class="fas fa-flag-checkered"></i> ${C(over === "victory" ? "endVictory" : "endDefeat")}</button>`;
   return `${phase === "opening" ? `<button type="button" data-gm="escape"><i class="fas fa-running"></i> ${C("escape")}</button>` : ""}
+    <button type="button" data-gm="shuffle" title="${esc(L("shuffleHint"))}"><i class="fas fa-random"></i> ${L("shuffle")}</button>
     <button type="button" data-gm="next"><i class="fas fa-forward"></i> ${phase === "main" ? C("nextTurn") : C("nextPhase")}</button>`;
 }
 
@@ -215,6 +245,7 @@ export function battleHtml(combat, { attack = pending === "attack" } = {}) {
       <div class="nb-enemies">${enemies.map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
       ${attacker ? `<div class="nb-hint">${targets.size ? L("pickTarget") : L("noTarget")}</div>` : ""}
       ${commandWindow(combat)}
+      ${game.user.isGM ? `<div class="nb-drop">${L("dropHint")}</div>` : ""}
     </div>
     <div class="nb-party">
       <div class="nb-row front"><span class="label">${L("front")}</span>${slots("front")}</div>
@@ -232,6 +263,7 @@ function bind(el, combat) {
       case "next": return combat.nextPhase();
       case "end": return combat.nextTurn();
       case "escape": return rollEscape(combat);
+      case "shuffle": return shuffleRowsDialog(combat);
     }
   }));
   el.querySelectorAll("[data-cmd]").forEach((b) => b.addEventListener("click", async (ev) => {
