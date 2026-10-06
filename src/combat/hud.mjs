@@ -255,7 +255,10 @@ export function battleHtml(combat, { attack = pending === "attack" } = {}) {
       ${orderStrip(combat)}
     </div>
     <div class="nb-field">
-      <div class="nb-enemies">${enemies.map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
+      <div class="nb-enemies ${enemies.some((c) => c.actor.system.row === "back") ? "has-back" : ""}">
+        <div class="nb-erow back">${enemies.filter((c) => c.actor.system.row === "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
+        <div class="nb-erow front">${enemies.filter((c) => c.actor.system.row !== "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
+      </div>
       ${attacker ? `<div class="nb-hint">${targets.size ? L("pickTarget") : L("noTarget")}</div>` : ""}
       ${commandWindow(combat)}
       ${game.user.isGM ? `<div class="nb-drop">${L("dropHint")}</div>` : ""}

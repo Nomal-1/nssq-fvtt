@@ -514,15 +514,25 @@
 #nssq-battle .nb-order .sep { font-size: 0.6em; color: var(--nq-dim); }
 /* 가운데: 에너미(커맨드 창은 왼쪽 아래에 겹쳐 고정) */
 #nssq-battle .nb-field { position: relative; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
-#nssq-battle .nb-enemies { flex: 1 1 auto; min-height: 0; display: flex; align-items: flex-end; justify-content: center; gap: 18px; padding: 10px 20px 8px 310px; }
-#nssq-battle .nb-enemy { flex: 0 1 220px; min-width: 90px; max-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; transition: transform 0.15s; }
+/* 에너미: 후열 줄은 위쪽(뒤)에 작고 어둡게, 전열 줄이 그 앞에 겹친다 */
+#nssq-battle .nb-enemies { position: relative; flex: 1 1 auto; min-height: 0; }
+#nssq-battle .nb-erow { position: absolute; left: 310px; right: 20px; display: flex; align-items: flex-end; justify-content: center; gap: 18px; }
+#nssq-battle .nb-erow.front { top: 8px; bottom: 8px; z-index: 2; }
+#nssq-battle .nb-erow.back { top: 34px; bottom: 34%; z-index: 1; gap: 28px; }
+#nssq-battle .nb-enemies.has-back .nb-erow.front { top: 22%; }
+#nssq-battle .nb-enemy { position: relative; flex: 0 1 220px; min-width: 90px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; cursor: pointer; transition: transform 0.15s; }
 #nssq-battle .nb-enemy .art { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
-#nssq-battle .nb-enemy .art img { max-width: 100%; max-height: 40vh; object-fit: contain; border: none; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7)); }
-#nssq-battle .nb-enemy.back { transform: scale(0.82); }
-#nssq-battle .nb-enemy.back .art img { filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7)) brightness(0.85); }
+#nssq-battle .nb-enemy .art img { max-width: 100%; max-height: 100%; object-fit: contain; border: none; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7)); }
+#nssq-battle .nb-enemy.back { flex-basis: 160px; font-size: 0.85em; }
+/* 후열은 전열에 가려지므로 이름·【HP】를 그림 위에 둔다 */
+#nssq-battle .nb-enemy.back .name { order: -2; }
+#nssq-battle .nb-enemy.back .nb-bar { order: -1; }
+#nssq-battle .nb-enemy.back { justify-content: flex-start; }
+#nssq-battle .nb-enemy.back .art { flex: 1 1 auto; min-height: 0; align-items: flex-start; }
+#nssq-battle .nb-enemy.back .art img { filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7)) brightness(0.72) saturate(0.85); }
 #nssq-battle .nb-enemy .name { font-size: 0.95em; padding: 0 10px; background: rgba(10, 22, 38, 0.85); border: 1px solid var(--nq-line2); border-radius: 10px; white-space: nowrap; }
 #nssq-battle .nb-enemy .name em { font-style: normal; font-size: 0.8em; color: var(--nq-mu); }
-#nssq-battle .nb-enemy .nb-bar { width: 80%; }
+#nssq-battle .nb-enemy .nb-bar { flex: 0 0 auto; width: 80%; height: 12px; }
 #nssq-battle .nb-enemy.current .name { border-color: var(--nq-red); box-shadow: 0 0 8px var(--nq-red); }
 #nssq-battle .nb-enemy.ko { opacity: 0.25; filter: grayscale(1); }
 #nssq-battle .nb-enemy.targetable .art img { filter: drop-shadow(0 0 10px var(--nq-cy)) drop-shadow(0 0 4px var(--nq-cy)); }
@@ -590,7 +600,7 @@
 #nssq-battle.dropping .nb-enemies { outline: 2px dashed var(--nq-gold); outline-offset: -6px; }
 /* 좁은 화면 */
 #nssq-battle.compact .nb-command { width: 240px; height: 320px; font-size: 1em; }
-#nssq-battle.compact .nb-enemies { padding-left: 260px; }
+#nssq-battle.compact .nb-erow { left: 260px; }
 #nssq-battle.compact .nb-member { height: 64px; font-size: 1em; }
 #nssq-battle.compact .nb-member .portrait { flex-basis: 52px; height: 52px; }
 #nssq-battle.compact .nb-member .cls { display: none; }
