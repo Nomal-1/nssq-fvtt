@@ -266,6 +266,7 @@
 .nq-node.maxed { color: var(--nq-gold-l); border-color: var(--nq-gold-l); background: linear-gradient(#5a4a22, #2b2a25); box-shadow: 0 0 6px rgba(201, 162, 74, 0.5); }
 .nq-node.can { cursor: pointer; }
 .nq-node.can:hover { box-shadow: 0 0 8px var(--nq-cy); }
+.nq-node .nq-shared { font-style: normal; font-size: 0.75em; padding: 0 4px; border-radius: 6px; border: 1px solid var(--nq-gold); color: var(--nq-gold-l); }
 .nq-node .nq-unique { font-style: normal; color: var(--nq-fp); margin-right: 3px; }
 .nq-tree-free { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px; }
 .nssq .nq-sl em { font-style: normal; color: var(--nq-dim); }

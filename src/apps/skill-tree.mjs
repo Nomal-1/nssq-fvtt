@@ -34,6 +34,22 @@ async function skillIndex() {
   return indexCache;
 }
 
+/** 이 스킬 항목이 메인·서브·커먼 중 어느 쪽인가 */
+function roleOf(e, st) {
+  if (e.system.classKey === "common") return "common";
+  return st.main && e.system.classKey === st.main.system.key ? "main" : "sub";
+}
+
+/**
+ * 서브 트리의 스킬이 메인 트리에도 같은 이름으로 있으면 메인 쪽 항목으로 바꾼다(메인 쪽만 유효, SL 합산 불가).
+ * 서브 탭에서 눌러도 메인 스킬이 오르내린다.
+ */
+function effectiveEntry(e, st, index) {
+  if (roleOf(e, st) !== "sub" || !st.main) return { entry: e, shared: false };
+  const m = index.find((x) => x.system?.classKey === st.main.system.key && x.name === e.name);
+  return m ? { entry: m, shared: true } : { entry: e, shared: false };
+}
+
 export class SkillTree extends Application {
   constructor(actor, options = {}) {
     super({ id: `nssq-skill-tree-${actor.id}`, ...options });
@@ -98,13 +114,15 @@ export class SkillTree extends Application {
     const ownedOf = (e) => st.owned.find((o) => o.system.classKey === e.system.classKey && o.system.skillKey === e.system.skillKey);
     const editable = this.actor.isOwner;
 
-    const nodeData = (e) => {
+    const nodeData = (orig) => {
+      const { entry: e, shared } = effectiveEntry(orig, st, index);
+      const role = roleOf(e, st);
       const item = ownedOf(e);
       const current = item?.system.sl ?? 0;
       const check = canRaise({
         skill: { name: e.name, maxSL: e.system.maxSL, unique: e.system.unique, prereqs: e.system.prereqs },
-        role: st.tab.key, current, slOf: st.slOf, level: st.level, hasSub: !!st.sub,
-        budgetLeft: st.budget.left, mainHasSame: st.tab.key === "sub" && mainNames.has(e.name)
+        role, current, slOf: st.slOf, level: st.level, hasSub: !!st.sub,
+        budgetLeft: st.budget.left, mainHasSame: role === "sub" && mainNames.has(e.name)
       });
       const ms = e.system.maxSL ?? {};
       const prereq = prereqList(e.system.prereqs).map((p) => `${p.any ? `(${L("or")}) ` : ""}${p.skill} SL${p.sl}`).join(", ");
@@ -113,11 +131,12 @@ export class SkillTree extends Application {
         `${e.system.unique ? "★ " : ""}${e.name} — ${e.system.timing ?? ""}${cost ? ` · ${cost}` : ""}`,
         prereq ? `${L("prereq")}: ${prereq}` : "",
         plain(e.system.description),
+        shared ? L("sharedHint") : "",
         !check.ok && check.reason !== "maxed" ? `✖ ${L(`reason.${check.reason}`)}` : ""
       ].filter(Boolean).join("\n");
       return {
-        id: e._id, name: e.name, unique: !!e.system.unique, current,
-        maxText: st.tab.key === "common" ? `${ms.main ?? 1}` : `${ms.main ?? 1}/${ms.sub ?? "-"}`,
+        id: e._id, name: e.name, unique: !!e.system.unique, current, shared,
+        maxText: role === "common" || shared ? `${ms.main ?? 1}` : `${ms.main ?? 1}/${ms.sub ?? "-"}`,
         max: check.max,
         state: current >= (check.max ?? 0) && current > 0 ? "maxed" : current > 0 ? "owned" : check.ok ? "open" : "locked",
         canRaise: editable && check.ok,
@@ -257,17 +276,20 @@ export class SkillTree extends Application {
   /** SL +1. 없으면 팩에서 가져와 SL 1로 */
   async raise(id, { force = false } = {}) {
     const index = await skillIndex();
-    const e = index.find((x) => x._id === id);
-    if (!e) return;
     const st = this.state();
+    const found = index.find((x) => x._id === id);
+    if (!found) return;
+    const e = effectiveEntry(found, st, index).entry;
+    id = e._id;
+    const role = roleOf(e, st);
     const item = st.owned.find((o) => o.system.classKey === e.system.classKey && o.system.skillKey === e.system.skillKey);
     const current = item?.system.sl ?? 0;
     if (!force) {
       const mainNames = st.main ? new Set(index.filter((x) => x.system?.classKey === st.main.system.key).map((x) => x.name)) : new Set();
       const check = canRaise({
         skill: { name: e.name, maxSL: e.system.maxSL, unique: e.system.unique, prereqs: e.system.prereqs },
-        role: st.tab.key, current, slOf: st.slOf, level: st.level, hasSub: !!st.sub,
-        budgetLeft: st.budget.left, mainHasSame: st.tab.key === "sub" && mainNames.has(e.name)
+        role, current, slOf: st.slOf, level: st.level, hasSub: !!st.sub,
+        budgetLeft: st.budget.left, mainHasSame: role === "sub" && mainNames.has(e.name)
       });
       if (!check.ok) return ui.notifications.warn(`${e.name}: ${L(`reason.${check.reason}`)}`);
     }

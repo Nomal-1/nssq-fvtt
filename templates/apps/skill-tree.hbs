@@ -23,9 +23,9 @@
       {{#if n.or}}
       <span class="nq-or {{#if n.met}}met{{/if}}" data-key="{{n.key}}" style="left: {{n.x}}px; top: {{n.y}}px;" title="{{n.tip}}">{{localize "NSSQ.Skill.or"}}</span>
       {{else}}
-      <a class="nq-node {{n.state}} {{#if n.canRaise}}can{{/if}}" data-key="{{n.key}}" data-skill-id="{{n.id}}" style="left: {{n.x}}px; top: {{n.y}}px;" title="{{n.tip}}">
+      <a class="nq-node {{n.state}} {{#if n.canRaise}}can{{/if}} {{#if n.shared}}shared{{/if}}" data-key="{{n.key}}" data-skill-id="{{n.id}}" style="left: {{n.x}}px; top: {{n.y}}px;" title="{{n.tip}}">
         <span class="nq-node-name">{{#if n.unique}}<i class="nq-unique">★</i>{{/if}}{{n.name}}</span>
-        <span class="nq-node-sl">{{#if n.current}}<b>{{n.current}}</b>{{/if}}<em>{{n.maxText}}</em></span>
+        <span class="nq-node-sl">{{#if n.shared}}<i class="nq-shared">{{localize "NSSQ.Skill.tabMain"}}</i>{{/if}}{{#if n.current}}<b>{{n.current}}</b>{{/if}}<em>{{n.maxText}}</em></span>
       </a>
       {{/if}}
       {{/each}}
@@ -36,9 +36,9 @@
     <h3 class="nq-title">{{localize "NSSQ.Skill.independent"}}</h3>
     <div class="nq-tree-free">
       {{#each independent as |n|}}
-      <a class="nq-node {{n.state}} {{#if n.canRaise}}can{{/if}}" data-skill-id="{{n.id}}" title="{{n.tip}}">
+      <a class="nq-node {{n.state}} {{#if n.canRaise}}can{{/if}} {{#if n.shared}}shared{{/if}}" data-skill-id="{{n.id}}" title="{{n.tip}}">
         <span class="nq-node-name">{{#if n.unique}}<i class="nq-unique">★</i>{{/if}}{{n.name}}</span>
-        <span class="nq-node-sl">{{#if n.current}}<b>{{n.current}}</b>{{/if}}<em>{{n.maxText}}</em></span>
+        <span class="nq-node-sl">{{#if n.shared}}<i class="nq-shared">{{localize "NSSQ.Skill.tabMain"}}</i>{{/if}}{{#if n.current}}<b>{{n.current}}</b>{{/if}}<em>{{n.maxText}}</em></span>
       </a>
       {{/each}}
     </div>
