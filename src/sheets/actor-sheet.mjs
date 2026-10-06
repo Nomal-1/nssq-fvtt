@@ -8,6 +8,7 @@ import { makeRare, removeRare } from "../apps/rare.mjs";
 import { isPhysical } from "../engine/equipment.mjs";
 import { characterContext, editAbilities, showCreationLog, toggleCreationLock } from "./character.mjs";
 import { rollGrowth } from "../apps/growth.mjs";
+import { openArtConfig } from "../apps/art-config.mjs";
 import { SkillTree } from "../apps/skill-tree.mjs";
 
 export class NssqActorSheet extends ActorSheet {
@@ -133,6 +134,10 @@ export class NssqActorSheet extends ActorSheet {
     html.on("click", "[data-action=edit-abilities]", (ev) => {
       ev.preventDefault();
       editAbilities(this.actor);
+    });
+    html.on("click", "[data-action=edit-art]", (ev) => {
+      ev.preventDefault();
+      openArtConfig(this.actor);
     });
     html.on("click", "[data-action=roll-growth]", (ev) => {
       ev.preventDefault();

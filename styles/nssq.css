@@ -571,7 +571,7 @@
 #nssq-battle .nb-member.ko { filter: grayscale(1); opacity: 0.55; }
 #nssq-battle .nb-member.targetable { border-color: var(--nq-red); box-shadow: 0 0 10px var(--nq-red); }
 #nssq-battle .nb-member .portrait { flex: 0 0 66px; height: 66px; border-radius: 4px; overflow: hidden; border: 1px solid var(--nq-line2); background: var(--nq-bg2); }
-#nssq-battle .nb-member .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center top; border: none; }
+#nssq-battle .nb-member .portrait { background-repeat: no-repeat; }
 #nssq-battle .nb-member .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
 #nssq-battle .nb-member .line { display: flex; align-items: baseline; gap: 5px; min-width: 0; }
 #nssq-battle .nb-member .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -623,3 +623,31 @@
 .chat-message.nssq-msg .message-header :is(.message-sender, .message-metadata, a, .message-timestamp) { color: var(--nq-mu); }
 .chat-message.nssq-msg .message-header .message-sender { color: var(--nq-gold-l); font-weight: 600; }
 .chat-message.nssq-msg .message-content > [class*="nssq-"] { margin: 0; border: none; box-shadow: none; background: transparent; }
+
+/* 14 ─ 일러스트: 시트 버튼, 설정 창, 전투 상반신 */
+.nssq .nq-portrait-wrap { position: relative; width: 92px; height: 92px; }
+.nssq .nq-art-btn { position: absolute; right: -6px; bottom: -6px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--nq-panel2); border: 1px solid var(--nq-gold); color: var(--nq-gold-l); font-size: 0.85em; }
+.nssq .nq-art-btn:hover { border-color: var(--nq-cy); color: var(--nq-cy); }
+.nssq-art-config .art-base { display: flex; gap: 10px; align-items: center; padding-bottom: 6px; border-bottom: 1px solid var(--nq-line2); }
+.nssq-art-config .art-thumb { flex: 0 0 70px; height: 90px; background: #0a1322 center / contain no-repeat; border: 1px solid var(--nq-line2); border-radius: 4px; }
+.nssq-art-config .art-base-info { flex: 1; min-width: 0; }
+.nssq-art-config .art-cols { display: grid; grid-template-columns: 220px 1fr 1fr; gap: 12px; align-items: start; }
+.nssq-art-config .art-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.nssq-art-config .art-col button { width: 100%; }
+.nssq-art-config h4 { align-self: stretch; margin: 4px 0; color: var(--nq-gold-l); border-bottom: 1px solid var(--nq-line2); }
+.nssq-art-config .art-frame { background-color: #0a1322; background-repeat: no-repeat; border: 1px solid var(--nq-gold); border-radius: 6px; cursor: grab; touch-action: none; user-select: none; }
+.nssq-art-config .art-frame:active { cursor: grabbing; }
+.nssq-art-config .art-frame.bust { width: 210px; height: 280px; }
+.nssq-art-config .art-frame.token { width: 140px; height: 140px; border-radius: 50%; border-width: 6px; border-color: #e0b84a; }
+.nssq-art-config .art-frame.token.back { border-color: #6fd3e6; }
+.nssq-art-config .art-frame.face { width: 120px; height: 120px; }
+.nssq-art-config .art-row { display: flex; gap: 4px; margin: 4px 0; align-self: stretch; }
+.nssq-art-config .art-row button:first-child { flex: 1; }
+.nssq-art-config .art-row button:last-child { flex: 0 0 32px; width: 32px; }
+.nssq-art-config .art-path { align-self: stretch; font-size: 0.75em; color: var(--nq-mu); word-break: break-all; }
+/* 전투 화면 오른쪽 상반신(원작풍) */
+#nssq-battle .nb-bust { position: absolute; right: 0; bottom: 0; top: 4%; width: min(34%, 46vh); z-index: 3; background-repeat: no-repeat; pointer-events: none; animation: nb-bust-in 0.35s ease-out;
+  -webkit-mask-image: linear-gradient(to left, #000 75%, transparent), linear-gradient(to top, transparent, #000 12%); -webkit-mask-composite: source-in; mask-image: linear-gradient(to left, #000 75%, transparent); }
+#nssq-battle .nb-bust-name { position: absolute; right: 12px; bottom: 12px; padding: 2px 14px; font-family: var(--nq-title); font-size: 1.2em; color: var(--nq-gold-l); background: rgba(10, 22, 38, 0.85); border: 1px solid var(--nq-gold); border-radius: 4px; }
+#nssq-battle .nb-enemies.has-bust .nb-erow { right: min(30%, 40vh); }
+@keyframes nb-bust-in { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }

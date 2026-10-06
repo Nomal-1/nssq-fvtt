@@ -15,6 +15,7 @@ import { rollEscape, setIdentified, swapWeapon, toggleGuard, toggleRow } from ".
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "./apply.mjs";
 import { enemyArtFor } from "../apps/enemy-art.mjs";
+import { bustStyle, faceStyle } from "../apps/art-config.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -159,7 +160,7 @@ function partyCard(c, combat, targetable) {
   const bar = (k, r) => `<div class="nb-bar ${k}"><b>${k.toUpperCase()}</b><i style="width:${pct(r)}%"></i><span>${r?.value ?? 0}/${r?.max ?? 0}</span></div>`;
   const classes = ["nb-member", isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", a.isOwner && !game.user.isGM ? "mine" : "", targetable ? "targetable" : ""].join(" ");
   return `<div class="${classes}" data-combatant="${c.id}">
-    <div class="portrait"><img src="${esc(a.img)}"/></div>
+    <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}"></div>
     <div class="info">
       <div class="line"><span class="name">${esc(c.name)}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
@@ -231,6 +232,14 @@ export function renderHud() {
   bind(el, combat);
 }
 
+/** 메인 페이즈에 행동하는 캐릭터(플레이어·동료 NPC)의 상반신. 에너미 차례에는 없다 */
+function bust(combat) {
+  if (combat.getFlag("nssq", "phase") !== "main" || combat.getFlag("nssq", "over")) return "";
+  const c = combat.combatant;
+  if (!c?.actor || c.actor.type !== "character" || isKO(c)) return "";
+  return `<div class="nb-bust" style="${bustStyle(c.actor)}"><span class="nb-bust-name">${esc(c.name)}</span></div>`;
+}
+
 /** 펼친 전투 화면의 HTML */
 export function battleHtml(combat, { attack = pending === "attack" } = {}) {
   const info = combat.getFlag("nssq", "battle") ?? {};
@@ -255,12 +264,13 @@ export function battleHtml(combat, { attack = pending === "attack" } = {}) {
       ${orderStrip(combat)}
     </div>
     <div class="nb-field">
-      <div class="nb-enemies ${enemies.some((c) => c.actor.system.row === "back") ? "has-back" : ""}">
+      <div class="nb-enemies ${enemies.some((c) => c.actor.system.row === "back") ? "has-back" : ""} ${bust(combat) ? "has-bust" : ""}">
         <div class="nb-erow back">${enemies.filter((c) => c.actor.system.row === "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
         <div class="nb-erow front">${enemies.filter((c) => c.actor.system.row !== "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
       </div>
       ${attacker ? `<div class="nb-hint">${targets.size ? L("pickTarget") : L("noTarget")}</div>` : ""}
       ${commandWindow(combat)}
+      ${bust(combat)}
       ${game.user.isGM ? `<div class="nb-drop">${L("dropHint")}</div>` : ""}
     </div>
     <div class="nb-party">

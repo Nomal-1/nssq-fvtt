@@ -5,6 +5,14 @@ import { description, int, resistances, resource, row, str } from "../fields.mjs
 
 const { SchemaField, ArrayField, StringField } = foundry.data.fields;
 
+const { NumberField } = foundry.data.fields;
+/** 일러스트 프레임: x·y = 보일 위치(%), s = 틀 너비 대비 배율. 비어 있으면 기본값(engine/art.mjs) */
+const crop = () => new SchemaField({
+  x: new NumberField({ required: false, nullable: true, initial: null }),
+  y: new NumberField({ required: false, nullable: true, initial: null }),
+  s: new NumberField({ required: false, nullable: true, initial: null })
+});
+
 /**
  * 능력치 하나의 저장값. 클래스·장비 보정은 저장하지 않고 계산한다.
  * temp: v0.6.0까지의 「일시」. 이제 쓰지 않고 GM 보너스에 합산해 보인다(편집 창에서 저장하면 bonus로 옮겨지고 0이 된다)
@@ -32,6 +40,16 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       row: row(),
       order: int(0),
       money: int(0, { min: 0 }),
+      // 일러스트: 전신(비우면 액터 이미지)·얼굴(비우면 전신에서 자름)·프레임(apps/art-config.mjs)
+      art: new SchemaField({
+        full: str(""),
+        face: str(""),
+        bustCrop: crop(),
+        tokenCrop: crop(),
+        faceCrop: crop(),
+        // 만들어 둔 필드 토큰 그림(전열·후열 테두리)
+        token: new SchemaField({ front: str(""), back: str("") })
+      }),
       // GM이 보상으로 주는 스킬 보너스 SL(합계 SL 예산에 더한다)
       skillBonus: int(0),
       storageEnabled: new foundry.data.fields.BooleanField({ initial: false }),

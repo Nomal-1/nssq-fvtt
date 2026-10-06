@@ -1,6 +1,9 @@
 <form class="{{cssClass}} nq-sheet" autocomplete="off">
   <header class="nq-head">
-    <img class="nq-portrait" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+    <div class="nq-portrait-wrap">
+      <img class="nq-portrait" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+      {{#if owner}}<a class="nq-art-btn" data-action="edit-art" title="{{localize 'NSSQ.Art.open'}}"><i class="fas fa-portrait"></i></a>{{/if}}
+    </div>
     <div class="nq-id">
       <input class="nq-name" name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'NSSQ.Name'}}"/>
       <div class="nq-sub">
