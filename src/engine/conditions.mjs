@@ -18,7 +18,8 @@ export const CONDITIONS = {
   paralyze: { kind: "ailment", depth: true, roll: "disable" },
   fear: { kind: "ailment", depth: true, roll: "disable" },
   blind: { kind: "ailment", depth: true },
-  stun: { kind: "ailment", depth: false, noAction: true, evasionZero: true },
+  // [스턴]은 그 턴에 끝나므로 다른 상태 이상과 함께 걸린다(덧씌우지도, 덧씌워지지도 않는다, 07 #35)
+  stun: { kind: "ailment", depth: false, noAction: true, evasionZero: true, separate: true },
   bindHead: { kind: "bind", depth: true },
   bindArm: { kind: "bind", depth: true },
   bindLeg: { kind: "bind", depth: true, evasionZero: true }
@@ -33,7 +34,7 @@ export const hasCondition = (list, id) => (list ?? []).some((c) => c.id === id);
 /**
  * 상태 이상·봉인 부여.
  * - 같은 것이 이미 있으면 심도가 더 높을 때만 갱신(07 #5)
- * - 상태 이상은 하나만: 다른 상태 이상이 걸리면 새 것으로 덧씌운다(07 #35, 사용자 결정). 봉인은 부위마다 따로
+ * - 상태 이상은 하나만: 다른 상태 이상이 걸리면 새 것으로 덧씌운다(07 #35, 사용자 결정). [스턴]과 봉인은 따로(함께 걸림)
  * @returns {{list: object[], result: "added"|"updated"|"replaced"|"ignored", replaced?: object}}
  */
 export function addCondition(list, { id, depth = null, source = "", sourceSuppAtk = 0 }) {
@@ -43,7 +44,8 @@ export function addCondition(list, { id, depth = null, source = "", sourceSuppAt
   const cur = list ?? [];
   const i = cur.findIndex((c) => c.id === id);
   if (i < 0) {
-    const old = def.kind === "ailment" ? cur.find((c) => CONDITIONS[c.id]?.kind === "ailment") : null;
+    const slot = (d) => d?.kind === "ailment" && !d.separate;
+    const old = slot(def) ? cur.find((c) => slot(CONDITIONS[c.id])) : null;
     if (old) return { list: [...cur.filter((c) => c !== old), entry], result: "replaced", replaced: old };
     return { list: [...cur, entry], result: "added" };
   }

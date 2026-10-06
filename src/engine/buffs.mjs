@@ -79,9 +79,34 @@ function stronger(a, b) {
 }
 
 /**
- * 강화·약화 부여
- * @returns {{list: object[], result: "added"|"updated"|"ignored"|"countered"|"rejected", removed?: object}}
- *  - countered: 대항 효과와 함께 둘 다 소멸 / rejected: 같은 분류 4종류째(07 #7)
+ * 효과를 비교하기 위한 모양: { 대상: 양 } (부능력치·내성은 부호 있는 수치, 그 밖은 1)
+ * 예) 『공격 상승: 3』 → { physAtk: 3, elemAtk: 3 }, 『내성 상승: 전체』 → { "resist.slash": 1, … }
+ */
+function effectVector(b) {
+  const def = BUFFS[b.id];
+  const v = Number(b.value) || 0;
+  const out = {};
+  if (def.stats) for (const k of def.stats) out[k] = (def.sign ?? 1) * v;
+  const delta = { resistGrant: 1, resistUp: 1, weaknessGrant: -1, resistDown: -1 }[b.id];
+  if (delta) for (const el of paramElements(b.param)) out[`resist.${el}`] = delta;
+  if (!def.stats && !delta) out[`${b.id}:${b.param ?? ""}`] = def.value ? v : 1;
+  return out;
+}
+
+/** existing이 incoming의 하위 호환인가: existing이 바꾸는 모든 대상을 incoming도 같은 방향으로 같거나 더 크게 바꾼다 */
+export function isInferior(existing, incoming) {
+  const e = effectVector(existing);
+  const n = effectVector(incoming);
+  return Object.entries(e).every(([k, v]) => k in n && Math.sign(n[k]) === Math.sign(v) && Math.abs(n[k]) >= Math.abs(v));
+}
+
+/**
+ * 강화·약화 부여. 목록 순서 = 걸린 순서(갱신된 것은 맨 뒤로)
+ * - 대항 효과가 있으면 둘 다 소멸(countered)
+ * - 같은 종류면 큰 효과 하나만(07 #36, 3종류가 차 있어도 같음)
+ * - 같은 분류가 이미 3종류면(07 #7, 사용자 결정): 새 효과의 하위 호환인 것이 있으면 그것을,
+ *   없으면 가장 나중에 걸린 것을 지우고 새 효과를 건다(replaced)
+ * @returns {{list: object[], result: "added"|"updated"|"ignored"|"countered"|"replaced", removed?: object}}
  */
 export function addBuff(list, { id, value = 0, turns = 1, param = "" }) {
   id = canonicalBuff(id);
@@ -89,7 +114,7 @@ export function addBuff(list, { id, value = 0, turns = 1, param = "" }) {
   const cur = list ?? [];
   if (!def) return { list: [...cur], result: "ignored" };
   const entry = { id, value: def.value ? Number(value) || 0 : 0, turns: Math.max(1, Number(turns) || 1), param: def.param ? String(param ?? "") : "" };
-  // 대항: 같은 param(있으면)의 반대 효과가 있으면 둘 다 소멸
+  // 대항: 같은 param(있으면)의 반대 효과가 있으면 둘 다 소멸(속성이 정확히 같을 때만, 07 #41)
   if (def.counter) {
     const j = cur.findIndex((b) => b.id === def.counter && (!def.param || (b.param ?? "") === entry.param));
     if (j >= 0) return { list: cur.filter((_, k) => k !== j), result: "countered", removed: cur[j] };
@@ -98,11 +123,12 @@ export function addBuff(list, { id, value = 0, turns = 1, param = "" }) {
   if (i >= 0) {
     const keep = stronger(entry, cur[i]);
     if (keep === cur[i]) return { list: [...cur], result: "ignored" };
-    return { list: cur.map((b, k) => (k === i ? entry : b)), result: "updated" };
+    return { list: [...cur.filter((_, k) => k !== i), entry], result: "updated" };
   }
-  const kinds = new Set(cur.filter((b) => BUFFS[b.id]?.kind === def.kind).map(keyOf));
-  if (kinds.size >= MAX_KINDS) return { list: [...cur], result: "rejected" };
-  return { list: [...cur, entry], result: "added" };
+  const same = cur.filter((b) => BUFFS[b.id]?.kind === def.kind);
+  if (new Set(same.map(keyOf)).size < MAX_KINDS) return { list: [...cur, entry], result: "added" };
+  const out = same.find((b) => isInferior(b, entry)) ?? same[same.length - 1];
+  return { list: [...cur.filter((b) => b !== out), entry], result: "replaced", removed: out };
 }
 
 export const removeBuff = (list, index) => (list ?? []).filter((_, i) => i !== index);

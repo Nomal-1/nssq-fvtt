@@ -24,7 +24,11 @@ describe("상태 이상·봉인", () => {
     expect(r.replaced.id).toBe("poison");
     expect(r.list.map((c) => c.id)).toEqual(["bindArm", "bindLeg", "blind"]);
     // 심도가 낮아도 다른 상태 이상이면 덧씌운다
-    expect(addCondition(r.list, { id: "stun" }).list.map((c) => c.id)).toEqual(["bindArm", "bindLeg", "stun"]);
+    expect(addCondition(r.list, { id: "poison", depth: 1 }).list.map((c) => c.id)).toEqual(["bindArm", "bindLeg", "poison"]);
+    // [스턴]은 함께 걸리고, [스턴]이 있어도 다른 상태 이상은 [스턴]을 지우지 않는다
+    const st = addCondition([{ id: "petrify", depth: null }], { id: "stun" });
+    expect(st.list.map((c) => c.id)).toEqual(["petrify", "stun"]);
+    expect(addCondition(st.list, { id: "sleep", depth: 9 }).list.map((c) => c.id)).toEqual(["stun", "sleep"]);
   });
 
   it("석화·스턴은 심도를 기록하지 않는다", () => {
@@ -94,13 +98,34 @@ describe("강화·약화", () => {
     expect(list[0].turns).toBe(2);
   });
 
-  it("강화 4종류째는 거부(07 #7), 약화는 따로 센다", () => {
+  it("강화 4종류째: 가장 나중에 걸린 것을 지우고 새 것을 건다(07 #7), 약화는 따로 센다", () => {
     let list = [];
     for (const id of ["physAtkUp", "defenseUp", "speedUp"]) list = addBuff(list, { id, value: 1, turns: 2 }).list;
-    expect(addBuff(list, { id: "evasionUp", value: 1, turns: 2 }).result).toBe("rejected");
+    const r = addBuff(list, { id: "evasionUp", value: 1, turns: 2 });
+    expect(r.result).toBe("replaced");
+    expect(r.removed.id).toBe("speedUp");
+    expect(r.list.map((b) => b.id)).toEqual(["physAtkUp", "defenseUp", "evasionUp"]);
     expect(addBuff(list, { id: "hitDown", value: 1, turns: 2 }).result).toBe("added");
-    // 이미 있는 종류의 갱신은 4종류째가 아니다
-    expect(addBuff(list, { id: "speedUp", value: 4, turns: 2 }).result).toBe("updated");
+  });
+
+  it("같은 종류는 3종류가 차 있어도 #36대로, 갱신된 것은 가장 나중에 걸린 것이 된다", () => {
+    let list = [];
+    for (const id of ["physAtkUp", "defenseUp", "speedUp"]) list = addBuff(list, { id, value: 1, turns: 2 }).list;
+    const u = addBuff(list, { id: "physAtkUp", value: 4, turns: 2 });
+    expect(u.result).toBe("updated");
+    expect(u.list.map((b) => b.id)).toEqual(["defenseUp", "speedUp", "physAtkUp"]);
+    expect(addBuff(u.list, { id: "evasionUp", value: 1, turns: 2 }).removed.id).toBe("physAtkUp");
+  });
+
+  it("4종류째: 하위 호환이 있으면 그것을 지운다(공격 상승 ⊃ 물리 공격 상승, 내성 상승 전체 ⊃ 내성 부여 염)", () => {
+    let list = [];
+    for (const [id, value, param] of [["physAtkUp", 2], ["resistGrant", 0, "fire"], ["speedUp", 1]]) list = addBuff(list, { id, value, turns: 2, param }).list;
+    const a = addBuff(list, { id: "atkUp", value: 3, turns: 2 });
+    expect(a.removed.id).toBe("physAtkUp");
+    const b = addBuff(list, { id: "resistUp", param: "all", turns: 2 });
+    expect(b.removed.id).toBe("resistGrant");
+    // 수치가 작으면 하위 호환이 아니다 → 가장 나중 것
+    expect(addBuff(list, { id: "atkUp", value: 1, turns: 2 }).removed.id).toBe("speedUp");
   });
 
   it("내성 부여·약점 부여는 같은 속성끼리만 대항", () => {

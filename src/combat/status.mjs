@@ -87,12 +87,12 @@ export async function inflictCondition(actor, { id, depth = null, source = null,
 
 export async function grantBuff(actor, entry) {
   const r = addBuff(actor.system.buffs, entry);
-  if (["added", "updated", "countered"].includes(r.result)) await actor.update({ "system.buffs": r.list });
+  if (["added", "updated", "countered", "replaced"].includes(r.result)) await actor.update({ "system.buffs": r.list });
   const label = buffLabel({ ...entry, value: Number(entry.value) || 0 });
   const kind = loc(`NSSQ.Buff.${BUFFS[entry.id]?.kind ?? "buff"}`);
   const other = r.removed ? buffLabel(r.removed) : "";
   const icon = BUFFS[entry.id]?.kind === "debuff" ? "fa-arrow-down" : "fa-arrow-up";
-  await note(`<i class="fas ${icon}"></i> ${L(r.result, { name: esc(nameOf(actor)), label: esc(label), other: esc(other), kind })}`);
+  await note(`<i class="fas ${icon}"></i> ${L(r.result === "replaced" ? "buffReplaced" : r.result, { name: esc(nameOf(actor)), label: esc(label), other: esc(other), kind })}`);
   return r;
 }
 
