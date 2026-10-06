@@ -436,11 +436,11 @@
 .nssq-gm-screen .party .who img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--nq-gold); object-fit: cover; }
 .nssq-gm-screen .party .owners { font-size: 0.8em; color: var(--nq-dim); }
 .nssq-gm-screen .party .owners.online { color: var(--nq-green); }
-.nssq-gm-screen .bar { position: relative; height: 16px; min-width: 96px; background: #22344d; border-radius: 4px; overflow: hidden; border: 1px solid #000; }
+.nssq-gm-screen .bar { position: relative; display: flex; align-items: center; justify-content: center; height: 18px; min-width: 96px; background: #22344d; border-radius: 4px; overflow: hidden; border: 1px solid #000; }
 .nssq-gm-screen .bar span { position: absolute; inset: 0 auto 0 0; }
 .nssq-gm-screen .bar.hp span { background: linear-gradient(#7cd893, var(--nq-hp)); }
 .nssq-gm-screen .bar.tp span { background: linear-gradient(#7ab8f0, var(--nq-tp)); }
-.nssq-gm-screen .bar b { position: relative; font-size: 0.8em; color: #fff; text-shadow: 0 0 3px #000; }
+.nssq-gm-screen .bar b { position: relative; font-size: 0.8em; line-height: 18px; color: #fff; text-shadow: 0 0 3px #000, 0 0 2px #000; white-space: nowrap; }
 .nssq-gm-screen .fp { font-weight: 700; color: var(--nq-fp); }
 .nssq-gm-screen .over { color: var(--nq-red); font-weight: 700; }
 .nssq-gm-screen .npc-tag { font-size: 0.75em; padding: 0 5px; border-radius: 8px; border: 1px solid #c7a6f0; color: #c7a6f0; }
@@ -530,3 +530,21 @@
 #nssq-hud.compact .hud-member img { display: none; }
 #nssq-hud.compact .hud-order .who span { display: none; }
 @keyframes nq-pop { from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+/* 13 ─ 추가: 성장·작성 기록·스킬 트리 보너스·채팅 메시지 틀 */
+.nssq .nq-growth-btn { border-color: var(--nq-green) !important; color: var(--nq-green) !important; }
+.nq-log.nq-log-full { max-height: none; }
+.nq-tree-bonus { display: inline-flex; align-items: center; gap: 4px; color: var(--nq-gold-l); }
+.nq-tree-bonus input { width: 3.5em; height: 22px; text-align: center; }
+.nssq-growth { text-align: center; }
+.nssq-growth .growth-die { display: inline-block; width: 34px; height: 34px; line-height: 32px; margin: 4px 0; font-size: 1.4em; font-weight: 700; border: 2px solid var(--nq-gold); border-radius: 6px; color: var(--nq-gold-l); background: var(--nq-bg2); }
+.nssq-growth p { margin: 2px 0; color: var(--nq-tx); }
+/* 시스템 카드가 든 채팅 메시지: 기본 양피지 틀 대신 남색 틀 */
+#chat-log .chat-message.nssq-msg, #chat-popout .chat-message.nssq-msg, .chat-popout .chat-message.nssq-msg {
+  background: linear-gradient(var(--nq-panel2), var(--nq-bg)); border: 1px solid var(--nq-gold); border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); color: var(--nq-tx); padding: 4px 6px; margin: 4px 2px;
+}
+.chat-message.nssq-msg .message-header { color: var(--nq-gold-l); border-bottom: 1px solid var(--nq-line2); margin-bottom: 4px; }
+.chat-message.nssq-msg .message-header :is(.message-sender, .message-metadata, a, .message-timestamp) { color: var(--nq-mu); }
+.chat-message.nssq-msg .message-header .message-sender { color: var(--nq-gold-l); font-weight: 600; }
+.chat-message.nssq-msg .message-content > [class*="nssq-"] { margin: 0; border: none; box-shadow: none; background: transparent; }

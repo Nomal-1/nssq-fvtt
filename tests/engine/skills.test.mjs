@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { brokenByLowering, canRaise, levelCap, prereqsMet, skillBudget, skillUsage, treeLayout } from "../../src/engine/skills.mjs";
+import { brokenByLowering, canRaise, levelCap, prereqsMet, skillBudget, skillUsage, treeLayout, uniqueSkillPlan } from "../../src/engine/skills.mjs";
 
 describe("전투/비전투 분류", () => {
   it("GM이 정한 값이 우선", () => {
@@ -98,10 +98,21 @@ describe("습득 규칙", () => {
     expect(canRaise({ ...base, role: "sub", skill: { ...base.skill, maxSL: { main: 1, sub: null } } }).reason).toBe("subNotAllowed");
     expect(canRaise({ ...base, role: "sub", mainHasSame: true }).reason).toBe("sameInMain");
   });
-  it("고유 스킬: 메인 클래스·서브 클래스 없음일 때만, 예산을 쓰지 않는다", () => {
+  it("고유 스킬은 손으로 찍지 않는다(자동 습득)", () => {
     const u = { ...base, skill: { name: "U", maxSL: { main: 1, sub: null }, unique: true, prereqs: { all: [] } }, budgetLeft: 0 };
-    expect(canRaise(u).ok).toBe(true);
+    expect(canRaise(u).reason).toBe("uniqueAuto");
     expect(canRaise({ ...u, hasSub: true }).reason).toBe("uniqueWithSub");
+  });
+  it("GM 보너스 SL은 예산에 더해진다", () => {
+    expect(skillBudget({ level: 1, skills: [{ sl: 5 }], bonus: 2 })).toEqual({ total: 7, spent: 5, left: 2 });
+  });
+  it("고유 스킬 자동 습득: 서브 없으면 메인 것을 더하고, 서브가 생기거나 메인이 바뀌면 지운다", () => {
+    const uniques = [{ classKey: "M", skillKey: "u1" }, { classKey: "N", skillKey: "u2" }];
+    expect(uniqueSkillPlan({ mainKey: "M", hasSub: false, uniques, owned: [] })).toEqual({ remove: [], add: [uniques[0]] });
+    const owned = [{ id: "i1", classKey: "M", skillKey: "u1", unique: true }, { id: "i2", classKey: "M", skillKey: "x", unique: false }];
+    expect(uniqueSkillPlan({ mainKey: "M", hasSub: false, uniques, owned })).toEqual({ remove: [], add: [] });
+    expect(uniqueSkillPlan({ mainKey: "M", hasSub: true, uniques, owned })).toEqual({ remove: ["i1"], add: [] });
+    expect(uniqueSkillPlan({ mainKey: "N", hasSub: false, uniques, owned })).toEqual({ remove: ["i1"], add: [uniques[1]] });
   });
   it("SL을 내리면 깨지는 전제", () => {
     const owned = [{ name: "A", sl: 2, prereqs: A.prereqs }, { name: "B", sl: 1, prereqs: B.prereqs }];

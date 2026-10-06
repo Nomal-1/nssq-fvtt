@@ -60,7 +60,7 @@
       "logEmpty": "기록이 없다.",
       "lock": "작성 완료 — 잠그기",
       "unlock": "잠금 풀기",
-      "lockNote": "잠그면 플레이어는 「굴림」을 고치거나 능력치를 다시 굴릴 수 없다. 「성장」은 계속 고칠 수 있다.",
+      "lockNote": "잠그면 플레이어는 「굴림」을 고치거나 능력치를 다시 굴릴 수 없다. 「성장」은 경험점이 쌓이면 [성장 굴리기]로 올린다.",
       "logRoll": "능력치 굴리기: {totals}",
       "logAssign": "배정: {values}",
       "logEdit": "{ability} {field}: {from} → {to}",
@@ -69,7 +69,21 @@
       "attackElement": "공격 속성",
       "editAbilities": "능력치 편집",
       "editAbilitiesHint": "모든 능력치의 굴림·성장·GM 보너스를 한 화면에서 고친다",
-      "editNote": "굴림: 작성 잠금 뒤에는 GM만 · 성장: 소유자 · GM 보너스: GM만(플레이어에게도 보인다) · 클래스·장비는 자동"
+      "editNote": "굴림: 작성 잠금 뒤에는 GM만 · 성장: GM만(플레이어는 [성장 굴리기]) · GM 보너스: GM만(플레이어에게도 보인다) · 클래스·장비는 자동",
+      "subFormula": "계산식",
+      "subCalc": "계산",
+      "speedFloor": "(음수가 되면 0)",
+      "subPart": {
+        "weapon": "무기",
+        "armor": "방어구",
+        "mods": "장비·제련",
+        "base5": "기본"
+      },
+      "recentLog": "최근 기록",
+      "fullLog": "전체 기록",
+      "close": "닫기",
+      "logGrowth": "성장: 1D6 = {die} → {ability} +1",
+      "roundDown": "(÷ 2는 내림)"
     },
     "Tab": {
       "main": "능력치",
@@ -626,13 +640,17 @@
         "maxed": "MaxSL에 도달했다",
         "levelCap": "이 레벨에서는 더 올릴 수 없다(Lv1 최대 SL 2, 레벨업마다 +1)",
         "prereq": "전제 조건을 채우지 않았다",
-        "budget": "남은 SL이 없다"
+        "budget": "남은 SL이 없다",
+        "uniqueAuto": "고유 스킬은 서브 클래스가 없으면 자동으로 습득된다"
       },
       "tabMain": "메인",
       "tabSub": "서브",
       "tabCommon": "커먼",
       "or": "또는",
-      "sharedHint": "메인 클래스에도 있는 스킬: 메인 쪽 하나로 관리한다(SL 합산 불가, MaxSL은 메인 값). 여기서 눌러도 메인 스킬이 오르내린다"
+      "sharedHint": "메인 클래스에도 있는 스킬: 메인 쪽 하나로 관리한다(SL 합산 불가, MaxSL은 메인 값). 여기서 눌러도 메인 스킬이 오르내린다",
+      "bonus": "보너스 SL",
+      "bonusHint": "GM이 보상으로 주는 스킬 포인트. 합계 SL에 더해진다",
+      "budgetBonus": "남은 SL {left} / {total} (보너스 +{bonus})"
     },
     "Hud": {
       "attack": "공격",
@@ -650,6 +668,16 @@
       "round": "턴",
       "pickTarget": "공격할 대상을 고른다(빛나는 이름을 클릭). 다시 [공격]을 누르면 취소",
       "noTarget": "사거리 안에 공격할 수 있는 대상이 없다"
+    },
+    "Growth": {
+      "button": "성장 굴리기",
+      "hint": "누적 경험점이 10의 배수에 도달할 때마다 1D6: 1 STR · 2 TEC · 3 VIT · 4 AGI · 5 LUC · 6 고르기",
+      "title": "능력치 성장",
+      "result": "{ability} +1",
+      "resultChoose": "6: 올릴 능력치를 고른다",
+      "choose": "성장할 능력치",
+      "chooseHint": "+1 할 능력치를 고른다.",
+      "none": "굴릴 수 있는 성장이 없다(누적 경험점 10마다 1회)."
     }
   }
 }

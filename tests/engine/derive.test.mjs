@@ -69,3 +69,22 @@ describe("GM 보너스", () => {
     expect(b.str).toMatchObject({ bonus: 2, total: 12 });
   });
 });
+
+describe("부능력치 계산 내역·성장", () => {
+  const abilities = { str: 15, tec: 13, vit: 11, agi: 9, luc: 8 };
+  it("내역의 합계는 deriveCharacter와 같고, 장비 보정은 따로 보인다", async () => {
+    const { subStatBreakdown } = await import("../../src/engine/derive.mjs");
+    const p = { abilities, level: 1, weapon: { physAtk: 14 }, armor: { defense: 5 }, mods: { physHit: 1 } };
+    const b = subStatBreakdown(p);
+    const d = deriveCharacter(p);
+    for (const k of Object.keys(d.sub)) expect(b[k].total, k).toBe(d.sub[k]);
+    expect(b.physAtk.parts).toEqual([{ label: "str", value: 3 }, { label: "weapon", value: 14 }]);
+    expect(b.physHit.parts.at(-1)).toEqual({ label: "mods", value: 1 });
+  });
+  it("성장: 경험점 10마다 1회, 이미 올린 만큼 뺀다", async () => {
+    const { growthAvailable, growthAbility } = await import("../../src/engine/derive.mjs");
+    expect(growthAvailable({ exp: 25, abilities: { str: { growth: 1 } } })).toEqual({ earned: 2, used: 1, left: 1 });
+    expect(growthAvailable({ exp: 9, abilities: { str: { growth: 2 } } }).left).toBe(0);
+    expect([1, 2, 3, 4, 5, 6].map(growthAbility)).toEqual(["str", "tec", "vit", "agi", "luc", null]);
+  });
+});

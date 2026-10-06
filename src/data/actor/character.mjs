@@ -32,6 +32,8 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       row: row(),
       order: int(0),
       money: int(0, { min: 0 }),
+      // GM이 보상으로 주는 스킬 보너스 SL(합계 SL 예산에 더한다)
+      skillBonus: int(0),
       storageEnabled: new foundry.data.fields.BooleanField({ initial: false }),
       // GM이 파티에 넣는 동료 NPC(전투에서 아군 NPC로 행동)
       npc: new foundry.data.fields.BooleanField({ initial: false }),

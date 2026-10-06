@@ -31,6 +31,7 @@
 
   <div class="nq-actions">
     {{#if canAttack}}<button type="button" data-action="normal-attack" title="{{localize 'NSSQ.Combat.normalAttackHint'}}"><i class="fas fa-fist-raised"></i> {{localize "NSSQ.Combat.normalAttack"}}</button>{{/if}}
+    {{#if editable}}{{#if sheet.growth.left}}<button type="button" class="nq-growth-btn" data-action="roll-growth" title="{{localize 'NSSQ.Growth.hint'}}"><i class="fas fa-seedling"></i> {{localize "NSSQ.Growth.button"}} ({{sheet.growth.left}})</button>{{/if}}{{/if}}
     {{#if sheet.canRollAbilities}}{{#if editable}}<button type="button" data-action="roll-abilities" title="{{localize 'NSSQ.AbilityRoll.hint'}}"><i class="fas fa-dice"></i> {{localize "NSSQ.AbilityRoll.title"}}</button>{{/if}}{{/if}}
     <span class="nq-spacer"></span>
     {{#if showNpcToggle}}<label class="nq-toggle" title="{{localize 'NSSQ.Party.npcHint'}}"><input type="checkbox" name="system.npc" {{checked system.npc}}/> {{localize "NSSQ.Party.npc"}}</label>{{/if}}
@@ -84,6 +85,7 @@
               <div class="nq-kv"><span>{{localize "NSSQ.Sheet.rolledValues"}}</span><b>{{#each sheet.creation.totals}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</b> <em>({{localize "NSSQ.AbilityRoll.sum"}} {{sheet.creation.sum}} · {{localize "NSSQ.AbilityRoll.money"}} {{sheet.creation.money}}G)</em></div>
               {{/if}}
               {{#if sheet.creation.assign}}<div class="nq-kv"><span>{{localize "NSSQ.Sheet.assigned"}}</span><b>{{sheet.creation.assign}}</b></div>{{/if}}
+              <div class="nq-kv"><span>{{localize "NSSQ.Sheet.recentLog"}}</span>{{#if (nssqGt sheet.creation.total 6)}}<a data-action="show-log"><i class="fas fa-list"></i> {{localize "NSSQ.Sheet.fullLog"}} ({{sheet.creation.total}})</a>{{/if}}</div>
               <ol class="nq-log">
                 {{#each sheet.creation.entries as |e|}}<li><span class="when">{{e.when}} · {{e.user}}</span> {{e.text}}</li>{{else}}<li class="empty">{{localize "NSSQ.Sheet.logEmpty"}}</li>{{/each}}
               </ol>
@@ -98,7 +100,7 @@
           <h3 class="nq-title">{{localize "NSSQ.Sub.label"}}</h3>
           <div class="nq-subs">
             {{#each sheet.subStats as |s|}}
-            <div class="nq-sub-stat" title="{{s.full}}"><span>{{s.label}}</span><b>{{s.value}}</b></div>
+            <div class="nq-sub-stat" title="{{s.tooltip}}"><span>{{s.label}}</span><b>{{s.value}}</b></div>
             {{/each}}
           </div>
 

@@ -101,6 +101,7 @@ export class SkillTree extends Application {
     const slOf = (name) => Math.max(0, ...owned.filter((o) => o.name === name).map((o) => o.system.sl ?? 0));
     const budget = skillBudget({
       level: s.level,
+      bonus: s.skillBonus ?? 0,
       skills: owned.map((o) => ({ sl: o.system.sl ?? 0, unique: !!o.system.unique, common: o.system.classKey === "common" }))
     });
     return { main, sub, tabs, tab: tabs.find((t) => t.key === this.tab), owned, slOf, budget, level: s.level };
@@ -216,7 +217,8 @@ export class SkillTree extends Application {
       hasTree: nodes.length > 0,
       independent: layout.independent.map((n) => nodeData(byName.get(n))),
       budget: st.budget,
-      budgetText: L("budget", st.budget),
+      budgetText: this.actor.system.skillBonus ? L("budgetBonus", { ...st.budget, bonus: this.actor.system.skillBonus }) : L("budget", st.budget),
+      skillBonus: this.actor.system.skillBonus ?? 0,
       capText: L("levelCap", { level: st.level, cap: levelCap(st.level) }),
       empty: !list.length,
       noPack: !game.packs.get("nssq.skills"),
@@ -262,6 +264,8 @@ export class SkillTree extends Application {
         el.addEventListener("mouseleave", () => tree.classList.remove("focus"));
       });
     }
+    // GM: 보너스 SL
+    html.on("change", "[name=skillBonus]", (ev) => this.actor.update({ "system.skillBonus": Number(ev.currentTarget.value) || 0 }));
     if (!this.actor.isOwner) return;
     html.on("click", ".nq-node[data-skill-id]", (ev) => {
       ev.preventDefault();
@@ -269,7 +273,7 @@ export class SkillTree extends Application {
     });
     html.on("contextmenu", ".nq-node[data-skill-id]", (ev) => {
       ev.preventDefault();
-      this.lower(ev.currentTarget.dataset.skillId);
+      this.lower(ev.currentTarget.dataset.skillId, { force: ev.shiftKey && game.user.isGM });
     });
   }
 
@@ -305,10 +309,11 @@ export class SkillTree extends Application {
   }
 
   /** SL −1. 0이 되면 지운다. 다른 스킬의 전제가 깨지면 확인 */
-  async lower(id) {
+  async lower(id, { force = false } = {}) {
     const index = await skillIndex();
     const e = index.find((x) => x._id === id);
     if (!e) return;
+    if (e.system.unique && !force) return ui.notifications.warn(`${e.name}: ${L("reason.uniqueAuto")}`);
     const owned = this.actor.items.filter((i) => i.type === "skill");
     const item = owned.find((o) => o.system.classKey === e.system.classKey && o.system.skillKey === e.system.skillKey);
     if (!item) return;

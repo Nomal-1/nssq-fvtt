@@ -34,6 +34,49 @@ export function abilityBreakdown({ abilities, classBonus = {}, level = 1, equip 
   }));
 }
 
+/**
+ * 부능력치 계산 내역(시트의 마우스 내역용). 값은 deriveCharacter와 같다.
+ * @returns {{[k]: {formula: string, parts: {label: string, value: number}[], total: number}}}
+ *   label은 표시용 키: "str"…(능력치 B), "agi:raw"(【AGI】 원값), "weapon", "armor", "mods", "base5"
+ */
+export function subStatBreakdown({ abilities, level, weapon = {}, armor = {}, mods = {} }) {
+  const d = deriveCharacter({ abilities, level, weapon, armor, mods });
+  const B = d.bonus;
+  const m = (k) => Number(mods[k]) || 0;
+  const half = (a, b) => ({ formula: `(${a}B + ${b}B) ÷ 2`, parts: [{ label: a, value: B[a] }, { label: b, value: B[b] }] });
+  const rows = {
+    physHit: half("str", "agi"),
+    elemHit: half("tec", "luc"),
+    evasion: { ...half("agi", "luc"), formula: "(agiB + lucB) ÷ 2 + 5", parts: [{ label: "agi", value: B.agi }, { label: "luc", value: B.luc }, { label: "base5", value: 5 }] },
+    physAtk: { formula: "strB + weapon", parts: [{ label: "str", value: B.str }, { label: "weapon", value: Number(weapon.physAtk) || 0 }] },
+    elemAtk: { formula: "tecB + weapon", parts: [{ label: "tec", value: B.tec }, { label: "weapon", value: Number(weapon.elemAtk) || 0 }] },
+    defense: { formula: "armor", parts: [{ label: "armor", value: Number(armor.defense) || 0 }] },
+    suppAtk: half("tec", "luc"),
+    suppDef: half("vit", "luc"),
+    speed: { formula: "agi", parts: [{ label: "agi:raw", value: Number(abilities?.agi) || 0 }] }
+  };
+  for (const [k, r] of Object.entries(rows)) {
+    if (m(k)) r.parts.push({ label: "mods", value: m(k) });
+    r.total = d.sub[k];
+  }
+  return rows;
+}
+
+/**
+ * 능력치 성장: 누적 경험점이 10의 배수에 도달할 때마다 1회. 이미 올린 성장(합계)보다 많으면 굴릴 수 있다.
+ * @returns {{earned: number, used: number, left: number}}
+ */
+export function growthAvailable({ exp = 0, abilities = {} }) {
+  const earned = Math.floor((Number(exp) || 0) / 10);
+  const used = ABILITIES.reduce((n, k) => n + (Number(abilities?.[k]?.growth) || 0), 0);
+  return { earned, used, left: Math.max(0, earned - used) };
+}
+
+/** 성장 1D6 → 능력치(6은 고르기) */
+export function growthAbility(die) {
+  return [null, "str", "tec", "vit", "agi", "luc", null][die] ?? null;
+}
+
 /** 능력치 보너스 = floor(x / 5) */
 export function bonus(value) {
   return Math.floor((Number(value) || 0) / 5);

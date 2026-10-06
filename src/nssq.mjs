@@ -1,3 +1,4 @@
+import { registerUniqueSkillHooks } from "./apps/unique-skill.mjs";
 import { migrateEnemyArt } from "./apps/enemy-art.mjs";
 import { actorModels, itemModels } from "./data/_module.mjs";
 import { NssqActor } from "./documents/actor.mjs";
@@ -79,7 +80,13 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   registerSocket();
+  registerUniqueSkillHooks();
   migrateEnemyArt();
+});
+
+// 시스템 카드가 든 채팅 메시지는 메시지 틀(양피지 테두리)까지 NSSQ 테마로
+Hooks.on("renderChatMessage", (message, html) => {
+  if (html[0]?.querySelector("[class*='nssq-']")) html[0].classList.add("nssq-msg");
 });
 
 // 시스템 대화창(내용에 nssq 클래스가 있는 것)은 창틀도 NSSQ 테마로

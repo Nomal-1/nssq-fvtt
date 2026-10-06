@@ -6,7 +6,8 @@ import { acquireItems } from "../apps/acquire.mjs";
 import { normalAttack } from "../combat/attack.mjs";
 import { makeRare, removeRare } from "../apps/rare.mjs";
 import { isPhysical } from "../engine/equipment.mjs";
-import { characterContext, editAbilities, toggleCreationLock } from "./character.mjs";
+import { characterContext, editAbilities, showCreationLog, toggleCreationLock } from "./character.mjs";
+import { rollGrowth } from "../apps/growth.mjs";
 import { SkillTree } from "../apps/skill-tree.mjs";
 
 export class NssqActorSheet extends ActorSheet {
@@ -55,7 +56,7 @@ export class NssqActorSheet extends ActorSheet {
       context.mainClassKey = main?.system.key ?? "";
       context.subClassKey = sub?.system.key ?? "";
       // 선택 상자가 이름을 자르지 않도록 이름 길이에 맞춘 너비(em)
-      const emWidth = (name) => Math.max(4, [...(name ?? "")].reduce((w, ch) => w + (/[ㄱ-힝]/.test(ch) ? 1.05 : 0.6), 0) + 2.2).toFixed(1);
+      const emWidth = (name) => Math.max(5, [...(name ?? "")].reduce((w, ch) => w + (/[ㄱ-힝]/.test(ch) ? 1.05 : 0.6), 0) + 3).toFixed(1);
       context.mainClassWidth = emWidth(main?.name);
       context.subClassWidth = emWidth(sub?.name ?? game.i18n.localize("NSSQ.Class.none"));
       context.inventory = inventoryContext(this.actor, { skillFilter: this._skillFilter ?? "all" });
@@ -132,6 +133,14 @@ export class NssqActorSheet extends ActorSheet {
     html.on("click", "[data-action=edit-abilities]", (ev) => {
       ev.preventDefault();
       editAbilities(this.actor);
+    });
+    html.on("click", "[data-action=roll-growth]", (ev) => {
+      ev.preventDefault();
+      rollGrowth(this.actor);
+    });
+    html.on("click", "[data-action=show-log]", (ev) => {
+      ev.preventDefault();
+      showCreationLog(this.actor);
     });
     html.on("click", "[data-action=toggle-lock]", (ev) => {
       ev.preventDefault();

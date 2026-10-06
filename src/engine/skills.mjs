@@ -144,11 +144,12 @@ export function levelCap(level) {
 }
 
 /**
- * 쓸 수 있는 합계 SL. 작성 5 + 레벨업마다 3. 커먼 스킬 1개(SL1)는 작성 때 따로 받는다. 고유 스킬은 무료.
+ * 쓸 수 있는 합계 SL. 작성 5 + 레벨업마다 3 + GM 보너스. 커먼 스킬 1개(SL1)는 작성 때 따로 받는다. 고유 스킬은 무료.
  * @param {{level, skills: {sl, unique, common}[]}} p
  */
-export function skillBudget({ level = 1, skills = [] }) {
-  const total = 5 + 3 * (Math.max(1, Number(level) || 1) - 1);
+export function skillBudget({ level = 1, skills = [], bonus = 0 }) {
+  // GM이 보상으로 준 보너스 SL(bonus)도 더한다
+  const total = 5 + 3 * (Math.max(1, Number(level) || 1) - 1) + (Number(bonus) || 0);
   let spent = 0;
   let common = 0;
   for (const s of skills) {
@@ -176,9 +177,10 @@ export function skillBudget({ level = 1, skills = [] }) {
  */
 export function canRaise({ skill, role, current = 0, slOf, level = 1, hasSub = false, budgetLeft = 0, mainHasSame = false }) {
   const max = role === "sub" ? skill.maxSL?.sub ?? null : skill.maxSL?.main ?? 1;
+  // 고유 스킬은 서브 클래스가 없으면 자동으로 습득된다(손으로 찍지 않는다)
   if (skill.unique) {
     if (role !== "main") return { ok: false, max, reason: "uniqueMainOnly" };
-    if (hasSub) return { ok: false, max, reason: "uniqueWithSub" };
+    return { ok: false, max, reason: hasSub ? "uniqueWithSub" : "uniqueAuto" };
   }
   if (mainHasSame) return { ok: false, max, reason: "sameInMain" };
   if (max === null) return { ok: false, max, reason: "subNotAllowed" };
@@ -187,6 +189,22 @@ export function canRaise({ skill, role, current = 0, slOf, level = 1, hasSub = f
   if (current === 0 && !prereqsMet(skill.prereqs, slOf)) return { ok: false, max, reason: "prereq" };
   if (!skill.unique && budgetLeft <= 0) return { ok: false, max, reason: "budget" };
   return { ok: true, max };
+}
+
+/**
+ * 고유 스킬 자동 습득: 서브 클래스가 없으면 메인 클래스의 고유 스킬(★)을 가진다, 있으면 없앤다.
+ * @param {{mainKey: string|null, hasSub: boolean, uniques: {classKey, skillKey}[], owned: {id, classKey, skillKey, unique}[]}} p
+ *   uniques = 스킬 팩의 고유 스킬 목록, owned = 액터가 가진 스킬
+ * @returns {{remove: string[], add: {classKey, skillKey}[]}} remove는 아이템 id
+ */
+export function uniqueSkillPlan({ mainKey, hasSub, uniques, owned }) {
+  const want = !hasSub && mainKey ? uniques.filter((u) => u.classKey === mainKey) : [];
+  const has = owned.filter((o) => o.unique);
+  const same = (a, b) => a.classKey === b.classKey && a.skillKey === b.skillKey;
+  return {
+    remove: has.filter((o) => !want.some((w) => same(w, o))).map((o) => o.id),
+    add: want.filter((w) => !has.some((o) => same(w, o)))
+  };
 }
 
 /**
