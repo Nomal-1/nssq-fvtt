@@ -10,12 +10,13 @@ import { fpFromHitChecks, resolveAttack } from "../combat.mjs";
 import { contestInflict, resistCheck } from "../conditions.mjs";
 import { canonicalBuff } from "../buffs.mjs";
 import { whenMatches } from "./when.mjs";
+import { sumAttackBonuses } from "./passives.mjs";
 import { activationRoll } from "./usage.mjs";
 
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["stance", "delayed", "counter", "chase", "trigger", "token"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag", "requireState"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus"];
 
 /** custom 핸들러 등록부: name → (ctx) => 결과 조각 */
 const CUSTOM = new Map();
@@ -84,9 +85,13 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
 
   const attackOnce = async (e, t) => {
     const kind = e.kind ?? "physical";
-    const elements = e.element ? [].concat(e.element) : user.elements;
-    let hitMod = evaluate(e.hitMod ?? 0, vars(t));
-    let diceMod = evaluate(e.diceMod ?? 0, vars(t));
+    // element: 그 속성으로 / addElement: 무기 속성에 더한다(「〈염〉 속성을 부가한」)
+    const elements = e.element ? [].concat(e.element)
+      : e.addElement ? [...new Set([...(user.elements ?? []).filter((x) => x !== "none"), ...[].concat(e.addElement)])] : user.elements;
+    // 상시 스킬의 공격 보정(《선봉의 공명》 등)
+    const pb = sumAttackBonuses(user.attackBonuses, { ...ctx, self: user, target: t, attack: { kind, elements } });
+    let hitMod = evaluate(e.hitMod ?? 0, vars(t)) + pb.hitMod;
+    let diceMod = evaluate(e.diceMod ?? 0, vars(t)) + pb.diceMod;
     for (const b of e.bonuses ?? []) {
       if (!whenMatches(b.when, { ...ctx, self: user, target: t, attack: { kind, elements } })) continue;
       hitMod += evaluate(b.hitMod ?? 0, vars(t));
@@ -99,7 +104,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
       target: { evasion: t.evasion, defense: t.defense, resist, guarding: t.guarding },
       kind, hitMod, diceMod,
-      atkMod: evaluate(e.atkMod ?? 0, vars(t)), atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
+      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
       rollDice
     });
     hitChecks.push(result);

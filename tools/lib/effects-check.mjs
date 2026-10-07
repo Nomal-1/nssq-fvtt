@@ -12,7 +12,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 
 /** 엔진이 받는 type과 필드(필수: true) */
 export const TYPES = {
-  attack: { kind: false, element: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false },
+  attack: { kind: false, element: false, addElement: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false },
   heal: { mode: false, bonus: false, amount: false, resource: false, revive: false },
   inflict: { condition: true, check: false, depth: false },
   cure: { conditions: false, kind: false, count: false },
@@ -33,7 +33,8 @@ export const TYPES = {
   custom: { handler: true },
   activeEvade: { ability: true, bonus: false, vs: false },
   nullify: {},
-  actionTiming: { value: true }
+  actionTiming: { value: true },
+  attackBonus: { hitMod: false, diceMod: false, atkMod: false }
 };
 const COMMON = ["type", "when", "chance", "label", "variant"];
 
@@ -82,7 +83,7 @@ export function checkEffects(list, where, errors = []) {
     }
     if (e.type === "attack") {
       if (e.kind && !["physical", "elemental"].includes(e.kind)) errors.push(`${at}: attack.kind는 physical/elemental`);
-      for (const el of [].concat(e.element ?? [])) if (!RESISTS.includes(el) && el !== "none") errors.push(`${at}: 모르는 속성 \`${el}\``);
+      for (const el of [...[].concat(e.element ?? []), ...[].concat(e.addElement ?? [])]) if (!RESISTS.includes(el) && el !== "none") errors.push(`${at}: 모르는 속성 \`${el}\``);
       (e.bonuses ?? []).forEach((b, j) => {
         const bk = unknownWhenKeys(b.when);
         if (bk.length) errors.push(`${at}.bonuses[${j}]: 모르는 when 키 ${bk.join(", ")}`);

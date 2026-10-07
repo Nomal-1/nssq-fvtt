@@ -66,7 +66,6 @@ export function unitProfile(actor, combatant) {
     shield: !!s.equipment?.shield,
     states: (actor.getFlag("nssq", "states") ?? []).map((x) => x.id),
     skills: actor.items.filter((i) => i.type === "skill").map((i) => i.name),
-    acted: false,
     noAction: actionState(combatant).noAction,
     overheat: Number(actor.getFlag("nssq", "overheat") ?? 0)
   };

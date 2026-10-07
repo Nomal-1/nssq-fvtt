@@ -3,6 +3,7 @@
  * 대상은 사용자가 지정(타깃)한 토큰. 계산은 engine/combat.mjs.
  */
 import { inRange, resolveAttack } from "../engine/combat.mjs";
+import { sumAttackBonuses } from "../engine/effects/passives.mjs";
 import { autoApplyMode, requestApply } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
@@ -68,10 +69,12 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
     rolls.push(r);
     return r.dice[0].results.map((x) => x.result);
   };
+  // 상시 스킬의 공격 보정(《선봉의 공명》 등)
+  const pb = sumAttackBonuses(a.attackBonuses, { self: a, target: { ...d, skills: target.items.filter((i) => i.type === "skill").map((i) => i.name) }, attack: { kind: "physical", elements: a.elements } });
   const r = await resolveAttack({
     attacker: { hit: a.physHit, physAtk: a.physAtk, elemAtk: a.elemAtk, elements: a.elements, critUp: a.critUp },
     target: { evasion: d.evasion, defense: d.defense, resist: d.resist, guarding: d.guarding },
-    kind: "physical",
+    kind: "physical", hitMod: pb.hitMod, diceMod: pb.diceMod, atkMod: pb.atkMod,
     rollDice
   });
 

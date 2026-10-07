@@ -14,9 +14,16 @@ export function collectPassives(skills, ctx = {}) {
   const mods = {};
   const flags = {};
   const sources = [];
+  // 공격할 때 대상·공격에 따라 붙는 보정(attackBonus): when은 공격 시점에 본다(sumAttackBonuses)
+  const attackBonuses = [];
   for (const s of skills ?? []) {
     if (s.timing !== "상시" || !(s.sl > 0)) continue;
     for (const e of s.effects ?? []) {
+      if (e.type === "attackBonus") {
+        const v = (x) => evaluate(x ?? 0, { SL: s.sl, self: ctx.self });
+        attackBonuses.push({ name: s.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod) });
+        continue;
+      }
       if (!whenMatches(e.when, ctx)) continue;
       if (e.type === "modifier" && e.path) {
         const v = evaluate(e.value ?? 0, { SL: s.sl, self: ctx.self });
@@ -25,5 +32,20 @@ export function collectPassives(skills, ctx = {}) {
       } else if (e.type === "flag" && e.flag) flags[e.flag] = e.value ?? true;
     }
   }
-  return { mods, flags, sources };
+  return { mods, flags, sources, attackBonuses };
+}
+
+/**
+ * 공격 1회에 붙는 상시 보정의 합
+ * @param {{when, hitMod, diceMod, atkMod}[]} list collectPassives의 attackBonuses
+ * @param {object} ctx { self, target, attack: { kind, elements } }
+ */
+export function sumAttackBonuses(list, ctx = {}) {
+  const out = { hitMod: 0, diceMod: 0, atkMod: 0, names: [] };
+  for (const b of list ?? []) {
+    if (!whenMatches(b.when, ctx)) continue;
+    out.hitMod += b.hitMod; out.diceMod += b.diceMod; out.atkMod += b.atkMod;
+    out.names.push(b.name);
+  }
+  return out;
 }

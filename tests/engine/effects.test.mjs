@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { resolveEffects, resolveTriggers } from "../../src/engine/effects/resolve.mjs";
-import { collectPassives } from "../../src/engine/effects/passives.mjs";
+import { collectPassives, sumAttackBonuses } from "../../src/engine/effects/passives.mjs";
 import { activationRoll, canUseSkill } from "../../src/engine/effects/usage.mjs";
 import { whenMatches } from "../../src/engine/effects/when.mjs";
 
@@ -232,5 +232,21 @@ describe("단계 7 스키마 보강", () => {
   it("actionTiming: 최속/후발", async () => {
     const r = await resolveEffects({ effects: [{ type: "actionTiming", value: "first" }], user, targets: [user], rollDice: dice() });
     expect(r.actionTiming).toBe("first");
+  });
+
+  it("attackBonus: 상시 스킬의 공격 보정은 공격 시점의 대상으로 판정(《선봉의 공명》)", async () => {
+    const skill = { name: "선봉의 공명", sl: 2, timing: "상시", effects: [{ type: "attackBonus", hitMod: "SL", diceMod: "SL", when: { targetNotActedThisTurn: true } }] };
+    const { attackBonuses, mods } = collectPassives([skill], { self: {} });
+    expect(mods).toEqual({});
+    expect(sumAttackBonuses(attackBonuses, { target: { acted: false } })).toEqual(expect.objectContaining({ hitMod: 2, diceMod: 2 }));
+    expect(sumAttackBonuses(attackBonuses, { target: { acted: true } }).diceMod).toBe(0);
+    // 스킬 공격에도: (9−3)+2 = 8개
+    const r = await resolveEffects({ effects: [{ type: "attack", kind: "physical" }], user: { ...user, attackBonuses }, targets: [{ ...foe, acted: false }], rollDice: dice(5, 5, ...Array(8).fill(2)) });
+    expect(r.results.get("e").hits[0].diceCount).toBe(8);
+  });
+
+  it("addElement: 무기 속성에 더한다", async () => {
+    const r = await resolveEffects({ effects: [{ type: "attack", kind: "physical", addElement: ["fire"] }], user, targets: [foe], rollDice: dice(5, 5, ...Array(6).fill(2)) });
+    expect(r.results.get("e").hits[0].elements).toEqual(["slash", "fire"]);
   });
 });

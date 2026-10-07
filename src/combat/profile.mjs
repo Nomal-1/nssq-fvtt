@@ -21,11 +21,15 @@ export const friendly = (a, b) => (sideOf(a) === "enemy") === (sideOf(b) === "en
 export function combatProfile(actor, combatant = null) {
   const s = actor.system;
   const guarding = !!combatant?.getFlag("nssq", "guarding");
+  // 이번 턴 메인 페이즈 행동을 이미 했는가(차례가 지났다)
+  const combat = combatant?.combat;
+  const acted = !!combat?.started && combat.getFlag("nssq", "phase") === "main"
+    && combat.turns.findIndex((c) => c.id === combatant.id) < (combat.turn ?? -1);
   const base = {
     actor, side: sideOf(actor), name: combatant?.name ?? actor.name,
     row: s.row ?? "front",
     hp: s.hp?.value ?? 0, hpMax: s.hp?.max ?? 0,
-    guarding,
+    guarding, acted,
     ko: (s.hp?.value ?? 0) <= 0,
     // 상태 이상·봉인·강화(단계 5): 부능력치·내성에는 액터 데이터에서 이미 반영됨
     conditions: s.conditions ?? [],
@@ -48,6 +52,9 @@ export function combatProfile(actor, combatant = null) {
       suppAtk: s.sub.suppAtk, suppDef: s.sub.suppDef,
       resist: s.resistTotal ?? s.resist,
       elements: withImbue(elements.length ? elements : ["strike"]),
+      weaponType: w?.weaponType ?? null,
+      // 상시 스킬의 공격 보정(engine/effects/passives.mjs)
+      attackBonuses: s.passives?.attackBonuses ?? [],
       weaponName: w?.item?.name ?? (w?.unarmed ? game.i18n.format("NSSQ.Combat.unarmed", { type: w.weaponType }) : ""),
       range: w?.range ?? "근"
     };
