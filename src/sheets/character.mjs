@@ -59,6 +59,8 @@ export function characterContext(actor) {
       ...(k === "speed" && b.total === 0 ? [L("speedFloor")] : []),
       // 상시 스킬 보정(단계 6)
       ...(s.passives?.sources ?? []).filter((x) => x.path === k).map((x) => `${L("skillMod")}: ${x.name} ${x.value >= 0 ? "+" : ""}${x.value}`),
+      // 전투 고유 상태(무사의 자세 등)
+      ...(s.battleStates ?? []).filter((x) => x.mods?.[k]).map((x) => `${L("stateMod")}: ${x.name} ${x.mods[k] >= 0 ? "+" : ""}${x.mods[k] * (x.max ? x.stacks ?? 1 : 1)}`),
       // 상태 이상·봉인·강화·약화(단계 5)
       ...(s.sub[k] !== b.total ? [`${L("statusMod")}: ${b.total} → ${s.sub[k]}`] : [])
     ].join("\n");

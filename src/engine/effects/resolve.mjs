@@ -15,13 +15,13 @@ import { activationRoll } from "./usage.mjs";
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["stance", "delayed", "counter", "chase", "trigger", "token"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState"];
 
 /** custom 핸들러 등록부: name → (ctx) => 결과 조각 */
 const CUSTOM = new Map();
 export const registerCustom = (name, fn) => CUSTOM.set(name, fn);
 
-const blank = (t) => ({ id: t.id, name: t.name, hits: [], damage: 0, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], sleepBroken: false });
+const blank = (t) => ({ id: t.id, name: t.name, hits: [], damage: 0, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], states: [], sleepBroken: false });
 
 /** 효과가 명중 판정을 하는가(하면 따로 발동 판정을 하지 않는다, 01 §3.4) */
 export const hasHitCheck = (effects) => (effects ?? []).some((e) => e.type === "attack");
@@ -166,6 +166,13 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       case "resource":
         r.resource.push({ resource: e.resource, delta: e.delta !== undefined ? evaluate(e.delta, vars(t)) : undefined, set: e.set !== undefined ? evaluate(e.set, vars(t)) : undefined });
         return;
+      case "state": {
+        // 전투 고유 상태(engine/states.mjs): 보정은 지금 SL로 계산해 둔다
+        const mods = {};
+        for (const m of e.mods ?? []) mods[m.path] = (mods[m.path] ?? 0) + evaluate(m.value ?? 0, vars(t));
+        r.states.push({ id: e.id, name: e.label ?? "", group: e.group ?? "", mods, ...(e.max ? { max: evaluate(e.max, vars(t)) } : {}), note: e.note ?? "" });
+        return;
+      }
       case "overheat":
         out.overheat = Math.max(out.overheat, evaluate(e.turns ?? 0, vars(t)));
         return;

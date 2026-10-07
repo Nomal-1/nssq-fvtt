@@ -8,6 +8,7 @@ import { canUseSkill } from "../engine/effects/usage.mjs";
 import { resolveEffects } from "../engine/effects/resolve.mjs";
 import { addCondition, CONDITIONS, removeCondition } from "../engine/conditions.mjs";
 import { addBuff, BUFFS } from "../engine/buffs.mjs";
+import { addState } from "../engine/states.mjs";
 import { inRange, pickRandom } from "../engine/combat.mjs";
 import { autoApplyMode, isActiveGM } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
@@ -58,6 +59,7 @@ export function unitProfile(actor, combatant) {
     tp: s.tp?.value ?? 0, tpMax: s.tp?.max ?? 0, fp: s.fp?.value ?? 0,
     weaponType: s.equipment?.weapon?.weaponType ?? null,
     shield: !!s.equipment?.shield,
+    states: (actor.getFlag("nssq", "states") ?? []).map((x) => x.id),
     skills: actor.items.filter((i) => i.type === "skill").map((i) => i.name),
     acted: false,
     noAction: actionState(combatant).noAction,
@@ -88,7 +90,7 @@ export function actionList(combat, combatant, kind) {
   }
   return actor.items.filter((i) => i.type === "skill" && ["주행동", "개막"].includes(i.system.timing) && (i.system.sl ?? 0) > 0)
     .map((i) => {
-      const r = canUseSkill(i.system, user, { phase, myTurn, drive: isDrive(i) });
+      const r = canUseSkill(i.system, user, { phase, myTurn, drive: isDrive(i), openingDone: !!combatant.getFlag("nssq", "opening") || !!combatant.getFlag("nssq", "guarding") });
       const c = i.system.cost ?? {};
       return { id: i.id, name: i.name, cost: [c.tp ? `TP ${c.tp}` : "", c.fp ? `FP ${c.fp}` : ""].filter(Boolean).join(" ") || "-", target: i.system.target, timing: i.system.timing, range: i.system.range, ok: r.ok, reason: r.reason, desc: plain(i.system.description) };
     })
@@ -186,6 +188,7 @@ async function resolveAndPost({ actor, combatant, item, kind, units, mainAction 
   const entries = [...r.results.values()].map((x) => ({
     uuid: actorOf.get(x.id)?.uuid ?? null, name: x.name,
     damage: x.damage, heal: x.heal, inflicts: x.inflicts, buffs: x.buffs, cures: x.cures, resource: x.resource,
+    states: x.states.map((st) => ({ ...st, name: st.name || item.name })),
     sleepBroken: x.sleepBroken,
     hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist })),
     applied: false, before: null,
@@ -237,10 +240,14 @@ function entryLines(e, card) {
   if (e.heal?.tp) out.push(`<li class="heal">${esc(L("healTp", { n: e.heal.tp }))}</li>`);
   for (const i of e.inflicts ?? []) if (!i.seq) out.push(inflictLi(i));
   for (const b of e.buffs ?? []) if (!b.seq) out.push(buffLi(b));
+  for (const st of e.states ?? []) out.push(`<li class="state">${esc(L("stateLine", { name: st.name, mods: stateModText(st.mods) }))}</li>`);
   for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}</li>`);
   for (const x of e.resource ?? []) if (x.chanceFailed && !x.seq) out.push(chanceLi(x));
   return out.join("");
 }
+
+/** { physAtk: 2 } → 「물리 공격 +2」 */
+export const stateModText = (mods) => Object.entries(mods ?? {}).filter(([, v]) => v).map(([k, v]) => `${game.i18n.localize(`NSSQ.Inventory.${k}`)} ${v >= 0 ? "+" : ""}${v}`).join(", ");
 
 export const renderSkillCard = (card) => renderCard(card);
 
@@ -266,7 +273,7 @@ function renderCard(card) {
 /** 한 대상에 결과를 적용 → 되돌리기용 이전 상태 */
 async function applyEntry(actor, e, sourceUuid) {
   const s = actor.system;
-  const before = { hp: s.hp?.value, tp: s.tp?.value ?? null, conditions: s.conditions ?? [], buffs: s.buffs ?? [] };
+  const before = { hp: s.hp?.value, tp: s.tp?.value ?? null, conditions: s.conditions ?? [], buffs: s.buffs ?? [], states: actor.getFlag("nssq", "states") ?? [] };
   let hp = s.hp?.value ?? 0;
   let tp = s.tp?.value ?? null;
   hp = Math.min(s.hp?.max ?? hp, hp - (e.damage ?? 0) + (e.heal?.hp ?? 0));
@@ -295,6 +302,12 @@ async function applyEntry(actor, e, sourceUuid) {
   for (const b of e.buffs ?? []) buffs = addBuff(buffs, b).list;
   const upd = { "system.hp.value": hp, "system.conditions": conds, "system.buffs": buffs };
   if (tp !== null) upd["system.tp.value"] = tp;
+  // 전투 고유 상태(같은 계열은 바꿔 끼움, engine/states.mjs)
+  if (e.states?.length) {
+    let states = [...before.states];
+    for (const st of e.states) states = addState(states, st).list;
+    upd["flags.nssq.states"] = states;
+  }
   await actor.update(upd);
   for (const id of newly) await onInflicted(actor, id);
   return before;
@@ -312,6 +325,7 @@ export async function applySkillCard(messageId, undo = false) {
     if (!undo) e.before = await applyEntry(actor, e, card.userUuid);
     else if (e.before) {
       const upd = { "system.hp.value": e.before.hp, "system.conditions": e.before.conditions, "system.buffs": e.before.buffs };
+      if (e.before.states) upd["flags.nssq.states"] = e.before.states;
       if (e.before.tp !== null && e.before.tp !== undefined) upd["system.tp.value"] = e.before.tp;
       await actor.update(upd);
       e.before = null;

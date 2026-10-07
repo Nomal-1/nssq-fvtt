@@ -6,6 +6,7 @@
 import { CONDITIONS, CONDITION_IDS, addCondition, contestInflict, removeCondition, resistCheck } from "../engine/conditions.mjs";
 import { BUFFS, BUFF_IDS, IMBUE_ELEMENTS, addBuff, canonicalBuff, paramElements, removeBuff } from "../engine/buffs.mjs";
 import { RESISTS } from "../engine/derive.mjs";
+import { removeState } from "../engine/states.mjs";
 import { combatProfile } from "./profile.mjs";
 import { onInflicted } from "./turn-status.mjs";
 
@@ -269,7 +270,10 @@ export class StatusApp extends Application {
     const opt = (v, label, sel = false) => `<option value="${esc(v)}" ${sel ? "selected" : ""}>${esc(label)}</option>`;
     const current = [
       ...(s.conditions ?? []).map((c) => `<li class="${CONDITIONS[c.id]?.kind ?? ""}"><span>${esc(conditionLabel(c))}</span><a data-remove-condition="${esc(c.id)}" title="${esc(L("remove"))}"><i class="fas fa-times"></i></a></li>`),
-      ...(s.buffs ?? []).map((b, i) => `<li class="${BUFFS[b.id]?.kind ?? ""}"><span>${esc(buffLabel(b))} · ${esc(game.i18n.format("NSSQ.Buff.turns", { n: b.turns }))}</span><a data-remove-buff="${i}" title="${esc(L("remove"))}"><i class="fas fa-times"></i></a></li>`)
+      ...(s.buffs ?? []).map((b, i) => `<li class="${BUFFS[b.id]?.kind ?? ""}"><span>${esc(buffLabel(b))} · ${esc(game.i18n.format("NSSQ.Buff.turns", { n: b.turns }))}</span><a data-remove-buff="${i}" title="${esc(L("remove"))}"><i class="fas fa-times"></i></a></li>`),
+      // 전투 고유 상태·오버히트: 해제 스킬로는 안 풀리지만 GM은 손으로 지울 수 있다(《나찰》의 임의 해제 등)
+      ...(this.actor.getFlag("nssq", "states") ?? []).map((st) => `<li class="bstate"><span>《${esc(st.name)}》${st.max ? ` ×${st.stacks ?? 1}` : ""} · ${esc(L("battleState"))}</span><a data-remove-state="${esc(st.id)}" title="${esc(L("remove"))}"><i class="fas fa-times"></i></a></li>`),
+      ...(this.actor.getFlag("nssq", "overheat") ? [`<li class="bstate"><span>${esc(game.i18n.format("NSSQ.SkillUse.overheatChip", { n: this.actor.getFlag("nssq", "overheat") }))}</span><a data-remove-overheat title="${esc(L("remove"))}"><i class="fas fa-times"></i></a></li>`] : [])
     ];
     const sources = this.sources();
     const groups = ["buff", "debuff"].map((kind) => `<optgroup label="${esc(loc(`NSSQ.Buff.${kind}`))}">${BUFF_IDS.filter((id) => BUFFS[id].kind === kind && !BUFFS[id].custom).map((id) => opt(id, loc(`NSSQ.Buff.${id}`))).join("")}</optgroup>`).join("");
@@ -352,5 +356,13 @@ export class StatusApp extends Application {
       await clearBuff(this.actor, Number(a.dataset.removeBuff));
       this.render();
     }));
+    root.querySelectorAll("[data-remove-state]").forEach((a) => a.addEventListener("click", async () => {
+      await this.actor.setFlag("nssq", "states", removeState(this.actor.getFlag("nssq", "states"), a.dataset.removeState));
+      this.render();
+    }));
+    root.querySelector("[data-remove-overheat]")?.addEventListener("click", async () => {
+      await this.actor.unsetFlag("nssq", "overheat");
+      this.render();
+    });
   }
 }

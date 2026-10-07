@@ -585,6 +585,8 @@
 #nssq-battle .nb-member em.npc { border: 1px solid #c7a6f0; color: #c7a6f0; }
 #nssq-battle .nb-member em.guard { background: rgba(111, 211, 230, 0.85); color: #0a1626; }
 #nssq-battle .nb-member em.overheat { background: linear-gradient(90deg, #ff7a1a, #e0302a); color: #fff; font-weight: 700; box-shadow: 0 0 6px rgba(255, 110, 30, 0.8); animation: nb-overheat 1.4s ease-in-out infinite alternate; }
+#nssq-battle .nb-member em.bstate { background: rgba(40, 30, 80, 0.85); border: 1px solid #b9a2ff; color: #e2d8ff; white-space: nowrap; }
+.nssq-skill-card .sk-target li.state { color: #5a3fb0; }
 @keyframes nb-overheat { from { box-shadow: 0 0 3px rgba(255, 110, 30, 0.5); } to { box-shadow: 0 0 9px rgba(255, 80, 20, 0.95); } }
 #nssq-battle .nb-member .cls { margin-left: auto; font-size: 0.85em; color: var(--nq-mu); white-space: nowrap; }
 #nssq-battle .nb-member .bars { display: flex; gap: 8px; }

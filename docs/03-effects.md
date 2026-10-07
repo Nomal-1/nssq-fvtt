@@ -55,6 +55,8 @@
 | `delayed` | `at`(endPhase/nextTurnLate), `turns`, `effects[]` | 지연 공격. 스킬마다 발동 시점이 달라 `at`으로 지정 |
 | `token` | `tokenKey`, `action{…}`, `maxCount` | 토큰 배치 |
 | `overheat` | `turns` | 드라이브 계열 |
+| `state` | `id`, `label`, `group?`, `mods[{path, value}]`, `max?`, `note?` | 전투 고유 상태(강화가 아님, 해제되지 않음, 전투 끝까지). 무사의 자세·《나찰》 등. 같은 `group`은 하나만, `max`가 있으면 쌓임(07 #57) |
+| `requireState` | `state` | 「《○○》 상태 한정」. 그 상태가 없으면 쓸 수 없다(사용 시 해석하지 않음) |
 | `flag` | `flag`, `value` | 규칙 스위치. 예 쌍수 스킬 공격 허용, 토큰 동시 유지 수 |
 | `custom` | `handler` | 스키마 밖. `src/engine/custom/<handler>.mjs` |
 | `activeEvade` | `ability`(str/tec/vit/agi/luc), `bonus`, `vs`(physical/elemental, 생략 시 둘 다) | 타이밍 「수동」: 능동 회피. 대상 2D6+능력치 보너스+bonus vs 공격자 명중 달성값, 동점 회피(07 #51) |

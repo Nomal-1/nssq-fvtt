@@ -86,7 +86,8 @@
       "roundDown": "(÷ 2는 내림)",
       "statusMod": "상태·강화 보정",
       "statusTitle": "상태·강화(전투 중)",
-      "skillMod": "스킬"
+      "skillMod": "스킬",
+      "stateMod": "전투 상태"
     },
     "Tab": {
       "main": "능력치",
@@ -841,6 +842,7 @@
       "current": "걸려 있는 효과",
       "none": "없음",
       "remove": "해제",
+      "battleState": "전투 고유 상태(전투가 끝나면 사라짐)",
       "ailmentSection": "상태 이상·봉인 부여",
       "buffSection": "강화·약화 부여",
       "condition": "종류",
@@ -1007,6 +1009,8 @@
         "noAction": "행동할 수 없다",
         "bound": "그 부위가 봉인되어 있다",
         "weapon": "무기 조건이 맞지 않는다",
+        "state": "필요한 상태(자세 등)가 아니다",
+        "openingDone": "이번 턴 개막 행동을 이미 했다",
         "overheat": "오버히트 중",
         "delayed": "지연 공격 대기 중",
         "tp": "【TP】가 부족하다",
@@ -1017,9 +1021,11 @@
       "hitLine": "명중 {dice} → {total}",
       "hitNo": "{n}타",
       "woke": "[수면] 풀림",
+      "stateLine": "《{name}》 상태({mods}) — 전투가 끝날 때까지",
       "brokenAt": "→ {n}타에서 풀림",
       "description": "해설",
       "overheatChip": "오버히트 {n}",
+      "stateHint": "《{name}》: 전투 고유 상태(강화 효과가 아니라 해제되지 않음, 전투가 끝나면 사라짐)\n{text}",
       "overheatHint": "오버히트: 앞으로 {n}턴 동안 드라이브 스킬을 쓸 수 없다",
       "missLine": "빗나감 {dice} → {total}",
       "skipped": "같은 대상이 다시 뽑혀 그 공격은 없던 것으로",

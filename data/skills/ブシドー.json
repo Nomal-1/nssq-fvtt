@@ -125,8 +125,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>해당 전투 동안 상단 계열 도 스킬 사용 가능. 【물리 공격】 +(SL). 이 보너스는 강화 효과가 아니며 해제되지 않는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "state",
+     "id": "bushido.jodan",
+     "group": "bushido.stance",
+     "label": "상단의 자세",
+     "mods": [
+      {
+       "path": "physAtk",
+       "value": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -169,8 +182,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《상단의 자세》 상태 한정. 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.jodan"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "(SL+1)*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -213,8 +236,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《상단의 자세》 상태 한정. 〈참〉+〈염〉 속성 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.jodan"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "slash",
+      "fire"
+     ],
+     "diceMod": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -261,8 +298,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《상단의 자세》 상태 한정. 〈참〉+〈염〉 속성 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.jodan"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "slash",
+      "fire"
+     ],
+     "diceMod": "(SL+1)*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -309,8 +360,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《상단의 자세》 상태 한정. 물리 공격 롤 2회, 각각 대미지 다이스 +(SL×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.jodan"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 2,
+     "diceMod": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -353,8 +415,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>해당 전투 동안 청안 계열 도 스킬 사용 가능. 【물리 방어】 +(SL). 이 보너스는 강화 효과가 아니며 해제되지 않는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "state",
+     "id": "bushido.seigan",
+     "group": "bushido.stance",
+     "label": "청안의 자세",
+     "mods": [
+      {
+       "path": "defense",
+       "value": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -397,8 +472,30 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《청안의 자세》 상태 한정. 〈돌〉 속성 물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [팔] 봉인.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.seigan"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "pierce"
+     ],
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindArm",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -443,13 +540,17 @@
    "description": "<p>《청안의 자세》 상태 한정. 【AGI】로 능동 회피, 달성값 +(SL-1).</p>",
    "effects": [
     {
+     "type": "requireState",
+     "state": "bushido.seigan"
+    },
+    {
      "type": "activeEvade",
      "ability": "agi",
      "bonus": "SL-1"
     }
    ],
    "review": "partial",
-   "effectsNote": "《청안의 자세》 상태에서만 사용 가능(GM 확인)"
+   "effectsNote": ""
   },
   "_meta": {
    "className": "무사"
@@ -492,8 +593,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《청안의 자세》 상태 한정. 〈돌〉+〈뇌〉 속성 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.seigan"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "pierce",
+      "volt"
+     ],
+     "diceMod": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -540,8 +655,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《청안의 자세》 상태 한정. 〈돌〉 속성 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.seigan"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "pierce"
+     ],
+     "diceMod": "(SL+1)*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -590,6 +718,10 @@
    "description": "<p>《청안의 자세》 상태 한정. 사용 시 대기 상태가 된다. 대기 상태 중 자신이 물리 공격을 받으면 【AGI】로 능동 회피(달성값 +(SL-1)), 회피 성공 시 공격자에게 물리 공격으로 반격. 대기 상태는 턴 종료 시 해제.</p>",
    "effects": [
     {
+     "type": "requireState",
+     "state": "bushido.seigan"
+    },
+    {
      "type": "stance",
      "until": "endOfTurn",
      "effects": [
@@ -613,7 +745,7 @@
     }
    ],
    "review": "ok",
-   "effectsNote": "《청안의 자세》 상태에서만 사용 가능(GM 확인). 대기 상태·반격은 단계 8에서 자동화"
+   "effectsNote": "대기 상태·반격은 단계 8에서 자동화"
   },
   "_meta": {
    "className": "무사"
@@ -656,8 +788,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>해당 전투 동안 거합 계열 도 스킬 사용 가능. 【속도】 +(SL×2). 이 보너스는 강화 효과가 아니며 해제되지 않는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "state",
+     "id": "bushido.iai",
+     "group": "bushido.stance",
+     "label": "발도의 자세",
+     "mods": [
+      {
+       "path": "speed",
+       "value": "SL*2"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -744,8 +889,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《발도의 자세》 상태 한정. 〈참〉+〈빙〉 속성 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.iai"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "slash",
+      "ice"
+     ],
+     "diceMod": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -840,8 +999,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《발도의 자세》 상태 한정. 〈참〉+〈빙〉 속성 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.iai"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "slash",
+      "ice"
+     ],
+     "diceMod": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -888,8 +1061,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《발도의 자세》 상태 한정. 물리 공격 롤, 대미지 다이스 +(SL×2)개. 명중 시 대상은 목표값 (공격자 【억제 공격】+(6+SL))의 억제 방어 롤, 실패하면 즉사.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.iai"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL*2"
+    }
+   ],
+   "review": "ok",
+   "effectsNote": "명중 시 즉사 억제 방어 롤(목표값 억제 공격+6+SL)은 GM 판단"
   },
   "_meta": {
    "className": "무사"

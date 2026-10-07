@@ -323,6 +323,9 @@ export async function endBattle(combat, result = "abort") {
       if (conds.length !== (a.system.conditions ?? []).length || (a.system.buffs ?? []).length) {
         await a.update({ "system.conditions": conds, "system.buffs": [] });
       }
+      // 오버히트·전투 고유 상태(무사의 자세 등)도 그 전투까지(07 #57)
+      if (a.getFlag("nssq", "overheat")) await a.unsetFlag("nssq", "overheat");
+      if ((a.getFlag("nssq", "states") ?? []).length) await a.unsetFlag("nssq", "states");
     }
     // 전투 BGM 정지 → 원래 씬·음악
     if (copy?.playlist) await copy.playlist.stopAll();

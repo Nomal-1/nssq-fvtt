@@ -25,7 +25,7 @@ import { StatusApp, statusChips, statusMarks } from "./status.mjs";
 import { allyAnalysisHtml, enemyAnalysisHtml } from "./analysis.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
 import { actionState, confusedAction, endPhaseMessage, requestEndPhaseApply } from "./turn-status.mjs";
-import { actionList, beginAction, pickTarget, requestSkillApply } from "./skill-use.mjs";
+import { actionList, beginAction, pickTarget, requestSkillApply, stateModText } from "./skill-use.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -256,12 +256,16 @@ function enemyCard(c, combat, targetable) {
   </div>`;
 }
 
-/** 오버히트(드라이브 스킬 사용 뒤 남은 턴) 표시 */
+/** 오버히트(드라이브 스킬 사용 뒤 남은 턴)·전투 고유 상태(무사의 자세 등) 표시 */
 function overheatChip(a) {
   const n = Number(a.getFlag("nssq", "overheat") ?? 0);
-  if (!(n > 0)) return "";
-  const S = (k) => game.i18n.format(`NSSQ.SkillUse.${k}`, { n });
-  return `<em class="overheat" title="${esc(S("overheatHint"))}"><i class="fas fa-fire-alt"></i> ${esc(S("overheatChip"))}</em>`;
+  const S = (k, d) => game.i18n.format(`NSSQ.SkillUse.${k}`, d ?? { n });
+  const states = (a.getFlag("nssq", "states") ?? []).map((st) => {
+    const stacks = st.max ? ` ×${st.stacks ?? 1}` : "";
+    const tip = [stateModText(st.mods), st.note].filter(Boolean).join("\n");
+    return `<em class="bstate" title="${esc(S("stateHint", { name: st.name, text: tip }))}"><i class="fas fa-yin-yang"></i> ${esc(st.name)}${stacks}</em>`;
+  }).join("");
+  return (n > 0 ? `<em class="overheat" title="${esc(S("overheatHint"))}"><i class="fas fa-fire-alt"></i> ${esc(S("overheatChip"))}</em>` : "") + states;
 }
 
 function partyCard(c, combat, targetable) {

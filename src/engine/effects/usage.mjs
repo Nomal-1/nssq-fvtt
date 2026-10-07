@@ -21,22 +21,35 @@ export function meetsWeaponReq(weaponReq, user) {
 }
 
 /**
+ * 「《청안의 자세》 상태 한정」 같은 조건: effects의 { type: "requireState", state: id } 가 모두 있어야(07 #57)
+ * @param {object[]} effects
+ * @param {{states?: string[]}} user states는 지금 가진 전투 고유 상태 id 목록
+ */
+export function meetsStateReq(effects, user) {
+  const need = (effects ?? []).filter((e) => e?.type === "requireState").map((e) => e.state);
+  return need.every((id) => (user.states ?? []).includes(id));
+}
+
+/**
  * @param {object} skill { timing, part, weaponReq: [], cost: {tp, fp}, effects: [], name }
- * @param {object} user { tp, fp, weaponType, shield?: boolean, conditions: [], overheat?: number, delayedPending?: boolean, noAction?: boolean }
- * @param {{phase: string, myTurn?: boolean, drive?: boolean}} ctx drive: 《○○ 드라이브》(오버히트 대상)
+ * @param {object} user { tp, fp, weaponType, shield?: boolean, states?: string[], conditions: [], overheat?: number, delayedPending?: boolean, noAction?: boolean }
+ * @param {{phase: string, myTurn?: boolean, drive?: boolean, openingDone?: boolean}} ctx drive: 《○○ 드라이브》(오버히트 대상)
  * @returns {{ok: boolean, reason: string|null}} reason은 ko.json NSSQ.SkillUse.reason.* 키
  */
 export function canUseSkill(skill, user, ctx = {}) {
   const s = skill ?? {};
-  if (!s.effects?.length) return { ok: false, reason: "noEffects" };
+  if (!s.effects?.some((e) => e?.type !== "requireState")) return { ok: false, reason: "noEffects" };
   const phase = PHASE_OF[s.timing];
   if (!phase) return { ok: false, reason: "timing" };
   if (ctx.phase !== phase) return { ok: false, reason: phase === "main" ? "notMain" : "notOpening" };
   if (phase === "main" && ctx.myTurn === false) return { ok: false, reason: "notTurn" };
+  // 개막 페이즈는 전원 1행동(01 §3.3): 이미 배치 변경·무기 교체·개막 스킬을 했으면 끝
+  if (phase === "opening" && ctx.openingDone) return { ok: false, reason: "openingDone" };
   if (user.noAction) return { ok: false, reason: "noAction" };
   const bind = PART_BIND[s.part];
   if (bind && (user.conditions ?? []).some((c) => c.id === bind)) return { ok: false, reason: "bound" };
   if (!meetsWeaponReq(s.weaponReq, user)) return { ok: false, reason: "weapon" };
+  if (!meetsStateReq(s.effects, user)) return { ok: false, reason: "state" };
   if (ctx.drive && (user.overheat ?? 0) > 0) return { ok: false, reason: "overheat" };
   if (user.delayedPending && s.effects.some((e) => e.type === "delayed")) return { ok: false, reason: "delayed" };
   if ((s.cost?.tp ?? 0) > (user.tp ?? 0)) return { ok: false, reason: "tp" };

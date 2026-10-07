@@ -1,5 +1,6 @@
 import { ABILITIES, RESISTS, abilityBreakdown, deriveCharacter } from "../../engine/derive.mjs";
 import { carriedCount, collectEquipment } from "../../engine/equipment.mjs";
+import { stateMods } from "../../engine/states.mjs";
 import tables from "../../generated/tables.mjs";
 import { buffs, conditions, description, int, resistances, resource, row, str } from "../fields.mjs";
 import { conditionMods } from "../../engine/conditions.mjs";
@@ -95,6 +96,9 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       { self: { weaponType: w0.weaponType, dualWield: items.some((i) => i.type === "weapon" && i.system.equipped && i.system.slot === "other"), row: this.row } }
     );
     for (const [k, v] of Object.entries(passives.mods)) eq.mods[k] = (eq.mods[k] ?? 0) + v;
+    // 전투 고유 상태(무사의 자세 등, 07 #57): 강화가 아니므로 장비·상시 스킬과 같은 자리에 더한다
+    this.battleStates = this.parent?.flags?.nssq?.states ?? [];
+    for (const [k, v] of Object.entries(stateMods(this.battleStates))) eq.mods[k] = (eq.mods[k] ?? 0) + v;
     this.passives = passives;
     this.equipment = eq;
     this.abilityParts = abilityBreakdown({
