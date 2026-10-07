@@ -84,7 +84,7 @@
 | `activeEvade` | `ability`(str/tec/vit/agi/luc), `bonus`, `vs`(physical/elemental, 생략 시 둘 다) | 타이밍 「수동」: 능동 회피. 대상 2D6+능력치 보너스+bonus vs 공격자 명중 달성값, 동점 회피(07 #51) |
 | `nullify` | — | 타이밍 「수동」: 그 공격의 대미지 0·추가 효과 무효(《완전 방어》), 반응한 캐릭터의 같은 편 대상 전부 |
 
-`attack.element`의 `"none"`은 무속성(내성 0). 대상 칸 「관통」은 고른 대상 + 다른 열에서 순서가 가장 가까운 1체(07 #60). 데이터 검사: `node tools/effects-check.mjs` → `build/effects-report.md`(오류·todo/auto/partial/ok 집계·partial 목록·단계 8 대기 목록). `npm test`에도 들어 있다.
+`attack.element`의 `"none"`은 무속성(내성 0). 대상 칸 「관통」은 고른 대상 + 다른 열에서 순서가 가장 가까운 1체, 가장 가까운 적이 여럿이면 그중에서 다시 고른다(07 #60). 데이터 검사: `node tools/effects-check.mjs` → `build/effects-report.md`(오류·todo/auto/partial/ok 집계·partial 목록·단계 8 대기 목록). `npm test`에도 들어 있다.
 
 ## 4. 변환 예시 (현재 데이터 기준)
 

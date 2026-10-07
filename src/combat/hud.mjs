@@ -687,7 +687,10 @@ function bindClicks(el) {
         pending = null;
         renderHud();
         const user = combat.combatants.get(p.combatantId);
-        if (user) return pickTarget(combat, user, p.kind, p.id, c, p.spec);
+        if (!user) return;
+        // 「관통」의 두 번째 대상처럼 한 번 더 고를 때
+        const r = await pickTarget(combat, user, p.kind, p.id, c, p.spec);
+        if (r?.pick) { pending = { ...p, pick: r.pick, spec: r.spec }; renderHud(); }
         return;
       }
       if (pending === "attack" && t.classList.contains("targetable")) {

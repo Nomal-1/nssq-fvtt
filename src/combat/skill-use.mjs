@@ -155,12 +155,20 @@ export async function pickTarget(combat, combatant, kind, id, picked, spec) {
     const row = picked.actor.system.row ?? "front";
     targets = candidates(combat, combatant, spec, "-", { allowKO: revives(combatant.actor.items.get(id)) }).filter((c) => (c.actor.system.row ?? "front") === row);
   } else if (spec.scope === "pierce") {
-    // 「관통」: 고른 대상 + 다른 열에서 순서가 가장 가까운 1체(07 #60)
-    const row = picked.actor.system.row ?? "front";
-    const order = picked.actor.system.order ?? 0;
-    const other = candidates(combat, combatant, spec, "-").filter((c) => (c.actor.system.row ?? "front") !== row)
-      .sort((a, b) => Math.abs((a.actor.system.order ?? 0) - order) - Math.abs((b.actor.system.order ?? 0) - order))[0];
-    if (other) targets.push(other);
+    // 「관통」: 고른 대상 + 다른 열에서 순서가 가장 가까운 1체. 가장 가까운 적이 여럿이면 그중에서 다시 고른다(07 #60)
+    if (spec.first) {
+      const first = combat.combatants.get(spec.first);
+      targets = first ? [first, picked] : [picked];
+    } else {
+      const row = picked.actor.system.row ?? "front";
+      const order = picked.actor.system.order ?? 0;
+      const dist = (c) => Math.abs((c.actor.system.order ?? 0) - order);
+      const others = candidates(combat, combatant, spec, "-").filter((c) => (c.actor.system.row ?? "front") !== row);
+      const best = Math.min(...others.map(dist));
+      const nearest = others.filter((c) => dist(c) === best);
+      if (nearest.length > 1) return { pick: nearest.map((c) => c.id), spec: { ...spec, first: picked.id } };
+      if (nearest.length) targets.push(nearest[0]);
+    }
   }
   return executeAction(combat, combatant, kind, id, targets, { variant: spec.variant ?? null });
 }
