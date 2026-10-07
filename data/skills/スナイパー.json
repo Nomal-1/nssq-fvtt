@@ -546,7 +546,8 @@
      "toSelf": true
     }
    ],
-   "review": "ok"
+   "review": "partial",
+   "effectsNote": "사용 후 자신 [마비]의 심도가 원문에 없어 0으로 둠(07 #61): GM이 심도를 정해 주세요"
   },
   "_meta": {
    "className": "스나이퍼"
