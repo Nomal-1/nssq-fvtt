@@ -201,12 +201,83 @@ async function resolveAndPost({ actor, combatant, item, kind, units, mainAction 
     description: sys.description ?? "",
     unknownScope: !!spec.unknown, entries, applied: false
   };
-  return ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor, token: actor.token }),
-    content: renderCard(card),
-    rolls, sound: rolls.length ? CONFIG.sounds.dice : undefined,
-    flags: { nssq: { skillCard: card } }
+  const speaker = ChatMessage.getSpeaker({ actor, token: actor.token });
+  const post = (c, first) => ChatMessage.create({
+    speaker, content: renderCard(c),
+    ...(first ? { rolls, sound: rolls.length ? CONFIG.sounds.dice : undefined } : {}),
+    flags: { nssq: { skillCard: c } }
   });
+  // 다회 공격은 타격마다 카드를 따로 낸다(주사위·발동 판정·GM 안내는 첫 카드에)
+  const parts = splitHits(card, spec.scope === "random");
+  if (!parts) return post(card, true);
+  let first = null;
+  for (const [i, c] of parts.entries()) {
+    const m = await post(c, i === 0);
+    first ??= m;
+  }
+  return first;
+}
+
+/* ---------------- 다회 공격: 타격마다 카드 ---------------- */
+
+/**
+ * 결과 카드를 타격(회차)별 카드로 나눈다. 다회 공격이 아니면 null
+ * - 무작위 대상: 공격 하나(seq)가 한 장. 그 밖(단일·열·전체): n번째 타격끼리 한 장(대상마다 한 줄)
+ * - 명중으로 생긴 부여·강화·자원 변화(seq가 붙은 것)는 그 타격 카드에, 나머지(회복·상태·해제 등)는 마지막 카드에
+ * - 수동 반응은 그 대상이 처음 명중한 카드에(공격 롤 1회에 1번)
+ */
+function splitHits(card, random) {
+  if (card.failed) return null;
+  const entries = card.entries ?? [];
+  const seqs = [...new Set(entries.flatMap((e) => (e.hits ?? []).map((h) => h.seq)))].sort((a, b) => a - b);
+  const count = random ? seqs.length : Math.max(0, ...entries.map((e) => e.hits?.length ?? 0));
+  if (count < 2) return null;
+  const hitAt = (e, k) => (random ? (e.hits ?? []).find((h) => h.seq === seqs[k]) : e.hits?.[k]) ?? null;
+  const roundOf = (e, seq) => (random ? seqs.indexOf(seq) : (e.hits ?? []).findIndex((h) => h.seq === seq)) + 1;
+  const hasRest = (e) => !!(e.heal?.hp || e.heal?.tp || e.states?.length || e.cures?.length
+    || [e.inflicts, e.buffs, e.resource].some((l) => (l ?? []).some((x) => !x.seq)));
+  const part = (e, h, last) => {
+    const pick = (list) => (list ?? []).filter((x) => (x.seq ? x.seq === h?.seq : last));
+    const firstHit = (e.hits ?? []).find((x) => x.hit);
+    return {
+      ...e, hits: h ? [h] : [], damage: h?.hit ? h.final ?? 0 : 0,
+      heal: last ? e.heal : { hp: 0, tp: 0 }, states: last ? e.states : [], cures: last ? e.cures : [],
+      inflicts: pick(e.inflicts).map((i) => (i.broken ? { ...i, broken: roundOf(e, i.broken) } : i)),
+      buffs: pick(e.buffs), resource: pick(e.resource),
+      sleepBroken: !!h?.woke,
+      // 다른 타격에 명중이 없으면 이 카드로 반응하면 대상의 추가 효과까지 없어진다(reaction.mjs)
+      reaction: h && h === firstHit ? e.reaction : null,
+      applied: false, before: null
+    };
+  };
+  const id = foundry.utils.randomID();
+  const out = [];
+  for (let k = 0; k < count; k++) {
+    const last = k === count - 1;
+    const list = [];
+    for (const e of entries) {
+      const h = hitAt(e, k);
+      if (h || (last && hasRest(e))) list.push(part(e, h, last));
+    }
+    out.push({
+      ...card, entries: list, applied: false, group: { id, index: k + 1, count },
+      ...(k ? { activation: null, fpGain: 0, gm: [], partial: "", description: "", unknownScope: false } : {})
+    });
+  }
+  return out;
+}
+
+/** 같은 다회 공격에서 나온 카드 메시지(회차 순) */
+export function groupMessages(card) {
+  if (!card?.group) return [];
+  return game.messages.filter((m) => m.getFlag("nssq", "skillCard")?.group?.id === card.group.id)
+    .sort((a, b) => a.getFlag("nssq", "skillCard").group.index - b.getFlag("nssq", "skillCard").group.index);
+}
+
+/** 이 카드(다회 공격이면 같은 공격의 모든 카드)에 반응을 기다리는 대상이 있는가 */
+export function groupPendingReaction(card) {
+  const cards = card?.group ? groupMessages(card).map((m) => m.getFlag("nssq", "skillCard")) : [card];
+  return cards.some((c) => hasPendingReaction(c?.entries));
 }
 
 /* ---------------- 카드 ---------------- */
@@ -214,7 +285,8 @@ async function resolveAndPost({ actor, combatant, item, kind, units, mainAction 
 function entryLines(e, card) {
   const out = [];
   const hits = e.hits ?? [];
-  const multi = (card.entries ?? []).reduce((n, x) => n + (x.hits?.length ?? 0), 0) > 1;
+  // 타격마다 나눈 카드는 머리에 회차를 보이므로 줄마다 붙이지 않는다
+  const multi = !card.group && (card.entries ?? []).reduce((n, x) => n + (x.hits?.length ?? 0), 0) > 1;
   // 부여·강화·확률 실패: 어느 명중에서 생겼는지(seq)가 있으면 그 공격 아래에
   // 억제 판정: 대결이면 양쪽, 고정 목표값이면 방어 쪽 주사위·달성값(07 #47: 모르는 에너미의 값은 ?)
   //   (공격 카드처럼 주사위만 보이고 보정·달성값을 가린다. 보정이 보이면 달성값을 계산할 수 있다)
@@ -261,7 +333,7 @@ export const stateModText = (mods) => Object.entries(mods ?? {}).filter(([, v]) 
 export const renderSkillCard = (card) => renderCard(card);
 
 function renderCard(card) {
-  const head = `<header class="check-header"><span class="check-label"><img src="${esc(card.img)}" width="20" height="20"/> ${esc(card.name)}${card.sl ? ` <small>SL${card.sl}</small>` : ""}</span><span class="check-kind">${esc(card.userName)}</span></header>`;
+  const head = `<header class="check-header"><span class="check-label"><img src="${esc(card.img)}" width="20" height="20"/> ${esc(card.name)}${card.sl ? ` <small>SL${card.sl}</small>` : ""}${card.group ? ` <b class="seq">${esc(L("hitOf", { n: card.group.index, count: card.group.count }))}</b>` : ""}</span><span class="check-kind">${esc(card.userName)}</span></header>`;
   const act = card.activation ? `<p class="activation ${card.activation.ok ? "ok" : "ng"}">${esc(L(card.activation.ok ? "activationOk" : "activationFail", { dice: card.activation.dice.join("+") }))}</p>` : "";
   const fp = card.fpGain ? `<p class="fp-gain">FP +${card.fpGain}</p>` : "";
   // 해설(데이터의 HTML)은 접어 둔다
@@ -322,9 +394,27 @@ async function applyEntry(actor, e, sourceUuid) {
   return before;
 }
 
-/** 카드 결과 적용·되돌리기(활성 GM) */
-export async function applySkillCard(messageId, undo = false) {
-  const message = game.messages.get(messageId);
+// 적용은 한 번에 하나씩(같은 대상에 여러 카드가 동시에 적용되면 앞 결과를 덮어쓴다)
+let queue = Promise.resolve();
+const enqueue = (fn) => (queue = queue.then(fn, fn));
+
+/**
+ * 카드 결과 적용·되돌리기(활성 GM).
+ * 다회 공격의 타격 카드는 순서를 지킨다: 적용하면 앞 타격 중 적용하지 않은 것부터, 되돌리면 뒤 타격 중 적용한 것부터
+ */
+export function applySkillCard(messageId, undo = false) {
+  return enqueue(async () => {
+    const message = game.messages.get(messageId);
+    const card = message?.getFlag("nssq", "skillCard");
+    if (!card?.group) return applyOne(message, undo);
+    const list = groupMessages(card);
+    const k = card.group.index;
+    if (!undo) for (const m of list.filter((x) => x.getFlag("nssq", "skillCard").group.index <= k)) await applyOne(m, false);
+    else for (const m of list.filter((x) => x.getFlag("nssq", "skillCard").group.index >= k).reverse()) await applyOne(m, true);
+  });
+}
+
+async function applyOne(message, undo) {
   const card = message?.getFlag("nssq", "skillCard");
   if (!card || card.failed || card.applied === !undo) return;
   const entries = foundry.utils.deepClone(card.entries);
@@ -350,7 +440,10 @@ export function registerSkillUse() {
   // 자동 적용 「즉시」: 카드가 생기면 GM이 적용
   Hooks.on("createChatMessage", (message) => {
     const card = message.getFlag("nssq", "skillCard");
-    if (card && !card.failed && autoApplyMode() === "auto" && isActiveGM() && !hasPendingReaction(card.entries)) applySkillCard(message.id);
+    if (!card || card.failed || autoApplyMode() !== "auto" || !isActiveGM()) return;
+    // 다회 공격은 마지막 타격 카드가 나온 뒤 한꺼번에(앞 카드부터)
+    if (card.group && card.group.index !== card.group.count) return;
+    if (!groupPendingReaction(card)) applySkillCard(message.id);
   });
   Hooks.on("renderChatMessage", (message, html) => {
     const card = message.getFlag("nssq", "skillCard");

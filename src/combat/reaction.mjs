@@ -142,6 +142,10 @@ async function gmReaction({ messageId, type, index, result }) {
   const card = foundry.utils.deepClone(message.getFlag("nssq", "skillCard"));
   const e = card.entries[index];
   if (e?.reaction?.state !== "pending") return;
+  const { groupMessages, groupPendingReaction } = await import("./skill-use.mjs");
+  // 다회 공격을 타격마다 나눈 카드: 같은 공격의 다른 카드도 함께 고친다(적용하지 않은 것만)
+  const others = card.group ? groupMessages(card).filter((m) => m.id !== message.id && !m.getFlag("nssq", "skillCard").applied)
+    .map((m) => ({ m, card: foundry.utils.deepClone(m.getFlag("nssq", "skillCard")), changed: false })) : [];
   const voidEntry = (x) => {
     x.hits = (x.hits ?? []).map((h) => (h.hit ? { ...h, hit: false, final: 0 } : h));
     x.damage = 0;
@@ -152,22 +156,38 @@ async function gmReaction({ messageId, type, index, result }) {
   else {
     e.reaction = { ...e.reaction, state: "used", text: result.text };
     if (result.nullify) {
-      // 《완전 방어》: 반응한 캐릭터의 같은 편 대상 전부
+      // 《완전 방어》: 반응한 캐릭터의 같은 편 대상 전부(다회 공격이면 모든 타격)
       const reactor = await fromUuid(result.reactorUuid);
-      for (const x of card.entries) {
-        const a = x.uuid ? await fromUuid(x.uuid) : null;
-        if (a && reactor && friendly(a, reactor)) voidEntry(x);
+      for (const c of [{ card }, ...others]) {
+        for (const x of c.card.entries) {
+          const a = x.uuid ? await fromUuid(x.uuid) : null;
+          if (a && reactor && friendly(a, reactor)) { voidEntry(x); c.changed = true; }
+        }
       }
     } else if (result.evaded) {
       // 처음 명중한 공격 하나를 빗나감으로(공격 롤 1회에 1번). 남은 명중이 없으면 추가 효과도 없음
       const h = e.hits.find((x) => x.hit);
       if (h) { h.hit = false; h.final = 0; }
       e.damage = e.hits.reduce((n, x) => n + (x.hit ? x.final ?? 0 : 0), 0);
-      if (!e.hits.some((x) => x.hit)) voidEntry(e);
+      if (card.group) {
+        // 타격 카드: 그 타격의 추가 효과는 없어지고, 다른 타격에도 명중이 없으면 그 대상의 나머지 효과(마지막 카드)도
+        voidEntry(e);
+        const rest = others.flatMap((c) => c.card.entries.filter((x) => x.uuid === e.uuid).map((x) => ({ c, x })));
+        if (!rest.some(({ x }) => x.hits?.some((y) => y.hit))) for (const { c, x } of rest) { voidEntry(x); c.changed = true; }
+      } else if (!e.hits.some((x) => x.hit)) voidEntry(e);
     }
   }
   await message.update({ content: renderSkillCard(card), "flags.nssq.skillCard": card });
-  if (autoApplyMode() === "auto" && !hasPendingReaction(card.entries)) await applySkillCard(messageId);
+  for (const c of others.filter((x) => x.changed)) await c.m.update({ content: renderSkillCard(c.card), "flags.nssq.skillCard": c.card });
+  if (autoApplyMode() !== "auto") return;
+  if (!card.group) {
+    if (!hasPendingReaction(card.entries)) await applySkillCard(messageId);
+    return;
+  }
+  // 다회 공격: 모든 카드가 나왔고 기다리는 반응이 없으면 마지막 카드까지 한꺼번에
+  const list = groupMessages(card);
+  const lastMsg = list.at(-1);
+  if (list.length === card.group.count && !groupPendingReaction(card)) await applySkillCard(lastMsg.id);
 }
 
 export function registerReaction() {

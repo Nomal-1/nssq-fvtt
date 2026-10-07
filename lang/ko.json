@@ -1054,6 +1054,7 @@
       "activationFail": "발동 판정 {dice} → 1이 2개라 발동 실패(코스트는 소모)",
       "hitLine": "명중 {dice} → {total}",
       "hitNo": "{n}타",
+      "hitOf": "{n}타 / 전 {count}타",
       "woke": "[수면] 풀림",
       "stateLine": "《{name}》 상태({mods}) — 전투가 끝날 때까지",
       "brokenAt": "→ {n}타에서 풀림",
