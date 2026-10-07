@@ -31,8 +31,26 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 명중 시 선언. 대미지 다이스 +7개, 대상에게 [스턴]. 이 [스턴]은 저항 불가.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "selfHit",
+     "when": {
+      "attackKind": "physical"
+     },
+     "effects": [
+      {
+       "type": "attackBonus",
+       "diceMod": 7
+      },
+      {
+       "type": "inflict",
+       "condition": "stun"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -70,8 +88,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>총 사용 시 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "총"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -111,11 +140,43 @@
      }
     ]
    },
-   "variants": [],
+   "variants": [
+    "플레임 불릿",
+    "아이스 불릿",
+    "선더 불릿"
+   ],
    "sl": 1,
    "description": "<p>《플레임 불릿》《아이스 불릿》《선더 불릿》 중 하나로 선언. 각각 〈염〉/〈빙〉/〈뇌〉 속성을 더한 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "addElement": [
+      "fire"
+     ],
+     "diceMod": "SL",
+     "variant": 0
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "addElement": [
+      "ice"
+     ],
+     "diceMod": "SL",
+     "variant": 1
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "addElement": [
+      "volt"
+     ],
+     "diceMod": "SL",
+     "variant": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -164,11 +225,61 @@
      }
     ]
    },
-   "variants": [],
+   "variants": [
+    "헤드 스나이핑",
+    "암 스나이핑",
+    "레그 스나이핑"
+   ],
    "sl": 1,
    "description": "<p>《헤드 스나이핑》《암 스나이핑》《레그 스나이핑》 중 하나로 선언. 물리 공격 롤, 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 선언한 [머리]/[팔]/[다리] 봉인.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindHead",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ],
+     "variant": 0
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindArm",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ],
+     "variant": 1
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindLeg",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ],
+     "variant": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -211,8 +322,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>회복 롤, 회복량 다이스 +(SL+3).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "roll",
+     "bonus": "SL+3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -255,8 +372,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상의 상태 이상을 (SL)개 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "cure",
+     "kind": "ailment",
+     "count": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -299,8 +422,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>후발 행동으로 〈염〉 속성을 더한 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "addElement": [
+      "fire"
+     ],
+     "diceMod": "(SL+1)*2"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "후발 행동: GM이 그 턴 행동 순서를 마지막으로(메인 페이즈 중 선언은 단계 8)"
   },
   "_meta": {
    "className": "거너"
@@ -343,8 +480,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>후발 행동으로 〈빙〉 속성을 더한 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "addElement": [
+      "ice"
+     ],
+     "diceMod": "(SL+1)*2"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "후발 행동: GM이 그 턴 행동 순서를 마지막으로(메인 페이즈 중 선언은 단계 8)"
   },
   "_meta": {
    "className": "거너"
@@ -387,8 +538,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>후발 행동으로 〈뇌〉 속성을 더한 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "addElement": [
+      "volt"
+     ],
+     "diceMod": "(SL+1)*2"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "후발 행동: GM이 그 턴 행동 순서를 마지막으로(메인 페이즈 중 선언은 단계 8)"
   },
   "_meta": {
    "className": "거너"
@@ -431,8 +596,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>후발 행동으로 물리 공격 롤, 명중 판정 달성값 +(SL+2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "hitMod": "SL+2"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "후발 행동: GM이 그 턴 행동 순서를 마지막으로(메인 페이즈 중 선언은 단계 8)"
   },
   "_meta": {
    "className": "거너"
@@ -475,8 +651,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL×2)개. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [마비].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL*2",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "paralyze",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -523,8 +715,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤 3회, 매 공격마다 대상은 적 중 무작위. 대미지 −(4−SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 3,
+     "random": true,
+     "diceMod": "-(4-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -566,7 +766,8 @@
    "sl": 1,
    "description": "<p>그 턴 동안 자신의 분류 『사격』 스킬 효과 범위를 『관통』으로 변경.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "그 턴 동안 자신의 『사격』 스킬 범위를 『관통』으로: GM이 처리"
   },
   "_meta": {
    "className": "거너"
@@ -608,7 +809,8 @@
    "sl": 1,
    "description": "<p>그 턴 동안 자신의 분류 『사격』 스킬 효과 범위를 『적 열』로 변경. 단, 공격 대미지 다이스 −(4−SL)개.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "그 턴 동안 자신의 『사격』 스킬 범위를 『적 열』로, 대미지 다이스 −(4−SL): GM이 처리"
   },
   "_meta": {
    "className": "거너"
@@ -654,7 +856,8 @@
    "sl": 1,
    "description": "<p>그 턴 동안 자신의 분류 『사격』 스킬 효과 범위를 『적 전체』로 변경. 단, 공격 대미지 다이스 −(5−SL)개.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "그 턴 동안 자신의 『사격』 스킬 범위를 『적 전체』로, 대미지 다이스 −(5−SL): GM이 처리"
   },
   "_meta": {
    "className": "거너"
@@ -690,8 +893,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴, 자신의 메인 페이즈 행동이 최속 행동이 된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "actionTiming",
+     "value": "first"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -744,8 +952,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 『사격』 공격은 항상 『크리티컬 업』 상태로 취급. 이는 강화 효과가 아니다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "critUp": true,
+     "when": {
+      "category": "사격"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -787,7 +1003,8 @@
    "sl": 1,
    "description": "<p>크리티컬 히트 시 원하면 같은 공격으로 같은 대상을 한 번 더 공격(TP도 다시 소비). 주행동 1회당 1번만 발생.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "크리티컬 히트 시 같은 공격으로 같은 대상을 한 번 더(TP 다시 소비, 주행동 1회당 1번): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "거너"
@@ -823,8 +1040,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>시력을 쓰는 판정 전반 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.sight",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -989,8 +1212,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 공격】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppAtk",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
