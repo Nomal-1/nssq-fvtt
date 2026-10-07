@@ -86,8 +86,16 @@
      "variants": [],
      "sl": 1,
      "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [머리] 봉인을 준다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "inflict",
+       "condition": "bindHead",
+       "check": {
+        "type": "contest"
+       }
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!1vHqbeKAbm0BSXku.Ax2Mr4YL6xA5D1Z8"
    },
@@ -121,8 +129,15 @@
      "variants": [],
      "sl": 1,
      "description": "<p>『방어 상승: 2』 강화 효과를 부여한다. 3턴 지속된다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "buff",
+       "id": "defenseUp",
+       "value": 2,
+       "turns": 3
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!1vHqbeKAbm0BSXku.1FjdwR0wEDTvsxaZ"
    }
@@ -213,8 +228,16 @@
      "variants": [],
      "sl": 1,
      "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [독]을 준다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "inflict",
+       "condition": "poison",
+       "check": {
+        "type": "contest"
+       }
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!KJE3JPG8ftpdo9iz.9cfLrL5kaJu0cCn5"
    },
@@ -2946,8 +2969,15 @@
      "variants": [],
      "sl": 1,
      "description": "<p>『방어 상승: 2』 강화 효과를 부여한다. 3턴 지속된다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "buff",
+       "id": "defenseUp",
+       "value": 2,
+       "turns": 3
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!MU2vT98Avoh17aTz.4x2aoOj8qNGq8BIG"
    },
@@ -2981,8 +3011,25 @@
      "variants": [],
      "sl": 1,
      "description": "<p>무속성의 속성 공격을 한다. 이때 공격력을 본래의 절반으로 취급한다. 명중하면 대상은 『물리 방어 저하: 3』 약화 효과를 받는다. 3턴 지속된다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "elemental",
+       "element": [
+        "none"
+       ],
+       "atkMultiplier": 0.5,
+       "onHit": [
+        {
+         "type": "debuff",
+         "id": "physDefDown",
+         "value": 3,
+         "turns": 3
+        }
+       ]
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!MU2vT98Avoh17aTz.QjmyNJgJ1NtPp9EF"
    },

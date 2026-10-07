@@ -21,6 +21,7 @@ import { registerApply } from "./combat/apply.mjs";
 import { registerTurnStatus } from "./combat/turn-status.mjs";
 import { registerBestiary } from "./combat/bestiary.mjs";
 import { BestiaryApp, registerBestiaryApp } from "./apps/bestiary.mjs";
+import { registerEffectsSync, syncEffects } from "./apps/effects-sync.mjs";
 import { attackerFromContext, normalAttack, registerAttackHooks } from "./combat/attack.mjs";
 import { registerTracker, rollEscape } from "./combat/tracker.mjs";
 import { registerFormation } from "./combat/formation.mjs";
@@ -74,6 +75,7 @@ Hooks.once("init", () => {
   registerGMScreen();
   registerBestiary();
   registerBestiaryApp();
+  registerEffectsSync();
   registerApply();
   registerTurnStatus();
   registerAttackHooks();
@@ -87,6 +89,7 @@ Hooks.once("init", () => {
     promptCheck, rollCheck, openRequestDialog, rollAbilities, acquireItems, openShop, toggleShop,
     openGMScreen: () => GMScreen.open(),
     openBestiary: () => BestiaryApp.open(),
+    syncEffects: () => syncEffects(),
     normalAttack: (actor) => normalAttack(attackerFromContext(actor)),
     rollEscape: () => rollEscape(game.combat),
     startBattle: openStartDialog,

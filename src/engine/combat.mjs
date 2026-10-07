@@ -89,12 +89,18 @@ export const halve = (n) => Math.floor(n / 2);
  * @param {"physical"|"elemental"} [a.kind]
  * @param {number} [a.hitMod] 명중 보정
  * @param {number} [a.diceMod] 대미지 다이스 보정
+ * @param {number} [a.atkMod] 【물리 공격】(속성이면 【속성 공격】) 보정
+ * @param {number} [a.atkMultiplier] 보정 뒤 배율
+ * @param {boolean} [a.halfDamage] 실대미지 절반
  * @param {(n: number) => number[]|Promise<number[]>} [a.rollDice] n개의 D6. Foundry에서는 Roll, 테스트에서는 고정값
  * @param {() => number} [a.rng] rollDice 대신 1개씩 굴리는 함수
  * @returns {Promise<object>}
  */
-export async function resolveAttack({ attacker, target, kind = "physical", hitMod = 0, diceMod = 0, rollDice, rng }) {
+export async function resolveAttack({ attacker, target, kind = "physical", hitMod = 0, diceMod = 0, atkMod = 0, atkMultiplier = 1, halfDamage = false, rollDice, rng }) {
   const roll = rollDice ?? ((n) => Array.from({ length: n }, () => rng()));
+  // 스킬의 공격력 보정: (【공격】 + atkMod) × atkMultiplier(버림). 《어설트 드라이브》 등
+  const boost = (v) => Math.floor(((Number(v) || 0) + atkMod) * atkMultiplier);
+  if (atkMod || atkMultiplier !== 1) attacker = { ...attacker, physAtk: kind === "physical" ? boost(attacker.physAtk) : attacker.physAtk, elemAtk: kind === "physical" ? attacker.elemAtk : boost(attacker.elemAtk) };
   const hd = await roll(2);
   const hit = evaluateCheck({ dice: hd, modifier: attacker.hit + hitMod, target: target.evasion });
   const result = { kind, hitCheck: hit, hit: !!hit.success, fpGain: hit.fpGain };
@@ -115,7 +121,9 @@ export async function resolveAttack({ attacker, target, kind = "physical", hitMo
     crit: first.crit,
     rawDamage: raw,
     guarded: !!target.guarding,
-    finalDamage: target.guarding ? halve(raw) : raw
+    halved: !!halfDamage,
+    // 방어 전념 절반, 스킬의 「대미지 절반」도 절반(둘 다면 두 번)
+    finalDamage: [target.guarding, halfDamage].reduce((n, h) => (h ? halve(n) : n), raw)
   };
 }
 

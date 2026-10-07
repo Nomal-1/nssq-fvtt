@@ -68,8 +68,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>검에 의한 물리 명중에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "검"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"

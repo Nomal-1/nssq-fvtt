@@ -4,6 +4,7 @@ import tables from "../../generated/tables.mjs";
 import { buffs, conditions, description, int, resistances, resource, row, str } from "../fields.mjs";
 import { conditionMods } from "../../engine/conditions.mjs";
 import { applyMods, buffMods } from "../../engine/buffs.mjs";
+import { collectPassives } from "../../engine/effects/passives.mjs";
 
 const { SchemaField, ArrayField, StringField } = foundry.data.fields;
 
@@ -87,6 +88,14 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       level: this.level,
       skillNames: items.filter((i) => i.type === "skill").map((i) => i.name)
     });
+    // 상시 스킬의 보정(단계 6, engine/effects/passives.mjs): 장비 보정과 같은 키로 더한다
+    const w0 = eq.weapon ?? {};
+    const passives = collectPassives(
+      items.filter((i) => i.type === "skill").map((i) => ({ name: i.name, sl: i.system.sl, timing: i.system.timing, effects: i.system.effects })),
+      { self: { weaponType: w0.weaponType, dualWield: items.some((i) => i.type === "weapon" && i.system.equipped && i.system.slot === "other"), row: this.row } }
+    );
+    for (const [k, v] of Object.entries(passives.mods)) eq.mods[k] = (eq.mods[k] ?? 0) + v;
+    this.passives = passives;
     this.equipment = eq;
     this.abilityParts = abilityBreakdown({
       abilities: this.abilities,

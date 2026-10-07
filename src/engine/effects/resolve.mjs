@@ -1,0 +1,206 @@
+/**
+ * effects 해석기 (03 §3·§6). Foundry 비의존 순수 함수(주사위는 주입).
+ * 스킬·아이템 1회 사용의 effects를 대상별 결과로 바꾼다. 실제 적용(HP·상태·강화)은 호출자가 한다.
+ *
+ * 전투원 모양(profile): { id, name, side, row, hp, hpMax, tp, tpMax, physHit, elemHit, evasion, physAtk, elemAtk,
+ *   defense, suppAtk, suppDef, resist, resistAwake?, elements, critUp, guarding, conditions, buffs, skills, weaponType, dualWield, acted }
+ */
+import { evaluate } from "../expr.mjs";
+import { fpFromHitChecks, resolveAttack } from "../combat.mjs";
+import { contestInflict, resistCheck } from "../conditions.mjs";
+import { canonicalBuff } from "../buffs.mjs";
+import { whenMatches } from "./when.mjs";
+import { activationRoll } from "./usage.mjs";
+
+/** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
+export const DEFERRED_TYPES = ["stance", "delayed", "counter", "chase", "trigger", "token"];
+/** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
+export const PASSIVE_TYPES = ["modifier", "flag"];
+
+/** custom 핸들러 등록부: name → (ctx) => 결과 조각 */
+const CUSTOM = new Map();
+export const registerCustom = (name, fn) => CUSTOM.set(name, fn);
+
+const blank = (t) => ({ id: t.id, name: t.name, hits: [], damage: 0, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], sleepBroken: false });
+
+/** 효과가 명중 판정을 하는가(하면 따로 발동 판정을 하지 않는다, 01 §3.4) */
+export const hasHitCheck = (effects) => (effects ?? []).some((e) => e.type === "attack");
+
+/**
+ * @param {object} p
+ * @param {object[]} p.effects
+ * @param {number} [p.sl]
+ * @param {object} p.user 사용자 프로필
+ * @param {object[]} p.targets 대상 프로필(자신이면 [user])
+ * @param {object[]} [p.pool] 무작위 대상 후보(사거리 안의 적)
+ * @param {boolean} [p.mainAction] 「주행동」인가(발동 판정)
+ * @param {(n: number) => number[]|Promise<number[]>} p.rollDice n개의 D6
+ * @param {() => number} [p.rng] 0 이상 1 미만(무작위 대상)
+ * @param {object} [p.ctx] when 조건용 { timeOfDay, allies }
+ */
+export async function resolveEffects({ effects, sl = 1, user, targets = [], pool = [], mainAction = false, rollDice, rng = Math.random, ctx = {} }) {
+  const out = { activation: null, fpGain: 0, failed: false, results: new Map(), gm: [], deferred: [], overheat: 0 };
+  const res = (t) => {
+    if (!out.results.has(t.id)) out.results.set(t.id, blank(t));
+    return out.results.get(t.id);
+  };
+  const vars = (target, extra = {}) => ({ SL: sl, self: user, target, ...extra });
+  const d6 = async () => (await rollDice(1))[0];
+
+  // 발동 판정: 명중 판정이 없는 「주행동」 스킬(회복 롤 포함, 01 §3.4·3.6)
+  if (mainAction && !hasHitCheck(effects)) {
+    const a = activationRoll(await rollDice(2));
+    out.activation = { ok: a.ok, dice: a.check.used, fpGain: a.fpGain };
+    out.fpGain = a.fpGain;
+    if (!a.ok) { out.failed = true; return out; }
+  }
+
+  const hitChecks = [];
+  const run = async (list, tgt) => {
+    for (const e of list ?? []) {
+      if (!e?.type || PASSIVE_TYPES.includes(e.type)) continue;
+      if (DEFERRED_TYPES.includes(e.type)) { out.deferred.push(e); out.gm.push(e.type); continue; }
+      for (const t of tgt) {
+        if (!whenMatches(e.when, { ...ctx, self: user, target: t })) continue;
+        // 확률 발동(「1D6 ≤ SL이면」 등)
+        if (e.chance) {
+          const sides = Number(String(e.chance.roll ?? "1d6").split("d")[1]) || 6;
+          const die = sides === 6 ? await d6() : Math.floor(rng() * sides) + 1;
+          if (die > evaluate(e.chance.lte ?? 0, vars(t))) { res(t).resource.push({ chanceFailed: true, die, label: e.label ?? e.type }); continue; }
+        }
+        await apply(e, t);
+      }
+    }
+  };
+
+  const attackOnce = async (e, t) => {
+    const kind = e.kind ?? "physical";
+    const elements = e.element ? [].concat(e.element) : user.elements;
+    let hitMod = evaluate(e.hitMod ?? 0, vars(t));
+    let diceMod = evaluate(e.diceMod ?? 0, vars(t));
+    for (const b of e.bonuses ?? []) {
+      if (!whenMatches(b.when, { ...ctx, self: user, target: t, attack: { kind, elements } })) continue;
+      hitMod += evaluate(b.hitMod ?? 0, vars(t));
+      diceMod += evaluate(b.diceMod ?? 0, vars(t));
+    }
+    const r = res(t);
+    // [수면]은 명중한 공격의 처리 뒤 풀린다: 같은 행동의 다음 회차는 깬 상태의 내성(07 #37)
+    const resist = r.sleepBroken && t.resistAwake ? t.resistAwake : t.resist;
+    const result = await resolveAttack({
+      attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
+      target: { evasion: t.evasion, defense: t.defense, resist, guarding: t.guarding },
+      kind, hitMod, diceMod,
+      atkMod: evaluate(e.atkMod ?? 0, vars(t)), atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
+      rollDice
+    });
+    hitChecks.push(result);
+    r.hits.push({ ...result, elements, kind });
+    if (result.hit) {
+      r.damage += result.finalDamage ?? 0;
+      if ((t.conditions ?? []).some((c) => c.id === "sleep")) r.sleepBroken = true;
+      if (e.onHit?.length) await run(e.onHit, [t]);
+    }
+  };
+
+  const apply = async (e, t) => {
+    const r = res(t);
+    switch (e.type) {
+      case "attack": {
+        const times = Math.max(1, evaluate(e.times ?? 1, vars(t)));
+        if (e.random) return; // 무작위 대상은 아래에서 한 번만 처리
+        for (let i = 0; i < times; i++) await attackOnce(e, t);
+        return;
+      }
+      case "heal": {
+        const res0 = e.resource ?? "hp";
+        const max = res0 === "tp" ? t.tpMax ?? 0 : t.hpMax ?? 0;
+        const cur = res0 === "tp" ? t.tp ?? 0 : t.hp ?? 0;
+        let amount = 0;
+        let dice = [];
+        if ((e.mode ?? "roll") === "roll") {
+          const n = Math.max(0, (user.elemAtk ?? 0) + evaluate(e.bonus ?? 0, vars(t)));
+          dice = n ? await rollDice(n) : [];
+          amount = dice.filter((v) => v >= 4).length;
+        } else if (e.mode === "fixed") amount = evaluate(e.amount ?? 0, vars(t));
+        else if (e.mode === "full") amount = max - cur;
+        else if (e.mode === "percent") amount = Math.floor((max * evaluate(e.amount ?? 0, vars(t))) / 100);
+        r.heal[res0] += Math.max(0, amount);
+        r.resource.push({ heal: res0, amount: Math.max(0, amount), dice });
+        return;
+      }
+      case "inflict": {
+        const ck = e.check ?? null;
+        if (!ck) { r.inflicts.push({ id: e.condition, depth: evaluate(e.depth ?? 0, vars(t)), resisted: false }); return; }
+        if (ck.type === "contest") {
+          const c = contestInflict({ atkDice: await rollDice(2), suppAtk: user.suppAtk ?? 0, defDice: await rollDice(2), suppDef: t.suppDef ?? 0 });
+          r.inflicts.push({ id: e.condition, depth: c.depth, resisted: c.resisted, contest: { atk: c.atk, def: c.def } });
+        } else {
+          const target = evaluate(ck.target, vars(t));
+          const c = resistCheck({ dice: await rollDice(2), suppDef: (t.suppDef ?? 0) + evaluate(ck.defMod ?? 0, vars(t)), target });
+          r.inflicts.push({ id: e.condition, depth: c.depth, resisted: c.resisted, fixed: { target, check: c.check } });
+        }
+        return;
+      }
+      case "cure":
+        r.cures.push({ conditions: e.conditions ?? "all", kind: e.kind ?? null });
+        return;
+      case "buff":
+      case "debuff":
+        r.buffs.push({ id: canonicalBuff(e.id), value: evaluate(e.value ?? 0, vars(t)), turns: Math.max(1, evaluate(e.turns ?? 1, vars(t))), param: e.param ?? "" });
+        return;
+      case "resource":
+        r.resource.push({ resource: e.resource, delta: e.delta !== undefined ? evaluate(e.delta, vars(t)) : undefined, set: e.set !== undefined ? evaluate(e.set, vars(t)) : undefined });
+        return;
+      case "overheat":
+        out.overheat = Math.max(out.overheat, evaluate(e.turns ?? 0, vars(t)));
+        return;
+      case "custom": {
+        const fn = CUSTOM.get(e.handler);
+        if (!fn) { out.gm.push(`custom:${e.handler}`); return; }
+        await fn({ effect: e, user, target: t, result: r, sl, rollDice });
+        return;
+      }
+      default:
+        out.gm.push(e.type);
+    }
+  };
+
+  // 무작위 다회 공격: 사거리 안의 적 중 같은 확률(01 §3.5), 「같은 에너미는 1번만」이면 중복은 없던 것으로
+  for (const e of effects ?? []) {
+    if (e?.type !== "attack" || !e.random) continue;
+    const times = Math.max(1, evaluate(e.times ?? 1, vars(null)));
+    const seen = new Set();
+    for (let i = 0; i < times; i++) {
+      const alive = pool.filter((p) => !p.ko);
+      if (!alive.length) break;
+      const t = alive[Math.min(alive.length - 1, Math.floor(rng() * alive.length))];
+      if (e.uniqueTarget && seen.has(t.id)) { res(t).hits.push({ skipped: true }); continue; }
+      seen.add(t.id);
+      await attackOnce(e, t);
+    }
+  }
+  await run(effects, targets);
+  // 명중 판정의 1로 얻는 FP는 주행동 1회당 처음 판정 하나만(01 §3.5)
+  if (hitChecks.length) out.fpGain = fpFromHitChecks(hitChecks);
+  return out;
+}
+
+/**
+ * 트리거 효과(on: crit / beforeKO / …) 중 이 사건에 해당하는 것을 해석한다. 연결은 단계 8
+ * @returns {Promise<object[]>} 발동한 트리거의 결과 목록
+ */
+export async function resolveTriggers({ effects, on, sl = 1, user, rollDice, rng }) {
+  const out = [];
+  for (const e of effects ?? []) {
+    if (e.type !== "trigger" || e.on !== on) continue;
+    if (e.chance) {
+      const die = (await rollDice(1))[0];
+      if (die > evaluate(e.chance.lte ?? 0, { SL: sl, self: user })) { out.push({ trigger: e, ok: false, die }); continue; }
+      const r = await resolveEffects({ effects: e.effects, sl, user, targets: [user], rollDice, rng });
+      out.push({ trigger: e, ok: true, die, result: r });
+    } else {
+      out.push({ trigger: e, ok: true, result: await resolveEffects({ effects: e.effects, sl, user, targets: [user], rollDice, rng }) });
+    }
+  }
+  return out;
+}

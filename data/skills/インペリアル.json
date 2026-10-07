@@ -112,8 +112,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 【물리 공격】에 +((SL-1)×2)한 뒤 2배로 취급. 사용 후 오버히트 7턴.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "atkMod": "(SL-1)*2",
+     "atkMultiplier": 2
+    },
+    {
+     "type": "overheat",
+     "turns": 7
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"

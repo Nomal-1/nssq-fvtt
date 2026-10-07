@@ -70,8 +70,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>도 사용 시 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "도"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"

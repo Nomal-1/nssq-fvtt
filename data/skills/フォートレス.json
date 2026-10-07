@@ -698,8 +698,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『물리 방어 상승: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "physDefUp",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -735,8 +742,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『방어 상승: (SL×2)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "defenseUp",
+     "value": "SL*2",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"

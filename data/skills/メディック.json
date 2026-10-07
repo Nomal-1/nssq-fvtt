@@ -235,8 +235,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>회복 롤을 한다. 이때, 회복량 다이스에 +((SL+1)×3)을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "roll",
+     "bonus": "(SL+1)*3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "메딕"
@@ -415,8 +421,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상의 상태 이상을 (SL)개까지 해제한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "cure",
+     "conditions": "all",
+     "kind": "ailment"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "메딕"

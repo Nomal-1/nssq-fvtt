@@ -107,8 +107,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>도 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "도"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -151,8 +162,26 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉 속성 물리 공격 롤 → 명중 시 대상은 억제 방어 롤(목표값: 공격자 【억제 공격】+(7+SL)), 실패하면 [마비].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "strike"
+     ],
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "paralyze",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"

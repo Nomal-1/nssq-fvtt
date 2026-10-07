@@ -107,8 +107,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>검 공격의 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "검"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"

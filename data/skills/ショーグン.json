@@ -70,8 +70,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>도 공격의 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "도"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -156,8 +167,26 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉 속성 물리 공격 롤. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [마비].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "strike"
+     ],
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "paralyze",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -244,8 +273,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL+1)개. 에너미가 《야행성》을 가졌으면 대미지 다이스 +(SL×2)개 추가.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL+1",
+     "bonuses": [
+      {
+       "when": {
+        "targetHasSkill": "야행성"
+       },
+       "diceMod": "SL*2"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -332,8 +375,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤 3회. 매 회 대상은 적 중 무작위 선택. 대미지 다이스 -(5-SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 3,
+     "random": true,
+     "diceMod": "-(5-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"

@@ -148,6 +148,7 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=battle-end]", () => openEndDialog());
     html.on("click", "[data-gm=preset-new]", () => createPreset());
     html.on("click", "[data-gm=enemy-cleanup]", () => cleanupEnemies());
+    html.on("click", "[data-gm=effects-sync]", () => game.nssq.syncEffects());
     html.on("click", "[data-preset-view]", (ev) => game.scenes.get(ev.currentTarget.dataset.presetView)?.view());
     html.on("click", "[data-preset-config]", (ev) => game.scenes.get(ev.currentTarget.dataset.presetConfig)?.sheet.render(true));
     // 상점 품목: 체크 = 판매, 해제 = 숨김

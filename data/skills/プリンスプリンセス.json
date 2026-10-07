@@ -103,8 +103,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>『물리 공격 상승: (SL×2)』 및 『속성 공격 상승: (SL×2)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "physAtkUp",
+     "value": "SL*2",
+     "turns": 3
+    },
+    {
+     "type": "buff",
+     "id": "elemAtkUp",
+     "value": "SL*2",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "프린스/프린세스"

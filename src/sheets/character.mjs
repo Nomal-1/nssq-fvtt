@@ -57,6 +57,8 @@ export function characterContext(actor) {
       `${L("subFormula")}: ${formulaText(b.formula)}${mods ? ` + ${L("subPart.mods")}` : ""}${b.formula.includes("÷") ? ` ${L("roundDown")}` : ""}`,
       `${L("subCalc")}: ${calc} = ${b.total}`,
       ...(k === "speed" && b.total === 0 ? [L("speedFloor")] : []),
+      // 상시 스킬 보정(단계 6)
+      ...(s.passives?.sources ?? []).filter((x) => x.path === k).map((x) => `${L("skillMod")}: ${x.name} ${x.value >= 0 ? "+" : ""}${x.value}`),
       // 상태 이상·봉인·강화·약화(단계 5)
       ...(s.sub[k] !== b.total ? [`${L("statusMod")}: ${b.total} → ${s.sub[k]}`] : [])
     ].join("\n");

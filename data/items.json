@@ -26,7 +26,13 @@
   "system": {
    "key": "メディカ",
    "price": 30,
-   "effects": [],
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "fixed",
+     "amount": 10
+    }
+   ],
    "quantity": 1,
    "description": "<p>단일 대상의 【HP】를 10 회복한다.</p>",
    "uses": {
@@ -34,7 +40,8 @@
     "max": 0
    },
    "materials": [],
-   "foodstuff": false
+   "foodstuff": false,
+   "review": "ok"
   }
  },
  {
@@ -45,7 +52,13 @@
   "system": {
    "key": "メディカII",
    "price": 300,
-   "effects": [],
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "fixed",
+     "amount": 20
+    }
+   ],
    "quantity": 1,
    "description": "<p>단일 대상의 【HP】를 20 회복한다.</p>",
    "uses": {
@@ -58,7 +71,8 @@
      "rank": 4
     }
    ],
-   "foodstuff": false
+   "foodstuff": false,
+   "review": "ok"
   }
  },
  {
@@ -69,7 +83,13 @@
   "system": {
    "key": "メディカIII",
    "price": 1500,
-   "effects": [],
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "fixed",
+     "amount": 30
+    }
+   ],
    "quantity": 1,
    "description": "<p>단일 대상의 【HP】를 30 회복한다.</p>",
    "uses": {
@@ -82,7 +102,8 @@
      "rank": 7
     }
    ],
-   "foodstuff": false
+   "foodstuff": false,
+   "review": "ok"
   }
  },
  {
@@ -93,7 +114,12 @@
   "system": {
    "key": "メディカIV",
    "price": 4000,
-   "effects": [],
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "full"
+    }
+   ],
    "quantity": 1,
    "description": "<p>단일 대상의 【HP】를 전부 회복한다.</p>",
    "uses": {
@@ -106,7 +132,8 @@
      "rank": 10
     }
    ],
-   "foodstuff": false
+   "foodstuff": false,
+   "review": "ok"
   }
  },
  {
@@ -189,7 +216,13 @@
   "system": {
    "key": "テリアカα",
    "price": 50,
-   "effects": [],
+   "effects": [
+    {
+     "type": "cure",
+     "conditions": "all",
+     "kind": "bind"
+    }
+   ],
    "quantity": 1,
    "description": "<p>단일 대상의 봉인을 전부 회복한다.</p>",
    "uses": {
@@ -197,7 +230,8 @@
     "max": 0
    },
    "materials": [],
-   "foodstuff": false
+   "foodstuff": false,
+   "review": "ok"
   }
  },
  {
@@ -208,7 +242,13 @@
   "system": {
    "key": "テリアカβ",
    "price": 50,
-   "effects": [],
+   "effects": [
+    {
+     "type": "cure",
+     "conditions": "all",
+     "kind": "ailment"
+    }
+   ],
    "quantity": 1,
    "description": "<p>단일 대상의 상태 이상을 전부 회복한다.</p>",
    "uses": {
@@ -216,7 +256,8 @@
     "max": 0
    },
    "materials": [],
-   "foodstuff": false
+   "foodstuff": false,
+   "review": "ok"
   }
  },
  {
@@ -227,7 +268,13 @@
   "system": {
    "key": "テリアカγ",
    "price": 50,
-   "effects": [],
+   "effects": [
+    {
+     "type": "cure",
+     "conditions": "all",
+     "kind": "debuff"
+    }
+   ],
    "quantity": 1,
    "description": "<p>단일 대상의 약화 효과를 전부 회복한다.</p>",
    "uses": {
@@ -235,7 +282,8 @@
     "max": 0
    },
    "materials": [],
-   "foodstuff": false
+   "foodstuff": false,
+   "review": "ok"
   }
  },
  {
