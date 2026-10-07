@@ -341,9 +341,10 @@ export async function endBattle(combat, result = "abort") {
 }
 
 export function registerBattle() {
-  // 트래커의 기본 [전투 종료]로 끝내도 정리한다(결과는 「중단」)
+  // 트래커의 기본 [전투 종료]로 끝내도 정리한다(결과는 「중단」).
+  // 훅은 모든 클라이언트에서 돌므로 접속 중인 GM 한 명만(보조 GM 등 GM이 여럿이면 사본 씬을 두 번 지우려다 오류)
   Hooks.on("deleteCombat", (combat) => {
-    if (!game.user.isGM || ending || !combat.getFlag("nssq", "battle")) return;
+    if (game.users.activeGM?.id !== game.user.id || ending || !combat.getFlag("nssq", "battle")) return;
     const info = combat.getFlag("nssq", "battle");
     if (!game.scenes.get(info.copy)) return;
     // 전멸로 끝난 전투를 기본 [전투 종료]로 닫으면 그 결과로 기록

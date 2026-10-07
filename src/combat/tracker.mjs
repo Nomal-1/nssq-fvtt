@@ -242,7 +242,7 @@ export function registerTracker() {
 
   // 전투 중에 추가된 전투원도 【속도】로 이니셔티브
   Hooks.on("createCombatant", (combatant) => {
-    if (game.user.isGM && combatant.combat?.started) combatant.combat.rollInitiative([combatant.id]);
+    if (game.users.activeGM?.id === game.user.id && combatant.combat?.started) combatant.combat.rollInitiative([combatant.id]);
   });
   // 【속도】·열·식별이 바뀌면 트래커 갱신
   Hooks.on("updateActor", () => ui.combat?.render(false));
