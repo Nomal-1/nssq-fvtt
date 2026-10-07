@@ -49,7 +49,7 @@ export const hasHitCheck = (effects) => (effects ?? []).some((e) => e.type === "
  */
 export async function resolveEffects({ effects, sl = 1, user, targets = [], pool = [], mainAction = false, rollDice, rng = Math.random, ctx = {}, variant = null, category = "", source = "skill" }) {
   effects = variantEffects(effects, variant);
-  const out = { activation: null, fpGain: 0, failed: false, results: new Map(), gm: [], deferred: [], overheat: 0 };
+  const out = { activation: null, fpGain: 0, failed: false, results: new Map(), gm: [], deferred: [], overheat: 0, overheatReduce: 0 };
   const res = (t) => {
     if (!out.results.has(t.id)) out.results.set(t.id, blank(t));
     return out.results.get(t.id);
@@ -240,7 +240,12 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         r.actionTiming = e.value === "last" ? "last" : "first";
         return;
       case "overheat":
-        out.overheat = Math.max(out.overheat, evaluate(e.turns ?? 0, vars(t)));
+        // 《제국 기사의 극의》 등 오버히트 턴 수 보정(상시 overheatTurns)
+        out.overheat = Math.max(out.overheat, evaluate(e.turns ?? 0, vars(t)) + (user.overheatMod ?? 0), 0);
+        return;
+      case "overheatReduce":
+        // 오버히트 단축(《샤프 에지》 등)
+        out.overheatReduce += evaluate(e.turns ?? 0, vars(t));
         return;
       case "custom": {
         const fn = CUSTOM.get(e.handler);

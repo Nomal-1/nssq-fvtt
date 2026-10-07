@@ -68,6 +68,7 @@ export function unitProfile(actor, combatant) {
     healDice: s.equipment?.mods?.healDice ?? 0,
     // 《이피션트》·《간이 소생》: 아이템 회복 +, HP 회복 아이템에 부활
     itemHeal: s.equipment?.mods?.itemHeal ?? 0,
+    overheatMod: s.equipment?.mods?.overheatTurns ?? 0,
     useBonuses: s.passives?.useBonuses ?? [],
     // 능력치 보너스(수식 @self.bonus.agi 등). 에너미는 0
     bonus: s.bonus ?? { str: 0, tec: 0, vit: 0, agi: 0, luc: 0 },
@@ -242,6 +243,10 @@ async function resolveAndPost({ actor, combatant, item, kind, units, mainAction,
   // FP(캐릭터만), 오버히트
   if (r.fpGain && actor.type === "character") await actor.update({ "system.fp.value": (actor.system.fp?.value ?? 0) + r.fpGain });
   if (r.overheat) await actor.setFlag("nssq", "overheat", r.overheat);
+  else if (r.overheatReduce && !r.failed) {
+    const cur = Number(actor.getFlag("nssq", "overheat") ?? 0);
+    if (cur > 0) await actor.setFlag("nssq", "overheat", Math.max(0, cur - r.overheatReduce));
+  }
 
   const entries = [...r.results.values()].map((x) => ({
     uuid: actorOf.get(x.id)?.uuid ?? null, name: x.name,

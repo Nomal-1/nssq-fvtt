@@ -29,8 +29,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>포검 드라이브 스킬 사용으로 생기는 오버히트 턴 수 -2.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "overheatTurns",
+     "value": -2,
+     "when": {
+      "weaponType": [
+       "포검"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -68,8 +79,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>포검 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "포검"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -171,8 +193,46 @@
    ],
    "sl": 1,
    "description": "<p>사용 시 《플레임 드라이브》《프리즈 드라이브》《쇼크 드라이브》 중 하나로 선언 → 〈참〉+〈염〉/〈빙〉/〈뇌〉 속성 물리 공격 롤. 【물리 공격】에 +((SL-1)×2)한 뒤 2배로 취급. 사용 후 오버히트 8턴.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "slash",
+      "fire"
+     ],
+     "atkMod": "(SL-1)*2",
+     "atkMultiplier": 2,
+     "variant": 0
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "slash",
+      "ice"
+     ],
+     "atkMod": "(SL-1)*2",
+     "atkMultiplier": 2,
+     "variant": 1
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "slash",
+      "volt"
+     ],
+     "atkMod": "(SL-1)*2",
+     "atkMultiplier": 2,
+     "variant": 2
+    },
+    {
+     "type": "overheat",
+     "turns": 8
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -215,8 +275,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>무속성 물리 공격 롤. 【물리 공격】 +(SL×2)로 취급. 사용 후 오버히트 9턴.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "none"
+     ],
+     "atkMod": "SL*2"
+    },
+    {
+     "type": "overheat",
+     "turns": 9
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -259,8 +332,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>무속성 물리 공격 롤. 【물리 공격】 +(SL)로 취급. 사용 후 오버히트 9턴.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "none"
+     ],
+     "atkMod": "SL"
+    },
+    {
+     "type": "overheat",
+     "turns": 9
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -303,8 +389,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개. 오버히트 1턴 단축.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL"
+    },
+    {
+     "type": "overheatReduce",
+     "turns": 1
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -347,8 +443,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 -(4-SL)개. 명중 시 대미지 다이스에서 나온 '6'의 개수만큼 자신의 【TP】 회복.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "-(4-SL)",
+     "onHit": [
+      {
+       "type": "drain",
+       "resource": "tp",
+       "mode": "sixes"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -395,8 +504,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개. 오버히트 2턴 단축.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL"
+    },
+    {
+     "type": "overheatReduce",
+     "turns": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -443,8 +562,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개. 다음 턴에 《○○ 드라이브》를 사용하면 그 대미지 다이스 +(SL×3)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "다음 턴에 《○○ 드라이브》를 쓰면 그 대미지 다이스 +(SL×3): GM이 처리"
   },
   "_meta": {
    "className": "임페리얼"
@@ -487,8 +613,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신의 오버히트 3턴 단축.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "overheatReduce",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -534,7 +665,8 @@
    "sl": 1,
    "description": "<p>대상이 '적 단일'인 공격에서 크리티컬 히트 시, 공격 대상과 같은 열의 모든 적에게도 같은 공격 가능(추가 TP 소비 없음).</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "적 단일 공격이 크리티컬이면 대상과 같은 열의 모든 적에게도 같은 공격(TP 추가 없음): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "임페리얼"
@@ -570,8 +702,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 자신의 메인 페이즈 행동을 후발 행동으로 하고, 그 턴 동안 전 속성 내성 +1.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
+     "type": "buff",
+     "id": "resistUp",
+     "value": 0,
+     "turns": 1,
+     "param": "all"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -612,8 +756,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신의 공격으로 적을 전투 불능으로 만들면 자신의 【TP】 (SL) 회복.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "enemyKO",
+     "effects": [
+      {
+       "type": "resource",
+       "resource": "tp",
+       "delta": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"
@@ -659,7 +815,8 @@
    "sl": 1,
    "description": "<p>그 턴에 자신이 《○○ 드라이브》를 사용하면 대미지 다이스 +20개. 단, 그 드라이브 사용 후 그 전투 동안 오버히트가 전혀 회복되지 않음.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "그 턴 《○○ 드라이브》 다이스 +20, 대신 그 전투 동안 오버히트가 회복되지 않음: GM이 처리"
   },
   "_meta": {
    "className": "임페리얼"
@@ -696,7 +853,8 @@
    "sl": 1,
    "description": "<p>드롭 판정 후 '고기'·'생선'·'알' 중 하나를 (SL)개 획득. 쓰러뜨린 에너미가 식용에 맞지 않다고 GM이 판단하면 적용되지 않음.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "드롭 판정 뒤 고기·생선·알 중 하나 (SL)개(식용 불가면 없음): 드롭 판정(단계 9)"
   },
   "_meta": {
    "className": "임페리얼"
@@ -861,8 +1019,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【방어】 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "defense",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"

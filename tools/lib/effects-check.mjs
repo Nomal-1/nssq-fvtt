@@ -27,6 +27,7 @@ export const TYPES = {
   delayed: { at: true, turns: false, effects: true },
   token: { tokenKey: true, action: false, maxCount: false },
   overheat: { turns: true },
+  overheatReduce: { turns: true },
   state: { id: true, label: true, group: false, mods: false, max: false, note: false },
   requireState: { state: true },
   flag: { flag: true, value: false },
@@ -48,7 +49,7 @@ const COMMON = ["type", "when", "chance", "label", "variant", "toSelf"];
 
 /** modifier path: derive가 읽는 키 */
 export const MOD_PATHS = new Set([
-  "physAtk", "elemAtk", "physHit", "elemHit", "defense", "evasion", "speed", "suppAtk", "suppDef", "hpMax", "tpMax", "carry", "healDice", "guardCount", "itemHeal",
+  "physAtk", "elemAtk", "physHit", "elemHit", "defense", "evasion", "speed", "suppAtk", "suppDef", "hpMax", "tpMax", "carry", "healDice", "guardCount", "itemHeal", "overheatTurns",
   ...ABILITIES.map((k) => `abilities.${k}`), ...RESISTS.map((k) => `resist.${k}`)
 ]);
 const MOD_PREFIX = ["checks."];

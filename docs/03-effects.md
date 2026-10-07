@@ -74,7 +74,8 @@
 | `provoke` | `count` | 그 턴 동안 단일 대상 공격을 누적 count회까지 자신으로(《도발》) |
 | `delayed` | `at`(endPhase/nextTurnLate), `turns`, `effects[]` | 지연 공격. 스킬마다 발동 시점이 달라 `at`으로 지정 |
 | `token` | `tokenKey`, `action{…}`, `maxCount` | 토큰 배치 |
-| `overheat` | `turns` | 드라이브 계열 |
+| `overheat` | `turns` | 드라이브 계열(상시 modifier `overheatTurns`로 증감) |
+| `overheatReduce` | `turns` | 자신의 오버히트 단축(《샤프 에지》·《강제 배기》) |
 | `attackBonus` | `hitMod`, `diceMod`, `atkMod`, `critDice`(크리티컬 추가 다이스 +), `critUp`(『크리티컬 업』 취급), `when` | 타이밍 「상시」: 공격할 때마다 붙는 보정. `when`은 공격 시점(대상·공격 속성)으로 판정(《선봉의 공명》 「아직 행동하지 않은 적에 대한 공격」). 통상 공격·스킬 공격 모두 |
 | `useBonus` | `buffTurns`, `healHp`, `when` | 타이밍 「상시」: 스킬을 쓸 때 붙는 보정. `buffTurns`: 그 스킬로 주는 강화의 지속 턴 +(《무용 마스터리》), `healHp`: 대상 HP 회복이 따라붙음(《리인포스》). 보통 `when.category` |
 | `target` | `side`(enemy/ally/self), `scope`(single/row/all/random), `count?` | 대상 칸 대신 쓸 대상 지정(대상이 「특수」인 스킬). `count`(n명)는 아직 한 명씩 |
