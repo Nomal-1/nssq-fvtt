@@ -93,6 +93,8 @@
       "items": "아이템",
       "skills": "스킬",
       "description": "해설",
+      "range": "사거리",
+      "noDescription": "해설 없음",
       "inventory": "장비·소지품"
     },
     "Row": {

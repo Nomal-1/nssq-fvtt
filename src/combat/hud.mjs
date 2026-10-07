@@ -35,6 +35,7 @@ let root = null;
 let fxLayer = null;
 let pending = null; // "attack" | { pick: [combatantId], kind, id, combatantId, spec } | null
 let menu = null; // { kind: "skill"|"item", combatantId } | null
+let menuHover = null; // 목록에서 마우스를 올린 스킬·아이템 id(위쪽 해설 창)
 let collapsed = false;
 let banner = null; // { id, text, cls }
 let bannerSeq = 0;
@@ -56,6 +57,7 @@ function ensureRoot() {
   document.body.append(root);
   bindDrop(root);
   bindClicks(root);
+  bindHover(root);
   return root;
 }
 
@@ -274,7 +276,7 @@ function partyCard(c, combat, targetable) {
     <div class="info">
       <div class="line"><span class="name">${esc(c.name)}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${overheatChip(a)}${statusChips(a)}
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
-      <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) : ""}</div>
+      <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) + `<div class="nb-fp" title="FP"><b>FP</b><span>${s.fp?.value ?? 0}</span></div>` : ""}</div>
     </div>
     <span class="nb-member-tools">${a.isOwner ? `<a data-tool="sheet" title="${esc(L("openSheet"))}"><i class="fas fa-id-card"></i></a>` : ""}${game.user.isGM ? `<a data-tool="status" title="${esc(game.i18n.localize("NSSQ.Conditions.button"))}"><i class="fas fa-heartbeat"></i></a>` : ""}</span>
   </div>`;
@@ -284,13 +286,52 @@ function partyCard(c, combat, targetable) {
 function actionMenu(combat, c) {
   const S = (k, d) => (d ? game.i18n.format(`NSSQ.SkillUse.${k}`, d) : game.i18n.localize(`NSSQ.SkillUse.${k}`));
   const list = actionList(combat, c, menu.kind);
-  const rows = list.map((x) => `<button type="button" class="act ${x.ok ? "" : "disabled"}" data-action-id="${x.id}" title="${esc([x.ok ? x.target ?? "" : S(`reason.${x.reason}`), x.desc].filter(Boolean).join("\n\n"))}">
-      <span class="nm">${esc(x.name)}</span><small>${esc(x.cost)} · ${esc(x.target ?? "")}</small>${x.ok ? "" : `<em>${esc(S(`reason.${x.reason}`))}</em>`}</button>`).join("");
+  // 세계수의 미궁처럼 이름 + 코스트만. 해설·대상·못 쓰는 이유는 위쪽 해설 창(skillInfo)
+  const rows = list.map((x) => `<button type="button" class="act ${x.ok ? "" : "disabled"} ${x.id === (menuHover ?? list[0]?.id) ? "hover" : ""}" data-action-id="${x.id}">
+      <span class="nm">${esc(x.name)}</span><span class="cost">${esc(x.cost)}</span></button>`).join("");
   return `<div class="who">${esc(S(menu.kind === "item" ? "itemTitle" : "skillTitle", { name: c.name }))}</div>
     <div class="action-list" data-combatant="${c.id}">
       <button type="button" class="act back" data-act="back"><i class="fas fa-arrow-left"></i> ${esc(S("back"))}</button>
       ${rows || `<p class="wait">${esc(S(menu.kind === "item" ? "noItems" : "noSkills"))}</p>`}
     </div>`;
+}
+
+/** 개발용(tools/dev/battle-preview.mjs): 스킬 목록 열린 상태 미리보기 */
+export const _preview = { openMenu: (m) => { menu = m; } };
+
+/** 위쪽 해설 창: 목록에서 고른(마우스를 올린) 스킬·아이템의 해설·대상·사거리·코스트 */
+function skillInfoInner(x) {
+  const S = (k) => game.i18n.localize(`NSSQ.SkillUse.${k}`);
+  const meta = [x.timing, x.target, x.range && x.range !== "-" ? `${S("range")} ${x.range}` : "", x.cost && x.cost !== "-" ? x.cost : ""].filter(Boolean).map(esc).join(" · ");
+  return `<div class="si-head"><b>${esc(x.name)}</b><span class="si-meta">${meta}</span></div>
+    <div class="si-desc">${esc(x.desc || S("noDescription"))}</div>
+    ${x.ok ? "" : `<div class="si-ng"><i class="fas fa-ban"></i> ${esc(S(`reason.${x.reason}`))}</div>`}`;
+}
+
+function skillInfo(combat) {
+  if (!menu) return "";
+  const c = combat.combatants.get(menu.combatantId);
+  if (!c?.actor) return "";
+  const list = actionList(combat, c, menu.kind);
+  const x = list.find((y) => y.id === menuHover) ?? list[0];
+  return x ? `<div class="nb-skill-info" data-key="skill-info">${skillInfoInner(x)}</div>` : "";
+}
+
+/** 목록 위에 마우스를 올리면 해설 창만 바꾼다(다시 그리지 않음) */
+function bindHover(el) {
+  el.addEventListener("mouseover", (ev) => {
+    const b = ev.target.closest?.("[data-action-id]");
+    if (!b || !menu || b.dataset.actionId === menuHover) return;
+    const combat = battleCombat();
+    const c = combat?.combatants.get(menu.combatantId);
+    const x = c && actionList(combat, c, menu.kind).find((y) => y.id === b.dataset.actionId);
+    if (!x) return;
+    menuHover = x.id;
+    el.querySelectorAll(".action-list .act.hover").forEach((n) => n.classList.remove("hover"));
+    b.classList.add("hover");
+    const box = el.querySelector(".nb-skill-info");
+    if (box) box.innerHTML = skillInfoInner(x);
+  });
 }
 
 /** 커맨드 창 몸통: 메인 페이즈는 현재 차례 전투원, 개막 페이즈는 내가 맡은 아군 모두 */
@@ -535,6 +576,7 @@ export function battleHtml(combat, { attack = pending === "attack" } = {}) {
         <div class="nb-erow back" data-key="erow-back">${enemies.filter((c) => c.actor.system.row === "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
         <div class="nb-erow front" data-key="erow-front">${enemies.filter((c) => c.actor.system.row !== "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
       </div>
+      ${skillInfo(combat)}
       ${attacker || picking ? `<div class="nb-hint" data-key="hint">${targets.size ? L("pickTarget") : L("noTarget")}</div>` : ""}
       ${commandWindow(combat)}
       ${bust(combat)}
@@ -593,7 +635,7 @@ function bindClicks(el) {
       switch (t.dataset.cmd) {
         case "attack": pending = pending === "attack" ? null : "attack"; menu = null; return renderHud();
         case "skill":
-        case "item": pending = null; menu = menu?.combatantId === c.id && menu.kind === t.dataset.cmd ? null : { kind: t.dataset.cmd, combatantId: c.id }; return renderHud();
+        case "item": pending = null; menuHover = null; menu = menu?.combatantId === c.id && menu.kind === t.dataset.cmd ? null : { kind: t.dataset.cmd, combatantId: c.id }; return renderHud();
         case "end": return requestEndTurn(combat);
         case "random": pending = null; return randomEnemyAction(combat);
         case "confused": pending = null; return confusedAction(combat, c);

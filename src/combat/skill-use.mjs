@@ -89,7 +89,7 @@ export function actionList(combat, combatant, kind) {
     .map((i) => {
       const r = canUseSkill(i.system, user, { phase, myTurn, drive: isDrive(i) });
       const c = i.system.cost ?? {};
-      return { id: i.id, name: i.name, cost: [c.tp ? `TP ${c.tp}` : "", c.fp ? `FP ${c.fp}` : ""].filter(Boolean).join(" ") || "-", target: i.system.target, timing: i.system.timing, ok: r.ok, reason: r.reason, desc: plain(i.system.description) };
+      return { id: i.id, name: i.name, cost: [c.tp ? `TP ${c.tp}` : "", c.fp ? `FP ${c.fp}` : ""].filter(Boolean).join(" ") || "-", target: i.system.target, timing: i.system.timing, range: i.system.range, ok: r.ok, reason: r.reason, desc: plain(i.system.description) };
     })
     .sort((a, b) => Number(b.ok) - Number(a.ok));
 }

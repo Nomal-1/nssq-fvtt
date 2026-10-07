@@ -591,6 +591,9 @@
 #nssq-battle .nb-member .nb-bar { height: 18px; border-radius: 8px; }
 #nssq-battle .nb-member .nb-bar b { font-size: 12px; padding-left: 6px; }
 #nssq-battle .nb-member .nb-bar span { font-size: 13px; line-height: 18px; padding-right: 7px; }
+#nssq-battle .nb-member .nb-fp { flex: 0 0 auto; display: flex; align-items: center; gap: 4px; height: 18px; padding: 0 7px; border-radius: 8px; background: rgba(60, 40, 0, 0.55); border: 1px solid #e0b040; color: #ffd76a; font-size: 13px; line-height: 18px; }
+#nssq-battle .nb-member .nb-fp b { font-size: 11px; color: #e0b040; }
+#nssq-battle .nb-member .nb-fp span { font-weight: 700; min-width: 1ch; text-align: right; }
 /* 인카운터 기능: 이니셔티브, GM 에너미 도구, 희소종, 개막 행동 표시 */
 #nssq-battle .nb-order .who .init { font-style: normal; font-size: 0.8em; padding: 0 4px; margin-left: 2px; border-radius: 8px; background: rgba(201, 162, 74, 0.25); color: var(--nq-gold-l); }
 #nssq-battle .nb-enemy { position: relative; }
@@ -876,12 +879,20 @@
 .nssq-bestiary .buttons button { width: auto; color: var(--nq-gold-l); background: rgba(201, 162, 74, 0.18); border: 1px solid var(--nq-gold); }
 .nssq-bestiary .none { color: var(--nq-mu); }
 /* 커맨드 창 [스킬]·[아이템] 목록 */
-#nssq-battle .nb-command .action-list { display: flex; flex-direction: column; gap: 4px; }
-#nssq-battle .nb-command .action-list .act { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; text-align: left; padding: 3px 10px; line-height: 1.5em; border-radius: 4px; }
-#nssq-battle .nb-command .action-list .act .nm { font-size: 1.05em; }
-#nssq-battle .nb-command .action-list .act small { margin-left: auto; color: var(--nq-mu); font-size: 0.8em; }
-#nssq-battle .nb-command .action-list .act em { flex: 1 0 100%; font-style: normal; font-size: 0.78em; color: #ff9b8f; }
-#nssq-battle .nb-command .action-list .act.disabled { opacity: 0.5; }
+#nssq-battle .nb-command .action-list { display: flex; flex-direction: column; gap: 3px; }
+#nssq-battle .nb-command .action-list .act { display: flex; align-items: center; gap: 8px; text-align: left; padding: 2px 4px 2px 12px; line-height: 1.6em; border-radius: 3px; background: linear-gradient(90deg, rgba(18, 96, 104, 0.85), rgba(10, 60, 72, 0.85)); border: 1px solid rgba(111, 211, 230, 0.35); color: #eaf6f8; }
+#nssq-battle .nb-command .action-list .act .nm { flex: 1; min-width: 0; font-size: 1.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#nssq-battle .nb-command .action-list .act .cost { flex: 0 0 auto; min-width: 3.4em; padding: 0 6px; text-align: right; background: rgba(4, 18, 34, 0.85); border-radius: 2px; font-size: 0.9em; color: #fff; }
+#nssq-battle .nb-command .action-list .act.hover { background: linear-gradient(90deg, #f3e36a, #d9c53e); color: #1b1a08; border-color: #fff6b0; }
+#nssq-battle .nb-command .action-list .act.hover .cost { color: #fff; }
+#nssq-battle .nb-command .action-list .act.disabled { opacity: 1; background: rgba(40, 52, 60, 0.85); color: #8b98a2; border-color: rgba(120, 140, 150, 0.3); }
+#nssq-battle .nb-command .action-list .act.disabled.hover { background: rgba(110, 104, 60, 0.9); color: #d9d2a0; }
+#nssq-battle .nb-skill-info { position: absolute; left: 50%; top: 8px; transform: translateX(-50%); z-index: 30; width: min(760px, 70%); padding: 7px 16px 8px; background: linear-gradient(180deg, rgba(14, 28, 92, 0.95), rgba(8, 18, 64, 0.95)); border: 2px solid #5ad1e6; border-radius: 6px; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 4px 14px rgba(0, 0, 0, 0.5); color: #fff; pointer-events: none; animation: nb-fade-in 0.2s ease-out; }
+#nssq-battle .nb-skill-info .si-head { display: flex; align-items: baseline; gap: 10px; }
+#nssq-battle .nb-skill-info .si-head b { font-size: 1.1em; }
+#nssq-battle .nb-skill-info .si-meta { margin-left: auto; font-size: 0.82em; color: #9fd8e6; white-space: nowrap; }
+#nssq-battle .nb-skill-info .si-desc { margin-top: 3px; font-size: 1em; line-height: 1.45; white-space: pre-line; }
+#nssq-battle .nb-skill-info .si-ng { margin-top: 3px; font-size: 0.85em; color: #ff9b8f; }
 #nssq-battle .nb-command .action-list .act.back { font-size: 0.9em; color: var(--nq-mu); }
 /* 스킬 결과 카드 */
 .nssq-skill-card .check-label img { vertical-align: middle; border: none; }

@@ -20,12 +20,12 @@ globalThis.game = {
 };
 const sampleSkills = [{ type: "skill", name: "갉아먹기", system: { timing: "주행동", range: "근", target: "적 단일", description: "<p>물리 공격 롤. 명중하면 [독].</p>" } }, { type: "skill", name: "약점: 혼란", system: { timing: "상시", range: "-", target: "자신", description: "" } }];
 const mk = (id, name, type, sys, extra = {}) => {
-  const actor = { id, name, type, items: { contents: type === "enemy" ? sampleSkills : [] }, img: extra.img ?? "../assets/enemies/" + (art[name] ?? "").split("/").pop(), isOwner: extra.owner ?? false, system: { row: "front", hp: { value: 10, max: 14 }, tp: { value: 5, max: 7 }, level: 1, sub: {}, stats: {}, equipment: { weapon: { range: "근" } }, ...sys } };
+  const actor = { getFlag: (s, k) => (k === "overheat" ? extra.overheat ?? null : null), id, name, type, items: { contents: type === "enemy" ? sampleSkills : [] }, img: extra.img ?? "../assets/enemies/" + (art[name] ?? "").split("/").pop(), isOwner: extra.owner ?? false, system: { row: "front", hp: { value: 10, max: 14 }, tp: { value: 5, max: 7 }, level: 1, sub: {}, stats: {}, equipment: { weapon: { range: "근" } }, ...sys } };
   return { id, name, actor, img: actor.img, defeated: false, initiative: 10 + id.length + Math.random() * 5, token: { texture: { src: actor.img } }, getFlag: (s, k) => (k === "guarding" ? extra.guard : null) };
 };
 const portrait = "https://api.dicebear.com/7.x/adventurer/svg?seed=";
 const turns = [
-  mk("p1", "플레이어2", "character", { classItems: { main: { name: "다크 헌터" } }, sub: { physHit: 5, elemHit: 3, evasion: 5, physAtk: 13, elemAtk: 4, defense: 6, suppAtk: 3, suppDef: 4, speed: 14 }, subBase: { physHit: 8, elemHit: 6, evasion: 8, physAtk: 11, elemAtk: 4, defense: 6, suppAtk: 3, suppDef: 4, speed: 14 }, resist: { slash: 3, strike: 3, pierce: 3, fire: 3, ice: 3, volt: 3 }, resistTotal: { slash: 3, strike: 3, pierce: 3, fire: 4, ice: 3, volt: 3 }, conditions: [{ id: "blind", depth: 10 }], buffs: [{ id: "physAtkUp", value: 2, turns: 2 }, { id: "resistGrant", param: "fire", turns: 3 }] }, { img: "https://api.dicebear.com/7.x/personas/svg?seed=hero&body=squared", owner: true }),
+  mk("p1", "플레이어2", "character", { classItems: { main: { name: "다크 헌터" } }, sub: { physHit: 5, elemHit: 3, evasion: 5, physAtk: 13, elemAtk: 4, defense: 6, suppAtk: 3, suppDef: 4, speed: 14 }, subBase: { physHit: 8, elemHit: 6, evasion: 8, physAtk: 11, elemAtk: 4, defense: 6, suppAtk: 3, suppDef: 4, speed: 14 }, resist: { slash: 3, strike: 3, pierce: 3, fire: 3, ice: 3, volt: 3 }, resistTotal: { slash: 3, strike: 3, pierce: 3, fire: 4, ice: 3, volt: 3 }, conditions: [{ id: "blind", depth: 10 }], buffs: [{ id: "physAtkUp", value: 2, turns: 2 }, { id: "resistGrant", param: "fire", turns: 3 }] }, { img: "https://api.dicebear.com/7.x/personas/svg?seed=hero&body=squared", owner: true, overheat: 3 }),
   mk("e1", "숲쥐", "enemy", { identified: true, level: 1, hp: { value: 6, max: 9 }, order: 0,
     stats: { physHit: 4, elemHit: 0, evasion: 7, physAtk: 11, elemAtk: 0, defense: 4, suppAtk: 3, suppDef: 3, speed: 12 },
     combatStats: { physHit: 4, elemHit: 0, evasion: 0, physAtk: 11, elemAtk: 0, defense: 2, suppAtk: 3, suppDef: 3, speed: 12 },
@@ -43,7 +43,15 @@ const combat = {
   combatants: Object.assign(turns, { get: (id) => turns.find((t) => t.id === id) }),
   getFlag: (s, k) => ({ phase: process.argv[3] ?? "main", battle: { copy: "x" } })[k] ?? null
 };
-const { battleHtml } = await import("../../src/combat/hud.mjs");
+const { battleHtml, _preview } = await import("../../src/combat/hud.mjs");
+// 스킬 목록 열린 상태(node … gm main skill)
+if (process.argv[4] === "skill") {
+  const sk = (id, name, tp, extra = {}) => ({ id, type: "skill", name, system: { sl: 1, timing: "주행동", range: "근", target: "적 단일", cost: { tp, fp: 0 }, effects: [{ type: "attack" }], description: `<p>${name}: 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>`, ...extra } });
+  const items = [sk("a", "숨 고르기", 3, { target: "자신", range: "-", description: "<p>호흡으로 자신의 【HP】를 조금 회복한다.</p>" }), sk("b", "상단의 자세", 3, { timing: "개막" }), sk("c", "참마", 4, { effects: [] }), sk("d", "청안의 자세", 3, { timing: "개막" }), sk("e", "일촌 간파", 10), sk("f", "거합의 자세", 3)];
+  Object.assign(turns[0].actor, { items: Object.assign(items, { get: (id) => items.find((i) => i.id === id) }), getFlag: (s, k) => (k === "overheat" ? 3 : null) });
+  Object.assign(turns[0].actor.system, { sl: 1, tp: { value: 8, max: 10 }, fp: { value: 2 } });
+  _preview.openMenu({ kind: "skill", combatantId: "p1" });
+}
 const css = fs.readFileSync("styles/nssq.css", "utf8");
 const html = battleHtml(combat, { attack: process.argv[4] === "attack" });
 // 「상태 자세히」 창 견본(node … gm main pop)

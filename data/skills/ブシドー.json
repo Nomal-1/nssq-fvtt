@@ -588,8 +588,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《청안의 자세》 상태 한정. 사용 시 대기 상태가 된다. 대기 상태 중 자신이 물리 공격을 받으면 【AGI】로 능동 회피(달성값 +(SL-1)), 회피 성공 시 공격자에게 물리 공격으로 반격. 대기 상태는 턴 종료 시 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "effects": [
+      {
+       "type": "activeEvade",
+       "ability": "agi",
+       "bonus": "SL-1",
+       "vs": "physical"
+      },
+      {
+       "type": "counter",
+       "when": {
+        "attackKind": "physical"
+       },
+       "attack": {
+        "kind": "physical"
+       },
+       "onlyIfEvaded": true
+      }
+     ]
+    }
+   ],
+   "review": "ok",
+   "effectsNote": "《청안의 자세》 상태에서만 사용 가능(GM 확인). 대기 상태·반격은 단계 8에서 자동화"
   },
   "_meta": {
    "className": "무사"
