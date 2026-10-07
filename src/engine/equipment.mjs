@@ -306,6 +306,7 @@ export function collectEquipment(items, tables, { level = 1, skillNames = [] } =
     .map((k) => tables.refinements.find((r) => r.key === k)).filter(Boolean);
 
   let weapon = null;
+  let shield = false;
   let armorDefense = 0;
   for (const item of items) {
     const slot = equippedSlot(item);
@@ -324,6 +325,7 @@ export function collectEquipment(items, tables, { level = 1, skillNames = [] } =
     } else if (item.type === "armor") {
       const s = armorStats(tables.armors[item.system.armorType] ?? {}, { rank: item.system.rank });
       armorDefense += s.defense;
+      if (item.system.armorType === SHIELD) shield = true;
       add("evasion", s.evasion);
       add("speed", s.speed);
       for (const r of refinementsOf(item)) applyEffects(r.effects, { R: item.system.rank });
@@ -342,5 +344,5 @@ export function collectEquipment(items, tables, { level = 1, skillNames = [] } =
   }
   // 제련 속성 부여: 기본 속성과의 관계(교체/복합)는 전투 단계에서 정한다(07 #24)
   if (weapon && flags.weaponElement) weapon.imbue = flags.weaponElement;
-  return { weapon, armorDefense, mods, flags };
+  return { weapon, shield, armorDefense, mods, flags };
 }

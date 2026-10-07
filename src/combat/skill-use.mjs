@@ -57,6 +57,7 @@ export function unitProfile(actor, combatant) {
     id: combatant?.id ?? actor.id,
     tp: s.tp?.value ?? 0, tpMax: s.tp?.max ?? 0, fp: s.fp?.value ?? 0,
     weaponType: s.equipment?.weapon?.weaponType ?? null,
+    shield: !!s.equipment?.shield,
     skills: actor.items.filter((i) => i.type === "skill").map((i) => i.name),
     acted: false,
     noAction: actionState(combatant).noAction,

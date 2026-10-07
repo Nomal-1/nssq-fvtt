@@ -183,3 +183,12 @@ describe("다회 공격 중 [수면]", () => {
     expect(e.inflicts[1].broken).toBeUndefined();
   });
 });
+
+describe("무기 칸의 방패(07 #56)", () => {
+  it("방패 스킬은 방패를 장비했을 때만", () => {
+    const skill = { timing: "주행동", weaponReq: ["방패"], cost: { tp: 1 }, effects: [{ type: "buff" }] };
+    const base = { tp: 5, fp: 0, weaponType: "검", conditions: [] };
+    expect(canUseSkill(skill, base, { phase: "main", myTurn: true })).toEqual({ ok: false, reason: "weapon" });
+    expect(canUseSkill(skill, { ...base, shield: true }, { phase: "main", myTurn: true }).ok).toBe(true);
+  });
+});

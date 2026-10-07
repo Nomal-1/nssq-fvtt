@@ -10,8 +10,19 @@ export const PART_BIND = { 머리: "bindHead", 팔: "bindArm", 다리: "bindLeg"
 const PHASE_OF = { 주행동: "main", 개막: "opening" };
 
 /**
+ * 스킬의 「무기」 칸 조건: 무기 슬롯의 무기 종류가 들어 있거나, 「방패」면 방패를 장비(기타 슬롯)했을 때(07 #56)
+ * @param {string[]} weaponReq
+ * @param {{weaponType?: string, shield?: boolean}} user
+ */
+export function meetsWeaponReq(weaponReq, user) {
+  const req = (weaponReq ?? []).filter(Boolean);
+  if (!req.length) return true;
+  return req.includes(user.weaponType) || (req.includes("방패") && !!user.shield);
+}
+
+/**
  * @param {object} skill { timing, part, weaponReq: [], cost: {tp, fp}, effects: [], name }
- * @param {object} user { tp, fp, weaponType, conditions: [], overheat?: number, delayedPending?: boolean, noAction?: boolean }
+ * @param {object} user { tp, fp, weaponType, shield?: boolean, conditions: [], overheat?: number, delayedPending?: boolean, noAction?: boolean }
  * @param {{phase: string, myTurn?: boolean, drive?: boolean}} ctx drive: 《○○ 드라이브》(오버히트 대상)
  * @returns {{ok: boolean, reason: string|null}} reason은 ko.json NSSQ.SkillUse.reason.* 키
  */
@@ -25,8 +36,7 @@ export function canUseSkill(skill, user, ctx = {}) {
   if (user.noAction) return { ok: false, reason: "noAction" };
   const bind = PART_BIND[s.part];
   if (bind && (user.conditions ?? []).some((c) => c.id === bind)) return { ok: false, reason: "bound" };
-  const req = (s.weaponReq ?? []).filter(Boolean);
-  if (req.length && !req.includes(user.weaponType)) return { ok: false, reason: "weapon" };
+  if (!meetsWeaponReq(s.weaponReq, user)) return { ok: false, reason: "weapon" };
   if (ctx.drive && (user.overheat ?? 0) > 0) return { ok: false, reason: "overheat" };
   if (user.delayedPending && s.effects.some((e) => e.type === "delayed")) return { ok: false, reason: "delayed" };
   if ((s.cost?.tp ?? 0) > (user.tp ?? 0)) return { ok: false, reason: "tp" };

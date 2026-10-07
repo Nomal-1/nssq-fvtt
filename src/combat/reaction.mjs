@@ -6,7 +6,7 @@
  * - 자동 적용 「즉시」라도 반응을 기다리는 대상이 있으면 적용을 미룬다(반응하거나 [반응 안 함]·[적용]으로 진행)
  */
 import { activeEvade, reactionEffect } from "../engine/effects/reaction.mjs";
-import { PART_BIND } from "../engine/effects/usage.mjs";
+import { meetsWeaponReq, PART_BIND } from "../engine/effects/usage.mjs";
 import { BUFFS, canonicalBuff } from "../engine/buffs.mjs";
 import { autoApplyMode, isActiveGM } from "./apply.mjs";
 import { friendly } from "./profile.mjs";
@@ -24,6 +24,7 @@ export function reactionChoices(actor, kind) {
   return actor.items.filter((i) => i.type === "skill" && i.system.timing === "수동" && (i.system.sl ?? 0) > 0 && reactionEffect(i.system.effects, kind))
     .filter((i) => (i.system.cost?.tp ?? 0) <= (s.tp?.value ?? 0) && (i.system.cost?.fp ?? 0) <= (s.fp?.value ?? 0))
     .filter((i) => !(PART_BIND[i.system.part] && conds.some((c) => c.id === PART_BIND[i.system.part])))
+    .filter((i) => meetsWeaponReq(i.system.weaponReq, { weaponType: s.equipment?.weapon?.weaponType, shield: !!s.equipment?.shield }))
     .map((i) => ({ id: i.id, name: i.name }));
 }
 
