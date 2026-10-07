@@ -44,7 +44,7 @@ const COMMON = ["type", "when", "chance", "label", "variant"];
 
 /** modifier path: derive가 읽는 키 */
 export const MOD_PATHS = new Set([
-  "physAtk", "elemAtk", "physHit", "elemHit", "defense", "evasion", "speed", "suppAtk", "suppDef", "hpMax", "tpMax", "carry", "healDice", "guardCount",
+  "physAtk", "elemAtk", "physHit", "elemHit", "defense", "evasion", "speed", "suppAtk", "suppDef", "hpMax", "tpMax", "carry", "healDice", "guardCount", "itemHeal",
   ...ABILITIES.map((k) => `abilities.${k}`), ...RESISTS.map((k) => `resist.${k}`)
 ]);
 const MOD_PREFIX = ["checks."];
@@ -101,6 +101,7 @@ export function checkEffects(list, where, errors = []) {
       if (!MOD_PATHS.has(m.path)) errors.push(`${at}: state.mods 모르는 path \`${m.path}\``);
       checkExpr(m.value, `${at}.mods.value`, errors);
     }
+    if (e.type === "flag" && !FLAGS.includes(e.flag)) errors.push(`${at}: 모르는 flag \`${e.flag}\``);
     if (e.type === "trigger" && !TRIGGER_ON.includes(e.on)) errors.push(`${at}: 모르는 trigger.on \`${e.on}\``);
     if (e.type === "guard" && !["half", "cover", "defense"].includes(e.mode)) errors.push(`${at}: guard.mode는 half/cover/defense`);
     if ((e.type === "guard" || e.type === "aura") && e.scope && !["front", "back", "all", "target"].includes(e.scope)) errors.push(`${at}: scope는 front/back/all/target`);
@@ -131,6 +132,8 @@ export function collectHolders() {
 }
 
 /** 단계 8에 연결할 type */
+/** flag 이름(03 §3) */
+export const FLAGS = ["itemRevive", "noCarryCount", "ownLimit", "weaponElement"];
 /** trigger.on 값(03 §3) */
 export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart", "escapeCheck"];
 

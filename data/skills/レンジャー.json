@@ -30,7 +30,8 @@
    "sl": 1,
    "description": "<p>일반 행위 판정을 했을 때, 성패를 확인한 뒤에 1D6을 추가로 더 굴릴 수 있다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "일반 행위 판정의 성패를 본 뒤 1D6을 더 굴려 더한다: 판정 카드에서 GM·플레이어가 처리"
   },
   "_meta": {
    "className": "레인저"
@@ -68,8 +69,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>활에 의한 물리 명중에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "활"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -112,8 +124,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +(SL+1)개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -156,8 +174,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [맹목]을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "blind",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -200,8 +233,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [독]을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "poison",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -244,8 +292,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [수면]을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "sleep",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -288,8 +351,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상에게 2회의 물리 공격 롤을 한다. 단, 이때의 대미지 다이스를 -(4-SL)개 한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 2,
+     "diceMod": "-(4-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -332,8 +402,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +(SL+1)개를 얻는다. 또한, 적이 후위에 있으면 추가로 대미지 다이스 +(SL)개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL+1",
+     "bonuses": [
+      {
+       "when": {
+        "targetRow": "back"
+       },
+       "diceMod": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -380,8 +464,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>다음 턴의 후발 행동 타이밍에 지연 공격을 예약한다. 이 공격은 통상 공격에 대미지 다이스 +((SL+1)×3)개를 한 물리 공격 롤로 한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "delayed",
+     "at": "nextTurnLate",
+     "turns": 1,
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "diceMod": "(SL+1)*3"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -417,8 +514,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>『속도 상승: (SL×3)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "speedUp",
+     "value": "SL*3",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -454,8 +558,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>『명중 저하: (SL)』의 약화 효과를 부여한다. 3턴 지속된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "hitDown",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -548,8 +659,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상의 메인 페이즈 행동을 최속 행동으로 하게 한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "actionTiming",
+     "value": "first"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -594,8 +710,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>『추격: (자신)』의 강화 효과를 부여한다. (SL)턴 지속된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "chase",
+     "param": "자신",
+     "turns": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -631,8 +754,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아이템에 의한 회복 효과에 항상 +(SL)을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "itemHeal",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -673,8 +802,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>HP 회복계 아이템 사용 시, 전투 불능에서 회복하는 효과가 부수된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "itemRevive"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -710,8 +844,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>도주 판정 때 사용을 선언한다. 도주 판정의 달성값에 +3을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "escapeCheck",
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "checks.escape",
+       "value": 3
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -748,7 +894,8 @@
    "sl": 1,
    "description": "<p>시나리오 개시 시점에 보유한 FP에 +1을 얻는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "시나리오 개시 때 FP +1: 세션 도구(단계 9)에서"
   },
   "_meta": {
    "className": "레인저"
@@ -784,8 +931,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>위험이 닥쳐오고 있음을 알아차리기 위한 판정에 +3을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.danger",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -821,8 +974,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>시력을 사용한 판정 전반에 +3을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.sight",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -858,8 +1017,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>전신 운동 판정 전반에 +3을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.athletic",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -896,7 +1061,8 @@
    "sl": 1,
    "description": "<p>벌채·채굴·채취 이벤트에서, 통상 횟수에 더해 채집 판정을 (SL)회 추가로 할 수 있다. 이 추가분은 「아앗!」 값을 0으로 취급한다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "벌채·채굴·채취 때 채집 판정 +SL회(「아앗!」 0 취급): 채집 대화창(단계 9)에서"
   },
   "_meta": {
    "className": "레인저"
@@ -933,7 +1099,8 @@
    "sl": 1,
    "description": "<p>「아앗!」 발생 시 등 기습을 받은 상황에서 (1D6-1)을 굴려, 결과가 SL 이하이면 기습에 의한 1턴분의 행동 손실을 막을 수 있다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "기습 때 1D6−1 ≤ SL이면 1턴 행동 손실을 막는다: GM이 처리(단계 9)"
   },
   "_meta": {
    "className": "레인저"
@@ -969,8 +1136,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【HP】에 +(SL×2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "hpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -1006,8 +1179,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【TP】에 +(SL×2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -1043,8 +1222,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 공격】에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppAtk",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
@@ -1080,8 +1265,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【속도】에 +(SL×3)을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "speed",
+     "value": "SL*3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"

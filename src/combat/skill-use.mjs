@@ -40,7 +40,9 @@ export function targetSpec(text = "") {
 }
 
 /** 쓰러진 아군도 대상이 되는 효과(revive)가 있는가 */
-const revives = (item) => (item?.system.effects ?? []).some((e) => e?.type === "heal" && e.revive);
+const revives = (item) => (item?.system.effects ?? []).some((e) => e?.type === "heal" && (e.revive
+  // 《간이 소생》: 그 캐릭터가 쓰는 HP 회복 아이템
+  || (item.type === "consumable" && (e.resource ?? "hp") === "hp" && !!item.parent?.system.passives?.flags?.itemRevive)));
 
 /** 이 사용자의 대상 후보(살아 있는 것, 상대 진영이면 사거리 안). allowKO: 쓰러진 아군도(부활 효과) */
 function candidates(combat, user, spec, range, { allowKO = false } = {}) {
@@ -60,6 +62,9 @@ export function unitProfile(actor, combatant) {
     ...p,
     // 회복 마스터리 등: 『회복』 스킬의 회복량 다이스(상시 보정 healDice)
     healDice: s.equipment?.mods?.healDice ?? 0,
+    // 《이피션트》·《간이 소생》: 아이템 회복 +, HP 회복 아이템에 부활
+    itemHeal: s.equipment?.mods?.itemHeal ?? 0,
+    itemRevive: !!s.passives?.flags?.itemRevive,
     id: combatant?.id ?? actor.id,
     tp: s.tp?.value ?? 0, tpMax: s.tp?.max ?? 0, fp: s.fp?.value ?? 0,
     weaponType: s.equipment?.weapon?.weaponType ?? null,
@@ -196,10 +201,15 @@ async function resolveAndPost({ actor, combatant, item, kind, units, mainAction,
     effects: sys.effects ?? [], sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : [],
     mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(),
-    variant, category: sys.category ?? ""
+    variant, category: sys.category ?? "", source: kind
   });
   // 「최속/후발 행동」(개막 페이즈에 쓴 것): 이번 턴 행동 순서. 메인 페이즈로 넘어갈 때 이니셔티브에 반영
-  if (r.actionTiming && combatant && !r.failed) await combatant.setFlag("nssq", "timing", r.actionTiming);
+  if (!r.failed) {
+    for (const [i, t] of targets.entries()) {
+      const at = r.results.get(t.id)?.actionTiming;
+      if (at && units[i].combatant) await units[i].combatant.setFlag("nssq", "timing", at);
+    }
+  }
   // FP(캐릭터만), 오버히트
   if (r.fpGain && actor.type === "character") await actor.update({ "system.fp.value": (actor.system.fp?.value ?? 0) + r.fpGain });
   if (r.overheat) await actor.setFlag("nssq", "overheat", r.overheat);

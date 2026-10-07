@@ -22,7 +22,7 @@ export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus"]
 const CUSTOM = new Map();
 export const registerCustom = (name, fn) => CUSTOM.set(name, fn);
 
-const blank = (t) => ({ id: t.id, name: t.name, hits: [], damage: 0, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], states: [], sleepBroken: false, revive: false });
+const blank = (t) => ({ id: t.id, name: t.name, hits: [], damage: 0, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], states: [], sleepBroken: false, revive: false, actionTiming: null });
 
 /** 선언 명칭(variants)을 고른 effects: variant가 없는 효과 + 고른 번호의 효과 */
 export const variantEffects = (effects, variant = null) => (effects ?? []).filter((e) => e?.variant === undefined || e.variant === variant);
@@ -45,10 +45,11 @@ export const hasHitCheck = (effects) => (effects ?? []).some((e) => e.type === "
  * @param {object} [p.ctx] when 조건용 { timeOfDay, allies }
  * @param {number|null} [p.variant] 선언 명칭 번호(《삼색 세이버》 등). variant가 붙은 효과는 이 번호만
  * @param {string} [p.category] 스킬 분류(『회복』이면 회복 롤에 사용자의 healDice를 더한다)
+ * @param {"skill"|"item"} [p.source] 아이템이면 사용자의 itemHeal(《이피션트》)·itemRevive(《간이 소생》)
  */
-export async function resolveEffects({ effects, sl = 1, user, targets = [], pool = [], mainAction = false, rollDice, rng = Math.random, ctx = {}, variant = null, category = "" }) {
+export async function resolveEffects({ effects, sl = 1, user, targets = [], pool = [], mainAction = false, rollDice, rng = Math.random, ctx = {}, variant = null, category = "", source = "skill" }) {
   effects = variantEffects(effects, variant);
-  const out = { activation: null, fpGain: 0, failed: false, results: new Map(), gm: [], deferred: [], overheat: 0, actionTiming: null };
+  const out = { activation: null, fpGain: 0, failed: false, results: new Map(), gm: [], deferred: [], overheat: 0 };
   const res = (t) => {
     if (!out.results.has(t.id)) out.results.set(t.id, blank(t));
     return out.results.get(t.id);
@@ -142,8 +143,9 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       case "heal": {
         const res0 = e.resource ?? "hp";
         // [전투 불능]인 대상은 revive 효과만 회복한다(《초의술》 「전투 불능에서도 부활」, 《리저렉션》)
-        if (t.ko && res0 === "hp" && !e.revive) return;
-        if (t.ko && e.revive) r.revive = true;
+        const revive = e.revive || (source === "item" && res0 === "hp" && !!user.itemRevive);
+        if (t.ko && res0 === "hp" && !revive) return;
+        if (t.ko && revive) r.revive = true;
         const max = res0 === "tp" ? t.tpMax ?? 0 : t.hpMax ?? 0;
         const cur = Math.max(0, res0 === "tp" ? t.tp ?? 0 : t.hp ?? 0);
         let amount = 0;
@@ -157,6 +159,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         } else if (e.mode === "fixed") amount = evaluate(e.amount ?? 0, vars(t));
         else if (e.mode === "full") amount = max - cur;
         else if (e.mode === "percent") amount = Math.floor((max * evaluate(e.amount ?? 0, vars(t))) / 100);
+        // 아이템의 회복 효과 +(《이피션트》)
+        if (source === "item" && amount > 0) amount += user.itemHeal ?? 0;
         r.heal[res0] += Math.max(0, amount);
         r.resource.push({ heal: res0, amount: Math.max(0, amount), dice });
         return;
@@ -200,7 +204,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       }
       case "actionTiming":
         // 「최속/후발 행동」: 이번 턴 행동 순서(전투원 플래그 timing, 호출자가 반영)
-        out.actionTiming = e.value === "last" ? "last" : "first";
+        r.actionTiming = e.value === "last" ? "last" : "first";
         return;
       case "overheat":
         out.overheat = Math.max(out.overheat, evaluate(e.turns ?? 0, vars(t)));

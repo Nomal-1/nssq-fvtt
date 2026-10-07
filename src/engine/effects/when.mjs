@@ -14,6 +14,7 @@ const CHECKS = {
   targetNotActedThisTurn: (v, c) => !c.target?.acted === !!v,
   selfHpAtMostHalf: (v, c) => ((c.self?.hp ?? 0) * 2 <= (c.self?.hpMax ?? 0)) === !!v,
   selfRow: (v, c) => c.self?.row === v,
+  targetRow: (v, c) => (c.target?.row ?? "front") === v,
   element: (v, c) => arr(v).some((e) => (c.attack?.elements ?? []).includes(e)),
   attackKind: (v, c) => c.attack?.kind === v,
   timeOfDay: (v, c) => c.timeOfDay === v,

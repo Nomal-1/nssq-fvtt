@@ -230,8 +230,9 @@ describe("단계 7 스키마 보강", () => {
   });
 
   it("actionTiming: 최속/후발", async () => {
-    const r = await resolveEffects({ effects: [{ type: "actionTiming", value: "first" }], user, targets: [user], rollDice: dice() });
-    expect(r.actionTiming).toBe("first");
+    const ally = { ...user, id: "a" };
+    const r = await resolveEffects({ effects: [{ type: "actionTiming", value: "first" }], user, targets: [ally], rollDice: dice() });
+    expect(r.results.get("a").actionTiming).toBe("first");
   });
 
   it("attackBonus: 상시 스킬의 공격 보정은 공격 시점의 대상으로 판정(《선봉의 공명》)", async () => {
@@ -271,5 +272,22 @@ describe("단계 7 스키마 보강", () => {
       rollDice: dice(5, 5, 6, 2, 2, 2, 2, 2, ...Array(8).fill(2)) });
     const h = r.results.get("e").hits[0];
     expect(h.crit).toBe(true);
+  });
+
+  it("아이템: itemHeal(《이피션트》) 더하기, itemRevive(《간이 소생》)면 쓰러진 대상도", async () => {
+    const effects = [{ type: "heal", mode: "fixed", amount: 10 }];
+    const u = { ...user, itemHeal: 2, itemRevive: true };
+    const ko = { ...user, id: "k", hp: 0, ko: true };
+    const a = await resolveEffects({ effects, user: u, targets: [user, ko], source: "item", rollDice: dice() });
+    expect(a.results.get("u").heal.hp).toBe(12);
+    expect(a.results.get("k")).toEqual(expect.objectContaining({ revive: true }));
+    const b = await resolveEffects({ effects, user: u, targets: [user, ko], source: "skill", rollDice: dice() });
+    expect(b.results.get("u").heal.hp).toBe(10);
+    expect(b.results.get("k").heal.hp).toBe(0);
+  });
+
+  it("when targetRow", () => {
+    expect(whenMatches({ targetRow: "back" }, { target: { row: "back" } })).toBe(true);
+    expect(whenMatches({ targetRow: "back" }, { target: { row: "front" } })).toBe(false);
   });
 });
