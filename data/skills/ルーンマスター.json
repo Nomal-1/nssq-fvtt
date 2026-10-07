@@ -29,8 +29,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>개막 페이즈에 사용 선언(타이밍 '개막' 스킬과 병용 가능). 자신과 같은 열의 아군은 턴 종료까지 〈염〉〈빙〉〈뇌〉 내성 +1.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "openingPhase",
+     "effects": [
+      {
+       "type": "target",
+       "side": "ally",
+       "scope": "row"
+      },
+      {
+       "type": "buff",
+       "id": "resistUp",
+       "value": 0,
+       "turns": 1,
+       "param": "fire,ice,volt"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -66,8 +85,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '술식' 스킬의 공격 롤 속성 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "hitMod": "SL/2",
+     "when": {
+      "category": "술식",
+      "attackKind": "elemental"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -112,8 +140,36 @@
    ],
    "sl": 1,
    "description": "<p>사용 시 《불꽃의 인술》《얼음의 인술》《번개의 인술》 중 하나로 선언 → 각각 〈염〉/〈빙〉/〈뇌〉 속성 공격. 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "fire"
+     ],
+     "diceMod": "SL",
+     "variant": 0
+    },
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "ice"
+     ],
+     "diceMod": "SL",
+     "variant": 1
+    },
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "volt"
+     ],
+     "diceMod": "SL",
+     "variant": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -154,8 +210,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>같은 열의 적 2체를 대상으로 선언, 〈염〉 속성 공격. 대미지 다이스 +(SL-2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "enemy",
+     "scope": "row"
+    },
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "fire"
+     ],
+     "diceMod": "SL-2"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "같은 열의 적 2체만: 3체 이상이면 GM이 1체를 빼고 적용"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -196,8 +267,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>적 전위 1체 + 후위 1체에게 〈빙〉 속성 공격 롤. 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "ice"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -238,8 +318,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈뇌〉 속성 공격. 대미지 다이스 +(SL-3)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "volt"
+     ],
+     "diceMod": "SL-3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -284,8 +373,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈염〉 속성 공격. 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "fire"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -330,8 +428,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈빙〉 속성 공격 2회, 매회 대상은 적 전체 중 무작위. 대미지 다이스 -(4-SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "ice"
+     ],
+     "times": 2,
+     "random": true,
+     "diceMod": "-(4-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -376,8 +485,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈뇌〉 속성 공격. 대미지 다이스 +((SL+1)×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "volt"
+     ],
+     "diceMod": "(SL+1)*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -422,8 +540,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈염〉 속성 공격. 대미지 다이스 +((SL+2)×3)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "fire"
+     ],
+     "diceMod": "(SL+2)*3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -468,8 +595,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈빙〉 속성 공격. 대미지 다이스 -(3-SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "ice"
+     ],
+     "diceMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -514,8 +650,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈뇌〉 속성 공격 3회, 매회 대상은 적 전체 중 무작위. 대미지 다이스 -(4-SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "volt"
+     ],
+     "times": 3,
+     "random": true,
+     "diceMod": "-(4-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -560,8 +707,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>무속성 속성 공격. 이때 【속성 공격】을 -(3-SL)으로 취급.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "none"
+     ],
+     "atkMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -606,8 +762,33 @@
    ],
    "sl": 1,
    "description": "<p>사용 시 《불꽃의 성인》《얼음의 성인》《번개의 성인》 중 하나로 선언 → 각각 『내성 상승: 염』/『내성 상승: 빙』/『내성 상승: 뇌』 강화 효과 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "resistUp",
+     "value": 0,
+     "turns": 3,
+     "param": "fire",
+     "variant": 0
+    },
+    {
+     "type": "buff",
+     "id": "resistUp",
+     "value": 0,
+     "turns": 3,
+     "param": "ice",
+     "variant": 1
+    },
+    {
+     "type": "buff",
+     "id": "resistUp",
+     "value": 0,
+     "turns": 3,
+     "param": "volt",
+     "variant": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -648,8 +829,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『속성 공격 상승: (SL×2)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "elemAtkUp",
+     "value": "SL*2",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -739,7 +927,8 @@
    "sl": 1,
    "description": "<p>자신의 공격 시 적의 【내성】 2는 1로, 1은 0으로 취급. 【내성】 3 이상에는 효과 없음.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "자신의 공격 때 적의 내성 2는 1로, 1은 0으로(3 이상은 그대로): GM이 대미지를 보정"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -784,8 +973,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 자신은 대기 상태. 대기 상태 동안 아군 전체의 〈염〉〈빙〉〈뇌〉 【내성】 +(SL). 대기 상태는 턴 종료 시 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "effects": [
+      {
+       "type": "aura",
+       "path": "resist.fire",
+       "value": "SL",
+       "scope": "all"
+      },
+      {
+       "type": "aura",
+       "path": "resist.ice",
+       "value": "SL",
+       "scope": "all"
+      },
+      {
+       "type": "aura",
+       "path": "resist.volt",
+       "value": "SL",
+       "scope": "all"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -821,8 +1035,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지식 관련 판정 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.knowledge",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -864,7 +1084,8 @@
    "sl": 1,
    "description": "<p>문 또는 그에 준하는 것을 열리지 않게 한다. 발동 시 해제 암호를 소리 내어 정해야 하며, 룬을 만진 자가 그 암호를 말하면 효과 소멸. 그 외에도 12시간 경과 시 자연 소멸.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "문 등을 잠그는 룬(암호로 해제): GM이 처리"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -906,7 +1127,8 @@
    "sl": 1,
    "description": "<p>자신을 중심으로 반경 5m 반원형 결계 생성. 공기 외 모든 것의 통과를 막고, 공격 롤·스킬 등의 영향도 일절 통하지 않음. 결계는 이동 불가. 발동 시 해제 암호를 소리 내어 정해야 하며, 룬을 만진 자가 그 암호를 말하면 효과 소멸. 그 외에도 30분 경과 시 자연 소멸.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "반경 5m 반원형 결계: GM이 처리"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -1028,8 +1250,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【속성 공격】 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "elemAtk",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
