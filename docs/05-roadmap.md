@@ -67,7 +67,7 @@
   - 도구: `node tools/dev/foundry-e2e.mjs info|eval|shot [gm|player]`, 스크립트에서는 `connect(role, { user })`. 클라우드 Chromium은 ws://가 막혀 socket.io를 Node WebSocket으로 중계한다(도구 안에 들어 있음). 월드 id는 `nssqtest`.
   - 테스트용 액터는 `[e2e]` 접두사로 만들고 끝나면 지운다. 사용자가 관전하는 계정: `GM관전`(보조 GM)·`PL관전`(플레이어), 비밀번호 없음. 관전 계정으로는 접속하지 않는다(겹치면 사용자가 못 들어온다). GM관전이 접속해 있으면 GM 클라이언트가 둘이라는 점을 감안한다.
   - **서버의 시스템 업데이트도 Claude가 한다**: `node tools/dev/foundry-e2e.mjs update [월드id=nssqtest] [--backup]` (환경 변수 `NSSQ_FOUNDRY_ADMIN_PASSWORD`, 출력·커밋 금지). 릴리스할 때마다 이걸로 올리고 체크리스트를 이어서 확인한다.
-    - 흐름: `/api/status`로 켜진 월드 확인 → 접속 화면 「셋업으로 돌아가기」(관리자 비밀번호)로 종료 → 셋업 화면에서 `Setup.checkPackage`·`Setup.installPackage`로 nssq 업데이트(이미 최신이면 건너뜀) → 월드 [실행] → 「월드 데이터 마이그레이션」 확인 창(시스템 버전이 바뀌면 뜸)을 [마이그레이션 시작]으로(백업은 `--backup`일 때만) → GM 접속으로 `game.system.version` 확인.
+    - 흐름: `/api/status`로 켜진 월드 확인 → 접속 화면 「셋업으로 돌아가기」(관리자 비밀번호)로 종료(접속자가 있으면 「연결이 끊긴다」 확인 창 → [예]) → 셋업 화면에서 `Setup.checkPackage`·`Setup.installPackage`로 nssq 업데이트(이미 최신이면 건너뜀) → 월드 [실행] → 「월드 데이터 마이그레이션」 확인 창(시스템 버전이 바뀌면 뜸)을 [마이그레이션 시작]으로(백업은 `--backup`일 때만) → GM 접속으로 `game.system.version` 확인.
     - 켜진 월드가 `nssqtest`가 아니면(실제 플레이 월드 등) **끄지 않고 멈춘다** → 사용자에게 알린다. 업데이트 중에는 접속자가 모두 튕긴다(관전 계정 포함). 시스템은 서버 전체 공용이라 같은 서버의 다른 월드도 같은 버전이 된다.
     - 업데이트 뒤 첫 GM 접속의 자동 효과 동기화(`effectsSyncedVersion`, 에너미 스킬 아이콘 고치기 포함)는 몇 초 걸린다. `eval`처럼 바로 끊는 접속만 하면 끝나기 전에 닫혀 일부만 바뀐다 → 업데이트 뒤 한 번은 `game.settings.get("nssq","effectsSyncedVersion") === game.system.version`이 될 때까지 기다린다.
   - 플레이어 권한이 아니라 GM 둘이 필요한 확인(27번 등): 관전 계정 대신 `ClaudePlayer`를 잠시 보조 GM(`role` 3)으로 바꿔 접속하고 끝나면 PLAYER(1)로 되돌린다.

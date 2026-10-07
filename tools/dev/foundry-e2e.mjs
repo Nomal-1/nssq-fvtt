@@ -148,8 +148,15 @@ export async function updateSystem({ world = "nssqtest", backup = false, log = c
     // 1. 월드 끄기: 접속 화면의 「셋업으로 돌아가기」
     if (before.active) {
       await page.goto(`${base}/join`, { waitUntil: "domcontentloaded", timeout: 60_000 });
+      // 접속 화면 스크립트가 준비되기 전에 누르면 폼이 그냥 제출돼 무시된다(사용자 목록이 채워질 때까지)
+      await page.waitForFunction(() => document.querySelectorAll("select[name=userid] option").length > 0 && globalThis.ui?.join, null, { timeout: 60_000 });
       await page.fill("#join-game-setup input[name=adminPassword]", admin);
-      await Promise.all([page.waitForURL(/\/(setup|auth)/, { timeout: 120_000 }), page.click("#join-game-setup button[type=submit]")]);
+      const toSetup = page.waitForURL(/\/(setup|auth)/, { timeout: 120_000 });
+      await page.click("#join-game-setup button[type=submit]");
+      // 접속 중인 사람이 있으면 「연결이 끊긴다, 계속할까?」 확인 창
+      const kick = await page.waitForSelector(".app.dialog button[data-button=yes]", { timeout: 5_000 }).catch(() => null);
+      if (kick) { log(`접속 중인 ${before.users}명의 연결을 끊는다`); await kick.click(); }
+      await toSetup;
       await waitStatus(base, st => !st.active);
       log(`${world} 종료`);
     }
