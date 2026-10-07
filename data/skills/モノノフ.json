@@ -29,8 +29,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>통상 공격 명중 시 자신의 TP 1 회복.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "selfHit",
+     "when": {
+      "category": ""
+     },
+     "effects": [
+      {
+       "type": "resource",
+       "resource": "tp",
+       "delta": 1
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -68,8 +83,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>망치 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "망치"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -224,8 +250,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈참〉+〈빙〉 속성 물리 공격 롤. 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "slash",
+      "ice"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -268,8 +304,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +(SL×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -312,8 +354,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +((SL+1)×3)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "(SL+1)*3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -356,8 +404,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤 3회, 매회 대상은 적 중 무작위. 대미지 다이스 -(4-SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 3,
+     "random": true,
+     "diceMod": "-(4-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -405,8 +461,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -449,8 +511,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤 → 명중 시 대상은 억제 방어 롤(목표값: 공격자 【억제 공격】+(7+SL)), 실패하면 [머리] 봉인.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindHead",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -493,8 +570,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉+〈염〉 속성 물리 공격 롤. 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "strike",
+      "fire"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -537,8 +624,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -581,8 +674,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +((SL+1)×4)개. 사용 후 자신이 [마비](심도 = 자신 【물리 명중】+7).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "(SL+1)*4"
+    },
+    {
+     "type": "inflict",
+     "condition": "paralyze",
+     "depth": "@self.physHit + 7",
+     "toSelf": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -618,8 +723,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>전투 불능이 될 때 1D6, 눈이 (SL) 이하면 전투 불능이 되지 않고 【HP】 1로 버틴다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "beforeKO",
+     "chance": {
+      "roll": "1d6",
+      "lte": "SL"
+     },
+     "effects": [
+      {
+       "type": "resource",
+       "resource": "hp",
+       "set": 1
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -655,8 +776,25 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 전투 동안 【물리 공격】【속성 공격】 +(SL+1)(강화 효과가 아니므로 해제당하지 않음). 효과 중에는 공격 롤마다 자신의 대미지 다이스에서 나온 '1'의 개수만큼 【HP】 대미지를 받고 【TP】 1 소모. 종료 페이즈의 대미지 처리 직후에 임의로 해제 가능.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "state",
+     "id": "mononofu.rakshasa",
+     "label": "나찰",
+     "mods": [
+      {
+       "path": "physAtk",
+       "value": "SL+1"
+      },
+      {
+       "path": "elemAtk",
+       "value": "SL+1"
+      }
+     ]
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "나찰 중 공격 롤마다 대미지 다이스의 1 개수만큼 HP 대미지·TP 1 소모, 종료 페이즈에 임의 해제(GM [상태] 창에서 지움): GM이 처리"
   },
   "_meta": {
    "className": "모노노후"
@@ -697,8 +835,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상의 강화 효과를 최대 (SL)개 소멸.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "cure",
+     "kind": "buff",
+     "count": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -739,8 +883,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신의 공격 롤 명중 시 자신의 【HP】 (SL) 회복.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "selfHit",
+     "effects": [
+      {
+       "type": "resource",
+       "resource": "hp",
+       "delta": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -776,8 +932,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>'무기'·'기타' 두 슬롯 모두에 무기를 장비하고 있으면 【물리 공격】 +1.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physAtk",
+     "value": 1,
+     "when": {
+      "dualWield": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
