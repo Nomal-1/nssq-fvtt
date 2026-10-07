@@ -8,6 +8,7 @@ import { inRange, pickRandom } from "../engine/combat.mjs";
 import { normalAttack } from "./attack.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 import { recordBestiary } from "./bestiary.mjs";
+import { enemyUseSkill } from "./skill-use.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.EnemyAI.${k}`, d) : game.i18n.localize(`NSSQ.EnemyAI.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -48,6 +49,14 @@ export async function randomEnemyAction(combat) {
     return normalAttack(me.actor, { target: target.token });
   }
   const skill = choice.skill;
+  // 효과 데이터가 있는 스킬은 사용 흐름으로 자동 처리(단계 6)
+  if (skill.system.effects?.length) {
+    await ChatMessage.create({
+      speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
+      content: `<div class="nssq-combat-note"><i class="fas fa-dice"></i> ${L("chosenSkill", { name: esc(me.name), skill: esc(skill.name) })}</div>`
+    });
+    return enemyUseSkill(combat, me, skill);
+  }
   // 사용한 스킬은 플레이어에게 공개(도감)
   await recordBestiary(me.actor, { skill: skill.name });
   const target = pickTarget(combat, me, skill);

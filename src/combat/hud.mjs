@@ -25,6 +25,7 @@ import { StatusApp, statusChips, statusMarks } from "./status.mjs";
 import { allyAnalysisHtml, enemyAnalysisHtml } from "./analysis.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
 import { actionState, confusedAction, endPhaseMessage, requestEndPhaseApply } from "./turn-status.mjs";
+import { actionList, beginAction, pickTarget } from "./skill-use.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -32,7 +33,8 @@ const pct = (r) => (r?.max > 0 ? Math.clamp(Math.round((r.value / r.max) * 100),
 
 let root = null;
 let fxLayer = null;
-let pending = null; // "attack" | null
+let pending = null; // "attack" | { pick: [combatantId], kind, id, combatantId, spec } | null
+let menu = null; // { kind: "skill"|"item", combatantId } | null
 let collapsed = false;
 let banner = null; // { id, text, cls }
 let bannerSeq = 0;
@@ -268,6 +270,19 @@ function partyCard(c, combat, targetable) {
   </div>`;
 }
 
+/** [스킬]·[아이템] 목록(커맨드 창 안) */
+function actionMenu(combat, c) {
+  const S = (k, d) => (d ? game.i18n.format(`NSSQ.SkillUse.${k}`, d) : game.i18n.localize(`NSSQ.SkillUse.${k}`));
+  const list = actionList(combat, c, menu.kind);
+  const rows = list.map((x) => `<button type="button" class="act ${x.ok ? "" : "disabled"}" data-action-id="${x.id}" title="${esc(x.ok ? x.target ?? "" : S(`reason.${x.reason}`))}">
+      <span class="nm">${esc(x.name)}</span><small>${esc(x.cost)} · ${esc(x.target ?? "")}</small>${x.ok ? "" : `<em>${esc(S(`reason.${x.reason}`))}</em>`}</button>`).join("");
+  return `<div class="who">${esc(S(menu.kind === "item" ? "itemTitle" : "skillTitle", { name: c.name }))}</div>
+    <div class="action-list" data-combatant="${c.id}">
+      <button type="button" class="act back" data-act="back"><i class="fas fa-arrow-left"></i> ${esc(S("back"))}</button>
+      ${rows || `<p class="wait">${esc(S(menu.kind === "item" ? "noItems" : "noSkills"))}</p>`}
+    </div>`;
+}
+
 /** 커맨드 창 몸통: 메인 페이즈는 현재 차례 전투원, 개막 페이즈는 내가 맡은 아군 모두 */
 function commandBody(combat) {
   const phase = combat.getFlag("nssq", "phase") ?? "opening";
@@ -290,12 +305,13 @@ function commandBody(combat) {
       </div>`;
     }
     if (st.noAction) return `<p class="wait">${esc(game.i18n.format("NSSQ.Turn.cannotAct", { name: c.name, reason: st.reason }))}</p>`;
+    if (menu && menu.combatantId === c.id) return actionMenu(combat, c);
     return `<div class="who">${L("whoseAction", { name: esc(c.name) })}</div>
       <div class="cmds" data-combatant="${c.id}">
         ${game.user.isGM && sideOf(c.actor) === "enemy" ? cmd("random", "fa-dice", L("randomAction"), { title: L("randomActionHint") }) : ""}
         ${cmd("attack", "fa-fist-raised", L("attack"), { active: pending === "attack" })}
-        ${cmd("skill", "fa-magic", L("skill"), { disabled: true, title: L("later") })}
-        ${cmd("item", "fa-flask", L("item"), { disabled: true, title: L("later") })}
+        ${cmd("skill", "fa-magic", L("skill"))}
+        ${cmd("item", "fa-flask", L("item"))}
         ${cmd("end", "fa-forward", L("endTurn"))}
       </div>`;
   }
@@ -305,6 +321,8 @@ function commandBody(combat) {
     const list = combat.turns.filter((c) => c.actor && mine(c) && !isKO(c))
       .sort((a, b) => (sideOf(a.actor) === "enemy") - (sideOf(b.actor) === "enemy"));
     if (!list.length) return `<p class="wait">${L("openingWait")}</p>`;
+    const open = menu && list.find((c) => c.id === menu.combatantId);
+    if (open) return actionMenu(combat, open);
     return `<div class="who">${L("openingTitle")}</div>` + list.map((c) => {
       // 행동 불가·혼란 판정 실패는 개막 행동 없음
       const st = actionState(c);
@@ -314,6 +332,7 @@ function commandBody(combat) {
         <button type="button" data-cmd="guard" class="${guarding ? "active" : ""}" title="${guarding ? L("guardOff") : L("guard")}"><i class="fas fa-shield-alt"></i> ${L("guard")}</button>
         <button type="button" data-cmd="row" title="${L("row")}"><i class="fas fa-arrows-alt-v"></i> ${L("row")}</button>
         ${c.actor.type === "character" ? `<button type="button" data-cmd="swap" title="${L("swap")}"><i class="fas fa-exchange-alt"></i> ${L("swapShort")}</button>` : ""}
+        <button type="button" data-cmd="skill" title="${L("skill")}"><i class="fas fa-magic"></i> ${L("skill")}</button>
       </div>`;
     }).join("");
   }
@@ -482,7 +501,8 @@ export function battleHtml(combat, { attack = pending === "attack" } = {}) {
   const info = combat.getFlag("nssq", "battle") ?? {};
   const bg = game.scenes.get(info.copy)?.background?.src;
   const attacker = attack ? combat.combatant?.actor : null;
-  const targets = new Set(attacker ? attackTargets(combat, attacker).map((c) => c.id) : []);
+  const picking = pending && typeof pending === "object" && pending.pick;
+  const targets = new Set(picking ? pending.pick : attacker ? attackTargets(combat, attacker).map((c) => c.id) : []);
   const enemies = combat.turns.filter((c) => c.actor && sideOf(c.actor) === "enemy")
     .sort((a, b) => (a.actor.system.row === b.actor.system.row ? (a.actor.system.order ?? 0) - (b.actor.system.order ?? 0) : a.actor.system.row === "back" ? -1 : 1));
   // 파티: 전열·후열 각 3칸. 칸 순서는 진형 배치(사본 씬 토큰의 가로 위치)를 따른다
@@ -505,7 +525,7 @@ export function battleHtml(combat, { attack = pending === "attack" } = {}) {
         <div class="nb-erow back" data-key="erow-back">${enemies.filter((c) => c.actor.system.row === "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
         <div class="nb-erow front" data-key="erow-front">${enemies.filter((c) => c.actor.system.row !== "back").map((c) => enemyCard(c, combat, targets.has(c.id))).join("")}</div>
       </div>
-      ${attacker ? `<div class="nb-hint" data-key="hint">${targets.size ? L("pickTarget") : L("noTarget")}</div>` : ""}
+      ${attacker || picking ? `<div class="nb-hint" data-key="hint">${targets.size ? L("pickTarget") : L("noTarget")}</div>` : ""}
       ${commandWindow(combat)}
       ${bust(combat)}
       ${game.user.isGM ? `<div class="nb-drop" data-key="drop">${L("dropHint")}</div>` : ""}
@@ -544,12 +564,25 @@ function bindClicks(el) {
       if (id) return requestEndPhaseApply(id, t.dataset.endphase === "undo");
       return;
     }
+    // [스킬]·[아이템] 목록
+    if ((t = hit("[data-act=back]"))) { menu = null; return renderHud(); }
+    if ((t = hit("[data-action-id]"))) {
+      const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
+      if (!c || !menu) return;
+      const kind = menu.kind;
+      const r = await beginAction(combat, c, kind, t.dataset.actionId);
+      menu = null;
+      if (r?.pick) pending = { pick: r.pick, kind, id: t.dataset.actionId, combatantId: c.id, spec: r.spec };
+      return renderHud();
+    }
     if ((t = hit("[data-cmd]"))) {
       if (t.disabled) return;
       const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
       if (!c) return;
       switch (t.dataset.cmd) {
-        case "attack": pending = pending === "attack" ? null : "attack"; return renderHud();
+        case "attack": pending = pending === "attack" ? null : "attack"; menu = null; return renderHud();
+        case "skill":
+        case "item": pending = null; menu = menu?.combatantId === c.id && menu.kind === t.dataset.cmd ? null : { kind: t.dataset.cmd, combatantId: c.id }; return renderHud();
         case "end": return requestEndTurn(combat);
         case "random": pending = null; return randomEnemyAction(combat);
         case "confused": pending = null; return confusedAction(combat, c);
@@ -582,6 +615,15 @@ function bindClicks(el) {
     if ((t = hit(".nb-enemy, .nb-member:not(.empty)"))) {
       const c = combat.combatants.get(t.dataset.combatant);
       if (!c) return;
+      // 스킬·아이템 대상 고르기
+      if (pending && typeof pending === "object" && pending.pick && t.classList.contains("targetable")) {
+        const p = pending;
+        pending = null;
+        renderHud();
+        const user = combat.combatants.get(p.combatantId);
+        if (user) return pickTarget(combat, user, p.kind, p.id, c, p.spec);
+        return;
+      }
       if (pending === "attack" && t.classList.contains("targetable")) {
         const attacker = combat.combatant.actor;
         pending = null;
@@ -622,7 +664,7 @@ export function registerHud() {
   Hooks.on("collapseSidebar", () => setTimeout(renderHud, 250));
   for (const hook of ["updateCombat", "createCombat", "updateCombatant", "createCombatant", "deleteCombatant", "updateActor", "updateToken", "createItem", "updateItem", "deleteItem"]) Hooks.on(hook, rerender);
   Hooks.on("updateCombat", (combat, changes) => {
-    if (foundry.utils.hasProperty(changes, "turn") || foundry.utils.hasProperty(changes, "flags.nssq.phase")) pending = null;
+    if (foundry.utils.hasProperty(changes, "turn") || foundry.utils.hasProperty(changes, "flags.nssq.phase")) { pending = null; menu = null; }
     // 새 전투가 시작되면 화면을 펼친다
     if (foundry.utils.hasProperty(changes, "started") && changes.started) collapsed = false;
   });

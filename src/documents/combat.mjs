@@ -111,6 +111,11 @@ export class NssqCombat extends Combat {
     if (!game.user.isGM) return this;
     // 종료 페이즈 결과를 적용하지 않았으면 묻는다(적용하고 넘어가기 / 그냥 넘어가기 / 취소)
     if (!(await confirmEndPhaseApplied(this))) return this;
+    // 오버히트(《○○ 드라이브》): 턴마다 1 줄어든다
+    for (const c of this.combatants) {
+      const n = Number(c.actor?.getFlag("nssq", "overheat") ?? 0);
+      if (n > 0) await c.actor.setFlag("nssq", "overheat", n - 1);
+    }
     await this.clearRoundFlags();
     await this.refreshInitiative();
     await super.nextRound();

@@ -19,6 +19,7 @@ import { NssqCombat } from "./documents/combat.mjs";
 import { NssqToken } from "./canvas/token.mjs";
 import { registerApply } from "./combat/apply.mjs";
 import { registerTurnStatus } from "./combat/turn-status.mjs";
+import { registerSkillUse } from "./combat/skill-use.mjs";
 import { registerBestiary } from "./combat/bestiary.mjs";
 import { BestiaryApp, registerBestiaryApp } from "./apps/bestiary.mjs";
 import { registerEffectsSync, syncEffects } from "./apps/effects-sync.mjs";
@@ -78,6 +79,7 @@ Hooks.once("init", () => {
   registerEffectsSync();
   registerApply();
   registerTurnStatus();
+  registerSkillUse();
   registerAttackHooks();
   registerTracker();
   registerBattle();
