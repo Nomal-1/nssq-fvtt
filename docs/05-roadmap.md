@@ -67,4 +67,6 @@
 - **Foundry 실제 확인**: 클라우드 환경 변수 `NSSQ_FOUNDRY_URL`·`NSSQ_FOUNDRY_USER`·`NSSQ_FOUNDRY_PASSWORD`·`NSSQ_FOUNDRY_PLAYER`·`NSSQ_FOUNDRY_PLAYER_PASSWORD`로 오라클 서버의 테스트 전용 월드(`nssq-test`)에 Playwright(Chromium, `/opt/pw-browsers`)로 접속할 수 있다. 비밀번호는 출력·커밋 금지. 실제 플레이 월드는 건드리지 않는다. 서버에 깔린 시스템 버전을 먼저 확인한다.
   - 도구: `node tools/dev/foundry-e2e.mjs info|eval|shot [gm|player]`, 스크립트에서는 `connect(role, { user })`. 클라우드 Chromium은 ws://가 막혀 socket.io를 Node WebSocket으로 중계한다(도구 안에 들어 있음). 월드 id는 `nssqtest`.
   - 테스트용 액터는 `[e2e]` 접두사로 만들고 끝나면 지운다. 사용자가 관전하는 계정: `GM관전`(보조 GM)·`PL관전`(플레이어), 비밀번호 없음. 관전 계정으로는 접속하지 않는다(겹치면 사용자가 못 들어온다). GM관전이 접속해 있으면 GM 클라이언트가 둘이라는 점을 감안한다.
+  - **서버의 시스템 업데이트도 Claude가 한다(다음 할 일)**: 환경 변수 `NSSQ_FOUNDRY_ADMIN_PASSWORD`(Foundry 관리자 비밀번호, 출력·커밋 금지)가 있으면 `tools/dev/foundry-e2e.mjs`에 업데이트 명령을 만든다. 흐름: 켜진 월드가 `nssqtest`인지 확인 → 월드 종료(관리자 비밀번호) → 설정 화면에서 NSSQ 시스템 [업데이트] → `nssqtest` 다시 켜기 → GM 접속으로 `game.system.version` 확인. 릴리스할 때마다 이걸로 올리고 체크리스트를 이어서 확인한다.
+    - 켜진 월드가 `nssqtest`가 아니면(실제 플레이 월드 등) **끄지 않고** 사용자에게 알린다. 업데이트 중에는 접속자가 모두 튕긴다(관전 계정 포함). 시스템은 서버 전체 공용이라 같은 서버의 다른 월드도 같은 버전이 된다.
   - 업데이트 전에 고친 코드를 확인하려면: 고친 파일을 읽어 상대 import를 `${location.origin}/systems/nssq/src/…` 절대 URL로 바꿔 blob 모듈로 `import()`하고, 그 함수를 직접 부르거나 문서 클래스 메서드·훅을 바꿔 끼운다(서버 버전과 섞이지 않게 테스트 뒤 새로고침).
