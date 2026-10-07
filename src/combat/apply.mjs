@@ -28,6 +28,10 @@ const sideKey = (actor) => (sideOf(actor) === "enemy" ? "enemy" : "party");
  */
 async function afterHpChange(actor) {
   const ko = (actor.system.hp?.value ?? 0) <= 0;
+  // 쓰러지면 상태 이상·봉인·강화·약화가 모두 풀린다(07 #49)
+  if (ko && ((actor.system.conditions ?? []).length || (actor.system.buffs ?? []).length)) {
+    await actor.update({ "system.conditions": [], "system.buffs": [] });
+  }
   const combat = game.combat;
   const combatant = combat?.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor.uuid);
   const dead = CONFIG.specialStatusEffects.DEFEATED;
