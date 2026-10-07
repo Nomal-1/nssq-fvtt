@@ -32,7 +32,8 @@
    "sl": 1,
    "description": "<p>《두 번째 칼》로 도 2자루를 동시 장비 중이면 분류 '백병' 스킬 공격도 2회 가능. 사용한 스킬 2회분 TP 소비. 2회째 스킬 공격을 일부러 발동하지 않는 것도 선택 가능.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "《두 번째 칼》로 도 2자루 장비 중이면 『백병』 스킬도 2회(TP 2회분): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "장군"
@@ -124,7 +125,8 @@
    "sl": 1,
    "description": "<p>종별 '도' 무기를 무기 슬롯과 기타 슬롯에 장비하고, 통상 공격 시 각 무기로 1회씩 공격. 각 공격 【물리 명중】 -3, 【물리 공격】 -(3-SL).</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "도를 무기·기타 슬롯에 함께 장비하면 통상 공격을 무기마다 1회씩(각 물리 명중 −3, 물리 공격 −(3−SL)): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "장군"
@@ -229,8 +231,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [팔] 봉인.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindArm",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -331,8 +348,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL+1)개. 에너미가 《주행성》을 가졌으면 대미지 다이스 +(SL×2)개 추가.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL+1",
+     "bonuses": [
+      {
+       "when": {
+        "targetHasSkill": "주행성"
+       },
+       "diceMod": "SL*2"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -420,8 +451,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴에 아직 메인 페이즈 행동을 하지 않은 적에 대한 공격 롤의 명중 판정과 대미지 다이스 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "hitMod": "SL",
+     "diceMod": "SL",
+     "when": {
+      "targetNotActedThisTurn": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -457,8 +497,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>도주 판정 시 선언. 도주 판정 달성값 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "escapeCheck",
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "checks.escape",
+       "value": 3
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -494,8 +546,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>전투 불능이 될 때 1D6을 굴려 (SL) 이하이면 전투 불능이 되지 않고 【HP】 1로 버틴다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "beforeKO",
+     "chance": {
+      "roll": "1d6",
+      "lte": "SL"
+     },
+     "effects": [
+      {
+       "type": "resource",
+       "resource": "hp",
+       "set": 1
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -536,8 +604,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신에게 상태 이상이 부여되는 순간 선언, 그 상태 이상을 무효화.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "conditionGained",
+     "when": {
+      "conditionKind": "ailment"
+     },
+     "effects": [
+      {
+       "type": "cure",
+       "kind": "ailment",
+       "count": 1
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -578,8 +661,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>적을 전투 불능으로 만들면 그 전투 동안 자신의 【물리 공격】 +1(강화 효과로 취급하지 않으며 해제되지 않음). 최대 +(SL+1)까지 누적.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "enemyKO",
+     "effects": [
+      {
+       "type": "state",
+       "id": "shogun.bloodspear",
+       "label": "피에 물든 창",
+       "mods": [
+        {
+         "path": "physAtk",
+         "value": 1
+        }
+       ],
+       "max": "SL+1"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -620,8 +722,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안 단일 대상 적 공격 롤의 대상을 누적 (SL+1)회까지 강제로 자신으로 변경. 또한 강화 효과 『물리 공격 상승: (SL+1)』을 얻는다(3턴 지속).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "provoke",
+     "count": "SL+1"
+    },
+    {
+     "type": "buff",
+     "id": "physAtkUp",
+     "value": "SL+1",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -666,8 +784,29 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 적에게 공격 롤이 행해지면 자신이 그 적에게 물리 공격으로 추격(대미지 다이스 -(4-SL)개). 누적 3체 추격 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "effects": [
+      {
+       "type": "chase",
+       "on": "anyAttack",
+       "attack": {
+        "kind": "physical",
+        "diceMod": "-(4-SL)"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -704,7 +843,8 @@
    "sl": 1,
    "description": "<p>강화 효과를 얻었을 때 선언. 자신 이외 아군의 【TP】 (SL) 회복. 전투당 1회.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "강화를 얻었을 때 선언, 자신 이외 아군 TP +SL(전투당 1회): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "장군"
@@ -745,8 +885,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상에게 강화 효과 『물리 공격 상승: (SL+1)』과 『속도 상승: (SL×5)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "physAtkUp",
+     "value": "SL+1",
+     "turns": 3
+    },
+    {
+     "type": "buff",
+     "id": "speedUp",
+     "value": "SL*5",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -787,8 +940,28 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상에게 강화 효과 『물리 방어 상승: (SL+1)』·『내성 상승: 전체』와 약화 효과 『속도 저하: (SL×5)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "defenseUp",
+     "value": "SL+1",
+     "turns": 3
+    },
+    {
+     "type": "buff",
+     "id": "resistUp",
+     "value": 0,
+     "turns": 3,
+     "param": "all"
+    },
+    {
+     "type": "debuff",
+     "id": "speedDown",
+     "value": "SL*5",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -829,8 +1002,26 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안 대상은 자기 열이 물리 공격을 받으면 공격자에게 물리 공격으로 반격. 반격은 최대 (SL)회.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "counter",
+       "on": "rowAttacked",
+       "when": {
+        "attackKind": "physical"
+       },
+       "attack": {
+        "kind": "physical"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -872,7 +1063,8 @@
    "sl": 1,
    "description": "<p>종별 '활'·'쇠뇌'·'총' 중 하나를 장비한 아군을 최대 (SL+1)명 선택, 즉시 적 단일에게 추격시킨다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "활·쇠뇌·총을 장비한 아군 최대 (SL+1)명이 즉시 적 단일에게 추격: GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "장군"
@@ -918,7 +1110,8 @@
    "sl": 1,
    "description": "<p>아군을 최대 (SL+1)명 선택, 즉시 적 단일에게 추격시킨다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "아군 최대 (SL+1)명이 즉시 적 단일에게 추격: GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "장군"
@@ -960,7 +1153,8 @@
    "sl": 1,
    "description": "<p>말이 통하는 NPC와 【TEC】 대항 판정, 이기면 그 NPC의 대화·행동을 일시적으로 중지시킨다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "NPC와 【TEC】 대항 판정, 이기면 대화·행동을 일시 중지: GM이 처리"
   },
   "_meta": {
    "className": "장군"
@@ -1125,8 +1319,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【속도】 +(SL×3).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "speed",
+     "value": "SL*3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
