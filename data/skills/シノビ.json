@@ -30,7 +30,8 @@
    "sl": 1,
    "description": "<p>모든 무기의 사거리를 『원』으로 취급. 그 무기를 쓰는 스킬 공격에도 동일 적용.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "모든 무기의 사거리를 『원』으로(스킬 공격 포함): GM이 사거리를 무시하고 처리"
   },
   "_meta": {
    "className": "시노비"
@@ -68,8 +69,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>단검 사용 시 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "단검"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -105,8 +117,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 『인법』 스킬 공격 롤의 물리 명중·속성 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "hitMod": "SL/2",
+     "when": {
+      "category": "인법"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -150,8 +170,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [다리] 봉인.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindLeg",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -195,8 +230,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(5+SL))의 억제 방어 롤, 실패하면 [석화].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "petrify",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 5 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -240,8 +290,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상에게 물리 공격 롤 2회, 대미지 다이스 −(4−SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 2,
+     "diceMod": "-(4-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -285,8 +342,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤 3회, 매 공격마다 대상은 적 중 무작위(같은 에너미는 1회까지만). 대미지 다이스 −(3−SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 3,
+     "random": true,
+     "uniqueTarget": true,
+     "diceMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -334,8 +400,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《인법: 분신》을 쓴 턴에만 사용 가능하며, 그 턴의 주행동 2회를 모두 이 스킬로 써야 한다. 물리 공격 롤, 대미지 다이스 +((SL+2)×3)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "(SL+2)*3"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "《인법: 분신》을 쓴 턴에만, 그 턴 주행동 2회 모두 이 스킬로: GM이 확인"
   },
   "_meta": {
    "className": "시노비"
@@ -376,8 +449,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈돌〉 속성 물리 공격 롤, 최종 실대미지는 절반으로 계산. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [수면].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "pierce"
+     ],
+     "halfDamage": true,
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "sleep",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -419,7 +511,8 @@
    "sl": 1,
    "description": "<p>상태 이상 중인 적 1체를 골라 선언. 자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정, 승리 시 대상의 상태 이상을 같은 열의 모든 적에게 옮긴다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "상태 이상 중인 적 1체와 억제 대항, 이기면 그 상태 이상을 같은 열의 모든 적에게 옮김: GM이 처리"
   },
   "_meta": {
    "className": "시노비"
@@ -460,8 +553,42 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 아군 전열이 물리 공격을 받으면 공격자에게 물리 공격으로 반격(최종 실대미지 절반). 또한 그 적은 목표값 (시노비 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [독]. 누계 3회 반격 또는 턴 종료 시 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "effects": [
+      {
+       "type": "counter",
+       "on": "frontRowAttacked",
+       "when": {
+        "attackKind": "physical"
+       },
+       "attack": {
+        "kind": "physical",
+        "halfDamage": true,
+        "onHit": [
+         {
+          "type": "inflict",
+          "condition": "poison",
+          "check": {
+           "type": "fixed",
+           "target": "@self.suppAtk + 7 + SL"
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -503,7 +630,8 @@
    "sl": 1,
    "description": "<p>그 턴 동안 모든 적은 물리 공격 명중 판정에서 주사위 눈 (SL+3) 이하가 절대 실패.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "그 턴 동안 모든 적의 물리 명중 판정에서 눈 (SL+3) 이하는 절대 실패: GM이 처리"
   },
   "_meta": {
    "className": "시노비"
@@ -549,7 +677,8 @@
    "sl": 1,
    "description": "<p>그 턴, 자신은 주행동을 2회 할 수 있다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "그 턴 주행동을 2회: GM이 행동 순서에서 한 번 더 차례를 줌(단계 8)"
   },
   "_meta": {
    "className": "시노비"
@@ -590,8 +719,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아군 1명을 지정해 선언. 그 턴 동안 적의 단일 대상 공격 롤의 대상을 누계 (SL+1)회까지 강제로 지정한 아군으로 바꾼다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "ally",
+     "scope": "single"
+    },
+    {
+     "type": "provoke",
+     "count": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -684,8 +823,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『회피 상승: (SL)』 획득, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "evasionUp",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -721,8 +867,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>도주 판정 시 선언, 도주 판정 달성값 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "escapeCheck",
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "checks.escape",
+       "value": 3
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -767,8 +925,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>크리티컬 히트 시 대상 즉사. F.O.E. 및 GM이 지정한 보스 에너미에게는 무효.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "crit",
+     "effects": [
+      {
+       "type": "resource",
+       "resource": "hp",
+       "set": 0
+      }
+     ]
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "F.O.E.·GM이 지정한 보스에게는 무효: GM이 확인"
   },
   "_meta": {
    "className": "시노비"
@@ -805,7 +976,8 @@
    "sl": 1,
    "description": "<p>물 위를 걸을 수 있다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "물 위를 걷는다: GM이 처리"
   },
   "_meta": {
    "className": "시노비"
@@ -842,7 +1014,8 @@
    "sl": 1,
    "description": "<p>시간 제한 없이 물속에 잠수해 있을 수 있다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "시간 제한 없이 잠수: GM이 처리"
   },
   "_meta": {
    "className": "시노비"
@@ -879,7 +1052,8 @@
    "sl": 1,
    "description": "<p>높은 곳에서 뛰어내려도 다치지 않는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "높은 곳에서 뛰어내려도 다치지 않음: GM이 처리"
   },
   "_meta": {
    "className": "시노비"
@@ -1001,8 +1175,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 공격】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppAtk",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -1038,8 +1218,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【속도】 +(SL×3).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "speed",
+     "value": "SL*3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
