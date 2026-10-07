@@ -65,6 +65,8 @@ export function unitProfile(actor, combatant) {
 }
 
 const isDrive = (item) => /드라이브/.test(item.name);
+/** 해설 HTML → 툴팁용 한 줄 글 */
+const plain = (html) => String(html ?? "").replace(/<br\s*\/?>|<\/p>/gi, "\n").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/[ \t]+/g, " ").replace(/\n\s*\n+/g, "\n").trim();
 
 /**
  * 지금 쓸 수 있는 스킬·아이템 목록
@@ -80,14 +82,14 @@ export function actionList(combat, combatant, kind) {
     return actor.items.filter((i) => i.type === "consumable" && (i.system.quantity ?? 0) > 0 && !i.system.stored).map((i) => {
       const ok = phase === "main" && myTurn && !!i.system.effects?.length && !user.noAction;
       const reason = !i.system.effects?.length ? "noEffects" : phase !== "main" ? "notMain" : !myTurn ? "notTurn" : user.noAction ? "noAction" : null;
-      return { id: i.id, name: i.name, cost: `×${i.system.quantity}`, target: i.system.target || L("allySingle"), ok, reason };
+      return { id: i.id, name: i.name, cost: `×${i.system.quantity}`, target: i.system.target || L("allySingle"), ok, reason, desc: plain(i.system.description) };
     });
   }
   return actor.items.filter((i) => i.type === "skill" && ["주행동", "개막"].includes(i.system.timing) && (i.system.sl ?? 0) > 0)
     .map((i) => {
       const r = canUseSkill(i.system, user, { phase, myTurn, drive: isDrive(i) });
       const c = i.system.cost ?? {};
-      return { id: i.id, name: i.name, cost: [c.tp ? `TP ${c.tp}` : "", c.fp ? `FP ${c.fp}` : ""].filter(Boolean).join(" ") || "-", target: i.system.target, timing: i.system.timing, ok: r.ok, reason: r.reason };
+      return { id: i.id, name: i.name, cost: [c.tp ? `TP ${c.tp}` : "", c.fp ? `FP ${c.fp}` : ""].filter(Boolean).join(" ") || "-", target: i.system.target, timing: i.system.timing, ok: r.ok, reason: r.reason, desc: plain(i.system.description) };
     })
     .sort((a, b) => Number(b.ok) - Number(a.ok));
 }
@@ -135,7 +137,6 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   const item = actor.items.get(id);
   if (!item) return null;
   const sys = item.system;
-  const spec = kind === "item" ? targetSpec(sys.target || "아군 단일") : targetSpec(sys.target);
   // 코스트 지불(아이템은 수량 −1). 발동에 실패해도 소모(07 #9)
   const upd = {};
   if (kind === "skill") {
@@ -145,62 +146,98 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   } else {
     await item.update({ "system.quantity": Math.max(0, (sys.quantity ?? 1) - 1) });
   }
+  const message = await resolveAndPost({
+    actor, combatant, item, kind,
+    units: targetCombatants.map((c) => ({ actor: c.actor, combatant: c })),
+    mainAction: kind === "skill" && sys.timing === "주행동"
+  });
+  if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
+  // 개막 페이즈에 쓴 스킬은 그 전투원의 개막 행동
+  if (combat.getFlag("nssq", "phase") === "opening") await combatant.setFlag("nssq", "opening", "skill");
+  return message;
+}
+
+/**
+ * 전투 밖에서 소모품 쓰기(캐릭터 시트의 [사용]). 수량은 호출한 쪽이 줄인다
+ * 대상이 「자신」이면 자신, 아니면 파티에서 고른다
+ */
+export async function useItemOutside(actor, item, targets) {
+  return resolveAndPost({ actor, combatant: null, item, kind: "item", units: targets.map((a) => ({ actor: a, combatant: null })), mainAction: false });
+}
+
+/** 효과 해석 → FP·오버히트 → 결과 카드 */
+async function resolveAndPost({ actor, combatant, item, kind, units, mainAction }) {
+  const sys = item.system;
+  const spec = kind === "item" ? targetSpec(sys.target || "아군 단일") : targetSpec(sys.target);
   const rolls = [];
   const user = unitProfile(actor, combatant);
-  const targets = targetCombatants.map((c) => unitProfile(c.actor, c));
-  const pool = spec.scope === "random" ? targets : [];
+  const targets = units.map((u) => unitProfile(u.actor, u.combatant));
+  const actorOf = new Map(units.map((u, i) => [targets[i].id, u.actor]));
   const r = await resolveEffects({
     effects: sys.effects ?? [], sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
-    targets: spec.scope === "random" ? [] : targets, pool,
-    mainAction: kind === "skill" && sys.timing === "주행동",
-    rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform()
+    targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : [],
+    mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform()
   });
   // FP(캐릭터만), 오버히트
   if (r.fpGain && actor.type === "character") await actor.update({ "system.fp.value": (actor.system.fp?.value ?? 0) + r.fpGain });
   if (r.overheat) await actor.setFlag("nssq", "overheat", r.overheat);
-  // 개막 페이즈에 쓴 스킬은 그 전투원의 개막 행동
-  if (combat.getFlag("nssq", "phase") === "opening") await combatant.setFlag("nssq", "opening", "skill");
-  if (actor.type === "enemy" && kind === "skill") await recordBestiary(actor, { skill: item.name });
 
-  const byId = new Map(combat.combatants.map((c) => [c.id, c]));
   const entries = [...r.results.values()].map((x) => ({
-    uuid: byId.get(x.id)?.actor?.uuid ?? null, name: x.name,
+    uuid: actorOf.get(x.id)?.uuid ?? null, name: x.name,
     damage: x.damage, heal: x.heal, inflicts: x.inflicts, buffs: x.buffs, cures: x.cures, resource: x.resource,
     sleepBroken: x.sleepBroken,
-    hits: x.hits.map((h) => (h.skipped ? { skipped: true } : { hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist })),
+    hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist })),
     applied: false, before: null,
     // 수동 반응(단계 6-C): 명중한 공격이 있고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
-    reaction: pendingReaction(byId.get(x.id)?.actor, x.hits.find((h) => h.hit)?.kind ?? "physical", x.hits.some((h) => h.hit))
+    reaction: pendingReaction(actorOf.get(x.id), x.hits.find((h) => h.hit)?.kind ?? "physical", x.hits.some((h) => h.hit))
   }));
   const card = {
-    userUuid: actor.uuid, userName: combatant.name, kind, name: item.name, img: item.img, sl: sys.sl ?? null,
+    userUuid: actor.uuid, userName: combatant?.name ?? actor.name, kind, name: item.name, img: item.img, sl: kind === "skill" ? sys.sl ?? null : null,
     activation: r.activation, failed: r.failed, fpGain: r.fpGain, gm: r.gm, partial: sys.effectsNote ?? "",
+    description: sys.description ?? "",
     unknownScope: !!spec.unknown, entries, applied: false
   };
-  const message = await ChatMessage.create({
+  return ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor, token: actor.token }),
     content: renderCard(card),
     rolls, sound: rolls.length ? CONFIG.sounds.dice : undefined,
     flags: { nssq: { skillCard: card } }
   });
-  return message;
 }
 
 /* ---------------- 카드 ---------------- */
 
 function entryLines(e, card) {
   const out = [];
-  for (const h of e.hits ?? []) {
-    if (h.skipped) { out.push(`<li class="miss">${esc(L("skipped"))}</li>`); continue; }
-    out.push(`<li class="${h.hit ? "hit" : "miss"}">${esc(L(h.hit ? "hitLine" : "missLine", { total: `<span data-mask="${card.kind}">${h.total}</span>`, dice: h.dice?.join("+") ?? "" }))}${h.hit ? ` — ${esc(L("damageLine", { n: h.final, count: h.diceCount }))}${h.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}` : ""}</li>`);
+  const hits = e.hits ?? [];
+  const multi = (card.entries ?? []).reduce((n, x) => n + (x.hits?.length ?? 0), 0) > 1;
+  // 부여·강화·확률 실패: 어느 명중에서 생겼는지(seq)가 있으면 그 공격 아래에
+  const inflictLi = (i) => `<li class="${i.resisted || i.broken ? "resist" : "inflict"}">${esc(L(i.resisted ? "inflictResisted" : "inflictLine", { label: conditionName(i.id), depth: i.depth ?? "-" }))}${i.broken ? ` <em class="woke">${esc(L("brokenAt", { n: i.broken }))}</em>` : ""}</li>`;
+  const buffLi = (b) => `<li class="${BUFFS[b.id]?.kind ?? "buff"}">${esc(L("buffLine", { label: buffLabel(b), turns: b.turns }))}</li>`;
+  const chanceLi = (x) => `<li class="miss">${esc(L("chanceFailed", { die: x.die }))}</li>`;
+  const sub = (seq) => [
+    ...(e.inflicts ?? []).filter((i) => i.seq === seq).map(inflictLi),
+    ...(e.buffs ?? []).filter((b) => b.seq === seq).map(buffLi),
+    ...(e.resource ?? []).filter((x) => x.chanceFailed && x.seq === seq).map(chanceLi)
+  ].join("");
+  for (const h of hits) {
+    const no = multi && h.seq ? `<b class="seq">${esc(L("hitNo", { n: h.seq }))}</b> ` : "";
+    if (h.skipped) { out.push(`<li class="miss">${no}${esc(L("skipped"))}</li>`); continue; }
+    // 달성값은 모르는 에너미면 ?로 바꾸므로 span에 넣고, 나머지 글자만 이스케이프한다
+    const [pre, post] = L(h.hit ? "hitLine" : "missLine", { total: "\u0000", dice: h.dice?.join("+") ?? "" }).split("\u0000");
+    let line = `${no}${esc(pre)}<span data-mask="${esc(card.kind)}">${h.total ?? "-"}</span>${esc(post ?? "")}`;
+    if (h.hit) line += ` — ${esc(L("damageLine", { n: h.final, count: h.diceCount }))}${h.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}`;
+    if (h.woke) line += ` <em class="woke">${esc(L("woke"))}</em>`;
+    const inner = h.seq ? sub(h.seq) : "";
+    out.push(`<li class="${h.hit ? "hit" : "miss"}">${line}${inner ? `<ul class="per-hit">${inner}</ul>` : ""}</li>`);
   }
-  if (e.damage && (e.hits ?? []).length > 1) out.push(`<li class="total">${esc(L("damageTotal", { n: e.damage }))}</li>`);
+  if (e.damage && hits.length > 1) out.push(`<li class="total">${esc(L("damageTotal", { n: e.damage }))}</li>`);
   if (e.heal?.hp) out.push(`<li class="heal">${esc(L("healHp", { n: e.heal.hp }))}</li>`);
   if (e.heal?.tp) out.push(`<li class="heal">${esc(L("healTp", { n: e.heal.tp }))}</li>`);
-  for (const i of e.inflicts ?? []) out.push(`<li class="${i.resisted ? "resist" : "inflict"}">${esc(L(i.resisted ? "inflictResisted" : "inflictLine", { label: conditionName(i.id), depth: i.depth ?? "-" }))}</li>`);
-  for (const b of e.buffs ?? []) out.push(`<li class="${BUFFS[b.id]?.kind ?? "buff"}">${esc(L("buffLine", { label: buffLabel(b), turns: b.turns }))}</li>`);
+  for (const i of e.inflicts ?? []) if (!i.seq) out.push(inflictLi(i));
+  for (const b of e.buffs ?? []) if (!b.seq) out.push(buffLi(b));
   for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}</li>`);
-  for (const x of e.resource ?? []) if (x.chanceFailed) out.push(`<li class="miss">${esc(L("chanceFailed", { die: x.die }))}</li>`);
+  for (const x of e.resource ?? []) if (x.chanceFailed && !x.seq) out.push(chanceLi(x));
   return out.join("");
 }
 
@@ -210,14 +247,16 @@ function renderCard(card) {
   const head = `<header class="check-header"><span class="check-label"><img src="${esc(card.img)}" width="20" height="20"/> ${esc(card.name)}${card.sl ? ` <small>SL${card.sl}</small>` : ""}</span><span class="check-kind">${esc(card.userName)}</span></header>`;
   const act = card.activation ? `<p class="activation ${card.activation.ok ? "ok" : "ng"}">${esc(L(card.activation.ok ? "activationOk" : "activationFail", { dice: card.activation.dice.join("+") }))}</p>` : "";
   const fp = card.fpGain ? `<p class="fp-gain">FP +${card.fpGain}</p>` : "";
-  if (card.failed) return `<div class="nssq-skill-card">${head}${act}${fp}</div>`;
+  // 해설(데이터의 HTML)은 접어 둔다
+  const desc = card.description ? `<details class="sk-desc"><summary>${esc(L("description"))}</summary>${card.description}</details>` : "";
+  if (card.failed) return `<div class="nssq-skill-card">${head}${desc}${act}${fp}</div>`;
   const rows = card.entries.map((e, i) => `<section class="sk-target" data-index="${i}"><div class="target-name"><i class="fas fa-bullseye"></i> ${esc(e.name)}</div><ul>${entryLines(e, card)}</ul><div class="sk-status"></div></section>`).join("");
   const gm = [
     ...(card.gm ?? []).map((g) => L("gmNeeded", { what: game.i18n.localize(`NSSQ.SkillUse.type.${String(g).split(":")[0]}`) })),
     ...(card.partial ? [L("gmNeeded", { what: card.partial })] : []),
     ...(card.unknownScope ? [L("gmScope")] : [])
   ];
-  return `<div class="nssq-skill-card">${head}${act}${rows}${fp}${gm.map((g) => `<p class="gm-needed"><i class="fas fa-exclamation-triangle"></i> ${esc(g)}</p>`).join("")}
+  return `<div class="nssq-skill-card">${head}${desc}${act}${rows}${fp}${gm.map((g) => `<p class="gm-needed"><i class="fas fa-exclamation-triangle"></i> ${esc(g)}</p>`).join("")}
     <div class="sk-apply"><span class="apply-status"></span><span class="apply-buttons"><button type="button" data-sk-apply><i class="fas fa-check"></i> ${esc(L("apply"))}</button><button type="button" data-sk-undo><i class="fas fa-undo"></i> ${esc(L("undo"))}</button></span></div></div>`;
 }
 
@@ -245,7 +284,7 @@ async function applyEntry(actor, e, sourceUuid) {
   const newly = [];
   const source = sourceUuid ? fromUuidSync(sourceUuid) : null;
   for (const i of e.inflicts ?? []) {
-    if (i.resisted) continue;
+    if (i.resisted || i.broken) continue;
     const r = addCondition(conds, { id: i.id, depth: i.depth, source: sourceUuid ?? "", sourceSuppAtk: source ? combatProfile(source).suppAtk : 0 });
     conds = r.list;
     if (!["ignored", "blocked"].includes(r.result)) newly.push(i.id);

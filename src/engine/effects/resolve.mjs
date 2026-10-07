@@ -56,6 +56,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
   }
 
   const hitChecks = [];
+  let seq = 0;
   const run = async (list, tgt) => {
     for (const e of list ?? []) {
       if (!e?.type || PASSIVE_TYPES.includes(e.type)) continue;
@@ -94,11 +95,25 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       rollDice
     });
     hitChecks.push(result);
-    r.hits.push({ ...result, elements, kind });
+    // seq: 이 행동 안에서 몇 번째 공격인가(다회 공격을 카드에 순서대로 보인다)
+    const hitRow = { ...result, elements, kind, seq: ++seq };
+    r.hits.push(hitRow);
     if (result.hit) {
       r.damage += result.finalDamage ?? 0;
-      if ((t.conditions ?? []).some((c) => c.id === "sleep")) r.sleepBroken = true;
-      if (e.onHit?.length) await run(e.onHit, [t]);
+      if (!r.sleepBroken && (t.conditions ?? []).some((c) => c.id === "sleep")) { r.sleepBroken = true; hitRow.woke = true; }
+      // 앞 회차에서 건 [수면]도 다음 명중으로 풀린다(07 #37)
+      const slept = r.inflicts.find((x) => x.id === "sleep" && !x.resisted && !x.broken);
+      if (slept) { slept.broken = hitRow.seq; hitRow.woke = true; }
+      if (e.onHit?.length) {
+        // 이 명중으로 생긴 부여·강화에 회차를 붙인다
+        const n0 = r.inflicts.length;
+        const b0 = r.buffs.length;
+        const c0 = r.resource.length;
+        await run(e.onHit, [t]);
+        for (const x of r.resource.slice(c0)) x.seq = hitRow.seq;
+        for (const x of r.inflicts.slice(n0)) x.seq = hitRow.seq;
+        for (const x of r.buffs.slice(b0)) x.seq = hitRow.seq;
+      }
     }
   };
 
@@ -174,7 +189,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       const alive = pool.filter((p) => !p.ko);
       if (!alive.length) break;
       const t = alive[Math.min(alive.length - 1, Math.floor(rng() * alive.length))];
-      if (e.uniqueTarget && seen.has(t.id)) { res(t).hits.push({ skipped: true }); continue; }
+      if (e.uniqueTarget && seen.has(t.id)) { res(t).hits.push({ skipped: true, seq: ++seq }); continue; }
       seen.add(t.id);
       await attackOnce(e, t);
     }

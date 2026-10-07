@@ -10,7 +10,16 @@ import { recordBestiary } from "./bestiary.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 
-export const autoApplyMode = () => game.settings.get("nssq", "autoApply");
+/**
+ * 자동 적용 방식: 월드 설정, 단 진행 중인 전투에서 GM이 전투 화면의 [자동 적용]을 켜고 끄면 그 전투에서만 그것(켬 → auto, 끔 → confirm)
+ */
+export function autoApplyMode() {
+  const setting = game.settings.get("nssq", "autoApply");
+  const battle = game.combats?.find((c) => c.getFlag("nssq", "battle") && c.started);
+  const v = battle?.getFlag("nssq", "autoApply");
+  if (v === undefined || v === null) return setting;
+  return v ? "auto" : "confirm";
+}
 
 /** 이 클라이언트가 GM 처리를 맡는가(활성 GM 1명) */
 export function isActiveGM() {

@@ -159,3 +159,27 @@ describe("수동 반응(07 #51)", () => {
     expect(reactionEffect([{ type: "nullify" }], "elemental").type).toBe("nullify");
   });
 });
+
+describe("다회 공격의 회차 표시", () => {
+  it("공격마다 seq, 명중으로 생긴 부여에 그 회차, 잠든 대상은 첫 명중에 woke", async () => {
+    const effects = [{ type: "attack", kind: "physical", times: 2, onHit: [{ type: "inflict", condition: "poison", depth: 3 }] }];
+    const sleeper = { ...foe, conditions: [{ id: "sleep", depth: 5 }] };
+    // 1타: 명중 [4,5] 대미지 6D6, 2타: 명중 [4,5] 대미지 6D6
+    const r = await resolveEffects({ effects, user, targets: [sleeper], rollDice: dice(4, 5, ...Array(6).fill(2), 4, 5, ...Array(6).fill(2)) });
+    const e = r.results.get("e");
+    expect(e.hits.map((h) => h.seq)).toEqual([1, 2]);
+    expect(e.hits.map((h) => !!h.woke)).toEqual([true, false]);
+    expect(e.inflicts.map((i) => i.seq)).toEqual([1, 2]);
+  });
+});
+
+describe("다회 공격 중 [수면]", () => {
+  it("1타로 건 [수면]은 2타 명중으로 풀린다", async () => {
+    const effects = [{ type: "attack", kind: "physical", times: 2, onHit: [{ type: "inflict", condition: "sleep", depth: 4 }] }];
+    const r = await resolveEffects({ effects, user, targets: [foe], rollDice: dice(4, 5, ...Array(6).fill(2), 4, 5, ...Array(6).fill(2)) });
+    const e = r.results.get("e");
+    expect(e.inflicts[0].broken).toBe(2);
+    expect(e.hits[1].woke).toBe(true);
+    expect(e.inflicts[1].broken).toBeUndefined();
+  });
+});

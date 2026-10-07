@@ -134,11 +134,22 @@ export function inventoryContext(actor, { skillFilter = "all" } = {}) {
   };
 }
 
-/** [사용]: 1회분 줄이고 채팅에 해설을 보인다(효과 자동 적용은 단계 6) */
+/** [사용]: 효과 데이터가 있으면 대상을 고르고 효과를 해석해 결과 카드(적용은 자동 적용 설정대로), 없으면 해설만 */
 async function useItem(actor, item) {
+  const hasEffects = !!item.system.effects?.length;
+  let targets = null;
+  if (hasEffects) {
+    targets = await pickItemTargets(actor, item);
+    if (!targets) return;
+  }
   const next = useOnce(item);
   const name = item.name;
   const desc = item.system.description ?? "";
+  // 지우기 전에 효과를 해석한다(카드가 아이템 그림·해설을 쓴다)
+  if (hasEffects) {
+    const { useItemOutside } = await import("../combat/skill-use.mjs");
+    await useItemOutside(actor, item, targets);
+  }
   if (next.remove) await item.delete();
   else {
     const u = { "system.quantity": next.quantity };
@@ -148,9 +159,30 @@ async function useItem(actor, item) {
   const left = next.remove ? game.i18n.localize("NSSQ.Inventory.usedUp")
     : next.usesValue !== null ? game.i18n.format("NSSQ.Inventory.usesLeft", { value: next.usesValue, max: item.system.uses.max, qty: next.quantity })
       : game.i18n.format("NSSQ.Inventory.qtyLeft", { qty: next.quantity });
+  if (hasEffects) return ui.notifications.info(`${game.i18n.format("NSSQ.Inventory.usedItem", { name })} (${left})`);
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content: `<div class="nssq-use"><b><i class="fas fa-hand-sparkles"></i> ${game.i18n.format("NSSQ.Inventory.usedItem", { name })}</b> <span class="left">(${left})</span>${desc}<p class="notes">${game.i18n.localize("NSSQ.Inventory.useManual")}</p></div>`
+  });
+}
+
+/** 전투 밖 소모품의 대상: 자신 / 아군 전체(파티) / 아군 단일(파티에서 고르기, 기본은 자신) */
+async function pickItemTargets(actor, item) {
+  const { targetSpec } = await import("../combat/skill-use.mjs");
+  const { partyActors } = await import("../apps/gm-screen.mjs");
+  const spec = targetSpec(item.system.target || "아군 단일");
+  if (spec.side === "self") return [actor];
+  const party = partyActors().filter((a) => a.type === "character");
+  if (!party.includes(actor)) party.unshift(actor);
+  if (spec.scope === "all" || spec.scope === "row") return party;
+  const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const options = party.map((a) => `<option value="${a.id}" ${a === actor ? "selected" : ""}>${esc(a.name)} (HP ${a.system.hp?.value ?? 0}/${a.system.hp?.max ?? 0})</option>`).join("");
+  return Dialog.prompt({
+    title: game.i18n.format("NSSQ.Inventory.useTargetTitle", { name: item.name }),
+    content: `<form><div class="form-group"><label>${game.i18n.localize("NSSQ.Inventory.useTarget")}</label><select name="target">${options}</select></div></form>`,
+    label: game.i18n.localize("NSSQ.Inventory.use"),
+    callback: (html) => [game.actors.get(html[0].querySelector("[name=target]").value)].filter(Boolean),
+    rejectClose: false
   });
 }
 

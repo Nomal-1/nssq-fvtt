@@ -15,7 +15,7 @@ import { changePosition, shuffleRowsDialog } from "./formation.mjs";
 import { joinBattle, openEndDialog } from "../apps/battle.mjs";
 import { rollEscape, setIdentified, swapWeapon, toggleGuard, toggleRow } from "./tracker.mjs";
 import { emit, onSocket } from "../socket.mjs";
-import { isActiveGM } from "./apply.mjs";
+import { autoApplyMode, isActiveGM, requestApply } from "./apply.mjs";
 import { enemyArtFor } from "../apps/enemy-art.mjs";
 import { bustStyle, faceStyle } from "../apps/art-config.mjs";
 import { flip, morph, snapshot } from "./morph.mjs";
@@ -25,7 +25,7 @@ import { StatusApp, statusChips, statusMarks } from "./status.mjs";
 import { allyAnalysisHtml, enemyAnalysisHtml } from "./analysis.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
 import { actionState, confusedAction, endPhaseMessage, requestEndPhaseApply } from "./turn-status.mjs";
-import { actionList, beginAction, pickTarget } from "./skill-use.mjs";
+import { actionList, beginAction, pickTarget, requestSkillApply } from "./skill-use.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -206,7 +206,9 @@ function gmControls(combat) {
   const C = (k) => game.i18n.localize(`NSSQ.Combat.${k}`);
   if (over) return `<button type="button" data-gm="end"><i class="fas fa-flag-checkered"></i> ${C(over === "victory" ? "endVictory" : "endDefeat")}</button>`;
   const idValue = combat.getFlag("nssq", "battle")?.identifyValue;
-  return `<button type="button" data-gm="identify" title="${esc(game.i18n.localize("NSSQ.Identify.hint"))}"><i class="fas fa-search"></i> ${game.i18n.localize("NSSQ.Identify.title")}${idValue !== null && idValue !== undefined ? ` (${idValue})` : ""}</button>
+  const auto = autoApplyMode() === "auto";
+  return `<button type="button" data-gm="auto" class="auto-toggle ${auto ? "on" : ""}" title="${esc(L("autoHint"))}"><i class="fas ${auto ? "fa-toggle-on" : "fa-toggle-off"}"></i> ${esc(L(auto ? "autoOn" : "autoOff"))}</button>
+    <button type="button" data-gm="identify" title="${esc(game.i18n.localize("NSSQ.Identify.hint"))}"><i class="fas fa-search"></i> ${game.i18n.localize("NSSQ.Identify.title")}${idValue !== null && idValue !== undefined ? ` (${idValue})` : ""}</button>
     <button type="button" data-gm="finish" title="${esc(L("finishHint"))}"><i class="fas fa-flag-checkered"></i> ${L("finish")}</button>
     ${phase === "opening" ? `<button type="button" data-gm="escape"><i class="fas fa-running"></i> ${C("escape")}</button>` : ""}
     <button type="button" data-gm="shuffle" title="${esc(L("shuffleHint"))}"><i class="fas fa-random"></i> ${L("shuffle")}</button>
@@ -252,6 +254,14 @@ function enemyCard(c, combat, targetable) {
   </div>`;
 }
 
+/** 오버히트(드라이브 스킬 사용 뒤 남은 턴) 표시 */
+function overheatChip(a) {
+  const n = Number(a.getFlag("nssq", "overheat") ?? 0);
+  if (!(n > 0)) return "";
+  const S = (k) => game.i18n.format(`NSSQ.SkillUse.${k}`, { n });
+  return `<em class="overheat" title="${esc(S("overheatHint"))}"><i class="fas fa-fire-alt"></i> ${esc(S("overheatChip"))}</em>`;
+}
+
 function partyCard(c, combat, targetable) {
   const a = c.actor;
   const s = a.system;
@@ -262,7 +272,7 @@ function partyCard(c, combat, targetable) {
   return `<div class="${classes}" data-combatant="${c.id}" data-key="p-${c.id}" data-flip>
     <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}"></div>
     <div class="info">
-      <div class="line"><span class="name">${esc(c.name)}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${statusChips(a)}
+      <div class="line"><span class="name">${esc(c.name)}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${overheatChip(a)}${statusChips(a)}
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
       <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) : ""}</div>
     </div>
@@ -274,7 +284,7 @@ function partyCard(c, combat, targetable) {
 function actionMenu(combat, c) {
   const S = (k, d) => (d ? game.i18n.format(`NSSQ.SkillUse.${k}`, d) : game.i18n.localize(`NSSQ.SkillUse.${k}`));
   const list = actionList(combat, c, menu.kind);
-  const rows = list.map((x) => `<button type="button" class="act ${x.ok ? "" : "disabled"}" data-action-id="${x.id}" title="${esc(x.ok ? x.target ?? "" : S(`reason.${x.reason}`))}">
+  const rows = list.map((x) => `<button type="button" class="act ${x.ok ? "" : "disabled"}" data-action-id="${x.id}" title="${esc([x.ok ? x.target ?? "" : S(`reason.${x.reason}`), x.desc].filter(Boolean).join("\n\n"))}">
       <span class="nm">${esc(x.name)}</span><small>${esc(x.cost)} · ${esc(x.target ?? "")}</small>${x.ok ? "" : `<em>${esc(S(`reason.${x.reason}`))}</em>`}</button>`).join("");
   return `<div class="who">${esc(S(menu.kind === "item" ? "itemTitle" : "skillTitle", { name: c.name }))}</div>
     <div class="action-list" data-combatant="${c.id}">
@@ -556,6 +566,7 @@ function bindClicks(el) {
         case "shuffle": return shuffleRowsDialog(combat);
         case "finish": return openEndDialog();
         case "identify": return identifyDialog(combat);
+        case "auto": return toggleAutoApply(combat);
       }
       return;
     }
@@ -634,6 +645,34 @@ function bindClicks(el) {
       return togglePop(combat, c, t);
     }
   });
+}
+
+/**
+ * 이 전투의 자동 적용 켜기/끄기(GM). 끌 때 이번 전투에서 이미 적용된 결과가 있으면 모두 되돌릴지 묻는다
+ */
+async function toggleAutoApply(combat) {
+  const on = autoApplyMode() === "auto";
+  await combat.setFlag("nssq", "autoApply", !on);
+  if (!on) return;
+  // 이 전투가 만들어진 뒤의 카드 중 적용된 것(최근 것부터 되돌린다)
+  const since = combat._stats?.createdTime ?? 0;
+  const jobs = [];
+  for (const m of game.messages.contents) {
+    if ((m.timestamp ?? 0) < since) continue;
+    const atk = m.getFlag("nssq", "attack");
+    (atk?.targets ?? []).forEach((t, i) => { if (t.applied) jobs.push(() => requestApply(m.id, i, true)); });
+    if (m.getFlag("nssq", "skillCard")?.applied) jobs.push(() => requestSkillApply(m.id, true));
+    const ep = m.getFlag("nssq", "endPhase");
+    if (ep?.applied && ep.combatId === combat.id) jobs.push(() => requestEndPhaseApply(m.id, true));
+  }
+  if (!jobs.length) return;
+  const undo = await Dialog.confirm({
+    title: L("autoOff"),
+    content: `<p>${esc(L("autoUndoAsk", { n: jobs.length }))}</p>`,
+    yes: () => true, no: () => false, defaultYes: false
+  });
+  if (!undo) return;
+  for (const job of jobs.reverse()) await job();
 }
 
 /** 턴 종료: GM은 바로, 플레이어는 GM에게 부탁 */

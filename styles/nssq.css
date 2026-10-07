@@ -556,6 +556,8 @@
 #nssq-battle .nb-command .head { flex: 0 0 auto; padding: 7px 12px; font-size: 1.15em; font-family: var(--nq-title); color: var(--nq-gold-l); background: rgba(201, 162, 74, 0.12); border-bottom: 1px solid var(--nq-gold); }
 #nssq-battle .nb-command .gm { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 4px; padding: 5px 8px; border-bottom: 1px solid var(--nq-line2); }
 #nssq-battle .nb-command .gm button { flex: 1 1 auto; font-size: 0.95em; padding: 2px 8px; }
+#nssq-battle .nb-command .gm button.auto-toggle { flex-basis: 100%; color: #9aa7b8; }
+#nssq-battle .nb-command .gm button.auto-toggle.on { color: #7dffa0; border-color: #3fae63; background: rgba(40, 140, 70, 0.3); }
 #nssq-battle .nb-command .body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
 #nssq-battle .nb-command .who { font-size: 1em; color: var(--nq-gold-l); }
 #nssq-battle .nb-command .wait { margin: auto 0; text-align: center; color: var(--nq-mu); }
@@ -582,6 +584,8 @@
 #nssq-battle .nb-member em { flex: 0 0 auto; font-style: normal; font-size: 0.72em; padding: 0 4px; border-radius: 6px; }
 #nssq-battle .nb-member em.npc { border: 1px solid #c7a6f0; color: #c7a6f0; }
 #nssq-battle .nb-member em.guard { background: rgba(111, 211, 230, 0.85); color: #0a1626; }
+#nssq-battle .nb-member em.overheat { background: linear-gradient(90deg, #ff7a1a, #e0302a); color: #fff; font-weight: 700; box-shadow: 0 0 6px rgba(255, 110, 30, 0.8); animation: nb-overheat 1.4s ease-in-out infinite alternate; }
+@keyframes nb-overheat { from { box-shadow: 0 0 3px rgba(255, 110, 30, 0.5); } to { box-shadow: 0 0 9px rgba(255, 80, 20, 0.95); } }
 #nssq-battle .nb-member .cls { margin-left: auto; font-size: 0.85em; color: var(--nq-mu); white-space: nowrap; }
 #nssq-battle .nb-member .bars { display: flex; gap: 8px; }
 #nssq-battle .nb-member .nb-bar { height: 18px; border-radius: 8px; }
@@ -889,6 +893,15 @@
 .nssq-skill-card .sk-target li.buff { color: #2460b2; }
 .nssq-skill-card .sk-target li.debuff { color: #6e3296; }
 .nssq-skill-card .sk-target li .crit { color: #c98a00; }
+.nssq-skill-card .sk-target li .seq { display: inline-block; min-width: 2.2em; color: #333; }
+.nssq-skill-card .sk-target li .woke { font-style: normal; font-size: 0.9em; color: #6e3296; }
+.nssq-skill-card .sk-target ul.per-hit { margin: 0 0 2px 2.4em; font-size: 0.95em; }
+.nssq-skill-card .sk-target li.hit > ul.per-hit li { color: inherit; }
+.nssq-skill-card .sk-target ul.per-hit li.inflict { color: #b02828; }
+.nssq-skill-card .sk-target ul.per-hit li.resist, .nssq-skill-card .sk-target ul.per-hit li.miss { color: #777; }
+.nssq-skill-card .sk-desc { margin: 2px 0 4px; font-size: 0.88em; color: #444; }
+.nssq-skill-card .sk-desc summary { cursor: pointer; color: #666; }
+.nssq-skill-card .sk-desc p { margin: 2px 0; }
 .nssq-skill-card .gm-needed { margin: 3px 0; padding: 2px 6px; font-size: 0.88em; color: #8a5a00; background: rgba(255, 200, 80, 0.15); border-left: 3px solid #c98a00; }
 .nssq-skill-card .sk-apply { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
 .nssq-skill-card .sk-apply .apply-status { flex: 1; font-size: 0.85em; color: #555; }
