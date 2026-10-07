@@ -29,8 +29,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>적의 공격 롤로 대미지를 받으면 자신의 TP 1 회복.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "damaged",
+     "effects": [
+      {
+       "type": "resource",
+       "resource": "tp",
+       "delta": 1
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -68,8 +80,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>망치 공격의 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "망치"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -107,8 +130,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '방어' 스킬의 효과 발동 횟수 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "guardCount",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -151,8 +180,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉+〈뇌〉 속성 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "strike",
+      "volt"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -195,8 +234,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL)개. 준 대미지의 절반만큼 자신의 【HP】 회복.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL",
+     "onHit": [
+      {
+       "type": "drain",
+       "resource": "hp",
+       "mode": "half"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -240,7 +292,8 @@
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 메인 페이즈 종료 시 후발 행동으로 적 단일에게 물리 공격 롤, 대미지 다이스는 (대기 중 받은 대미지+(SL×2))개.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "대기 상태 → 메인 페이즈 종료 때 후발로 적 단일에 물리 공격, 다이스 = 대기 중 받은 대미지 + SL×2: GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "포트리스"
@@ -283,8 +336,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL×2)개. 공격 롤 종료 후 자신은 [마비].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL*2"
+    },
+    {
+     "type": "inflict",
+     "condition": "paralyze",
+     "check": {
+      "type": "forced"
+     },
+     "toSelf": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -326,7 +393,8 @@
    "sl": 1,
    "description": "<p>분류 '방어' 스킬로 대기 상태여도 후발 행동으로 통상 공격 가능.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "『방어』 스킬로 대기 중이어도 후발 행동으로 통상 공격 가능: GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "포트리스"
@@ -369,8 +437,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 대상이 공격 롤의 대상이 되면 자신이 그 공격 롤을 대신 받는다. 대신 받기 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "cover",
+       "scope": "target"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -417,8 +498,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 대상 열의 인물이 공격 롤의 대상이 되면 자신이 대신 받는다. 대신 받기 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "cover",
+       "scope": "row"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -465,8 +559,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 아군이 공격 롤의 대상이 되면 자신이 대신 받는다. 대신 받기 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "cover",
+       "scope": "all"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -513,8 +620,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 아군이 공격 롤의 대상이 될 때마다 대신 받을지 선택 가능. 대신 받기 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "cover",
+       "scope": "all",
+       "optional": true
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -550,8 +671,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안 단일 대상 적 공격 롤의 대상을 누적 (SL+1)회까지 강제로 자신으로 변경.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "provoke",
+     "count": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -675,8 +801,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『억제 방어 상승: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "suppDefUp",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -805,8 +938,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『내성 부여: 염빙뇌』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "resistGrant",
+     "value": 0,
+     "turns": 3,
+     "param": "fire,ice,volt"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -842,8 +983,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>도주 판정 시 선언. 도주 판정 달성값 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "escapeCheck",
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "checks.escape",
+       "value": 3
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -884,8 +1037,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『억제 방어 상승: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "suppDefUp",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -921,8 +1081,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『물리 방어 상승: (SL)』과 『내성 상승: 염빙뇌』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "defenseUp",
+     "value": "SL",
+     "turns": 3
+    },
+    {
+     "type": "buff",
+     "id": "resistUp",
+     "value": 0,
+     "turns": 3,
+     "param": "fire,ice,volt"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -1044,8 +1218,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【방어】 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "defense",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -1081,8 +1261,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 방어】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppDef",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
