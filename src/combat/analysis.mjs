@@ -76,10 +76,30 @@ export function enemyAnalysisHtml(actor, name) {
     <h4>DROP</h4><ul class="an-list">${dropRows.join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>`;
 
   // 오른쪽: 강화 3칸·약화 3칸·상태 이상·봉인(눈에 보이므로 식별과 관계없이)
+  const right = effectsColumnHtml(actor);
+
+  return `<header>
+      <span class="name">${rare ? `<span class="rare">★</span>` : ""}${esc(name)}</span>
+      <span class="lv">Lv ${show ? esc(s.level) : Q}</span>${s.isFOE ? `<span class="foe">F.O.E.</span>` : ""}
+      ${gm ? `<span class="gm-note">${esc(full ? A("gmFull", { n: book.defeated ?? 0 }) : known ? A("gmKnown") : A("gmHidden"))}</span>` : ""}
+      ${gmEditButton()}
+      <a data-pop-close title="${esc(loc("NSSQ.StatusPanel.close"))}"><i class="fas fa-times"></i></a>
+    </header>
+    <div class="an-cols"><div class="an-col left">${left}</div><div class="an-col mid">${middle}</div><div class="an-col right">${right}</div></div>`;
+}
+
+/** GM: 상태 이상·강화·약화를 거는 창 열기 버튼(자세히 보기 머리) */
+function gmEditButton() {
+  return game.user.isGM ? `<button type="button" class="an-edit" data-pop-status><i class="fas fa-heartbeat"></i> ${esc(loc("NSSQ.Conditions.button"))}</button>` : "";
+}
+
+/** 강화 3칸·약화 3칸·상태 이상·봉인 열(에너미·아군 공통) */
+export function effectsColumnHtml(actor) {
+  const s = actor?.system ?? {};
   const buffs = (s.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]);
   const slots = (kind) => {
     const list = buffs.filter((b) => BUFFS[canonicalBuff(b.id)].kind === kind);
-    const rows = list.map((b) => `<li class="${kind}" title="${esc(buffEffectText(b))}"><span>『${esc(buffLabel(b))}』</span><small>${esc(A("turns", { n: b.turns }))}</small></li>`);
+    const rows = list.map((b) => `<li class="${kind}" title="${esc(buffEffectText(b))}"><span>『${esc(buffLabel(b))}』</span><small>${esc(A("turns", { n: b.turns }))}</small><div class="eff">${esc(buffEffectText(b))}</div></li>`);
     while (rows.length < MAX_KINDS) rows.push(`<li class="slot">— — — — —</li>`);
     return rows.join("");
   };
@@ -88,18 +108,31 @@ export function enemyAnalysisHtml(actor, name) {
     const bind = CONDITIONS[c.id].kind === "bind";
     const label = bind ? conditionName(c.id) : `[${conditionName(c.id)}]`;
     const depth = c.depth === null || c.depth === undefined ? "" : `<small>${esc(game.i18n.format("NSSQ.StatusHint.depth", { n: c.depth }))}</small>`;
-    return `<li class="${CONDITIONS[c.id].kind}" title="${esc(loc(`NSSQ.StatusHint.${c.id}`))}"><span>${esc(label)}</span>${depth}</li>`;
+    return `<li class="${CONDITIONS[c.id].kind}" title="${esc(loc(`NSSQ.StatusHint.${c.id}`))}"><span>${esc(label)}</span>${depth}<div class="eff">${esc(loc(`NSSQ.StatusHint.${c.id}`))}</div></li>`;
   });
-  const right = `
+  return `
     <h4 class="buff">${esc(loc("NSSQ.StatusPanel.buffs"))}</h4><ul class="an-slots">${slots("buff")}</ul>
     <h4 class="debuff">${esc(loc("NSSQ.StatusPanel.debuffs"))}</h4><ul class="an-slots">${slots("debuff")}</ul>
     <h4 class="ailment">${esc(A("conditions"))}</h4><ul class="an-slots">${condRows.join("") || `<li class="slot">${esc(A("none"))}</li>`}</ul>`;
+}
 
+/** 아군(캐릭터·동료 NPC) 자세히 보기: HP·TP·부능력치·내성 / 강화·약화·상태 이상 */
+export function allyAnalysisHtml(actor, name) {
+  const s = actor?.system ?? {};
+  const cls = actor?.type === "character" ? s.classItems?.main?.name ?? "" : "";
+  const sub = s.sub ?? {};
+  const base = s.subBase ?? sub;
+  const stat = (k) => `<div class="an-stat"><span>${esc(A(`short.${k}`))}</span><b class="${sub[k] !== base[k] ? "changed" : ""}">${esc(sub[k] ?? "-")}</b></div>`;
+  const res = (k) => `<div class="an-res ${k}"><span>${esc(loc(`NSSQ.Resist.${k}`))}</span><b>${esc(s.resistTotal?.[k] ?? s.resist?.[k] ?? "-")}</b></div>`;
+  const bar = (label, r) => (r ? `<div class="an-hp"><span>${label}</span><b>${esc(r.value)} / ${esc(r.max)}</b></div>` : "");
   return `<header>
-      <span class="name">${rare ? `<span class="rare">★</span>` : ""}${esc(name)}</span>
-      <span class="lv">Lv ${show ? esc(s.level) : Q}</span>${s.isFOE ? `<span class="foe">F.O.E.</span>` : ""}
-      ${gm ? `<span class="gm-note">${esc(full ? A("gmFull", { n: book.defeated ?? 0 }) : known ? A("gmKnown") : A("gmHidden"))}</span>` : ""}
+      <span class="name">${esc(name)}</span><span class="lv">${esc(cls)}${s.level ? ` Lv ${esc(s.level)}` : ""}</span>
+      ${gmEditButton()}
       <a data-pop-close title="${esc(loc("NSSQ.StatusPanel.close"))}"><i class="fas fa-times"></i></a>
     </header>
-    <div class="an-cols"><div class="an-col left">${left}</div><div class="an-col mid">${middle}</div><div class="an-col right">${right}</div></div>`;
+    <div class="an-cols ally"><div class="an-col left">
+      ${bar("HP", s.hp)}${actor?.type === "character" ? bar("TP", s.tp) : ""}
+      <h4>${esc(A("stats"))}</h4><div class="an-stats">${SUB_STATS.map(stat).join("")}</div>
+      <h4>${esc(A("resist"))}</h4><div class="an-resists">${RESISTS.map(res).join("")}</div>
+    </div><div class="an-col right">${effectsColumnHtml(actor)}</div></div>`;
 }

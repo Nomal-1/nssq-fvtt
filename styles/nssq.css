@@ -813,3 +813,16 @@
 .nssq-bestiary .none { color: #888; }
 .nssq-bestiary .an-list li.spec { flex-wrap: wrap; }
 .nssq-bestiary .an-list li.spec .desc { flex: 1 0 100%; font-size: 0.88em; color: #555; }
+#nssq-battle .nb-command .end-body { font-size: 0.85em; }
+#nssq-battle .nb-command .end-body .end-units { list-style: none; margin: 0; padding: 0; }
+#nssq-battle .nb-command .end-body .end-units > li { margin-bottom: 5px; }
+#nssq-battle .nb-command .end-body .end-units ul { margin: 0 0 0 14px; padding: 0; }
+#nssq-battle .nb-command .end-body .hp-line { color: var(--nq-mu); }
+#nssq-battle .nb-command .end-body li.poison { color: #e39be3; }
+#nssq-battle .nb-command .end-buttons button { width: 100%; }
+#nssq-status-pop.analysis.ally { width: 560px; }
+#nssq-status-pop .an-cols.ally { grid-template-columns: 1.2fr 1fr; }
+#nssq-status-pop header .an-edit { width: auto; flex: 0 0 auto; margin: 0; padding: 0 8px; line-height: 1.6em; font-size: 0.85em; color: var(--nq-gold-l); background: rgba(201, 162, 74, 0.18); border: 1px solid var(--nq-gold); border-radius: 4px; }
+#nssq-status-pop header .an-edit:hover { background: rgba(201, 162, 74, 0.35); }
+#nssq-status-pop .an-slots li { flex-wrap: wrap; }
+#nssq-status-pop .an-slots li .eff { flex: 1 0 100%; font-size: 0.78em; color: var(--nq-mu); }

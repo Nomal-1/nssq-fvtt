@@ -21,10 +21,10 @@ import { bustStyle, faceStyle } from "../apps/art-config.mjs";
 import { flip, morph, snapshot } from "./morph.mjs";
 import { identifyDialog } from "./identify.mjs";
 import { randomEnemyAction } from "./enemy-ai.mjs";
-import { StatusApp, statusChips, statusDetailHtml } from "./status.mjs";
-import { enemyAnalysisHtml } from "./analysis.mjs";
+import { StatusApp, statusChips } from "./status.mjs";
+import { allyAnalysisHtml, enemyAnalysisHtml } from "./analysis.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
-import { actionState, confusedAction } from "./turn-status.mjs";
+import { actionState, confusedAction, endPhaseMessage, requestEndPhaseApply } from "./turn-status.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -112,7 +112,14 @@ function togglePop(combat, c, card) {
     popEl = document.createElement("div");
     popEl.id = "nssq-status-pop";
     document.body.append(popEl);
-    popEl.addEventListener("click", (ev) => { if (ev.target.closest("[data-pop-close]")) closePop(); });
+    popEl.addEventListener("click", (ev) => {
+      if (ev.target.closest("[data-pop-close]")) return closePop();
+      // GM: 상태 이상·강화·약화 부여 창
+      if (ev.target.closest("[data-pop-status]")) {
+        const c = battleCombat()?.combatants.get(popId);
+        if (c?.actor) StatusApp.open(c.actor);
+      }
+    });
   }
   fillPop(c);
   const r = card.getBoundingClientRect();
@@ -120,16 +127,23 @@ function togglePop(combat, c, card) {
   const h = popEl.offsetHeight || 200;
   let left = r.right + 8;
   if (left + w > window.innerWidth - 8) left = Math.max(8, r.left - w - 8);
-  const top = Math.min(Math.max(8, r.top), window.innerHeight - h - 8);
+  let top = Math.min(Math.max(8, r.top), window.innerHeight - h - 8);
+  // 아군 카드(화면 아래)는 전투 화면 가운데에 띄운다
+  if (c.actor?.type !== "enemy") {
+    const field = root?.getBoundingClientRect() ?? { left: 0, width: window.innerWidth, top: 0, height: window.innerHeight };
+    left = Math.max(8, field.left + (field.width - w) / 2);
+    top = Math.max(8, field.top + (field.height - h) / 2 - 60);
+  }
   popEl.style.left = `${left}px`;
   popEl.style.top = `${top}px`;
 }
 
-/** 에너미는 원작풍 정보 화면(식별에 따라 ???), 아군은 상태 자세히 */
+/** 에너미는 원작풍 정보 화면(식별에 따라 ???), 아군도 같은 모양(능력치·강화·약화·상태 이상) */
 function fillPop(c) {
   const enemy = c.actor?.type === "enemy";
-  popEl.classList.toggle("analysis", enemy);
-  popEl.innerHTML = enemy ? enemyAnalysisHtml(c.actor, c.name) : statusDetailHtml(c.actor, c.name);
+  popEl.classList.add("analysis");
+  popEl.classList.toggle("ally", !enemy);
+  popEl.innerHTML = enemy ? enemyAnalysisHtml(c.actor, c.name) : allyAnalysisHtml(c.actor, c.name);
 }
 
 /** 다시 그릴 때 열려 있는 창의 내용도 맞춘다 */
@@ -298,6 +312,20 @@ function commandBody(combat) {
         ${c.actor.type === "character" ? `<button type="button" data-cmd="swap" title="${L("swap")}"><i class="fas fa-exchange-alt"></i> ${L("swapShort")}</button>` : ""}
       </div>`;
     }).join("");
+  }
+  if (phase === "end") {
+    // 종료 페이즈: 채팅에 올라온 결과를 그대로, GM은 [적용]·[되돌리기]
+    const msg = endPhaseMessage(combat);
+    const data = msg?.getFlag("nssq", "endPhase");
+    if (!data) return `<p class="wait">${esc(game.i18n.localize("NSSQ.Turn.endProcessing"))}</p>`;
+    const T = (k) => game.i18n.localize(`NSSQ.Turn.${k}`);
+    const buttons = game.user.isGM && data.updates?.length
+      ? `<div class="end-buttons" data-message="${msg.id}">${data.applied
+        ? `<button type="button" data-endphase="undo"><i class="fas fa-undo"></i> ${esc(T("undo"))}</button>`
+        : `<button type="button" data-endphase="apply"><i class="fas fa-check"></i> ${esc(T("apply"))}</button>`}</div>` : "";
+    return `<div class="who">${esc(game.i18n.format("NSSQ.Turn.endTitle", { round: combat.round }))}</div>
+      <div class="end-body nssq-end-phase">${data.body ?? ""}</div>
+      ${data.updates?.length ? `<p class="notes">${esc(data.applied ? T("applied") : T("notApplied"))}</p>` : ""}${buttons}`;
   }
   return "";
 }
@@ -507,6 +535,11 @@ function bindClicks(el) {
       }
       return;
     }
+    if ((t = hit("[data-endphase]"))) {
+      const id = t.closest("[data-message]")?.dataset.message;
+      if (id) return requestEndPhaseApply(id, t.dataset.endphase === "undo");
+      return;
+    }
     if ((t = hit("[data-cmd]"))) {
       if (t.disabled) return;
       const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
@@ -591,5 +624,7 @@ export function registerHud() {
   });
   Hooks.on("deleteCombat", () => setTimeout(renderHud, 50));
   Hooks.on("nssqBestiary", rerender);
+  // 종료 페이즈 카드가 생기거나 적용되면 커맨드 창도
+  for (const hook of ["createChatMessage", "updateChatMessage"]) Hooks.on(hook, (m) => { if (m.getFlag("nssq", "endPhase")) rerender(); });
   Hooks.on("createChatMessage", (message) => attackEffect(message));
 }

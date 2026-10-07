@@ -129,7 +129,7 @@ function logLine(entry) {
     case "poison": return L("logPoison", { n: entry.damage });
     case "effects": return L(entry.resource === "hp" ? "logRegenHp" : "logRegenTp", { n: entry.amount });
     case "recovery": return L(entry.success ? "logRecovered" : "logNotRecovered", { label: conditionName(entry.id), dice: entry.dice.join("+"), total: entry.total, depth: entry.depth });
-    case "buffs": return L("logExpired", { label: buffLabel(entry.expired) });
+    case "buffs": return entry.expired ? L("logExpired", { label: buffLabel(entry.expired) }) : L("logTick", { label: buffLabel(entry.buff), from: entry.from, to: entry.to });
     case "depth": return entry.ended ? L("logStunEnd") : L("logDepth", { label: conditionName(entry.id), from: entry.from, to: entry.to });
     default: return "";
   }
@@ -159,18 +159,60 @@ export async function runEndPhase(combat) {
     });
     blocks.push(`<li><b>${esc(c.name)}</b><ul>${r.log.map((e) => `<li class="${e.step}">${esc(logLine(e))}</li>`).join("")}</ul>${isHidden(a) ? "" : `<span class="hp-line">${L("hpLine", { before: s.hp.value, after: r.hp })}</span>`}</li>`);
   }
+  // 본문은 전투 화면 커맨드 창에도 그대로 보인다(플래그 body)
+  const body = `<p class="notes">${L("delayedNone")}</p>
+    ${blocks.length ? `<ul class="end-units">${blocks.join("")}</ul>` : `<p>${L("endNothing")}</p>`}`;
   const content = `<div class="nssq-end-phase"><header class="check-header"><span class="check-label"><i class="fas fa-hourglass-end"></i> ${L("endTitle", { round: combat.round })}</span></header>
-    <p class="notes">${L("delayedNone")}</p>
-    ${blocks.length ? `<ul class="end-units">${blocks.join("")}</ul>` : `<p>${L("endNothing")}</p>`}
+    ${body}
     <div class="end-apply"><span class="apply-status"></span><span class="apply-buttons"><button type="button" data-end-apply><i class="fas fa-check"></i> ${L("apply")}</button><button type="button" data-end-undo><i class="fas fa-undo"></i> ${L("undo")}</button></span></div>
   </div>`;
   const message = await ChatMessage.create({
     speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
     rolls, sound: rolls.length ? CONFIG.sounds.dice : undefined,
     content,
-    flags: { nssq: { endPhase: { updates, applied: false } } }
+    flags: { nssq: { endPhase: { updates, applied: false, round: combat.round, combatId: combat.id, body } } }
   });
   if (updates.length && autoApplyMode() === "auto") await applyEndPhase(message.id);
+}
+
+/** 이 전투의 이번 턴 종료 페이즈 카드(가장 최근) */
+export function endPhaseMessage(combat) {
+  if (!combat) return null;
+  const list = game.messages.contents;
+  for (let i = list.length - 1; i >= 0; i--) {
+    const d = list[i].getFlag("nssq", "endPhase");
+    if (d?.combatId === combat.id && d.round === combat.round) return list[i];
+  }
+  return null;
+}
+
+/** 적용 요청: 활성 GM이면 바로, 아니면 소켓 */
+export function requestEndPhaseApply(messageId, undo = false) {
+  return isActiveGM() ? applyEndPhase(messageId, undo) : emit("endPhaseApply", { messageId, undo });
+}
+
+/**
+ * 다음 턴으로 넘어가기 전(GM): 종료 페이즈 결과를 적용하지 않았으면 묻는다
+ * @returns {Promise<boolean>} 넘어가도 되면 true
+ */
+export async function confirmEndPhaseApplied(combat) {
+  const msg = endPhaseMessage(combat);
+  const data = msg?.getFlag("nssq", "endPhase");
+  if (!data || data.applied || !data.updates?.length) return true;
+  const choice = await new Promise((resolve) => new Dialog({
+    title: L("unappliedTitle"),
+    content: `<p>${L("unappliedText")}</p>`,
+    buttons: {
+      apply: { icon: '<i class="fas fa-check"></i>', label: L("unappliedApply"), callback: () => resolve("apply") },
+      skip: { icon: '<i class="fas fa-forward"></i>', label: L("unappliedSkip"), callback: () => resolve("skip") },
+      cancel: { icon: '<i class="fas fa-times"></i>', label: L("unappliedCancel"), callback: () => resolve("cancel") }
+    },
+    default: "apply",
+    close: () => resolve("cancel")
+  }).render(true));
+  if (choice === "cancel") return false;
+  if (choice === "apply") await applyEndPhase(msg.id);
+  return true;
 }
 
 /** 종료 페이즈 결과 적용·되돌리기(GM) */
@@ -204,7 +246,7 @@ export function registerTurnStatus() {
     const undo = buttons.querySelector("[data-end-undo]");
     if (data.applied) apply?.remove();
     else undo?.remove();
-    const send = (u) => (isActiveGM() ? applyEndPhase(message.id, u) : emit("endPhaseApply", { messageId: message.id, undo: u }));
+    const send = (u) => requestEndPhaseApply(message.id, u);
     apply?.addEventListener("click", () => send(false));
     undo?.addEventListener("click", () => send(true));
   });

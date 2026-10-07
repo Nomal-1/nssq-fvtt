@@ -69,9 +69,11 @@ export async function endPhaseFor(u, roll2d6) {
   conditions = kept;
 
   // 5. 강화·약화 턴 감소
+  // 남은 것도 기록한다(기록이 비면 그 전투원을 건너뛰어 턴이 줄지 않던 문제)
   const t = tickBuffs(buffs);
-  buffs = t.list;
+  for (const b of t.list) log.push({ step: "buffs", buff: b, from: b.turns + 1, to: b.turns });
   for (const b of t.expired) log.push({ step: "buffs", expired: b });
+  buffs = t.list;
 
   // 6. 심도 감소, [스턴] 소멸
   const after = [];

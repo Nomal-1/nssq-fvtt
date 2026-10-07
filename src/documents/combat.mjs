@@ -8,7 +8,7 @@
 import { initiativeValue } from "../engine/combat.mjs";
 import { combatProfile } from "../combat/profile.mjs";
 import { openEndDialog } from "../apps/battle.mjs";
-import { actionState, openingRolls, runEndPhase } from "../combat/turn-status.mjs";
+import { actionState, confirmEndPhaseApplied, openingRolls, runEndPhase } from "../combat/turn-status.mjs";
 
 export class NssqCombat extends Combat {
   get phase() {
@@ -109,6 +109,8 @@ export class NssqCombat extends Combat {
 
   async nextRound() {
     if (!game.user.isGM) return this;
+    // 종료 페이즈 결과를 적용하지 않았으면 묻는다(적용하고 넘어가기 / 그냥 넘어가기 / 취소)
+    if (!(await confirmEndPhaseApplied(this))) return this;
     await this.clearRoundFlags();
     await this.refreshInitiative();
     await super.nextRound();

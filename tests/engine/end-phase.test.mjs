@@ -13,13 +13,19 @@ describe("종료 페이즈", () => {
       conditions: [{ id: "poison", depth: 12, sourceSuppAtk: 4 }, { id: "bindArm", depth: 5 }],
       buffs: [{ id: "hpRegen", value: 2, turns: 1 }, { id: "tpRegen", value: 1, turns: 2 }]
     }, rolls([2, 3], [1, 2]));
-    expect(r.log.map((l) => l.step)).toEqual(["poison", "effects", "effects", "recovery", "recovery", "buffs", "depth"]);
+    expect(r.log.map((l) => l.step)).toEqual(["poison", "effects", "effects", "recovery", "recovery", "buffs", "buffs", "depth"]);
     // 독 4 → 6, 리젠 2 → 8
     expect(r.hp).toBe(8);
     expect(r.tp).toBe(3);
     // 독: 2+3+3=8 < 12 실패, [팔] 봉인: 1+2+3=6 ≥ 5 성공 → 소멸
     expect(r.conditions).toEqual([{ id: "poison", depth: 11, sourceSuppAtk: 4 }]);
     expect(r.buffs).toEqual([{ id: "tpRegen", value: 1, turns: 1 }]);
+  });
+
+  it("강화·약화만 있어도 턴 감소가 기록된다(전투원을 건너뛰지 않음)", async () => {
+    const r = await endPhaseFor({ hp: { value: 5, max: 5 }, suppDef: 0, conditions: [], buffs: [{ id: "defenseDown", value: 2, turns: 3 }] }, rolls());
+    expect(r.buffs).toEqual([{ id: "defenseDown", value: 2, turns: 2 }]);
+    expect(r.log).toEqual([{ step: "buffs", buff: { id: "defenseDown", value: 2, turns: 2 }, from: 3, to: 2 }]);
   });
 
   it("독 대미지는 건 자의 현재 【억제 공격】(있으면)", async () => {

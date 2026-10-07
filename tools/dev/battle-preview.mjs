@@ -25,7 +25,7 @@ const mk = (id, name, type, sys, extra = {}) => {
 };
 const portrait = "https://api.dicebear.com/7.x/adventurer/svg?seed=";
 const turns = [
-  mk("p1", "플레이어2", "character", { classItems: { main: { name: "다크 헌터" } }, conditions: [{ id: "blind", depth: 10 }], buffs: [{ id: "physAtkUp", value: 2, turns: 2 }, { id: "resistGrant", param: "fire", turns: 3 }] }, { img: "https://api.dicebear.com/7.x/personas/svg?seed=hero&body=squared", owner: true }),
+  mk("p1", "플레이어2", "character", { classItems: { main: { name: "다크 헌터" } }, sub: { physHit: 5, elemHit: 3, evasion: 5, physAtk: 13, elemAtk: 4, defense: 6, suppAtk: 3, suppDef: 4, speed: 14 }, subBase: { physHit: 8, elemHit: 6, evasion: 8, physAtk: 11, elemAtk: 4, defense: 6, suppAtk: 3, suppDef: 4, speed: 14 }, resist: { slash: 3, strike: 3, pierce: 3, fire: 3, ice: 3, volt: 3 }, resistTotal: { slash: 3, strike: 3, pierce: 3, fire: 4, ice: 3, volt: 3 }, conditions: [{ id: "blind", depth: 10 }], buffs: [{ id: "physAtkUp", value: 2, turns: 2 }, { id: "resistGrant", param: "fire", turns: 3 }] }, { img: "https://api.dicebear.com/7.x/personas/svg?seed=hero&body=squared", owner: true }),
   mk("e1", "숲쥐", "enemy", { identified: true, level: 1, hp: { value: 6, max: 9 }, order: 0,
     stats: { physHit: 4, elemHit: 0, evasion: 7, physAtk: 11, elemAtk: 0, defense: 4, suppAtk: 3, suppDef: 3, speed: 12 },
     combatStats: { physHit: 4, elemHit: 0, evasion: 0, physAtk: 11, elemAtk: 0, defense: 2, suppAtk: 3, suppDef: 3, speed: 12 },
@@ -47,9 +47,10 @@ const { battleHtml } = await import("../../src/combat/hud.mjs");
 const css = fs.readFileSync("styles/nssq.css", "utf8");
 const html = battleHtml(combat, { attack: process.argv[4] === "attack" });
 // 「상태 자세히」 창 견본(node … gm main pop)
-const { enemyAnalysisHtml } = await import("../../src/combat/analysis.mjs");
-const who = turns[process.argv[5] === "unknown" ? 2 : 1];
-const pop = process.argv[4] === "pop" ? `<div id="nssq-status-pop" class="analysis" style="left:760px;top:300px">${enemyAnalysisHtml(who.actor, who.name)}</div>` : "";
+const { allyAnalysisHtml, enemyAnalysisHtml } = await import("../../src/combat/analysis.mjs");
+const ally = process.argv[5] === "ally";
+const who = ally ? turns[0] : turns[process.argv[5] === "unknown" ? 2 : 1];
+const pop = process.argv[4] === "pop" ? `<div id="nssq-status-pop" class="analysis${ally ? " ally" : ""}" style="left:600px;top:220px">${ally ? allyAnalysisHtml(who.actor, who.name) : enemyAnalysisHtml(who.actor, who.name)}</div>` : "";
 fs.writeFileSync("build/battle-preview.html", `<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>${css}
 body{margin:0;background:#556;font-family:sans-serif} #sidebar-mock{position:fixed;right:0;top:0;bottom:0;width:300px;background:#222;color:#ccc;padding:8px}</style>
 <div id="sidebar-mock">sidebar</div><div id="nssq-battle">${html}</div>${pop}`);

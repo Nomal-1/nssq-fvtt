@@ -889,7 +889,14 @@
       "apply": "적용",
       "undo": "되돌리기",
       "applied": "적용함",
-      "notApplied": "아직 적용하지 않음"
+      "notApplied": "아직 적용하지 않음",
+      "logTick": "『{label}』 남은 턴 {from} → {to}",
+      "endProcessing": "종료 페이즈 처리 중…",
+      "unappliedTitle": "종료 페이즈 결과 미적용",
+      "unappliedText": "이번 종료 페이즈 결과(독·리젠·자연 회복·강화 턴 감소 등)를 아직 적용하지 않았다. 적용하지 않고 다음 턴으로 넘어갈까?",
+      "unappliedApply": "적용하고 넘어가기",
+      "unappliedSkip": "적용하지 않고 넘어가기",
+      "unappliedCancel": "취소"
     },
     "StatusPanel": {
       "ailments": "상태 이상",
