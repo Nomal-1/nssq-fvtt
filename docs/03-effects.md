@@ -52,7 +52,7 @@
 | `modifier` | `path`, `value` | 상시 보정. 타이밍 「상시」 스킬, 장식, 제련. path: `physAtk elemAtk physHit elemHit defense evasion speed suppAtk suppDef hpMax tpMax carry healDice abilities.<능력치> resist.<속성> checks.<판정>` |
 | `resource` | `resource`(hp/tp/fp), `delta` 또는 `set` | 직접 증감 |
 | `stance` | `effects[]`, `until`(endOfTurn/count), `count` | 대기 상태가 되며 대기 중 효과 부여 |
-| `trigger` | `on`, `effects[]`, `limit`(perAction/perTurn/perBattle) | 반응형. `on`: crit / beforeKO / attacked / allyAttacked / rowAttacked / endPhase / openingPhase / battleStart |
+| `trigger` | `on`, `effects[]`, `limit`(perAction/perTurn/perBattle) | 반응형. `on`: crit / beforeKO / attacked / allyAttacked / rowAttacked / endPhase / openingPhase / battleStart / selfHit(자신의 공격이 명중했을 때 선언) / mainPhaseStart(메인 페이즈 개시 시 선언) |
 | `counter` / `chase` | `when`, `attack{…}`, `count`, `on`, `onlyIfEvaded`(반격만) | 반격·추격(01 §3.11의 연쇄 금지 규칙은 엔진이 강제) |
 | `delayed` | `at`(endPhase/nextTurnLate), `turns`, `effects[]` | 지연 공격. 스킬마다 발동 시점이 달라 `at`으로 지정 |
 | `token` | `tokenKey`, `action{…}`, `maxCount` | 토큰 배치 |

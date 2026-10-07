@@ -29,8 +29,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격이 명중했을 때 사용을 선언한다. 대미지 다이스에 +10개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "selfHit",
+     "when": {
+      "attackKind": "physical"
+     },
+     "effects": [
+      {
+       "type": "attackBonus",
+       "diceMod": 10
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -118,8 +132,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>세검에 의한 물리 명중에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "세검"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -157,8 +182,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>도끼에 의한 물리 명중에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "도끼"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -211,8 +247,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>전투 턴의 메인 페이즈 개시 시에 사용을 선언한다. 최속 행동으로 물리 공격 롤을 한다. 또한 이때, 대미지 다이스에 +(SL)개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "mainPhaseStart",
+     "effects": [
+      {
+       "type": "actionTiming",
+       "value": "first"
+      },
+      {
+       "type": "attack",
+       "kind": "physical",
+       "diceMod": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -265,8 +317,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상에게 2회의 물리 공격 롤을 한다. 단, 이때의 대미지 다이스를 -(4-SL)개 한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 2,
+     "diceMod": "-(4-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -314,8 +373,36 @@
    ],
    "sl": 1,
    "description": "<p>이 스킬을 사용할 때는 아래 중 하나의 명칭으로 선언한다. 《플레임 세이버》《프리즈 세이버》《쇼크 세이버》 각각 〈염〉〈빙〉〈뇌〉 속성을 부가한 물리 공격 롤을 한다. 또한 이때의 대미지 다이스 +(SL)개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "addElement": [
+      "fire"
+     ],
+     "diceMod": "SL",
+     "variant": 0
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "addElement": [
+      "ice"
+     ],
+     "diceMod": "SL",
+     "variant": 1
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "addElement": [
+      "volt"
+     ],
+     "diceMod": "SL",
+     "variant": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -359,8 +446,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>적 한 열을 대상으로 물리 공격 롤을 한다. 단, 이때의 대미지 다이스를 -(3-SL)개 한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -412,8 +505,78 @@
    ],
    "sl": 1,
    "description": "<p>이 스킬을 사용할 때는 아래 중 하나의 명칭으로 선언한다. 《체이스 플레임》《체이스 프리즈》《체이스 쇼크》 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 적에게 〈염〉〈빙〉〈뇌〉 중 하나를 포함한 공격이 가해지면 자신은 그 대상에게 물리 공격으로 추격을 한다. 이때, 추격의 기점이 된 속성을 자신의 공격에 부가한다. 단, 이때의 대미지 다이스를 -(4-SL)개 한다. 대기 상태는 누적 3체에 대한 추격을 하거나, 턴 종료로 해제된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "variant": 0,
+     "effects": [
+      {
+       "type": "chase",
+       "when": {
+        "element": [
+         "fire"
+        ]
+       },
+       "attack": {
+        "kind": "physical",
+        "addElement": [
+         "fire"
+        ],
+        "diceMod": "-(4-SL)"
+       }
+      }
+     ]
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "variant": 1,
+     "effects": [
+      {
+       "type": "chase",
+       "when": {
+        "element": [
+         "ice"
+        ]
+       },
+       "attack": {
+        "kind": "physical",
+        "addElement": [
+         "ice"
+        ],
+        "diceMod": "-(4-SL)"
+       }
+      }
+     ]
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "variant": 2,
+     "effects": [
+      {
+       "type": "chase",
+       "when": {
+        "element": [
+         "volt"
+        ]
+       },
+       "attack": {
+        "kind": "physical",
+        "addElement": [
+         "volt"
+        ],
+        "diceMod": "-(4-SL)"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -457,8 +620,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +((SL+1)×3)개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "(SL+1)*3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -501,8 +670,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>적 전위·후위 1체씩을 대상으로 물리 공격 롤을 한다. 단, 이때의 대미지 다이스를 -(3-SL)개 한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "-(3-SL)"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "대상 「관통」(적 전위·후위 1체씩): 지금은 단일로 처리되므로 GM이 뒤쪽 대상에게 한 번 더 적용"
   },
   "_meta": {
    "className": "소드맨"
@@ -549,8 +725,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>3회의 물리 공격 롤을 한다. 이때, 대상은 공격 1회마다 근거리의 적 중에서 무작위로 선택한다. 또한 이때의 대미지 다이스를 -(5-SL)개 한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 3,
+     "random": true,
+     "diceMod": "-(5-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -595,7 +779,8 @@
    "sl": 1,
    "description": "<p>《삼색 세이버》에 의한 공격을 했을 때의 대상이 된 적에게 그 턴 동안 추가로 공격이 가해진 경우, 그 공격에는 〈염〉〈빙〉〈뇌〉 중 《삼색 세이버》에서 사용한 속성이 부가된다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "《삼색 세이버》로 공격한 적에게 그 턴 동안 가해지는 다른 공격에 그 속성을 부가: GM이 처리(단계 8 트리거)"
   },
   "_meta": {
    "className": "소드맨"
@@ -638,8 +823,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -683,8 +874,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +(SL×2)개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -728,8 +925,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [머리] 봉인을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindHead",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -773,8 +985,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [스턴]을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "stun",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -818,8 +1045,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>후발 행동으로 물리 공격 롤을 한다. 이때, 대미지 다이스 +((SL+1)×4)개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "(SL+1)*4"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "후발 행동으로 공격: GM이 행동 순서를 그 턴 마지막으로"
   },
   "_meta": {
    "className": "소드맨"
@@ -855,8 +1089,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴, 자신의 메인 페이즈 행동을 최속 행동으로 한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "actionTiming",
+     "value": "first"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -892,8 +1131,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴에 아직 메인 페이즈 행동을 하지 않은 적에 대한 공격 롤의 명중 판정과 대미지 다이스에 +(SL)을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "hitMod": "SL",
+     "diceMod": "SL",
+     "when": {
+      "targetNotActedThisTurn": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -930,7 +1178,8 @@
    "sl": 1,
    "description": "<p>자신이 어떠한 공격 롤을 한 뒤, 같은 턴 안에 자신이 공격한 적과 같은 적을 공격하는 아군의 대미지 다이스에 +(SL)을 준다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "자신이 공격한 적을 같은 턴에 공격하는 아군의 대미지 다이스 +SL: GM이 처리(단계 8 트리거)"
   },
   "_meta": {
    "className": "소드맨"
@@ -966,8 +1215,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【HP】에 +(SL×2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "hpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -1003,8 +1258,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【TP】에 +(SL×2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -1040,8 +1301,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【물리 공격】에 +(SL)을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physAtk",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
@@ -1077,8 +1344,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【방어】에 +(SL)을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "defense",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"

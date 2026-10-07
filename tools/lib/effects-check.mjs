@@ -96,6 +96,7 @@ export function checkEffects(list, where, errors = []) {
       if (!MOD_PATHS.has(m.path)) errors.push(`${at}: state.mods 모르는 path \`${m.path}\``);
       checkExpr(m.value, `${at}.mods.value`, errors);
     }
+    if (e.type === "trigger" && !TRIGGER_ON.includes(e.on)) errors.push(`${at}: 모르는 trigger.on \`${e.on}\``);
     if (e.type === "actionTiming" && !["first", "last"].includes(e.value)) errors.push(`${at}: actionTiming.value는 first/last`);
     if (e.type === "counter" || e.type === "chase") checkEffects([{ type: "attack", ...e.attack }], `${at}.attack`, errors);
     for (const k of NESTED) if (Array.isArray(e[k])) checkEffects(e[k], `${at}.${k}`, errors);
@@ -122,6 +123,9 @@ export function collectHolders() {
 }
 
 /** 단계 8에 연결할 type */
+/** trigger.on 값(03 §3) */
+export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart"];
+
 export const STAGE8 = new Set(["stance", "trigger", "counter", "chase", "delayed", "token"]);
 const usesStage8 = (list) => (list ?? []).some((e) => STAGE8.has(e.type) || NESTED.some((k) => usesStage8(e[k])));
 
