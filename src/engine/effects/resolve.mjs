@@ -16,7 +16,7 @@ import { activationRoll } from "./usage.mjs";
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["stance", "delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus", "useBonus", "target"];
 
 /** custom 핸들러 등록부: name → (ctx) => 결과 조각 */
 const CUSTOM = new Map();
@@ -189,9 +189,12 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         r.cures.push({ conditions: e.conditions ?? "all", kind: e.kind ?? null, ...(e.count !== undefined ? { count: Math.max(0, evaluate(e.count, vars(t))) } : {}) });
         return;
       case "buff":
-      case "debuff":
-        r.buffs.push({ id: canonicalBuff(e.id), value: evaluate(e.value ?? 0, vars(t)), turns: Math.max(1, evaluate(e.turns ?? 1, vars(t))), param: e.param ?? "" });
+      case "debuff": {
+        // 《무용 마스터리》 등: 이 스킬(분류)로 주는 강화의 지속 턴 +
+        const plus = e.type === "buff" ? (user.useBonuses ?? []).filter((b) => whenMatches(b.when, { ...ctx, category, self: user, target: t })).reduce((n, b) => n + (b.buffTurns ?? 0), 0) : 0;
+        r.buffs.push({ id: canonicalBuff(e.id), value: evaluate(e.value ?? 0, vars(t)), turns: Math.max(1, evaluate(e.turns ?? 1, vars(t)) + plus), param: e.param ?? "" });
         return;
+      }
       case "resource":
         r.resource.push({ resource: e.resource, delta: e.delta !== undefined ? evaluate(e.delta, vars(t)) : undefined, set: e.set !== undefined ? evaluate(e.set, vars(t)) : undefined });
         return;

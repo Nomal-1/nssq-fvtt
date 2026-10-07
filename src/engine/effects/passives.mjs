@@ -16,12 +16,18 @@ export function collectPassives(skills, ctx = {}) {
   const sources = [];
   // 공격할 때 대상·공격에 따라 붙는 보정(attackBonus): when은 공격 시점에 본다(sumAttackBonuses)
   const attackBonuses = [];
+  // 스킬을 쓸 때 붙는 보정(useBonus): 강화 지속 턴 + 등. when은 사용 시점(분류 등)
+  const useBonuses = [];
   for (const s of skills ?? []) {
     if (s.timing !== "상시" || !(s.sl > 0)) continue;
     for (const e of s.effects ?? []) {
       if (e.type === "attackBonus") {
         const v = (x) => evaluate(x ?? 0, { SL: s.sl, self: ctx.self });
         attackBonuses.push({ name: s.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod), critDice: v(e.critDice), critUp: !!e.critUp });
+        continue;
+      }
+      if (e.type === "useBonus") {
+        useBonuses.push({ name: s.name, when: e.when ?? null, buffTurns: evaluate(e.buffTurns ?? 0, { SL: s.sl, self: ctx.self }) });
         continue;
       }
       if (!whenMatches(e.when, ctx)) continue;
@@ -32,7 +38,7 @@ export function collectPassives(skills, ctx = {}) {
       } else if (e.type === "flag" && e.flag) flags[e.flag] = e.value ?? true;
     }
   }
-  return { mods, flags, sources, attackBonuses };
+  return { mods, flags, sources, attackBonuses, useBonuses };
 }
 
 /**

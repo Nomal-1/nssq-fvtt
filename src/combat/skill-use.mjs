@@ -29,7 +29,10 @@ const alive = (c) => !!c.actor && !c.defeated && (c.actor.system.hp?.value ?? 0)
  * side: enemy(상대 진영)·ally(같은 편)·self, scope: single·row·all·random
  * 「관통」 등 아직 모르는 범위는 single + GM 판단
  */
-export function targetSpec(text = "") {
+export function targetSpec(text = "", effects = null) {
+  // 데이터의 대상 지정(type "target")이 있으면 그것을(대상 칸이 「특수」인 스킬 등)
+  const o = (effects ?? []).find((e) => e?.type === "target");
+  if (o) return { side: o.side ?? "enemy", scope: o.scope ?? "single", ...(o.count ? { count: o.count } : {}) };
   const t = String(text);
   if (/자신/.test(t) && !/아군|적/.test(t)) return { side: "self", scope: "single" };
   const side = /아군/.test(t) ? "ally" : "enemy";
@@ -64,6 +67,9 @@ export function unitProfile(actor, combatant) {
     healDice: s.equipment?.mods?.healDice ?? 0,
     // 《이피션트》·《간이 소생》: 아이템 회복 +, HP 회복 아이템에 부활
     itemHeal: s.equipment?.mods?.itemHeal ?? 0,
+    useBonuses: s.passives?.useBonuses ?? [],
+    // 능력치 보너스(수식 @self.bonus.agi 등). 에너미는 0
+    bonus: s.bonus ?? { str: 0, tec: 0, vit: 0, agi: 0, luc: 0 },
     itemRevive: !!s.passives?.flags?.itemRevive,
     id: combatant?.id ?? actor.id,
     tp: s.tp?.value ?? 0, tpMax: s.tp?.max ?? 0, fp: s.fp?.value ?? 0,
@@ -115,7 +121,7 @@ export async function beginAction(combat, combatant, kind, id) {
   if (!item) return null;
   const entry = actionList(combat, combatant, kind).find((x) => x.id === id);
   if (!entry?.ok) return ui.notifications.warn(L(`reason.${entry?.reason ?? "timing"}`)) && null;
-  const spec = { ...(kind === "item" ? targetSpec(item.system.target || "아군 단일") : targetSpec(item.system.target)), variant: null };
+  const spec = { ...(kind === "item" ? targetSpec(item.system.target || "아군 단일", item.system.effects) : targetSpec(item.system.target, item.system.effects)), variant: null };
   // 선언 명칭(《삼색 세이버》 → 《플레임 세이버》 등)을 먼저 고른다
   if (hasVariants(item.system.effects) && item.system.variants?.length) {
     spec.variant = await pickVariant(item);
@@ -192,7 +198,7 @@ export async function useItemOutside(actor, item, targets) {
 /** 효과 해석 → FP·오버히트 → 결과 카드 */
 async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null }) {
   const sys = item.system;
-  const spec = kind === "item" ? targetSpec(sys.target || "아군 단일") : targetSpec(sys.target);
+  const spec = kind === "item" ? targetSpec(sys.target || "아군 단일", sys.effects) : targetSpec(sys.target, sys.effects);
   const rolls = [];
   const user = unitProfile(actor, combatant);
   const targets = units.map((u) => unitProfile(u.actor, u.combatant));
@@ -516,7 +522,7 @@ export function registerSkillUse() {
 
 /** 에너미 랜덤 행동: 효과가 있는 스킬이면 이 흐름으로(대상은 무작위 또는 범위 전체) */
 export async function enemyUseSkill(combat, combatant, skill) {
-  const spec = targetSpec(skill.system.target);
+  const spec = targetSpec(skill.system.target, skill.system.effects);
   // 선언 명칭이 있으면 무작위로 하나
   const n = hasVariants(skill.system.effects) ? skill.system.variants?.length ?? 0 : 0;
   const variant = n ? Math.floor(CONFIG.Dice.randomUniform() * n) : null;

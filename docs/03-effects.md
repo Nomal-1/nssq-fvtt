@@ -11,6 +11,7 @@
   - `R`, `Lv` — 장비 랭크, 캐릭터 레벨(장비 표의 식에도 같은 평가기를 쓴다)
   - `@self.<path>`, `@target.<path>`, `@owner.<path>`(토큰의 배치자) — 파생치. 예 `@self.suppAtk`, `@target.hp.value`
   - `@roll.<name>` — 같은 효과 처리 안에서 앞서 굴린 결과
+  - `@self.bonus.agi` 등 — 능력치 보너스(【AGI】B). 에너미는 0
 - 데이터 쪽 원문 표기 `(SL×2)`, `(R의 제곱)×100`은 변환기가 `SL*2`, `R*R*100`으로 바꾼다.
 
 ## 2. 공통 필드
@@ -64,6 +65,8 @@
 | `token` | `tokenKey`, `action{…}`, `maxCount` | 토큰 배치 |
 | `overheat` | `turns` | 드라이브 계열 |
 | `attackBonus` | `hitMod`, `diceMod`, `atkMod`, `critDice`(크리티컬 추가 다이스 +), `critUp`(『크리티컬 업』 취급), `when` | 타이밍 「상시」: 공격할 때마다 붙는 보정. `when`은 공격 시점(대상·공격 속성)으로 판정(《선봉의 공명》 「아직 행동하지 않은 적에 대한 공격」). 통상 공격·스킬 공격 모두 |
+| `useBonus` | `buffTurns`, `when` | 타이밍 「상시」: 스킬을 쓸 때 붙는 보정. `buffTurns`: 그 스킬로 주는 강화의 지속 턴 +(《무용 마스터리》, `when.category`) |
+| `target` | `side`(enemy/ally/self), `scope`(single/row/all/random), `count?` | 대상 칸 대신 쓸 대상 지정(대상이 「특수」인 스킬). `count`(n명)는 아직 한 명씩 |
 | `actionTiming` | `value`(first/last) | 「그 턴 최속/후발 행동」(대상에게. 자신이면 target 자신). 개막 페이즈에 쓰면 메인 페이즈 행동 순서에 반영(전투원 플래그 timing, 라운드마다 지움). 메인 페이즈 중 선언하는 것은 partial |
 | `state` | `id`, `label`, `group?`, `mods[{path, value}]`, `max?`, `note?` | 전투 고유 상태(강화가 아님, 해제되지 않음, 전투 끝까지). 무사의 자세·《나찰》 등. 같은 `group`은 하나만, `max`가 있으면 쌓임(07 #57) |
 | `requireState` | `state` | 「《○○》 상태 한정」. 그 상태가 없으면 쓸 수 없다(사용 시 해석하지 않음) |

@@ -290,4 +290,13 @@ describe("단계 7 스키마 보강", () => {
     expect(whenMatches({ targetRow: "back" }, { target: { row: "back" } })).toBe(true);
     expect(whenMatches({ targetRow: "back" }, { target: { row: "front" } })).toBe(false);
   });
+
+  it("useBonus buffTurns: 분류가 맞는 스킬의 강화 지속 턴 +(《무용 마스터리》)", async () => {
+    const { useBonuses } = collectPassives([{ name: "무용 마스터리", sl: 4, timing: "상시", effects: [{ type: "useBonus", buffTurns: "SL/2", when: { category: "무용" } }] }], { self: {} });
+    const effects = [{ type: "buff", id: "defenseUp", value: 2, turns: 3 }];
+    const a = await resolveEffects({ effects, user: { ...user, useBonuses }, targets: [user], category: "무용", rollDice: dice() });
+    expect(a.results.get("u").buffs[0].turns).toBe(5);
+    const b = await resolveEffects({ effects, user: { ...user, useBonuses }, targets: [user], category: "호령", rollDice: dice() });
+    expect(b.results.get("u").buffs[0].turns).toBe(3);
+  });
 });

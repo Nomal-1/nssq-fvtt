@@ -30,7 +30,8 @@
    "sl": 1,
    "description": "<p>그 턴 동안 분류 '무용'이면서 대상 '아군 열'인 스킬의 대상을 아군 전체로 변경.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "그 턴 동안 『무용』·『아군 열』 스킬의 대상을 아군 전체로: GM이 처리"
   },
   "_meta": {
    "className": "댄서"
@@ -116,8 +117,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '무용' 스킬로 부여한 강화 효과의 지속 턴 수 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "useBonus",
+     "buffTurns": "SL/2",
+     "when": {
+      "category": "무용"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -158,8 +167,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『물리 공격 상승: (SL×2)』·『속성 공격 상승: (SL×2)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "physAtkUp",
+     "value": "SL*2",
+     "turns": 3
+    },
+    {
+     "type": "buff",
+     "id": "elemAtkUp",
+     "value": "SL*2",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -200,8 +222,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『물리 방어 상승: (SL×2)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "defenseUp",
+     "value": "SL*2",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -242,8 +271,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『HP 리젠: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "hpRegen",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -288,8 +324,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>회복 롤. 회복량 다이스 +(SL+【AGI】B).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "roll",
+     "bonus": "SL+@self.bonus.agi"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -334,8 +376,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상의 상태 이상을 최대 (SL)개 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "cure",
+     "kind": "ailment",
+     "count": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -380,8 +428,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상의 봉인을 최대 (SL)개 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "cure",
+     "kind": "bind",
+     "count": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -422,8 +476,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『TP 리젠: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "tpRegen",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -470,8 +531,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 자신은 대기 상태. 대기 중 자신이 물리 공격을 받으면 공격자에게 물리 공격으로 반격(대미지 다이스 -(3-SL)개). 반격 누계 3회 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "effects": [
+      {
+       "type": "counter",
+       "on": "attacked",
+       "when": {
+        "attackKind": "physical"
+       },
+       "attack": {
+        "kind": "physical",
+        "diceMod": "-(3-SL)"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -518,8 +603,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 자신은 대기 상태. 대기 중 자신과 같은 열의 아군이 적에게 물리 공격 롤을 하면, 그 대상에게 물리 공격으로 추격(대미지 다이스 -(4-SL)개). 누계 3체 추격 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "effects": [
+      {
+       "type": "chase",
+       "on": "rowAllyAttack",
+       "when": {
+        "attackKind": "physical"
+       },
+       "attack": {
+        "kind": "physical",
+        "diceMod": "-(4-SL)"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -564,8 +673,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『추격: (자신)』을 (SL)명에게 부여, 2턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "ally",
+     "scope": "single",
+     "count": "SL"
+    },
+    {
+     "type": "buff",
+     "id": "chase",
+     "value": 0,
+     "turns": 2,
+     "param": "자신"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "대상 (SL)명: 한 명씩 고르므로 나머지는 GM이 같은 강화를 부여"
   },
   "_meta": {
    "className": "댄서"
@@ -612,8 +736,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 자신은 대기 상태. 대기 중 적에게 물리 공격 롤이 행해지면(공격자 불문), 그 대상에게 물리 공격으로 추격(대미지 다이스 -(4-SL)개). 누계 3체 추격 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "effects": [
+      {
+       "type": "chase",
+       "on": "anyAttack",
+       "when": {
+        "attackKind": "physical"
+       },
+       "attack": {
+        "kind": "physical",
+        "diceMod": "-(4-SL)"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -713,10 +861,16 @@
      "type": "activeEvade",
      "ability": "agi",
      "bonus": "SL-1"
+    },
+    {
+     "type": "counter",
+     "attack": {
+      "kind": "physical"
+     },
+     "onlyIfEvaded": true
     }
    ],
-   "review": "partial",
-   "effectsNote": "회피 성공 시 통상 공격으로 반격(단계 8에서 자동화)"
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -761,8 +915,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>크리티컬 히트 시 대상에게 [스턴].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "crit",
+     "effects": [
+      {
+       "type": "inflict",
+       "condition": "stun"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -799,7 +964,8 @@
    "sl": 1,
    "description": "<p>시나리오 시작 시점의 보유 FP +1.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "시나리오 개시 때 FP +1: 세션 도구(단계 9)에서"
   },
   "_meta": {
    "className": "댄서"
@@ -841,7 +1007,8 @@
    "sl": 1,
    "description": "<p>춤이 보이는 범위의 모두에게 강한 관심을 일으켜 주목을 끈다. 5분 정도 계속 보고 있던 상대에게만 유효하며, 원칙적으로 전투 중 사용 불가.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "전투 밖 연출(5분 이상 본 상대의 주목): GM이 처리"
   },
   "_meta": {
    "className": "댄서"
@@ -963,8 +1130,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【속도】 +(SL×3).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "speed",
+     "value": "SL*3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
