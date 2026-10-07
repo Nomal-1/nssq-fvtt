@@ -8,6 +8,7 @@
 | `node tools/dev/battle-preview.mjs [gm\|player] [opening\|main] [attack]` | 전투 화면을 Foundry 없이 `build/battle-preview.html`로 |
 | `node tools/dev/tree-preview.mjs <클래스 파일> "스킬=SL,..."` | 스킬 트리 창을 `build/tree-preview.html`로 |
 | `node tools/dev/tree-dump.mjs <클래스 파일>` | 스킬 트리 배치를 글로 |
+| `node tools/dev/foundry-e2e.mjs info\|eval\|shot [gm\|player] …` | 오라클 테스트 월드에 Playwright로 로그인해 정보·스크린샷·월드 안 JS 실행(`-e "return game.user.name"`)·콘솔 오류 수집. 다른 스크립트에서 `connect(role)`로 불러 써도 된다. 환경 변수는 CLAUDE.md |
 | `node tools/dev/usage-check.mjs` | 전투/비전투 자동 분류 결과 |
 | `tools/dev/morph-test.html`, `bust-test.html` | 브라우저에서 여는 전투 화면 갱신(morph·FLIP) 확인 페이지. 저장소 루트를 웹 서버로 띄우고(`python -m http.server`) `/tools/dev/…html`로 연다 |
 
