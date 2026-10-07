@@ -33,7 +33,7 @@ const turns = [
     drops: [{ min: 5, max: 9, item: "가죽", rank: 1 }, { min: 10, max: null, item: "이빨", rank: 1 }], conditions: [{ id: "poison", depth: 12 }, { id: "bindLeg", depth: 9 }], buffs: [{ id: "defenseDown", value: 2, turns: 3 }] }),
   mk("e2", "숲쥐", "enemy", { identified: false, hp: { value: 9, max: 9 }, order: 1 }),
   mk("n1", "동료2", "character", { npc: true, classItems: { main: { name: "몽크" } }, conditions: [{ id: "sleep", depth: 9 }] }, { img: portrait + "b", guard: true }),
-  mk("e3", "광란의 뿔사슴", "enemy", { row: "back", identified: true, isRare: true, hp: { value: 20, max: 30 }, order: 2 }),
+  mk("e3", "광란의 뿔사슴", "enemy", { row: "back", identified: true, isRare: true, hp: { value: 20, max: 30 }, order: 2, conditions: [{ id: "confuse", depth: 10 }, { id: "bindHead", depth: 8 }], buffs: [{ id: "physAtkUp", value: 2, turns: 3 }, { id: "speedUp", value: 3, turns: 2 }, { id: "evasionDown", value: 1, turns: 2 }] }),
   mk("p2", "캐릭터", "character", { row: "back", classItems: { main: { name: "메딕" } } }, { img: portrait + "c" })
 ];
 turns[1].name = "숲쥐 A";

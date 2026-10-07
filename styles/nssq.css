@@ -521,8 +521,8 @@
 /* 에너미: 후열 줄은 위쪽(뒤)에 작고 어둡게, 전열 줄이 그 앞에 겹친다 */
 #nssq-battle .nb-enemies { position: relative; flex: 1 1 auto; min-height: 0; }
 #nssq-battle .nb-erow { position: absolute; left: 310px; right: 20px; display: flex; align-items: flex-end; justify-content: center; gap: 18px; }
-#nssq-battle .nb-erow.front { top: 8px; bottom: 8px; z-index: 2; }
-#nssq-battle .nb-erow.back { top: 34px; bottom: 34%; z-index: 1; gap: 28px; }
+#nssq-battle .nb-erow.front { top: 8px; bottom: 8px; }
+#nssq-battle .nb-erow.back { top: 34px; bottom: 34%; gap: 28px; }
 #nssq-battle .nb-enemies.has-back .nb-erow.front { top: 22%; }
 #nssq-battle .nb-enemy { position: relative; flex: 0 1 220px; min-width: 90px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; cursor: pointer; transition: transform 0.15s; }
 #nssq-battle .nb-enemy .art { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
@@ -590,7 +590,7 @@
 /* 인카운터 기능: 이니셔티브, GM 에너미 도구, 희소종, 개막 행동 표시 */
 #nssq-battle .nb-order .who .init { font-style: normal; font-size: 0.8em; padding: 0 4px; margin-left: 2px; border-radius: 8px; background: rgba(201, 162, 74, 0.25); color: var(--nq-gold-l); }
 #nssq-battle .nb-enemy { position: relative; }
-#nssq-battle .nb-enemy .gm-tools { position: absolute; top: 0; right: 0; z-index: 2; display: flex; gap: 2px; opacity: 0.35; transition: opacity 0.15s; }
+#nssq-battle .nb-enemy .gm-tools { display: flex; justify-content: center; gap: 2px; opacity: 0.35; transition: opacity 0.15s; }
 #nssq-battle .nb-enemy:hover .gm-tools { opacity: 1; }
 #nssq-battle .nb-enemy .gm-tools a { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(10, 22, 38, 0.9); border: 1px solid var(--nq-line2); color: var(--nq-mu); font-size: 0.8em; }
 #nssq-battle .nb-enemy .gm-tools a:hover { border-color: var(--nq-cy); color: var(--nq-cy); }
@@ -826,3 +826,48 @@
 #nssq-status-pop header .an-edit:hover { background: rgba(201, 162, 74, 0.35); }
 #nssq-status-pop .an-slots li { flex-wrap: wrap; }
 #nssq-status-pop .an-slots li .eff { flex: 1 0 100%; font-size: 0.78em; color: var(--nq-mu); }
+/* 에너미 카드: 그림과 정보판(plate). 겹칠 때 정보판이 언제나 그림 위로(후열 정보판도 전열 그림에 가리지 않음) */
+#nssq-battle .nb-enemy .art { position: relative; z-index: 1; }
+#nssq-battle .nb-enemy.front .art { z-index: 2; }
+#nssq-battle .nb-enemy .plate { position: relative; z-index: 3; flex: 0 0 auto; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+#nssq-battle .nb-enemy.back .plate { order: -1; }
+#nssq-battle .nb-enemy .plate .nb-bar { width: 80%; }
+#nssq-battle .nb-marks { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
+#nssq-battle .nb-marks .mk { padding: 0 6px; font-size: 11px; line-height: 16px; color: #fff; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.35); text-shadow: 0 1px 1px #000; white-space: nowrap; }
+#nssq-battle .nb-marks .mk i { margin-right: 2px; font-size: 0.9em; }
+#nssq-battle .nb-marks .mk.ailment { background: rgba(176, 40, 40, 0.92); }
+#nssq-battle .nb-marks .mk.bind { background: rgba(196, 110, 20, 0.92); }
+#nssq-battle .nb-marks .mk.buff { background: rgba(36, 96, 178, 0.92); }
+#nssq-battle .nb-marks .mk.debuff { background: rgba(110, 50, 150, 0.92); }
+/* 몬스터 도감: 전투 화면·자세히 보기와 같은 남색·금색 */
+.nssq-bestiary .window-content { padding: 0; color: var(--nq-tx); background: linear-gradient(rgba(24, 49, 82, 0.98), rgba(12, 24, 42, 0.98)); font-family: var(--nq-font); }
+.nssq-bestiary aside { background: rgba(0, 0, 0, 0.22); border-right: 1px solid var(--nq-gold); }
+.nssq-bestiary aside input[type=search] { color: var(--nq-tx); background: rgba(0, 0, 0, 0.35); border: 1px solid var(--nq-line2); }
+.nssq-bestiary aside .notes { color: var(--nq-mu); font-size: 0.8em; margin: 4px 2px 0; }
+.nssq-bestiary .species li { color: var(--nq-mu); border: 1px solid transparent; }
+.nssq-bestiary .species li.known { color: var(--nq-tx); }
+.nssq-bestiary .species li:hover { background: rgba(255, 255, 255, 0.06); }
+.nssq-bestiary .species li.active { background: rgba(201, 162, 74, 0.2); border-color: var(--nq-gold); }
+.nssq-bestiary .species li small { color: var(--nq-mu); }
+.nssq-bestiary .species li .fa-eye { color: var(--nq-gold-l); font-size: 0.8em; }
+.nssq-bestiary .detail header { padding-bottom: 6px; border-bottom: 1px solid var(--nq-gold); }
+.nssq-bestiary .detail header img { filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7)); }
+.nssq-bestiary .detail header h2 { font-family: var(--nq-title); color: var(--nq-gold-l); }
+.nssq-bestiary .detail header span { color: var(--nq-mu); }
+.nssq-bestiary .detail h4 { color: var(--nq-gold-l); border-bottom: 1px solid var(--nq-line2); }
+.nssq-bestiary .detail .notes { color: var(--nq-mu); }
+.nssq-bestiary .an-stat, .nssq-bestiary .an-res { background: rgba(0, 0, 0, 0.25); border-color: var(--nq-line2); }
+.nssq-bestiary .an-stat span, .nssq-bestiary .an-res span { color: var(--nq-mu); }
+.nssq-bestiary .an-res.fire span { color: #ff8a6a; }
+.nssq-bestiary .an-res.ice span { color: #8fd3ff; }
+.nssq-bestiary .an-res.volt span { color: #ffe06a; }
+.nssq-bestiary .an-list li { margin: 2px 0; padding: 3px 8px; background: rgba(36, 70, 120, 0.55); border: none; border-radius: 3px; }
+.nssq-bestiary .an-list li small { color: var(--nq-mu); }
+.nssq-bestiary .an-list li.q, .nssq-bestiary .an-list li.empty { color: var(--nq-mu); background: rgba(0, 0, 0, 0.2); }
+.nssq-bestiary .an-list li.spec .desc { color: var(--nq-tx); opacity: 0.85; }
+.nssq-bestiary .bestiary-edit label { color: var(--nq-tx); }
+.nssq-bestiary .bestiary-edit input[type=number] { color: var(--nq-tx); background: rgba(0, 0, 0, 0.35); border: 1px solid var(--nq-line2); }
+.nssq-bestiary .checks li { padding: 1px 0; }
+.nssq-bestiary .checks small { color: var(--nq-mu); }
+.nssq-bestiary .buttons button { width: auto; color: var(--nq-gold-l); background: rgba(201, 162, 74, 0.18); border: 1px solid var(--nq-gold); }
+.nssq-bestiary .none { color: var(--nq-mu); }

@@ -115,6 +115,28 @@ export function statusChips(actor) {
   return chips.length ? `<div class="nb-chips">${chips.join("")}</div>` : "";
 }
 
+/**
+ * 에너미 카드용 짧은 표시: 상태 이상 이름, 봉인 수, 강화·약화 수(▲n ▼n). 자세한 것은 카드를 눌러 자세히 보기
+ * 그림 크기와 관계없이 이름·【HP】 막대와 한 줄에 들어가도록 칩 대신 쓴다
+ */
+export function statusMarks(actor) {
+  const s = actor?.system;
+  if (!s) return "";
+  const conds = (s.conditions ?? []).filter((c) => CONDITIONS[c.id]);
+  const buffs = (s.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]);
+  const ail = conds.filter((c) => CONDITIONS[c.id].kind === "ailment");
+  const binds = conds.filter((c) => CONDITIONS[c.id].kind === "bind");
+  const up = buffs.filter((b) => BUFFS[canonicalBuff(b.id)].kind === "buff");
+  const down = buffs.filter((b) => BUFFS[canonicalBuff(b.id)].kind === "debuff");
+  const marks = [
+    ...ail.map((c) => `<span class="mk ailment" title="${esc(conditionLabel(c))}">${esc(conditionName(c.id))}</span>`),
+    binds.length ? `<span class="mk bind" title="${esc(binds.map(conditionLabel).join(", "))}"><i class="fas fa-link"></i>${binds.length}</span>` : "",
+    up.length ? `<span class="mk buff" title="${esc(up.map(buffLabel).join(", "))}">▲${up.length}</span>` : "",
+    down.length ? `<span class="mk debuff" title="${esc(down.map(buffLabel).join(", "))}">▼${down.length}</span>` : ""
+  ].filter(Boolean);
+  return marks.length ? `<div class="nb-marks">${marks.join("")}</div>` : "";
+}
+
 /* ---------------- 적용 ---------------- */
 
 const note = (content) => ChatMessage.create({

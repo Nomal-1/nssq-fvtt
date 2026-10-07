@@ -21,7 +21,7 @@ import { bustStyle, faceStyle } from "../apps/art-config.mjs";
 import { flip, morph, snapshot } from "./morph.mjs";
 import { identifyDialog } from "./identify.mjs";
 import { randomEnemyAction } from "./enemy-ai.mjs";
-import { StatusApp, statusChips } from "./status.mjs";
+import { StatusApp, statusChips, statusMarks } from "./status.mjs";
 import { allyAnalysisHtml, enemyAnalysisHtml } from "./analysis.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
 import { actionState, confusedAction, endPhaseMessage, requestEndPhaseApply } from "./turn-status.mjs";
@@ -122,7 +122,8 @@ function togglePop(combat, c, card) {
     });
   }
   fillPop(c);
-  const r = card.getBoundingClientRect();
+  // 에너미는 실제 그림 기준(카드는 줄 높이 전체라 그림보다 크다)
+  const r = (card.querySelector(".art img") ?? card).getBoundingClientRect();
   const w = popEl.offsetWidth || 300;
   const h = popEl.offsetHeight || 200;
   let left = r.right + 8;
@@ -237,12 +238,15 @@ function enemyCard(c, combat, targetable) {
       <a data-tool="status" title="${esc(game.i18n.localize("NSSQ.Conditions.button"))}"><i class="fas fa-heartbeat"></i></a>
       <a data-tool="sheet" title="${esc(L("openSheet"))}"><i class="fas fa-id-card"></i></a>
     </div>` : "";
+  // 이름·【HP】·상태 표시·GM 도구를 한 덩어리(plate)로 그림에 붙인다. 그림 크기와 관계없이 전열은 그림 아래, 후열은 그림 위
   return `<div class="${cls}" data-combatant="${c.id}" data-key="e-${c.id}" data-flip title="${esc(c.name)}">
-    ${tools}
     <div class="art"><img src="${esc(enemyImage(c))}"/></div>
-    <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
-    <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
-    ${statusChips(a)}
+    <div class="plate">
+      <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
+      <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
+      ${statusMarks(a)}
+      ${tools}
+    </div>
   </div>`;
 }
 
