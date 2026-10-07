@@ -13,6 +13,24 @@ import { characterContext, editAbilities, showCreationLog, toggleCreationLock } 
 import { rollGrowth } from "../apps/growth.mjs";
 import { openArtConfig } from "../apps/art-config.mjs";
 import { SkillTree } from "../apps/skill-tree.mjs";
+import tables from "../generated/tables.mjs";
+
+/** GM 편의: 「Lv n으로」 → 경험점을 그 레벨이 되는 값으로 맞춘다(레벨은 경험점으로 정해짐) */
+async function setLevelDialog(actor) {
+  if (!game.user.isGM) return;
+  const levels = tables.levelExp?.levels ?? [];
+  const options = levels.map((r) => `<option value="${r.level}" ${r.level === actor.system.level ? "selected" : ""}>Lv ${r.level} (${game.i18n.localize("NSSQ.Exp")} ${r.total})</option>`).join("");
+  const level = await Dialog.prompt({
+    title: game.i18n.format("NSSQ.Level.setTitle", { name: actor.name }),
+    content: `<form><div class="form-group"><label>${game.i18n.localize("NSSQ.Level.label")}</label><select name="level">${options}</select></div><p class="notes">${game.i18n.localize("NSSQ.Level.setNote")}</p></form>`,
+    label: game.i18n.localize("NSSQ.Level.apply"),
+    callback: (html) => Number(html[0].querySelector("[name=level]").value),
+    rejectClose: false
+  });
+  if (!level) return;
+  const total = levels.find((r) => r.level === level)?.total ?? 0;
+  await actor.update({ "system.exp": total, "system.level": level });
+}
 
 export class NssqActorSheet extends ActorSheet {
   static get defaultOptions() {
@@ -39,6 +57,14 @@ export class NssqActorSheet extends ActorSheet {
     context.canAttack = this.isEditable && (this.actor.type === "character" || this.actor.type === "enemy");
     context.showNpcToggle = game.user.isGM && this.actor.type === "character";
     context.isGM = game.user.isGM;
+    if (this.actor.type === "character") {
+      // 레벨은 경험점으로 정해진다: 다음 레벨까지 남은 경험점
+      const levels = tables.levelExp?.levels ?? [];
+      const next = levels.find((r) => r.level === system.level + 1);
+      context.expHint = next
+        ? game.i18n.format("NSSQ.Level.toNext", { level: next.level, total: next.total, left: Math.max(0, next.total - (system.exp ?? 0)) })
+        : game.i18n.localize("NSSQ.Level.max");
+    }
     const pct = (r) => (r?.max > 0 ? Math.clamp(Math.round((r.value / r.max) * 100), 0, 100) : 0);
     context.hpPct = pct(system.hp);
     if (this.actor.type === "enemy") {
@@ -79,6 +105,14 @@ export class NssqActorSheet extends ActorSheet {
       context.subClassWidth = emWidth(sub?.name ?? game.i18n.localize("NSSQ.Class.none"));
       context.inventory = inventoryContext(this.actor, { skillFilter: this._skillFilter ?? "all" });
       context.isGM = game.user.isGM;
+    if (this.actor.type === "character") {
+      // 레벨은 경험점으로 정해진다: 다음 레벨까지 남은 경험점
+      const levels = tables.levelExp?.levels ?? [];
+      const next = levels.find((r) => r.level === system.level + 1);
+      context.expHint = next
+        ? game.i18n.format("NSSQ.Level.toNext", { level: next.level, total: next.total, left: Math.max(0, next.total - (system.exp ?? 0)) })
+        : game.i18n.localize("NSSQ.Level.max");
+    }
       context.sheet = characterContext(this.actor);
       context.tpPct = pct(system.tp);
       context.resistRows = RESISTS.map((k) => ({ key: k, base: system.resist[k], total: system.resistTotal[k], changed: system.resistTotal[k] !== system.resist[k] }));
@@ -125,6 +159,10 @@ export class NssqActorSheet extends ActorSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+    html.on("click", "[data-action=set-level]", (ev) => {
+      ev.preventDefault();
+      setLevelDialog(this.actor);
+    });
     html.on("click", "[data-action=item-edit]", (ev) => {
       const id = ev.currentTarget.closest("[data-item-id]")?.dataset.itemId;
       this.actor.items.get(id)?.sheet.render(true);

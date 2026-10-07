@@ -4,6 +4,9 @@
  * 같은 key(system.key)끼리만 바꾸고, GM이 시트에서 손으로 effects를 쓴 것(review가 "manual")은 건드리지 않는다.
  * 시스템 버전이 바뀐 뒤 처음 접속하면 자동으로 한 번 실행한다.
  */
+import tables from "../generated/tables.mjs";
+import { expForLevel, levelFromExp } from "../engine/derive.mjs";
+
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.EffectsSync.${k}`, d) : game.i18n.localize(`NSSQ.EffectsSync.${k}`));
 
 /** key → { effects, review } */
@@ -50,11 +53,30 @@ export async function syncEffects({ quiet = false } = {}) {
   return n;
 }
 
+/**
+ * v0.10.8: 레벨을 경험점으로 정하게 바뀌었다. 저장된 레벨보다 경험점이 적은 캐릭터는
+ * 경험점을 그 레벨의 누적 값으로 올려 레벨이 내려가지 않게 한다(한 번만)
+ */
+async function migrateLevelExp() {
+  if (game.settings.get("nssq", "levelExpMigrated")) return;
+  const levels = tables.levelExp?.levels ?? [];
+  const updates = [];
+  for (const a of game.actors.filter((x) => x.type === "character")) {
+    const stored = Number(a._source.system?.level) || 1;
+    if (levelFromExp(a.system.exp, levels) < stored) updates.push({ _id: a.id, "system.exp": expForLevel(stored, levels) });
+  }
+  if (updates.length) await Actor.updateDocuments(updates);
+  await game.settings.set("nssq", "levelExpMigrated", true);
+  if (updates.length) ui.notifications.info(game.i18n.format("NSSQ.Level.migrated", { n: updates.length }), { permanent: true });
+}
+
 export function registerEffectsSync() {
   game.settings.register("nssq", "effectsSyncedVersion", { scope: "world", config: false, type: String, default: "" });
-  Hooks.once("ready", () => {
+  game.settings.register("nssq", "levelExpMigrated", { scope: "world", config: false, type: Boolean, default: false });
+  Hooks.once("ready", async () => {
     const gm = game.users.activeGM;
     if (!gm || gm.id !== game.user.id) return;
+    await migrateLevelExp();
     if (game.settings.get("nssq", "effectsSyncedVersion") !== game.system.version) syncEffects({ quiet: true });
   });
 }

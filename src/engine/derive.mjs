@@ -72,6 +72,20 @@ export function growthAvailable({ exp = 0, abilities = {} }) {
   return { earned, used, left: Math.max(0, earned - used) };
 }
 
+/**
+ * 누적 경험점 → 레벨(01 §8 레벨업 표). levels: [{ level, total }]
+ * @returns {number}
+ */
+export function levelFromExp(exp, levels) {
+  const e = Number(exp) || 0;
+  let lv = 1;
+  for (const row of levels ?? []) if (e >= row.total && row.level > lv) lv = row.level;
+  return lv;
+}
+
+/** 그 레벨이 되는 누적 경험점 */
+export const expForLevel = (level, levels) => (levels ?? []).find((r) => r.level === level)?.total ?? 0;
+
 /** 성장 1D6 → 능력치(6은 고르기) */
 export function growthAbility(die) {
   return [null, "str", "tec", "vit", "agi", "luc", null][die] ?? null;

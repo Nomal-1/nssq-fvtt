@@ -1,4 +1,4 @@
-import { ABILITIES, RESISTS, abilityBreakdown, deriveCharacter } from "../../engine/derive.mjs";
+import { ABILITIES, RESISTS, abilityBreakdown, deriveCharacter, levelFromExp } from "../../engine/derive.mjs";
 import { carriedCount, collectEquipment } from "../../engine/equipment.mjs";
 import { stateMods } from "../../engine/states.mjs";
 import tables from "../../generated/tables.mjs";
@@ -79,6 +79,11 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     const main = classes.find((c) => c.system.key && c.system.key === this.mainClass) ?? classes[0] ?? null;
     const sub = this.subClass ? classes.find((c) => c !== main && c.system.key === this.subClass) ?? null : null;
     return { main, sub, all: classes };
+  }
+
+  /** 레벨은 누적 경험점으로 정해진다(01 §8). 저장된 level은 쓰지 않는다 */
+  prepareBaseData() {
+    this.level = levelFromExp(this.exp, tables.levelExp?.levels);
   }
 
   prepareDerivedData() {

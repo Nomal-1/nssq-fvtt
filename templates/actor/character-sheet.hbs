@@ -7,7 +7,7 @@
     <div class="nq-id">
       <input class="nq-name" name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'NSSQ.Name'}}"/>
       <div class="nq-sub">
-        <label class="nq-lv">Lv <input type="number" name="system.level" value="{{system.level}}" data-dtype="Number"/></label>
+        <span class="nq-lv" title="{{expHint}}">Lv <b>{{system.level}}</b>{{#if isGM}}<a class="nq-ctl" data-action="set-level" title="{{localize 'NSSQ.Level.setHint'}}"><i class="fas fa-level-up-alt"></i></a>{{/if}}</span>
         {{#if classes.main}}
         <select class="nq-class" style="width: {{mainClassWidth}}em" name="system.mainClass" title="{{localize 'NSSQ.Class.main'}}">{{selectOptions mainClassChoices selected=mainClassKey}}</select>
         <span class="nq-slash">/</span>
@@ -28,7 +28,7 @@
       <label class="nq-chip fp"><span>FP</span><input type="number" name="system.fp.value" value="{{system.fp.value}}" data-dtype="Number"/></label>
       <label class="nq-chip"><span>{{localize "NSSQ.Sheet.money"}}</span><input type="number" name="system.money" value="{{system.money}}" data-dtype="Number"/><em>G</em></label>
       <div class="nq-chip {{#if inventory.over}}over{{/if}}" title="{{localize 'NSSQ.Inventory.carryHint'}}"><span>{{localize "NSSQ.Sheet.carry"}}</span><b>{{system.carried}} / {{system.carry}}</b></div>
-      <label class="nq-chip"><span>{{localize "NSSQ.Exp"}}</span><input type="number" name="system.exp" value="{{system.exp}}" data-dtype="Number"/></label>
+      <label class="nq-chip" title="{{expHint}}"><span>{{localize "NSSQ.Exp"}}</span><input type="number" name="system.exp" value="{{system.exp}}" data-dtype="Number"/></label>
     </div>
   </header>
 

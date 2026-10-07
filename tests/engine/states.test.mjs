@@ -41,3 +41,18 @@ describe("전투 고유 상태(07 #57)", () => {
     expect(canUseSkill(skill, { tp: 5 }, { phase: "opening", openingDone: true }).reason).toBe("openingDone");
   });
 });
+
+import { expForLevel, levelFromExp } from "../../src/engine/derive.mjs";
+import tables from "../../src/generated/tables.mjs";
+
+describe("레벨 = 누적 경험점(01 §8)", () => {
+  const L = tables.levelExp.levels;
+  it("표대로", () => {
+    expect(levelFromExp(0, L)).toBe(1);
+    expect(levelFromExp(14, L)).toBe(1);
+    expect(levelFromExp(15, L)).toBe(2);
+    expect(levelFromExp(664, L)).toBe(14);
+    expect(levelFromExp(9999, L)).toBe(15);
+    expect(expForLevel(15, L)).toBe(665);
+  });
+});

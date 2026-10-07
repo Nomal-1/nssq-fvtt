@@ -25,6 +25,7 @@ import { StatusApp, statusChips, statusMarks } from "./status.mjs";
 import { allyAnalysisHtml, enemyAnalysisHtml } from "./analysis.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
 import { actionState, confusedAction, endPhaseMessage, requestEndPhaseApply } from "./turn-status.mjs";
+import { openingLabel, requestPass, restoreOpening } from "./opening.mjs";
 import { actionList, beginAction, pickTarget, requestSkillApply, stateModText } from "./skill-use.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
@@ -46,6 +47,8 @@ const lastHp = new Map(); // combatant id → 【HP】(피격 숫자용)
 /** 진행 중인 NSSQ 전투(전투 개시로 만든 것) */
 export const battleCombat = () => game.combats.find((c) => c.getFlag("nssq", "battle") && c.started) ?? null;
 
+/** 표시 이름: 연결된 캐릭터는 액터 이름(시트에서 바꾼 이름이 바로 보이게), 그 밖에는 전투원 이름 */
+const nameOf = (c) => (c.actor?.type === "character" && c.token?.actorLink ? c.actor.name : c.name);
 const isKO = (c) => c.defeated || (c.actor?.system.hp?.value ?? 0) <= 0;
 /** 메인 페이즈의 현재 차례 전투원인가 */
 const isCurrent = (c, combat) => combat.getFlag("nssq", "phase") === "main" && combat.combatant?.id === c.id;
@@ -188,7 +191,7 @@ function orderStrip(combat) {
     const cls = [sideOf(c.actor) === "enemy" ? "enemy" : "", phase === "main" && i === curIdx ? "current" : "", phase === "main" && i < curIdx ? "done" : "", isKO(c) ? "ko" : ""].join(" ");
     const init = c.initiative !== null && c.initiative !== undefined && (game.user.isGM || sideOf(c.actor) !== "enemy")
       ? `<em class="init" title="${esc(L("initiative"))}">${Math.round(c.initiative * 10) / 10}</em>` : "";
-    return `<span class="who ${cls}" data-key="o-${c.id}" data-flip><img src="${esc(c.img)}"/><span>${esc(c.name)}</span>${init}</span>`;
+    return `<span class="who ${cls}" data-key="o-${c.id}" data-flip><img src="${esc(c.img)}"/><span>${esc(nameOf(c))}</span>${init}</span>`;
   }).join('<i class="fas fa-chevron-right sep"></i>');
   return `<div class="nb-order">${items}</div>`;
 }
@@ -213,6 +216,7 @@ function gmControls(combat) {
     <button type="button" data-gm="identify" title="${esc(game.i18n.localize("NSSQ.Identify.hint"))}"><i class="fas fa-search"></i> ${game.i18n.localize("NSSQ.Identify.title")}${idValue !== null && idValue !== undefined ? ` (${idValue})` : ""}</button>
     <button type="button" data-gm="finish" title="${esc(L("finishHint"))}"><i class="fas fa-flag-checkered"></i> ${L("finish")}</button>
     ${phase === "opening" ? `<button type="button" data-gm="escape"><i class="fas fa-running"></i> ${C("escape")}</button>` : ""}
+    ${phase === "opening" && combat.combatants.some((x) => x.getFlag("nssq", "opening")) ? `<button type="button" data-gm="opening-undo" title="${esc(game.i18n.localize("NSSQ.Opening.undoHint"))}"><i class="fas fa-undo"></i> ${esc(game.i18n.localize("NSSQ.Opening.undo"))}</button>` : ""}
     <button type="button" data-gm="shuffle" title="${esc(L("shuffleHint"))}"><i class="fas fa-random"></i> ${L("shuffle")}</button>
     <button type="button" data-gm="next"><i class="fas fa-forward"></i> ${phase === "main" ? C("nextTurn") : C("nextPhase")}</button>`;
 }
@@ -278,7 +282,7 @@ function partyCard(c, combat, targetable) {
   return `<div class="${classes}" data-combatant="${c.id}" data-key="p-${c.id}" data-flip>
     <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}"></div>
     <div class="info">
-      <div class="line"><span class="name">${esc(c.name)}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${overheatChip(a)}${statusChips(a)}
+      <div class="line"><span class="name">${esc(nameOf(c))}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${overheatChip(a)}${statusChips(a)}
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
       <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) + `<div class="nb-fp" title="FP"><b>FP</b><span>${s.fp?.value ?? 0}</span></div>` : ""}</div>
     </div>
@@ -382,12 +386,15 @@ function commandBody(combat) {
       // 행동 불가·혼란 판정 실패는 개막 행동 없음
       const st = actionState(c);
       if (st.noOpening) return `<div class="opening-row disabled" data-combatant="${c.id}"><span class="name">${esc(c.name)}</span><span class="notes">${esc(game.i18n.format("NSSQ.Turn.noOpening", { reason: st.reason }))}</span></div>`;
-      const guarding = !!c.getFlag("nssq", "guarding");
-      return `<div class="opening-row ${sideOf(c.actor) === "enemy" ? "enemy" : ""} ${c.getFlag("nssq", "opening") ? "done" : ""}" data-combatant="${c.id}"><span class="name">${esc(c.name)}</span>
-        <button type="button" data-cmd="guard" class="${guarding ? "active" : ""}" title="${guarding ? L("guardOff") : L("guard")}"><i class="fas fa-shield-alt"></i> ${L("guard")}</button>
+      // 개막 행동은 한 번: 정했으면 무엇을 했는지만(되돌리기는 GM의 [개막 행동 되돌리기])
+      const done = c.getFlag("nssq", "opening");
+      if (done) return `<div class="opening-row done ${sideOf(c.actor) === "enemy" ? "enemy" : ""}" data-combatant="${c.id}"><span class="name">${esc(c.name)}</span><span class="act-done"><i class="fas fa-check"></i> ${esc(openingLabel(done))}</span></div>`;
+      return `<div class="opening-row ${sideOf(c.actor) === "enemy" ? "enemy" : ""}" data-combatant="${c.id}"><span class="name">${esc(c.name)}</span>
+        <button type="button" data-cmd="guard" title="${L("guard")}"><i class="fas fa-shield-alt"></i> ${L("guard")}</button>
         <button type="button" data-cmd="row" title="${L("row")}"><i class="fas fa-arrows-alt-v"></i> ${L("row")}</button>
         ${c.actor.type === "character" ? `<button type="button" data-cmd="swap" title="${L("swap")}"><i class="fas fa-exchange-alt"></i> ${L("swapShort")}</button>` : ""}
         <button type="button" data-cmd="skill" title="${L("skill")}"><i class="fas fa-magic"></i> ${L("skill")}</button>
+        <button type="button" data-cmd="pass" title="${esc(game.i18n.localize("NSSQ.Opening.passHint"))}"><i class="fas fa-ban"></i> ${esc(game.i18n.localize("NSSQ.Opening.pass"))}</button>
       </div>`;
     }).join("");
   }
@@ -613,6 +620,7 @@ function bindClicks(el) {
         case "finish": return openEndDialog();
         case "identify": return identifyDialog(combat);
         case "auto": return toggleAutoApply(combat);
+        case "opening-undo": return restoreOpening(combat);
       }
       return;
     }
@@ -644,6 +652,7 @@ function bindClicks(el) {
         case "random": pending = null; return randomEnemyAction(combat);
         case "confused": pending = null; return confusedAction(combat, c);
         case "guard": return toggleGuard(c);
+        case "pass": return requestPass(c);
         case "row": return toggleRow(c);
         case "swap": return swapWeapon(c);
       }

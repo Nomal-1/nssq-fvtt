@@ -587,6 +587,7 @@
 #nssq-battle .nb-member em.overheat { background: linear-gradient(90deg, #ff7a1a, #e0302a); color: #fff; font-weight: 700; box-shadow: 0 0 6px rgba(255, 110, 30, 0.8); animation: nb-overheat 1.4s ease-in-out infinite alternate; }
 #nssq-battle .nb-member em.bstate { background: rgba(40, 30, 80, 0.85); border: 1px solid #b9a2ff; color: #e2d8ff; white-space: nowrap; }
 .nssq-skill-card .sk-target li.state { color: #5a3fb0; }
+.nssq-skill-card .sk-target .supp-roll { margin-left: 1em; font-size: 0.9em; color: #555; }
 @keyframes nb-overheat { from { box-shadow: 0 0 3px rgba(255, 110, 30, 0.5); } to { box-shadow: 0 0 9px rgba(255, 80, 20, 0.95); } }
 #nssq-battle .nb-member .cls { margin-left: auto; font-size: 0.85em; color: var(--nq-mu); white-space: nowrap; }
 #nssq-battle .nb-member .bars { display: flex; gap: 8px; }
@@ -607,6 +608,7 @@
 #nssq-battle .nb-enemy .name .rare { color: var(--nq-fp); margin-right: 3px; }
 #nssq-battle .nb-command .opening-row.enemy .name { color: var(--nq-red); }
 #nssq-battle .nb-command .opening-row.done .name::after { content: " ✓"; color: var(--nq-green); }
+#nssq-battle .nb-command .opening-row .act-done { flex: 1 0 100%; font-size: 0.88em; color: var(--nq-green); }
 /* 난입: GM이 끌고 있을 때 */
 #nssq-battle .nb-drop { display: none; position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); padding: 14px 24px; font-size: 1.2em; color: var(--nq-gold-l); background: rgba(10, 22, 38, 0.92); border: 2px dashed var(--nq-gold); border-radius: 12px; pointer-events: none; }
 #nssq-battle.dropping .nb-drop { display: block; }

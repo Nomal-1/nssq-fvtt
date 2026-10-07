@@ -9,6 +9,7 @@ import { initiativeValue } from "../engine/combat.mjs";
 import { combatProfile } from "../combat/profile.mjs";
 import { openEndDialog } from "../apps/battle.mjs";
 import { actionState, confirmEndPhaseApplied, openingRolls, runEndPhase } from "../combat/turn-status.mjs";
+import { confirmOpeningDone, snapshotOpening } from "../combat/opening.mjs";
 
 export class NssqCombat extends Combat {
   get phase() {
@@ -76,7 +77,11 @@ export class NssqCombat extends Combat {
       content: `<div class="nssq-phase phase-${phase}"><i class="fas fa-hourglass-half"></i> ${game.i18n.format("NSSQ.Combat.phaseStart", { round: this.round, phase: game.i18n.localize(`NSSQ.Combat.phase.${phase}`) })}</div>`
     });
     // 상태 이상의 턴 처리(단계 5)
-    if (phase === "opening") await openingRolls(this);
+    if (phase === "opening") {
+      await openingRolls(this);
+      // 개막 행동 되돌리기용 기록(combat/opening.mjs)
+      await snapshotOpening(this);
+    }
     if (phase === "end") await runEndPhase(this);
   }
 
@@ -91,6 +96,8 @@ export class NssqCombat extends Combat {
     }
     switch (this.phase) {
       case "opening": {
+        // 모두 개막 행동을 정했는가(남은 GM 전투원은 확인 뒤 「행동 안 함」)
+        if (!(await confirmOpeningDone(this))) return this;
         // 개막 → 메인: 【속도】를 다시 계산하고 첫 행동자부터
         await this.refreshInitiative();
         const first = this.firstActingTurn(0);

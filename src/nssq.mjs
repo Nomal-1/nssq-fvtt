@@ -21,6 +21,7 @@ import { registerApply } from "./combat/apply.mjs";
 import { registerTurnStatus } from "./combat/turn-status.mjs";
 import { registerSkillUse } from "./combat/skill-use.mjs";
 import { registerReaction } from "./combat/reaction.mjs";
+import { registerOpening } from "./combat/opening.mjs";
 import { registerBestiary } from "./combat/bestiary.mjs";
 import { BestiaryApp, registerBestiaryApp } from "./apps/bestiary.mjs";
 import { registerEffectsSync, syncEffects } from "./apps/effects-sync.mjs";
@@ -82,6 +83,7 @@ Hooks.once("init", () => {
   registerTurnStatus();
   registerSkillUse();
   registerReaction();
+  registerOpening();
   registerAttackHooks();
   registerTracker();
   registerBattle();

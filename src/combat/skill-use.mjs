@@ -216,7 +216,11 @@ function entryLines(e, card) {
   const hits = e.hits ?? [];
   const multi = (card.entries ?? []).reduce((n, x) => n + (x.hits?.length ?? 0), 0) > 1;
   // 부여·강화·확률 실패: 어느 명중에서 생겼는지(seq)가 있으면 그 공격 아래에
-  const inflictLi = (i) => `<li class="${i.resisted || i.broken ? "resist" : "inflict"}">${esc(L(i.resisted ? "inflictResisted" : "inflictLine", { label: conditionName(i.id), depth: i.depth ?? "-" }))}${i.broken ? ` <em class="woke">${esc(L("brokenAt", { n: i.broken }))}</em>` : ""}</li>`;
+  // 억제 판정: 대결이면 양쪽, 고정 목표값이면 방어 쪽 주사위·달성값(07 #47: 모르는 에너미의 값은 ?)
+  const chk = (c, side = "user") => `${(c?.used ?? []).join("+")}${c && c.total - c.sum ? `${c.total - c.sum >= 0 ? "+" : ""}${c.total - c.sum}` : ""} = <span ${side === "user" ? `data-mask="${esc(card.kind)}"` : "data-mask-def"}>${c?.total ?? "-"}</span>`;
+  const rollText = (i) => (i.contest ? esc(L("contestRoll", { atk: "\u0001", def: "\u0002" })).replace("\u0001", chk(i.contest.atk)).replace("\u0002", chk(i.contest.def, "target"))
+    : i.fixed ? esc(L("fixedRoll", { def: "\u0002", target: i.fixed.target })).replace("\u0002", chk(i.fixed.check, "target")) : "");
+  const inflictLi = (i) => `<li class="${i.resisted || i.broken ? "resist" : "inflict"}">${esc(L(i.resisted ? "inflictResisted" : "inflictLine", { label: conditionName(i.id), depth: i.depth ?? "-" }))}${i.broken ? ` <em class="woke">${esc(L("brokenAt", { n: i.broken }))}</em>` : ""}${rollText(i) ? `<div class="supp-roll">${rollText(i)}</div>` : ""}</li>`;
   const buffLi = (b) => `<li class="${BUFFS[b.id]?.kind ?? "buff"}">${esc(L("buffLine", { label: buffLabel(b), turns: b.turns }))}</li>`;
   const chanceLi = (x) => `<li class="miss">${esc(L("chanceFailed", { die: x.die }))}</li>`;
   const sub = (seq) => [
@@ -351,6 +355,11 @@ export function registerSkillUse() {
     if (!game.user.isGM) {
       const user = fromUuidSync(card.userUuid);
       if (user && !knowsEnemy(user)) el.querySelectorAll("[data-mask]").forEach((x) => { x.textContent = "?"; });
+      // 대상 쪽 억제 방어 달성값: 모르는 에너미면 ?
+      el.querySelectorAll(".sk-target").forEach((row) => {
+        const t = fromUuidSync(card.entries[Number(row.dataset.index)]?.uuid ?? "");
+        if (t && !knowsEnemy(t)) row.querySelectorAll("[data-mask-def]").forEach((x) => { x.textContent = "?"; });
+      });
     }
     decorateReactions(el, message, "skill");
     const status = el.querySelector(".apply-status");

@@ -15,9 +15,17 @@ const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.loc
 
 /* ---------------- 개막 행동 ---------------- */
 
+/** 개막 행동은 한 번(01 §3.3). 이미 했으면 알림(되돌리기는 GM [개막 행동 되돌리기]) */
+function alreadyActed(combatant) {
+  if (!combatant.getFlag("nssq", "opening")) return false;
+  ui.notifications.warn(game.i18n.localize("NSSQ.Opening.already"));
+  return true;
+}
+
 export async function toggleGuard(combatant) {
-  const on = !combatant.getFlag("nssq", "guarding");
-  await combatant.update({ "flags.nssq.guarding": on, "flags.nssq.waiting": on, "flags.nssq.opening": on ? "guard" : null });
+  if (alreadyActed(combatant)) return;
+  const on = true;
+  await combatant.update({ "flags.nssq.guarding": on, "flags.nssq.waiting": on, "flags.nssq.opening": "guard" });
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: combatant.actor }),
     content: `<div class="nssq-combat-note"><i class="fas fa-shield-alt"></i> ${L(on ? "guardOn" : "guardOff", { name: combatant.name })}</div>`
@@ -25,6 +33,7 @@ export async function toggleGuard(combatant) {
 }
 
 export async function toggleRow(combatant) {
+  if (alreadyActed(combatant)) return;
   if (await changePosition(combatant)) await combatant.setFlag("nssq", "opening", "row");
 }
 
@@ -32,6 +41,7 @@ export async function toggleRow(combatant) {
 export async function swapWeapon(combatant) {
   const actor = combatant.actor;
   if (actor.type !== "character") return;
+  if (alreadyActed(combatant)) return;
   const items = actor.items.contents;
   const main = slotOccupant(items, "weapon");
   const sub = slotOccupant(items, "other");
@@ -84,6 +94,9 @@ export async function rollEscape(combat) {
   const flee = rows.filter((r) => r.flee).map((r) => r.total);
   const chase = rows.filter((r) => !r.flee).map((r) => r.total);
   const success = escapeSucceeds(flee, chase);
+  // 도주는 파티 전원의 개막 행동(01 §3.3)
+  const party = combat.combatants.filter((c) => c.actor && combatProfile(c.actor, c).side !== "enemy" && !c.getFlag("nssq", "opening"));
+  if (party.length) await combat.updateEmbeddedDocuments("Combatant", party.map((c) => ({ _id: c.id, "flags.nssq.opening": "escape" })));
   const line = (r) => `<li>${r.name}: [${r.dice.join(", ")}] + ${r.total - r.dice[0] - r.dice[1]} = <b>${r.total}</b></li>`;
   await ChatMessage.create({
     speaker: { alias: L("tracker") },
