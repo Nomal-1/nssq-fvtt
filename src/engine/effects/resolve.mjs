@@ -259,7 +259,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     const times = Math.max(1, evaluate(e.times ?? 1, vars(null)));
     const seen = new Set();
     for (let i = 0; i < times; i++) {
-      const alive = pool.filter((p) => !p.ko);
+      // randomFrom: 그 열에서만 고른다(《밀리언 스러스트》 「적 전열 중 무작위」)
+      const alive = pool.filter((p) => !p.ko && (!e.randomFrom || (p.row ?? "front") === e.randomFrom));
       if (!alive.length) break;
       const t = alive[Math.min(alive.length - 1, Math.floor(rng() * alive.length))];
       if (e.uniqueTarget && seen.has(t.id)) { res(t).hits.push({ skipped: true, seq: ++seq }); continue; }
