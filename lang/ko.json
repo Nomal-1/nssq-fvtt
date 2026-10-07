@@ -228,7 +228,8 @@
       "bindHead": "[머리] 봉인",
       "bindArm": "[팔] 봉인",
       "bindLeg": "[다리] 봉인",
-      "ko": "전투 불능"
+      "ko": "전투 불능",
+      "death": "즉사"
     },
     "Settings": {
       "autoApply": {

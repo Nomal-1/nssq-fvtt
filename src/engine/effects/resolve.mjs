@@ -89,7 +89,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     const elements = e.element ? [].concat(e.element)
       : e.addElement ? [...new Set([...(user.elements ?? []).filter((x) => x !== "none"), ...[].concat(e.addElement)])] : user.elements;
     // 상시 스킬의 공격 보정(《선봉의 공명》 등)
-    const pb = sumAttackBonuses(user.attackBonuses, { ...ctx, self: user, target: t, attack: { kind, elements } });
+    const pb = sumAttackBonuses(user.attackBonuses, { ...ctx, category, self: user, target: t, attack: { kind, elements } });
     let hitMod = evaluate(e.hitMod ?? 0, vars(t)) + pb.hitMod;
     let diceMod = evaluate(e.diceMod ?? 0, vars(t)) + pb.diceMod;
     for (const b of e.bonuses ?? []) {
@@ -104,7 +104,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
       target: { evasion: t.evasion, defense: t.defense, resist, guarding: t.guarding },
       kind, hitMod, diceMod,
-      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
+      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
       rollDice
     });
     hitChecks.push(result);
@@ -172,6 +172,13 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
           const c = resistCheck({ dice: await rollDice(2), suppDef: (t.suppDef ?? 0) + evaluate(ck.defMod ?? 0, vars(t)), target });
           r.inflicts.push({ id: e.condition, depth: c.depth, resisted: c.resisted, fixed: { target, check: c.check } });
         }
+        return;
+      }
+      case "kill": {
+        // 즉사: 고정 목표값 억제 방어 롤에 실패하면 【HP】 0(《일섬》 등). 카드에는 [즉사]로 표시
+        const target = evaluate(e.check?.target ?? 0, vars(t));
+        const c = resistCheck({ dice: await rollDice(2), suppDef: (t.suppDef ?? 0) + evaluate(e.check?.defMod ?? 0, vars(t)), target });
+        r.inflicts.push({ id: "death", depth: null, resisted: c.resisted, fixed: { target, check: c.check } });
         return;
       }
       case "cure":

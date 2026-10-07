@@ -317,7 +317,7 @@ function entryLines(e, card) {
   };
   const rollText = (i) => (i.contest ? esc(L("contestRoll", { atk: "\u0001", def: "\u0002" })).replace("\u0001", chk(i.contest.atk)).replace("\u0002", chk(i.contest.def, "target"))
     : i.fixed ? esc(L("fixedRoll", { def: "\u0002", target: i.fixed.target })).replace("\u0002", chk(i.fixed.check, "target")) : "");
-  const inflictLi = (i) => `<li class="${i.resisted || i.broken ? "resist" : "inflict"}">${esc(L(i.resisted ? "inflictResisted" : "inflictLine", { label: conditionName(i.id), depth: i.depth ?? "-" }))}${i.broken ? ` <em class="woke">${esc(L("brokenAt", { n: i.broken }))}</em>` : ""}${rollText(i) ? `<div class="supp-roll">${rollText(i)}</div>` : ""}</li>`;
+  const inflictLi = (i) => `<li class="${i.resisted || i.broken ? "resist" : "inflict"}">${esc(i.resisted ? L("inflictResisted", { label: conditionName(i.id) }) : i.id === "death" ? `[${conditionName(i.id)}]` : L("inflictLine", { label: conditionName(i.id), depth: i.depth ?? "-" }))}${i.broken ? ` <em class="woke">${esc(L("brokenAt", { n: i.broken }))}</em>` : ""}${rollText(i) ? `<div class="supp-roll">${rollText(i)}</div>` : ""}</li>`;
   const buffLi = (b) => `<li class="${BUFFS[b.id]?.kind ?? "buff"}">${esc(L("buffLine", { label: buffLabel(b), turns: b.turns }))}</li>`;
   const chanceLi = (x) => `<li class="miss">${esc(L("chanceFailed", { die: x.die }))}</li>`;
   const sub = (seq) => [
@@ -399,6 +399,8 @@ async function applyEntry(actor, e, sourceUuid) {
   const source = sourceUuid ? fromUuidSync(sourceUuid) : null;
   for (const i of e.inflicts ?? []) {
     if (i.resisted || i.broken) continue;
+    // 즉사
+    if (i.id === "death") { hp = Math.min(hp, 0); continue; }
     const r = addCondition(conds, { id: i.id, depth: i.depth, source: sourceUuid ?? "", sourceSuppAtk: source ? combatProfile(source).suppAtk : 0 });
     conds = r.list;
     if (!["ignored", "blocked"].includes(r.result)) newly.push(i.id);

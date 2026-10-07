@@ -98,7 +98,8 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     const w0 = eq.weapon ?? {};
     const passives = collectPassives(
       items.filter((i) => i.type === "skill").map((i) => ({ name: i.name, sl: i.system.sl, timing: i.system.timing, effects: i.system.effects })),
-      { self: { weaponType: w0.weaponType, dualWield: items.some((i) => i.type === "weapon" && i.system.equipped && i.system.slot === "other"), row: this.row } }
+      // hp·hpMax: 「HP 절반 이하일 때」(《불석신명》). 최대값은 직전 계산값
+      { self: { weaponType: w0.weaponType, dualWield: items.some((i) => i.type === "weapon" && i.system.equipped && i.system.slot === "other"), row: this.row, hp: this.hp.value, hpMax: this.hp.max } }
     );
     for (const [k, v] of Object.entries(passives.mods)) eq.mods[k] = (eq.mods[k] ?? 0) + v;
     // 전투 고유 상태(무사의 자세 등, 07 #57): 강화가 아니므로 장비·상시 스킬과 같은 자리에 더한다

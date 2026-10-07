@@ -38,6 +38,7 @@
 | `element: [..]` | 처리 중인 공격의 속성 포함 |
 | `attackKind: "physical"/"elemental"` | 처리 중인 공격의 종류 |
 | `timeOfDay: "day"/"night"` | 탐색 시간대 |
+| `category: [..]` | 사용 중인 스킬의 분류(『백병』 등). 통상 공격은 분류 없음(07 #58) |
 | `allyCountInRow: {name, gte}` | 같은 열에 특정 에너미 n체 이상(연계 공격) |
 
 ## 3. 효과 타입
@@ -47,6 +48,7 @@
 | `attack` | `kind`(physical/elemental), `element`(생략 시 무기 기본 속성), `addElement`(무기 속성에 더함, 「〈염〉 속성을 부가한」), `times`, `hitMod`, `diceMod`, `atkMod`, `atkMultiplier`, `random`, `uniqueTarget`, `onHit[]`, `bonuses[{when, hitMod?, diceMod?}]`, `halfDamage` | 공격 롤 1회분(또는 times회) |
 | `heal` | `mode`(roll/fixed/full/percent), `bonus`/`amount`, `resource`(hp/tp), `revive` | 회복 롤 또는 고정 회복. \[전투 불능\] 대상은 `revive: true`인 효과만 회복(부활). 부활 효과가 있으면 쓰러진 아군도 대상으로 고를 수 있다. 『회복』 분류 스킬의 회복 롤에는 사용자의 `healDice` 보정이 더해진다 |
 | `inflict` | `condition`, `check: {type: fixed, target} | {type: contest}` | 상태 이상·봉인 부여 |
+| `kill` | `check: {type: fixed, target, defMod?}` | 즉사: 억제 방어 롤 실패면 【HP】 0(카드에 \[즉사\]) |
 | `cure` | `conditions[]` 또는 `"all"`, `kind`(ailment/bind/debuff), `count` | 해제. `count`가 있으면 걸린 순서대로 그 개수까지(「(SL)개까지」) |
 | `buff` / `debuff` | `id`, `value`, `turns`, `param`(속성 등) | 01 §3.10의 강화·약화 |
 | `modifier` | `path`, `value` | 상시 보정. 타이밍 「상시」 스킬, 장식, 제련. path: `physAtk elemAtk physHit elemHit defense evasion speed suppAtk suppDef hpMax tpMax carry healDice abilities.<능력치> resist.<속성> checks.<판정>` |
@@ -60,7 +62,7 @@
 | `delayed` | `at`(endPhase/nextTurnLate), `turns`, `effects[]` | 지연 공격. 스킬마다 발동 시점이 달라 `at`으로 지정 |
 | `token` | `tokenKey`, `action{…}`, `maxCount` | 토큰 배치 |
 | `overheat` | `turns` | 드라이브 계열 |
-| `attackBonus` | `hitMod`, `diceMod`, `atkMod`, `when` | 타이밍 「상시」: 공격할 때마다 붙는 보정. `when`은 공격 시점(대상·공격 속성)으로 판정(《선봉의 공명》 「아직 행동하지 않은 적에 대한 공격」). 통상 공격·스킬 공격 모두 |
+| `attackBonus` | `hitMod`, `diceMod`, `atkMod`, `critDice`(크리티컬 추가 다이스 +), `critUp`(『크리티컬 업』 취급), `when` | 타이밍 「상시」: 공격할 때마다 붙는 보정. `when`은 공격 시점(대상·공격 속성)으로 판정(《선봉의 공명》 「아직 행동하지 않은 적에 대한 공격」). 통상 공격·스킬 공격 모두 |
 | `actionTiming` | `value`(first/last) | 「그 턴 최속/후발 행동」. 개막 페이즈에 쓰면 메인 페이즈 행동 순서에 반영(전투원 플래그 timing, 라운드마다 지움). 메인 페이즈 중 선언하는 것은 partial |
 | `state` | `id`, `label`, `group?`, `mods[{path, value}]`, `max?`, `note?` | 전투 고유 상태(강화가 아님, 해제되지 않음, 전투 끝까지). 무사의 자세·《나찰》 등. 같은 `group`은 하나만, `max`가 있으면 쌓임(07 #57) |
 | `requireState` | `state` | 「《○○》 상태 한정」. 그 상태가 없으면 쓸 수 없다(사용 시 해석하지 않음) |

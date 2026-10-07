@@ -31,8 +31,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>크리티컬 히트 시, 통상 크리티컬 효과에 더해 대미지 다이스 +4개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "critDice": 4
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -844,8 +849,28 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《발도의 자세》 상태 한정. 메인 페이즈 개시 시 사용 선언, 최속 행동으로 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.iai"
+    },
+    {
+     "type": "trigger",
+     "on": "mainPhaseStart",
+     "effects": [
+      {
+       "type": "actionTiming",
+       "value": "first"
+      },
+      {
+       "type": "attack",
+       "kind": "physical",
+       "diceMod": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -950,8 +975,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《발도의 자세》 상태 한정. 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "requireState",
+     "state": "bushido.iai"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "(SL+1)*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -1068,11 +1103,19 @@
     {
      "type": "attack",
      "kind": "physical",
-     "diceMod": "SL*2"
+     "diceMod": "SL*2",
+     "onHit": [
+      {
+       "type": "kill",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 6 + SL"
+       }
+      }
+     ]
     }
    ],
-   "review": "ok",
-   "effectsNote": "명중 시 즉사 억제 방어 롤(목표값 억제 공격+6+SL)은 GM 판단"
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -1108,8 +1151,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신에게 강화 효과 『물리 공격 상승: (SL+1)』과 약화 효과 『물리 방어 저하: (SL)』 부여. 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "physAtkUp",
+     "value": "SL+1",
+     "turns": 3
+    },
+    {
+     "type": "debuff",
+     "id": "defenseDown",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -1145,8 +1201,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>남은 【HP】가 절반 이하일 때 【물리 공격】 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physAtk",
+     "value": "SL",
+     "when": {
+      "selfHpAtMostHalf": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -1187,8 +1252,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 『백병』 공격은 항상 『크리티컬 업』 상태로 취급. 이는 강화 효과가 아니다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "critUp": true,
+     "when": {
+      "category": "백병"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -1224,8 +1297,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【HP】 +(SL×2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "hpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -1261,8 +1340,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【TP】 +(SL×2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"
@@ -1298,8 +1383,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【물리 공격】 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physAtk",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "무사"

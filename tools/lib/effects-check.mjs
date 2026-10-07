@@ -34,7 +34,8 @@ export const TYPES = {
   activeEvade: { ability: true, bonus: false, vs: false },
   nullify: {},
   actionTiming: { value: true },
-  attackBonus: { hitMod: false, diceMod: false, atkMod: false },
+  attackBonus: { hitMod: false, diceMod: false, atkMod: false, critDice: false, critUp: false },
+  kill: { check: true },
   guard: { mode: true, scope: false },
   aura: { path: true, value: true, scope: false },
   provoke: { count: false }
@@ -48,7 +49,7 @@ export const MOD_PATHS = new Set([
 ]);
 const MOD_PREFIX = ["checks."];
 const NESTED = ["onHit", "effects"];
-const EXPR_FIELDS = ["times", "hitMod", "diceMod", "atkMod", "atkMultiplier", "bonus", "amount", "value", "turns", "delta", "set", "count", "depth", "max", "maxCount"];
+const EXPR_FIELDS = ["critDice", "times", "hitMod", "diceMod", "atkMod", "atkMultiplier", "bonus", "amount", "value", "turns", "delta", "set", "count", "depth", "max", "maxCount"];
 
 function checkExpr(v, where, errors) {
   if (v === undefined || v === null || typeof v === "number" || typeof v === "boolean") return;
@@ -75,6 +76,7 @@ export function checkEffects(list, where, errors = []) {
       if (!def) errors.push(`${at}: 모르는 강화·약화 id \`${e.id}\``);
       else if (def.kind !== e.type) errors.push(`${at}: \`${e.id}\`는 ${def.kind}인데 type이 ${e.type}`);
     }
+    if (e.type === "kill") checkExpr(e.check?.target, `${at}.check.target`, errors);
     if (e.type === "inflict") {
       if (!CONDITIONS[e.condition]) errors.push(`${at}: 모르는 상태 이상 \`${e.condition}\``);
       if (e.check && !["fixed", "contest"].includes(e.check.type)) errors.push(`${at}: check.type은 fixed/contest`);

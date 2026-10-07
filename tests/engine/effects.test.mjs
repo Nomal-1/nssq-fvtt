@@ -249,4 +249,27 @@ describe("단계 7 스키마 보강", () => {
     const r = await resolveEffects({ effects: [{ type: "attack", kind: "physical", addElement: ["fire"] }], user, targets: [foe], rollDice: dice(5, 5, ...Array(6).fill(2)) });
     expect(r.results.get("e").hits[0].elements).toEqual(["slash", "fire"]);
   });
+
+  it("kill: 억제 방어 실패면 즉사, 성공이면 막음", async () => {
+    const effects = [{ type: "kill", check: { type: "fixed", target: 12 } }];
+    const a = await resolveEffects({ effects, user, targets: [foe], rollDice: dice(3, 3) });
+    expect(a.results.get("e").inflicts[0]).toEqual(expect.objectContaining({ id: "death", resisted: false }));
+    const b = await resolveEffects({ effects, user, targets: [foe], rollDice: dice(6, 6) });
+    expect(b.results.get("e").inflicts[0].resisted).toBe(true);
+  });
+
+  it("attackBonus critUp(분류 한정)·critDice", async () => {
+    const skills = [
+      { name: "일의전심", sl: 1, timing: "상시", effects: [{ type: "attackBonus", critUp: true, when: { category: "백병" } }] },
+      { name: "일도필살", sl: 1, timing: "상시", effects: [{ type: "attackBonus", critDice: 4 }] }
+    ];
+    const { attackBonuses } = collectPassives(skills, { self: {} });
+    expect(sumAttackBonuses(attackBonuses, { category: "백병" })).toEqual(expect.objectContaining({ critUp: true, critDice: 4 }));
+    expect(sumAttackBonuses(attackBonuses, { category: "" }).critUp).toBe(false);
+    // 6개 중 6이 1개·1이 0개 → critUp이면 크리티컬, 추가 4+4 = 8개
+    const r = await resolveEffects({ effects: [{ type: "attack", kind: "physical" }], user: { ...user, attackBonuses }, targets: [foe], category: "백병",
+      rollDice: dice(5, 5, 6, 2, 2, 2, 2, 2, ...Array(8).fill(2)) });
+    const h = r.results.get("e").hits[0];
+    expect(h.crit).toBe(true);
+  });
 });

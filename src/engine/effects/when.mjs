@@ -17,6 +17,8 @@ const CHECKS = {
   element: (v, c) => arr(v).some((e) => (c.attack?.elements ?? []).includes(e)),
   attackKind: (v, c) => c.attack?.kind === v,
   timeOfDay: (v, c) => c.timeOfDay === v,
+  // 사용하는 스킬의 분류(『백병』 등). 통상 공격은 분류 없음
+  category: (v, c) => arr(v).includes(c.category),
   allyCountInRow: (v, c) => (c.allies ?? []).filter((a) => a.name === v.name && a.row === c.self?.row && !a.ko).length >= (v.gte ?? 1)
 };
 

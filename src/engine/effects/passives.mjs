@@ -21,7 +21,7 @@ export function collectPassives(skills, ctx = {}) {
     for (const e of s.effects ?? []) {
       if (e.type === "attackBonus") {
         const v = (x) => evaluate(x ?? 0, { SL: s.sl, self: ctx.self });
-        attackBonuses.push({ name: s.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod) });
+        attackBonuses.push({ name: s.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod), critDice: v(e.critDice), critUp: !!e.critUp });
         continue;
       }
       if (!whenMatches(e.when, ctx)) continue;
@@ -41,10 +41,12 @@ export function collectPassives(skills, ctx = {}) {
  * @param {object} ctx { self, target, attack: { kind, elements } }
  */
 export function sumAttackBonuses(list, ctx = {}) {
-  const out = { hitMod: 0, diceMod: 0, atkMod: 0, names: [] };
+  const out = { hitMod: 0, diceMod: 0, atkMod: 0, critDice: 0, critUp: false, names: [] };
   for (const b of list ?? []) {
     if (!whenMatches(b.when, ctx)) continue;
     out.hitMod += b.hitMod; out.diceMod += b.diceMod; out.atkMod += b.atkMod;
+    out.critDice += b.critDice ?? 0;
+    out.critUp ||= !!b.critUp;
     out.names.push(b.name);
   }
   return out;
