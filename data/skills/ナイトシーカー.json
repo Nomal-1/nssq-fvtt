@@ -29,8 +29,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>상태 이상을 하나라도 받고 있는 대상에 대한 공격 롤의 대미지 다이스 +5개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "diceMod": 5,
+     "when": {
+      "targetHasAilment": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -68,8 +76,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>단검 공격의 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "단검"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -163,8 +182,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈참〉+〈빙〉 속성 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "slash",
+      "ice"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -208,8 +237,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 명중했고 그 뒤 메인 페이즈 종료까지 자신이 대미지를 전혀 받지 않았다면, 후발 행동으로 같은 대상에게 물리 공격 롤 1회 추가. 두 공격 모두 대미지 -(3-SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "-(3-SL)"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "명중했고 메인 페이즈 끝까지 자신이 대미지를 받지 않았으면 후발 행동으로 같은 대상에게 물리 공격 1회 더(다이스 −(3−SL)): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -253,8 +289,25 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대상이 상태 이상을 받고 있고 명중하면, 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [즉사].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "kill",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       },
+       "when": {
+        "targetHasAilment": true
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -302,8 +355,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대상이 상태 이상을 받고 있으면 대미지 다이스 +(SL×3)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "bonuses": [
+      {
+       "when": {
+        "targetHasAilment": true
+       },
+       "diceMod": "SL*3"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -351,8 +417,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대상이 상태 이상을 받고 있으면 물리 공격 롤 2회 추가. 대미지 다이스 -(5-SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "-(5-SL)"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 2,
+     "diceMod": "-(5-SL)",
+     "when": {
+      "targetHasAilment": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -395,8 +476,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 최종 실대미지는 절반으로 계산. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [맹목].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "halfDamage": true,
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "blind",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -439,8 +536,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 최종 실대미지는 절반으로 계산. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [마비].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "halfDamage": true,
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "paralyze",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -483,8 +596,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 최종 실대미지는 절반으로 계산. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [수면].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "halfDamage": true,
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "sleep",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -527,8 +656,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 최종 실대미지는 절반으로 계산. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [독].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "halfDamage": true,
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "poison",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -570,7 +715,8 @@
    "sl": 1,
    "description": "<p>그 턴 동안 분류 '투인' 스킬의 대상 범위를 '적 열'로 확대.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "그 턴 동안 『투인』 스킬의 대상을 『적 열』로: GM이 처리"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -607,7 +753,8 @@
    "sl": 1,
    "description": "<p>어둠 속에서도 시야 불이익을 받지 않는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "어둠 속 시야 불이익 없음: 탐색·GM이 처리"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -643,8 +790,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아군 1명을 지정해 선언. 그 턴 동안 단일 대상 적 공격 롤의 대상을 누적 (SL+1)회까지 강제로 지정한 아군으로 변경.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "ally",
+     "scope": "single"
+    },
+    {
+     "type": "provoke",
+     "count": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -741,7 +898,8 @@
    "sl": 1,
    "description": "<p>종별 '검' 또는 '단검' 무기를 무기 슬롯과 기타 슬롯에 장비하고, 통상 공격 시 각 무기로 1회씩 공격. 각 공격 【물리 명중】 -3, 【물리 공격】 -(3-SL).</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "검·단검을 무기·기타 슬롯에 함께 장비하면 통상 공격을 무기마다 1회씩(각 물리 명중 −3, 물리 공격 −(3−SL)): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -790,7 +948,8 @@
    "sl": 1,
    "description": "<p>《추영의 칼날》로 무기 2개를 동시 장비 중이면 분류 '백병' 스킬 공격도 2회 가능. 사용한 스킬 2회분 TP 소비, 2회째를 일부러 발동하지 않는 것도 선택 가능. 각 공격 【물리 명중】 -(4-SL).</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "《추영의 칼날》로 쌍수 중이면 『백병』 스킬도 2회(TP 2회분, 각 물리 명중 −(4−SL)): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -955,8 +1114,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 공격】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppAtk",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
