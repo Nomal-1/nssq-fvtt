@@ -330,4 +330,13 @@ describe("단계 7 스키마 보강", () => {
     const r = await resolveEffects({ effects: [{ type: "attack", kind: "physical" }, { type: "recoil", mode: "ones", toSelf: true }], user, targets: [foe], rollDice: dice(5, 5, 4, 5, 6, 1, 2, 1) });
     expect(r.results.get("u").damage).toBe(2);
   });
+
+  it("useBonus healHp: 『호령』 스킬에 HP 회복이 따라붙는다(《리인포스》)", async () => {
+    const { useBonuses } = collectPassives([{ name: "리인포스", sl: 3, timing: "상시", effects: [{ type: "useBonus", healHp: "SL", when: { category: "호령" } }] }], { self: {} });
+    const effects = [{ type: "buff", id: "defenseUp", value: 2, turns: 3 }];
+    const a = await resolveEffects({ effects, user: { ...user, useBonuses }, targets: [user], category: "호령", rollDice: dice() });
+    expect(a.results.get("u").heal.hp).toBe(3);
+    const b = await resolveEffects({ effects, user: { ...user, useBonuses }, targets: [user], category: "무용", rollDice: dice() });
+    expect(b.results.get("u").heal.hp).toBe(0);
+  });
 });

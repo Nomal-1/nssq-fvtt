@@ -265,6 +265,16 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     }
   }
   await run(effects, targets);
+  // 《리인포스》 등: 이 분류의 스킬에 대상 HP 회복이 따라붙는다(useBonus healHp)
+  const extraHeal = (user.useBonuses ?? []).filter((b) => b.healHp && whenMatches(b.when, { ...ctx, category, self: user })).reduce((n, b) => n + b.healHp, 0);
+  if (extraHeal && !out.failed) {
+    for (const t of targets) {
+      if (t.ko) continue;
+      const r = res(t);
+      r.heal.hp += extraHeal;
+      r.resource.push({ heal: "hp", amount: extraHeal });
+    }
+  }
   // 명중 판정의 1로 얻는 FP는 주행동 1회당 처음 판정 하나만(01 §3.5)
   if (hitChecks.length) out.fpGain = fpFromHitChecks(hitChecks);
   return out;

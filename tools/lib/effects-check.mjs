@@ -12,7 +12,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 
 /** 엔진이 받는 type과 필드(필수: true) */
 export const TYPES = {
-  attack: { kind: false, element: false, addElement: false, failAtOrBelow: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false },
+  attack: { kind: false, element: false, addElement: false, failAtOrBelow: false, copyElement: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false },
   heal: { mode: false, bonus: false, amount: false, resource: false, revive: false },
   inflict: { condition: true, check: false, depth: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
@@ -36,7 +36,7 @@ export const TYPES = {
   actionTiming: { value: true },
   attackBonus: { hitMod: false, diceMod: false, atkMod: false, critDice: false, critUp: false },
   kill: { check: true },
-  useBonus: { buffTurns: false },
+  useBonus: { buffTurns: false, healHp: false },
   drain: { resource: false, mode: false },
   recoil: { mode: false },
   target: { side: true, scope: true, count: false },
@@ -53,7 +53,7 @@ export const MOD_PATHS = new Set([
 ]);
 const MOD_PREFIX = ["checks."];
 const NESTED = ["onHit", "effects"];
-const EXPR_FIELDS = ["buffTurns", "critDice", "times", "hitMod", "diceMod", "atkMod", "atkMultiplier", "bonus", "amount", "value", "turns", "delta", "set", "count", "depth", "max", "maxCount"];
+const EXPR_FIELDS = ["healHp", "buffTurns", "critDice", "times", "hitMod", "diceMod", "atkMod", "atkMultiplier", "bonus", "amount", "value", "turns", "delta", "set", "count", "depth", "max", "maxCount"];
 
 function checkExpr(v, where, errors) {
   if (v === undefined || v === null || typeof v === "number" || typeof v === "boolean") return;
@@ -109,7 +109,7 @@ export function checkEffects(list, where, errors = []) {
     }
     if (e.type === "flag" && !FLAGS.includes(e.flag)) errors.push(`${at}: 모르는 flag \`${e.flag}\``);
     if (e.type === "trigger" && !TRIGGER_ON.includes(e.on)) errors.push(`${at}: 모르는 trigger.on \`${e.on}\``);
-    if (e.type === "guard" && !["half", "cover", "defense"].includes(e.mode)) errors.push(`${at}: guard.mode는 half/cover/defense`);
+    if (e.type === "guard" && !["half", "cover", "defense", "redirect"].includes(e.mode)) errors.push(`${at}: guard.mode는 half/cover/defense/redirect`);
     if ((e.type === "guard" || e.type === "aura") && e.scope && !["front", "back", "all", "target"].includes(e.scope)) errors.push(`${at}: scope는 front/back/all/target`);
     if (e.type === "aura" && !MOD_PATHS.has(e.path)) errors.push(`${at}: 모르는 aura path \`${e.path}\``);
     if (e.type === "actionTiming" && !["first", "last"].includes(e.value)) errors.push(`${at}: actionTiming.value는 first/last`);
@@ -141,7 +141,7 @@ export function collectHolders() {
 /** flag 이름(03 §3) */
 export const FLAGS = ["itemRevive", "noCarryCount", "ownLimit", "weaponElement"];
 /** trigger.on 값(03 §3) */
-export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart", "escapeCheck", "hpLost", "enemyKO"];
+export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart", "escapeCheck", "hpLost", "enemyKO", "buffGained", "battleWon"];
 
 export const STAGE8 = new Set(["stance", "trigger", "counter", "chase", "delayed", "token", "guard", "aura", "provoke"]);
 const usesStage8 = (list) => (list ?? []).some((e) => STAGE8.has(e.type) || NESTED.some((k) => usesStage8(e[k])));
