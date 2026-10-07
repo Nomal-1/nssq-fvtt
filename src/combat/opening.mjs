@@ -39,22 +39,26 @@ export async function passOpening(combatant) {
 
 /** 개막 페이즈 시작(개막 1D6 판정 뒤): 지금 상태를 전투 플래그에 기록 */
 export async function snapshotOpening(combat) {
-  const actors = {};
-  const tokens = {};
-  const combatants = {};
+  // UUID에는 점(.)이 있어 객체 키로 쓰면 setFlag가 중첩 경로로 펼친다 → 배열에 uuid를 함께 넣는다
+  const actors = [];
+  const tokens = [];
+  const combatants = [];
   for (const c of combat.combatants) {
     const a = c.actor;
     if (!a) continue;
     const s = a.system;
-    actors[a.uuid] = {
+    actors.push({
+      uuid: a.uuid,
       hp: s.hp?.value ?? null, tp: s.tp?.value ?? null, fp: s.fp?.value ?? null,
       conditions: s.conditions ?? [], buffs: s.buffs ?? [], row: s.row ?? "front", order: s.order ?? null,
       states: a.getFlag("nssq", "states") ?? [], overheat: a.getFlag("nssq", "overheat") ?? null,
       slots: a.type === "character" ? a.items.filter((i) => i.type === "weapon").map((i) => ({ _id: i.id, slot: i.system.slot ?? null, equipped: !!i.system.equipped })) : []
-    };
-    if (c.token) tokens[c.token.uuid] = { x: c.token.x, y: c.token.y };
-    combatants[c.id] = Object.fromEntries(COMBATANT_FLAGS.map((k) => [k, c.getFlag("nssq", k) ?? null]));
+    });
+    if (c.token) tokens.push({ uuid: c.token.uuid, x: c.token.x, y: c.token.y });
+    combatants.push({ id: c.id, flags: Object.fromEntries(COMBATANT_FLAGS.map((k) => [k, c.getFlag("nssq", k) ?? null])) });
   }
+  // 예전 기록(객체)과 합쳐지지 않도록 지우고 새로 쓴다
+  await combat.update({ "flags.nssq.-=openingSnapshot": null });
   await combat.setFlag("nssq", "openingSnapshot", { round: combat.round, actors, tokens, combatants });
 }
 
@@ -62,11 +66,11 @@ export async function snapshotOpening(combat) {
 export async function restoreOpening(combat) {
   if (!game.user.isGM) return;
   const snap = combat.getFlag("nssq", "openingSnapshot");
-  if (!snap || snap.round !== combat.round || combat.getFlag("nssq", "phase") !== "opening") return ui.notifications.warn(L("noSnapshot"));
+  if (!snap || snap.round !== combat.round || combat.getFlag("nssq", "phase") !== "opening" || !Array.isArray(snap.actors)) return ui.notifications.warn(L("noSnapshot"));
   const ok = await Dialog.confirm({ title: L("undoTitle"), content: `<p>${L("undoConfirm")}</p>`, rejectClose: false });
   if (!ok) return;
-  for (const [uuid, v] of Object.entries(snap.actors ?? {})) {
-    const a = await fromUuid(uuid);
+  for (const v of snap.actors) {
+    const a = await fromUuid(v.uuid);
     if (!a) continue;
     const upd = { "system.conditions": v.conditions, "system.buffs": v.buffs, "system.row": v.row, "flags.nssq.states": v.states };
     if (v.hp !== null) upd["system.hp.value"] = v.hp;
@@ -79,11 +83,11 @@ export async function restoreOpening(combat) {
     const slots = (v.slots ?? []).filter((x) => a.items.get(x._id));
     if (slots.length) await a.updateEmbeddedDocuments("Item", slots.map((x) => ({ _id: x._id, "system.slot": x.slot, "system.equipped": x.equipped })));
   }
-  for (const [uuid, pos] of Object.entries(snap.tokens ?? {})) {
-    const t = await fromUuid(uuid);
-    if (t && (t.x !== pos.x || t.y !== pos.y)) await t.update(pos, { animate: false });
+  for (const pos of snap.tokens ?? []) {
+    const t = await fromUuid(pos.uuid);
+    if (t && (t.x !== pos.x || t.y !== pos.y)) await t.update({ x: pos.x, y: pos.y }, { animate: false });
   }
-  const updates = Object.entries(snap.combatants ?? {}).filter(([id]) => combat.combatants.has(id)).map(([id, flags]) => {
+  const updates = (snap.combatants ?? []).filter(({ id }) => combat.combatants.has(id)).map(({ id, flags }) => {
     const u = { _id: id };
     for (const k of COMBATANT_FLAGS) {
       if (flags[k] === null || flags[k] === undefined) u[`flags.nssq.-=${k}`] = null;

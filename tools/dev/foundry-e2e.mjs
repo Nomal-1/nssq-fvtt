@@ -1,4 +1,4 @@
-/* global game, ui */
+/* global game, ui, document */
 // Foundry 테스트 월드에 Playwright(Chromium)로 접속하는 개발 도구.
 // 환경 변수: NSSQ_FOUNDRY_URL, NSSQ_FOUNDRY_USER/PASSWORD(GM), NSSQ_FOUNDRY_PLAYER/PLAYER_PASSWORD(플레이어)
 // 비밀번호는 출력하지 않는다.
@@ -54,9 +54,13 @@ async function relaySocket(page, base) {
 }
 
 /** 로그인해서 game.ready까지 기다린 세션을 돌려준다. */
-export async function connect(role = "gm", { viewport = { width: 1600, height: 1000 }, browser } = {}) {
+export async function connect(role = "gm", { viewport = { width: 1600, height: 1000 }, browser, user: asUser, password } = {}) {
   const { chromium } = await loadPlaywright();
-  const { base, user, pass } = credentials(role);
+  // user를 주면 그 계정으로(관전 계정 등). 비밀번호가 없으면 빈 칸
+  const cred = credentials(role);
+  const { base } = cred;
+  const user = asUser ?? cred.user;
+  const pass = asUser ? (password ?? "") : cred.pass;
   const ownBrowser = !browser;
   browser ??= await chromium.launch({ args: ["--no-proxy-server"] });
   const context = await browser.newContext({ viewport });
@@ -76,6 +80,11 @@ export async function connect(role = "gm", { viewport = { width: 1600, height: 1
   const options = await page.$$eval("select[name=userid] option", os => os.map(o => ({ v: o.value, t: o.textContent.trim() })));
   const target = options.find(o => o.t === user);
   if (!target) throw new Error(`접속 화면에 사용자 ${user}가 없다`);
+  // 접속 화면은 소켓으로 사용자 목록(접속 중이면 비활성)을 늦게 갱신한다
+  await page.waitForFunction((v) => {
+    const o = document.querySelector(`select[name=userid] option[value="${v}"]`);
+    return o && !o.disabled;
+  }, target.v, { timeout: 20_000 }).catch(() => { throw new Error(`사용자 ${user}는 이미 접속 중이라 고를 수 없다`); });
   await page.selectOption("select[name=userid]", target.v);
   await page.fill("input[name=password]", pass);
   await Promise.all([

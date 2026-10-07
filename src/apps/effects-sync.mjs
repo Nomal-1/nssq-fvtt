@@ -26,6 +26,9 @@ async function packEffects() {
   return map;
 }
 
+const BROKEN_IMG = "icons/svg/claw.svg";
+const ENEMY_SKILL_IMG = "icons/svg/pawprint.svg";
+
 const same = (a, b) => JSON.stringify(a ?? []) === JSON.stringify(b ?? []);
 
 export async function syncEffects({ quiet = false } = {}) {
@@ -33,11 +36,15 @@ export async function syncEffects({ quiet = false } = {}) {
   const map = await packEffects();
   let n = 0;
   const fix = (it) => {
+    // v0.10.9: 에너미 스킬 아이콘(v12에 없는 claw.svg) → pawprint.svg
+    const img = it.img === BROKEN_IMG ? { img: ENEMY_SKILL_IMG } : {};
     const src = map.get(it.system?.key);
-    if (!src || it.system.review === "manual" || (same(it.system.effects, src.effects) && (it.system.effectsNote ?? "") === src.note)) return null;
+    if (!src || it.system.review === "manual" || (same(it.system.effects, src.effects) && (it.system.effectsNote ?? "") === src.note)) {
+      return img.img ? { _id: it.id, ...img } : null;
+    }
     n++;
     return {
-      _id: it.id, "system.effects": src.effects,
+      _id: it.id, "system.effects": src.effects, ...img,
       ...(it.system.review !== undefined ? { "system.review": src.review } : {}),
       ...(it.system.effectsNote !== undefined ? { "system.effectsNote": src.note } : {})
     };

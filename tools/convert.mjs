@@ -618,7 +618,7 @@ function convertEnemyBlock(block, file) {
         _id: makeId("Item", `enemyskill:${key}`, sKey),
         name: sname,
         type: "skill",
-        img: "icons/svg/claw.svg",
+        img: "icons/svg/pawprint.svg",
         system: {
           key: `enemy.${key}.${sKey}`, skillKey: sKey, classKey: "enemy", weaponReq: [],
           part, category, timing, range, target, cost: { tp: 0, fp: 0 }, maxSL: { main: 1, sub: null },

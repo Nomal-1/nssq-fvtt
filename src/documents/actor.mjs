@@ -24,11 +24,16 @@ export class NssqActor extends Actor {
     }
   }
 
-  /** …그리고 씬에 놓인 연결 토큰·전투원 이름도(바꾼 사람의 클라이언트에서 한 번) */
+  /**
+   * …그리고 씬에 놓인 연결 토큰·전투원 이름도. 플레이어는 전투원 이름을 고칠 권한이 없으므로
+   * 접속 중인 GM의 클라이언트에서 한 번(GM이 없으면 바꾼 사람이 할 수 있는 만큼)
+   */
   _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
     const old = options.nssqOldName;
-    if (!old || userId !== game.user.id) return;
+    if (!old) return;
+    const runner = game.users.activeGM?.id ?? userId;
+    if (runner !== game.user.id) return;
     const name = this.name;
     (async () => {
       try {

@@ -60,7 +60,7 @@
     "_id": "MNMHNSONScnWloII",
     "name": "덩굴 난무",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ラフレシア.ツタの乱舞",
      "skillKey": "ツタの乱舞",
@@ -95,7 +95,7 @@
     "_id": "Nnu2T2F648UdC5w6",
     "name": "독 꽃가루",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ラフレシア.毒の花粉",
      "skillKey": "毒の花粉",
@@ -130,7 +130,7 @@
     "_id": "FRov7iK0kTUjShEo",
     "name": "포식의 냉기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ラフレシア.捕食の冷気",
      "skillKey": "捕食の冷気",
@@ -165,7 +165,7 @@
     "_id": "O2MJ58s7yD7bMGpI",
     "name": "내성: 독",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ラフレシア.耐性.poison",
      "skillKey": "耐性.poison",
@@ -200,7 +200,7 @@
     "_id": "564ZpcSB5eG9xSFg",
     "name": "내성: 맹목",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ラフレシア.耐性.blind",
      "skillKey": "耐性.blind",
@@ -298,7 +298,7 @@
     "_id": "TLiGE8z9ZkIDiNET",
     "name": "악몽의 만찬",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ドレッドヒュドラ.悪夢の晩餐",
      "skillKey": "悪夢の晩餐",
@@ -333,7 +333,7 @@
     "_id": "5M7zuIWBJ964kaKb",
     "name": "약점: 머리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ドレッドヒュドラ.弱点.bindHead",
      "skillKey": "弱点.bindHead",
@@ -431,7 +431,7 @@
     "_id": "O20H1Zq4dACV5Urc",
     "name": "데빌 크라이",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.フォレストウルフ.デビルクライ",
      "skillKey": "デビルクライ",
@@ -466,7 +466,7 @@
     "_id": "FdGyWSrSdQgouZ8t",
     "name": "실버 팽",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.フォレストウルフ.シルバーファング",
      "skillKey": "シルバーファング",
@@ -501,7 +501,7 @@
     "_id": "HijedmSFbCciEQlh",
     "name": "약점: 머리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.フォレストウルフ.弱点.bindHead",
      "skillKey": "弱点.bindHead",
@@ -536,7 +536,7 @@
     "_id": "NgcaGqYIKlgJ15w2",
     "name": "약점: 다리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.フォレストウルフ.弱点.bindLeg",
      "skillKey": "弱点.bindLeg",
@@ -571,7 +571,7 @@
     "_id": "6XUYGCRlQXd9dwca",
     "name": "내성: 맹목",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.フォレストウルフ.耐性.blind",
      "skillKey": "耐性.blind",
@@ -669,7 +669,7 @@
     "_id": "Ko1guHG4Mbo8gWRp",
     "name": "화염탄",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.火喰い鳥.火炎弾",
      "skillKey": "火炎弾",
@@ -767,7 +767,7 @@
     "_id": "HKyEmG8Yd0YUgIv0",
     "name": "수면 꽃가루",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.危険な花びら.眠りの花粉",
      "skillKey": "眠りの花粉",
@@ -802,7 +802,7 @@
     "_id": "Rz3DUgQJXMPZVK8h",
     "name": "흩날리는 꽃잎",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.危険な花びら.舞い散る花びら",
      "skillKey": "舞い散る花びら",
@@ -837,7 +837,7 @@
     "_id": "BBocUGafFG2QOQZd",
     "name": "내성: 독",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.危険な花びら.耐性.poison",
      "skillKey": "耐性.poison",
@@ -872,7 +872,7 @@
     "_id": "3li0prOR4iOVf8aW",
     "name": "완전 내성: 수면",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.危険な花びら.完全耐性.sleep",
      "skillKey": "完全耐性.sleep",
@@ -970,7 +970,7 @@
     "_id": "VBmEIgLT98cChZBZ",
     "name": "대식가",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.人喰いサンゴ.大食らい",
      "skillKey": "大食らい",
@@ -1005,7 +1005,7 @@
     "_id": "DSTh2Ckr0xqpVhbg",
     "name": "약점: 팔",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.人喰いサンゴ.弱点.bindArm",
      "skillKey": "弱点.bindArm",
@@ -1103,7 +1103,7 @@
     "_id": "JUBQKxMTvNbAFsST",
     "name": "자폭",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.爆弾カズラ.自爆",
      "skillKey": "自爆",
@@ -1138,7 +1138,7 @@
     "_id": "O7CEzf0Opvd5VG3g",
     "name": "약점: 머리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.爆弾カズラ.弱点.bindHead",
      "skillKey": "弱点.bindHead",
@@ -1242,7 +1242,7 @@
     "_id": "EHTfL63oYHrlYEyC",
     "name": "그랜드 혼",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.暴れ野牛.グランドホーン",
      "skillKey": "グランドホーン",
@@ -1277,7 +1277,7 @@
     "_id": "6Jd3ylI1TtUG3Alr",
     "name": "마구 날뛰기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.暴れ野牛.大暴れ",
      "skillKey": "大暴れ",
@@ -1312,7 +1312,7 @@
     "_id": "ZNBrxRnXRPzAJEeF",
     "name": "약점: 머리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.暴れ野牛.弱点.bindHead",
      "skillKey": "弱点.bindHead",
@@ -1347,7 +1347,7 @@
     "_id": "5gNH0Jax8ptMHSqW",
     "name": "내성: 수면",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.暴れ野牛.耐性.sleep",
      "skillKey": "耐性.sleep",
@@ -1445,7 +1445,7 @@
     "_id": "UnVs9pu9BgwoPOwu",
     "name": "헤비 스탬프",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ジャイアントモア.ヘヴィスタンプ",
      "skillKey": "ヘヴィスタンプ",
@@ -1480,7 +1480,7 @@
     "_id": "5UlKysyHNw1XZwNr",
     "name": "약점: 맹목",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ジャイアントモア.弱点.blind",
      "skillKey": "弱点.blind",
@@ -1515,7 +1515,7 @@
     "_id": "9UB7bUbhugtqbObR",
     "name": "약점: 다리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ジャイアントモア.弱点.bindLeg",
      "skillKey": "弱点.bindLeg",
@@ -1607,7 +1607,7 @@
     "_id": "PeWZpwWeNp3zFO1L",
     "name": "약점: 수면",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ヨロイリュウ.弱点.sleep",
      "skillKey": "弱点.sleep",
@@ -1705,7 +1705,7 @@
     "_id": "9aRnVXhi1AzgUNTQ",
     "name": "힘 모으기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.サウロポセイドン.力溜め",
      "skillKey": "力溜め",
@@ -1740,7 +1740,7 @@
     "_id": "GcONFqtSUu2issg2",
     "name": "질풍 질주",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.サウロポセイドン.疾風疾駆",
      "skillKey": "疾風疾駆",
@@ -1775,7 +1775,7 @@
     "_id": "A4MKZ1Wh7HqcTPp6",
     "name": "약점: 머리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.サウロポセイドン.弱点.bindHead",
      "skillKey": "弱点.bindHead",
@@ -1810,7 +1810,7 @@
     "_id": "L1Lug0ARA7Hwsu4x",
     "name": "약점: 다리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.サウロポセイドン.弱点.bindLeg",
      "skillKey": "弱点.bindLeg",

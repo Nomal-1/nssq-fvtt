@@ -217,7 +217,12 @@ function entryLines(e, card) {
   const multi = (card.entries ?? []).reduce((n, x) => n + (x.hits?.length ?? 0), 0) > 1;
   // 부여·강화·확률 실패: 어느 명중에서 생겼는지(seq)가 있으면 그 공격 아래에
   // 억제 판정: 대결이면 양쪽, 고정 목표값이면 방어 쪽 주사위·달성값(07 #47: 모르는 에너미의 값은 ?)
-  const chk = (c, side = "user") => `${(c?.used ?? []).join("+")}${c && c.total - c.sum ? `${c.total - c.sum >= 0 ? "+" : ""}${c.total - c.sum}` : ""} = <span ${side === "user" ? `data-mask="${esc(card.kind)}"` : "data-mask-def"}>${c?.total ?? "-"}</span>`;
+  //   (공격 카드처럼 주사위만 보이고 보정·달성값을 가린다. 보정이 보이면 달성값을 계산할 수 있다)
+  const chk = (c, side = "user") => {
+    const mask = side === "user" ? `data-mask="${esc(card.kind)}"` : "data-mask-def";
+    const mod = c ? c.total - c.sum : 0;
+    return `${(c?.used ?? []).join("+")}${mod ? `${mod >= 0 ? "+" : "−"}<span ${mask}>${Math.abs(mod)}</span>` : ""} = <span ${mask}>${c?.total ?? "-"}</span>`;
+  };
   const rollText = (i) => (i.contest ? esc(L("contestRoll", { atk: "\u0001", def: "\u0002" })).replace("\u0001", chk(i.contest.atk)).replace("\u0002", chk(i.contest.def, "target"))
     : i.fixed ? esc(L("fixedRoll", { def: "\u0002", target: i.fixed.target })).replace("\u0002", chk(i.fixed.check, "target")) : "");
   const inflictLi = (i) => `<li class="${i.resisted || i.broken ? "resist" : "inflict"}">${esc(L(i.resisted ? "inflictResisted" : "inflictLine", { label: conditionName(i.id), depth: i.depth ?? "-" }))}${i.broken ? ` <em class="woke">${esc(L("brokenAt", { n: i.broken }))}</em>` : ""}${rollText(i) ? `<div class="supp-roll">${rollText(i)}</div>` : ""}</li>`;

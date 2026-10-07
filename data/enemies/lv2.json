@@ -60,7 +60,7 @@
     "_id": "Ax2Mr4YL6xA5D1Z8",
     "name": "거슬리는 날갯소리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.はさみカブト.いらつく羽音",
      "skillKey": "いらつく羽音",
@@ -103,7 +103,7 @@
     "_id": "1FjdwR0wEDTvsxaZ",
     "name": "단단한 껍질",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.はさみカブト.堅殻",
      "skillKey": "堅殻",
@@ -202,7 +202,7 @@
     "_id": "9cfLrL5kaJu0cCn5",
     "name": "독 인분",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.毒噴きアゲハ.毒リンプン",
      "skillKey": "毒リンプン",
@@ -245,7 +245,7 @@
     "_id": "TOYyZbjrRuBpCVVf",
     "name": "완전 내성: 독",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.毒噴きアゲハ.完全耐性.poison",
      "skillKey": "完全耐性.poison",
@@ -337,7 +337,7 @@
     "_id": "R4iEK7Oji41nmezW",
     "name": "물어뜯기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.オオヤマネコ.食いちぎり",
      "skillKey": "食いちぎり",
@@ -429,7 +429,7 @@
     "_id": "3PuIbbjchTeGrHEH",
     "name": "독물기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.巨大ムカデ.毒咬み",
      "skillKey": "毒咬み",
@@ -464,7 +464,7 @@
     "_id": "8dhlEMX3886SWY9Q",
     "name": "백족 구속",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.巨大ムカデ.百足拘束",
      "skillKey": "百足拘束",
@@ -499,7 +499,7 @@
     "_id": "NbxUxKmjXzmH3WbB",
     "name": "내성: 독",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.巨大ムカデ.耐性.poison",
      "skillKey": "耐性.poison",
@@ -597,7 +597,7 @@
     "_id": "CrSVe1IlapASJlws",
     "name": "점핑",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ビックビル.ジャンピング",
      "skillKey": "ジャンピング",
@@ -632,7 +632,7 @@
     "_id": "9uW1odU6og2v5bbK",
     "name": "대식가",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ビックビル.大食らい",
      "skillKey": "大食らい",
@@ -667,7 +667,7 @@
     "_id": "Uebrfsb8YvkwIy6n",
     "name": "주행성",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ビックビル.昼行性",
      "skillKey": "昼行性",
@@ -702,7 +702,7 @@
     "_id": "WR158oHSsyLXIaNJ",
     "name": "약점: 맹목",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ビックビル.弱点.blind",
      "skillKey": "弱点.blind",
@@ -737,7 +737,7 @@
     "_id": "5fBVUiLqD58uaFK6",
     "name": "약점: 머리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ビックビル.弱点.bindHead",
      "skillKey": "弱点.bindHead",
@@ -772,7 +772,7 @@
     "_id": "YaL38M5YPbQKxZau",
     "name": "약점: 다리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ビックビル.弱点.bindLeg",
      "skillKey": "弱点.bindLeg",
@@ -870,7 +870,7 @@
     "_id": "6MSbbmimv6cHMTkv",
     "name": "돌팔매",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.荒くれ狒々.つぶて投げ",
      "skillKey": "つぶて投げ",
@@ -905,7 +905,7 @@
     "_id": "7SnYttfi1yOaDHf7",
     "name": "약점: 혼란",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.荒くれ狒々.弱点.confuse",
      "skillKey": "弱点.confuse",
@@ -940,7 +940,7 @@
     "_id": "Styhlbcfco97syS8",
     "name": "약점: 팔",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.荒くれ狒々.弱点.bindArm",
      "skillKey": "弱点.bindArm",
@@ -1038,7 +1038,7 @@
     "_id": "QMaOvmT0Auy5ZdQw",
     "name": "마비 찌르기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.デスストーカー.痺れ突き",
      "skillKey": "痺れ突き",
@@ -1073,7 +1073,7 @@
     "_id": "JmdL9guo0D7evPxc",
     "name": "약점: 석화",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.デスストーカー.弱点.petrify",
      "skillKey": "弱点.petrify",
@@ -1108,7 +1108,7 @@
     "_id": "TzV9cRL3gc211I32",
     "name": "내성: 마비",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.デスストーカー.耐性.paralyze",
      "skillKey": "耐性.paralyze",
@@ -1206,7 +1206,7 @@
     "_id": "28upK1ussHunjw1E",
     "name": "수면 가루",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.サイミンフクロウ.眠りの粉",
      "skillKey": "眠りの粉",
@@ -1241,7 +1241,7 @@
     "_id": "YDsTohwuUqndde6J",
     "name": "내성: 혼란",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.サイミンフクロウ.耐性.confuse",
      "skillKey": "耐性.confuse",
@@ -1276,7 +1276,7 @@
     "_id": "EhOvaNrmSdaANNHc",
     "name": "완전 내성: 수면",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.サイミンフクロウ.完全耐性.sleep",
      "skillKey": "完全耐性.sleep",
@@ -1374,7 +1374,7 @@
     "_id": "6TR0FDlHu6wj3zkn",
     "name": "예리한 송곳니",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.イビルフィッシュ.鋭い牙",
      "skillKey": "鋭い牙",
@@ -1409,7 +1409,7 @@
     "_id": "H8AJfWxq3KCjXvR2",
     "name": "흉어의 향연",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.イビルフィッシュ.凶魚の饗宴",
      "skillKey": "凶魚の饗宴",
@@ -1444,7 +1444,7 @@
     "_id": "PuQSFFA2LiTelW0p",
     "name": "약점: 마비",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.イビルフィッシュ.弱点.paralyze",
      "skillKey": "弱点.paralyze",
@@ -1542,7 +1542,7 @@
     "_id": "X80Cp8wNV7g8L0wZ",
     "name": "무지개 미채",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.踊る虹蜥蜴.虹色迷彩",
      "skillKey": "虹色迷彩",
@@ -1577,7 +1577,7 @@
     "_id": "Y1e1zH5KmmUzGBGA",
     "name": "아이시클",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.踊る虹蜥蜴.アイシクル",
      "skillKey": "アイシクル",
@@ -1675,7 +1675,7 @@
     "_id": "NdPqOQQaGHUlUx1i",
     "name": "맹목의 가시",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.噛みつき草.盲目のトゲ",
      "skillKey": "盲目のトゲ",
@@ -1710,7 +1710,7 @@
     "_id": "ArRbNbrm8UoHihu9",
     "name": "수갑 덩굴",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.噛みつき草.手枷のツタ",
      "skillKey": "手枷のツタ",
@@ -1745,7 +1745,7 @@
     "_id": "XIVKIeTga7wVPEhn",
     "name": "족쇄의 덩굴",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.噛みつき草.足枷のツタ",
      "skillKey": "足枷のツタ",
@@ -1780,7 +1780,7 @@
     "_id": "2RM3aUwAuWu1ctU7",
     "name": "내성: 맹목",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.噛みつき草.耐性.blind",
      "skillKey": "耐性.blind",
@@ -1878,7 +1878,7 @@
     "_id": "CQ8LpKTiPW9K941J",
     "name": "조르기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.オオアナコンダ.絞め落とし",
      "skillKey": "絞め落とし",
@@ -1982,7 +1982,7 @@
     "_id": "FDhiT32gqvOyy9jN",
     "name": "떠올리기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ヤマクジラ.しゃくりあげ",
      "skillKey": "しゃくりあげ",
@@ -2017,7 +2017,7 @@
     "_id": "1J5dcInLAXazgGYk",
     "name": "저돌희용",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ヤマクジラ.猪突猛進",
      "skillKey": "猪突猛進",
@@ -2052,7 +2052,7 @@
     "_id": "FKcoqZ8gjGjIZZfJ",
     "name": "약점: 맹목",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ヤマクジラ.弱点.blind",
      "skillKey": "弱点.blind",
@@ -2087,7 +2087,7 @@
     "_id": "D26MmcKyVeoOKm9K",
     "name": "약점: 머리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ヤマクジラ.弱点.bindHead",
      "skillKey": "弱点.bindHead",
@@ -2185,7 +2185,7 @@
     "_id": "3aoCqME1B5jE7cdr",
     "name": "얼굴 할퀴기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.マッハロリス.顔面ひっかき",
      "skillKey": "顔面ひっかき",
@@ -2220,7 +2220,7 @@
     "_id": "TejUAAIgUT6VjrZ3",
     "name": "독샘",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.マッハロリス.毒の腺",
      "skillKey": "毒の腺",
@@ -2255,7 +2255,7 @@
     "_id": "UMhCNj1jZM2k6PUG",
     "name": "마하 스텝",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.マッハロリス.マッハステップ",
      "skillKey": "マッハステップ",
@@ -2290,7 +2290,7 @@
     "_id": "EroEPmja07ox4nWO",
     "name": "약점: 다리",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.マッハロリス.弱点.bindLeg",
      "skillKey": "弱点.bindLeg",
@@ -2388,7 +2388,7 @@
     "_id": "DitbJv80mb3tCQTN",
     "name": "러시 비크",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ワイルドウィング.ラッシュビーク",
      "skillKey": "ラッシュビーク",
@@ -2423,7 +2423,7 @@
     "_id": "CjYPLghbkxbKCTWM",
     "name": "약점: 맹목",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ワイルドウィング.弱点.blind",
      "skillKey": "弱点.blind",
@@ -2515,7 +2515,7 @@
     "_id": "7UdImlI5NItWMtuz",
     "name": "힘 모으기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ワーボア.力溜め",
      "skillKey": "力溜め",
@@ -2550,7 +2550,7 @@
     "_id": "RPtwcDgu9TTwJx5R",
     "name": "약점: 맹목",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ワーボア.弱点.blind",
      "skillKey": "弱点.blind",
@@ -2585,7 +2585,7 @@
     "_id": "18GiH7xd72QdOYtL",
     "name": "내성: 수면",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ワーボア.耐性.sleep",
      "skillKey": "耐性.sleep",
@@ -2677,7 +2677,7 @@
     "_id": "WVsm9G6y4LCHNuXz",
     "name": "늘어나는 혀",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.トノサマカエル.伸びる舌",
      "skillKey": "伸びる舌",
@@ -2712,7 +2712,7 @@
     "_id": "VpfmU8O2U9YO1nrn",
     "name": "점핑",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.トノサマカエル.ジャンピング",
      "skillKey": "ジャンピング",
@@ -2810,7 +2810,7 @@
     "_id": "rtUJb0zmXot4b8Lm",
     "name": "화염탄",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.火炎トカゲ.火炎弾",
      "skillKey": "火炎弾",
@@ -2845,7 +2845,7 @@
     "_id": "H2vRR2hYHstB8Le1",
     "name": "내성: 마비",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.火炎トカゲ.耐性.paralyze",
      "skillKey": "耐性.paralyze",
@@ -2943,7 +2943,7 @@
     "_id": "4x2aoOj8qNGq8BIG",
     "name": "단단한 껍질",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.マイマイダイオウ.堅殻",
      "skillKey": "堅殻",
@@ -2985,7 +2985,7 @@
     "_id": "QjmyNJgJ1NtPp9EF",
     "name": "용해액",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.マイマイダイオウ.溶解液",
      "skillKey": "溶解液",
@@ -3037,7 +3037,7 @@
     "_id": "Ke2w6j3UbYoLrbcA",
     "name": "달팽이 행진",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.マイマイダイオウ.マイマイマーチ",
      "skillKey": "マイマイマーチ",
@@ -3129,7 +3129,7 @@
     "_id": "8YVW8i9oCIMkCumh",
     "name": "독물기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ベノムスパイダー.毒咬み",
      "skillKey": "毒咬み",
@@ -3164,7 +3164,7 @@
     "_id": "2YtbHlL8cx7TybH2",
     "name": "포식의 실",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ベノムスパイダー.捕食の糸",
      "skillKey": "捕食の糸",
@@ -3262,7 +3262,7 @@
     "_id": "GR2SnFmeoKzdpNv2",
     "name": "쇼크 빔",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ウォッチャー.ショックビーム",
      "skillKey": "ショックビーム",
@@ -3297,7 +3297,7 @@
     "_id": "JZ8S6WBC0f49mmlb",
     "name": "타기팅",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ウォッチャー.ターゲッティング",
      "skillKey": "ターゲッティング",
@@ -3389,7 +3389,7 @@
     "_id": "TQkjde8zdLbrCo9C",
     "name": "속사",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ガードボット.速射",
      "skillKey": "速射",
@@ -3424,7 +3424,7 @@
     "_id": "PyxQMFzU7RU4aUC6",
     "name": "저격",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ガードボット.狙撃",
      "skillKey": "狙撃",
@@ -3522,7 +3522,7 @@
     "_id": "AMiCEatWGmjr0Btc",
     "name": "찔러 올리기",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.ギラファビートル.突き上げ",
      "skillKey": "突き上げ",
@@ -3614,7 +3614,7 @@
     "_id": "I6UZvtJMOYlNS9EN",
     "name": "덩굴 난무",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.タイタンアルム.ツタの乱舞",
      "skillKey": "ツタの乱舞",
@@ -3649,7 +3649,7 @@
     "_id": "A2TQlzaw2P03g8s7",
     "name": "부란의 숨결",
     "type": "skill",
-    "img": "icons/svg/claw.svg",
+    "img": "icons/svg/pawprint.svg",
     "system": {
      "key": "enemy.タイタンアルム.腐乱の吐息",
      "skillKey": "腐乱の吐息",
