@@ -15,7 +15,7 @@ export const TYPES = {
   attack: { kind: false, element: false, addElement: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false },
   heal: { mode: false, bonus: false, amount: false, resource: false, revive: false },
   inflict: { condition: true, check: false, depth: false },
-  cure: { conditions: false, kind: false, count: false },
+  cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },
   debuff: { id: true, value: false, turns: false, param: false },
   modifier: { path: true, value: true },

@@ -205,7 +205,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         return;
       }
       case "cure":
-        r.cures.push({ conditions: e.conditions ?? "all", kind: e.kind ?? null, ...(e.count !== undefined ? { count: Math.max(0, evaluate(e.count, vars(t))) } : {}) });
+        r.cures.push({ conditions: e.conditions ?? "all", kind: e.kind ?? null, ...(e.count !== undefined ? { count: Math.max(0, evaluate(e.count, vars(t))) } : {}), ...(e.buffs ? { buffs: e.buffs.map(canonicalBuff) } : {}) });
         return;
       case "buff":
       case "debuff": {

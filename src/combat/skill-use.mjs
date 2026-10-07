@@ -424,10 +424,10 @@ async function applyEntry(actor, e, sourceUuid) {
     if (!["ignored", "blocked"].includes(r.result)) newly.push(i.id);
   }
   let buffs = [...(s.buffs ?? [])];
-  // 약화(debuff)·강화(buff) 해제: 걸린 순서대로 count개
+  // 약화(debuff)·강화(buff) 해제: 걸린 순서대로 count개. buffs가 있으면 그 종류만(《조명탄》 『명중 저하』)
   for (const c of (e.cures ?? []).filter((x) => x.kind === "debuff" || x.kind === "buff")) {
     let left = c.count ?? Infinity;
-    buffs = buffs.filter((b) => !(BUFFS[b.id]?.kind === c.kind && left-- > 0));
+    buffs = buffs.filter((b) => !(BUFFS[b.id]?.kind === c.kind && (!c.buffs || c.buffs.includes(b.id)) && left-- > 0));
   }
   for (const b of e.buffs ?? []) buffs = addBuff(buffs, b).list;
   const upd = { "system.hp.value": hp, "system.conditions": conds, "system.buffs": buffs };

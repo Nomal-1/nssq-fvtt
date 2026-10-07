@@ -7,6 +7,7 @@ import { CONDITIONS } from "../conditions.mjs";
 
 const arr = (v) => (Array.isArray(v) ? v : [v]);
 const AILMENTS = new Set(Object.entries(CONDITIONS).filter(([, d]) => d.kind === "ailment").map(([k]) => k));
+const BINDS = new Set(Object.entries(CONDITIONS).filter(([, d]) => d.kind === "bind").map(([k]) => k));
 
 /** 키 하나 판정. 모르는 키는 false(조용히 통과시키지 않는다) */
 const CHECKS = {
@@ -14,6 +15,10 @@ const CHECKS = {
   dualWield: (v, c) => !!c.self?.dualWield === !!v,
   targetHasSkill: (v, c) => (c.target?.skills ?? []).includes(v),
   targetKO: (v, c) => !!c.target?.ko === !!v,
+  // 대상이 봉인 중
+  targetHasBind: (v, c) => (c.target?.conditions ?? []).some((x) => BINDS.has(x.id)) === !!v,
+  // 대상의 LV가 자신보다 높다(《자이언트 킬》)
+  targetLevelAbove: (v, c) => ((c.target?.level ?? 0) > (c.self?.level ?? 0)) === !!v,
   // 대상이 상태 이상(봉인 제외) 중
   targetHasAilment: (v, c) => (c.target?.conditions ?? []).some((x) => AILMENTS.has(x.id)) === !!v,
   targetNotActedThisTurn: (v, c) => !c.target?.acted === !!v,

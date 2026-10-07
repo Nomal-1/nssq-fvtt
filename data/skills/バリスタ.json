@@ -29,8 +29,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신보다 LV가 높은 에너미에 대한 공격 롤의 대미지 다이스 항상 +4개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "diceMod": 4,
+     "when": {
+      "targetLevelAbove": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -68,8 +76,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>쇠뇌 공격의 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "쇠뇌"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -112,8 +131,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -165,8 +190,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>후발 행동으로 발동. 메인 페이즈 종료 시점에 봉인을 하나라도 받고 있는 적 전원에게 물리 공격, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "enemy",
+     "scope": "all"
+    },
+    {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL",
+     "when": {
+      "targetHasBind": true
+     }
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "후발 행동(메인 페이즈 종료 시점): GM이 그 턴 마지막에 사용(메인 페이즈 중 선언은 단계 8)"
   },
   "_meta": {
    "className": "발리스타"
@@ -218,8 +262,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>후발 행동으로 발동. 메인 페이즈 종료 시점에 상태 이상을 하나라도 받고 있는 적 전원에게 물리 공격, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "enemy",
+     "scope": "all"
+    },
+    {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL",
+     "when": {
+      "targetHasAilment": true
+     }
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "후발 행동(메인 페이즈 종료 시점): GM이 그 턴 마지막에 사용(메인 페이즈 중 선언은 단계 8)"
   },
   "_meta": {
    "className": "발리스타"
@@ -262,8 +325,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤 3회. 매 회 대상은 적 중 무작위 선택, 같은 에너미는 1회까지만. 【물리 명중】 -3, 대미지 -(3-SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 3,
+     "random": true,
+     "uniqueTarget": true,
+     "hitMod": -3,
+     "diceMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -306,8 +379,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈돌〉+〈염〉 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "pierce",
+      "fire"
+     ],
+     "diceMod": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -350,8 +433,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈돌〉+〈빙〉 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "pierce",
+      "ice"
+     ],
+     "diceMod": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -394,8 +487,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈돌〉+〈뇌〉 물리 공격 롤, 대미지 다이스 +(SL+1)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "pierce",
+      "volt"
+     ],
+     "diceMod": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -442,8 +545,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL×2)개. 대미지 계산 시 강화 효과 『물리 방어 상승』과 『내성 상승: 돌』을 무시.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL*2"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "대상의 강화 『방어 상승』·『내성 상승: 〈돌〉』을 무시: GM이 그 만큼 대미지를 보정"
   },
   "_meta": {
    "className": "발리스타"
@@ -486,8 +596,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>다음 턴 후발 행동 타이밍에 지연 공격을 예약. 그 공격은 대상을 적 중 무작위로 정하는 3회 물리 공격이며 대미지 다이스 +(SL×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "delayed",
+     "at": "nextTurnLate",
+     "turns": 1,
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "times": 3,
+       "random": true,
+       "diceMod": "SL*2"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -534,8 +659,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +((SL+1)×4)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "(SL+1)*4"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -588,8 +719,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '사격' 공격을 항상 '크리티컬 업' 상태로 취급. 이 효과는 강화 효과로 보지 않는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "critUp": true,
+     "when": {
+      "category": "사격"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -631,7 +770,8 @@
    "sl": 1,
    "description": "<p>크리티컬 히트 발생 시 원하면 같은 공격으로 같은 대상을 한 번 더 공격(TP도 다시 소비). 주행동 1회당 1번만 발생.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "크리티컬 히트 시 같은 공격으로 같은 대상을 한 번 더(TP 다시 소비, 주행동 1회당 1번): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "발리스타"
@@ -668,7 +808,8 @@
    "sl": 1,
    "description": "<p>어둠 속에서도 시야 불이익을 받지 않는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "어둠 속 시야 불이익 없음: 탐색·GM이 처리"
   },
   "_meta": {
    "className": "발리스타"
@@ -710,7 +851,8 @@
    "sl": 1,
    "description": "<p>대상 '단일' 물리 공격이 크리티컬 히트하면 후위 적 1체에게도 같은 공격(스킬 공격이어도 【TP】는 1회분만 소비). 주행동 1회당 1번만 발생.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "단일 대상 물리 공격이 크리티컬이면 후위 적 1체에게도 같은 공격(TP 1회분, 주행동 1회당 1번): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "발리스타"
@@ -754,8 +896,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아군의 약화 효과 『명중 저하』 소멸. 어둠 등에 의한 시야 불이익도 그 전투 동안 무효화.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "cure",
+     "kind": "debuff",
+     "buffs": [
+      "hitDown"
+     ]
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "그 전투 동안 어둠 등의 시야 불이익 무효: GM이 처리"
   },
   "_meta": {
    "className": "발리스타"
@@ -791,8 +942,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>다가오는 위험을 알아채는 판정 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.danger",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"

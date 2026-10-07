@@ -32,6 +32,8 @@
 | `weaponType: [..]` | 현재 사용 무기 종류 |
 | `dualWield: true` | 무기·기타 슬롯 모두 무기 장비 |
 | `targetHasSkill: "이름"` | 대상이 그 스킬 보유(예 《야행성》) |
+| `targetHasBind: true` | 대상이 봉인 중 |
+| `targetLevelAbove: true` | 대상의 LV가 자신보다 높다 |
 | `targetHasAilment: true` | 대상이 상태 이상(봉인 제외) 중 |
 | `targetKO: true` | 대상이 \[전투 불능\](부활 효과용) |
 | `targetNotActedThisTurn` | 대상이 이번 턴 메인 행동 전 |
@@ -53,7 +55,7 @@
 | `inflict` | `condition`, `check: {type: fixed, target} | {type: contest}` | 상태 이상·봉인 부여 |
 | `drain` | `resource`(hp/tp), `mode`(half: 준 대미지 절반 / sixes: 대미지 다이스의 6 개수) | onHit 안에서: 그 명중으로 자신 회복(《음양검: 영흡명참》) |
 | `kill` | `check: {type: fixed, target, defMod?}` | 즉사: 억제 방어 롤 실패면 【HP】 0(카드에 \[즉사\]) |
-| `cure` | `conditions[]` 또는 `"all"`, `kind`(ailment/bind/debuff/buff), `count` | 해제. `count`가 있으면 걸린 순서대로 그 개수까지(「(SL)개까지」) |
+| `cure` | `conditions[]` 또는 `"all"`, `kind`(ailment/bind/debuff/buff), `count`, `buffs[]`(그 강화·약화 id만) | 해제. `count`가 있으면 걸린 순서대로 그 개수까지(「(SL)개까지」) |
 | `buff` / `debuff` | `id`, `value`, `turns`, `param`(속성 등) | 01 §3.10의 강화·약화 |
 | `modifier` | `path`, `value` | 상시 보정. 타이밍 「상시」 스킬, 장식, 제련. path: `physAtk elemAtk physHit elemHit defense evasion speed suppAtk suppDef hpMax tpMax carry healDice(『회복』 스킬 회복 롤 다이스) itemHeal(아이템 회복량 +) guardCount(방어 스킬 횟수 +) abilities.<능력치> resist.<속성> checks.<판정>` |
 | `resource` | `resource`(hp/tp/fp), `delta` 또는 `set` | 직접 증감 |
