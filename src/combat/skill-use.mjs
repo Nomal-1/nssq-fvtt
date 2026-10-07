@@ -5,7 +5,7 @@
  * 효과 데이터가 없는 스킬은 쓸 수 없다(07 #52).
  */
 import { canUseSkill } from "../engine/effects/usage.mjs";
-import { resolveEffects } from "../engine/effects/resolve.mjs";
+import { hasVariants, resolveEffects } from "../engine/effects/resolve.mjs";
 import { addCondition, CONDITIONS, removeCondition } from "../engine/conditions.mjs";
 import { addBuff, BUFFS } from "../engine/buffs.mjs";
 import { addState } from "../engine/states.mjs";
@@ -39,11 +39,14 @@ export function targetSpec(text = "") {
   return { side, scope: "single", unknown: !/단일|단체|1체/.test(t) };
 }
 
-/** 이 사용자의 대상 후보(살아 있는 것, 상대 진영이면 사거리 안) */
-function candidates(combat, user, spec, range) {
+/** 쓰러진 아군도 대상이 되는 효과(revive)가 있는가 */
+const revives = (item) => (item?.system.effects ?? []).some((e) => e?.type === "heal" && e.revive);
+
+/** 이 사용자의 대상 후보(살아 있는 것, 상대 진영이면 사거리 안). allowKO: 쓰러진 아군도(부활 효과) */
+function candidates(combat, user, spec, range, { allowKO = false } = {}) {
   const me = user.actor;
   const row = me.system.row ?? "front";
-  return combat.combatants.filter((c) => alive(c) && (spec.side === "ally" ? friendly(c.actor, me) : !friendly(c.actor, me)))
+  return combat.combatants.filter((c) => (alive(c) || (allowKO && spec.side === "ally" && !!c.actor)) && (spec.side === "ally" ? friendly(c.actor, me) : !friendly(c.actor, me)))
     .filter((c) => spec.side === "ally" || range === "-" || !range || inRange(range, row, c.actor.system.row ?? "front"));
 }
 
@@ -55,6 +58,8 @@ export function unitProfile(actor, combatant) {
   const s = actor.system;
   return {
     ...p,
+    // 회복 마스터리 등: 『회복』 스킬의 회복량 다이스(상시 보정 healDice)
+    healDice: s.equipment?.mods?.healDice ?? 0,
     id: combatant?.id ?? actor.id,
     tp: s.tp?.value ?? 0, tpMax: s.tp?.max ?? 0, fp: s.fp?.value ?? 0,
     weaponType: s.equipment?.weapon?.weaponType ?? null,
@@ -106,13 +111,25 @@ export async function beginAction(combat, combatant, kind, id) {
   if (!item) return null;
   const entry = actionList(combat, combatant, kind).find((x) => x.id === id);
   if (!entry?.ok) return ui.notifications.warn(L(`reason.${entry?.reason ?? "timing"}`)) && null;
-  const spec = kind === "item" ? targetSpec(item.system.target || "아군 단일") : targetSpec(item.system.target);
+  const spec = { ...(kind === "item" ? targetSpec(item.system.target || "아군 단일") : targetSpec(item.system.target)), variant: null };
+  // 선언 명칭(《삼색 세이버》 → 《플레임 세이버》 등)을 먼저 고른다
+  if (hasVariants(item.system.effects) && item.system.variants?.length) {
+    spec.variant = await pickVariant(item);
+    if (spec.variant === null) return null;
+  }
   const range = kind === "item" ? "-" : item.system.range;
-  if (spec.side === "self") return executeAction(combat, combatant, kind, id, [combatant]);
-  const list = candidates(combat, combatant, spec, range);
+  if (spec.side === "self") return executeAction(combat, combatant, kind, id, [combatant], { variant: spec.variant });
+  const list = candidates(combat, combatant, spec, range, { allowKO: revives(item) });
   if (!list.length) return ui.notifications.warn(L("noTarget")) && null;
-  if (spec.scope === "all" || spec.scope === "random") return executeAction(combat, combatant, kind, id, list);
+  if (spec.scope === "all" || spec.scope === "random") return executeAction(combat, combatant, kind, id, list, { variant: spec.variant });
   return { pick: list.map((c) => c.id), spec };
+}
+
+/** 선언 명칭 고르기 → 번호(취소면 null) */
+async function pickVariant(item) {
+  const names = item.system.variants;
+  const buttons = Object.fromEntries(names.map((n, i) => [`v${i}`, { label: `《${esc(n)}》`, callback: () => i }]));
+  return Dialog.wait({ title: L("variantTitle", { name: item.name }), content: `<p>${esc(L("variantHint"))}</p>`, buttons, close: () => null }, { classes: ["nssq", "dialog"] });
 }
 
 /** 고른 카드로 실행(열 범위면 그 카드의 열 전체) */
@@ -120,9 +137,9 @@ export async function pickTarget(combat, combatant, kind, id, picked, spec) {
   let targets = [picked];
   if (spec.scope === "row") {
     const row = picked.actor.system.row ?? "front";
-    targets = candidates(combat, combatant, spec, "-").filter((c) => (c.actor.system.row ?? "front") === row);
+    targets = candidates(combat, combatant, spec, "-", { allowKO: revives(combatant.actor.items.get(id)) }).filter((c) => (c.actor.system.row ?? "front") === row);
   }
-  return executeAction(combat, combatant, kind, id, targets);
+  return executeAction(combat, combatant, kind, id, targets, { variant: spec.variant ?? null });
 }
 
 /* ---------------- 실행 ---------------- */
@@ -135,7 +152,7 @@ async function rollWith(rolls, n) {
 }
 
 /** 실행: 코스트 → 발동·효과 해석 → 결과 카드 */
-export async function executeAction(combat, combatant, kind, id, targetCombatants) {
+export async function executeAction(combat, combatant, kind, id, targetCombatants, { variant = null } = {}) {
   const actor = combatant.actor;
   const item = actor.items.get(id);
   if (!item) return null;
@@ -152,7 +169,7 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   const message = await resolveAndPost({
     actor, combatant, item, kind,
     units: targetCombatants.map((c) => ({ actor: c.actor, combatant: c })),
-    mainAction: kind === "skill" && sys.timing === "주행동"
+    mainAction: kind === "skill" && sys.timing === "주행동", variant
   });
   if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
   // 개막 페이즈에 쓴 스킬은 그 전투원의 개막 행동
@@ -169,7 +186,7 @@ export async function useItemOutside(actor, item, targets) {
 }
 
 /** 효과 해석 → FP·오버히트 → 결과 카드 */
-async function resolveAndPost({ actor, combatant, item, kind, units, mainAction }) {
+async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null }) {
   const sys = item.system;
   const spec = kind === "item" ? targetSpec(sys.target || "아군 단일") : targetSpec(sys.target);
   const rolls = [];
@@ -179,8 +196,11 @@ async function resolveAndPost({ actor, combatant, item, kind, units, mainAction 
   const r = await resolveEffects({
     effects: sys.effects ?? [], sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : [],
-    mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform()
+    mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(),
+    variant, category: sys.category ?? ""
   });
+  // 「최속/후발 행동」(개막 페이즈에 쓴 것): 이번 턴 행동 순서. 메인 페이즈로 넘어갈 때 이니셔티브에 반영
+  if (r.actionTiming && combatant && !r.failed) await combatant.setFlag("nssq", "timing", r.actionTiming);
   // FP(캐릭터만), 오버히트
   if (r.fpGain && actor.type === "character") await actor.update({ "system.fp.value": (actor.system.fp?.value ?? 0) + r.fpGain });
   if (r.overheat) await actor.setFlag("nssq", "overheat", r.overheat);
@@ -189,14 +209,15 @@ async function resolveAndPost({ actor, combatant, item, kind, units, mainAction 
     uuid: actorOf.get(x.id)?.uuid ?? null, name: x.name,
     damage: x.damage, heal: x.heal, inflicts: x.inflicts, buffs: x.buffs, cures: x.cures, resource: x.resource,
     states: x.states.map((st) => ({ ...st, name: st.name || item.name })),
-    sleepBroken: x.sleepBroken,
+    sleepBroken: x.sleepBroken, revive: !!x.revive,
     hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist })),
     applied: false, before: null,
     // 수동 반응(단계 6-C): 명중한 공격이 있고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
     reaction: pendingReaction(actorOf.get(x.id), x.hits.find((h) => h.hit)?.kind ?? "physical", x.hits.some((h) => h.hit))
   }));
   const card = {
-    userUuid: actor.uuid, userName: combatant?.name ?? actor.name, kind, name: item.name, img: item.img, sl: kind === "skill" ? sys.sl ?? null : null,
+    userUuid: actor.uuid, userName: combatant?.name ?? actor.name, kind,
+    name: variant !== null && sys.variants?.[variant] ? `${item.name}《${sys.variants[variant]}》` : item.name, img: item.img, sl: kind === "skill" ? sys.sl ?? null : null,
     activation: r.activation, failed: r.failed, fpGain: r.fpGain, gm: r.gm, partial: sys.effectsNote ?? "",
     description: sys.description ?? "",
     unknownScope: !!spec.unknown, entries, applied: false
@@ -322,7 +343,8 @@ function entryLines(e, card) {
   for (const i of e.inflicts ?? []) if (!i.seq) out.push(inflictLi(i));
   for (const b of e.buffs ?? []) if (!b.seq) out.push(buffLi(b));
   for (const st of e.states ?? []) out.push(`<li class="state">${esc(L("stateLine", { name: st.name, mods: stateModText(st.mods) }))}</li>`);
-  for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}</li>`);
+  if (e.revive) out.push(`<li class="heal">${esc(L("revive"))}</li>`);
+  for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}${c.count !== undefined ? ` ${esc(L("cureCount", { n: c.count }))}` : ""}</li>`);
   for (const x of e.resource ?? []) if (x.chanceFailed && !x.seq) out.push(chanceLi(x));
   return out.join("");
 }
@@ -357,6 +379,8 @@ async function applyEntry(actor, e, sourceUuid) {
   const before = { hp: s.hp?.value, tp: s.tp?.value ?? null, conditions: s.conditions ?? [], buffs: s.buffs ?? [], states: actor.getFlag("nssq", "states") ?? [] };
   let hp = s.hp?.value ?? 0;
   let tp = s.tp?.value ?? null;
+  // 부활: 【HP】 0 이하에서 회복량만큼(쓰러진 상태의 음수 HP는 0으로 본다)
+  if (e.revive && hp <= 0) hp = 0;
   hp = Math.min(s.hp?.max ?? hp, hp - (e.damage ?? 0) + (e.heal?.hp ?? 0));
   if (tp !== null) tp = Math.min(s.tp?.max ?? tp, tp + (e.heal?.tp ?? 0));
   for (const x of e.resource ?? []) {
@@ -368,7 +392,9 @@ async function applyEntry(actor, e, sourceUuid) {
   for (const c of e.cures ?? []) {
     if (c.kind === "debuff") continue;
     const match = (x) => (c.conditions === "all" || c.conditions?.includes(x.id)) && (!c.kind || CONDITIONS[x.id]?.kind === c.kind);
-    conds = conds.filter((x) => !match(x));
+    // 「(SL)개까지」: 걸린 순서대로 count개
+    let left = c.count ?? Infinity;
+    conds = conds.filter((x) => !(match(x) && left-- > 0));
   }
   const newly = [];
   const source = sourceUuid ? fromUuidSync(sourceUuid) : null;
@@ -379,7 +405,10 @@ async function applyEntry(actor, e, sourceUuid) {
     if (!["ignored", "blocked"].includes(r.result)) newly.push(i.id);
   }
   let buffs = [...(s.buffs ?? [])];
-  if ((e.cures ?? []).some((c) => c.kind === "debuff")) buffs = buffs.filter((b) => BUFFS[b.id]?.kind !== "debuff");
+  for (const c of (e.cures ?? []).filter((x) => x.kind === "debuff")) {
+    let left = c.count ?? Infinity;
+    buffs = buffs.filter((b) => !(BUFFS[b.id]?.kind === "debuff" && left-- > 0));
+  }
   for (const b of e.buffs ?? []) buffs = addBuff(buffs, b).list;
   const upd = { "system.hp.value": hp, "system.conditions": conds, "system.buffs": buffs };
   if (tp !== null) upd["system.tp.value"] = tp;
@@ -477,11 +506,14 @@ export function registerSkillUse() {
 /** 에너미 랜덤 행동: 효과가 있는 스킬이면 이 흐름으로(대상은 무작위 또는 범위 전체) */
 export async function enemyUseSkill(combat, combatant, skill) {
   const spec = targetSpec(skill.system.target);
-  if (spec.side === "self") return executeAction(combat, combatant, "skill", skill.id, [combatant]);
-  const list = candidates(combat, combatant, spec, skill.system.range);
+  // 선언 명칭이 있으면 무작위로 하나
+  const n = hasVariants(skill.system.effects) ? skill.system.variants?.length ?? 0 : 0;
+  const variant = n ? Math.floor(CONFIG.Dice.randomUniform() * n) : null;
+  if (spec.side === "self") return executeAction(combat, combatant, "skill", skill.id, [combatant], { variant });
+  const list = candidates(combat, combatant, spec, skill.system.range, { allowKO: revives(skill) });
   if (!list.length) return null;
-  if (spec.scope === "all" || spec.scope === "random") return executeAction(combat, combatant, "skill", skill.id, list);
+  if (spec.scope === "all" || spec.scope === "random") return executeAction(combat, combatant, "skill", skill.id, list, { variant });
   const pick = pickRandom(list, () => CONFIG.Dice.randomUniform());
-  return pickTarget(combat, combatant, "skill", skill.id, pick, spec);
+  return pickTarget(combat, combatant, "skill", skill.id, pick, { ...spec, variant });
 }
 

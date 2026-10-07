@@ -21,7 +21,12 @@ export const PASSIVE_TYPES = ["modifier", "flag", "requireState"];
 const CUSTOM = new Map();
 export const registerCustom = (name, fn) => CUSTOM.set(name, fn);
 
-const blank = (t) => ({ id: t.id, name: t.name, hits: [], damage: 0, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], states: [], sleepBroken: false });
+const blank = (t) => ({ id: t.id, name: t.name, hits: [], damage: 0, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], states: [], sleepBroken: false, revive: false });
+
+/** 선언 명칭(variants)을 고른 effects: variant가 없는 효과 + 고른 번호의 효과 */
+export const variantEffects = (effects, variant = null) => (effects ?? []).filter((e) => e?.variant === undefined || e.variant === variant);
+/** 이 effects에 선언 명칭별 효과가 있는가 */
+export const hasVariants = (effects) => (effects ?? []).some((e) => e?.variant !== undefined);
 
 /** 효과가 명중 판정을 하는가(하면 따로 발동 판정을 하지 않는다, 01 §3.4) */
 export const hasHitCheck = (effects) => (effects ?? []).some((e) => e.type === "attack");
@@ -37,9 +42,12 @@ export const hasHitCheck = (effects) => (effects ?? []).some((e) => e.type === "
  * @param {(n: number) => number[]|Promise<number[]>} p.rollDice n개의 D6
  * @param {() => number} [p.rng] 0 이상 1 미만(무작위 대상)
  * @param {object} [p.ctx] when 조건용 { timeOfDay, allies }
+ * @param {number|null} [p.variant] 선언 명칭 번호(《삼색 세이버》 등). variant가 붙은 효과는 이 번호만
+ * @param {string} [p.category] 스킬 분류(『회복』이면 회복 롤에 사용자의 healDice를 더한다)
  */
-export async function resolveEffects({ effects, sl = 1, user, targets = [], pool = [], mainAction = false, rollDice, rng = Math.random, ctx = {} }) {
-  const out = { activation: null, fpGain: 0, failed: false, results: new Map(), gm: [], deferred: [], overheat: 0 };
+export async function resolveEffects({ effects, sl = 1, user, targets = [], pool = [], mainAction = false, rollDice, rng = Math.random, ctx = {}, variant = null, category = "" }) {
+  effects = variantEffects(effects, variant);
+  const out = { activation: null, fpGain: 0, failed: false, results: new Map(), gm: [], deferred: [], overheat: 0, actionTiming: null };
   const res = (t) => {
     if (!out.results.has(t.id)) out.results.set(t.id, blank(t));
     return out.results.get(t.id);
@@ -128,12 +136,17 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       }
       case "heal": {
         const res0 = e.resource ?? "hp";
+        // [전투 불능]인 대상은 revive 효과만 회복한다(《초의술》 「전투 불능에서도 부활」, 《리저렉션》)
+        if (t.ko && res0 === "hp" && !e.revive) return;
+        if (t.ko && e.revive) r.revive = true;
         const max = res0 === "tp" ? t.tpMax ?? 0 : t.hpMax ?? 0;
-        const cur = res0 === "tp" ? t.tp ?? 0 : t.hp ?? 0;
+        const cur = Math.max(0, res0 === "tp" ? t.tp ?? 0 : t.hp ?? 0);
         let amount = 0;
         let dice = [];
         if ((e.mode ?? "roll") === "roll") {
-          const n = Math.max(0, (user.elemAtk ?? 0) + evaluate(e.bonus ?? 0, vars(t)));
+          // 『회복』 분류 스킬이면 회복 마스터리 등의 회복량 다이스 보정(healDice)
+          const mastery = category === "회복" ? user.healDice ?? 0 : 0;
+          const n = Math.max(0, (user.elemAtk ?? 0) + evaluate(e.bonus ?? 0, vars(t)) + mastery);
           dice = n ? await rollDice(n) : [];
           amount = dice.filter((v) => v >= 4).length;
         } else if (e.mode === "fixed") amount = evaluate(e.amount ?? 0, vars(t));
@@ -157,7 +170,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         return;
       }
       case "cure":
-        r.cures.push({ conditions: e.conditions ?? "all", kind: e.kind ?? null });
+        r.cures.push({ conditions: e.conditions ?? "all", kind: e.kind ?? null, ...(e.count !== undefined ? { count: Math.max(0, evaluate(e.count, vars(t))) } : {}) });
         return;
       case "buff":
       case "debuff":
@@ -173,6 +186,10 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         r.states.push({ id: e.id, name: e.label ?? "", group: e.group ?? "", mods, ...(e.max ? { max: evaluate(e.max, vars(t)) } : {}), note: e.note ?? "" });
         return;
       }
+      case "actionTiming":
+        // 「최속/후발 행동」: 이번 턴 행동 순서(전투원 플래그 timing, 호출자가 반영)
+        out.actionTiming = e.value === "last" ? "last" : "first";
+        return;
       case "overheat":
         out.overheat = Math.max(out.overheat, evaluate(e.turns ?? 0, vars(t)));
         return;

@@ -20,7 +20,8 @@
   "type": "attack",            // 아래 §3 중 하나
   "when": { … },               // 적용 조건 (생략 시 항상)
   "chance": { "roll": "1d6", "lte": "SL" },   // 확률 발동
-  "label": "…"                 // 채팅 카드에 표시할 짧은 이름(선택)
+  "label": "…",                // 채팅 카드에 표시할 짧은 이름(선택)
+  "variant": 0                  // 선언 명칭 번호(스킬의 variants 순서). 쓸 때 고른 명칭의 효과만 적용(선택)
 }
 ```
 
@@ -30,6 +31,7 @@
 | `weaponType: [..]` | 현재 사용 무기 종류 |
 | `dualWield: true` | 무기·기타 슬롯 모두 무기 장비 |
 | `targetHasSkill: "이름"` | 대상이 그 스킬 보유(예 《야행성》) |
+| `targetKO: true` | 대상이 \[전투 불능\](부활 효과용) |
 | `targetNotActedThisTurn` | 대상이 이번 턴 메인 행동 전 |
 | `selfHpAtMostHalf` | 자기 HP가 최대의 절반 이하 |
 | `selfRow: "front"/"back"` | 자기 위치 |
@@ -43,24 +45,27 @@
 | type | 필드 | 설명 |
 |---|---|---|
 | `attack` | `kind`(physical/elemental), `element`(생략 시 무기 기본 속성), `times`, `hitMod`, `diceMod`, `atkMod`, `atkMultiplier`, `random`, `uniqueTarget`, `onHit[]`, `bonuses[{when, hitMod?, diceMod?}]`, `halfDamage` | 공격 롤 1회분(또는 times회) |
-| `heal` | `mode`(roll/fixed/full/percent), `bonus`/`amount`, `resource`(hp/tp) | 회복 롤 또는 고정 회복 |
+| `heal` | `mode`(roll/fixed/full/percent), `bonus`/`amount`, `resource`(hp/tp), `revive` | 회복 롤 또는 고정 회복. \[전투 불능\] 대상은 `revive: true`인 효과만 회복(부활). 부활 효과가 있으면 쓰러진 아군도 대상으로 고를 수 있다. 『회복』 분류 스킬의 회복 롤에는 사용자의 `healDice` 보정이 더해진다 |
 | `inflict` | `condition`, `check: {type: fixed, target} | {type: contest}` | 상태 이상·봉인 부여 |
-| `cure` | `conditions[]` 또는 `"all"`, `kind`(ailment/bind/debuff) | 해제 |
+| `cure` | `conditions[]` 또는 `"all"`, `kind`(ailment/bind/debuff), `count` | 해제. `count`가 있으면 걸린 순서대로 그 개수까지(「(SL)개까지」) |
 | `buff` / `debuff` | `id`, `value`, `turns`, `param`(속성 등) | 01 §3.10의 강화·약화 |
-| `modifier` | `path`, `value` | 상시 보정. 타이밍 「상시」 스킬, 장식, 제련 |
+| `modifier` | `path`, `value` | 상시 보정. 타이밍 「상시」 스킬, 장식, 제련. path: `physAtk elemAtk physHit elemHit defense evasion speed suppAtk suppDef hpMax tpMax carry healDice abilities.<능력치> resist.<속성> checks.<판정>` |
 | `resource` | `resource`(hp/tp/fp), `delta` 또는 `set` | 직접 증감 |
 | `stance` | `effects[]`, `until`(endOfTurn/count), `count` | 대기 상태가 되며 대기 중 효과 부여 |
 | `trigger` | `on`, `effects[]`, `limit`(perAction/perTurn/perBattle) | 반응형. `on`: crit / beforeKO / attacked / allyAttacked / rowAttacked / endPhase / openingPhase / battleStart |
-| `counter` / `chase` | `when`, `attack{…}`, `count` | 반격·추격(01 §3.11의 연쇄 금지 규칙은 엔진이 강제) |
+| `counter` / `chase` | `when`, `attack{…}`, `count`, `on`, `onlyIfEvaded`(반격만) | 반격·추격(01 §3.11의 연쇄 금지 규칙은 엔진이 강제) |
 | `delayed` | `at`(endPhase/nextTurnLate), `turns`, `effects[]` | 지연 공격. 스킬마다 발동 시점이 달라 `at`으로 지정 |
 | `token` | `tokenKey`, `action{…}`, `maxCount` | 토큰 배치 |
 | `overheat` | `turns` | 드라이브 계열 |
+| `actionTiming` | `value`(first/last) | 「그 턴 최속/후발 행동」. 개막 페이즈에 쓰면 메인 페이즈 행동 순서에 반영(전투원 플래그 timing, 라운드마다 지움). 메인 페이즈 중 선언하는 것은 partial |
 | `state` | `id`, `label`, `group?`, `mods[{path, value}]`, `max?`, `note?` | 전투 고유 상태(강화가 아님, 해제되지 않음, 전투 끝까지). 무사의 자세·《나찰》 등. 같은 `group`은 하나만, `max`가 있으면 쌓임(07 #57) |
 | `requireState` | `state` | 「《○○》 상태 한정」. 그 상태가 없으면 쓸 수 없다(사용 시 해석하지 않음) |
 | `flag` | `flag`, `value` | 규칙 스위치. 예 쌍수 스킬 공격 허용, 토큰 동시 유지 수 |
 | `custom` | `handler` | 스키마 밖. `src/engine/custom/<handler>.mjs` |
 | `activeEvade` | `ability`(str/tec/vit/agi/luc), `bonus`, `vs`(physical/elemental, 생략 시 둘 다) | 타이밍 「수동」: 능동 회피. 대상 2D6+능력치 보너스+bonus vs 공격자 명중 달성값, 동점 회피(07 #51) |
 | `nullify` | — | 타이밍 「수동」: 그 공격의 대미지 0·추가 효과 무효(《완전 방어》), 반응한 캐릭터의 같은 편 대상 전부 |
+
+`attack.element`의 `"none"`은 무속성(내성 0). 데이터 검사: `node tools/effects-check.mjs` → `build/effects-report.md`(오류·todo/auto/partial/ok 집계·partial 목록·단계 8 대기 목록). `npm test`에도 들어 있다.
 
 ## 4. 변환 예시 (현재 데이터 기준)
 
@@ -106,6 +111,12 @@
 
 // 에너미 《거슬리는 날갯소리》 대결 판정(억제 공격 vs 억제 방어), 승리하면 [머리] 봉인
 [{ "type": "inflict", "condition": "bindHead", "check": { "type": "contest" } }]
+
+// 《삼색 세이버》 선언 명칭(variants: 플레임/프리즈/쇼크)별 속성
+[{ "type": "attack", "kind": "physical", "element": ["slash", "fire"], "diceMod": "SL", "variant": 0 }, …]
+
+// 《리저렉션》 [전투 불능] 회복, HP 1
+[{ "type": "heal", "mode": "fixed", "amount": 1, "revive": true, "when": { "targetKO": true } }]
 
 // 장식 「지식의 서」 에너미 식별 판정 +1
 [{ "type": "modifier", "path": "checks.identify", "value": 1 }]

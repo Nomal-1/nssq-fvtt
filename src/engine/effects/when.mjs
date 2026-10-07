@@ -10,6 +10,7 @@ const CHECKS = {
   weaponType: (v, c) => arr(v).includes(c.self?.weaponType),
   dualWield: (v, c) => !!c.self?.dualWield === !!v,
   targetHasSkill: (v, c) => (c.target?.skills ?? []).includes(v),
+  targetKO: (v, c) => !!c.target?.ko === !!v,
   targetNotActedThisTurn: (v, c) => !c.target?.acted === !!v,
   selfHpAtMostHalf: (v, c) => ((c.self?.hp ?? 0) * 2 <= (c.self?.hpMax ?? 0)) === !!v,
   selfRow: (v, c) => c.self?.row === v,

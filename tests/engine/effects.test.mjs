@@ -192,3 +192,45 @@ describe("무기 칸의 방패(07 #56)", () => {
     expect(canUseSkill(skill, { ...base, shield: true }, { phase: "main", myTurn: true }).ok).toBe(true);
   });
 });
+
+describe("단계 7 스키마 보강", () => {
+  it("선언 명칭(variant): 고른 번호의 효과만", async () => {
+    const effects = [
+      { type: "attack", kind: "physical", element: ["fire"], variant: 0 },
+      { type: "attack", kind: "physical", element: ["ice"], variant: 1 }
+    ];
+    const r = await resolveEffects({ effects, user, targets: [foe], variant: 1, rollDice: dice(5, 5, ...Array(6).fill(2)) });
+    expect(r.results.get("e").hits.map((h) => h.elements)).toEqual([["ice"]]);
+  });
+
+  it("[전투 불능] 대상: 보통 회복은 무시, revive만 회복하고 부활 표시", async () => {
+    const ko = { ...user, id: "k", hp: -3, ko: true };
+    const plain = await resolveEffects({ effects: [{ type: "heal", mode: "full" }], user, targets: [ko], rollDice: dice() });
+    expect(plain.results.get("k")?.heal.hp ?? 0).toBe(0);
+    const rev = await resolveEffects({ effects: [{ type: "heal", mode: "fixed", amount: 1, revive: true, when: { targetKO: true } }], user, targets: [ko, { ...user, id: "a" }], rollDice: dice() });
+    expect(rev.results.get("k")).toEqual(expect.objectContaining({ revive: true, heal: { hp: 1, tp: 0 } }));
+    expect(rev.results.get("a")).toBeUndefined();
+    const full = await resolveEffects({ effects: [{ type: "heal", mode: "full", revive: true }], user, targets: [ko], rollDice: dice() });
+    expect(full.results.get("k").heal.hp).toBe(20);
+  });
+
+  it("cure count: (SL)개까지", async () => {
+    const r = await resolveEffects({ effects: [{ type: "cure", kind: "ailment", count: "SL" }], sl: 2, user, targets: [user], rollDice: dice() });
+    expect(r.results.get("u").cures).toEqual([{ conditions: "all", kind: "ailment", count: 2 }]);
+  });
+
+  it("『회복』 스킬의 회복 롤에는 사용자의 healDice를 더한다", async () => {
+    const effects = [{ type: "heal", mode: "roll", bonus: 1 }];
+    const healer = { ...user, healDice: 2 };
+    // 속성 공격 5 + 1 + 2 = 8개
+    const a = await resolveEffects({ effects, user: healer, targets: [user], category: "회복", rollDice: dice(...Array(8).fill(4)) });
+    expect(a.results.get("u").heal.hp).toBe(8);
+    const b = await resolveEffects({ effects, user: healer, targets: [user], category: "백병", rollDice: dice(...Array(6).fill(4)) });
+    expect(b.results.get("u").heal.hp).toBe(6);
+  });
+
+  it("actionTiming: 최속/후발", async () => {
+    const r = await resolveEffects({ effects: [{ type: "actionTiming", value: "first" }], user, targets: [user], rollDice: dice() });
+    expect(r.actionTiming).toBe("first");
+  });
+});
