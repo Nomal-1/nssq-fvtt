@@ -29,8 +29,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>어떠한 봉인이 부여된 대상에 대한 공격 롤에서 대미지 다이스에 +5개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "diceMod": 5,
+     "when": {
+      "targetHasBind": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -168,8 +176,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>채찍에 의한 물리 명중에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "채찍"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -216,8 +235,54 @@
    ],
    "sl": 1,
    "description": "<p>이 스킬을 사용할 때는 아래 중 하나의 명칭으로 선언한다. 《헤드 본디지》《암 본디지》《레그 본디지》 물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [머리] [팔] [다리] 중 하나의 봉인을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindHead",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ],
+     "variant": 0
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindArm",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ],
+     "variant": 1
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindLeg",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ],
+     "variant": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -260,8 +325,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [독]을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "poison",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -304,8 +384,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상에게 『속도 저하: (SL×4)』의 약화 효과를 준다. 3턴 지속된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "debuff",
+       "id": "speedDown",
+       "value": "SL*4",
+       "turns": 3
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -352,8 +445,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +(대상의 봉인 개수×(SL+1))개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "@target.bindCount*(SL+1)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -396,8 +495,25 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중했을 때, 이 공격으로 대미지를 주기 전 대상의 HP 잔량이 최대치의 절반 미만이면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 즉사한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "kill",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       },
+       "when": {
+        "targetHpBelowHalf": true
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -449,8 +565,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [수면]을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "sleep",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -502,8 +633,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [마비]를 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "paralyze",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -555,8 +701,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [혼란]을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "confuse",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -608,8 +769,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다. 또한, 이때 준 대미지의 절반만큼 자신의 【HP】를 회복한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL",
+     "onHit": [
+      {
+       "type": "drain",
+       "resource": "hp",
+       "mode": "half"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -661,8 +835,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 이때, 대미지 다이스 +(SL)개를 얻는다. 대상이 어떠한 상태 이상을 받고 있으면, 추가로 대미지 다이스 +(SL×2)개를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL",
+     "bonuses": [
+      {
+       "when": {
+        "targetHasAilment": true
+       },
+       "diceMod": "SL*2"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -718,8 +906,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤을 한다. 명중하면, 대상은 (공격자의 【억제 공격】+(6+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [석화]를 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "petrify",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 6 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -776,8 +979,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 자신을 포함한 열에 물리 공격이 가해지면 자신은 공격자에게 물리 공격으로 반격을 한다. 단, 이때의 대미지 다이스를 -(4-SL)개 한다. 대기 상태는 누적 3회의 반격을 하거나, 턴 종료로 해제된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "effects": [
+      {
+       "type": "counter",
+       "on": "rowAttacked",
+       "when": {
+        "attackKind": "physical"
+       },
+       "attack": {
+        "kind": "physical",
+        "diceMod": "-(4-SL)"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -834,8 +1061,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 자신을 포함한 열에 속성 공격이 가해지면 자신은 공격자에게 물리 공격으로 반격을 한다. 단, 이때의 대미지 다이스를 -(4-SL)개 한다. 대기 상태는 누적 3회의 반격을 하거나, 턴 종료로 해제된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "effects": [
+      {
+       "type": "counter",
+       "on": "rowAttacked",
+       "when": {
+        "attackKind": "elemental"
+       },
+       "attack": {
+        "kind": "physical",
+        "diceMod": "-(4-SL)"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -871,8 +1122,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>『회피 상승: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "evasionUp",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -918,7 +1176,8 @@
    "sl": 1,
    "description": "<p>자신의 주행동으로 봉인을 준 경우, 자신이 장비한 무기가 『백병』 분류의 무기라면 그 대상에게 통상 공격으로 추격을 한다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "자신의 주행동으로 봉인을 걸었을 때 백병 무기면 그 대상에게 통상 공격으로 추격: GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -993,7 +1252,8 @@
    "sl": 1,
    "description": "<p>로프나 사슬을 사용한 판정 전반에 +3을 얻는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "로프·사슬을 쓰는 판정 +3: 판정 때 보정으로(타이밍 특수)"
   },
   "_meta": {
    "className": "다크 헌터"

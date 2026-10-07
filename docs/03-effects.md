@@ -34,6 +34,7 @@
 | `weaponType: [..]` | 현재 사용 무기 종류 |
 | `dualWield: true` | 무기·기타 슬롯 모두 무기 장비 |
 | `targetHasSkill: "이름"` | 대상이 그 스킬 보유(예 《야행성》) |
+| `targetHpBelowHalf: true` | 대상 HP 잔량이 최대치의 절반 미만(그 공격의 대미지 전) |
 | `targetHasBind: true` | 대상이 봉인 중 |
 | `targetLevelAbove: true` | 대상의 LV가 자신보다 높다 |
 | `targetHasAilment: true` | 대상이 상태 이상(봉인 제외) 중 |

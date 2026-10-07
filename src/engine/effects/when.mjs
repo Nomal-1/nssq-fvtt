@@ -15,6 +15,8 @@ const CHECKS = {
   dualWield: (v, c) => !!c.self?.dualWield === !!v,
   targetHasSkill: (v, c) => (c.target?.skills ?? []).includes(v),
   targetKO: (v, c) => !!c.target?.ko === !!v,
+  // 대상의 HP 잔량이 최대치의 절반 미만(공격 전 값, 《디 엔드》)
+  targetHpBelowHalf: (v, c) => ((c.target?.hp ?? 0) * 2 < (c.target?.hpMax ?? 0)) === !!v,
   // 대상이 봉인 중
   targetHasBind: (v, c) => (c.target?.conditions ?? []).some((x) => BINDS.has(x.id)) === !!v,
   // 대상의 LV가 자신보다 높다(《자이언트 킬》)
