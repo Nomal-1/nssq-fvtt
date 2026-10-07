@@ -34,13 +34,16 @@ export const TYPES = {
   activeEvade: { ability: true, bonus: false, vs: false },
   nullify: {},
   actionTiming: { value: true },
-  attackBonus: { hitMod: false, diceMod: false, atkMod: false }
+  attackBonus: { hitMod: false, diceMod: false, atkMod: false },
+  guard: { mode: true, scope: false },
+  aura: { path: true, value: true, scope: false },
+  provoke: { count: false }
 };
 const COMMON = ["type", "when", "chance", "label", "variant"];
 
 /** modifier path: derive가 읽는 키 */
 export const MOD_PATHS = new Set([
-  "physAtk", "elemAtk", "physHit", "elemHit", "defense", "evasion", "speed", "suppAtk", "suppDef", "hpMax", "tpMax", "carry", "healDice",
+  "physAtk", "elemAtk", "physHit", "elemHit", "defense", "evasion", "speed", "suppAtk", "suppDef", "hpMax", "tpMax", "carry", "healDice", "guardCount",
   ...ABILITIES.map((k) => `abilities.${k}`), ...RESISTS.map((k) => `resist.${k}`)
 ]);
 const MOD_PREFIX = ["checks."];
@@ -97,6 +100,9 @@ export function checkEffects(list, where, errors = []) {
       checkExpr(m.value, `${at}.mods.value`, errors);
     }
     if (e.type === "trigger" && !TRIGGER_ON.includes(e.on)) errors.push(`${at}: 모르는 trigger.on \`${e.on}\``);
+    if (e.type === "guard" && !["half", "cover", "defense"].includes(e.mode)) errors.push(`${at}: guard.mode는 half/cover/defense`);
+    if ((e.type === "guard" || e.type === "aura") && e.scope && !["front", "back", "all", "target"].includes(e.scope)) errors.push(`${at}: scope는 front/back/all/target`);
+    if (e.type === "aura" && !MOD_PATHS.has(e.path)) errors.push(`${at}: 모르는 aura path \`${e.path}\``);
     if (e.type === "actionTiming" && !["first", "last"].includes(e.value)) errors.push(`${at}: actionTiming.value는 first/last`);
     if (e.type === "counter" || e.type === "chase") checkEffects([{ type: "attack", ...e.attack }], `${at}.attack`, errors);
     for (const k of NESTED) if (Array.isArray(e[k])) checkEffects(e[k], `${at}.${k}`, errors);
@@ -124,9 +130,9 @@ export function collectHolders() {
 
 /** 단계 8에 연결할 type */
 /** trigger.on 값(03 §3) */
-export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart"];
+export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart", "escapeCheck"];
 
-export const STAGE8 = new Set(["stance", "trigger", "counter", "chase", "delayed", "token"]);
+export const STAGE8 = new Set(["stance", "trigger", "counter", "chase", "delayed", "token", "guard", "aura", "provoke"]);
 const usesStage8 = (list) => (list ?? []).some((e) => STAGE8.has(e.type) || NESTED.some((k) => usesStage8(e[k])));
 
 export function checkAll() {

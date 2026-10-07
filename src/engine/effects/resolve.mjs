@@ -14,7 +14,7 @@ import { sumAttackBonuses } from "./passives.mjs";
 import { activationRoll } from "./usage.mjs";
 
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
-export const DEFERRED_TYPES = ["stance", "delayed", "counter", "chase", "trigger", "token"];
+export const DEFERRED_TYPES = ["stance", "delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
 export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus"];
 

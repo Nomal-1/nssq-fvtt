@@ -74,8 +74,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 『방어』의 스킬을 사용했을 때의 효과 발동 횟수에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "guardCount",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -118,8 +124,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 적의 물리 공격 롤에 의해 아군 전위가 받는 대미지를 반감한다. 대기 상태는 누적 (SL)회의 대미지 반감을 하거나, 턴 종료로 해제된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "half",
+       "scope": "front",
+       "when": {
+        "attackKind": "physical"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -162,8 +184,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 적의 물리 공격 롤에 의해 아군 후위가 받는 대미지를 반감한다. 대기 상태는 누적 (SL)회의 대미지 반감을 하거나, 턴 종료로 해제된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "half",
+       "scope": "back",
+       "when": {
+        "attackKind": "physical"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -206,8 +244,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 대상이 어떠한 공격 롤의 대상이 되었을 때, 자신이 그 공격 롤을 대신 받는다. 대기 상태는 누적 (SL)회의 대미지 대신 받기를 하거나, 턴 종료로 해제된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "cover",
+       "scope": "target"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -254,8 +305,48 @@
    ],
    "sl": 1,
    "description": "<p>이 스킬을 사용할 때는 아래 중 하나의 명칭으로 선언한다. 《파이어 가드》《프리즈 가드》《쇼크 가드》 자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 아군 전체의 〈염〉〈빙〉〈뇌〉 중 하나의 【내성】을 (+SL) 한다. 대기 상태는 턴 종료로 해제된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "variant": 0,
+     "effects": [
+      {
+       "type": "aura",
+       "path": "resist.fire",
+       "value": "SL",
+       "scope": "all"
+      }
+     ]
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "variant": 1,
+     "effects": [
+      {
+       "type": "aura",
+       "path": "resist.ice",
+       "value": "SL",
+       "scope": "all"
+      }
+     ]
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "variant": 2,
+     "effects": [
+      {
+       "type": "aura",
+       "path": "resist.volt",
+       "value": "SL",
+       "scope": "all"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -298,8 +389,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉 속성의 물리 공격 롤을 한다. 이때, 대미지 다이스 +3개를 얻는다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [스턴]을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "strike"
+     ],
+     "diceMod": 3,
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "stun",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -342,8 +452,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉 속성의 물리 공격 롤을 한다. 이때, 대미지 다이스 +3개를 얻는다. 명중하면, 대상은 (공격자의 【억제 공격】+(7+SL))을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [스턴]을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "strike"
+     ],
+     "diceMod": 3,
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "stun",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -386,8 +515,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 대상의 방어력을 스킬 사용자의 것과 같은 값으로 한다. 대기 상태는 누적 (SL)회의 대미지 감소를 하거나, 턴 종료로 해제된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "defense",
+       "scope": "target"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -430,8 +572,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 대기 상태 중, 적의 물리 공격 롤에 의해 아군 전원이 받는 대미지를 반감한다. 대기 상태는 누적 (SL)회의 대미지 반감을 하거나, 턴 종료로 해제된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "half",
+       "scope": "all",
+       "when": {
+        "attackKind": "physical"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -467,8 +625,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안, 단일을 대상으로 한 적의 공격 롤의 대상을 누적 (SL+1)회까지 강제로 자신으로 변경한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "provoke",
+     "count": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -592,8 +755,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>『억제 방어 상승: (SL)』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "suppDefUp",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -722,8 +892,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>『내성 부여: 염빙뇌』의 강화 효과를 부여한다. 3턴 지속된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "resistGrant",
+     "param": "fire,ice,volt",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -759,8 +936,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>도주 판정 때 사용을 선언한다. 도주 판정의 달성값에 +3을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "escapeCheck",
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "checks.escape",
+       "value": 3
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -796,8 +985,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아이템 소지 수에 +4를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "carry",
+     "value": 4
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -833,8 +1028,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【HP】에 +(SL×2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "hpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -870,8 +1071,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【TP】에 +(SL×2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -907,8 +1114,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【방어】에 +(SL)을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "defense",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
@@ -944,8 +1157,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 방어】에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppDef",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔라딘"
