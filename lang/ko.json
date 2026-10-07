@@ -1079,6 +1079,7 @@
       "inflictResisted": "[{label}] — 막았다",
       "contestRoll": "억제 대결: 공격 {atk} / 방어 {def}",
       "fixedRoll": "억제 방어 {def} (목표값 {target})",
+      "forcedRoll": "반드시 걸림 — 심도: 억제 공격 {atk}",
       "buffLine": "『{label}』 {turns}턴",
       "cure": {
         "all": "상태 이상·봉인 해제",

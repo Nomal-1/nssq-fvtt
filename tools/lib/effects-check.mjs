@@ -84,7 +84,7 @@ export function checkEffects(list, where, errors = []) {
     if (e.type === "kill") checkExpr(e.check?.target, `${at}.check.target`, errors);
     if (e.type === "inflict") {
       if (!CONDITIONS[e.condition]) errors.push(`${at}: 모르는 상태 이상 \`${e.condition}\``);
-      if (e.check && !["fixed", "contest"].includes(e.check.type)) errors.push(`${at}: check.type은 fixed/contest`);
+      if (e.check && !["fixed", "contest", "forced"].includes(e.check.type)) errors.push(`${at}: check.type은 fixed/contest/forced`);
       if (e.check?.type === "fixed") { checkExpr(e.check.target, `${at}.check.target`, errors); checkExpr(e.check.defMod, `${at}.check.defMod`, errors); }
     }
     if (e.type === "cure") {
@@ -110,7 +110,7 @@ export function checkEffects(list, where, errors = []) {
     if (e.type === "flag" && !FLAGS.includes(e.flag)) errors.push(`${at}: 모르는 flag \`${e.flag}\``);
     if (e.type === "trigger" && !TRIGGER_ON.includes(e.on)) errors.push(`${at}: 모르는 trigger.on \`${e.on}\``);
     if (e.type === "guard" && !["half", "cover", "defense", "redirect"].includes(e.mode)) errors.push(`${at}: guard.mode는 half/cover/defense/redirect`);
-    if ((e.type === "guard" || e.type === "aura") && e.scope && !["front", "back", "all", "target"].includes(e.scope)) errors.push(`${at}: scope는 front/back/all/target`);
+    if ((e.type === "guard" || e.type === "aura") && e.scope && !["front", "back", "row", "all", "target"].includes(e.scope)) errors.push(`${at}: scope는 front/back/row/all/target`);
     if (e.type === "aura" && !MOD_PATHS.has(e.path)) errors.push(`${at}: 모르는 aura path \`${e.path}\``);
     if (e.type === "actionTiming" && !["first", "last"].includes(e.value)) errors.push(`${at}: actionTiming.value는 first/last`);
     if (e.type === "counter" || e.type === "chase") checkEffects([{ type: "attack", ...e.attack }], `${at}.attack`, errors);

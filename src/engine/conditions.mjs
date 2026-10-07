@@ -103,5 +103,13 @@ export function contestInflict({ atkDice, suppAtk = 0, defDice, suppDef = 0 }) {
   return { atk, def, resisted: !won, depth: won ? atk.total : null };
 }
 
+/**
+ * 반드시 거는 부여(저항 없음): 심도만 【억제 공격】 판정 달성값으로(07 #61, 《임팩트 애로》 자신 [마비])
+ */
+export function forcedInflict({ atkDice, suppAtk = 0 }) {
+  const atk = evaluateCheck({ dice: atkDice, modifier: suppAtk });
+  return { atk, resisted: false, depth: atk.total };
+}
+
 /** 개막 1D6 판정(혼란·마비·공포): 1~3이면 실패 */
 export const openingRollFails = (die) => die >= 1 && die <= 3;

@@ -339,4 +339,9 @@ describe("단계 7 스키마 보강", () => {
     const b = await resolveEffects({ effects, user: { ...user, useBonuses }, targets: [user], category: "무용", rollDice: dice() });
     expect(b.results.get("u").heal.hp).toBe(0);
   });
+
+  it("inflict forced: 반드시 걸고 심도는 억제 공격 달성값(《임팩트 애로》)", async () => {
+    const r = await resolveEffects({ effects: [{ type: "inflict", condition: "paralyze", check: { type: "forced" }, toSelf: true }], user, targets: [foe], rollDice: dice(1, 1) });
+    expect(r.results.get("u").inflicts[0]).toEqual(expect.objectContaining({ id: "paralyze", resisted: false, depth: 6 }));
+  });
 });

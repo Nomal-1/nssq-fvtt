@@ -29,8 +29,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>개막 페이즈에 선언하며, 타이밍 『개막』 스킬과 함께 쓸 수 있다. 자신과 같은 열의 아군은 턴 종료까지 〈참〉〈괴〉〈돌〉 내성 +1.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "openingPhase",
+     "effects": [
+      {
+       "type": "target",
+       "side": "ally",
+       "scope": "row"
+      },
+      {
+       "type": "buff",
+       "id": "resistUp",
+       "value": 0,
+       "turns": 1,
+       "param": "slash,strike,pierce"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -68,8 +87,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>창 사용 시 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "창"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -107,8 +137,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 『방어』 스킬의 효과 발동 횟수 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "guardCount",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -151,8 +187,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -195,8 +237,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈돌〉+〈뇌〉 속성 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "pierce",
+      "volt"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -239,8 +291,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL)개. 자신이 후열이면 추가로 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL",
+     "bonuses": [
+      {
+       "when": {
+        "selfRow": "back"
+       },
+       "diceMod": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -282,7 +348,8 @@
    "sl": 1,
    "description": "<p>전투 중 원하는 타이밍에 자신의 배치를 전위↔후위로 바꿀 수 있으며, 이때 동료 1명과 자리를 맞바꿀 수도 있다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "전투 중 아무 때나 자신의 전위↔후위 교대(동료 1명과 맞바꾸기 가능): GM이 배치 변경으로 처리"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -324,7 +391,8 @@
    "sl": 1,
    "description": "<p>《디바이드 가드》 대기 상태 중 원하는 타이밍에 그 대상을 바꿀 수 있다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "《디바이드 가드》 대기 중 아무 때나 대상 변경: GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -367,8 +435,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 대상이 공격 롤의 대상이 되면 자신이 대신 받는다. 대신 받은 대미지가 누계 (SL)회에 이르거나 턴 종료 시 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "cover",
+       "scope": "target"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -415,8 +496,48 @@
    ],
    "sl": 1,
    "description": "<p>《파이어 가드》《프리즈 가드》《쇼크 가드》 중 하나로 선언. 사용 시 대기 상태, 대기 중 아군 전체의 해당 〈염〉/〈빙〉/〈뇌〉 【내성】 +(SL). 턴 종료 시 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "variant": 0,
+     "effects": [
+      {
+       "type": "aura",
+       "path": "resist.fire",
+       "value": "SL",
+       "scope": "all"
+      }
+     ]
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "variant": 1,
+     "effects": [
+      {
+       "type": "aura",
+       "path": "resist.ice",
+       "value": "SL",
+       "scope": "all"
+      }
+     ]
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "variant": 2,
+     "effects": [
+      {
+       "type": "aura",
+       "path": "resist.volt",
+       "value": "SL",
+       "scope": "all"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -459,8 +580,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 자신이 있는 열의 아군이 적의 물리 공격 롤로 받는 대미지 절반. 절반 처리가 누계 (SL)회에 이르거나 턴 종료 시 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "half",
+       "scope": "row",
+       "when": {
+        "attackKind": "physical"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -496,8 +633,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안 적의 단일 대상 공격 롤의 대상을 누계 (SL+1)회까지 강제로 자신으로 바꾼다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "provoke",
+     "count": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -665,8 +807,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>도주 판정 시 선언, 도주 판정 달성값 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "escapeCheck",
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "checks.escape",
+       "value": 3
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -712,7 +866,8 @@
    "sl": 1,
    "description": "<p>같은 열 아군이 공격 롤을 받을 때 《패링》《머티리얼 패링》로 대신 능동 회피 판정을 할 수 있다. 그 아군이 아직 능동 회피 판정을 하지 않았을 때만 가능.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "같은 열 아군이 공격받을 때 《패링》·《머티리얼 패링》으로 대신 능동 회피(그 아군이 아직 안 했을 때): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -748,8 +903,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아이템 소지 수 +4.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "carry",
+     "value": 4
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -871,8 +1032,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【방어】 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "defense",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -908,8 +1075,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 방어】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppDef",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"

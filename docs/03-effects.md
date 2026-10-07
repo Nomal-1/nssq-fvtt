@@ -57,7 +57,7 @@
 |---|---|---|
 | `attack` | `kind`(physical/elemental), `element`(생략 시 무기 기본 속성), `addElement`(무기 속성에 더함, 「〈염〉 속성을 부가한」), `failAtOrBelow`(명중 눈 합이 n 이하면 절대 실패), `times`, `hitMod`, `diceMod`, `atkMod`, `atkMultiplier`, `random`, `uniqueTarget`, `onHit[]`, `bonuses[{when, hitMod?, diceMod?, atkMod?, element?}]`, `halfDamage` | 공격 롤 1회분(또는 times회) |
 | `heal` | `mode`(roll/fixed/full/percent), `bonus`/`amount`, `resource`(hp/tp), `revive` | 회복 롤 또는 고정 회복. \[전투 불능\] 대상은 `revive: true`인 효과만 회복(부활). 부활 효과가 있으면 쓰러진 아군도 대상으로 고를 수 있다. 『회복』 분류 스킬의 회복 롤에는 사용자의 `healDice` 보정이 더해진다 |
-| `inflict` | `condition`, `check: {type: fixed, target} | {type: contest}` | 상태 이상·봉인 부여 |
+| `inflict` | `condition`, `check: {type: fixed, target} | {type: contest} | {type: forced}` | 상태 이상·봉인 부여. forced: 저항 없이 반드시 걸고 심도만 사용자의 【억제 공격】 판정 달성값(07 #61) |
 | `drain` | `resource`(hp/tp), `mode`(half: 준 대미지 절반 / sixes: 대미지 다이스의 6 개수) | onHit 안에서: 그 명중으로 자신 회복(《음양검: 영흡명참》) |
 | `recoil` | `mode`(ones) | `toSelf`와 함께: 이 행동에서 굴린 대미지 다이스의 '1' 개수만큼 자신이 대미지(《싱글 스러스트》) |
 | `kill` | `check: {type: fixed, target, defMod?}` | 즉사: 억제 방어 롤 실패면 【HP】 0(카드에 \[즉사\]) |
@@ -68,7 +68,7 @@
 | `stance` | `effects[]`, `until`(endOfTurn/count), `count` | 대기 상태가 되며 대기 중 효과 부여 |
 | `trigger` | `on`, `effects[]`, `limit`(perAction/perTurn/perBattle) | 반응형. `on`: crit / beforeKO / attacked / allyAttacked / rowAttacked / endPhase / openingPhase / battleStart / selfHit(자신의 공격이 명중했을 때 선언) / mainPhaseStart(메인 페이즈 개시 시 선언) / escapeCheck(도주 판정 때 선언) / hpLost(자신의 HP가 줄었을 때) / enemyKO(자신의 공격으로 적을 쓰러뜨렸을 때) / buffGained(강화 효과를 얻었을 때) / battleWon(전투에 승리했을 때) |
 | `counter` / `chase` | `when`, `attack{…}`, `count`, `on`, `onlyIfEvaded`(반격만) | 반격·추격(01 §3.11의 연쇄 금지 규칙은 엔진이 강제). `attack.copyElement`: 계기가 된 공격의 속성으로 |
-| `guard` | `mode`(half: 받는 대미지 반감 / cover: 대신 받기 / defense: 대상의 【방어】를 사용자 값으로 / redirect: 자신이 받는 공격을 대상에게 넘김), `scope`(front/back/all/target), `when` | 방어 스킬(대기 상태 안). 대기 상태의 `count`가 「누적 n회」, 《방패 마스터리》는 modifier `guardCount`로 그 횟수 + |
+| `guard` | `mode`(half: 받는 대미지 반감 / cover: 대신 받기 / defense: 대상의 【방어】를 사용자 값으로 / redirect: 자신이 받는 공격을 대상에게 넘김), `scope`(front/back/row: 자신이 있는 열/all/target), `when` | 방어 스킬(대기 상태 안). 대기 상태의 `count`가 「누적 n회」, 《방패 마스터리》는 modifier `guardCount`로 그 횟수 + |
 | `aura` | `path`, `value`, `scope` | 대기 상태 동안 아군에게 주는 보정(《삼색 가드》 내성 +SL 등) |
 | `provoke` | `count` | 그 턴 동안 단일 대상 공격을 누적 count회까지 자신으로(《도발》) |
 | `delayed` | `at`(endPhase/nextTurnLate), `turns`, `effects[]` | 지연 공격. 스킬마다 발동 시점이 달라 `at`으로 지정 |

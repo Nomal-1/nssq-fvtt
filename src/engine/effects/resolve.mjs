@@ -7,7 +7,7 @@
  */
 import { evaluate } from "../expr.mjs";
 import { fpFromHitChecks, resolveAttack } from "../combat.mjs";
-import { contestInflict, resistCheck } from "../conditions.mjs";
+import { contestInflict, forcedInflict, resistCheck } from "../conditions.mjs";
 import { canonicalBuff } from "../buffs.mjs";
 import { whenMatches } from "./when.mjs";
 import { sumAttackBonuses } from "./passives.mjs";
@@ -176,7 +176,10 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       case "inflict": {
         const ck = e.check ?? null;
         if (!ck) { r.inflicts.push({ id: e.condition, depth: evaluate(e.depth ?? 0, vars(t)), resisted: false }); return; }
-        if (ck.type === "contest") {
+        if (ck.type === "forced") {
+          const c = forcedInflict({ atkDice: await rollDice(2), suppAtk: user.suppAtk ?? 0 });
+          r.inflicts.push({ id: e.condition, depth: c.depth, resisted: false, forced: { atk: c.atk } });
+        } else if (ck.type === "contest") {
           const c = contestInflict({ atkDice: await rollDice(2), suppAtk: user.suppAtk ?? 0, defDice: await rollDice(2), suppDef: t.suppDef ?? 0 });
           r.inflicts.push({ id: e.condition, depth: c.depth, resisted: c.resisted, contest: { atk: c.atk, def: c.def } });
         } else {
