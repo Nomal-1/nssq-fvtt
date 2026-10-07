@@ -1047,13 +1047,17 @@
    "description": "<p>후발 행동으로 물리 공격 롤을 한다. 이때, 대미지 다이스 +((SL+1)×4)개를 얻는다.</p>",
    "effects": [
     {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
      "type": "attack",
      "kind": "physical",
      "diceMod": "(SL+1)*4"
     }
    ],
    "review": "partial",
-   "effectsNote": "후발 행동으로 공격: GM이 행동 순서를 그 턴 마지막으로"
+   "effectsNote": "후발 행동: GM이 그 턴 행동 순서를 마지막으로(메인 페이즈 중 선언은 단계 8)"
   },
   "_meta": {
    "className": "소드맨"

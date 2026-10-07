@@ -185,9 +185,9 @@ function skillFromRow(cells, { classKey, className, where }) {
   const { maxSL, unique } = parseMaxSL(maxSLCell, w);
   if (nm[1] === "★" && !unique) report.add("열거형 위반", `${w}: ★ 이름인데 MaxSL이 \`${maxSLCell}\``);
 
-  // 선언 명칭: "아래 중 하나의 명칭으로 선언한다. 《A》《B》《C》"
+  // 선언 명칭: "아래 중 하나의 명칭으로 선언한다. 《A》《B》《C》" 또는 "《A》《B》《C》 중 하나로 선언"
   const variants = [];
-  const vm = desc.match(/명칭으로 선언한다\.?\s*((?:《[^》]+》\s*)+)/);
+  const vm = desc.match(/명칭으로 선언한다\.?\s*((?:《[^》]+》\s*)+)/) ?? desc.match(/((?:《[^》]+》\s*){2,})중 하나(?:의 명칭)?로 선언/);
   if (vm) for (const v of vm[1].matchAll(/《([^》]+)》/g)) variants.push(v[1]);
   for (const v of variants) if (!variantSources.has(v)) report.add("glossary 불일치(용어 추가 필요)", `${w}: 선언 명칭 \`${v}\``);
 
