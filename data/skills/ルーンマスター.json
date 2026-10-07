@@ -682,8 +682,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【TEC】로 능동 회피. 달성값 +(SL-1).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "activeEvade",
+     "ability": "tec",
+     "bonus": "SL-1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"

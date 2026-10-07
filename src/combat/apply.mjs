@@ -128,6 +128,8 @@ export async function requestApply(messageId, index, undo = false) {
 export async function autoApplyCard(message) {
   if (autoApplyMode() !== "auto" || !isActiveGM()) return;
   const card = message.getFlag("nssq", "attack");
+  // 수동 반응을 기다리는 대상이 있으면 미룬다(반응·[반응 안 함] 뒤 reaction.mjs가 다시 부른다)
+  if ((card?.targets ?? []).some((t) => t?.reaction?.state === "pending")) return;
   for (let i = 0; i < (card?.targets?.length ?? 0); i++) if (card.targets[i].hit) await gmApply({ messageId: message.id, index: i });
 }
 

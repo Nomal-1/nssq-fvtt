@@ -587,8 +587,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤에 대해 【VIT】로 능동 회피, 달성값 +(SL-1).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "activeEvade",
+     "ability": "vit",
+     "bonus": "SL-1",
+     "vs": "physical"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"
@@ -624,8 +631,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>속성 공격 롤에 대해 【VIT】로 능동 회피, 달성값 +(SL-1).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "activeEvade",
+     "ability": "vit",
+     "bonus": "SL-1",
+     "vs": "elemental"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"

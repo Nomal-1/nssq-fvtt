@@ -496,8 +496,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【AGI】로 능동 회피를 한다. 또한, 그때의 달성값에 +(SL-1)을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "activeEvade",
+     "ability": "agi",
+     "bonus": "SL-1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"

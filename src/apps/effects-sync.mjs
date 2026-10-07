@@ -11,7 +11,7 @@ async function packEffects() {
   const map = new Map();
   const put = (it) => {
     const key = it.system?.key;
-    if (key && Array.isArray(it.system.effects) && it.system.effects.length) map.set(key, { effects: it.system.effects, review: it.system.review ?? "" });
+    if (key && Array.isArray(it.system.effects) && it.system.effects.length) map.set(key, { effects: it.system.effects, review: it.system.review ?? "", note: it.system.effectsNote ?? "" });
   };
   for (const name of ["nssq.skills", "nssq.items"]) {
     const pack = game.packs.get(name);
@@ -31,9 +31,13 @@ export async function syncEffects({ quiet = false } = {}) {
   let n = 0;
   const fix = (it) => {
     const src = map.get(it.system?.key);
-    if (!src || it.system.review === "manual" || same(it.system.effects, src.effects)) return null;
+    if (!src || it.system.review === "manual" || (same(it.system.effects, src.effects) && (it.system.effectsNote ?? "") === src.note)) return null;
     n++;
-    return { _id: it.id, "system.effects": src.effects, ...(it.system.review !== undefined ? { "system.review": src.review } : {}) };
+    return {
+      _id: it.id, "system.effects": src.effects,
+      ...(it.system.review !== undefined ? { "system.review": src.review } : {}),
+      ...(it.system.effectsNote !== undefined ? { "system.effectsNote": src.note } : {})
+    };
   };
   for (const a of game.actors) {
     const updates = a.items.map(fix).filter(Boolean);

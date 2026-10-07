@@ -893,3 +893,5 @@
 .nssq-skill-card .sk-apply { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
 .nssq-skill-card .sk-apply .apply-status { flex: 1; font-size: 0.85em; color: #555; }
 .nssq-skill-card .sk-apply button { width: auto; line-height: 1.6em; padding: 0 8px; }
+.nssq-reaction { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 3px 0; padding: 3px 6px; font-size: 0.88em; background: rgba(36, 96, 178, 0.1); border-left: 3px solid #2460b2; }
+.nssq-reaction button { width: auto; flex: 0 0 auto; line-height: 1.6em; padding: 0 8px; }

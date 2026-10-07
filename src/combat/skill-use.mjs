@@ -15,6 +15,7 @@ import { actionState, onInflicted } from "./turn-status.mjs";
 import { buffLabel, conditionName } from "./status.mjs";
 import { knowsEnemy, recordBestiary } from "./bestiary.mjs";
 import { emit, onSocket } from "../socket.mjs";
+import { decorateReactions, hasPendingReaction, pendingReaction } from "./reaction.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.SkillUse.${k}`, d) : game.i18n.localize(`NSSQ.SkillUse.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -166,12 +167,14 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
     uuid: byId.get(x.id)?.actor?.uuid ?? null, name: x.name,
     damage: x.damage, heal: x.heal, inflicts: x.inflicts, buffs: x.buffs, cures: x.cures, resource: x.resource,
     sleepBroken: x.sleepBroken,
-    hits: x.hits.map((h) => (h.skipped ? { skipped: true } : { hit: h.hit, total: h.hitCheck?.total, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist })),
-    applied: false, before: null
+    hits: x.hits.map((h) => (h.skipped ? { skipped: true } : { hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist })),
+    applied: false, before: null,
+    // 수동 반응(단계 6-C): 명중한 공격이 있고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
+    reaction: pendingReaction(byId.get(x.id)?.actor, x.hits.find((h) => h.hit)?.kind ?? "physical", x.hits.some((h) => h.hit))
   }));
   const card = {
     userUuid: actor.uuid, userName: combatant.name, kind, name: item.name, img: item.img, sl: sys.sl ?? null,
-    activation: r.activation, failed: r.failed, fpGain: r.fpGain, gm: r.gm, partial: sys.partial ?? sys.effectsNote ?? "",
+    activation: r.activation, failed: r.failed, fpGain: r.fpGain, gm: r.gm, partial: sys.effectsNote ?? "",
     unknownScope: !!spec.unknown, entries, applied: false
   };
   const message = await ChatMessage.create({
@@ -200,6 +203,8 @@ function entryLines(e, card) {
   for (const x of e.resource ?? []) if (x.chanceFailed) out.push(`<li class="miss">${esc(L("chanceFailed", { die: x.die }))}</li>`);
   return out.join("");
 }
+
+export const renderSkillCard = (card) => renderCard(card);
 
 function renderCard(card) {
   const head = `<header class="check-header"><span class="check-label"><img src="${esc(card.img)}" width="20" height="20"/> ${esc(card.name)}${card.sl ? ` <small>SL${card.sl}</small>` : ""}</span><span class="check-kind">${esc(card.userName)}</span></header>`;
@@ -282,7 +287,7 @@ export function registerSkillUse() {
   // 자동 적용 「즉시」: 카드가 생기면 GM이 적용
   Hooks.on("createChatMessage", (message) => {
     const card = message.getFlag("nssq", "skillCard");
-    if (card && !card.failed && autoApplyMode() === "auto" && isActiveGM()) applySkillCard(message.id);
+    if (card && !card.failed && autoApplyMode() === "auto" && isActiveGM() && !hasPendingReaction(card.entries)) applySkillCard(message.id);
   });
   Hooks.on("renderChatMessage", (message, html) => {
     const card = message.getFlag("nssq", "skillCard");
@@ -293,6 +298,7 @@ export function registerSkillUse() {
       const user = fromUuidSync(card.userUuid);
       if (user && !knowsEnemy(user)) el.querySelectorAll("[data-mask]").forEach((x) => { x.textContent = "?"; });
     }
+    decorateReactions(el, message, "skill");
     const status = el.querySelector(".apply-status");
     const buttons = el.querySelector(".apply-buttons");
     if (status) status.textContent = card.applied ? L("applied") : L("notApplied");

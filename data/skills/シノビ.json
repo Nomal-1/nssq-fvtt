@@ -632,8 +632,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【AGI】로 능동 회피, 달성값 +(SL-1).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "activeEvade",
+     "ability": "agi",
+     "bonus": "SL-1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"

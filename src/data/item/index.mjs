@@ -53,7 +53,9 @@ export class SkillData extends NssqItemData {
       // 에너미 스킬: 식별하면 플레이어에게 공개(끄면 실제로 쓸 때까지 ???, 07 #47)
       reveal: new BooleanField({ initial: true }),
       effects: effects(),
-      review: new StringField({ required: true, blank: true, initial: "" })
+      review: new StringField({ required: true, blank: true, initial: "" }),
+      // 효과 데이터로 다 적지 못한 처리(카드에 「GM 판단 필요」로 표시, 03 §5)
+      effectsNote: new StringField({ required: true, blank: true, initial: "" })
     };
   }
 }

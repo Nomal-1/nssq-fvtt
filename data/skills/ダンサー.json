@@ -654,8 +654,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【AGI】로 능동 회피. 달성값 +(SL-1).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "activeEvade",
+     "ability": "agi",
+     "bonus": "SL-1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"
@@ -702,8 +708,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【AGI】로 능동 회피. 달성값 +(SL-1). 회피 성공 시 통상 공격으로 반격.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "activeEvade",
+     "ability": "agi",
+     "bonus": "SL-1"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "회피 성공 시 통상 공격으로 반격(단계 8에서 자동화)"
   },
   "_meta": {
    "className": "댄서"

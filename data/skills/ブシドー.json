@@ -441,8 +441,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《청안의 자세》 상태 한정. 【AGI】로 능동 회피, 달성값 +(SL-1).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "activeEvade",
+     "ability": "agi",
+     "bonus": "SL-1"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "《청안의 자세》 상태에서만 사용 가능(GM 확인)"
   },
   "_meta": {
    "className": "무사"

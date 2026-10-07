@@ -6,6 +6,7 @@ import { inRange, resolveAttack } from "../engine/combat.mjs";
 import { autoApplyMode, requestApply } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
+import { decorateReactions, pendingReaction } from "./reaction.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/attack-card.hbs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
@@ -86,7 +87,9 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
     resist: r.resist ?? null, diceCount: r.diceCount ?? 0,
     damageDice: r.damage?.dice ?? [], critDice: r.critExtra?.dice ?? [],
     crit: !!r.crit, rawDamage: r.rawDamage ?? 0, guarded: !!r.guarded, finalDamage: r.finalDamage ?? 0,
-    applied: false, before: null, after: null
+    applied: false, before: null, after: null,
+    // 수동 반응(단계 6-C): 명중했고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
+    reaction: pendingReaction(target, "physical", r.hit)
   };
   const flags = {
     nssq: {
@@ -155,6 +158,7 @@ export function registerAttackHooks() {
         if (target && !knowsEnemy(target)) row.querySelectorAll("[data-mask=def]").forEach((x) => { x.textContent = "?"; });
       });
     }
+    decorateReactions(el, message, "attack");
     el.querySelectorAll(".attack-target").forEach((row) => {
       const i = Number(row.dataset.index);
       const t = card.targets[i];

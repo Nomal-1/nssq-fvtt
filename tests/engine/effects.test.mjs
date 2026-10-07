@@ -141,3 +141,21 @@ describe("사용 가능·발동·조건", () => {
     expect(r.fpGain).toBe(1);
   });
 });
+
+import { activeEvade, reactionEffect } from "../../src/engine/effects/reaction.mjs";
+
+describe("수동 반응(07 #51)", () => {
+  it("능동 회피: 대상 2D6+능력치 보너스+(SL−1) ≥ 공격자 달성값이면 회피(동점 회피)", () => {
+    expect(activeEvade({ dice: [4, 4], abilityBonus: 3, bonus: "SL-1", sl: 3, attack: { total: 13 } }).evaded).toBe(true);
+    expect(activeEvade({ dice: [4, 4], abilityBonus: 3, bonus: "SL-1", sl: 3, attack: { total: 14 } }).evaded).toBe(false);
+    // 공격자 절대 성공이면 회피 실패, 대상 절대 성공이면 회피
+    expect(activeEvade({ dice: [5, 5], abilityBonus: 9, attack: { total: 8, absSuccess: true } }).evaded).toBe(false);
+    expect(activeEvade({ dice: [6, 6], abilityBonus: 0, attack: { total: 20 } }).evaded).toBe(true);
+  });
+  it("반응 효과 고르기: 물리 공격엔 《패링》, 속성 공격엔 《머티리얼 패링》, 《완전 방어》는 모두", () => {
+    const parry = [{ type: "activeEvade", ability: "vit", bonus: "SL-1", vs: "physical" }];
+    expect(reactionEffect(parry, "physical")).toBeTruthy();
+    expect(reactionEffect(parry, "elemental")).toBeNull();
+    expect(reactionEffect([{ type: "nullify" }], "elemental").type).toBe("nullify");
+  });
+});

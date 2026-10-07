@@ -1039,6 +1039,15 @@
       "undo": "되돌리기",
       "applied": "적용함",
       "notApplied": "아직 적용하지 않음"
+    },
+    "Reaction": {
+      "use": "수동: 《{name}》",
+      "decline": "반응 안 함",
+      "declined": "수동 반응 안 함",
+      "waiting": "{name}의 수동 반응을 기다리는 중",
+      "evaded": "《{skill}》 능동 회피 {dice}+{mod} = {total} ≥ 명중 {vs} → 회피",
+      "notEvaded": "《{skill}》 능동 회피 {dice}+{mod} = {total} < 명중 {vs} → 회피 실패",
+      "nullified": "《{skill}》({name}): 이 공격의 대미지와 추가 효과를 모두 무효로 했다"
     }
   }
 }
