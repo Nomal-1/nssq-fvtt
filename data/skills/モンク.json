@@ -29,8 +29,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>주먹 상태로 분류 '회복' 스킬을 쓸 때 회복량 다이스 +6.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "healDice",
+     "value": 6,
+     "when": {
+      "weaponType": [
+       "주먹"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -68,8 +79,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>주먹 공격의 무기 데이터를 '주먹(주먹 마스터리)'로 변경. 그 공격의 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "주먹"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -105,8 +127,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '회복' 스킬의 회복량 다이스 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "healDice",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -147,8 +175,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>회복 롤. 회복량 다이스 +(SL+3).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "roll",
+     "bonus": "SL+3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -189,8 +223,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>회복 롤. 회복량 다이스 +(SL+3).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "roll",
+     "bonus": "SL+3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -287,8 +327,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>회복 롤. 회복량 다이스 +((SL+1)×3).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "roll",
+     "bonus": "(SL+1)*3"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -333,8 +379,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【HP】 완전 회복.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "full"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -423,8 +474,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상의 봉인을 최대 (SL)개 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "cure",
+     "kind": "bind",
+     "count": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -465,8 +522,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>[전투 불능] 해제, 대상의 【HP】 현재값은 1.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "fixed",
+     "amount": 1,
+     "revive": true,
+     "when": {
+      "targetKO": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -509,8 +576,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [마비].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "paralyze",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -553,8 +635,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉+〈뇌〉 속성 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "strike",
+      "volt"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -597,8 +689,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉+〈염〉 속성 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "strike",
+      "fire"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -641,8 +743,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>무속성 물리 공격 롤. 【물리 공격】에 +(SL)한 뒤 그 값을 절반으로 취급.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "none"
+     ],
+     "atkMod": "SL",
+     "atkMultiplier": 0.5
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -685,8 +797,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈참〉+〈돌〉 속성 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "slash",
+      "pierce"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -729,8 +851,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉+〈빙〉 속성 물리 공격 롤, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "strike",
+      "ice"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -773,8 +905,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [저주].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "curse",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -817,8 +964,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 자신이 물리 공격을 받으면 공격자에게 물리 공격으로 반격(대미지 다이스 -(4-SL)개). 반격 누적 3회 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "effects": [
+      {
+       "type": "counter",
+       "on": "attacked",
+       "when": {
+        "attackKind": "physical"
+       },
+       "attack": {
+        "kind": "physical",
+        "diceMod": "-(4-SL)"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -861,8 +1032,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 자신이 속성 공격을 받으면 공격자에게 물리 공격으로 반격(대미지 다이스 -(4-SL)개). 반격 누적 3회 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": 3,
+     "effects": [
+      {
+       "type": "counter",
+       "on": "attacked",
+       "when": {
+        "attackKind": "elemental"
+       },
+       "attack": {
+        "kind": "physical",
+        "diceMod": "-(4-SL)"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -909,8 +1104,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉+〈염〉 속성 물리 공격 롤 3회. 매 회 대상은 적 중 무작위 선택. 대미지 다이스 -(4-SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "element": [
+      "strike",
+      "fire"
+     ],
+     "times": 3,
+     "random": true,
+     "diceMod": "-(4-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -946,8 +1153,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 방어】 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppDef",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
@@ -989,7 +1202,8 @@
    "sl": 1,
    "description": "<p>약 5분간 용암·바늘산 등의 위를 대미지 없이 걸을 수 있다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "탐색: 약 5분간 용암·바늘산 위를 대미지 없이(단계 9·GM)"
   },
   "_meta": {
    "className": "몽크"
@@ -1154,8 +1368,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 방어】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppDef",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "몽크"
