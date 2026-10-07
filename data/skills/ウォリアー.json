@@ -29,8 +29,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤의 대미지 다이스 항상 +2개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "diceMod": 2,
+     "when": {
+      "attackKind": "physical"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -118,8 +126,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>망치 사용 시 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "망치"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -163,8 +182,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -208,8 +233,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤 3회, 매 공격마다 대상은 적 중 무작위(같은 에너미는 1회까지만). 대미지 다이스 −(3−SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 3,
+     "random": true,
+     "uniqueTarget": true,
+     "diceMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -253,8 +287,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>적 열에 물리 공격 롤, 대미지 다이스 −(3−SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -302,8 +342,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤, 대미지 다이스 +(SL)개. 대상이 어떤 봉인이든 받고 있으면 추가로 대미지 다이스 +(SL×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL",
+     "bonuses": [
+      {
+       "when": {
+        "targetHasBind": true
+       },
+       "diceMod": "SL*2"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -351,8 +405,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤 3회, 매 공격마다 대상은 적 중 무작위. 대미지 다이스 −(4−SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 3,
+     "random": true,
+     "diceMod": "-(4-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -396,8 +458,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [혼란].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "confuse",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -441,8 +518,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 명중 시 대상은 목표값 (공격자 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 [팔] 봉인.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindArm",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -486,8 +578,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈빙〉 속성을 더한 물리 공격 롤, 대미지 다이스 +((SL+1)×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "addElement": [
+      "ice"
+     ],
+     "diceMod": "(SL+1)*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -531,8 +632,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤 9회. 이 스킬의 명중 판정은 주사위 눈 7 이하가 절대 실패. 명중 판정 달성값 −5, 대미지 다이스 −(4−SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 9,
+     "hitMod": -5,
+     "diceMod": "-(4-SL)",
+     "failAtOrBelow": 7
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -573,8 +683,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>크리티컬 히트 시 공격 대상에게 [스턴].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "crit",
+     "effects": [
+      {
+       "type": "inflict",
+       "condition": "stun"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -620,7 +741,8 @@
    "sl": 1,
    "description": "<p>대상이 『적 단일』인 공격에서 크리티컬 히트 시, 대상과 같은 열의 모든 적에게도 같은 공격을 할 수 있다. 추가 TP 소비 없음.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "적 단일 공격이 크리티컬이면 대상과 같은 열의 모든 적에게도 같은 공격(TP 추가 없음): GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "워리어"
@@ -656,8 +778,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>약화 효과 『물리 공격 저하: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "physAtkDown",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -693,8 +822,21 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신에게 강화 효과 『물리 공격 상승: (SL+1)』과 약화 효과 『물리 방어 저하: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "physAtkUp",
+     "value": "SL+1",
+     "turns": 3
+    },
+    {
+     "type": "debuff",
+     "id": "defenseDown",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -735,8 +877,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신에게 상태 이상이 걸리는 순간 선언, 그 상태 이상을 무효화.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "conditionGained",
+     "when": {
+      "conditionKind": "ailment"
+     },
+     "effects": [
+      {
+       "type": "cure",
+       "kind": "ailment",
+       "count": 1
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -777,8 +934,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신에게 [팔] 봉인이 걸리는 순간 선언, 그 [팔] 봉인을 무효화.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "conditionGained",
+     "when": {
+      "condition": "bindArm"
+     },
+     "effects": [
+      {
+       "type": "cure",
+       "conditions": [
+        "bindArm"
+       ]
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -814,8 +987,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아이템 소지 수 +4.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "carry",
+     "value": 4
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"
@@ -980,8 +1159,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【방어】 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "defense",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"

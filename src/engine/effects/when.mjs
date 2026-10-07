@@ -15,6 +15,9 @@ const CHECKS = {
   dualWield: (v, c) => !!c.self?.dualWield === !!v,
   targetHasSkill: (v, c) => (c.target?.skills ?? []).includes(v),
   targetKO: (v, c) => !!c.target?.ko === !!v,
+  // 트리거 conditionGained: 막 걸리려는 상태 이상·봉인(c.condition = id)
+  condition: (v, c) => arr(v).includes(c.condition),
+  conditionKind: (v, c) => CONDITIONS[c.condition]?.kind === v,
   // 대상의 HP 잔량이 최대치의 절반 미만(공격 전 값, 《디 엔드》)
   targetHpBelowHalf: (v, c) => ((c.target?.hp ?? 0) * 2 < (c.target?.hpMax ?? 0)) === !!v,
   // 대상이 봉인 중
