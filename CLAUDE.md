@@ -42,6 +42,7 @@ npm run build:packs      # data/*.json → packs/ (LevelDB 컴펜디움)
 npm run link             # .env의 FOUNDRY_DATA/Data/systems/nssq 로 심볼릭 링크
 npm run package          # dist/nssq.zip + dist/system.json (릴리스용)
 node tools/dev/foundry-e2e.mjs eval gm -e "return game.system.version" --shot build/a.png  # 테스트 월드 접속(NSSQ_FOUNDRY_URL·USER·PASSWORD·PLAYER·PLAYER_PASSWORD, 비밀번호 출력·커밋 금지)
+node tools/dev/foundry-e2e.mjs update   # 서버 시스템을 최신 릴리스로 올리고 nssqtest 다시 켜기(NSSQ_FOUNDRY_ADMIN_PASSWORD)
 ```
 
 ## 작업 방식
