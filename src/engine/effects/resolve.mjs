@@ -71,7 +71,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     for (const e of list ?? []) {
       if (!e?.type || PASSIVE_TYPES.includes(e.type)) continue;
       if (DEFERRED_TYPES.includes(e.type)) { out.deferred.push(e); out.gm.push(e.type); continue; }
-      for (const t of tgt) {
+      // toSelf: 대상과 관계없이 사용자 자신에게 한 번(《임팩트 애로》 사용 후 자신 [마비])
+      for (const t of e.toSelf ? [user] : tgt) {
         if (!whenMatches(e.when, { ...ctx, self: user, target: t })) continue;
         // 확률 발동(「1D6 ≤ SL이면」 등)
         if (e.chance) {
@@ -111,7 +112,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
       target: { evasion: t.evasion, defense: t.defense, resist, guarding: t.guarding },
       kind, hitMod, diceMod,
-      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
+      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, failAtOrBelow: Number(e.failAtOrBelow ?? 0) || 0, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
       rollDice
     });
     hitChecks.push(result);

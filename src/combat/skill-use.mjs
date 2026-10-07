@@ -37,6 +37,7 @@ export function targetSpec(text = "", effects = null) {
   if (/자신/.test(t) && !/아군|적/.test(t)) return { side: "self", scope: "single" };
   const side = /아군/.test(t) ? "ally" : "enemy";
   if (/전체/.test(t)) return { side, scope: "all" };
+  if (/관통/.test(t)) return { side, scope: "pierce" };
   if (/열/.test(t)) return { side, scope: "row" };
   if (/특수|무작위/.test(t)) return { side, scope: "random" };
   return { side, scope: "single", unknown: !/단일|단체|1체/.test(t) };
@@ -76,6 +77,9 @@ export function unitProfile(actor, combatant) {
     weaponType: s.equipment?.weapon?.weaponType ?? null,
     shield: !!s.equipment?.shield,
     states: (actor.getFlag("nssq", "states") ?? []).map((x) => x.id),
+    // 수식용: 걸린 봉인·상태 이상 수(《헤븐즈 샷》 @target.bindCount)
+    bindCount: (s.conditions ?? []).filter((c) => CONDITIONS[c.id]?.kind === "bind").length,
+    ailmentCount: (s.conditions ?? []).filter((c) => CONDITIONS[c.id]?.kind === "ailment").length,
     skills: actor.items.filter((i) => i.type === "skill").map((i) => i.name),
     noAction: actionState(combatant).noAction,
     overheat: Number(actor.getFlag("nssq", "overheat") ?? 0)
@@ -148,6 +152,13 @@ export async function pickTarget(combat, combatant, kind, id, picked, spec) {
   if (spec.scope === "row") {
     const row = picked.actor.system.row ?? "front";
     targets = candidates(combat, combatant, spec, "-", { allowKO: revives(combatant.actor.items.get(id)) }).filter((c) => (c.actor.system.row ?? "front") === row);
+  } else if (spec.scope === "pierce") {
+    // 「관통」: 고른 대상 + 다른 열에서 순서가 가장 가까운 1체(07 #60)
+    const row = picked.actor.system.row ?? "front";
+    const order = picked.actor.system.order ?? 0;
+    const other = candidates(combat, combatant, spec, "-").filter((c) => (c.actor.system.row ?? "front") !== row)
+      .sort((a, b) => Math.abs((a.actor.system.order ?? 0) - order) - Math.abs((b.actor.system.order ?? 0) - order))[0];
+    if (other) targets.push(other);
   }
   return executeAction(combat, combatant, kind, id, targets, { variant: spec.variant ?? null });
 }

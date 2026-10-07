@@ -12,7 +12,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 
 /** 엔진이 받는 type과 필드(필수: true) */
 export const TYPES = {
-  attack: { kind: false, element: false, addElement: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false },
+  attack: { kind: false, element: false, addElement: false, failAtOrBelow: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false },
   heal: { mode: false, bonus: false, amount: false, resource: false, revive: false },
   inflict: { condition: true, check: false, depth: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
@@ -43,7 +43,7 @@ export const TYPES = {
   aura: { path: true, value: true, scope: false },
   provoke: { count: false }
 };
-const COMMON = ["type", "when", "chance", "label", "variant"];
+const COMMON = ["type", "when", "chance", "label", "variant", "toSelf"];
 
 /** modifier path: derive가 읽는 키 */
 export const MOD_PATHS = new Set([

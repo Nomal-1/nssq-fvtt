@@ -311,4 +311,17 @@ describe("단계 7 스키마 보강", () => {
     const c = await resolveEffects({ effects: [{ type: "attack", kind: "physical", bonuses: [{ when: { targetHasAilment: true }, element: ["none"], atkMod: 2 }] }], user, targets: [poisoned], rollDice: dice(5, 5, ...Array(8).fill(2)) });
     expect(c.results.get("e").hits[0]).toEqual(expect.objectContaining({ elements: ["none"], diceCount: 8 }));
   });
+
+  it("toSelf·failAtOrBelow·targetHasBind", async () => {
+    const two = [foe, { ...foe, id: "f" }];
+    const r = await resolveEffects({ effects: [{ type: "inflict", condition: "paralyze", toSelf: true }], user, targets: two, rollDice: dice() });
+    expect(r.results.get("u").inflicts).toHaveLength(1);
+    expect(r.results.get("e")).toBeUndefined();
+    // 눈 합 7 → 명중 달성값이 충분해도 절대 실패
+    const m = await resolveEffects({ effects: [{ type: "attack", kind: "physical", hitMod: 20, failAtOrBelow: 7 }], user, targets: [foe], rollDice: dice(3, 4) });
+    expect(m.results.get("e").hits[0].hit).toBe(false);
+    expect(whenMatches({ targetHasBind: true }, { target: { conditions: [{ id: "bindArm" }] } })).toBe(true);
+    expect(whenMatches({ targetHasBind: true }, { target: { conditions: [{ id: "poison" }] } })).toBe(false);
+    expect(whenMatches({ targetLevelAbove: true }, { self: { level: 3 }, target: { level: 4 } })).toBe(true);
+  });
 });

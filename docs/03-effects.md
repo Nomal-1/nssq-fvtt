@@ -12,6 +12,7 @@
   - `@self.<path>`, `@target.<path>`, `@owner.<path>`(토큰의 배치자) — 파생치. 예 `@self.suppAtk`, `@target.hp.value`
   - `@roll.<name>` — 같은 효과 처리 안에서 앞서 굴린 결과
   - `@self.bonus.agi` 등 — 능력치 보너스(【AGI】B). 에너미는 0
+  - `@target.bindCount`, `@target.ailmentCount` — 걸린 봉인·상태 이상 수
 - 데이터 쪽 원문 표기 `(SL×2)`, `(R의 제곱)×100`은 변환기가 `SL*2`, `R*R*100`으로 바꾼다.
 
 ## 2. 공통 필드
@@ -22,7 +23,8 @@
   "when": { … },               // 적용 조건 (생략 시 항상)
   "chance": { "roll": "1d6", "lte": "SL" },   // 확률 발동
   "label": "…",                // 채팅 카드에 표시할 짧은 이름(선택)
-  "variant": 0                  // 선언 명칭 번호(스킬의 variants 순서). 쓸 때 고른 명칭의 효과만 적용(선택)
+  "variant": 0,                 // 선언 명칭 번호(스킬의 variants 순서). 쓸 때 고른 명칭의 효과만 적용(선택)
+  "toSelf": true                // 대상과 관계없이 사용자 자신에게 한 번(《임팩트 애로》 사용 후 자신 [마비])(선택)
 }
 ```
 
@@ -50,7 +52,7 @@
 
 | type | 필드 | 설명 |
 |---|---|---|
-| `attack` | `kind`(physical/elemental), `element`(생략 시 무기 기본 속성), `addElement`(무기 속성에 더함, 「〈염〉 속성을 부가한」), `times`, `hitMod`, `diceMod`, `atkMod`, `atkMultiplier`, `random`, `uniqueTarget`, `onHit[]`, `bonuses[{when, hitMod?, diceMod?, atkMod?, element?}]`, `halfDamage` | 공격 롤 1회분(또는 times회) |
+| `attack` | `kind`(physical/elemental), `element`(생략 시 무기 기본 속성), `addElement`(무기 속성에 더함, 「〈염〉 속성을 부가한」), `failAtOrBelow`(명중 눈 합이 n 이하면 절대 실패), `times`, `hitMod`, `diceMod`, `atkMod`, `atkMultiplier`, `random`, `uniqueTarget`, `onHit[]`, `bonuses[{when, hitMod?, diceMod?, atkMod?, element?}]`, `halfDamage` | 공격 롤 1회분(또는 times회) |
 | `heal` | `mode`(roll/fixed/full/percent), `bonus`/`amount`, `resource`(hp/tp), `revive` | 회복 롤 또는 고정 회복. \[전투 불능\] 대상은 `revive: true`인 효과만 회복(부활). 부활 효과가 있으면 쓰러진 아군도 대상으로 고를 수 있다. 『회복』 분류 스킬의 회복 롤에는 사용자의 `healDice` 보정이 더해진다 |
 | `inflict` | `condition`, `check: {type: fixed, target} | {type: contest}` | 상태 이상·봉인 부여 |
 | `drain` | `resource`(hp/tp), `mode`(half: 준 대미지 절반 / sixes: 대미지 다이스의 6 개수) | onHit 안에서: 그 명중으로 자신 회복(《음양검: 영흡명참》) |
@@ -79,7 +81,7 @@
 | `activeEvade` | `ability`(str/tec/vit/agi/luc), `bonus`, `vs`(physical/elemental, 생략 시 둘 다) | 타이밍 「수동」: 능동 회피. 대상 2D6+능력치 보너스+bonus vs 공격자 명중 달성값, 동점 회피(07 #51) |
 | `nullify` | — | 타이밍 「수동」: 그 공격의 대미지 0·추가 효과 무효(《완전 방어》), 반응한 캐릭터의 같은 편 대상 전부 |
 
-`attack.element`의 `"none"`은 무속성(내성 0). 데이터 검사: `node tools/effects-check.mjs` → `build/effects-report.md`(오류·todo/auto/partial/ok 집계·partial 목록·단계 8 대기 목록). `npm test`에도 들어 있다.
+`attack.element`의 `"none"`은 무속성(내성 0). 대상 칸 「관통」은 고른 대상 + 다른 열에서 순서가 가장 가까운 1체(07 #60). 데이터 검사: `node tools/effects-check.mjs` → `build/effects-report.md`(오류·todo/auto/partial/ok 집계·partial 목록·단계 8 대기 목록). `npm test`에도 들어 있다.
 
 ## 4. 변환 예시 (현재 데이터 기준)
 

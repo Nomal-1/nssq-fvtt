@@ -29,8 +29,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>크리티컬 히트 시 대미지 다이스: 통상 크리티컬 효과 + 추가로 +4개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "critDice": 4
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -68,8 +73,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>활 물리 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "활"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -112,8 +128,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +(SL+1)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -169,8 +191,54 @@
    ],
    "sl": 1,
    "description": "<p>사용 시 《헤드 스나이핑》《암 스나이핑》《레그 스나이핑》 중 하나로 선언. 물리 공격 롤 → 명중 시 대상은 억제 방어 롤(목표값: 공격자 【억제 공격】+(7+SL)), 실패하면 선언한 부위에 따라 [머리]/[팔]/[다리] 봉인.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindHead",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ],
+     "variant": 0
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindArm",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ],
+     "variant": 1
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "onHit": [
+      {
+       "type": "inflict",
+       "condition": "bindLeg",
+       "check": {
+        "type": "fixed",
+        "target": "@self.suppAtk + 7 + SL"
+       }
+      }
+     ],
+     "variant": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -222,8 +290,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>후발 행동으로 발동. 메인 페이즈 종료 시점에 봉인(종류 불문)을 받고 있는 적 전원에게 물리 공격. 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "enemy",
+     "scope": "all"
+    },
+    {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL",
+     "when": {
+      "targetHasBind": true
+     }
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "후발 행동(메인 페이즈 종료 시점): GM이 그 턴 마지막에 사용(메인 페이즈 중 선언은 단계 8)"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -275,8 +362,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>후발 행동으로 발동. 메인 페이즈 종료 시점에 상태 이상(종류 불문)을 받고 있는 적 전원에게 물리 공격. 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "enemy",
+     "scope": "all"
+    },
+    {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL",
+     "when": {
+      "targetHasAilment": true
+     }
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "후발 행동(메인 페이즈 종료 시점): GM이 그 턴 마지막에 사용(메인 페이즈 중 선언은 단계 8)"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -319,8 +425,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>적 전위 1체 + 후위 1체에게 물리 공격 롤. 대미지 다이스 -(3-SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -367,8 +479,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +(SL×2)개. 대미지 계산 시 대상의 『물리 방어 상승』·『내성 상승: 돌』 강화 효과 무시.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL*2"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "대상의 강화 『방어 상승』·『내성 상승: 〈돌〉』을 무시: GM이 그 만큼 대미지를 보정"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -415,8 +534,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>적 전위 1체 + 후위 1체에게 물리 공격 롤. 대미지 다이스 +(SL×3)개. 사용 후 성공 여부와 관계없이 사용자가 [마비].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "SL*3"
+    },
+    {
+     "type": "inflict",
+     "condition": "paralyze",
+     "toSelf": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -459,8 +589,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>적 1열에 물리 공격 롤. 대미지 다이스 -(3-SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -503,8 +639,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤 6회, 매회 대상은 적 전체 중 무작위. 명중 판정 눈 7 이하는 절대 실패. 명중 달성값 -5, 대미지 다이스 -(4-SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "times": 6,
+     "random": true,
+     "hitMod": -5,
+     "diceMod": "-(4-SL)",
+     "failAtOrBelow": 7
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -551,8 +697,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>물리 공격 롤. 대미지 다이스 +(대상이 받은 봉인 수×(SL+1))개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "physical",
+     "diceMod": "@target.bindCount*(SL+1)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -588,8 +740,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『크리티컬 업』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "critUp",
+     "value": 0,
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -625,8 +784,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『명중 상승: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "hitUp",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -671,8 +837,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>봉인(종류 불문)을 받은 대상에 대한 공격 롤은 항상 『크리티컬 업』 상태로 취급.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "critUp": true,
+     "when": {
+      "targetHasBind": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -718,7 +892,8 @@
    "sl": 1,
    "description": "<p>자신의 주행동으로 봉인을 걸었을 때, 장비 무기가 '사격' 분류면 그 대상에게 통상 공격으로 추격.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "자신의 주행동으로 봉인을 걸었을 때 사격 무기면 그 대상에게 통상 공격으로 추격: GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -754,8 +929,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>숨기·몰래 접근 등의 판정 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.stealth",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -792,7 +973,8 @@
    "sl": 1,
    "description": "<p>드롭 판정 달성값을 ±1 범위에서 임의 조정 가능.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "드롭 판정 달성값 ±1 조작(단계 9)"
   },
   "_meta": {
    "className": "스나이퍼"
@@ -957,8 +1139,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 공격】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppAtk",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"

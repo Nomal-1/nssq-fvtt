@@ -96,13 +96,15 @@ export const halve = (n) => Math.floor(n / 2);
  * @param {() => number} [a.rng] rollDice 대신 1개씩 굴리는 함수
  * @returns {Promise<object>}
  */
-export async function resolveAttack({ attacker, target, kind = "physical", hitMod = 0, diceMod = 0, atkMod = 0, atkMultiplier = 1, halfDamage = false, critUp = false, critDiceMod = 0, rollDice, rng }) {
+export async function resolveAttack({ attacker, target, kind = "physical", hitMod = 0, diceMod = 0, atkMod = 0, atkMultiplier = 1, halfDamage = false, critUp = false, critDiceMod = 0, failAtOrBelow = 0, rollDice, rng }) {
   const roll = rollDice ?? ((n) => Array.from({ length: n }, () => rng()));
   // 스킬의 공격력 보정: (【공격】 + atkMod) × atkMultiplier(버림). 《어설트 드라이브》 등
   const boost = (v) => Math.floor(((Number(v) || 0) + atkMod) * atkMultiplier);
   if (atkMod || atkMultiplier !== 1) attacker = { ...attacker, physAtk: kind === "physical" ? boost(attacker.physAtk) : attacker.physAtk, elemAtk: kind === "physical" ? attacker.elemAtk : boost(attacker.elemAtk) };
   const hd = await roll(2);
   const hit = evaluateCheck({ dice: hd, modifier: attacker.hit + hitMod, target: target.evasion });
+  // 「명중 판정 눈 n 이하는 절대 실패」(《스콜 샷》)
+  if (failAtOrBelow && hit.sum <= failAtOrBelow && !hit.absSuccess) { hit.success = false; hit.absFailure = true; }
   const result = { kind, hitCheck: hit, hit: !!hit.success, fpGain: hit.fpGain };
   if (!result.hit) return result;
 

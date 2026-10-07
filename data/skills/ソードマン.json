@@ -677,8 +677,7 @@
      "diceMod": "-(3-SL)"
     }
    ],
-   "review": "partial",
-   "effectsNote": "대상 「관통」(적 전위·후위 1체씩): 지금은 단일로 처리되므로 GM이 뒤쪽 대상에게 한 번 더 적용"
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"
