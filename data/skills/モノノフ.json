@@ -813,8 +813,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【HP】 +(SL×2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "hpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -850,8 +856,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【TP】 +(SL×2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"
@@ -887,8 +899,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【물리 공격】 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physAtk",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"

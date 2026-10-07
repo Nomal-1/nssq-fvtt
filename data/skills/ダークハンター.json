@@ -118,8 +118,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>세검에 의한 물리 명중에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physHit",
+     "value": "SL/2",
+     "when": {
+      "weaponType": [
+       "세검"
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -944,7 +955,8 @@
    "sl": 1,
    "description": "<p>시나리오 개시 시점에 보유한 FP에 +1을 얻는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "시나리오 개시 때 FP +1: 세션 도구(단계 9)에서"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -1017,8 +1029,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【HP】에 +(SL×2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "hpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -1054,8 +1072,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【TP】에 +(SL×2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -1091,8 +1115,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【물리 공격】에 +(SL)을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "physAtk",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
@@ -1128,8 +1158,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 공격】에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppAtk",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"

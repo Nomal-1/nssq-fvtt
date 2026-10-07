@@ -907,8 +907,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【HP】에 +(SL×2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "hpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "프린스/프린세스"
@@ -944,8 +950,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【TP】에 +(SL×2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "프린스/프린세스"
@@ -981,8 +993,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【방어】에 +(SL)을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "defense",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "프린스/프린세스"
@@ -1018,8 +1036,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 방어】에 +(SL/2)를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppDef",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "프린스/프린세스"

@@ -774,8 +774,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【HP】 +(SL×2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "hpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -811,8 +817,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【TP】 +(SL×2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tpMax",
+     "value": "SL*2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"

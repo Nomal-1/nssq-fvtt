@@ -145,7 +145,16 @@ export function checkAll() {
   const counts = new Map();
   const partial = [];
   const stage8 = [];
+  // 같은 이름의 스킬(여러 클래스의 《HP 부스트》 등)은 해설이 같으면 effects도 같아야 한다
+  const byName = new Map();
   for (const { group, name, holder } of collectHolders()) {
+    if (holder.review && holder.review !== "todo" && holder.description) {
+      const k = `${name}\u0000${holder.description}`;
+      const v = JSON.stringify(holder.effects ?? []);
+      const prev = byName.get(k);
+      if (prev && prev.v !== v) errors.push(`${group} 《${name}》: 해설이 같은 ${prev.group}의 것과 effects가 다르다`);
+      else if (!prev) byName.set(k, { v, group });
+    }
     const where = `${group} 《${name}》`;
     const review = holder.review ?? (holder.effects?.length ? "auto" : "todo");
     const c = counts.get(group) ?? { todo: 0, auto: 0, partial: 0, ok: 0 };
