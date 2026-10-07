@@ -3,7 +3,10 @@
  * ctx: { self, target, attack: { kind, elements }, timeOfDay, allies }
  *  self/target은 전투 프로필 모양 { weaponType, dualWield, skills: [이름], hp, hpMax, row, acted, … }
  */
+import { CONDITIONS } from "../conditions.mjs";
+
 const arr = (v) => (Array.isArray(v) ? v : [v]);
+const AILMENTS = new Set(Object.entries(CONDITIONS).filter(([, d]) => d.kind === "ailment").map(([k]) => k));
 
 /** 키 하나 판정. 모르는 키는 false(조용히 통과시키지 않는다) */
 const CHECKS = {
@@ -11,6 +14,8 @@ const CHECKS = {
   dualWield: (v, c) => !!c.self?.dualWield === !!v,
   targetHasSkill: (v, c) => (c.target?.skills ?? []).includes(v),
   targetKO: (v, c) => !!c.target?.ko === !!v,
+  // 대상이 상태 이상(봉인 제외) 중
+  targetHasAilment: (v, c) => (c.target?.conditions ?? []).some((x) => AILMENTS.has(x.id)) === !!v,
   targetNotActedThisTurn: (v, c) => !c.target?.acted === !!v,
   selfHpAtMostHalf: (v, c) => ((c.self?.hp ?? 0) * 2 <= (c.self?.hpMax ?? 0)) === !!v,
   selfRow: (v, c) => c.self?.row === v,

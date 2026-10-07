@@ -37,6 +37,7 @@ export const TYPES = {
   attackBonus: { hitMod: false, diceMod: false, atkMod: false, critDice: false, critUp: false },
   kill: { check: true },
   useBonus: { buffTurns: false },
+  drain: { resource: false, mode: false },
   target: { side: true, scope: true, count: false },
   guard: { mode: true, scope: false },
   aura: { path: true, value: true, scope: false },
@@ -87,7 +88,7 @@ export function checkEffects(list, where, errors = []) {
     }
     if (e.type === "cure") {
       if (e.conditions !== undefined && e.conditions !== "all" && !(Array.isArray(e.conditions) && e.conditions.every((c) => CONDITIONS[c]))) errors.push(`${at}: cure.conditions는 "all" 또는 상태 이상 id 배열`);
-      if (e.kind !== undefined && !["ailment", "bind", "debuff"].includes(e.kind)) errors.push(`${at}: cure.kind는 ailment/bind/debuff`);
+      if (e.kind !== undefined && !["ailment", "bind", "debuff", "buff"].includes(e.kind)) errors.push(`${at}: cure.kind는 ailment/bind/debuff/buff`);
     }
     if (e.type === "attack") {
       if (e.kind && !["physical", "elemental"].includes(e.kind)) errors.push(`${at}: attack.kind는 physical/elemental`);
@@ -97,6 +98,7 @@ export function checkEffects(list, where, errors = []) {
         if (bk.length) errors.push(`${at}.bonuses[${j}]: 모르는 when 키 ${bk.join(", ")}`);
         checkExpr(b.hitMod, `${at}.bonuses[${j}].hitMod`, errors);
         checkExpr(b.diceMod, `${at}.bonuses[${j}].diceMod`, errors);
+        checkExpr(b.atkMod, `${at}.bonuses[${j}].atkMod`, errors);
       });
     }
     if (e.type === "heal" && e.mode && !["roll", "fixed", "full", "percent"].includes(e.mode)) errors.push(`${at}: heal.mode`);

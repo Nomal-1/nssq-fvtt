@@ -84,19 +84,25 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     }
   };
 
+  // onHit 처리 중인 명중(흡수 drain이 대미지·주사위를 본다)
+  let lastHit = null;
   const attackOnce = async (e, t) => {
     const kind = e.kind ?? "physical";
     // element: 그 속성으로 / addElement: 무기 속성에 더한다(「〈염〉 속성을 부가한」)
-    const elements = e.element ? [].concat(e.element)
+    let elements = e.element ? [].concat(e.element)
       : e.addElement ? [...new Set([...(user.elements ?? []).filter((x) => x !== "none"), ...[].concat(e.addElement)])] : user.elements;
     // 상시 스킬의 공격 보정(《선봉의 공명》 등)
     const pb = sumAttackBonuses(user.attackBonuses, { ...ctx, category, self: user, target: t, attack: { kind, elements } });
     let hitMod = evaluate(e.hitMod ?? 0, vars(t)) + pb.hitMod;
     let diceMod = evaluate(e.diceMod ?? 0, vars(t)) + pb.diceMod;
+    let atkPlus = 0;
     for (const b of e.bonuses ?? []) {
       if (!whenMatches(b.when, { ...ctx, self: user, target: t, attack: { kind, elements } })) continue;
       hitMod += evaluate(b.hitMod ?? 0, vars(t));
       diceMod += evaluate(b.diceMod ?? 0, vars(t));
+      atkPlus += evaluate(b.atkMod ?? 0, vars(t));
+      // 조건부 속성 변경(《음양검: 영공대참》 「상태 이상 중이면 무속성」)
+      if (b.element) elements = [].concat(b.element);
     }
     const r = res(t);
     // [수면]은 명중한 공격의 처리 뒤 풀린다: 같은 행동의 다음 회차는 깬 상태의 내성(07 #37)
@@ -105,7 +111,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
       target: { evasion: t.evasion, defense: t.defense, resist, guarding: t.guarding },
       kind, hitMod, diceMod,
-      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
+      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
       rollDice
     });
     hitChecks.push(result);
@@ -119,6 +125,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       const slept = r.inflicts.find((x) => x.id === "sleep" && !x.resisted && !x.broken);
       if (slept) { slept.broken = hitRow.seq; hitRow.woke = true; }
       if (e.onHit?.length) {
+        lastHit = result;
         // 이 명중으로 생긴 부여·강화에 회차를 붙인다
         const n0 = r.inflicts.length;
         const b0 = r.buffs.length;
@@ -176,6 +183,18 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
           const c = resistCheck({ dice: await rollDice(2), suppDef: (t.suppDef ?? 0) + evaluate(ck.defMod ?? 0, vars(t)), target });
           r.inflicts.push({ id: e.condition, depth: c.depth, resisted: c.resisted, fixed: { target, check: c.check } });
         }
+        return;
+      }
+      case "drain": {
+        // 흡수: 이 명중의 결과로 자신을 회복(《음양검: 영흡명참》 대미지 절반 → HP, 《영흡심참》 6의 개수 → TP)
+        if (!lastHit) return;
+        const resource = e.resource ?? "hp";
+        const amount = e.mode === "sixes"
+          ? [...(lastHit.damage?.dice ?? []), ...(lastHit.critExtra?.dice ?? [])].filter((d) => d === 6).length
+          : Math.floor((lastHit.finalDamage ?? 0) / 2);
+        const me = res(user);
+        me.heal[resource] += amount;
+        me.resource.push({ heal: resource, amount, drain: true });
         return;
       }
       case "kill": {

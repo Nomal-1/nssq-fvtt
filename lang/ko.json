@@ -1083,7 +1083,8 @@
         "all": "상태 이상·봉인 해제",
         "ailment": "상태 이상 해제",
         "bind": "봉인 해제",
-        "debuff": "약화 효과 해제"
+        "debuff": "약화 효과 해제",
+        "buff": "강화 효과 해제"
       },
       "chanceFailed": "확률 발동 실패(1D6 = {die})",
       "gmNeeded": "GM 판단 필요: {what}",

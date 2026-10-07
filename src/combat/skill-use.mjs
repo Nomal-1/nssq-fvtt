@@ -203,6 +203,8 @@ async function resolveAndPost({ actor, combatant, item, kind, units, mainAction,
   const user = unitProfile(actor, combatant);
   const targets = units.map((u) => unitProfile(u.actor, u.combatant));
   const actorOf = new Map(units.map((u, i) => [targets[i].id, u.actor]));
+  // 흡수(drain) 등 사용자 자신에게 돌아오는 결과
+  if (!actorOf.has(user.id)) actorOf.set(user.id, actor);
   const r = await resolveEffects({
     effects: sys.effects ?? [], sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : [],
@@ -405,7 +407,7 @@ async function applyEntry(actor, e, sourceUuid) {
   let conds = [...(s.conditions ?? [])];
   if (e.sleepBroken) conds = removeCondition(conds, "sleep");
   for (const c of e.cures ?? []) {
-    if (c.kind === "debuff") continue;
+    if (c.kind === "debuff" || c.kind === "buff") continue;
     const match = (x) => (c.conditions === "all" || c.conditions?.includes(x.id)) && (!c.kind || CONDITIONS[x.id]?.kind === c.kind);
     // 「(SL)개까지」: 걸린 순서대로 count개
     let left = c.count ?? Infinity;
@@ -422,9 +424,10 @@ async function applyEntry(actor, e, sourceUuid) {
     if (!["ignored", "blocked"].includes(r.result)) newly.push(i.id);
   }
   let buffs = [...(s.buffs ?? [])];
-  for (const c of (e.cures ?? []).filter((x) => x.kind === "debuff")) {
+  // 약화(debuff)·강화(buff) 해제: 걸린 순서대로 count개
+  for (const c of (e.cures ?? []).filter((x) => x.kind === "debuff" || x.kind === "buff")) {
     let left = c.count ?? Infinity;
-    buffs = buffs.filter((b) => !(BUFFS[b.id]?.kind === "debuff" && left-- > 0));
+    buffs = buffs.filter((b) => !(BUFFS[b.id]?.kind === c.kind && left-- > 0));
   }
   for (const b of e.buffs ?? []) buffs = addBuff(buffs, b).list;
   const upd = { "system.hp.value": hp, "system.conditions": conds, "system.buffs": buffs };

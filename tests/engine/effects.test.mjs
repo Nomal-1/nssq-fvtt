@@ -299,4 +299,16 @@ describe("단계 7 스키마 보강", () => {
     const b = await resolveEffects({ effects, user: { ...user, useBonuses }, targets: [user], category: "호령", rollDice: dice() });
     expect(b.results.get("u").buffs[0].turns).toBe(3);
   });
+
+  it("drain·targetHasAilment·조건부 속성(닥터 마구스)", async () => {
+    const poisoned = { ...foe, conditions: [{ id: "poison", depth: 3 }] };
+    const effects = [{ type: "attack", kind: "physical", onHit: [{ type: "drain", resource: "hp", mode: "half", when: { targetHasAilment: true } }] }];
+    // 6D6 [4,5,6,1,2,3] → 3 대미지 → 자신 HP +1
+    const a = await resolveEffects({ effects, user, targets: [poisoned], rollDice: dice(5, 5, 4, 5, 6, 1, 2, 3) });
+    expect(a.results.get("u").heal.hp).toBe(1);
+    const b = await resolveEffects({ effects, user, targets: [foe], rollDice: dice(5, 5, 4, 5, 6, 1, 2, 3) });
+    expect(b.results.get("u")).toBeUndefined();
+    const c = await resolveEffects({ effects: [{ type: "attack", kind: "physical", bonuses: [{ when: { targetHasAilment: true }, element: ["none"], atkMod: 2 }] }], user, targets: [poisoned], rollDice: dice(5, 5, ...Array(8).fill(2)) });
+    expect(c.results.get("e").hits[0]).toEqual(expect.objectContaining({ elements: ["none"], diceCount: 8 }));
+  });
 });
