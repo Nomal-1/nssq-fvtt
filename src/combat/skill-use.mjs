@@ -79,6 +79,8 @@ export function unitProfile(actor, combatant) {
     states: (actor.getFlag("nssq", "states") ?? []).map((x) => x.id),
     // 수식용: 걸린 봉인·상태 이상 수(《헤븐즈 샷》 @target.bindCount)
     bindCount: (s.conditions ?? []).filter((c) => CONDITIONS[c.id]?.kind === "bind").length,
+    // 수식용: 같은 편 인원수(자신 포함, 쓰러진 사람 제외. 《레기온 스러스트》 @self.allyCount)
+    allyCount: combatant?.combat ? combatant.combat.combatants.filter((c) => c.actor && friendly(c.actor, actor) && alive(c)).length : 1,
     ailmentCount: (s.conditions ?? []).filter((c) => CONDITIONS[c.id]?.kind === "ailment").length,
     skills: actor.items.filter((i) => i.type === "skill").map((i) => i.name),
     noAction: actionState(combatant).noAction,
@@ -366,6 +368,7 @@ function entryLines(e, card) {
     out.push(`<li class="${h.hit ? "hit" : "miss"}">${line}${inner ? `<ul class="per-hit">${inner}</ul>` : ""}</li>`);
   }
   if (e.damage && hits.length > 1) out.push(`<li class="total">${esc(L("damageTotal", { n: e.damage }))}</li>`);
+  for (const x of e.resource ?? []) if (x.recoil) out.push(`<li class="hit">${esc(L("recoil", { n: x.recoil }))}</li>`);
   if (e.heal?.hp) out.push(`<li class="heal">${esc(L("healHp", { n: e.heal.hp }))}</li>`);
   if (e.heal?.tp) out.push(`<li class="heal">${esc(L("healTp", { n: e.heal.tp }))}</li>`);
   for (const i of e.inflicts ?? []) if (!i.seq) out.push(inflictLi(i));

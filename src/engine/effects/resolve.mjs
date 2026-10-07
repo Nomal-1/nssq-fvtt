@@ -186,6 +186,13 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         }
         return;
       }
+      case "recoil": {
+        // 반동: 이 행동에서 지금까지 굴린 대미지 다이스의 '1' 개수만큼 대미지(toSelf와 함께, 《싱글 스러스트》)
+        let ones = 0;
+        for (const x of out.results.values()) for (const h of x.hits) ones += [...(h.damage?.dice ?? []), ...(h.critExtra?.dice ?? [])].filter((d) => d === 1).length;
+        if (ones) { r.damage += ones; r.resource.push({ recoil: ones }); }
+        return;
+      }
       case "drain": {
         // 흡수: 이 명중의 결과로 자신을 회복(《음양검: 영흡명참》 대미지 절반 → HP, 《영흡심참》 6의 개수 → TP)
         if (!lastHit) return;

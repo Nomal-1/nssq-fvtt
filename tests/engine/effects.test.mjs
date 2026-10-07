@@ -324,4 +324,10 @@ describe("단계 7 스키마 보강", () => {
     expect(whenMatches({ targetHasBind: true }, { target: { conditions: [{ id: "poison" }] } })).toBe(false);
     expect(whenMatches({ targetLevelAbove: true }, { self: { level: 3 }, target: { level: 4 } })).toBe(true);
   });
+
+  it("recoil: 대미지 다이스의 1 개수만큼 자신 대미지", async () => {
+    // 6D6 [4,5,6,1,2,1] → 1이 2개
+    const r = await resolveEffects({ effects: [{ type: "attack", kind: "physical" }, { type: "recoil", mode: "ones", toSelf: true }], user, targets: [foe], rollDice: dice(5, 5, 4, 5, 6, 1, 2, 1) });
+    expect(r.results.get("u").damage).toBe(2);
+  });
 });

@@ -13,6 +13,7 @@
   - `@roll.<name>` — 같은 효과 처리 안에서 앞서 굴린 결과
   - `@self.bonus.agi` 등 — 능력치 보너스(【AGI】B). 에너미는 0
   - `@target.bindCount`, `@target.ailmentCount` — 걸린 봉인·상태 이상 수
+  - `@self.allyCount` — 같은 편 인원수(자신 포함, 쓰러진 사람 제외)
 - 데이터 쪽 원문 표기 `(SL×2)`, `(R의 제곱)×100`은 변환기가 `SL*2`, `R*R*100`으로 바꾼다.
 
 ## 2. 공통 필드
@@ -57,13 +58,14 @@
 | `heal` | `mode`(roll/fixed/full/percent), `bonus`/`amount`, `resource`(hp/tp), `revive` | 회복 롤 또는 고정 회복. \[전투 불능\] 대상은 `revive: true`인 효과만 회복(부활). 부활 효과가 있으면 쓰러진 아군도 대상으로 고를 수 있다. 『회복』 분류 스킬의 회복 롤에는 사용자의 `healDice` 보정이 더해진다 |
 | `inflict` | `condition`, `check: {type: fixed, target} | {type: contest}` | 상태 이상·봉인 부여 |
 | `drain` | `resource`(hp/tp), `mode`(half: 준 대미지 절반 / sixes: 대미지 다이스의 6 개수) | onHit 안에서: 그 명중으로 자신 회복(《음양검: 영흡명참》) |
+| `recoil` | `mode`(ones) | `toSelf`와 함께: 이 행동에서 굴린 대미지 다이스의 '1' 개수만큼 자신이 대미지(《싱글 스러스트》) |
 | `kill` | `check: {type: fixed, target, defMod?}` | 즉사: 억제 방어 롤 실패면 【HP】 0(카드에 \[즉사\]) |
 | `cure` | `conditions[]` 또는 `"all"`, `kind`(ailment/bind/debuff/buff), `count`, `buffs[]`(그 강화·약화 id만) | 해제. `count`가 있으면 걸린 순서대로 그 개수까지(「(SL)개까지」) |
 | `buff` / `debuff` | `id`, `value`, `turns`, `param`(속성 등) | 01 §3.10의 강화·약화 |
 | `modifier` | `path`, `value` | 상시 보정. 타이밍 「상시」 스킬, 장식, 제련. path: `physAtk elemAtk physHit elemHit defense evasion speed suppAtk suppDef hpMax tpMax carry healDice(『회복』 스킬 회복 롤 다이스) itemHeal(아이템 회복량 +) guardCount(방어 스킬 횟수 +) abilities.<능력치> resist.<속성> checks.<판정>` |
 | `resource` | `resource`(hp/tp/fp), `delta` 또는 `set` | 직접 증감 |
 | `stance` | `effects[]`, `until`(endOfTurn/count), `count` | 대기 상태가 되며 대기 중 효과 부여 |
-| `trigger` | `on`, `effects[]`, `limit`(perAction/perTurn/perBattle) | 반응형. `on`: crit / beforeKO / attacked / allyAttacked / rowAttacked / endPhase / openingPhase / battleStart / selfHit(자신의 공격이 명중했을 때 선언) / mainPhaseStart(메인 페이즈 개시 시 선언) / escapeCheck(도주 판정 때 선언) |
+| `trigger` | `on`, `effects[]`, `limit`(perAction/perTurn/perBattle) | 반응형. `on`: crit / beforeKO / attacked / allyAttacked / rowAttacked / endPhase / openingPhase / battleStart / selfHit(자신의 공격이 명중했을 때 선언) / mainPhaseStart(메인 페이즈 개시 시 선언) / escapeCheck(도주 판정 때 선언) / hpLost(자신의 HP가 줄었을 때) / enemyKO(자신의 공격으로 적을 쓰러뜨렸을 때) |
 | `counter` / `chase` | `when`, `attack{…}`, `count`, `on`, `onlyIfEvaded`(반격만) | 반격·추격(01 §3.11의 연쇄 금지 규칙은 엔진이 강제) |
 | `guard` | `mode`(half: 받는 대미지 반감 / cover: 대신 받기 / defense: 대상의 【방어】를 사용자 값으로), `scope`(front/back/all/target), `when` | 방어 스킬(대기 상태 안). 대기 상태의 `count`가 「누적 n회」, 《방패 마스터리》는 modifier `guardCount`로 그 횟수 + |
 | `aura` | `path`, `value`, `scope` | 대기 상태 동안 아군에게 주는 보정(《삼색 가드》 내성 +SL 등) |

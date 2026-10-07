@@ -1060,6 +1060,7 @@
       "variantHint": "어느 명칭으로 선언할까?",
       "revive": "[전투 불능]에서 부활",
       "cureCount": "(최대 {n}개)",
+      "recoil": "반동 대미지 {n}(대미지 다이스의 1의 개수)",
       "woke": "[수면] 풀림",
       "stateLine": "《{name}》 상태({mods}) — 전투가 끝날 때까지",
       "brokenAt": "→ {n}타에서 풀림",
