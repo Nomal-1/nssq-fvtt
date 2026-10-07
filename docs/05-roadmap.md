@@ -63,6 +63,7 @@
   - 릴리스는 태그 push가 막혀 있으므로 버전 커밋을 main에 push한 뒤 매번 https://github.com/Nomal-1/nssq-fvtt/actions/workflows/release.yml 의 [Run workflow] 링크를 준다.
   - 고칠 때마다 `tests/manual-checklist.md`의 「지금 확인할 것」에 번호 붙은 절을 추가하고 머리말 버전을 올린다.
   - 룰이 원문에 없으면 임시 처리 + 07에 「사용자 확인 필요」로 적고 보고한다.
+  - 스킬 판단을 물을 때는 **스킬명과 직업(클래스)을 함께** 적는다(예: 무사 《일의전심》). 07에 적을 때도 같다.
 - **Foundry 실제 확인**: 클라우드 환경 변수 `NSSQ_FOUNDRY_URL`·`NSSQ_FOUNDRY_USER`·`NSSQ_FOUNDRY_PASSWORD`·`NSSQ_FOUNDRY_PLAYER`·`NSSQ_FOUNDRY_PLAYER_PASSWORD`로 오라클 서버의 테스트 전용 월드(`nssq-test`)에 Playwright(Chromium, `/opt/pw-browsers`)로 접속할 수 있다. 비밀번호는 출력·커밋 금지. 실제 플레이 월드는 건드리지 않는다. 서버에 깔린 시스템 버전을 먼저 확인한다.
   - 도구: `node tools/dev/foundry-e2e.mjs info|eval|shot [gm|player]`, 스크립트에서는 `connect(role, { user })`. 클라우드 Chromium은 ws://가 막혀 socket.io를 Node WebSocket으로 중계한다(도구 안에 들어 있음). 월드 id는 `nssqtest`.
   - 테스트용 액터는 `[e2e]` 접두사로 만들고 끝나면 지운다. 사용자가 관전하는 계정: `GM관전`(보조 GM)·`PL관전`(플레이어), 비밀번호 없음. 관전 계정으로는 접속하지 않는다(겹치면 사용자가 못 들어온다). GM관전이 접속해 있으면 GM 클라이언트가 둘이라는 점을 감안한다.
