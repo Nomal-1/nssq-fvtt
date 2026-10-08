@@ -37,6 +37,7 @@ export const TYPES = {
   actionTiming: { value: true },
   attackBonus: { hitMod: false, diceMod: false, atkMod: false, critDice: false, critUp: false },
   kill: { check: true },
+  immune: { condition: true },
   useBonus: { buffTurns: false, debuffTurns: false, healHp: false },
   drain: { resource: false, mode: false },
   recoil: { mode: false },
@@ -52,7 +53,7 @@ export const MOD_PATHS = new Set([
   "physAtk", "elemAtk", "physHit", "elemHit", "defense", "evasion", "speed", "suppAtk", "suppDef", "hpMax", "tpMax", "carry", "healDice", "guardCount", "itemHeal", "overheatTurns", "tokenHit", "campHeal", "tokenTurns",
   ...ABILITIES.map((k) => `abilities.${k}`), ...RESISTS.map((k) => `resist.${k}`)
 ]);
-const MOD_PREFIX = ["checks.", "gather."];
+const MOD_PREFIX = ["checks.", "gather.", "condResist."];
 const NESTED = ["onHit", "effects"];
 const EXPR_FIELDS = ["debuffTurns", "healHp", "buffTurns", "critDice", "times", "hitMod", "diceMod", "atkMod", "atkMultiplier", "bonus", "amount", "value", "turns", "delta", "set", "count", "depth", "max", "maxCount"];
 

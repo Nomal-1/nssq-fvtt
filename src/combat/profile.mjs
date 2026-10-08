@@ -1,3 +1,5 @@
+import { collectConditionResist } from "../engine/effects/passives.mjs";
+
 /**
  * 전투에 쓰는 값을 액터 종류와 관계없이 한 모양으로 모은다.
  */
@@ -36,7 +38,12 @@ export function combatProfile(actor, combatant = null) {
     conditions: s.conditions ?? [],
     buffs: s.buffs ?? [],
     petrified: (s.conditions ?? []).some((x) => x.id === "petrify"),
-    critUp: !!s.statusMods?.buffs?.critUp
+    critUp: !!s.statusMods?.buffs?.critUp,
+    // 상시 스킬의 상태 이상별 억제 방어 보정·완전 내성
+    ...(() => {
+      const r = collectConditionResist(actor.items.filter((i) => i.type === "skill").map((i) => ({ sl: i.system.sl, timing: i.system.timing, effects: i.system.effects })));
+      return { condResist: r.resist, immune: r.immune };
+    })()
   };
   // [마비]·[공포] 판정에 실패한 턴은 【회피】 0(전투원 플래그, combat/turn-status.mjs)
   const disabled = !!combatant?.getFlag("nssq", "disabled");

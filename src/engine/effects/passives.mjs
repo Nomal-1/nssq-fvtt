@@ -32,7 +32,7 @@ export function collectPassives(skills, ctx = {}) {
         continue;
       }
       if (!whenMatches(e.when, ctx)) continue;
-      if (e.type === "modifier" && e.path) {
+      if (e.type === "modifier" && e.path && !e.path.startsWith("condResist.")) {
         const v = evaluate(e.value ?? 0, { SL: s.sl, self: ctx.self });
         mods[e.path] = (mods[e.path] ?? 0) + v;
         sources.push({ name: s.name, path: e.path, value: v });
@@ -40,6 +40,27 @@ export function collectPassives(skills, ctx = {}) {
     }
   }
   return { mods, flags, sources, attackBonuses, useBonuses };
+}
+
+/**
+ * 상태 이상·봉인별 억제 방어 보정과 완전 내성(에너미 「내성/약점: ○○」·「완전 내성: ○○」)
+ * modifier path `condResist.<id>` → { resist: { id: n } }, type `immune` → { immune: [id] }
+ * @param {{sl: number, timing: string, effects: object[]}[]} skills
+ */
+export function collectConditionResist(skills) {
+  const resist = {};
+  const immune = [];
+  for (const s of skills ?? []) {
+    if (s.timing !== "상시") continue;
+    for (const e of s.effects ?? []) {
+      if (e.type === "immune" && e.condition) immune.push(...[].concat(e.condition));
+      if (e.type === "modifier" && String(e.path).startsWith("condResist.")) {
+        const id = e.path.slice("condResist.".length);
+        resist[id] = (resist[id] ?? 0) + evaluate(e.value ?? 0, { SL: s.sl ?? 1 });
+      }
+    }
+  }
+  return { resist, immune };
 }
 
 /**

@@ -16,7 +16,7 @@ import { activationRoll } from "./usage.mjs";
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["stance", "delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus", "useBonus", "target"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus", "useBonus", "target", "immune"];
 
 /** custom 핸들러 등록부: name → (ctx) => 결과 조각 */
 const CUSTOM = new Map();
@@ -175,17 +175,24 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       }
       case "inflict": {
         const ck = e.check ?? null;
+        // 완전 내성(「완전 내성: 독」)은 판정 없이 막는다
+        if ((t.immune ?? []).includes(e.condition) && ck?.type !== "forced") {
+          r.inflicts.push({ id: e.condition, depth: null, resisted: true, immune: true });
+          return;
+        }
+        // 상태 이상별 억제 방어 보정(「내성/약점: ○○」 ±n)
+        const cr = t.condResist?.[e.condition] ?? 0;
         if (!ck) { r.inflicts.push({ id: e.condition, depth: evaluate(e.depth ?? 0, vars(t)), resisted: false }); return; }
         if (ck.type === "forced") {
           const c = forcedInflict({ atkDice: await rollDice(2), suppAtk: user.suppAtk ?? 0 });
           r.inflicts.push({ id: e.condition, depth: c.depth, resisted: false, forced: { atk: c.atk } });
         } else if (ck.type === "contest") {
           // atkMod: 「대항 판정(자신 +(SL))」 공격 쪽 보정
-          const c = contestInflict({ atkDice: await rollDice(2), suppAtk: (user.suppAtk ?? 0) + evaluate(ck.atkMod ?? 0, vars(t)), defDice: await rollDice(2), suppDef: t.suppDef ?? 0 });
+          const c = contestInflict({ atkDice: await rollDice(2), suppAtk: (user.suppAtk ?? 0) + evaluate(ck.atkMod ?? 0, vars(t)), defDice: await rollDice(2), suppDef: (t.suppDef ?? 0) + cr });
           r.inflicts.push({ id: e.condition, depth: c.depth, resisted: c.resisted, contest: { atk: c.atk, def: c.def } });
         } else {
           const target = evaluate(ck.target, vars(t));
-          const c = resistCheck({ dice: await rollDice(2), suppDef: (t.suppDef ?? 0) + evaluate(ck.defMod ?? 0, vars(t)), target });
+          const c = resistCheck({ dice: await rollDice(2), suppDef: (t.suppDef ?? 0) + cr + evaluate(ck.defMod ?? 0, vars(t)), target });
           r.inflicts.push({ id: e.condition, depth: c.depth, resisted: c.resisted, fixed: { target, check: c.check } });
         }
         return;

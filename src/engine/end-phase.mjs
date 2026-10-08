@@ -62,7 +62,8 @@ export async function endPhaseFor(u, roll2d6) {
   for (const c of conditions) {
     if (!hasDepth(c)) { kept.push(c); continue; }
     const dice = await roll2d6();
-    const r = evaluateCheck({ dice, modifier: u.suppDef ?? 0, target: c.depth ?? 0 });
+    // 상태 이상별 억제 방어 보정(「내성/약점: ○○」)
+    const r = evaluateCheck({ dice, modifier: (u.suppDef ?? 0) + (u.condResist?.[c.id] ?? 0), target: c.depth ?? 0 });
     log.push({ step: "recovery", id: c.id, depth: c.depth, dice: r.used, total: r.total, success: !!r.success });
     if (!r.success) kept.push(c);
   }

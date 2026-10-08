@@ -147,7 +147,7 @@ export async function runEndPhase(combat) {
     const s = a.system;
     const p = combatProfile(a, c);
     const r = await endPhaseFor({
-      hp: s.hp, tp: a.type === "character" ? s.tp : null, suppDef: p.suppDef,
+      hp: s.hp, tp: a.type === "character" ? s.tp : null, suppDef: p.suppDef, condResist: p.condResist,
       conditions: s.conditions ?? [], buffs: s.buffs ?? [],
       poisonPower: (cond) => poisonPower(combat, cond)
     }, () => roll2d6(rolls));

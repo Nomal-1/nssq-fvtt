@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { resolveEffects, resolveTriggers } from "../../src/engine/effects/resolve.mjs";
-import { collectPassives, sumAttackBonuses } from "../../src/engine/effects/passives.mjs";
+import { collectConditionResist, collectPassives, sumAttackBonuses } from "../../src/engine/effects/passives.mjs";
 import { activationRoll, canUseSkill } from "../../src/engine/effects/usage.mjs";
 import { whenMatches } from "../../src/engine/effects/when.mjs";
 
@@ -343,5 +343,16 @@ describe("단계 7 스키마 보강", () => {
   it("inflict forced: 반드시 걸고 심도는 억제 공격 달성값(《임팩트 애로》)", async () => {
     const r = await resolveEffects({ effects: [{ type: "inflict", condition: "paralyze", check: { type: "forced" }, toSelf: true }], user, targets: [foe], rollDice: dice(1, 1) });
     expect(r.results.get("u").inflicts[0]).toEqual(expect.objectContaining({ id: "paralyze", resisted: false, depth: 6 }));
+  });
+
+  it("상태 이상별 억제 방어 보정·완전 내성(에너미 「내성/약점」)", async () => {
+    const r = collectConditionResist([{ timing: "상시", sl: 1, effects: [{ type: "modifier", path: "condResist.blind", value: 2 }, { type: "immune", condition: "poison" }] }]);
+    expect(r).toEqual({ resist: { blind: 2 }, immune: ["poison"] });
+    const t = { ...foe, condResist: r.resist, immune: r.immune };
+    const a = await resolveEffects({ effects: [{ type: "inflict", condition: "poison", check: { type: "contest" } }], user, targets: [t], rollDice: dice() });
+    expect(a.results.get("e").inflicts[0]).toEqual(expect.objectContaining({ resisted: true, immune: true }));
+    // 목표값 10: [3,3]+2(억제 방어)+2(내성) = 10 → 막음
+    const b = await resolveEffects({ effects: [{ type: "inflict", condition: "blind", check: { type: "fixed", target: 10 } }], user, targets: [t], rollDice: dice(3, 3) });
+    expect(b.results.get("e").inflicts[0].resisted).toBe(true);
   });
 });
