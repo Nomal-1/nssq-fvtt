@@ -925,7 +925,8 @@
       "confusedNone": "{name}: [혼란] — 공격할 같은 열 아군이 없어 아무것도 하지 않았다",
       "confusedAttack": "{name}: [혼란] — {target}을(를) 공격한다",
       "endTitle": "{round}턴 종료 페이즈",
-      "delayedNone": "1. 지연 공격: 없음(지연 공격은 이후 단계에서 연결)",
+      "delayedNone": "1. 지연 공격: 없음",
+      "delayedDone": "1. 지연 공격: {n}건(위 카드)",
       "endNothing": "처리할 독·리젠·상태 이상·강화·약화가 없다.",
       "logPoison": "[독] 실대미지 {n}",
       "logRegenHp": "HP 리젠 +{n}",
@@ -1118,8 +1119,15 @@
       "resourceSet": "【{res}】 {n}이 됨",
       "followup": {
         "chase": "추격",
-        "counter": "반격"
-      }
+        "counter": "반격",
+        "delayed": "지연 공격"
+      },
+      "lateChip": "후발: {name}",
+      "lateHint": "후발 행동 예약: 모든 전투원이 행동한 뒤 【속도】 순으로 실행",
+      "delayedChip": "지연: {name}",
+      "delayedHint": "지연 공격 예약: {round}턴 {at}에 실행",
+      "atLate": "메인 페이즈 끝(후발 행동)",
+      "atEnd": "종료 페이즈 처음"
     },
     "Guard": {
       "provoke": "{skill}({holder}): 공격 대상 {from} → {to}",
@@ -1132,6 +1140,21 @@
       "resist": "{target}: 【내성】 {list}",
       "coverTitle": "대신 받기",
       "coverAsk": "{holder}의 {skill}: {target} 대신 이 공격을 받는가?"
+    },
+    "Late": {
+      "reserved": "{name}: 《{skill}》 후발 행동으로 예약(모든 전투원이 행동한 뒤 실행)",
+      "delayedLate": "{name}: 《{skill}》 지연 공격 예약({n}턴 뒤 후발 행동 타이밍)",
+      "delayedEnd": "{name}: 《{skill}》 지연 공격 예약({n}턴 뒤 종료 페이즈)",
+      "lateRun": "후발 행동: {name}의 《{skill}》",
+      "cancelled": "{name}: 쓰러졌거나 행동할 수 없어 《{skill}》 취소",
+      "noCost": "{name}: 코스트가 부족해 《{skill}》 취소",
+      "noTarget": "{name}: 대상이 없어 《{skill}》 취소",
+      "declareTitle": "메인 페이즈 개시: 선언할 수 있는 스킬",
+      "declareBtn": "선언: {name}의 《{skill}》",
+      "declared": "{name}: 《{skill}》 선언(최속 행동, 이번 턴 주행동)",
+      "notDeclared": "{name}: 《{skill}》 선언 안 함",
+      "waiting": "{name}: 《{skill}》 선언 여부 선택 대기",
+      "extraAction": "{name}: 두 번째 주행동"
     },
     "Chase": {
       "run": "{type}: {name}",

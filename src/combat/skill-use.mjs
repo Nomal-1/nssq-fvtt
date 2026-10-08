@@ -7,6 +7,7 @@
 import { canUseSkill } from "../engine/effects/usage.mjs";
 import { hasVariants, resolveEffects, variantEffects } from "../engine/effects/resolve.mjs";
 import { guardAttack } from "./guard.mjs";
+import { delayedOf, isLateSkill, reserveDelayed, reserveLate, withoutTiming } from "./late.mjs";
 import { addCondition, CONDITIONS, removeCondition } from "../engine/conditions.mjs";
 import { addBuff, BUFFS } from "../engine/buffs.mjs";
 import { addState } from "../engine/states.mjs";
@@ -50,7 +51,7 @@ const revives = (item) => (item?.system.effects ?? []).some((e) => e?.type === "
   || (item.type === "consumable" && (e.resource ?? "hp") === "hp" && !!item.parent?.system.passives?.flags?.itemRevive)));
 
 /** 이 사용자의 대상 후보(살아 있는 것, 상대 진영이면 사거리 안). allowKO: 쓰러진 아군도(부활 효과) */
-function candidates(combat, user, spec, range, { allowKO = false } = {}) {
+export function candidates(combat, user, spec, range, { allowKO = false } = {}) {
   const me = user.actor;
   const row = me.system.row ?? "front";
   return combat.combatants.filter((c) => (alive(c) || (allowKO && spec.side === "ally" && !!c.actor)) && (spec.side === "ally" ? friendly(c.actor, me) : !friendly(c.actor, me)))
@@ -89,6 +90,8 @@ export function unitProfile(actor, combatant) {
     ailmentCount: (s.conditions ?? []).filter((c) => CONDITIONS[c.id]?.kind === "ailment").length,
     skills: actor.items.filter((i) => i.type === "skill").map((i) => i.name),
     noAction: actionState(combatant).noAction,
+    // 지연 공격 예약 중이면 새 지연 공격 스킬 불가(01 §3.11)
+    delayedPending: !!combatant?.getFlag("nssq", "delayed"),
     overheat: Number(actor.getFlag("nssq", "overheat") ?? 0)
   };
 }
@@ -191,11 +194,17 @@ async function rollWith(rolls, n) {
 const combatantOf = (actor) => game.combat?.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor.uuid) ?? null;
 
 /** 실행: 코스트 → 발동·효과 해석 → 결과 카드 */
-export async function executeAction(combat, combatant, kind, id, targetCombatants, { variant = null } = {}) {
+export async function executeAction(combat, combatant, kind, id, targetCombatants, { variant = null, late = false } = {}) {
   const actor = combatant.actor;
   const item = actor.items.get(id);
   if (!item) return null;
   const sys = item.system;
+  const phase = combat.getFlag("nssq", "phase");
+  const effects = variantEffects(sys.effects ?? [], variant);
+  // 후발 행동 주행동 스킬: 메인 페이즈에 쓰면 예약만(모든 전투원 행동 뒤 실행, combat/late.mjs)
+  if (!late && kind === "skill" && combat.started && phase === "main" && sys.timing === "주행동" && isLateSkill(effects)) {
+    return reserveLate(combatant, kind, item, targetCombatants, variant);
+  }
   // 코스트 지불(아이템은 수량 −1). 발동에 실패해도 소모(07 #9)
   const upd = {};
   if (kind === "skill") {
@@ -205,10 +214,19 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   } else {
     await item.update({ "system.quantity": Math.max(0, (sys.quantity ?? 1) - 1) });
   }
+  // 지연 공격: 코스트를 내고 예약(그 효과만 있는 스킬이면 카드는 예약 안내뿐)
+  const delayed = combat.started ? delayedOf(effects) : null;
+  if (delayed) {
+    await reserveDelayed(combat, combatant, item, delayed, targetCombatants);
+    if (effects.every((e) => ["delayed", "target"].includes(e?.type))) {
+      if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
+      return null;
+    }
+  }
   const message = await resolveAndPost({
     actor, combatant, item, kind,
     units: targetCombatants.map((c) => ({ actor: c.actor, combatant: c })),
-    mainAction: kind === "skill" && sys.timing === "주행동", variant
+    mainAction: kind === "skill" && sys.timing === "주행동", variant, stripTiming: late, skipDelayed: !!delayed
   });
   if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
   // 개막 페이즈에 쓴 스킬은 그 전투원의 개막 행동
@@ -230,13 +248,17 @@ export async function useItemOutside(actor, item, targets) {
  * @param {{ type: "chase"|"counter"|"trigger" }} [followup] 이 카드가 추격·반격 등이면(연쇄 금지 판단용)
  * @param {Object<string, object>} [extra] 대상 uuid → 더한 대미지 다이스(《풀 게인》 등, engine extendDamage 결과 + count)
  */
-export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, followup = null, extra = null, extraRolls = [] }) {
+export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false }) {
   const sys = item.system;
+  // 후발 행동으로 실행할 때는 행동 순서 효과를 빼고, 예약한 지연 공격은 다시 해석하지 않는다
+  let effectsAll = sys.effects ?? [];
+  if (stripTiming) effectsAll = withoutTiming(effectsAll);
+  if (skipDelayed) effectsAll = effectsAll.filter((e) => e?.type !== "delayed");
   const spec = kind === "item" ? targetSpec(sys.target || "아군 단일", sys.effects) : targetSpec(sys.target, sys.effects);
   const rolls = [...extraRolls];
   const user = unitProfile(actor, combatant);
   // 가드·도발·반사(단계 8-C): 공격 롤이 있는 스킬이면 대상·방어 값을 먼저 정한다
-  const atk = variantEffects(sys.effects ?? [], variant).find((e) => e?.type === "attack");
+  const atk = variantEffects(effectsAll, variant).find((e) => e?.type === "attack");
   let guard = null;
   if (atk && units.length && units.every((u) => u.combatant)) {
     const elements = atk.element ? [].concat(atk.element) : atk.addElement ? [...new Set([...(user.elements ?? []).filter((x) => x !== "none"), ...[].concat(atk.addElement)])] : user.elements;
@@ -249,7 +271,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   // 흡수(drain) 등 사용자 자신에게 돌아오는 결과
   if (!actorOf.has(user.id)) actorOf.set(user.id, actor);
   const r = await resolveEffects({
-    effects: sys.effects ?? [], sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
+    effects: effectsAll, sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : [],
     mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(),
     variant, category: sys.category ?? "", source: kind
@@ -260,6 +282,9 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     for (const [i, t] of targets.entries()) {
       const at = r.results.get(t.id)?.actionTiming;
       if (at && units[i].combatant) await units[i].combatant.setFlag("nssq", "timing", at);
+      // 「그 턴 주행동 2회」(《인법: 분신》)
+      const extraN = r.results.get(t.id)?.extraAction;
+      if (extraN && units[i].combatant) await units[i].combatant.setFlag("nssq", "extraAction", (units[i].combatant.getFlag("nssq", "extraAction") ?? 0) + extraN);
     }
   }
   // FP(캐릭터만), 오버히트

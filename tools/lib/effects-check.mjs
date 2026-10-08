@@ -35,6 +35,7 @@ export const TYPES = {
   activeEvade: { ability: true, bonus: false, vs: false },
   nullify: {},
   actionTiming: { value: true },
+  extraAction: { count: false },
   attackBonus: { hitMod: false, diceMod: false, atkMod: false, critDice: false, critUp: false },
   kill: { check: true },
   immune: { condition: true },

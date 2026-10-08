@@ -676,9 +676,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴, 자신은 주행동을 2회 할 수 있다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 주행동을 2회: GM이 행동 순서에서 한 번 더 차례를 줌(단계 8)"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "extraAction",
+     "count": 1
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"

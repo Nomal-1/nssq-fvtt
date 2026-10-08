@@ -437,8 +437,7 @@
      "diceMod": "(SL+1)*2"
     }
    ],
-   "review": "partial",
-   "effectsNote": "후발 행동: GM이 그 턴 행동 순서를 마지막으로(메인 페이즈 중 선언은 단계 8)"
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -495,8 +494,7 @@
      "diceMod": "(SL+1)*2"
     }
    ],
-   "review": "partial",
-   "effectsNote": "후발 행동: GM이 그 턴 행동 순서를 마지막으로(메인 페이즈 중 선언은 단계 8)"
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -553,8 +551,7 @@
      "diceMod": "(SL+1)*2"
     }
    ],
-   "review": "partial",
-   "effectsNote": "후발 행동: GM이 그 턴 행동 순서를 마지막으로(메인 페이즈 중 선언은 단계 8)"
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -608,8 +605,7 @@
      "hitMod": "SL+2"
     }
    ],
-   "review": "partial",
-   "effectsNote": "후발 행동: GM이 그 턴 행동 순서를 마지막으로(메인 페이즈 중 선언은 단계 8)"
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"

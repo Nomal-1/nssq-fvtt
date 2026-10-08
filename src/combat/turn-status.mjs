@@ -136,7 +136,7 @@ function logLine(entry) {
 }
 
 /** 종료 페이즈 처리(활성 GM): 결과 카드. autoApply=auto면 바로 적용 */
-export async function runEndPhase(combat) {
+export async function runEndPhase(combat, { delayed = 0 } = {}) {
   if (!isActiveGM() || !combat) return;
   const rolls = [];
   const updates = [];
@@ -160,7 +160,7 @@ export async function runEndPhase(combat) {
     blocks.push(`<li><b>${esc(c.name)}</b><ul>${r.log.map((e) => `<li class="${e.step}">${esc(logLine(e))}</li>`).join("")}</ul>${isHidden(a) ? "" : `<span class="hp-line">${L("hpLine", { before: s.hp.value, after: r.hp })}</span>`}</li>`);
   }
   // 본문은 전투 화면 커맨드 창에도 그대로 보인다(플래그 body)
-  const body = `<p class="notes">${L("delayedNone")}</p>
+  const body = `<p class="notes">${delayed ? L("delayedDone", { n: delayed }) : L("delayedNone")}</p>
     ${blocks.length ? `<ul class="end-units">${blocks.join("")}</ul>` : `<p>${L("endNothing")}</p>`}`;
   const content = `<div class="nssq-end-phase"><header class="check-header"><span class="check-label"><i class="fas fa-hourglass-end"></i> ${L("endTitle", { round: combat.round })}</span></header>
     ${body}

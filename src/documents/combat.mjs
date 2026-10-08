@@ -10,6 +10,7 @@ import { combatProfile } from "../combat/profile.mjs";
 import { openEndDialog } from "../apps/battle.mjs";
 import { actionState, confirmEndPhaseApplied, openingRolls, runEndPhase } from "../combat/turn-status.mjs";
 import { confirmOpeningDone, snapshotOpening } from "../combat/opening.mjs";
+import { mainStartDeclarations, runDelayedEnd, runLateActions } from "../combat/late.mjs";
 
 export class NssqCombat extends Combat {
   get phase() {
@@ -48,6 +49,8 @@ export class NssqCombat extends Combat {
   canAct(combatant) {
     if (!combatant || combatant.defeated || combatant.isDefeated) return false;
     if (combatant.getFlag("nssq", "waiting")) return false;
+    // 메인 페이즈 개시 선언(《소닉 레이드》 등)으로 이미 주행동을 했다
+    if (combatant.getFlag("nssq", "acted")) return false;
     if (actionState(combatant).noAction) return false;
     return true;
   }
@@ -67,7 +70,10 @@ export class NssqCombat extends Combat {
       "flags.nssq.-=disabled": null,
       "flags.nssq.-=confused": null,
       "flags.nssq.-=timing": null,
-      "flags.nssq.-=stances": null
+      "flags.nssq.-=stances": null,
+      "flags.nssq.-=late": null,
+      "flags.nssq.-=acted": null,
+      "flags.nssq.-=extraAction": null
     }));
     if (updates.length) await this.updateEmbeddedDocuments("Combatant", updates);
   }
@@ -84,7 +90,8 @@ export class NssqCombat extends Combat {
       // 개막 행동 되돌리기용 기록(combat/opening.mjs)
       await snapshotOpening(this);
     }
-    if (phase === "end") await runEndPhase(this);
+    // 종료 페이즈 처음: 이번 턴 지연 공격(at endPhase) → 독·자연 회복 등
+    if (phase === "end") await runEndPhase(this, { delayed: await runDelayedEnd(this) });
   }
 
   async nextTurn() {
@@ -102,18 +109,36 @@ export class NssqCombat extends Combat {
         if (!(await confirmOpeningDone(this))) return this;
         // 개막 → 메인: 【속도】를 다시 계산하고 첫 행동자부터
         await this.refreshInitiative();
+        await this.setPhase("main", { turn: null });
+        // 메인 페이즈 개시 선언(《소닉 레이드》 등): 의무·에너미·자동은 여기서 최속으로 실행
+        await mainStartDeclarations(this);
         const first = this.firstActingTurn(0);
-        if (first === null) return this.setPhase("end", { turn: null });
-        return this.setPhase("main", { turn: first });
+        if (first === null) return this.endMain();
+        return this.update({ turn: first });
       }
       case "main": {
+        // 「그 턴 주행동 2회」(《인법: 분신》): 같은 전투원이 한 번 더
+        const cur = this.combatant;
+        const extra = Number(cur?.getFlag("nssq", "extraAction") ?? 0);
+        if (extra > 0 && this.canAct(cur)) {
+          await cur.setFlag("nssq", "extraAction", extra - 1);
+          await ChatMessage.create({ speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") }, content: `<div class="nssq-combat-note"><i class="fas fa-redo"></i> ${game.i18n.format("NSSQ.Late.extraAction", { name: cur.name })}</div>` });
+          return this;
+        }
         const next = this.firstActingTurn((this.turn ?? -1) + 1);
-        if (next === null) return this.setPhase("end", { turn: null });
+        if (next === null) return this.endMain();
         return this.update({ turn: next });
       }
       default:
         return this.nextRound();
     }
+  }
+
+  /** 메인 페이즈 끝: 후발 행동·이번 턴 지연 공격(【속도】 순) → 종료 페이즈 */
+  async endMain() {
+    await this.update({ turn: null });
+    await runLateActions(this);
+    return this.setPhase("end", { turn: null });
   }
 
   async nextRound() {

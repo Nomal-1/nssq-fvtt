@@ -268,6 +268,10 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         r.states.push({ id: e.id, name: e.label ?? "", group: e.group ?? "", mods, ...(e.max ? { max: evaluate(e.max, vars(t)) } : {}), note: e.note ?? "" });
         return;
       }
+      case "extraAction":
+        // 「그 턴, 주행동을 2회」(《인법: 분신》): 이번 턴 추가 주행동 수(전투원 플래그 extraAction, 호출자가 반영)
+        r.extraAction = (r.extraAction ?? 0) + Math.max(1, evaluate(e.count ?? 1, vars(t)));
+        return;
       case "actionTiming":
         // 「최속/후발 행동」: 이번 턴 행동 순서(전투원 플래그 timing, 호출자가 반영)
         r.actionTiming = e.value === "last" ? "last" : "first";

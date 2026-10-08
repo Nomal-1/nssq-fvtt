@@ -209,8 +209,7 @@
      }
     }
    ],
-   "review": "partial",
-   "effectsNote": "후발 행동(메인 페이즈 종료 시점): GM이 그 턴 마지막에 사용(메인 페이즈 중 선언은 단계 8)"
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -281,8 +280,7 @@
      }
     }
    ],
-   "review": "partial",
-   "effectsNote": "후발 행동(메인 페이즈 종료 시점): GM이 그 턴 마지막에 사용(메인 페이즈 중 선언은 단계 8)"
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"

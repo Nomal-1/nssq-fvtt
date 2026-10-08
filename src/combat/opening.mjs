@@ -12,7 +12,7 @@ import { isActiveGM } from "./apply.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Opening.${k}`, d) : game.i18n.localize(`NSSQ.Opening.${k}`));
 const alive = (c) => !!c.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
-const COMBATANT_FLAGS = ["guarding", "waiting", "opening", "disabled", "confused", "timing", "stances"];
+const COMBATANT_FLAGS = ["guarding", "waiting", "opening", "disabled", "confused", "timing", "stances", "late", "acted", "extraAction", "delayed"];
 
 /** 이 전투원은 개막 행동을 정해야 하는가(쓰러짐·행동 불가 판정 실패는 제외) */
 export const needsOpening = (c) => alive(c) && !actionState(c).noOpening;
