@@ -26,6 +26,13 @@ export function reactionChoices(actor, kind) {
     .filter((i) => !(PART_BIND[i.system.part] && conds.some((c) => c.id === PART_BIND[i.system.part])))
     .filter((i) => meetsWeaponReq(i.system.weaponReq, { weaponType: s.equipment?.weapon?.weaponType, shield: !!s.equipment?.shield }))
     .filter((i) => meetsStateReq(i.system.effects, { states: (actor.getFlag("nssq", "states") ?? []).map((x) => x.id) }))
+    // 토큰을 없애고 쓰는 것(《야수의 우정》)은 그 분류의 토큰이 있어야
+    .filter((i) => {
+      const tr = (i.system.effects ?? []).find((e) => e?.type === "tokenRemove");
+      if (!tr) return true;
+      const cb = game.combat?.combatants.find((c) => c.actor?.uuid === actor.uuid);
+      return (cb?.getFlag("nssq", "tokens") ?? []).some((t) => !tr.category || t.category === tr.category);
+    })
     .map((i) => ({ id: i.id, name: i.name }));
 }
 
@@ -97,10 +104,16 @@ async function useReaction(message, type, index, skillId) {
   if (c.fp) upd["system.fp.value"] = Math.max(0, (actor.system.fp?.value ?? 0) - c.fp);
   if (Object.keys(upd).length) await actor.update(upd);
 
+  // 토큰 1개를 없앤다(《야수의 우정》)
+  const tr = (skill.system.effects ?? []).find((e) => e?.type === "tokenRemove");
+  if (tr) {
+    const cb = game.combat?.combatants.find((c) => c.actor?.uuid === actor.uuid);
+    if (cb) await (await import("./tokens.mjs")).removeToken(cb, tr.category ?? null);
+  }
   if (eff.type === "nullify") {
     const text = L("nullified", { skill: skill.name, name: actor.name });
     await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-combat-note"><i class="fas fa-shield-alt"></i> ${esc(text)}</div>` });
-    return send({ messageId: message.id, type, index, result: { nullify: true, reactorUuid: actor.uuid, text } });
+    return send({ messageId: message.id, type, index, result: { nullify: true, selfOnly: eff.scope === "self", reactorUuid: actor.uuid, text } });
   }
   // 능동 회피: 공격자의 명중 판정(카드의 달성값)과 대항
   const hit = type === "attack" ? { total: t.hitTotal, absSuccess: t.absSuccess, absFailure: t.absFailure } : t.hits.find((h) => h.hit);
@@ -173,7 +186,9 @@ async function updateReaction({ message, messageId, type, index, result }) {
       for (const c of [{ card }, ...others]) {
         for (const x of c.card.entries) {
           const a = x.uuid ? await fromUuid(x.uuid) : null;
-          if (a && reactor && friendly(a, reactor)) { voidEntry(x); c.changed = true; }
+          // scope self(《야수의 우정》 「자신이 받는 공격 하나」)면 자신만
+          const hitMe = result.selfOnly ? x.uuid === result.reactorUuid : a && reactor && friendly(a, reactor);
+          if (hitMe) { voidEntry(x); c.changed = true; }
         }
       }
     } else if (result.evaded) {

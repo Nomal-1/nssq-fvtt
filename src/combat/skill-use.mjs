@@ -8,6 +8,7 @@ import { canUseSkill } from "../engine/effects/usage.mjs";
 import { hasVariants, resolveEffects, variantEffects } from "../engine/effects/resolve.mjs";
 import { guardAttack } from "./guard.mjs";
 import { delayedOf, isLateSkill, reserveDelayed, reserveLate, withoutTiming } from "./late.mjs";
+import { placeTokens, removeToken, tokenEffectOf, tokensOf } from "./tokens.mjs";
 import { addCondition, CONDITIONS, removeCondition } from "../engine/conditions.mjs";
 import { addBuff, BUFFS } from "../engine/buffs.mjs";
 import { addState } from "../engine/states.mjs";
@@ -92,6 +93,7 @@ export function unitProfile(actor, combatant) {
     noAction: actionState(combatant).noAction,
     // 지연 공격 예약 중이면 새 지연 공격 스킬 불가(01 §3.11)
     delayedPending: !!combatant?.getFlag("nssq", "delayed"),
+    tokens: tokensOf(combatant),
     overheat: Number(actor.getFlag("nssq", "overheat") ?? 0)
   };
 }
@@ -214,6 +216,11 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   } else {
     await item.update({ "system.quantity": Math.max(0, (sys.quantity ?? 1) - 1) });
   }
+  // 토큰 배치(소환수·방진): 그 효과만 있는 스킬이면 카드는 배치 안내뿐(combat/tokens.mjs)
+  if (combat.started && tokenEffectOf(effects).length) {
+    await placeTokens(combat, combatant, item, variant);
+    if (effects.every((e) => ["token", "target"].includes(e?.type))) return null;
+  }
   // 지연 공격: 코스트를 내고 예약(그 효과만 있는 스킬이면 카드는 예약 안내뿐)
   const delayed = combat.started ? delayedOf(effects) : null;
   if (delayed) {
@@ -226,7 +233,7 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   const message = await resolveAndPost({
     actor, combatant, item, kind,
     units: targetCombatants.map((c) => ({ actor: c.actor, combatant: c })),
-    mainAction: kind === "skill" && sys.timing === "주행동", variant, stripTiming: late, skipDelayed: !!delayed
+    mainAction: kind === "skill" && sys.timing === "주행동", variant, stripTiming: late, skipDelayed: !!delayed, skipToken: tokenEffectOf(effects).length > 0
   });
   if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
   // 개막 페이즈에 쓴 스킬은 그 전투원의 개막 행동
@@ -248,12 +255,13 @@ export async function useItemOutside(actor, item, targets) {
  * @param {{ type: "chase"|"counter"|"trigger" }} [followup] 이 카드가 추격·반격 등이면(연쇄 금지 판단용)
  * @param {Object<string, object>} [extra] 대상 uuid → 더한 대미지 다이스(《풀 게인》 등, engine extendDamage 결과 + count)
  */
-export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false }) {
+export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false, skipToken = false }) {
   const sys = item.system;
   // 후발 행동으로 실행할 때는 행동 순서 효과를 빼고, 예약한 지연 공격은 다시 해석하지 않는다
   let effectsAll = sys.effects ?? [];
   if (stripTiming) effectsAll = withoutTiming(effectsAll);
   if (skipDelayed) effectsAll = effectsAll.filter((e) => e?.type !== "delayed");
+  if (skipToken) effectsAll = effectsAll.filter((e) => e?.type !== "token");
   const spec = kind === "item" ? targetSpec(sys.target || "아군 단일", sys.effects) : targetSpec(sys.target, sys.effects);
   const rolls = [...extraRolls];
   const user = unitProfile(actor, combatant);
@@ -287,6 +295,9 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
       if (extraN && units[i].combatant) await units[i].combatant.setFlag("nssq", "extraAction", (units[i].combatant.getFlag("nssq", "extraAction") ?? 0) + extraN);
     }
   }
+  // 토큰 1개 소멸(《비스트 귀환》·《파진》)
+  const tr = r.results.get(user.id)?.tokenRemove;
+  if (tr !== undefined && !r.failed && combatant) await removeToken(combatant, tr || null);
   // FP(캐릭터만), 오버히트
   if (r.fpGain && actor.type === "character") await actor.update({ "system.fp.value": (actor.system.fp?.value ?? 0) + r.fpGain });
   if (r.overheat) await actor.setFlag("nssq", "overheat", r.overheat);

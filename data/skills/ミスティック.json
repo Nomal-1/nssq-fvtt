@@ -561,13 +561,16 @@
    "description": "<p>'방진' 토큰 1개를 소멸시키고 회복 롤. 회복량 다이스 +((SL+1)×2).</p>",
    "effects": [
     {
+     "type": "tokenRemove",
+     "category": "방진"
+    },
+    {
      "type": "heal",
      "mode": "roll",
      "bonus": "(SL+1)*2"
     }
    ],
-   "review": "partial",
-   "effectsNote": "『방진』 토큰 1개를 없앤다: GM이 토큰을 지움(단계 8)"
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"

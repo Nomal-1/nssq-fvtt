@@ -268,7 +268,9 @@ function stanceChips(c) {
   return (c.getFlag("nssq", "stances") ?? []).map((st) => `<em class="stance" title="${esc(S("stanceHint", { name: st.name }))}"><i class="fas fa-hourglass-half"></i> ${esc(st.name)}${st.left ? ` ${st.left}` : ""}</em>`).join("")
     // 후발 행동·지연 공격 예약(단계 8-D)
     + (late ? `<em class="stance" title="${esc(S("lateHint"))}"><i class="fas fa-hourglass-end"></i> ${esc(S("lateChip", { name: late.name }))}</em>` : "")
-    + (delayed ? `<em class="stance" title="${esc(S("delayedHint", { round: delayed.round, at: S(delayed.at === "endPhase" ? "atEnd" : "atLate") }))}"><i class="fas fa-stopwatch"></i> ${esc(S("delayedChip", { name: delayed.name }))}</em>` : "");
+    + (delayed ? `<em class="stance" title="${esc(S("delayedHint", { round: delayed.round, at: S(delayed.at === "endPhase" ? "atEnd" : "atLate") }))}"><i class="fas fa-stopwatch"></i> ${esc(S("delayedChip", { name: delayed.name }))}</em>` : "")
+    // 토큰(소환수·방진, 단계 8-E)
+    + (c.getFlag("nssq", "tokens") ?? []).map((t) => `<em class="stance token" title="${esc(game.i18n.localize("NSSQ.Token.chipHint"))}"><i class="fas fa-paw"></i> ${esc(game.i18n.format("NSSQ.Token.chip", { token: t.name, n: t.left }))}</em>`).join("");
 }
 
 /** 오버히트(드라이브 스킬 사용 뒤 남은 턴)·전투 고유 상태(무사의 자세 등) 표시 */

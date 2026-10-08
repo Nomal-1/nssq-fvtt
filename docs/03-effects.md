@@ -77,12 +77,13 @@
 | `aura` | `path`, `value`, `scope` | 대기 상태 동안 아군에게 주는 보정(《삼색 가드》 내성 +SL 등) |
 | `provoke` | `count`, `to`("target"이면 스킬 대상 아군에게) | 그 턴 동안 단일 대상 공격을 누적 count회까지 자신으로(《도발》). 8-C부터 `stance`(`wait: false`, `until: count`) 안에 적는다 |
 | `delayed` | `at`(endPhase/nextTurnLate), `turns`, `effects[]` | 지연 공격. 스킬마다 발동 시점이 달라 `at`으로 지정. 8-D: 쓰면 코스트를 내고 전투원 플래그 `delayed`에 예약(턴을 넘어 남음), nextTurnLate는 turns턴 뒤 메인 페이즈 끝(후발 행동과 함께), endPhase는 종료 페이즈 처음. 예약 중엔 새 지연 공격 불가(`combat/late.mjs`) |
-| `token` | `tokenKey`, `turns`(지속 턴), `action{target, stats?, effects[]}`, `maxCount` | 토큰 배치. `action.target`은 대상 칸 문구, `action.stats`는 배치자의 어느 수치로 공격하는가(physical/elemental), `action.effects`는 매 턴 하는 행동 |
+| `token` | `tokenKey`, `turns`(지속 턴), `action{target, stats?, effects[]}`, `maxCount` | 토큰 배치. `action.target`은 대상 칸 문구, `action.stats`는 배치자의 어느 수치로 공격하는가(physical/elemental), `action.effects`는 매 턴 하는 행동 8-E: `combat/tokens.mjs`(배치자 전투원 플래그 `tokens`, 07 #77~81) |
 | `overheat` | `turns` | 드라이브 계열(상시 modifier `overheatTurns`로 증감) |
 | `overheatReduce` | `turns` | 자신의 오버히트 단축(《샤프 에지》·《강제 배기》) |
 | `attackBonus` | `hitMod`, `diceMod`, `atkMod`, `critDice`(크리티컬 추가 다이스 +), `critUp`(『크리티컬 업』 취급), `when` | 타이밍 「상시」: 공격할 때마다 붙는 보정. `when`은 공격 시점(대상·공격 속성)으로 판정(《선봉의 공명》 「아직 행동하지 않은 적에 대한 공격」). 통상 공격·스킬 공격 모두 |
 | `useBonus` | `buffTurns`, `debuffTurns`, `healHp`, `when` | 타이밍 「상시」: 스킬을 쓸 때 붙는 보정. `buffTurns`·`debuffTurns`: 그 스킬로 주는 강화·약화의 지속 턴 +(《무용 마스터리》·《주언 마스터리》), `healHp`: 대상 HP 회복이 따라붙음(《리인포스》). 보통 `when.category` |
 | `target` | `side`(enemy/ally/self), `scope`(single/row/all/random), `count?` | 대상 칸 대신 쓸 대상 지정(대상이 「특수」인 스킬). `count`(n명)는 아직 한 명씩 |
+| `tokenRemove` | `category`(소환수/방진) | 사용자의 그 분류 토큰 1개(가장 오래된 것)를 없앤다(《비스트 귀환》·《야수의 우정》·《파진》). 토큰이 없으면 사용 불가 |
 | `extraAction` | `count` | 그 턴 주행동 +count회(《인법: 분신》). 메인 페이즈 그 전투원 차례에서 [턴 종료]를 누르면 한 번 더 그 전투원(전투원 플래그 `extraAction`) |
 | `actionTiming` | `value`(first/last) | 「그 턴 최속/후발 행동」(대상에게. 자신이면 target 자신). 개막 페이즈에 쓰면 메인 페이즈 행동 순서에 반영(전투원 플래그 timing, 라운드마다 지움). 주행동 스킬에 `last`가 있으면 메인 페이즈에 쓸 때 후발 행동 예약(전투원 플래그 `late`, 코스트는 실행할 때), 모든 전투원 행동 뒤 【속도】 순 실행. 실행할 때 이 효과는 뺀다(8-D) |
 | `state` | `id`, `label`, `group?`, `mods[{path, value}]`, `max?`, `note?` | 전투 고유 상태(강화가 아님, 해제되지 않음, 전투 끝까지). 무사의 자세·《나찰》 등. 같은 `group`은 하나만, `max`가 있으면 쌓임(07 #57) |

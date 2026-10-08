@@ -67,6 +67,8 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
   const tc = combatantOf(target);
   const guard = await guardAttack({ attacker, targets: tc ? [tc] : [], kind: "physical", elements: a.elements, single: true });
   const gc = guard.targets[0];
+  // 공격 자체가 무효(《부정형 생물》)
+  if (tc && !gc) return guard.commit(new Set());
   if (gc && gc !== tc) {
     target = gc.actor;
     targetToken = gc.token ?? targetToken;

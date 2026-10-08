@@ -1053,6 +1053,7 @@
         "openingDone": "이번 턴 개막 행동을 이미 했다",
         "overheat": "오버히트 중",
         "delayed": "지연 공격 대기 중",
+        "noToken": "없앨 토큰이 없다",
         "tp": "【TP】가 부족하다",
         "fp": "【FP】가 부족하다"
       },
@@ -1134,12 +1135,26 @@
       "redirect": "{skill}({holder}): 공격 대상 {from} → {to}",
       "cover": "{skill}: {holder}이(가) {from} 대신 공격을 받는다",
       "reflect": "{skill}({holder}): 공격을 공격자에게 반사",
+      "nullify": "{skill}({holder}): {from}에 대한 공격을 완전 무효",
       "reflectNullify": "{skill}({holder}): 공격을 공격자에게 반사, 나머지 대상 {n}명에 대한 공격은 무효",
       "half": "{skill}({holder}): {target}이(가) 받는 대미지 반감",
       "defense": "{skill}({holder}): {target}의 【방어】를 {n}(으)로",
       "resist": "{target}: 【내성】 {list}",
       "coverTitle": "대신 받기",
       "coverAsk": "{holder}의 {skill}: {target} 대신 이 공격을 받는가?"
+    },
+    "Token": {
+      "placed": "{name}: 토큰 「{token}」 배치({n}턴)",
+      "cardName": "{token}(토큰)",
+      "noTarget": "토큰 「{token}」: 대상이 없다",
+      "chip": "{token} {n}",
+      "chipHint": "토큰: 배치자와 같은 【속도】로 정해진 행동. 숫자는 남은 턴",
+      "gone": {
+        "replaced": "{name}: 토큰 「{token}」 소멸(최대 수 초과)",
+        "removed": "{name}: 토큰 「{token}」 소멸",
+        "expired": "{name}: 토큰 「{token}」 지속 턴 끝, 소멸",
+        "ownerKO": "{name}: 배치자가 쓰러져 토큰 「{token}」 소멸"
+      }
     },
     "Late": {
       "reserved": "{name}: 《{skill}》 후발 행동으로 예약(모든 전투원이 행동한 뒤 실행)",

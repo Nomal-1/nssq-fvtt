@@ -937,9 +937,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '소환수' 토큰 1개를 소멸시키고 자신의 【TP】 (SL) 회복.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "『소환수』 토큰 1개를 없애고 자신 TP +SL: GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "tokenRemove",
+     "category": "소환수"
+    },
+    {
+     "type": "resource",
+     "resource": "tp",
+     "delta": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -980,9 +994,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '소환수' 토큰 1개를 소멸시키고 자신이 받는 공격 하나를 무효화.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "『소환수』 토큰 1개를 없애고 자신이 받는 공격 하나 무효: GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "nullify",
+     "scope": "self"
+    },
+    {
+     "type": "tokenRemove",
+     "category": "소환수"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"

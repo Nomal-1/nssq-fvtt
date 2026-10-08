@@ -105,6 +105,21 @@ export async function planGuards({ attack, attacker, targets, units, decide = ()
     }
   }
 
+  // 완전 무효(《부정형 생물》 토큰: 배치자가 받는 물리 공격, 턴에 1회). 그 대상에 대한 공격은 없어진다
+  if (!attack.noRedirect) {
+    const keep = [];
+    for (const t of list) {
+      const g = guardsOf(defSide, "guard", "nullify").find(({ u, st, e }) => (st.guardTargets ?? []).includes(t) && whenMatches(e.when, ctx) && remain(u, st) !== 0);
+      if (g && take(g.u, g.st)) {
+        notes.push({ type: "nullify", name: g.st.name, holder: g.u.id, from: t });
+        spendNow.push({ unitId: g.u.id, stanceId: g.st.id });
+        continue;
+      }
+      keep.push(t);
+    }
+    list = keep;
+  }
+
   // 대상마다: 반감·【방어】·【내성】
   const mods = {};
   const spendOnHit = {};

@@ -6,6 +6,7 @@
 import { applySpends, planGuards } from "../engine/guards.mjs";
 import { combatProfile, sideOf } from "./profile.mjs";
 import { actionState } from "./turn-status.mjs";
+import { spendTokenStance, tokenStances } from "./tokens.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Guard.${k}`, d) : game.i18n.localize(`NSSQ.Guard.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -31,9 +32,10 @@ export async function guardAttack({ attacker, targets, kind, elements, single, n
   if (!me) return pass(targets);
   const units = combat.combatants.filter((c) => c.actor).map((c) => ({
     id: c.id, side: unitSide(c.actor), row: c.actor.system.row ?? "front",
-    ko: !alive(c) || actionState(c).noAction,
+    // 행동 불가면 대기 상태는 이미 풀려 있다. 토큰의 방어(《부정형 생물》)는 배치자가 살아 있으면 그대로
+    ko: !alive(c) || (actionState(c).noAction && (c.getFlag("nssq", "stances") ?? []).length > 0),
     defense: combatProfile(c.actor, c).defense,
-    stances: c.getFlag("nssq", "stances") ?? [],
+    stances: [...(c.getFlag("nssq", "stances") ?? []), ...tokenStances(combat, c)],
     autoTrigger: c.actor.getFlag("nssq", "autoTrigger") ?? {}
   }));
   if (!units.some((u) => u.stances.length)) return pass(targets);
@@ -74,8 +76,10 @@ export async function guardAttack({ attacker, targets, kind, elements, single, n
     /** 공격 롤 뒤: 횟수 차감(반감·【방어】는 명중한 대상만) + 안내 */
     async commit(hitIds = new Set()) {
       const spends = [...plan.spendNow, ...Object.entries(plan.spendOnHit).filter(([id]) => hitIds.has(id)).flatMap(([, l]) => l)];
-      const next = applySpends(spends, (id) => combat.combatants.get(id)?.getFlag("nssq", "stances") ?? []);
+      const tokenSpends = spends.filter((x) => String(x.stanceId).startsWith("tk:"));
+      const next = applySpends(spends.filter((x) => !tokenSpends.includes(x)), (id) => combat.combatants.get(id)?.getFlag("nssq", "stances") ?? []);
       for (const [id, list] of next) await combat.combatants.get(id)?.setFlag("nssq", "stances", list);
+      for (const x of tokenSpends) await spendTokenStance(combat.combatants.get(x.unitId), x.stanceId, combat.round);
       const lines = plan.notes.map((n) => L(n.type === "reflect" && n.nullified ? "reflectNullify" : n.type, { skill: `《${n.name}》`, holder: name(n.holder), from: name(n.from), to: name(n.to), n: n.nullified ?? 0 }));
       for (const [id, m] of Object.entries(plan.mods)) {
         if (!hitIds.has(id)) continue;

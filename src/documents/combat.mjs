@@ -11,6 +11,7 @@ import { openEndDialog } from "../apps/battle.mjs";
 import { actionState, confirmEndPhaseApplied, openingRolls, runEndPhase } from "../combat/turn-status.mjs";
 import { confirmOpeningDone, snapshotOpening } from "../combat/opening.mjs";
 import { mainStartDeclarations, runDelayedEnd, runLateActions } from "../combat/late.mjs";
+import { runTokensFor, tickAllTokens } from "../combat/tokens.mjs";
 
 export class NssqCombat extends Combat {
   get phase() {
@@ -90,8 +91,11 @@ export class NssqCombat extends Combat {
       // 개막 행동 되돌리기용 기록(combat/opening.mjs)
       await snapshotOpening(this);
     }
-    // 종료 페이즈 처음: 이번 턴 지연 공격(at endPhase) → 독·자연 회복 등
-    if (phase === "end") await runEndPhase(this, { delayed: await runDelayedEnd(this) });
+    // 종료 페이즈 처음: 이번 턴 지연 공격(at endPhase) → 독·자연 회복 등 → 토큰 지속 턴
+    if (phase === "end") {
+      await runEndPhase(this, { delayed: await runDelayedEnd(this) });
+      await tickAllTokens(this);
+    }
   }
 
   async nextTurn() {
@@ -113,6 +117,8 @@ export class NssqCombat extends Combat {
         // 메인 페이즈 개시 선언(《소닉 레이드》 등): 의무·에너미·자동은 여기서 최속으로 실행
         await mainStartDeclarations(this);
         const first = this.firstActingTurn(0);
+        // 첫 행동자보다 앞자리(행동하지 않는 전투원)의 토큰은 먼저 행동
+        await runTokensFor(this, this.turns.slice(0, first ?? this.turns.length));
         if (first === null) return this.endMain();
         return this.update({ turn: first });
       }
@@ -125,7 +131,10 @@ export class NssqCombat extends Combat {
           await ChatMessage.create({ speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") }, content: `<div class="nssq-combat-note"><i class="fas fa-redo"></i> ${game.i18n.format("NSSQ.Late.extraAction", { name: cur.name })}</div>` });
           return this;
         }
-        const next = this.firstActingTurn((this.turn ?? -1) + 1);
+        const from = this.turn ?? 0;
+        const next = this.firstActingTurn(from + 1);
+        // 차례가 지나가는 자리(지금 전투원과 건너뛰는 전투원)의 토큰이 행동(01 §3.11: 배치자와 같은 【속도】)
+        await runTokensFor(this, this.turns.slice(from, next ?? this.turns.length));
         if (next === null) return this.endMain();
         return this.update({ turn: next });
       }

@@ -52,6 +52,9 @@ export function canUseSkill(skill, user, ctx = {}) {
   if (!meetsStateReq(s.effects, user)) return { ok: false, reason: "state" };
   if (ctx.drive && (user.overheat ?? 0) > 0) return { ok: false, reason: "overheat" };
   if (user.delayedPending && s.effects.some((e) => e.type === "delayed")) return { ok: false, reason: "delayed" };
+  // 토큰을 없애는 스킬(《비스트 귀환》 등)은 그 분류의 토큰이 있어야
+  const tr = s.effects.find((e) => e?.type === "tokenRemove");
+  if (tr && !(user.tokens ?? []).some((t) => !tr.category || t.category === tr.category)) return { ok: false, reason: "noToken" };
   if ((s.cost?.tp ?? 0) > (user.tp ?? 0)) return { ok: false, reason: "tp" };
   if ((s.cost?.fp ?? 0) > (user.fp ?? 0)) return { ok: false, reason: "fp" };
   return { ok: true, reason: null };
