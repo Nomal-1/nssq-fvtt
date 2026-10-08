@@ -20,7 +20,7 @@ export const TYPES = {
   debuff: { id: true, value: false, turns: false, param: false },
   modifier: { path: true, value: true },
   resource: { resource: true, delta: false, set: false },
-  stance: { effects: true, until: false, count: false, holder: false },
+  stance: { effects: true, until: false, count: false, holder: false, wait: false },
   trigger: { on: true, effects: true, limit: false, optional: false },
   counter: { attack: true, on: false, count: false, onlyIfEvaded: false, evenIfKO: false, optional: false },
   chase: { attack: true, on: false, count: false, optional: false },
@@ -44,7 +44,7 @@ export const TYPES = {
   target: { side: true, scope: true, count: false },
   guard: { mode: true, scope: false, optional: false },
   aura: { path: true, value: true, scope: false },
-  provoke: { count: false }
+  provoke: { count: false, to: false }
 };
 const COMMON = ["type", "when", "chance", "label", "variant", "toSelf"];
 

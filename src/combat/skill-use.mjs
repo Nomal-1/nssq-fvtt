@@ -5,7 +5,8 @@
  * 효과 데이터가 없는 스킬은 쓸 수 없다(07 #52).
  */
 import { canUseSkill } from "../engine/effects/usage.mjs";
-import { hasVariants, resolveEffects } from "../engine/effects/resolve.mjs";
+import { hasVariants, resolveEffects, variantEffects } from "../engine/effects/resolve.mjs";
+import { guardAttack } from "./guard.mjs";
 import { addCondition, CONDITIONS, removeCondition } from "../engine/conditions.mjs";
 import { addBuff, BUFFS } from "../engine/buffs.mjs";
 import { addState } from "../engine/states.mjs";
@@ -234,7 +235,16 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const spec = kind === "item" ? targetSpec(sys.target || "아군 단일", sys.effects) : targetSpec(sys.target, sys.effects);
   const rolls = [...extraRolls];
   const user = unitProfile(actor, combatant);
+  // 가드·도발·반사(단계 8-C): 공격 롤이 있는 스킬이면 대상·방어 값을 먼저 정한다
+  const atk = variantEffects(sys.effects ?? [], variant).find((e) => e?.type === "attack");
+  let guard = null;
+  if (atk && units.length && units.every((u) => u.combatant)) {
+    const elements = atk.element ? [].concat(atk.element) : atk.addElement ? [...new Set([...(user.elements ?? []).filter((x) => x !== "none"), ...[].concat(atk.addElement)])] : user.elements;
+    guard = await guardAttack({ attacker: actor, targets: units.map((u) => u.combatant), kind: atk.kind ?? "physical", elements, single: spec.scope === "single" && units.length === 1, noRedirect: spec.scope === "random" });
+    units = guard.targets.map((c) => ({ actor: c.actor, combatant: c }));
+  }
   const targets = units.map((u) => unitProfile(u.actor, u.combatant));
+  if (guard) for (const t of targets) guard.apply(t);
   const actorOf = new Map(units.map((u, i) => [targets[i].id, u.actor]));
   // 흡수(drain) 등 사용자 자신에게 돌아오는 결과
   if (!actorOf.has(user.id)) actorOf.set(user.id, actor);
@@ -244,6 +254,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(),
     variant, category: sys.category ?? "", source: kind
   });
+  if (guard) await guard.commit(new Set([...r.results.values()].filter((x) => x.hits.some((h) => h.hit)).map((x) => x.id)));
   // 「최속/후발 행동」(개막 페이즈에 쓴 것): 이번 턴 행동 순서. 메인 페이즈로 넘어갈 때 이니셔티브에 반영
   if (!r.failed) {
     for (const [i, t] of targets.entries()) {
@@ -265,7 +276,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     states: x.states.map((st) => ({ ...st, name: st.name || item.name })),
     sleepBroken: x.sleepBroken, revive: !!x.revive,
     stances: (x.stances ?? []).map((st) => ({ ...st, name: item.name, key: sys.key ?? item.name })),
-    hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist, raw: h.rawDamage ?? 0, halves: Number(!!h.guarded) + Number(!!h.halved), elements: h.elements ?? [] })),
+    hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist, raw: h.rawDamage ?? 0, halves: Number(!!h.guarded) + Number(!!h.halved) + Number(!!h.guardHalf), elements: h.elements ?? [] })),
     applied: false, before: null,
     // 수동 반응(단계 6-C): 명중한 공격이 있고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
     reaction: pendingReaction(actorOf.get(x.id), x.hits.find((h) => h.hit)?.kind ?? "physical", x.hits.some((h) => h.hit))
@@ -417,7 +428,11 @@ function entryLines(e, card) {
   for (const i of e.inflicts ?? []) if (!i.seq) out.push(inflictLi(i));
   for (const b of e.buffs ?? []) if (!b.seq) out.push(buffLi(b));
   for (const st of e.states ?? []) out.push(`<li class="state">${esc(L("stateLine", { name: st.name, mods: stateModText(st.mods) }))}</li>`);
-  for (const st of e.stances ?? []) out.push(`<li class="state">${esc(L(st.left ? "stanceLineCount" : "stanceLine", { name: st.name, n: st.left }))}</li>`);
+  for (const st of e.stances ?? []) {
+    // wait: false(《도발》·《캐슬링》 등 「그 턴 동안」)는 대기 상태가 아님
+    const key = st.waiting === false ? (st.left ? "keepLineCount" : "keepLine") : st.left ? "stanceLineCount" : "stanceLine";
+    out.push(`<li class="state">${esc(L(key, { name: st.name, n: st.left }))}</li>`);
+  }
   if (e.revive) out.push(`<li class="heal">${esc(L("revive"))}</li>`);
   for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}${c.count !== undefined ? ` ${esc(L("cureCount", { n: c.count }))}` : ""}</li>`);
   for (const x of e.resource ?? []) if (x.chanceFailed && !x.seq) out.push(chanceLi(x));

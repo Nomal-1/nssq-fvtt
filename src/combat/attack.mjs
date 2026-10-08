@@ -8,6 +8,7 @@ import { autoApplyMode, requestApply } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
 import { decorateReactions, pendingReaction } from "./reaction.mjs";
+import { guardAttack } from "./guard.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/attack-card.hbs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
@@ -37,11 +38,11 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
   if (!attacker) return;
   const targets = picked ? [picked] : [...game.user.targets];
   if (targets.length !== 1) return ui.notifications.warn(L("pickOneTarget"));
-  const targetToken = targets[0];
-  const target = targetToken.actor;
+  let targetToken = targets[0];
+  let target = targetToken.actor;
   if (!target) return;
   const a = combatProfile(attacker, combatantOf(attacker));
-  const d = combatProfile(target, combatantOf(target));
+  let d = combatProfile(target, combatantOf(target));
   if (a.ko) return ui.notifications.warn(L("attackerKO", { name: a.name }));
   if (d.ko) return ui.notifications.warn(L("targetKO", { name: target.name }));
   if (friendly(attacker, target) && !ignoreRange) return ui.notifications.warn(L("friendlyTarget"));
@@ -62,6 +63,18 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
     }
   }
 
+  // 가드·도발(단계 8-C): 대상이 바뀌면 바뀐 대상으로, 반감·【방어】·【내성】 보정
+  const tc = combatantOf(target);
+  const guard = await guardAttack({ attacker, targets: tc ? [tc] : [], kind: "physical", elements: a.elements, single: true });
+  const gc = guard.targets[0];
+  if (gc && gc !== tc) {
+    target = gc.actor;
+    targetToken = gc.token ?? targetToken;
+    d = combatProfile(target, gc);
+  }
+  if (gc) d.id = gc.id;
+  guard.apply(d);
+
   // 주사위는 Foundry Roll로(Dice So Nice 표시), 계산은 엔진
   const rolls = [];
   const rollDice = async (n) => {
@@ -73,7 +86,7 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
   const pb = sumAttackBonuses(a.attackBonuses, { self: a, target: { ...d, skills: target.items.filter((i) => i.type === "skill").map((i) => i.name) }, attack: { kind: "physical", elements: a.elements } });
   const r = await resolveAttack({
     attacker: { hit: a.physHit, physAtk: a.physAtk, elemAtk: a.elemAtk, elements: a.elements, critUp: a.critUp },
-    target: { evasion: d.evasion, defense: d.defense, resist: d.resist, guarding: d.guarding },
+    target: { evasion: d.evasion, defense: d.defense, resist: d.resist, guarding: d.guarding, guardHalf: d.guardHalf },
     kind: "physical", hitMod: pb.hitMod, diceMod: pb.diceMod, atkMod: pb.atkMod, critUp: pb.critUp, critDiceMod: pb.critDice,
     rollDice
   });
@@ -89,11 +102,12 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
     absSuccess: r.hitCheck.absSuccess, absFailure: r.hitCheck.absFailure,
     resist: r.resist ?? null, diceCount: r.diceCount ?? 0,
     damageDice: r.damage?.dice ?? [], critDice: r.critExtra?.dice ?? [],
-    crit: !!r.crit, rawDamage: r.rawDamage ?? 0, guarded: !!r.guarded, finalDamage: r.finalDamage ?? 0,
+    crit: !!r.crit, rawDamage: r.rawDamage ?? 0, guarded: !!r.guarded, guardHalf: !!r.guardHalf, finalDamage: r.finalDamage ?? 0,
     applied: false, before: null, after: null,
     // 수동 반응(단계 6-C): 명중했고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
     reaction: pendingReaction(target, "physical", r.hit)
   };
+  await guard.commit(new Set(r.hit && gc ? [gc.id] : []));
   const flags = {
     nssq: {
       attack: {

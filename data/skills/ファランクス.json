@@ -636,8 +636,20 @@
    "description": "<p>그 턴 동안 적의 단일 대상 공격 롤의 대상을 누계 (SL+1)회까지 강제로 자신으로 바꾼다.</p>",
    "effects": [
     {
-     "type": "provoke",
-     "count": "SL+1"
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL+1",
+     "wait": false,
+     "effects": [
+      {
+       "type": "provoke"
+      }
+     ]
     }
    ],
    "review": "ok"

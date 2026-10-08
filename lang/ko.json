@@ -1066,6 +1066,8 @@
       "cureCount": "(최대 {n}개)",
       "stanceLine": "대기 상태: 《{name}》(턴 종료까지)",
       "stanceLineCount": "대기 상태: 《{name}》(누적 {n}회 또는 턴 종료까지)",
+      "keepLine": "《{name}》: 이번 턴 동안",
+      "keepLineCount": "《{name}》: 이번 턴 동안 누적 {n}회까지",
       "stanceHint": "대기 상태: 《{name}》. 메인 페이즈 행동을 하지 않고, 조건이 맞으면 반격·추격·방어가 발동한다. 숫자는 남은 횟수",
       "recoil": "반동 대미지 {n}(대미지 다이스의 1의 개수)",
       "woke": "[수면] 풀림",
@@ -1118,6 +1120,18 @@
         "chase": "추격",
         "counter": "반격"
       }
+    },
+    "Guard": {
+      "provoke": "{skill}({holder}): 공격 대상 {from} → {to}",
+      "redirect": "{skill}({holder}): 공격 대상 {from} → {to}",
+      "cover": "{skill}: {holder}이(가) {from} 대신 공격을 받는다",
+      "reflect": "{skill}({holder}): 공격을 공격자에게 반사",
+      "reflectNullify": "{skill}({holder}): 공격을 공격자에게 반사, 나머지 대상 {n}명에 대한 공격은 무효",
+      "half": "{skill}({holder}): {target}이(가) 받는 대미지 반감",
+      "defense": "{skill}({holder}): {target}의 【방어】를 {n}(으)로",
+      "resist": "{target}: 【내성】 {list}",
+      "coverTitle": "대신 받기",
+      "coverAsk": "{holder}의 {skill}: {target} 대신 이 공격을 받는가?"
     },
     "Chase": {
       "run": "{type}: {name}",

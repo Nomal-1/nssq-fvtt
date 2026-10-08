@@ -749,9 +749,21 @@
    "description": "<p>그 턴 동안, 자신이 공격 롤의 대상이 되었을 때, 공격 롤의 대상을 이 스킬의 대상자로 변경한다.</p>",
    "effects": [
     {
-     "type": "guard",
-     "mode": "redirect",
-     "scope": "target"
+     "type": "target",
+     "side": "ally",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "redirect",
+       "scope": "target"
+      }
+     ]
     }
    ],
    "review": "ok"

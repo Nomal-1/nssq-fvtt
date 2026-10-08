@@ -726,8 +726,16 @@
      "scope": "single"
     },
     {
-     "type": "provoke",
-     "count": "SL+1"
+     "type": "stance",
+     "until": "count",
+     "count": "SL+1",
+     "wait": false,
+     "effects": [
+      {
+       "type": "provoke",
+       "to": "target"
+      }
+     ]
     }
    ],
    "review": "ok"

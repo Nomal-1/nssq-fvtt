@@ -85,7 +85,7 @@ export const halve = (n) => Math.floor(n / 2);
  * 공격 롤 한 번(대상 1체).
  * @param {object} a
  * @param {{hit: number, physAtk: number, elemAtk: number, elements: string[], critUp?: boolean}} a.attacker
- * @param {{evasion: number, defense: number, resist: object, guarding?: boolean}} a.target
+ * @param {{evasion: number, defense: number, resist: object, guarding?: boolean, guardHalf?: boolean}} a.target guardHalf: 가드 스킬 반감(《프런트 가드》 등)
  * @param {"physical"|"elemental"} [a.kind]
  * @param {number} [a.hitMod] 명중 보정
  * @param {number} [a.diceMod] 대미지 다이스 보정
@@ -126,8 +126,9 @@ export async function resolveAttack({ attacker, target, kind = "physical", hitMo
     rawDamage: raw,
     guarded: !!target.guarding,
     halved: !!halfDamage,
-    // 방어 전념 절반, 스킬의 「대미지 절반」도 절반(둘 다면 두 번)
-    finalDamage: [target.guarding, halfDamage].reduce((n, h) => (h ? halve(n) : n), raw)
+    guardHalf: !!target.guardHalf,
+    // 방어 전념 절반, 스킬의 「대미지 절반」, 가드 스킬 반감도 절반(겹치면 겹친 만큼)
+    finalDamage: [target.guarding, halfDamage, target.guardHalf].reduce((n, h) => (h ? halve(n) : n), raw)
   };
 }
 

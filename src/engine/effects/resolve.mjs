@@ -112,7 +112,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     const resist = r.sleepBroken && t.resistAwake ? t.resistAwake : t.resist;
     const result = await resolveAttack({
       attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
-      target: { evasion: t.evasion, defense: t.defense, resist, guarding: t.guarding },
+      target: { evasion: t.evasion, defense: t.defense, resist, guarding: t.guarding, guardHalf: t.guardHalf },
       kind, hitMod, diceMod,
       atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, failAtOrBelow: Number(e.failAtOrBelow ?? 0) || 0, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
       rollDice
@@ -214,7 +214,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         // 《방패 마스터리》: 『방어』 스킬 대기 상태의 횟수 +
         const plus = category === "방어" ? user.guardCount ?? 0 : 0;
         const left = e.until === "count" ? Math.max(1, evaluate(e.count ?? 1, vars(t)) + plus) : null;
-        (toTarget ? r : res(user)).stances.push({ effects: e.effects ?? [], until: e.until ?? "endOfTurn", left, sl, waiting: !toTarget, guardTargets: targets.map((x) => x.id) });
+        // wait: false → 「그 턴 동안」 효과(《도발》·《캐슬링》): 저장만 하고 메인 행동은 그대로
+        (toTarget ? r : res(user)).stances.push({ effects: e.effects ?? [], until: e.until ?? "endOfTurn", left, sl, waiting: !toTarget && e.wait !== false, guardTargets: targets.map((x) => x.id) });
         return;
       }
       case "drain": {

@@ -46,7 +46,7 @@ export async function attackEvent(message) {
     elements = atk.elements ?? [];
     category = "";
     for (const t of atk.targets ?? []) {
-      rows.push({ uuid: t.actorUuid, hit: !!t.hit, crit: !!t.crit, hitData: t.hit ? { dice: t.damageDice ?? [], resist: t.resist ?? 0, crit: !!t.crit, raw: t.rawDamage ?? 0, halves: Number(!!t.guarded) } : null });
+      rows.push({ uuid: t.actorUuid, hit: !!t.hit, crit: !!t.crit, hitData: t.hit ? { dice: t.damageDice ?? [], resist: t.resist ?? 0, crit: !!t.crit, raw: t.rawDamage ?? 0, halves: Number(!!t.guarded) + Number(!!t.guardHalf) } : null });
     }
   } else if (sk && !sk.failed) {
     if (sk.group && sk.group.index !== sk.group.count) return null;
