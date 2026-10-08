@@ -210,7 +210,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         const resource = e.resource ?? "hp";
         const amount = e.mode === "sixes"
           ? [...(lastHit.damage?.dice ?? []), ...(lastHit.critExtra?.dice ?? [])].filter((d) => d === 6).length
-          : Math.floor((lastHit.finalDamage ?? 0) / 2);
+          : Math.floor((lastHit.finalDamage ?? 0) / (e.mode === "quarter" ? 4 : 2));
         const me = res(user);
         me.heal[resource] += amount;
         me.resource.push({ heal: resource, amount, drain: true });

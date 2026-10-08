@@ -32,6 +32,7 @@ const CHECKS = {
   // 자신이 배치한 토큰 중 그 tokenKey 접두사가 있는가(《진 회복》, c.self.tokens = [tokenKey])
   hasToken: (v, c) => (c.self?.tokens ?? []).some((k) => String(k).startsWith(v)),
   selfHpFull: (v, c) => ((c.self?.hp ?? 0) >= (c.self?.hpMax ?? 0)) === !!v,
+  selfHpBelowHalf: (v, c) => ((c.self?.hp ?? 0) * 2 < (c.self?.hpMax ?? 0)) === !!v,
   selfHpAtMostHalf: (v, c) => ((c.self?.hp ?? 0) * 2 <= (c.self?.hpMax ?? 0)) === !!v,
   selfRow: (v, c) => c.self?.row === v,
   targetRow: (v, c) => (c.target?.row ?? "front") === v,
