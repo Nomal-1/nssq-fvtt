@@ -86,8 +86,16 @@
      "variants": [],
      "sl": 1,
      "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [혼란]을 준다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "inflict",
+       "condition": "confuse",
+       "check": {
+        "type": "contest"
+       }
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!HTmXv7tUnwICTcfD.5DfqflYJhM5xRTql"
    },
@@ -121,8 +129,23 @@
      "variants": [],
      "sl": 1,
      "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [혼란]을 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "onHit": [
+        {
+         "type": "inflict",
+         "condition": "confuse",
+         "check": {
+          "type": "fixed",
+          "target": "@self.suppAtk + 7"
+         }
+        }
+       ]
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!HTmXv7tUnwICTcfD.UPWdxqC6Xu7Wiqlp"
    },
@@ -156,8 +179,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>[다리] 봉인에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "condResist.bindLeg",
+       "value": -2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!HTmXv7tUnwICTcfD.UvflNKf1FMcyzv6M"
    },
@@ -191,8 +220,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>[공포]에 대한 억제 방어 롤에 항상 +2를 얻는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "condResist.fear",
+       "value": 2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!HTmXv7tUnwICTcfD.6AFNgZByyahzwGgN"
    },
@@ -226,8 +261,13 @@
      "variants": [],
      "sl": 1,
      "description": "<p>[혼란]을 받지 않게 된다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "immune",
+       "condition": "confuse"
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!HTmXv7tUnwICTcfD.Kh3DSOxLz8XLGAyN"
    }
@@ -324,8 +364,23 @@
      "variants": [],
      "sl": 1,
      "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [독]을 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "onHit": [
+        {
+         "type": "inflict",
+         "condition": "poison",
+         "check": {
+          "type": "fixed",
+          "target": "@self.suppAtk + 7"
+         }
+        }
+       ]
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!Gu0koM4qX8QXJnpM.Or1z4WOHa31FN61d"
    },
@@ -359,8 +414,24 @@
      "variants": [],
      "sl": 1,
      "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+6)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [독]을 받는다. 또한 이때 【물리 명중】에 −5를 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "hitMod": -5,
+       "onHit": [
+        {
+         "type": "inflict",
+         "condition": "poison",
+         "check": {
+          "type": "fixed",
+          "target": "@self.suppAtk + 6"
+         }
+        }
+       ]
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!Gu0koM4qX8QXJnpM.GllP63gyiMdzluQ7"
    },
@@ -394,8 +465,13 @@
      "variants": [],
      "sl": 1,
      "description": "<p>[독]을 받지 않게 된다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "immune",
+       "condition": "poison"
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!Gu0koM4qX8QXJnpM.NXbN1qG1WmGUUDNb"
    }
@@ -486,8 +562,18 @@
      "variants": [],
      "sl": 1,
      "description": "<p>4회의 〈빙〉 속성 공격 롤을 한다. 이때 대상은 공격 1회마다 적 중에서 무작위로 선택한다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "elemental",
+       "element": [
+        "ice"
+       ],
+       "times": 4,
+       "random": true
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!6y5bVXL30jgufs9G.W6meehzxK3eYmVIH"
    },
@@ -521,8 +607,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>[독]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "condResist.poison",
+       "value": -2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!6y5bVXL30jgufs9G.HdJrwY57JrnYwGLw"
    },
@@ -556,8 +648,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>[마비]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "condResist.paralyze",
+       "value": -2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!6y5bVXL30jgufs9G.OT33EqdtBSm32ysP"
    }
@@ -660,8 +758,23 @@
      "variants": [],
      "sl": 1,
      "description": "<p>전투 턴의 메인 페이즈 시작 시에 사용을 선언한다. 최속 행동으로 물리 공격 롤을 한다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "trigger",
+       "on": "mainPhaseStart",
+       "effects": [
+        {
+         "type": "actionTiming",
+         "value": "first"
+        },
+        {
+         "type": "attack",
+         "kind": "physical"
+        }
+       ]
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!YZm1Vo7AvVLJP6Qg.4OSTAZUG7VIi3Dkb"
    },
@@ -695,8 +808,23 @@
      "variants": [],
      "sl": 1,
      "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [혼란]을 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "onHit": [
+        {
+         "type": "inflict",
+         "condition": "confuse",
+         "check": {
+          "type": "fixed",
+          "target": "@self.suppAtk + 7"
+         }
+        }
+       ]
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!YZm1Vo7AvVLJP6Qg.3nxyflUhmsmCeUgM"
    },
@@ -730,8 +858,17 @@
      "variants": [],
      "sl": 1,
      "description": "<p>〈뇌〉 속성 공격 롤을 한다. 또한 이때 【물리 명중】에 −2를 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "elemental",
+       "element": [
+        "volt"
+       ],
+       "hitMod": -2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!YZm1Vo7AvVLJP6Qg.V7ocDp8irHLtaaZO"
    }
@@ -828,8 +965,23 @@
      "variants": [],
      "sl": 1,
      "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 [마비]를 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "onHit": [
+        {
+         "type": "inflict",
+         "condition": "paralyze",
+         "check": {
+          "type": "fixed",
+          "target": "@self.suppAtk + 7"
+         }
+        }
+       ]
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!5Ht1NBTzpzny8JP4.SqCJnh6QGmou5DEn"
    },
@@ -863,8 +1015,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>물리 공격 롤을 한다. 이때 대미지 다이스 +8개를 얻는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "diceMod": 8
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!5Ht1NBTzpzny8JP4.RCjKPWppGdixUe7k"
    },
@@ -898,8 +1056,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>[다리] 봉인에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "condResist.bindLeg",
+       "value": -2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!5Ht1NBTzpzny8JP4.Mk29WPGMh0HrQ05P"
    }
@@ -996,8 +1160,15 @@
      "variants": [],
      "sl": 1,
      "description": "<p>물리 공격 롤을 한다. 이때 【물리 명중】−3으로 취급하고, 대미지 다이스 +7개를 얻는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "hitMod": -3,
+       "diceMod": 7
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!NX8XH3UWaMR6rogr.ZiEXmVPbEDZzJCT3"
    },
@@ -1031,8 +1202,16 @@
      "variants": [],
      "sl": 1,
      "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [공포]를 준다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "inflict",
+       "condition": "fear",
+       "check": {
+        "type": "contest"
+       }
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!NX8XH3UWaMR6rogr.FYq3zlCJpouAjyhi"
    },
@@ -1066,8 +1245,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>[혼란]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "condResist.confuse",
+       "value": -2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!NX8XH3UWaMR6rogr.ZY6cuNm4Pwk90mmZ"
    }
@@ -1164,8 +1349,16 @@
      "variants": [],
      "sl": 1,
      "description": "<p>자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [공포]를 준다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "inflict",
+       "condition": "fear",
+       "check": {
+        "type": "contest"
+       }
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!KxYczCGowUEWYbPU.B37KT9ox7r7sNR2J"
    },
@@ -1199,8 +1392,18 @@
      "variants": [],
      "sl": 1,
      "description": "<p>〈괴+빙〉 속성의 물리 공격 롤을 한다. 이때 대미지 다이스 +5개를 얻는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "element": [
+        "strike",
+        "ice"
+       ],
+       "diceMod": 5
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!KxYczCGowUEWYbPU.UT2hmpNg7t78jVqG"
    }
@@ -1291,8 +1494,27 @@
      "variants": [],
      "sl": 1,
      "description": "<p>자신은 스킬 사용 시 대기 상태가 된다. 이 대기 상태 중에 자신에게 '백병' 분류의 물리 공격 롤이 행해지면, 대미지를 받은 뒤 통상 공격 취급의 반격을 한다. 이 반격은 자신이 쓰러진 경우에도 발동한다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "stance",
+       "until": "endOfTurn",
+       "effects": [
+        {
+         "type": "counter",
+         "on": "attacked",
+         "when": {
+          "attackKind": "physical",
+          "category": "백병"
+         },
+         "attack": {
+          "kind": "physical"
+         }
+        }
+       ]
+      }
+     ],
+     "review": "partial",
+     "effectsNote": "대미지를 받은 뒤 반격, 쓰러져도 반격: 단계 8"
     },
     "_key": "!actors.items!TYVdzpsOXjPWjC1F.3gKFgpShLQGHku99"
    },
@@ -1326,8 +1548,18 @@
      "variants": [],
      "sl": 1,
      "description": "<p>2회의 〈돌〉 속성 물리 공격 롤을 한다. 이때 【물리 명중】−5로 취급한다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "element": [
+        "pierce"
+       ],
+       "times": 2,
+       "hitMod": -5
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!TYVdzpsOXjPWjC1F.Ol4CzYTNnmLnleqE"
    },
@@ -1361,8 +1593,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>[수면]에 대한 억제 방어 롤에 항상 −2를 받는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "condResist.sleep",
+       "value": -2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!TYVdzpsOXjPWjC1F.Z5tDZdcx13EeBAZK"
    }
@@ -1453,8 +1691,16 @@
      "variants": [],
      "sl": 1,
      "description": "<p>2회의 물리 공격 롤을 한다. 이때 대상은 공격 1회마다 적 중에서 무작위로 선택한다. 또한 이때의 대미지 다이스를 −5개 한다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "times": 2,
+       "random": true,
+       "diceMod": -5
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!O3OBC47ITlvcioJx.Xn1xvjyEAiX8oVwy"
    },
@@ -1488,8 +1734,22 @@
      "variants": [],
      "sl": 1,
      "description": "<p>물리 공격 롤을 한다. 명중하면 대상은 (공격자의 【억제 공격】+7)을 목표값으로 한 억제 방어 롤을 하고, 이에 실패하면 전투 불능이 된다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical",
+       "onHit": [
+        {
+         "type": "kill",
+         "check": {
+          "type": "fixed",
+          "target": "@self.suppAtk + 7"
+         }
+        }
+       ]
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!O3OBC47ITlvcioJx.GXDZ4bbMikpPRx1S"
    },
@@ -1523,8 +1783,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>즉시 전투 불능이 되는 효과에 대한 억제 방어 롤에 항상 +2를 얻는다.</p>",
-     "effects": [],
-     "review": "todo"
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "condResist.death",
+       "value": 2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!O3OBC47ITlvcioJx.VTEvGNtK7Cs8OAJH"
    }

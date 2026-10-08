@@ -220,12 +220,13 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         // 즉사: 고정 목표값 억제 방어 롤에 실패하면 【HP】 0(《일섬》 등). 카드에는 [즉사]로 표시
         if (e.check?.type === "contest") {
           // 대결 즉사(커스메이커 《죽음의 주언》)
-          const c = contestInflict({ atkDice: await rollDice(2), suppAtk: (user.suppAtk ?? 0) + evaluate(e.check.atkMod ?? 0, vars(t)), defDice: await rollDice(2), suppDef: t.suppDef ?? 0 });
+          const c = contestInflict({ atkDice: await rollDice(2), suppAtk: (user.suppAtk ?? 0) + evaluate(e.check.atkMod ?? 0, vars(t)), defDice: await rollDice(2), suppDef: (t.suppDef ?? 0) + (t.condResist?.death ?? 0) });
           r.inflicts.push({ id: "death", depth: null, resisted: c.resisted, contest: { atk: c.atk, def: c.def } });
           return;
         }
         const target = evaluate(e.check?.target ?? 0, vars(t));
-        const c = resistCheck({ dice: await rollDice(2), suppDef: (t.suppDef ?? 0) + evaluate(e.check?.defMod ?? 0, vars(t)), target });
+        // 「내성: 즉사」 condResist.death
+        const c = resistCheck({ dice: await rollDice(2), suppDef: (t.suppDef ?? 0) + (t.condResist?.death ?? 0) + evaluate(e.check?.defMod ?? 0, vars(t)), target });
         r.inflicts.push({ id: "death", depth: null, resisted: c.resisted, fixed: { target, check: c.check } });
         return;
       }
