@@ -16,6 +16,7 @@
       {{#each inventory.skillFilters as |f|}}<a class="{{#if f.active}}active{{/if}}" data-action="skill-filter" data-filter="{{f.key}}">{{f.label}} <em>{{f.count}}</em></a>{{/each}}
     </div>
     <span class="nq-spacer"></span>
+    <a class="nq-auto {{#if inventory.autoChase}}on{{/if}}" data-action="auto-trigger" data-key="chaseBuff" title="{{localize 'NSSQ.Skill.autoChaseHint'}}"><i class="fas fa-bolt"></i> {{localize "NSSQ.Skill.autoChase"}}</a>
     <button type="button" data-action="skill-tree" title="{{localize 'NSSQ.Skill.treeHint'}}"><i class="fas fa-sitemap"></i> {{localize "NSSQ.Skill.tree"}}</button>
   </div>
 
@@ -30,6 +31,7 @@
         {{#if (nssqEq s.usage "explore")}}<span class="nq-usage explore" title="{{localize 'NSSQ.Skill.filterExplore'}}"><i class="fas fa-compass"></i></span>{{/if}}
         <span class="nq-timing {{s.timingCls}}">{{s.timing}}</span>
         {{#if s.cost}}<span class="nq-cost">{{s.cost}}</span>{{/if}}
+        {{#if s.optional}}<a class="nq-auto {{#if s.auto}}on{{/if}}" data-action="auto-trigger" data-key="{{s.autoKey}}" title="{{localize 'NSSQ.Skill.autoHint'}}"><i class="fas fa-bolt"></i> {{localize "NSSQ.Skill.auto"}}</a>{{/if}}
         <span class="nq-sl" title="{{#if s.prereq}}{{localize 'NSSQ.Skill.prereq'}}: {{s.prereq}}{{/if}}">SL {{s.sl}}{{#if s.max}}<em>/{{s.max}}</em>{{/if}}</span>
         {{#if @root.editable}}<a class="nq-ctl" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>{{/if}}
       </li>

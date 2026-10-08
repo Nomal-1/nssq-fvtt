@@ -78,7 +78,8 @@
        "resource": "tp",
        "delta": "SL"
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"

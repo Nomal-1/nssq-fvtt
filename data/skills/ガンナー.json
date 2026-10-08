@@ -47,7 +47,8 @@
        "type": "inflict",
        "condition": "stun"
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"

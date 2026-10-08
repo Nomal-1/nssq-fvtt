@@ -178,6 +178,13 @@ export class NssqActorSheet extends ActorSheet {
       SkillTree.open(this.actor);
     });
     if (!this.isEditable) return;
+    // 선택형 스킬·『추격』 강화: 조건이 맞으면 자동 사용(단계 8)
+    html.on("click", "[data-action=auto-trigger]", async (ev) => {
+      ev.preventDefault();
+      const key = ev.currentTarget.dataset.key;
+      const cur = this.actor.getFlag("nssq", "autoTrigger") ?? {};
+      await this.actor.update({ [`flags.nssq.autoTrigger.${key}`]: !cur[key] });
+    });
     if (this.actor.type === "character") activateInventoryListeners(this, html);
     // 통상 공격: 지정(타깃)한 토큰 1개. GM은 Shift로 사거리·아군 확인 무시
     html.on("click", "[data-action=rare-on]", () => makeRare(this.actor));

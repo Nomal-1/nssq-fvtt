@@ -585,6 +585,8 @@
 #nssq-battle .nb-member em.npc { border: 1px solid #c7a6f0; color: #c7a6f0; }
 #nssq-battle .nb-member em.guard { background: rgba(111, 211, 230, 0.85); color: #0a1626; }
 #nssq-battle .nb-member em.overheat { background: linear-gradient(90deg, #ff7a1a, #e0302a); color: #fff; font-weight: 700; box-shadow: 0 0 6px rgba(255, 110, 30, 0.8); animation: nb-overheat 1.4s ease-in-out infinite alternate; }
+#nssq-battle em.stance { font-style: normal; font-size: 0.72em; padding: 0 4px; border-radius: 6px; background: rgba(20, 60, 50, 0.85); border: 1px solid #7fe0c4; color: #d8fff2; white-space: nowrap; }
+#nssq-battle .nb-enemy .stances { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; }
 #nssq-battle .nb-member em.bstate { background: rgba(40, 30, 80, 0.85); border: 1px solid #b9a2ff; color: #e2d8ff; white-space: nowrap; }
 .nssq-skill-card .sk-target li.state { color: #5a3fb0; }
 .nssq-skill-card .sk-target .supp-roll { margin-left: 1em; font-size: 0.9em; color: #555; }
@@ -923,3 +925,7 @@
 .nssq-skill-card .sk-apply button { width: auto; line-height: 1.6em; padding: 0 8px; }
 .nssq-reaction { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 3px 0; padding: 3px 6px; font-size: 0.88em; background: rgba(36, 96, 178, 0.1); border-left: 3px solid #2460b2; }
 .nssq-reaction button { width: auto; flex: 0 0 auto; line-height: 1.6em; padding: 0 8px; }
+
+/* 선언형 스킬 자동 사용 토글(단계 8) */
+.nssq .nq-auto { font-size: 0.8em; padding: 0 5px; border: 1px solid currentColor; border-radius: 8px; opacity: 0.55; white-space: nowrap; }
+.nssq .nq-auto.on { opacity: 1; color: #e2a400; }

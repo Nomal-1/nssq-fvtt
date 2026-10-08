@@ -38,7 +38,8 @@
        "type": "attack",
        "kind": "physical"
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"

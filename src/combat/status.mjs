@@ -24,13 +24,20 @@ export function conditionLabel(c) {
   return c.depth === null || c.depth === undefined ? name : `${name} (${game.i18n.format("NSSQ.StatusHint.depth", { n: c.depth })})`;
 }
 
+/** 액터 uuid면 이름, 아니면 그 글자 그대로 */
+const nameOfUuid = (v) => {
+  if (!v || !String(v).includes(".")) return v ?? "";
+  try { return fromUuidSync(v, { strict: false })?.name ?? v; } catch { return v; }
+};
+
 /** 속성 param 표기: 〈염〉 / 〈염〉〈빙〉〈뇌〉 / 전체 */
 const elementText = (param) => (param === "all" ? loc("NSSQ.Buff.paramAll") : paramElements(param).map((k) => loc(`NSSQ.Resist.${k}`)).join(""));
 
 const paramText = (b) => {
   const def = BUFFS[b.id];
   if (!def?.param || !b.param) return "";
-  return def.param === "text" ? b.param : elementText(b.param);
+  // 글자 param(『추격: ○』)은 액터 uuid면 이름으로
+  return def.param === "text" ? nameOfUuid(b.param) : elementText(b.param);
 };
 
 /** 「물리 공격 상승: 2」·「내성 부여: 〈염〉」 */
@@ -55,7 +62,8 @@ export function buffEffectText(raw) {
   if (delta) return B("effResist", { el: elementText(b.param), n: signed(delta) });
   if (b.id === "elemImbue") return B("effImbue", { el: elementText(b.param) });
   if (b.id === "hpRegen" || b.id === "tpRegen") return B("effRegen", { res: b.id === "hpRegen" ? "【HP】" : "【TP】", n: b.value });
-  if (b.id === "chase") return B("effChase", { target: b.param || "-" });
+  // 『추격: ○』 param은 ○의 액터 uuid(단계 8). 예전 데이터의 글자도 그대로 보인다
+  if (b.id === "chase") return B("effChase", { target: nameOfUuid(b.param) || "-" });
   if (b.id === "critUp") return B("effCrit");
   return "";
 }

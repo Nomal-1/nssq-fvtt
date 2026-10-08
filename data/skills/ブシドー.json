@@ -867,7 +867,8 @@
        "kind": "physical",
        "diceMod": "SL"
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"

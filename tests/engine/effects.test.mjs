@@ -83,11 +83,15 @@ describe("03 §4 예시", () => {
     expect(r.results.get("a").buffs).toEqual([{ id: "physAtkUp", value: 4, turns: 3, param: "" }, { id: "elemAtkUp", value: 4, turns: 3, param: "" }]);
   });
 
-  it("《트래핑》 대기 상태·반격, 《사지타리우스의 화살》 지연 공격은 기록만(단계 8, GM 판단)", async () => {
+  it("《트래핑》 대기 상태는 사용자에게 저장(단계 8-A), 《사지타리우스의 화살》 지연 공격은 아직 기록만", async () => {
     const trap = [{ type: "stance", until: "count", count: 3, effects: [{ type: "counter", when: { attackKind: "physical" }, on: "rowAttacked", attack: { kind: "physical", diceMod: "-(4-SL)" } }] }];
-    const r = await resolveEffects({ effects: trap, user, targets: [user], rollDice: dice() });
-    expect(r.deferred).toEqual(trap);
-    expect(r.gm).toEqual(["stance"]);
+    const r = await resolveEffects({ effects: trap, sl: 2, user, targets: [user, { ...user, id: "a" }], rollDice: dice() });
+    expect(r.gm).toEqual([]);
+    expect(r.results.get("u").stances).toEqual([expect.objectContaining({ until: "count", left: 3, sl: 2, waiting: true, effects: trap[0].effects })]);
+    expect(r.results.get("a")?.stances ?? []).toEqual([]);
+    // 《방패 마스터리》(guardCount): 『방어』 스킬이면 횟수 +
+    const g = await resolveEffects({ effects: trap, user: { ...user, guardCount: 2 }, targets: [user], category: "방어", rollDice: dice() });
+    expect(g.results.get("u").stances[0].left).toBe(5);
     const arrow = [{ type: "delayed", at: "nextTurnLate", turns: 1, effects: [{ type: "attack", kind: "physical", diceMod: "(SL+1)*3" }] }];
     const r2 = await resolveEffects({ effects: arrow, user, targets: [foe], rollDice: dice() });
     expect(r2.deferred[0].at).toBe("nextTurnLate");

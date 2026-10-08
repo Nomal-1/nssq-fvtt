@@ -66,7 +66,8 @@ export class NssqCombat extends Combat {
       "flags.nssq.-=opening": null,
       "flags.nssq.-=disabled": null,
       "flags.nssq.-=confused": null,
-      "flags.nssq.-=timing": null
+      "flags.nssq.-=timing": null,
+      "flags.nssq.-=stances": null
     }));
     if (updates.length) await this.updateEmbeddedDocuments("Combatant", updates);
   }

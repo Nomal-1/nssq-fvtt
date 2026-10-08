@@ -254,10 +254,15 @@ function enemyCard(c, combat, targetable) {
     <div class="plate">
       <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
       <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
-      ${statusMarks(a)}
+      ${statusMarks(a)}${(c.getFlag("nssq", "stances") ?? []).length ? `<div class="stances">${stanceChips(c)}</div>` : ""}
       ${tools}
     </div>
   </div>`;
+}
+
+/** 대기 상태(단계 8): 「대기: 《트래핑》 2」 */
+function stanceChips(c) {
+  return (c.getFlag("nssq", "stances") ?? []).map((st) => `<em class="stance" title="${esc(game.i18n.format("NSSQ.SkillUse.stanceHint", { name: st.name }))}"><i class="fas fa-hourglass-half"></i> ${esc(st.name)}${st.left ? ` ${st.left}` : ""}</em>`).join("");
 }
 
 /** 오버히트(드라이브 스킬 사용 뒤 남은 턴)·전투 고유 상태(무사의 자세 등) 표시 */
@@ -282,7 +287,7 @@ function partyCard(c, combat, targetable) {
   return `<div class="${classes}" data-combatant="${c.id}" data-key="p-${c.id}" data-flip>
     <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}"></div>
     <div class="info">
-      <div class="line"><span class="name">${esc(nameOf(c))}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${overheatChip(a)}${statusChips(a)}
+      <div class="line"><span class="name">${esc(nameOf(c))}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${overheatChip(a)}${stanceChips(c)}${statusChips(a)}
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
       <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) + `<div class="nb-fp" title="FP"><b>FP</b><span>${s.fp?.value ?? 0}</span></div>` : ""}</div>
     </div>

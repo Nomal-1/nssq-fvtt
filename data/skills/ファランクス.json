@@ -46,7 +46,8 @@
        "turns": 1,
        "param": "slash,strike,pierce"
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"
@@ -817,7 +818,8 @@
        "path": "checks.escape",
        "value": 3
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"

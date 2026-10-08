@@ -46,7 +46,8 @@
        "turns": 1,
        "param": "fire,ice,volt"
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"

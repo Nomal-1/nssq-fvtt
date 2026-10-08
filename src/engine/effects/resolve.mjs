@@ -14,7 +14,7 @@ import { sumAttackBonuses } from "./passives.mjs";
 import { activationRoll } from "./usage.mjs";
 
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
-export const DEFERRED_TYPES = ["stance", "delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
+export const DEFERRED_TYPES = ["delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
 export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus", "useBonus", "target", "immune"];
 
@@ -22,7 +22,7 @@ export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus",
 const CUSTOM = new Map();
 export const registerCustom = (name, fn) => CUSTOM.set(name, fn);
 
-const blank = (t) => ({ id: t.id, name: t.name, hits: [], damage: 0, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], states: [], sleepBroken: false, revive: false, actionTiming: null });
+const blank = (t) => ({ id: t.id, name: t.name, hits: [], damage: 0, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], states: [], sleepBroken: false, revive: false, actionTiming: null, stances: [] });
 
 /** 선언 명칭(variants)을 고른 effects: variant가 없는 효과 + 고른 번호의 효과 */
 export const variantEffects = (effects, variant = null) => (effects ?? []).filter((e) => e?.variant === undefined || e.variant === variant);
@@ -85,6 +85,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     }
   };
 
+  // 대기 상태는 사용자에게 한 번(대상이 여럿이어도). holder: "target"이면 대상마다(《노부시의 진형》)
+  let stanceDone = false;
   // onHit 처리 중인 명중(흡수 drain이 대미지·주사위를 본다)
   let lastHit = null;
   const attackOnce = async (e, t) => {
@@ -204,6 +206,17 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         if (ones) { r.damage += ones; r.resource.push({ recoil: ones }); }
         return;
       }
+      case "stance": {
+        // 대기 상태(단계 8): 저장해 두고 공격 이벤트 때 반격·추격·가드로 쓴다(combat/stance.mjs)
+        const toTarget = e.holder === "target";
+        if (!toTarget && stanceDone) return;
+        if (!toTarget) stanceDone = true;
+        // 《방패 마스터리》: 『방어』 스킬 대기 상태의 횟수 +
+        const plus = category === "방어" ? user.guardCount ?? 0 : 0;
+        const left = e.until === "count" ? Math.max(1, evaluate(e.count ?? 1, vars(t)) + plus) : null;
+        (toTarget ? r : res(user)).stances.push({ effects: e.effects ?? [], until: e.until ?? "endOfTurn", left, sl, waiting: !toTarget, guardTargets: targets.map((x) => x.id) });
+        return;
+      }
       case "drain": {
         // 흡수: 이 명중의 결과로 자신을 회복(《음양검: 영흡명참》 대미지 절반 → HP, 《영흡심참》 6의 개수 → TP)
         if (!lastHit) return;
@@ -235,11 +248,13 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         return;
       case "buff":
       case "debuff": {
+        // 『추격: (자신)』·『추격: (스킬 사용자)』: 누구의 공격에 추격하는지 사용자 액터로 기록
+        const param = e.id === "chase" && ["자신", "사용자", "self", "user"].includes(e.param) ? user.uuid ?? e.param : e.param;
         // 《무용 마스터리》 등: 이 스킬(분류)로 주는 강화의 지속 턴 +
         // 《주언 마스터리》: 약화 지속 턴 +(debuffTurns)
         const key = e.type === "buff" ? "buffTurns" : "debuffTurns";
         const plus = (user.useBonuses ?? []).filter((b) => whenMatches(b.when, { ...ctx, category, self: user, target: t })).reduce((n, b) => n + (b[key] ?? 0), 0);
-        r.buffs.push({ id: canonicalBuff(e.id), value: evaluate(e.value ?? 0, vars(t)), turns: Math.max(1, evaluate(e.turns ?? 1, vars(t)) + plus), param: e.param ?? "" });
+        r.buffs.push({ id: canonicalBuff(e.id), value: evaluate(e.value ?? 0, vars(t)), turns: Math.max(1, evaluate(e.turns ?? 1, vars(t)) + plus), param: param ?? "" });
         return;
       }
       case "resource":

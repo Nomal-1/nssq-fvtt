@@ -41,7 +41,8 @@
        "type": "attackBonus",
        "diceMod": 10
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"
@@ -261,7 +262,8 @@
        "kind": "physical",
        "diceMod": "SL"
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"

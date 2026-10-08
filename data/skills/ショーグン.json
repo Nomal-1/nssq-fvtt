@@ -507,7 +507,8 @@
        "path": "checks.escape",
        "value": 3
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"
@@ -617,7 +618,8 @@
        "kind": "ailment",
        "count": 1
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"

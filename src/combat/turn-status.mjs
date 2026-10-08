@@ -53,7 +53,7 @@ async function rollFor(combatant, id, rolls) {
     const u = CONDITIONS[id].roll === "confuse"
       ? { "flags.nssq.confused": true }
       // 행동 불가가 되면 대기 상태(방어 전념 등)도 취소(01 §3.8)
-      : { "flags.nssq.disabled": id, "flags.nssq.guarding": null, "flags.nssq.waiting": null };
+      : { "flags.nssq.disabled": id, "flags.nssq.guarding": null, "flags.nssq.waiting": null, "flags.nssq.-=stances": null };
     await combatant.update(u);
   }
   return `<li class="${fail ? "ng" : "ok"}">${esc(combatant.name)} [${esc(conditionName(id))}] 1D6 = <b>${die}</b> → ${fail ? L(CONDITIONS[id].roll === "confuse" ? "confusedFail" : "disabledFail") : L("rollOk")}</li>`;
@@ -82,7 +82,7 @@ export async function onInflicted(actor, id) {
   const c = combat?.started ? combat.combatants.find((x) => x.actor === actor || x.actor?.uuid === actor.uuid) : null;
   if (!c) return;
   if (id === "stun" && (c.getFlag("nssq", "guarding") || c.getFlag("nssq", "waiting"))) {
-    await c.update({ "flags.nssq.guarding": null, "flags.nssq.waiting": null });
+    await c.update({ "flags.nssq.guarding": null, "flags.nssq.waiting": null, "flags.nssq.-=stances": null });
   }
   if (!CONDITIONS[id]?.roll) return;
   const rolls = [];

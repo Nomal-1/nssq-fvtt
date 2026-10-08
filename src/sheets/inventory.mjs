@@ -7,6 +7,7 @@ import { openShop, shopOpen } from "../apps/shop.mjs";
 import { refinementBadges } from "./badges.mjs";
 import { retrieveItem, storageActive, storeItem } from "../apps/acquire.mjs";
 import { skillUsage } from "../engine/skills.mjs";
+import { autoKey, hasOptional } from "../engine/triggers.mjs";
 
 const GROUPS = [
   ["weapon", "TYPES.Item.weapon"],
@@ -55,12 +56,15 @@ function skillGroups(actor, items, filter = "all") {
   const { main, sub } = actor.system.classItems ?? {};
   const skills = items.filter((i) => i.type === "skill" && (filter === "all" || skillUsage(i.system) === filter));
   const timingCls = { 상시: "passive", 주행동: "action", 개막: "opening", 수동: "reaction", 특수: "special" };
+  // 선택형(「사용을 선언한다」) 스킬: 조건이 맞으면 자동 사용하는 토글(단계 8)
+  const auto = actor.getFlag("nssq", "autoTrigger") ?? {};
   const row = (s) => ({
     id: s.id, name: s.name, img: s.img, sl: s.system.sl,
     max: s.system.classKey === sub?.system.key && s.system.classKey !== main?.system.key ? s.system.maxSL.sub : s.system.maxSL.main,
     timing: s.system.timing, timingCls: timingCls[s.system.timing] ?? "other",
     cost: s.system.cost?.tp ? `TP ${s.system.cost.tp}` : s.system.cost?.fp ? `FP ${s.system.cost.fp}` : "",
     unique: !!s.system.unique, skillKey: s.system.skillKey, usage: skillUsage(s.system),
+    optional: hasOptional(s.system.effects), autoKey: autoKey(s.system.key), auto: !!auto[autoKey(s.system.key)],
     prereq: (s.system.prereqs?.all ?? []).map((p) => (p.any ? p.any.map((q) => `${q.skill} ${q.sl}`).join(" / ") : `${p.skill} ${p.sl}`)).join(" + ")
   });
   const groups = [];
@@ -126,6 +130,7 @@ export function inventoryContext(actor, { skillFilter = "all" } = {}) {
     skillGroups: skillGroups(actor, items, skillFilter),
     skillFilter,
     skillCount: items.filter((i) => i.type === "skill").length,
+    autoChase: !!actor.getFlag("nssq", "autoTrigger")?.chaseBuff,
     skillFilters: ["all", "combat", "explore"].map((k) => ({
       key: k, active: k === skillFilter,
       label: game.i18n.localize(`NSSQ.Skill.filter${k[0].toUpperCase()}${k.slice(1)}`),

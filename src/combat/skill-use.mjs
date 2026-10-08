@@ -69,6 +69,9 @@ export function unitProfile(actor, combatant) {
     // 《이피션트》·《간이 소생》: 아이템 회복 +, HP 회복 아이템에 부활
     itemHeal: s.equipment?.mods?.itemHeal ?? 0,
     overheatMod: s.equipment?.mods?.overheatTurns ?? 0,
+    // 《방패 마스터리》: 『방어』 스킬 대기 상태 횟수 +
+    guardCount: s.equipment?.mods?.guardCount ?? 0,
+    uuid: actor.uuid,
     useBonuses: s.passives?.useBonuses ?? [],
     // 능력치 보너스(수식 @self.bonus.agi 등). 에너미는 0
     bonus: s.bonus ?? { str: 0, tec: 0, vit: 0, agi: 0, luc: 0 },
@@ -183,6 +186,9 @@ async function rollWith(rolls, n) {
   return r.dice[0].results.map((x) => x.result);
 }
 
+/** 진행 중인 전투에서 이 액터의 전투원 */
+const combatantOf = (actor) => game.combat?.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor.uuid) ?? null;
+
 /** 실행: 코스트 → 발동·효과 해석 → 결과 카드 */
 export async function executeAction(combat, combatant, kind, id, targetCombatants, { variant = null } = {}) {
   const actor = combatant.actor;
@@ -253,6 +259,7 @@ async function resolveAndPost({ actor, combatant, item, kind, units, mainAction,
     damage: x.damage, heal: x.heal, inflicts: x.inflicts, buffs: x.buffs, cures: x.cures, resource: x.resource,
     states: x.states.map((st) => ({ ...st, name: st.name || item.name })),
     sleepBroken: x.sleepBroken, revive: !!x.revive,
+    stances: (x.stances ?? []).map((st) => ({ ...st, name: item.name, key: sys.key ?? item.name })),
     hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist })),
     applied: false, before: null,
     // 수동 반응(단계 6-C): 명중한 공격이 있고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
@@ -388,6 +395,7 @@ function entryLines(e, card) {
   for (const i of e.inflicts ?? []) if (!i.seq) out.push(inflictLi(i));
   for (const b of e.buffs ?? []) if (!b.seq) out.push(buffLi(b));
   for (const st of e.states ?? []) out.push(`<li class="state">${esc(L("stateLine", { name: st.name, mods: stateModText(st.mods) }))}</li>`);
+  for (const st of e.stances ?? []) out.push(`<li class="state">${esc(L(st.left ? "stanceLineCount" : "stanceLine", { name: st.name, n: st.left }))}</li>`);
   if (e.revive) out.push(`<li class="heal">${esc(L("revive"))}</li>`);
   for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}${c.count !== undefined ? ` ${esc(L("cureCount", { n: c.count }))}` : ""}</li>`);
   for (const x of e.resource ?? []) if (x.chanceFailed && !x.seq) out.push(chanceLi(x));
@@ -468,6 +476,15 @@ async function applyEntry(actor, e, sourceUuid) {
   }
   await actor.update(upd);
   for (const id of newly) await onInflicted(actor, id);
+  // 대기 상태(단계 8): 전투원 플래그. 대기 상태가 되면 메인 행동을 하지 않는다(waiting)
+  if (e.stances?.length) {
+    const cb = combatantOf(actor);
+    if (cb) {
+      before.combatant = { id: cb.id, stances: cb.getFlag("nssq", "stances") ?? null, waiting: cb.getFlag("nssq", "waiting") ?? null };
+      const add = e.stances.map((st) => ({ ...st, id: foundry.utils.randomID() }));
+      await cb.update({ "flags.nssq.stances": [...(cb.getFlag("nssq", "stances") ?? []), ...add], ...(add.some((st) => st.waiting) ? { "flags.nssq.waiting": true } : {}) });
+    }
+  }
   return before;
 }
 
@@ -504,6 +521,14 @@ async function applyOne(message, undo) {
       if (e.before.states) upd["flags.nssq.states"] = e.before.states;
       if (e.before.tp !== null && e.before.tp !== undefined) upd["system.tp.value"] = e.before.tp;
       await actor.update(upd);
+      const cb = e.before.combatant && game.combat?.combatants.get(e.before.combatant.id);
+      if (cb) {
+        const f = e.before.combatant;
+        await cb.update({
+          ...(f.stances ? { "flags.nssq.stances": f.stances } : { "flags.nssq.-=stances": null }),
+          ...(f.waiting ? { "flags.nssq.waiting": f.waiting } : { "flags.nssq.-=waiting": null })
+        });
+      }
       e.before = null;
     }
   }

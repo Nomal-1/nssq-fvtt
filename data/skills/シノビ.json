@@ -877,7 +877,8 @@
        "path": "checks.escape",
        "value": 3
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"

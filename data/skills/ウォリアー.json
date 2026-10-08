@@ -890,7 +890,8 @@
        "kind": "ailment",
        "count": 1
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"
@@ -948,7 +949,8 @@
         "bindArm"
        ]
       }
-     ]
+     ],
+     "optional": true
     }
    ],
    "review": "ok"
