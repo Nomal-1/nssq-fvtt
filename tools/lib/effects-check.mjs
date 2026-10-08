@@ -52,7 +52,7 @@ export const MOD_PATHS = new Set([
   "physAtk", "elemAtk", "physHit", "elemHit", "defense", "evasion", "speed", "suppAtk", "suppDef", "hpMax", "tpMax", "carry", "healDice", "guardCount", "itemHeal", "overheatTurns", "tokenHit", "campHeal", "tokenTurns",
   ...ABILITIES.map((k) => `abilities.${k}`), ...RESISTS.map((k) => `resist.${k}`)
 ]);
-const MOD_PREFIX = ["checks."];
+const MOD_PREFIX = ["checks.", "gather."];
 const NESTED = ["onHit", "effects"];
 const EXPR_FIELDS = ["debuffTurns", "healHp", "buffTurns", "critDice", "times", "hitMod", "diceMod", "atkMod", "atkMultiplier", "bonus", "amount", "value", "turns", "delta", "set", "count", "depth", "max", "maxCount"];
 
@@ -142,7 +142,7 @@ export function collectHolders() {
 
 /** 단계 8에 연결할 type */
 /** flag 이름(03 §3) */
-export const FLAGS = ["itemRevive", "noCarryCount", "ownLimit", "weaponElement", "tokenMax"];
+export const FLAGS = ["itemRevive", "noCarryCount", "ownLimit", "weaponElement", "tokenMax", "campCookHp", "campCookTp", "campCookCure"];
 /** trigger.on 값(03 §3) */
 export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart", "escapeCheck", "hpLost", "enemyKO", "buffGained", "battleWon", "damaged", "conditionGained", "tokenGone"];
 

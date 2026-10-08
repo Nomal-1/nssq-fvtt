@@ -29,8 +29,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>에너미 식별 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.identify",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -66,8 +72,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>전신 운동에 관한 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.athletic",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -103,8 +115,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>오감을 사용한 감지 등의 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.senses",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -140,8 +158,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>몸을 숨기기 위한 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.stealth",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -177,8 +201,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>발자국 추적이나 미행(원문 표기 '備考') 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.tracking",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -214,8 +244,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지도 작성이나 독해 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.mapping",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -251,8 +287,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>신화나 전승에 관한 지식 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.lore",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -288,8 +330,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>동물을 능숙하게 타기 위한 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.riding",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -325,8 +373,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>탈것을 능숙하게 다루기 위한 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.piloting",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -362,8 +416,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>기계나 컴퓨터 조작 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.machinery",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -399,8 +459,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>벌채 이벤트에서 통상 횟수에 더해 채취 판정을 (SL)회 추가로 할 수 있다. 이 추가분은 아앗! 값을 0으로 취급한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "gather.felling",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -436,8 +502,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>채굴 이벤트에서 통상 횟수에 더해 채취 판정을 (SL)회 추가로 할 수 있다. 이 추가분은 아앗! 값을 0으로 취급한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "gather.mining",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -473,8 +545,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>채취 이벤트에서 통상 횟수에 더해 채취 판정을 (SL)회 추가로 할 수 있다. 이 추가분은 아앗! 값을 0으로 취급한다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "gather.picking",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -510,8 +588,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아이템 소지 수에 +3을 얻는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "carry",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -547,8 +631,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>캠프 시 【HP】 회복량이 2배가 된다. 『조리기구 세트』가 필요하다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "campCookHp"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -584,8 +673,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>캠프 시 【TP】 회복량이 2배가 된다. 『조리기구 세트』가 필요하다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "campCookTp"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
@@ -621,8 +715,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>캠프 시 상태 이상이 회복되게 된다. 『조리기구 세트』가 필요하다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "campCookCure"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커먼"
