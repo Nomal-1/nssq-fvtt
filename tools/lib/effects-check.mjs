@@ -22,7 +22,7 @@ export const TYPES = {
   resource: { resource: true, delta: false, set: false },
   stance: { effects: true, until: false, count: false, holder: false },
   trigger: { on: true, effects: true, limit: false, optional: false },
-  counter: { attack: true, on: false, count: false, onlyIfEvaded: false, optional: false },
+  counter: { attack: true, on: false, count: false, onlyIfEvaded: false, evenIfKO: false, optional: false },
   chase: { attack: true, on: false, count: false, optional: false },
   delayed: { at: true, turns: false, effects: true },
   token: { tokenKey: true, action: false, maxCount: false, turns: false },
@@ -86,7 +86,8 @@ export function checkEffects(list, where, errors = []) {
     if (e.type === "kill") checkExpr(e.check?.type === "contest" ? e.check.atkMod : e.check?.target, `${at}.check`, errors);
     if (e.check?.type === "contest") checkExpr(e.check.atkMod, `${at}.check.atkMod`, errors);
     if (e.type === "inflict") {
-      if (!CONDITIONS[e.condition]) errors.push(`${at}: 모르는 상태 이상 \`${e.condition}\``);
+      // death: 판정 없는 확정 즉사(《참수》 크리티컬 시)
+      if (!CONDITIONS[e.condition] && !(e.condition === "death" && !e.check)) errors.push(`${at}: 모르는 상태 이상 \`${e.condition}\``);
       if (e.check && !["fixed", "contest", "forced"].includes(e.check.type)) errors.push(`${at}: check.type은 fixed/contest/forced`);
       if (e.check?.type === "fixed") { checkExpr(e.check.target, `${at}.check.target`, errors); checkExpr(e.check.defMod, `${at}.check.defMod`, errors); }
     }

@@ -112,7 +112,9 @@ async function useReaction(message, type, index, skillId) {
   const note = skill.system.effectsNote ? ` (${game.i18n.format("NSSQ.SkillUse.gmNeeded", { what: skill.system.effectsNote })})` : "";
   const text = L(r.evaded ? "evaded" : "notEvaded", { skill: skill.name, dice: r.check.used.join("+"), mod: r.mod, total: r.check.total, vs: hit.total }) + (r.evaded ? note : "");
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), rolls: [roll], sound: CONFIG.sounds.dice, content: `<div class="nssq-combat-note"><i class="fas fa-shield-alt"></i> ${esc(text)}</div>` });
-  return send({ messageId: message.id, type, index, result: { evaded: r.evaded, text } });
+  // 회피 성공 시 반격(《검의 춤》)
+  const counter = r.evaded && (skill.system.effects ?? []).some((e) => e?.type === "counter" && e.onlyIfEvaded);
+  return send({ messageId: message.id, type, index, result: { evaded: r.evaded, text, ...(counter ? { counter: skill.id, reactorUuid: actor.uuid } : {}) } });
 }
 
 /* ---------------- 카드 반영(GM) ---------------- */
@@ -120,6 +122,16 @@ async function useReaction(message, type, index, skillId) {
 async function gmReaction({ messageId, type, index, result }) {
   const message = game.messages.get(messageId);
   if (!message) return;
+  await updateReaction({ message, messageId, type, index, result });
+  if (result.counter) {
+    const reactor = await fromUuid(result.reactorUuid);
+    const skill = reactor?.items.get(result.counter);
+    const { counterAfterEvade } = await import("./chase.mjs");
+    if (skill) await counterAfterEvade(message, reactor.uuid, skill);
+  }
+}
+
+async function updateReaction({ message, messageId, type, index, result }) {
   const { renderAttackCard } = await import("./attack.mjs");
   const { renderSkillCard, applySkillCard } = await import("./skill-use.mjs");
   if (type === "attack") {

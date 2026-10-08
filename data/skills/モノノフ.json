@@ -40,7 +40,8 @@
       {
        "type": "resource",
        "resource": "tp",
-       "delta": 1
+       "delta": 1,
+       "toSelf": true
       }
      ]
     }
@@ -891,7 +892,8 @@
       {
        "type": "resource",
        "resource": "hp",
-       "delta": "SL"
+       "delta": "SL",
+       "toSelf": true
       }
      ]
     }

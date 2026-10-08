@@ -468,7 +468,7 @@
    "effects": [
     {
      "type": "target",
-     "side": "ally",
+     "side": "enemy",
      "scope": "single"
     },
     {
@@ -478,7 +478,7 @@
      "effects": [
       {
        "type": "chase",
-       "on": "allyAttacked",
+       "on": "targetAttacked",
        "when": {
         "element": [
          "fire",

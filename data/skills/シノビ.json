@@ -932,9 +932,8 @@
      "on": "crit",
      "effects": [
       {
-       "type": "resource",
-       "resource": "hp",
-       "set": 0
+       "type": "inflict",
+       "condition": "death"
       }
      ]
     }

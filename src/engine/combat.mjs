@@ -131,6 +131,25 @@ export async function resolveAttack({ attacker, target, kind = "physical", hitMo
   };
 }
 
+/**
+ * 명중한 공격에 대미지 다이스를 더한다(「명중했을 때 사용을 선언한다. 대미지 다이스 +n개」 《풀 게인》 등)
+ * 더한 주사위도 처음 굴림에 합쳐 크리티컬을 다시 본다. 원래 크리티컬이 아니었는데 이제 크리티컬이면 4다이스 추가
+ * @param {{ dice: number[], resist: number, crit: boolean, raw: number, halves?: number, critUp?: boolean }} hit 원래 명중
+ * @param {number} n 더할 다이스 수
+ * @returns {Promise<{ dice: number[], critExtra: number[], crit: boolean, raw: number, final: number, add: number }>}
+ *   add: 원래 최종 대미지에 더할 값(절반 처리 반영)
+ */
+export async function extendDamage(hit, n, rollDice, { critDiceMod = 0 } = {}) {
+  const dice = n > 0 ? await rollDice(n) : [];
+  const all = judgeDamage([...(hit.dice ?? []), ...dice], hit.resist, { critUp: !!hit.critUp });
+  const added = dice.filter((d) => d > hit.resist).length;
+  const newCrit = all.crit && !hit.crit;
+  const critExtra = newCrit ? await rollDice(CRIT_EXTRA_DICE + Math.max(0, critDiceMod)) : [];
+  const raw = (hit.raw ?? 0) + added + critExtra.filter((d) => d > hit.resist).length;
+  const halve2 = (v) => Array.from({ length: hit.halves ?? 0 }).reduce((x) => halve(x), v);
+  return { dice, critExtra, crit: newCrit, raw, final: halve2(raw), add: halve2(raw) - halve2(hit.raw ?? 0) };
+}
+
 /** 다회·범위 공격: 명중 판정의 1로 얻는 【FP】는 주행동 1회당 처음 판정 하나만 */
 export function fpFromHitChecks(results) {
   return results.length ? results[0].fpGain ?? 0 : 0;

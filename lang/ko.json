@@ -1110,7 +1110,32 @@
       "apply": "적용",
       "undo": "되돌리기",
       "applied": "적용함",
-      "notApplied": "아직 적용하지 않음"
+      "notApplied": "아직 적용하지 않음",
+      "extraDice": "대미지 다이스 +{count}개: {dice} → 대미지 +{n}",
+      "resourceDelta": "【{res}】 {n}",
+      "resourceSet": "【{res}】 {n}이 됨",
+      "followup": {
+        "chase": "추격",
+        "counter": "반격"
+      }
+    },
+    "Chase": {
+      "run": "{type}: {name}",
+      "declare": "선언: {name}",
+      "decline": "안 함",
+      "waiting": "{actor}: {name} {type} 여부 선택 대기",
+      "done": "{actor}: {name} {type}",
+      "declined": "{actor}: {name} 사용 안 함",
+      "skipKO": "{actor}: 대상이 쓰러져 {name} {type}하지 않는다",
+      "skipRange": "{actor}: 대상이 사거리 밖이라 {name} {type}하지 않는다",
+      "noCost": "{actor}: 코스트가 부족해 {name} 사용 불가",
+      "chaseBuff": "『추격』",
+      "type": {
+        "chase": "추격",
+        "counter": "반격",
+        "trigger": "발동",
+        "declare": "선언"
+      }
     },
     "Reaction": {
       "use": "수동: 《{name}》",

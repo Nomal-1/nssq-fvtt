@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { autoRuns, canChaseAfter, canCounterAfter, findReactions, spendStance } from "../../src/engine/triggers.mjs";
+import { autoRuns, canChaseAfter, canCounterAfter, findHitTriggers, findReactions, spendStance } from "../../src/engine/triggers.mjs";
+import { extendDamage } from "../../src/engine/combat.mjs";
 
 const trap = { id: "s1", key: "trap", effects: [{ type: "counter", on: "rowAttacked", when: { attackKind: "physical" }, attack: { kind: "physical", diceMod: "-(4-SL)" } }], left: 3 };
 const chaser = { id: "s2", key: "rush", effects: [{ type: "chase", on: "anyAttack", when: { attackKind: "physical" }, attack: { kind: "physical" } }], left: 3 };
@@ -50,5 +51,41 @@ describe("연쇄 금지(01 §3.11, 05 완료 기준)", () => {
   it("대기 상태 횟수: 누적 n회면 끝", () => {
     expect(spendStance([trap], "s1")[0].left).toBe(2);
     expect(spendStance([{ ...trap, left: 1 }], "s1")).toEqual([]);
+  });
+
+  it("《삼색 체이스》: 속성별 효과가 여럿이어도 공격 하나에 추격 1번", () => {
+    const tri = { id: "s3", key: "tri", left: 3, effects: ["fire", "ice"].map((el) => ({ type: "chase", when: { element: [el] }, attack: { kind: "physical" } })) };
+    const atk = { kind: "skill", attackerId: "p1", attackerSide: "pc", attackKind: "elemental", elements: ["fire", "ice"], category: "술식", targets: [{ id: "e1", side: "enemy", row: "front", hit: true }] };
+    expect(findReactions(atk, [pc("p1"), pc("p2", { stances: [tri] }), foe])).toHaveLength(1);
+  });
+
+  it("《링크 오더》: 선언한 적에게 〈염〉〈빙〉〈뇌〉 공격이 가해지면 같은 속성으로 추격", () => {
+    const link = { id: "s4", key: "link", left: 1, guardTargets: ["e1"], effects: [{ type: "chase", on: "targetAttacked", when: { element: ["fire", "ice", "volt"] }, attack: { kind: "elemental", copyElement: true, diceMod: "SL" } }] };
+    const atk = (target, elements) => ({ kind: "skill", attackerId: "p1", attackerSide: "pc", attackKind: "elemental", elements, category: "술식", targets: [{ id: target, side: "enemy", row: "front", hit: true }] });
+    const units = [pc("p1"), pc("p2", { stances: [link] }), foe];
+    expect(findReactions(atk("e1", ["ice", "slash"]), units)).toEqual([expect.objectContaining({ unitId: "p2", target: "e1", attack: expect.objectContaining({ element: ["ice"] }) })]);
+    expect(findReactions(atk("e2", ["ice"]), units)).toHaveLength(0);
+    expect(findReactions(atk("e1", ["slash"]), units)).toHaveLength(0);
+  });
+
+  it("명중·크리티컬 시 발동: 크리티컬 대상마다, perAction은 1번, 추격에서는 추격형 없음", () => {
+    const me = { id: "p1", side: "pc", triggers: [
+      { key: "stun", name: "스턴 어택", on: "crit", effects: [{ type: "inflict", condition: "stun" }] },
+      { key: "ryu", name: "아류 살법", on: "crit", limit: "perAction", effects: [{ type: "attack", kind: "physical" }] },
+      { key: "tp", name: "무사의 마음가짐", on: "selfHit", when: { category: "" }, effects: [{ type: "resource", resource: "tp", delta: 1, toSelf: true }] },
+      { key: "gain", name: "풀 게인", on: "selfHit", optional: true, when: { attackKind: "physical" }, effects: [{ type: "attackBonus", diceMod: 10 }] }
+    ] };
+    const t = (id, x) => ({ id, side: "enemy", row: "front", hit: true, crit: false, ...x });
+    const ev2 = (kind, category) => ({ kind, attackerId: "p1", attackerSide: "pc", attackKind: "physical", elements: [], category, targets: [t("e1", { crit: true }), t("e2", { crit: true }), t("e3", { hit: false })] });
+    const names = (l) => l.map((x) => `${x.name}:${x.target}`);
+    expect(names(findHitTriggers(ev2("normal", ""), me))).toEqual(["스턴 어택:e1", "스턴 어택:e2", "아류 살법:e1", "무사의 마음가짐:e1", "풀 게인:e1", "풀 게인:e2"]);
+    expect(names(findHitTriggers(ev2("chase", "-"), me))).toEqual(["스턴 어택:e1", "스턴 어택:e2", "풀 게인:e1", "풀 게인:e2"]);
+  });
+
+  it("대미지 다이스 추가: 더한 눈도 크리티컬을 다시 보고, 절반이면 절반", async () => {
+    const seq = [[6, 2, 3], [5, 5, 5, 5]];
+    const roll = async () => seq.shift();
+    const r = await extendDamage({ dice: [6, 4], resist: 3, crit: false, raw: 2, halves: 1 }, 3, roll);
+    expect(r).toEqual(expect.objectContaining({ crit: true, raw: 2 + 1 + 4, final: 3, add: 3 - 1 }));
   });
 });

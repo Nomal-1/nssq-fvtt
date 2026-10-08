@@ -1502,6 +1502,7 @@
         {
          "type": "counter",
          "on": "attacked",
+         "evenIfKO": true,
          "when": {
           "attackKind": "physical",
           "category": "백병"
@@ -1513,8 +1514,7 @@
        ]
       }
      ],
-     "review": "partial",
-     "effectsNote": "대미지를 받은 뒤 반격, 쓰러져도 반격: 단계 8"
+     "review": "ok"
     },
     "_key": "!actors.items!TYVdzpsOXjPWjC1F.3gKFgpShLQGHku99"
    },
