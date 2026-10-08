@@ -30,7 +30,8 @@
    "sl": 1,
    "description": "<p>시나리오 시작 시 보유 FP +2.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "시나리오 개시 때 FP +2: 세션 도구(단계 9)"
   },
   "_meta": {
    "className": "농부"
@@ -66,8 +67,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아이템의 회복 효과 항상 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "itemHeal",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -108,8 +115,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>HP 회복계 아이템 사용 시 전투 불능 회복 효과가 추가된다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "itemRevive"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -145,8 +157,25 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신의 【억제 공격】 대 대상의 【억제 방어】 대항 판정(자신 +(SL)), 이기면 대상에게 [수면]. 성패와 관계없이 자신도 [수면]을 받는다.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": "sleep",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     }
+    },
+    {
+     "type": "inflict",
+     "condition": "sleep",
+     "check": {
+      "type": "forced"
+     },
+     "toSelf": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -183,7 +212,8 @@
    "sl": 1,
    "description": "<p>그 턴 메인 페이즈에 아직 행동하지 않은 상태에서 대상 '단일' 공격 롤의 대상이 되었을 때 선언. 그 공격의 대상을 원하는 아군 1명으로 바꾼다. 대신 자신은 그 턴 메인 페이즈의 주행동 권리를 잃는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "메인 행동 전에 단일 공격의 대상이 되면 선언, 대상을 원하는 아군 1명으로: GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "농부"
@@ -224,8 +254,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>상태 이상을 하나라도 받고 있는 대상에게만 유효. 약화 효과 『물리 공격 저하: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "physAtkDown",
+     "value": "SL",
+     "turns": 3,
+     "when": {
+      "targetHasAilment": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -267,7 +307,8 @@
    "sl": 1,
    "description": "<p>자신이 상태 이상을 받고 있을 때만 사용 가능. 자신의 상태 이상을 최대 (SL)개 대상에게 전염.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "자신의 상태 이상을 최대 SL개 대상에게 전염(자신이 상태 이상일 때만): GM이 처리"
   },
   "_meta": {
    "className": "농부"
@@ -309,7 +350,8 @@
    "sl": 1,
    "description": "<p>자신의 【억제 공격】 대 대상의 【억제 방어】 대항 판정(자신 +(SL-2)), 이기면 [머리]/[팔]/[다리] 중 무작위 1부위 봉인.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "억제 대항(+SL−2), 이기면 [머리]/[팔]/[다리] 중 무작위 1부위 봉인: GM이 1D3으로 부위를 정해 처리"
   },
   "_meta": {
    "className": "농부"
@@ -345,8 +387,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>다가오는 위험을 알아채는 판정 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.danger",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -383,7 +431,8 @@
    "sl": 1,
    "description": "<p>벌채·채굴·채취 이벤트에서 통상 횟수에 더해 채집 판정 (SL)회 추가. 추가분의 아앗! 값은 0으로 취급.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "벌채·채굴·채취 때 채집 판정 +SL회(「아앗!」 0 취급): 채집 대화창(단계 9)"
   },
   "_meta": {
    "className": "농부"
@@ -420,7 +469,8 @@
    "sl": 1,
    "description": "<p>드롭 판정 달성값을 ±(SL) 범위에서 자유롭게 조정.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "드롭 판정 달성값 ±SL 조정: 드롭 판정(단계 9)"
   },
   "_meta": {
    "className": "농부"
@@ -462,7 +512,8 @@
    "sl": 1,
    "description": "<p>채집 판정 달성값을 ±(SL) 범위에서 자유롭게 조정.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "채집 판정 달성값 ±SL 조정: 채집 대화창(단계 9)"
   },
   "_meta": {
    "className": "농부"
@@ -504,7 +555,8 @@
    "sl": 1,
    "description": "<p>아이템 소지 상한 +10.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "아이템 소지 상한 +10(타이밍 특수): GM이 시트 소지 수를 보정"
   },
   "_meta": {
    "className": "농부"
@@ -546,7 +598,8 @@
    "sl": 1,
    "description": "<p>채집 판정에서 같은 눈(조로메)이 나오면 해당 소재 1개 추가 입수.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "채집 판정에서 더블이면 그 소재 1개 더: 채집 대화창(단계 9)"
   },
   "_meta": {
    "className": "농부"
@@ -582,8 +635,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>캠프 회복량 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "campHeal",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -620,7 +679,8 @@
    "sl": 1,
    "description": "<p>드롭 판정 후 '고기'/'생선'/'알' 중 하나를 (SL)개 획득. 쓰러뜨린 에너미가 식용에 맞지 않는다고 GM이 판단하면 적용되지 않는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "드롭 판정 뒤 고기·생선·알 중 하나 (SL)개(식용 불가면 없음): 드롭 판정(단계 9)"
   },
   "_meta": {
    "className": "농부"
@@ -657,7 +717,8 @@
    "sl": 1,
    "description": "<p>채집 판정 후 '곡류'/'채소'/'과일' 중 하나를 (SL)개 획득. 주변 지형이 식용 식물이 자라기에 명백히 부적합하다고 GM이 판단하면 적용되지 않는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "채집 판정 뒤 곡류·채소·과일 중 하나 (SL)개(부적합한 지형이면 없음): 채집 대화창(단계 9)"
   },
   "_meta": {
    "className": "농부"
@@ -693,8 +754,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>숨기·몰래 접근 등의 판정 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.stealth",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -731,7 +798,8 @@
    "sl": 1,
    "description": "<p>약 5분간 늪 등 발이 묶이는 지형의 영향을 무시.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "약 5분간 늪 등 발이 묶이는 지형 무시: GM이 처리"
   },
   "_meta": {
    "className": "농부"
@@ -777,7 +845,8 @@
    "sl": 1,
    "description": "<p>채집 판정·드롭 판정에서 같은 눈이 나오면 입수 아이템 랭크 +1.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "채집·드롭 판정에서 더블이면 입수 아이템 랭크 +1(단계 9)"
   },
   "_meta": {
    "className": "농부"
@@ -814,7 +883,8 @@
    "sl": 1,
    "description": "<p>아앗! 발생 등 기습당한 상황에서 (1D6-1)을 굴려 SL 이하이면 기습에 의한 1턴분 행동 손실을 막는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "기습 때 1D6−1 ≤ SL이면 1턴 행동 손실을 막는다: GM(단계 9)"
   },
   "_meta": {
    "className": "농부"

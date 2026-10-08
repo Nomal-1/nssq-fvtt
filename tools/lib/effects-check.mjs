@@ -49,7 +49,7 @@ const COMMON = ["type", "when", "chance", "label", "variant", "toSelf"];
 
 /** modifier path: derive가 읽는 키 */
 export const MOD_PATHS = new Set([
-  "physAtk", "elemAtk", "physHit", "elemHit", "defense", "evasion", "speed", "suppAtk", "suppDef", "hpMax", "tpMax", "carry", "healDice", "guardCount", "itemHeal", "overheatTurns", "tokenHit",
+  "physAtk", "elemAtk", "physHit", "elemHit", "defense", "evasion", "speed", "suppAtk", "suppDef", "hpMax", "tpMax", "carry", "healDice", "guardCount", "itemHeal", "overheatTurns", "tokenHit", "campHeal",
   ...ABILITIES.map((k) => `abilities.${k}`), ...RESISTS.map((k) => `resist.${k}`)
 ]);
 const MOD_PREFIX = ["checks."];
