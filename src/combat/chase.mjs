@@ -58,8 +58,8 @@ export async function attackEvent(message) {
     kind = sk.followup?.type === "trigger" ? "skill" : sk.followup?.type ?? "skill";
     attackKind = hits[0].h.kind ?? "physical";
     elements = [...new Set(hits.flatMap(({ h }) => h.elements ?? []))];
-    // 통상 공격(분류 없음)과 구별: 분류가 빈 스킬은 「-」
-    category = sk.category || "-";
+    // 통상 공격(분류 없음)과 구별: 분류가 빈 스킬은 「-」. 추격·반격은 통상 공격의 물리 공격 롤(01 §3.11)
+    category = ["chase", "counter"].includes(sk.followup?.type) ? "" : sk.category || "-";
     const seen = new Map();
     for (const { e, h } of hits) {
       const r = seen.get(e.uuid) ?? { uuid: e.uuid, hit: false, crit: false, hitData: null };
@@ -207,7 +207,7 @@ export async function runFollowup(f, originKind = "normal") {
     if (onTarget && !alive(target)) { if (chase) await note("skipKO"); return false; }
     await resolveAndPost({
       actor, combatant: c, kind: "skill", mainAction: false, extra, extraRolls: rolls,
-      item: { name: item.name, img: item.img, system: { effects: f.effects, sl: f.source.sl ?? 1, category: "", description: "" } },
+      item: { name: item.name, img: item.img, system: { effects: f.effects, sl: f.source.sl ?? 1, category: "", description: "", target: "적 단일" } },
       units: [{ actor: target.actor, combatant: target }], followup: { type: chase ? "chase" : "trigger" }
     });
     return true;
@@ -227,7 +227,7 @@ export async function runFollowup(f, originKind = "normal") {
   void copyElement;
   await resolveAndPost({
     actor, combatant: c, kind: "skill", mainAction: false,
-    item: { name: f.name, img: actor.img, system: { effects: [{ type: "attack", ...attack }], sl: f.source?.sl ?? 1, category: "", description: "" } },
+    item: { name: f.name, img: actor.img, system: { effects: [{ type: "attack", ...attack }], sl: f.source?.sl ?? 1, category: "", description: "", target: "적 단일" } },
     units: [{ actor: target.actor, combatant: target }], followup: { type: f.type }
   });
   return true;
