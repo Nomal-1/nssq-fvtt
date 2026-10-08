@@ -281,6 +281,10 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     // 수동 반응(단계 6-C): 명중한 공격이 있고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
     reaction: pendingReaction(actorOf.get(x.id), x.hits.find((h) => h.hit)?.kind ?? "physical", x.hits.some((h) => h.hit))
   }));
+  // 아무 결과도 없는 대상 줄은 뺀다(《디코이 사인》처럼 대상은 지정만 하고 효과는 사용자에게 저장되는 스킬)
+  const empty = (e) => !e.hits.length && !e.damage && !e.heal?.hp && !e.heal?.tp && !e.revive && !e.sleepBroken && !e.extra
+    && ![e.inflicts, e.buffs, e.cures, e.resource, e.states, e.stances].some((l) => l?.length);
+  for (let i = entries.length - 1; i >= 0; i--) if (empty(entries[i]) && entries.length > 1) entries.splice(i, 1);
   // 더한 대미지 다이스만 있는 대상(《풀 게인》: 효과 해석 결과가 없다)
   for (const [uuid, x] of Object.entries(extra ?? {})) {
     if (entries.some((e) => e.uuid === uuid)) continue;
