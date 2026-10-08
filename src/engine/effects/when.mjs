@@ -29,6 +29,8 @@ const CHECKS = {
   targetNotActedThisTurn: (v, c) => !c.target?.acted === !!v,
   // 자신이 봉인 중(《저주 사슬의 은혜》)
   selfHasBind: (v, c) => (c.self?.conditions ?? []).some((x) => BINDS.has(x.id)) === !!v,
+  // 자신이 배치한 토큰 중 그 tokenKey 접두사가 있는가(《진 회복》, c.self.tokens = [tokenKey])
+  hasToken: (v, c) => (c.self?.tokens ?? []).some((k) => String(k).startsWith(v)),
   selfHpFull: (v, c) => ((c.self?.hp ?? 0) >= (c.self?.hpMax ?? 0)) === !!v,
   selfHpAtMostHalf: (v, c) => ((c.self?.hp ?? 0) * 2 <= (c.self?.hpMax ?? 0)) === !!v,
   selfRow: (v, c) => c.self?.row === v,

@@ -46,6 +46,7 @@
 | `selfRow: "front"/"back"` | 자기 위치 |
 | `selfHpFull: true` | 자기 HP가 만전 |
 | `selfHasBind: true` | 자신이 봉인 중 |
+| `hasToken: "접두사"` | 자신이 배치한 토큰 중 그 tokenKey로 시작하는 것이 있다(단계 8) |
 | `targetRow: "front"/"back"` | 대상 위치 |
 | `element: [..]` | 처리 중인 공격의 속성 포함 |
 | `attackKind: "physical"/"elemental"` | 처리 중인 공격의 종류 |
@@ -65,10 +66,10 @@
 | `kill` | `check: {type: fixed, target, defMod?} | {type: contest, atkMod?}` | 즉사: 억제 방어 롤 실패면 【HP】 0(카드에 \[즉사\]) |
 | `cure` | `conditions[]` 또는 `"all"`, `kind`(ailment/bind/debuff/buff), `count`, `buffs[]`(그 강화·약화 id만) | 해제. `count`가 있으면 걸린 순서대로 그 개수까지(「(SL)개까지」) |
 | `buff` / `debuff` | `id`, `value`, `turns`, `param`(속성 등) | 01 §3.10의 강화·약화 |
-| `modifier` | `path`, `value` | 상시 보정. 타이밍 「상시」 스킬, 장식, 제련. path: `physAtk elemAtk physHit elemHit defense evasion speed suppAtk suppDef hpMax tpMax carry healDice(『회복』 스킬 회복 롤 다이스) itemHeal(아이템 회복량 +) guardCount(방어 스킬 횟수 +) tokenHit(『소환수』 토큰 공격 명중 +) campHeal(캠프 회복량 +) overheatTurns(오버히트 턴 +) abilities.<능력치> resist.<속성> checks.<판정>` |
+| `modifier` | `path`, `value` | 상시 보정. 타이밍 「상시」 스킬, 장식, 제련. path: `physAtk elemAtk physHit elemHit defense evasion speed suppAtk suppDef hpMax tpMax carry healDice(『회복』 스킬 회복 롤 다이스) itemHeal(아이템 회복량 +) guardCount(방어 스킬 횟수 +) tokenHit(『소환수』 토큰 공격 명중 +) campHeal(캠프 회복량 +) tokenTurns(『방진』 토큰 지속 턴 +) overheatTurns(오버히트 턴 +) abilities.<능력치> resist.<속성> checks.<판정>` |
 | `resource` | `resource`(hp/tp/fp), `delta` 또는 `set` | 직접 증감 |
 | `stance` | `effects[]`, `until`(endOfTurn/count), `count` | 대기 상태가 되며 대기 중 효과 부여 |
-| `trigger` | `on`, `effects[]`, `limit`(perAction/perTurn/perBattle) | 반응형. `on`: crit / beforeKO / attacked / allyAttacked / rowAttacked / endPhase / openingPhase / battleStart / selfHit(자신의 공격이 명중했을 때 선언) / mainPhaseStart(메인 페이즈 개시 시 선언) / escapeCheck(도주 판정 때 선언) / hpLost(자신의 HP가 줄었을 때) / enemyKO(자신의 공격으로 적을 쓰러뜨렸을 때) / buffGained(강화 효과를 얻었을 때) / battleWon(전투에 승리했을 때) / damaged(적의 공격 롤로 대미지를 받았을 때) / conditionGained(자신에게 상태 이상·봉인이 걸리는 순간. when `condition`·`conditionKind`) |
+| `trigger` | `on`, `effects[]`, `limit`(perAction/perTurn/perBattle) | 반응형. `on`: crit / beforeKO / attacked / allyAttacked / rowAttacked / endPhase / openingPhase / battleStart / selfHit(자신의 공격이 명중했을 때 선언) / mainPhaseStart(메인 페이즈 개시 시 선언) / escapeCheck(도주 판정 때 선언) / hpLost(자신의 HP가 줄었을 때) / enemyKO(자신의 공격으로 적을 쓰러뜨렸을 때) / buffGained(강화 효과를 얻었을 때) / battleWon(전투에 승리했을 때) / damaged(적의 공격 롤로 대미지를 받았을 때) / conditionGained(자신에게 상태 이상·봉인이 걸리는 순간. when `condition`·`conditionKind`) / tokenGone(자신의 토큰이 사라졌을 때) |
 | `counter` / `chase` | `when`, `attack{…}`, `count`, `on`, `onlyIfEvaded`(반격만) | 반격·추격(01 §3.11의 연쇄 금지 규칙은 엔진이 강제). `attack.copyElement`: 계기가 된 공격의 속성으로 |
 | `guard` | `mode`(half: 받는 대미지 반감 / cover: 대신 받기 / defense: 대상의 【방어】를 사용자 값으로 / redirect: 자신이 받는 공격을 대상에게 넘김 / reflect: 그 공격을 공격자에게 반사, 범위 공격은 1회분만 반사하고 나머지 무효 / nullify: 공격 완전 무효(턴당 1회)), `scope`(front/back/row: 자신이 있는 열/all/target/owner: 토큰의 배치자), `optional`(그때마다 할지 고름), `when` | 방어 스킬(대기 상태 안). 대기 상태의 `count`가 「누적 n회」, 《방패 마스터리》는 modifier `guardCount`로 그 횟수 + |
 | `aura` | `path`, `value`, `scope` | 대기 상태 동안 아군에게 주는 보정(《삼색 가드》 내성 +SL 등) |

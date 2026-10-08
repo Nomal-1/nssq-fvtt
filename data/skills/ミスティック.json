@@ -29,8 +29,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '방진' 스킬의 토큰을 동시에 최대 2개까지 유지 가능.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "tokenMax",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -66,8 +72,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '방진' 스킬로 배치한 토큰의 지속 턴 수 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tokenTurns",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -108,8 +120,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>효과 시간 3턴의 토큰 배치. 토큰은 적 전체에 대해 술자 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)), 승리 시 대상에게 [독].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "circle.poison",
+     "turns": 3,
+     "action": {
+      "target": "적 전체",
+      "effects": [
+       {
+        "type": "inflict",
+        "condition": "poison",
+        "check": {
+         "type": "contest",
+         "atkMod": "SL"
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -150,8 +186,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>효과 시간 3턴의 토큰 배치. 토큰은 적 전체에 대해 술자 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)), 승리 시 대상에게 [마비].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "circle.paralyze",
+     "turns": 3,
+     "action": {
+      "target": "적 전체",
+      "effects": [
+       {
+        "type": "inflict",
+        "condition": "paralyze",
+        "check": {
+         "type": "contest",
+         "atkMod": "SL"
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -196,8 +256,71 @@
    ],
    "sl": 1,
    "description": "<p>사용 시 《머리 봉인의 방진》《팔 봉인의 방진》《다리 봉인의 방진》 중 하나로 선언. 효과 시간 3턴의 토큰 배치. 토큰은 적 전체에 대해 술자 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)), 승리 시 선언한 [머리]/[팔]/[다리] 봉인.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "circle.bindHead",
+     "turns": 3,
+     "variant": 0,
+     "action": {
+      "target": "적 전체",
+      "effects": [
+       {
+        "type": "inflict",
+        "condition": "bindHead",
+        "check": {
+         "type": "contest",
+         "atkMod": "SL"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "type": "token",
+     "tokenKey": "circle.bindArm",
+     "turns": 3,
+     "variant": 1,
+     "action": {
+      "target": "적 전체",
+      "effects": [
+       {
+        "type": "inflict",
+        "condition": "bindArm",
+        "check": {
+         "type": "contest",
+         "atkMod": "SL"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "type": "token",
+     "tokenKey": "circle.bindLeg",
+     "turns": 3,
+     "variant": 2,
+     "action": {
+      "target": "적 전체",
+      "effects": [
+       {
+        "type": "inflict",
+        "condition": "bindLeg",
+        "check": {
+         "type": "contest",
+         "atkMod": "SL"
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -238,8 +361,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>효과 시간 3턴의 토큰 배치. 토큰은 적 전체에 대해 술자 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)), 승리 시 대상에게 [혼란].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "circle.confuse",
+     "turns": 3,
+     "action": {
+      "target": "적 전체",
+      "effects": [
+       {
+        "type": "inflict",
+        "condition": "confuse",
+        "check": {
+         "type": "contest",
+         "atkMod": "SL"
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -280,8 +427,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>효과 시간 3턴의 토큰 배치. 토큰은 적 전체에 대해 술자 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)), 승리 시 대상에게 [수면].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "circle.sleep",
+     "turns": 3,
+     "action": {
+      "target": "적 전체",
+      "effects": [
+       {
+        "type": "inflict",
+        "condition": "sleep",
+        "check": {
+         "type": "contest",
+         "atkMod": "SL"
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -322,8 +493,28 @@
    "variants": [],
    "sl": 1,
    "description": "<p>전투 중 '방진' 토큰이 있는 상태로 종료 페이즈를 맞으면 아군 전원 【HP】 (SL) 회복. 《다중 방진》으로 토큰이 여러 개여도 중복 발생하지 않음.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "endPhase",
+     "when": {
+      "hasToken": "circle"
+     },
+     "effects": [
+      {
+       "type": "target",
+       "side": "ally",
+       "scope": "all"
+      },
+      {
+       "type": "heal",
+       "mode": "fixed",
+       "amount": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -368,8 +559,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>'방진' 토큰 1개를 소멸시키고 회복 롤. 회복량 다이스 +((SL+1)×2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "heal",
+     "mode": "roll",
+     "bonus": "(SL+1)*2"
+    }
+   ],
+   "review": "partial",
+   "effectsNote": "『방진』 토큰 1개를 없앤다: GM이 토큰을 지움(단계 8)"
   },
   "_meta": {
    "className": "미스틱"
@@ -410,8 +608,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>무속성 속성 공격. 이때 【속성 공격】을 -(3-SL)으로 취급.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "none"
+     ],
+     "atkMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -452,8 +659,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>무속성 속성 공격. 이때 【속성 공격】을 -(3-SL)으로 취급.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "none"
+     ],
+     "atkMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -494,8 +710,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>전투 중 '방진' 토큰이 어떤 이유로든 소멸하면 자신의 【TP】 1 회복.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "tokenGone",
+     "effects": [
+      {
+       "type": "resource",
+       "resource": "tp",
+       "delta": 1
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -536,8 +764,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>약화 효과 『물리 공격 저하: (SL+2)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "physAtkDown",
+     "value": "SL+2",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -578,8 +813,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>약화 효과 『물리 방어 저하: (SL+2)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "defenseDown",
+     "value": "SL+2",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -620,8 +862,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상의 강화 효과를 최대 (SL)개 소멸.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "cure",
+     "kind": "buff",
+     "count": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -662,8 +910,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과 『억제 방어 상승: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "buff",
+     "id": "suppDefUp",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -699,8 +954,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지식 관련 판정 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.knowledge",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -742,7 +1003,8 @@
    "sl": 1,
    "description": "<p>약 5분간 용암·바늘산 등의 위를 피해 없이 걸을 수 있다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "약 5분간 용암·바늘산 위를 피해 없이: GM이 처리"
   },
   "_meta": {
    "className": "미스틱"
@@ -864,8 +1126,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 공격】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppAtk",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
@@ -901,8 +1169,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 방어】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppDef",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "미스틱"
