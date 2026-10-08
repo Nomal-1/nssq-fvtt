@@ -88,4 +88,11 @@ describe("연쇄 금지(01 §3.11, 05 완료 기준)", () => {
     const r = await extendDamage({ dice: [6, 4], resist: 3, crit: false, raw: 2, halves: 1 }, 3, roll);
     expect(r).toEqual(expect.objectContaining({ crit: true, raw: 2 + 1 + 4, final: 3, add: 3 - 1 }));
   });
+
+  it("스킬 key에 점이 있어도 시트 「자동」 토글(autoKey)과 맞는다", () => {
+    const r = { optional: true, source: { key: "ソードマン.풀 게인" } };
+    expect(autoRuns(r, { side: "pc", autoTrigger: { "ソードマン_풀 게인": true } })).toBe(true);
+    expect(autoRuns(r, { side: "pc", autoTrigger: {} })).toBe(false);
+    expect(autoRuns(r, { side: "enemy" })).toBe(true);
+  });
 });
