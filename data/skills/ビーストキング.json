@@ -29,8 +29,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '소환수' 스킬의 토큰을 동시에 최대 2개 유지 가능.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "tokenMax",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -66,8 +72,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '소환수' 스킬로 배치한 토큰의 공격에 물리 명중·속성 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "tokenHit",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -112,8 +124,101 @@
    ],
    "sl": 1,
    "description": "<p>사용 시 《큰 새 소환》《큰 뱀 소환》《두더지 소환》 중 하나로 선언. 지속 3턴 토큰 배치. 토큰은 배치자의 【물리 명중】【물리 공격】으로 적 전열 단일에게 물리 공격. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(7+SL))의 억제 방어 롤, 실패하면 봉인. 속성과 봉인 조합은 〈돌〉+[머리] 봉인 / 〈괴〉+[팔] 봉인 / 〈참〉+[다리] 봉인 중 하나로 고정.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "bird",
+     "turns": 3,
+     "variant": 0,
+     "action": {
+      "target": "적 전열 단일",
+      "stats": "physical",
+      "effects": [
+       {
+        "type": "attack",
+        "kind": "physical",
+        "element": [
+         "pierce"
+        ],
+        "onHit": [
+         {
+          "type": "inflict",
+          "condition": "bindHead",
+          "check": {
+           "type": "fixed",
+           "target": "@self.suppAtk + 7 + SL"
+          }
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "type": "token",
+     "tokenKey": "snake",
+     "turns": 3,
+     "variant": 1,
+     "action": {
+      "target": "적 전열 단일",
+      "stats": "physical",
+      "effects": [
+       {
+        "type": "attack",
+        "kind": "physical",
+        "element": [
+         "strike"
+        ],
+        "onHit": [
+         {
+          "type": "inflict",
+          "condition": "bindArm",
+          "check": {
+           "type": "fixed",
+           "target": "@self.suppAtk + 7 + SL"
+          }
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "type": "token",
+     "tokenKey": "mole",
+     "turns": 3,
+     "variant": 2,
+     "action": {
+      "target": "적 전열 단일",
+      "stats": "physical",
+      "effects": [
+       {
+        "type": "attack",
+        "kind": "physical",
+        "element": [
+         "slash"
+        ],
+        "onHit": [
+         {
+          "type": "inflict",
+          "condition": "bindLeg",
+          "check": {
+           "type": "fixed",
+           "target": "@self.suppAtk + 7 + SL"
+          }
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -154,8 +259,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【속성 명중】【속성 공격】으로 적 단일에게 〈염〉 속성 공격, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "salamander",
+     "turns": 3,
+     "action": {
+      "target": "적 단일",
+      "stats": "elemental",
+      "effects": [
+       {
+        "type": "attack",
+        "kind": "elemental",
+        "element": [
+         "fire"
+        ],
+        "diceMod": "SL"
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -196,8 +326,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【속성 명중】【속성 공격】으로 적 단일에게 〈빙〉 속성 공격, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "snowhare",
+     "turns": 3,
+     "action": {
+      "target": "적 단일",
+      "stats": "elemental",
+      "effects": [
+       {
+        "type": "attack",
+        "kind": "elemental",
+        "element": [
+         "ice"
+        ],
+        "diceMod": "SL"
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -238,8 +393,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【속성 명중】【속성 공격】으로 적 단일에게 〈뇌〉 속성 공격, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "whitefox",
+     "turns": 3,
+     "action": {
+      "target": "적 단일",
+      "stats": "elemental",
+      "effects": [
+       {
+        "type": "attack",
+        "kind": "elemental",
+        "element": [
+         "volt"
+        ],
+        "diceMod": "SL"
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -280,8 +460,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지속 3턴 토큰 배치. 토큰은 적 열을 대상으로 배치자의 【억제 공격】 대 대상의 【억제 방어】 대항 판정(배치자 측 +(SL)), 이기면 [독].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "poisonmoth",
+     "turns": 3,
+     "action": {
+      "target": "적 열",
+      "stats": "physical",
+      "effects": [
+       {
+        "type": "inflict",
+        "condition": "poison",
+        "check": {
+         "type": "contest",
+         "atkMod": "SL"
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -322,8 +527,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지속 3턴 토큰 배치. 토큰은 적 열을 대상으로 배치자의 【억제 공격】 대 대상의 【억제 방어】 대항 판정(배치자 측 +(SL)), 이기면 [수면].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "sleepowl",
+     "turns": 3,
+     "action": {
+      "target": "적 열",
+      "stats": "physical",
+      "effects": [
+       {
+        "type": "inflict",
+        "condition": "sleep",
+        "check": {
+         "type": "contest",
+         "atkMod": "SL"
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -364,8 +594,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【물리 명중】【물리 공격】으로 적 관통 대상 〈돌〉 물리 공격, 대미지 다이스 +(SL×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "bison",
+     "turns": 3,
+     "action": {
+      "target": "적 관통",
+      "stats": "physical",
+      "effects": [
+       {
+        "type": "attack",
+        "kind": "physical",
+        "element": [
+         "pierce"
+        ],
+        "diceMod": "SL*2"
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -406,8 +661,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【물리 명중】【물리 공격】으로 적 전열 대상 〈괴〉 물리 공격, 대미지 다이스 +(SL×2)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "elephant",
+     "turns": 3,
+     "action": {
+      "target": "적 전열",
+      "stats": "physical",
+      "effects": [
+       {
+        "type": "attack",
+        "kind": "physical",
+        "element": [
+         "strike"
+        ],
+        "diceMod": "SL*2"
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -448,8 +728,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지속 3턴 토큰 배치. 토큰은 항상 대기 상태이며, 배치자가 받는 물리 공격을 1턴에 1회 완전 무효화.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "slime",
+     "turns": 3,
+     "action": {
+      "target": "자신",
+      "stats": "physical",
+      "effects": [
+       {
+        "type": "guard",
+        "mode": "nullify",
+        "scope": "owner",
+        "when": {
+         "attackKind": "physical"
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -490,8 +795,41 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【물리 명중】【물리 공격】으로 적 단일에게 〈참〉 물리 공격. 명중 시 대상은 목표값 (공격자의 【억제 공격】+(5+SL))의 억제 방어 롤, 실패하면 [즉사].</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "sabertiger",
+     "turns": 3,
+     "action": {
+      "target": "적 단일",
+      "stats": "physical",
+      "effects": [
+       {
+        "type": "attack",
+        "kind": "physical",
+        "element": [
+         "slash"
+        ],
+        "onHit": [
+         {
+          "type": "kill",
+          "check": {
+           "type": "fixed",
+           "target": "@self.suppAtk + 5 + SL"
+          }
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -532,8 +870,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지속 3턴 토큰 배치. 토큰은 배치자의 【물리 명중】【물리 공격】으로 적 전열 대상 〈참〉 물리 공격, 대미지 다이스 +((SL+1)×3)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "token",
+     "tokenKey": "lionking",
+     "turns": 3,
+     "action": {
+      "target": "적 전열",
+      "stats": "physical",
+      "effects": [
+       {
+        "type": "attack",
+        "kind": "physical",
+        "element": [
+         "slash"
+        ],
+        "diceMod": "(SL+1)*3"
+       }
+      ]
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -575,7 +938,8 @@
    "sl": 1,
    "description": "<p>분류 '소환수' 토큰 1개를 소멸시키고 자신의 【TP】 (SL) 회복.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "『소환수』 토큰 1개를 없애고 자신 TP +SL: GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -617,7 +981,8 @@
    "sl": 1,
    "description": "<p>분류 '소환수' 토큰 1개를 소멸시키고 자신이 받는 공격 하나를 무효화.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "『소환수』 토큰 1개를 없애고 자신이 받는 공격 하나 무효: GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -658,8 +1023,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>약화 효과 『물리 공격 저하: (SL+1)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "physAtkDown",
+     "value": "SL+1",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -700,8 +1072,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>약화 효과 『물리 방어 저하: (SL+1)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "defenseDown",
+     "value": "SL+1",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -743,7 +1122,8 @@
    "sl": 1,
    "description": "<p>위치를 아는 상대에게 편지 1통을 보낸다. 도착 소요 시간은 GM이 정한다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "편지 1통 전달: GM이 처리"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -784,8 +1164,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아이템 7개까지 운반하는 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 아이템 소지 수가 그만큼 늘어난 것으로 취급.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "carry",
+     "value": 7
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -827,7 +1213,8 @@
    "sl": 1,
    "description": "<p>사람보다 빠르게 달리는 탈것 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 빨리 달리기 등의 판정 +3.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "탈것 동물(빨리 달리기 판정 +3): GM이 처리"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -869,7 +1256,8 @@
    "sl": 1,
    "description": "<p>헤엄치는 탈것 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 수면 위를 이동 가능.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "수면 위 이동: GM이 처리"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -911,7 +1299,8 @@
    "sl": 1,
    "description": "<p>저공 비행하는 탈것 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 저공으로 공중 이동 가능.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "저공 비행 이동: GM이 처리"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -948,7 +1337,8 @@
    "sl": 1,
    "description": "<p>F.O.E.로부터 도망치기·숨기 등의 판정 +2.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "F.O.E.로부터 도망치기·숨기 판정 +2: 판정 때 보정(단계 9)"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -1113,8 +1503,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 공격】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppAtk",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"
