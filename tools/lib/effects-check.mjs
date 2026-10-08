@@ -167,7 +167,7 @@ export function checkAll() {
     }
     const where = `${group} 《${name}》`;
     const review = holder.review ?? (holder.effects?.length ? "auto" : "todo");
-    const c = counts.get(group) ?? { todo: 0, auto: 0, partial: 0, ok: 0 };
+    const c = counts.get(group) ?? { todo: 0, auto: 0, partial: 0, ok: 0, none: 0 };
     c[review] = (c[review] ?? 0) + 1;
     counts.set(group, c);
     checkEffects(holder.effects ?? [], where, errors);
@@ -176,6 +176,7 @@ export function checkAll() {
       if (!holder.effectsNote) errors.push(`${where}: partial인데 effectsNote가 없다`);
       partial.push(`${where}: ${holder.effectsNote ?? ""}`);
     }
+    if (review === "none" && (holder.effects ?? []).length) errors.push(`${where}: none인데 effects가 있다`);
     if (["ok", "auto"].includes(review) && !(holder.effects ?? []).length) errors.push(`${where}: ${review}인데 effects가 비었다`);
     if (usesStage8(holder.effects)) stage8.push(where);
   }
@@ -183,15 +184,15 @@ export function checkAll() {
 }
 
 export function reportMarkdown({ errors, counts, partial, stage8 }) {
-  const total = { todo: 0, auto: 0, partial: 0, ok: 0 };
+  const total = { todo: 0, auto: 0, partial: 0, ok: 0, none: 0 };
   const rows = [...counts].map(([g, c]) => {
     for (const k of Object.keys(total)) total[k] += c[k] ?? 0;
-    return `| ${g} | ${c.todo ?? 0} | ${c.auto ?? 0} | ${c.partial ?? 0} | ${c.ok ?? 0} |`;
+    return `| ${g} | ${c.todo ?? 0} | ${c.auto ?? 0} | ${c.partial ?? 0} | ${c.ok ?? 0} | ${c.none ?? 0} |`;
   });
   return [
     "# 효과 데이터 리포트 (tools/effects-check.mjs)", "",
-    `오류 ${errors.length}건 · todo ${total.todo} · auto ${total.auto} · partial ${total.partial} · ok ${total.ok}`, "",
-    "| 묶음 | todo | auto | partial | ok |", "|---|---|---|---|---|", ...rows, "",
+    `오류 ${errors.length}건 · todo ${total.todo} · auto ${total.auto} · partial ${total.partial} · ok ${total.ok} · none(규칙상 효과 없음) ${total.none}`, "",
+    "| 묶음 | todo | auto | partial | ok | none |", "|---|---|---|---|---|---|", ...rows, "",
     "## 오류", ...(errors.length ? errors.map((e) => `- ${e}`) : ["없음"]), "",
     "## partial (남은 처리)", ...(partial.length ? partial.map((e) => `- ${e}`) : ["없음"]), "",
     "## 단계 8 대기(트리거·대기 상태·지연·추격·반격·토큰)", ...(stage8.length ? stage8.map((e) => `- ${e}`) : ["없음"]), ""

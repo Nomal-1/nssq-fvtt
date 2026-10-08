@@ -152,6 +152,7 @@
 
 1. 변환기가 만든 `data/skills/*.json`에는 `effects: []`, `review: "todo"`가 들어 있다.
 2. 클래스 단위로 effects를 채운다. 자동으로 채운 것은 `review: "auto"`, 사람이 확인한 것은 `"ok"`.
+2-1. 규칙상 효과가 없는 것(로프·물통 같은 설명용 도구, 식료품)은 `review: "none"`, effects는 빈 배열.
 3. 완전히 표현하지 못하면 가능한 만큼 쓰고 `review: "partial"`, `effectsNote: "남은 처리 설명"`을 남긴다. 런타임에서는 채팅 카드에 「GM 판단 필요: …」로 표시한다.
 4. 커밋은 클래스 하나씩. `build/report.md`에 클래스별 todo/auto/partial/ok 수를 집계한다.
 5. 에너미 스킬(66종 페이지의 스킬 목록), 아이템, 장식, 제련도 같은 방식으로.

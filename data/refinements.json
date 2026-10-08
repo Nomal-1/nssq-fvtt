@@ -14,8 +14,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "TEC1",
@@ -32,8 +31,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "VIT1",
@@ -50,8 +48,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "AGI1",
@@ -68,8 +65,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "LUC1",
@@ -86,8 +82,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "물리명중1",
@@ -103,8 +98,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "속성명중1",
@@ -120,8 +114,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "물리공격1",
@@ -137,8 +130,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "속성공격1",
@@ -154,8 +146,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "염속성부여",
@@ -171,8 +162,7 @@
     "value": "fire"
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "빙속성부여",
@@ -188,8 +178,7 @@
     "value": "ice"
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "뇌속성부여",
@@ -205,8 +194,7 @@
     "value": "volt"
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "방어1",
@@ -222,8 +210,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "속도2",
@@ -239,8 +226,7 @@
     "value": 2
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "염내성1",
@@ -256,8 +242,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "빙내성1",
@@ -273,8 +258,7 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  },
  {
   "key": "뇌내성1",
@@ -290,7 +274,6 @@
     "value": 1
    }
   ],
-  "review": "auto",
-  "effectsSource": "convert"
+  "review": "ok"
  }
 ]

@@ -48,7 +48,9 @@ for (const [name, v] of Object.entries(spec.skills)) {
   const sys = hit[0].sys;
   sys.effects = v.effects;
   sys.review = v.review ?? (v.note ? "partial" : "ok");
-  if (v.note) sys.effectsNote = v.note;
+  // 손으로 확인한 것은 변환기가 다시 만들지 않게(effectsSource: "convert" 해제)
+  delete sys.effectsSource;
+  if (v.note && sys.review !== "none") sys.effectsNote = v.note;
   else delete sys.effectsNote;
   n++;
 }
