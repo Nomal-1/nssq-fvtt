@@ -28,7 +28,7 @@ export function collectPassives(skills, ctx = {}) {
       }
       if (e.type === "useBonus") {
         const v = (x) => evaluate(x ?? 0, { SL: s.sl, self: ctx.self });
-        useBonuses.push({ name: s.name, when: e.when ?? null, buffTurns: v(e.buffTurns), healHp: v(e.healHp) });
+        useBonuses.push({ name: s.name, when: e.when ?? null, buffTurns: v(e.buffTurns), debuffTurns: v(e.debuffTurns), healHp: v(e.healHp) });
         continue;
       }
       if (!whenMatches(e.when, ctx)) continue;

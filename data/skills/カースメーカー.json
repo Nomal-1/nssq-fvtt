@@ -30,7 +30,8 @@
    "sl": 1,
    "description": "<p>분류 『주언』 스킬 사용 시 선언. 그 억제 공격 달성값 +5.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "『주언』 스킬 사용 때 선언, 그 억제 공격 달성값 +5: 판정 때 GM이 보정(단계 8)"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -66,8 +67,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 『주언』 스킬이 거는 약화 효과의 지속 턴 수 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "useBonus",
+     "debuffTurns": "SL/2",
+     "when": {
+      "category": "주언"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -108,8 +117,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>약화 효과 『물리 공격 저하: (SL+1)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "physAtkDown",
+     "value": "SL+1",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -150,8 +166,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>약화 효과 『물리 방어 저하: (SL+1)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "defenseDown",
+     "value": "SL+1",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -192,8 +215,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>약화 효과 『속도 저하: (SL×3)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "speedDown",
+     "value": "SL*3",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -238,8 +268,36 @@
    ],
    "sl": 1,
    "description": "<p>사용 시 《봉인의 주언: 두부》《봉인의 주언: 상지》《봉인의 주언: 하지》 중 하나로 선언. 자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 선언한 [머리]/[팔]/[다리] 봉인 부여.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": "bindHead",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     },
+     "variant": 0
+    },
+    {
+     "type": "inflict",
+     "condition": "bindArm",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     },
+     "variant": 1
+    },
+    {
+     "type": "inflict",
+     "condition": "bindLeg",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     },
+     "variant": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -280,8 +338,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [맹목] 부여.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": "blind",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -322,8 +389,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [마비] 부여.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": "paralyze",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -364,8 +440,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [혼란] 부여.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": "confuse",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -406,8 +491,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [수면] 부여.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": "sleep",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -448,8 +542,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [독] 부여.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": "poison",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -490,8 +593,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [저주] 부여.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": "curse",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -532,8 +644,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL-2)), 승리 시 대상 즉사.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "kill",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL-2"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -574,8 +694,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(자신 +(SL)), 승리 시 [공포] 부여.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": "fear",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -617,7 +746,8 @@
    "sl": 1,
    "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴 동안 대상은 어떤 행동도 할 수 없고 【회피】는 0으로 취급.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "[공포]로 행동 불능인 대상에게만: 그 턴 행동 불가·회피 0. GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -659,7 +789,8 @@
    "sl": 1,
    "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴, 대상은 자신 이외의 에너미를 공격한다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "[공포]로 행동 불능인 대상에게만: 그 턴 자신 이외의 에너미를 공격. GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -701,7 +832,8 @@
    "sl": 1,
    "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴 동안 사용자가 공격 대상이 되면 이 스킬의 대상이 대신 그 공격을 받는다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "[공포]로 행동 불능인 대상에게만: 그 턴 사용자 대신 공격을 받음. GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -743,7 +875,8 @@
    "sl": 1,
    "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴, 대상은 자기 자신을 공격한다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "[공포]로 행동 불능인 대상에게만: 그 턴 자기 자신을 공격. GM이 처리(단계 8)"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -784,8 +917,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>무속성 속성 공격. 이때 자신의 【속성 공격】을 (최대 HP − 현재 HP)÷2만큼 높은 것으로 취급.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "none"
+     ],
+     "atkMod": "(@self.hpMax-@self.hp)/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -826,8 +968,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>약화 효과 『억제 방어 저하: (SL)』 부여, 3턴 지속.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "debuff",
+     "id": "suppDefDown",
+     "value": "SL",
+     "turns": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -869,7 +1018,8 @@
    "sl": 1,
    "description": "<p>그 턴 동안 자신의 【억제 공격】 +(SL).</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "그 턴 동안 자신의 억제 공격 +SL(강화 효과 아님): GM이 판정 때 보정"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -905,8 +1055,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신이 어떤 봉인이든 받고 있으면 【억제 공격】 +1.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppAtk",
+     "value": 1,
+     "when": {
+      "selfHasBind": true
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -942,8 +1101,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지식 관련 판정 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.knowledge",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -985,7 +1150,8 @@
    "sl": 1,
    "description": "<p>대상이 잠들었을 때 그 꿈에 나타나 메시지를 보낼 수 있다. 일방 송신만 가능하며 대상의 말은 들을 수 없다. 대상의 이름과 있는 곳을 알아야 한다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "잠든 대상의 꿈에 메시지: GM이 처리"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -1027,7 +1193,8 @@
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정, 승리 시 대상의 부분적 기억('누구의 거처' 정도)이나 공포 체험을 잊게 한다. 효과는 영구지만 시전자가 암호를 외우면 기억이 돌아온다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "억제 대항, 이기면 부분 기억을 잊게 함: GM이 처리"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -1069,7 +1236,8 @@
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정, 승리 시 특정 행동을 금하는 제약 부여. 금지 행동을 시도하면 1D6 실대미지, 계속 어기는 동안 1시간마다 1D6 실대미지. 시전자가 해제할 때까지 영구. 호흡 금지처럼 자살적 결과를 낳는 명령은 불가.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "억제 대항, 이기면 특정 행동 금지(어기면 1D6 실대미지): GM이 처리"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -1191,8 +1359,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 공격】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppAtk",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -1228,8 +1402,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【억제 방어】 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "suppDef",
+     "value": "SL/2"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"

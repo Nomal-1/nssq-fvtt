@@ -27,6 +27,8 @@ const CHECKS = {
   // 대상이 상태 이상(봉인 제외) 중
   targetHasAilment: (v, c) => (c.target?.conditions ?? []).some((x) => AILMENTS.has(x.id)) === !!v,
   targetNotActedThisTurn: (v, c) => !c.target?.acted === !!v,
+  // 자신이 봉인 중(《저주 사슬의 은혜》)
+  selfHasBind: (v, c) => (c.self?.conditions ?? []).some((x) => BINDS.has(x.id)) === !!v,
   selfHpFull: (v, c) => ((c.self?.hp ?? 0) >= (c.self?.hpMax ?? 0)) === !!v,
   selfHpAtMostHalf: (v, c) => ((c.self?.hp ?? 0) * 2 <= (c.self?.hpMax ?? 0)) === !!v,
   selfRow: (v, c) => c.self?.row === v,

@@ -45,6 +45,7 @@
 | `selfHpAtMostHalf` | 자기 HP가 최대의 절반 이하 |
 | `selfRow: "front"/"back"` | 자기 위치 |
 | `selfHpFull: true` | 자기 HP가 만전 |
+| `selfHasBind: true` | 자신이 봉인 중 |
 | `targetRow: "front"/"back"` | 대상 위치 |
 | `element: [..]` | 처리 중인 공격의 속성 포함 |
 | `attackKind: "physical"/"elemental"` | 처리 중인 공격의 종류 |
@@ -58,10 +59,10 @@
 |---|---|---|
 | `attack` | `kind`(physical/elemental), `element`(생략 시 무기 기본 속성), `addElement`(무기 속성에 더함, 「〈염〉 속성을 부가한」), `failAtOrBelow`(명중 눈 합이 n 이하면 절대 실패), `randomFrom`(무작위 대상을 그 열에서만: front/back), `times`, `hitMod`, `diceMod`, `atkMod`, `atkMultiplier`, `random`, `uniqueTarget`, `onHit[]`, `bonuses[{when, hitMod?, diceMod?, atkMod?, element?}]`, `halfDamage` | 공격 롤 1회분(또는 times회) |
 | `heal` | `mode`(roll/fixed/full/percent), `bonus`/`amount`, `resource`(hp/tp), `revive` | 회복 롤 또는 고정 회복. \[전투 불능\] 대상은 `revive: true`인 효과만 회복(부활). 부활 효과가 있으면 쓰러진 아군도 대상으로 고를 수 있다. 『회복』 분류 스킬의 회복 롤에는 사용자의 `healDice` 보정이 더해진다 |
-| `inflict` | `condition`, `check: {type: fixed, target} | {type: contest} | {type: forced}` | 상태 이상·봉인 부여. forced: 저항 없이 반드시 걸고 심도만 사용자의 【억제 공격】 판정 달성값(07 #61) |
+| `inflict` | `condition`, `check: {type: fixed, target} | {type: contest, atkMod?} | {type: forced}` | 상태 이상·봉인 부여. forced: 저항 없이 반드시 걸고 심도만 사용자의 【억제 공격】 판정 달성값(07 #61) |
 | `drain` | `resource`(hp/tp), `mode`(half: 준 대미지 절반 / sixes: 대미지 다이스의 6 개수) | onHit 안에서: 그 명중으로 자신 회복(《음양검: 영흡명참》) |
 | `recoil` | `mode`(ones) | `toSelf`와 함께: 이 행동에서 굴린 대미지 다이스의 '1' 개수만큼 자신이 대미지(《싱글 스러스트》) |
-| `kill` | `check: {type: fixed, target, defMod?}` | 즉사: 억제 방어 롤 실패면 【HP】 0(카드에 \[즉사\]) |
+| `kill` | `check: {type: fixed, target, defMod?} | {type: contest, atkMod?}` | 즉사: 억제 방어 롤 실패면 【HP】 0(카드에 \[즉사\]) |
 | `cure` | `conditions[]` 또는 `"all"`, `kind`(ailment/bind/debuff/buff), `count`, `buffs[]`(그 강화·약화 id만) | 해제. `count`가 있으면 걸린 순서대로 그 개수까지(「(SL)개까지」) |
 | `buff` / `debuff` | `id`, `value`, `turns`, `param`(속성 등) | 01 §3.10의 강화·약화 |
 | `modifier` | `path`, `value` | 상시 보정. 타이밍 「상시」 스킬, 장식, 제련. path: `physAtk elemAtk physHit elemHit defense evasion speed suppAtk suppDef hpMax tpMax carry healDice(『회복』 스킬 회복 롤 다이스) itemHeal(아이템 회복량 +) guardCount(방어 스킬 횟수 +) abilities.<능력치> resist.<속성> checks.<판정>` |
@@ -77,7 +78,7 @@
 | `overheat` | `turns` | 드라이브 계열(상시 modifier `overheatTurns`로 증감) |
 | `overheatReduce` | `turns` | 자신의 오버히트 단축(《샤프 에지》·《강제 배기》) |
 | `attackBonus` | `hitMod`, `diceMod`, `atkMod`, `critDice`(크리티컬 추가 다이스 +), `critUp`(『크리티컬 업』 취급), `when` | 타이밍 「상시」: 공격할 때마다 붙는 보정. `when`은 공격 시점(대상·공격 속성)으로 판정(《선봉의 공명》 「아직 행동하지 않은 적에 대한 공격」). 통상 공격·스킬 공격 모두 |
-| `useBonus` | `buffTurns`, `healHp`, `when` | 타이밍 「상시」: 스킬을 쓸 때 붙는 보정. `buffTurns`: 그 스킬로 주는 강화의 지속 턴 +(《무용 마스터리》), `healHp`: 대상 HP 회복이 따라붙음(《리인포스》). 보통 `when.category` |
+| `useBonus` | `buffTurns`, `debuffTurns`, `healHp`, `when` | 타이밍 「상시」: 스킬을 쓸 때 붙는 보정. `buffTurns`·`debuffTurns`: 그 스킬로 주는 강화·약화의 지속 턴 +(《무용 마스터리》·《주언 마스터리》), `healHp`: 대상 HP 회복이 따라붙음(《리인포스》). 보통 `when.category` |
 | `target` | `side`(enemy/ally/self), `scope`(single/row/all/random), `count?` | 대상 칸 대신 쓸 대상 지정(대상이 「특수」인 스킬). `count`(n명)는 아직 한 명씩 |
 | `actionTiming` | `value`(first/last) | 「그 턴 최속/후발 행동」(대상에게. 자신이면 target 자신). 개막 페이즈에 쓰면 메인 페이즈 행동 순서에 반영(전투원 플래그 timing, 라운드마다 지움). 메인 페이즈 중 선언하는 것은 partial |
 | `state` | `id`, `label`, `group?`, `mods[{path, value}]`, `max?`, `note?` | 전투 고유 상태(강화가 아님, 해제되지 않음, 전투 끝까지). 무사의 자세·《나찰》 등. 같은 `group`은 하나만, `max`가 있으면 쌓임(07 #57) |

@@ -180,7 +180,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
           const c = forcedInflict({ atkDice: await rollDice(2), suppAtk: user.suppAtk ?? 0 });
           r.inflicts.push({ id: e.condition, depth: c.depth, resisted: false, forced: { atk: c.atk } });
         } else if (ck.type === "contest") {
-          const c = contestInflict({ atkDice: await rollDice(2), suppAtk: user.suppAtk ?? 0, defDice: await rollDice(2), suppDef: t.suppDef ?? 0 });
+          // atkMod: 「대항 판정(자신 +(SL))」 공격 쪽 보정
+          const c = contestInflict({ atkDice: await rollDice(2), suppAtk: (user.suppAtk ?? 0) + evaluate(ck.atkMod ?? 0, vars(t)), defDice: await rollDice(2), suppDef: t.suppDef ?? 0 });
           r.inflicts.push({ id: e.condition, depth: c.depth, resisted: c.resisted, contest: { atk: c.atk, def: c.def } });
         } else {
           const target = evaluate(ck.target, vars(t));
@@ -210,6 +211,12 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       }
       case "kill": {
         // 즉사: 고정 목표값 억제 방어 롤에 실패하면 【HP】 0(《일섬》 등). 카드에는 [즉사]로 표시
+        if (e.check?.type === "contest") {
+          // 대결 즉사(커스메이커 《죽음의 주언》)
+          const c = contestInflict({ atkDice: await rollDice(2), suppAtk: (user.suppAtk ?? 0) + evaluate(e.check.atkMod ?? 0, vars(t)), defDice: await rollDice(2), suppDef: t.suppDef ?? 0 });
+          r.inflicts.push({ id: "death", depth: null, resisted: c.resisted, contest: { atk: c.atk, def: c.def } });
+          return;
+        }
         const target = evaluate(e.check?.target ?? 0, vars(t));
         const c = resistCheck({ dice: await rollDice(2), suppDef: (t.suppDef ?? 0) + evaluate(e.check?.defMod ?? 0, vars(t)), target });
         r.inflicts.push({ id: "death", depth: null, resisted: c.resisted, fixed: { target, check: c.check } });
@@ -221,7 +228,9 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       case "buff":
       case "debuff": {
         // 《무용 마스터리》 등: 이 스킬(분류)로 주는 강화의 지속 턴 +
-        const plus = e.type === "buff" ? (user.useBonuses ?? []).filter((b) => whenMatches(b.when, { ...ctx, category, self: user, target: t })).reduce((n, b) => n + (b.buffTurns ?? 0), 0) : 0;
+        // 《주언 마스터리》: 약화 지속 턴 +(debuffTurns)
+        const key = e.type === "buff" ? "buffTurns" : "debuffTurns";
+        const plus = (user.useBonuses ?? []).filter((b) => whenMatches(b.when, { ...ctx, category, self: user, target: t })).reduce((n, b) => n + (b[key] ?? 0), 0);
         r.buffs.push({ id: canonicalBuff(e.id), value: evaluate(e.value ?? 0, vars(t)), turns: Math.max(1, evaluate(e.turns ?? 1, vars(t)) + plus), param: e.param ?? "" });
         return;
       }
