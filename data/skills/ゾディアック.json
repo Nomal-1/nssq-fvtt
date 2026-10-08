@@ -29,8 +29,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>속성 공격의 대미지 다이스 항상 +2개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "diceMod": 2,
+     "when": {
+      "attackKind": "elemental"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -66,8 +74,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '술식' 스킬로 하는 공격 롤의 속성 명중 +(SL/2).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "hitMod": "SL/2",
+     "when": {
+      "category": "술식",
+      "attackKind": "elemental"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -112,8 +129,36 @@
    ],
    "sl": 1,
    "description": "<p>사용 시 《불꽃의 성술》《얼음의 성술》《번개의 성술》 중 하나로 선언. 해당하는 〈염〉/〈빙〉/〈뇌〉 속성 공격, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "fire"
+     ],
+     "diceMod": "SL",
+     "variant": 0
+    },
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "ice"
+     ],
+     "diceMod": "SL",
+     "variant": 1
+    },
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "volt"
+     ],
+     "diceMod": "SL",
+     "variant": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -158,8 +203,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈염〉 속성 공격, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "fire"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -204,8 +258,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈빙〉 속성 공격, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "ice"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -250,8 +313,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈뇌〉 속성 공격, 대미지 다이스 +(SL)개.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "volt"
+     ],
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -296,8 +368,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 아군을 노린 〈염〉 단일 속성 공격을 공격자에게 반사. 범위 공격은 1회분만 반사하고 나머지는 무효화. 반사 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "reflect",
+       "scope": "all",
+       "when": {
+        "attackKind": "elemental",
+        "element": [
+         "fire"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -342,8 +438,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 아군을 노린 〈빙〉 단일 속성 공격을 공격자에게 반사. 범위 공격은 1회분만 반사하고 나머지는 무효화. 반사 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "reflect",
+       "scope": "all",
+       "when": {
+        "attackKind": "elemental",
+        "element": [
+         "ice"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -388,8 +508,32 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 대기 중 아군을 노린 〈뇌〉 단일 속성 공격을 공격자에게 반사. 범위 공격은 1회분만 반사하고 나머지는 무효화. 반사 누적 (SL)회 또는 턴 종료 시 대기 해제.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "count",
+     "count": "SL",
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "reflect",
+       "scope": "all",
+       "when": {
+        "attackKind": "elemental",
+        "element": [
+         "volt"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -430,8 +574,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>〈괴〉 속성 공격 롤 3회. 매 회 대상은 적 중 무작위 선택. 대미지 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "attack",
+     "kind": "elemental",
+     "element": [
+      "strike"
+     ],
+     "times": 3,
+     "random": true,
+     "diceMod": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -473,7 +628,8 @@
    "sl": 1,
    "description": "<p>자신의 공격 시 적의 【내성】 2는 1로, 1은 0으로 취급. 【내성】 3 이상에는 효과 없음.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "자신의 공격 때 적의 내성 2는 1로, 1은 0으로(3 이상은 그대로): GM이 대미지를 보정"
   },
   "_meta": {
    "className": "조디악"
@@ -514,8 +670,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신의 공격으로 적을 전투 불능으로 만들면 자신의 【TP】 (SL) 회복.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "enemyKO",
+     "effects": [
+      {
+       "type": "resource",
+       "resource": "tp",
+       "delta": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -561,7 +729,8 @@
    "sl": 1,
    "description": "<p>그 턴에 자신이 하는 술식 공격 롤의 대미지 다이스 +(SL×2)개. 단 그 술식 공격은 후발 행동이 된다.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "그 턴 자신의 술식 공격 다이스 +(SL×2), 대신 그 공격은 후발 행동: GM이 처리"
   },
   "_meta": {
    "className": "조디악"
@@ -597,8 +766,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>지식 관련 판정 +3.</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.knowledge",
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -635,7 +810,8 @@
    "sl": 1,
    "description": "<p>시력을 쓰는 판정을 【TEC】로 할 수 있고, 달성값 +3.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "시력 판정을 【TEC】로, 달성값 +3: 판정 때 보정(타이밍 특수)"
   },
   "_meta": {
    "className": "조디악"
@@ -672,7 +848,8 @@
    "sl": 1,
    "description": "<p>다가오는 위험을 알아채는 판정을 【TEC】로 할 수 있고, 달성값 +3.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "위험 감지 판정을 【TEC】로, 달성값 +3: 판정 때 보정(타이밍 특수)"
   },
   "_meta": {
    "className": "조디악"
@@ -709,7 +886,8 @@
    "sl": 1,
    "description": "<p>자신 이외의 인물이 전투 외 일반 행위 판정을 할 때 사용. 그 달성값 +1.</p>",
    "effects": [],
-   "review": "todo"
+   "review": "partial",
+   "effectsNote": "다른 사람의 전투 밖 일반 행위 판정에 +1: 판정 때 보정"
   },
   "_meta": {
    "className": "조디악"
@@ -831,8 +1009,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【속성 공격】 +(SL).</p>",
-   "effects": [],
-   "review": "todo"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "elemAtk",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"

@@ -111,7 +111,7 @@ export function checkEffects(list, where, errors = []) {
     }
     if (e.type === "flag" && !FLAGS.includes(e.flag)) errors.push(`${at}: 모르는 flag \`${e.flag}\``);
     if (e.type === "trigger" && !TRIGGER_ON.includes(e.on)) errors.push(`${at}: 모르는 trigger.on \`${e.on}\``);
-    if (e.type === "guard" && !["half", "cover", "defense", "redirect"].includes(e.mode)) errors.push(`${at}: guard.mode는 half/cover/defense/redirect`);
+    if (e.type === "guard" && !["half", "cover", "defense", "redirect", "reflect"].includes(e.mode)) errors.push(`${at}: guard.mode는 half/cover/defense/redirect/reflect`);
     if ((e.type === "guard" || e.type === "aura") && e.scope && !["front", "back", "row", "all", "target"].includes(e.scope)) errors.push(`${at}: scope는 front/back/row/all/target`);
     if (e.type === "aura" && !MOD_PATHS.has(e.path)) errors.push(`${at}: 모르는 aura path \`${e.path}\``);
     if (e.type === "actionTiming" && !["first", "last"].includes(e.value)) errors.push(`${at}: actionTiming.value는 first/last`);
