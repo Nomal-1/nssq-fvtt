@@ -1300,7 +1300,33 @@
       "noEnemies": "쓰러뜨린 에너미가 없다",
       "reason": "전투 후 갈무리",
       "took": "{name}: {item} ×{n}",
-      "notYours": "자신의 캐릭터만 고를 수 있다"
+      "notYours": "자신의 캐릭터만 고를 수 있다",
+      "gatherTitle": "채집",
+      "gatherGo": "채집 판정",
+      "gatherHead": "채집: {method}·{amount} (R{rank})",
+      "method": "채집 방법",
+      "m": {
+        "felling": "벌채",
+        "mining": "채굴",
+        "picking": "채취"
+      },
+      "amount": "채집량",
+      "a": {
+        "little": "조금만",
+        "some": "적당히",
+        "lots": "잔뜩"
+      },
+      "amountOpt": "{name} ({n}개, 아앗! {ahh})",
+      "rank": "소재 R(던전 레벨, 희소한 채집 포인트는 +1)",
+      "table": "결과표",
+      "tablePlaceholder": "비우면 랜덤 던전 채집표. 예: ~6: R1 풀 / 7~10: R1 꽃 / 11~: R2 풀",
+      "gatherHint": "파티의 《벌채》·《채굴》·《채취》(그 방법)와 《채집 마스터》 SL만큼 채집 판정을 더 한다(추가분은 아앗! 없음). 채집 판정은 1이 나와도 FP를 얻지 않는다.",
+      "tableBad": "결과표를 읽지 못했다(예: ~6: R1 풀 / 7~10: R1 꽃 / 11~: R2 풀)",
+      "row": "채집 {n}",
+      "rowExtra": "채집 {n}(추가)",
+      "doubleExtra": "같은 눈: 1개 더",
+      "ahh": "아앗!",
+      "ambush": "아앗! 강력한 에너미(던전 레벨+1)의 기습. 전투 시작 창에서 「파티가 기습당했다」를 고른다. 소재는 그대로 얻는다"
     }
   }
 }

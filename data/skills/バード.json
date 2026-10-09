@@ -907,9 +907,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>채집 판정의 달성값을 ±1 범위에서 자유롭게 조작할 수 있다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "채집 판정 달성값 ±1 조작(단계 9)"
+   "effects": [
+    {
+     "type": "gatherAdjust",
+     "range": 1
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "바드"

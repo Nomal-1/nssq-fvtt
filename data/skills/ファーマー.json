@@ -457,9 +457,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>벌채·채굴·채취 이벤트에서 통상 횟수에 더해 채집 판정 (SL)회 추가. 추가분의 아앗! 값은 0으로 취급.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "벌채·채굴·채취 때 채집 판정 +SL회(「아앗!」 0 취급): 채집 대화창(단계 9)"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "gather.all",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -542,9 +547,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>채집 판정 달성값을 ±(SL) 범위에서 자유롭게 조정.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "채집 판정 달성값 ±SL 조정: 채집 대화창(단계 9)"
+   "effects": [
+    {
+     "type": "gatherAdjust",
+     "range": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -628,9 +637,12 @@
    "variants": [],
    "sl": 1,
    "description": "<p>채집 판정에서 같은 눈(조로메)이 나오면 해당 소재 1개 추가 입수.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "채집 판정에서 더블이면 그 소재 1개 더: 채집 대화창(단계 9)"
+   "effects": [
+    {
+     "type": "gatherDoubleExtra"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -756,9 +768,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>채집 판정 후 '곡류'/'채소'/'과일' 중 하나를 (SL)개 획득. 주변 지형이 식용 식물이 자라기에 명백히 부적합하다고 GM이 판단하면 적용되지 않는다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "채집 판정 뒤 곡류·채소·과일 중 하나 (SL)개(부적합한 지형이면 없음): 채집 대화창(단계 9)"
+   "effects": [
+    {
+     "type": "gatherExtra",
+     "count": "SL",
+     "choices": [
+      "곡류",
+      "채소",
+      "과일"
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -887,10 +908,12 @@
    "effects": [
     {
      "type": "dropDoubleUp"
+    },
+    {
+     "type": "gatherDoubleUp"
     }
    ],
-   "review": "partial",
-   "effectsNote": "채집 판정의 같은 눈 랭크 +1은 채집 대화창(9-B)에서"
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"

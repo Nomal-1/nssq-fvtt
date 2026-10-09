@@ -1061,9 +1061,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>벌채·채굴·채취 이벤트에서, 통상 횟수에 더해 채집 판정을 (SL)회 추가로 할 수 있다. 이 추가분은 「아앗!」 값을 0으로 취급한다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "벌채·채굴·채취 때 채집 판정 +SL회(「아앗!」 0 취급): 채집 대화창(단계 9)에서"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "gather.all",
+     "value": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"

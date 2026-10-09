@@ -1058,9 +1058,12 @@
    "variants": [],
    "sl": 1,
    "description": "<p>채집 판정에서 같은 눈(더블)이 나오면 얻는 아이템 랭크 +1.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "채집 판정에서 더블이면 얻는 아이템 랭크 +1(단계 9)"
+   "effects": [
+    {
+     "type": "gatherDoubleUp"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "파이리츠"

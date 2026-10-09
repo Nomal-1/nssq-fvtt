@@ -108,6 +108,7 @@ Hooks.once("init", () => {
     rollEscape: () => rollEscape(game.combat),
     startBattle: openStartDialog,
     endBattle: openEndDialog,
+    gather: async (o) => (await import("./apps/loot.mjs")).openGatherDialog(o),
     createBattlePreset: createPreset,
     cleanupEnemies
   };

@@ -7,7 +7,7 @@
  * - [갈무리 종료](GM): 남은 것은 버린 것으로 본다
  * 카드 상태는 메시지 플래그 nssq.loot, 바꾸는 것은 활성 GM만(소켓 "loot")
  */
-import { judgeDrop, partyDropSkills } from "../engine/loot.mjs";
+import { GATHER_AMOUNT, judgeDrop, judgeGather, parseGatherTable, partyDropSkills, RANDOM_GATHER } from "../engine/loot.mjs";
 import { acquireItems } from "./acquire.mjs";
 import { recordBestiary } from "../combat/bestiary.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
@@ -48,6 +48,64 @@ export async function startLoot(combat) {
   });
 }
 
+/* ---------------- 채집(9-B) ---------------- */
+
+const METHOD_MOD = { felling: "gather.felling", mining: "gather.mining", picking: "gather.picking" };
+
+/** GM: 채집 대화창 → 채집 판정 카드 */
+export async function openGatherDialog(defaults = {}) {
+  if (!game.user.isGM) return;
+  const { partyActors } = await import("./gm-screen.mjs");
+  const opt = (v, cur, label) => `<option value="${v}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
+  const content = `<form class="nssq-gather">
+    <div class="form-group"><label>${esc(L("method"))}</label><select name="method">${["felling", "mining", "picking"].map((m) => opt(m, defaults.method ?? "felling", L(`m.${m}`))).join("")}</select></div>
+    <div class="form-group"><label>${esc(L("amount"))}</label><select name="amount">${Object.entries(GATHER_AMOUNT).map(([k, v]) => opt(k, defaults.amount ?? "little", L("amountOpt", { name: L(`a.${k}`), n: v.count, ahh: v.ahh }))).join("")}</select></div>
+    <div class="form-group"><label>${esc(L("rank"))}</label><input type="number" name="rank" min="1" value="${Number(defaults.rank) || 1}"/></div>
+    <div class="form-group"><label>${esc(L("table"))}</label><input type="text" name="table" value="${esc(defaults.table ?? "")}" placeholder="${esc(L("tablePlaceholder"))}"/></div>
+    <p class="notes">${esc(L("gatherHint"))}</p></form>`;
+  const got = await Dialog.prompt({
+    title: L("gatherTitle"), content, label: L("gatherGo"), rejectClose: false,
+    callback: (html) => { const f = html[0].querySelector("form"); return { method: f.method.value, amount: f.amount.value, rank: Number(f.rank.value) || 1, table: f.table.value.trim() }; }
+  }, { classes: ["nssq", "dialog"] });
+  if (!got) return;
+  const table = got.table ? parseGatherTable(got.table) : RANDOM_GATHER[got.method];
+  if (!table) return ui.notifications.warn(L("tableBad"));
+  return startGather({ ...got, table, party: partyActors() });
+}
+
+/**
+ * 채집 판정 카드. 채집 개수 = 방법(1·2·3) + 파티의 《벌채》·《채굴》·《채취》(그 방법) 합계 SL + 《채집 마스터》 SL(추가분은 아앗! 0)
+ */
+export async function startGather({ method, amount, rank, table, party }) {
+  const base = GATHER_AMOUNT[amount] ?? GATHER_AMOUNT.little;
+  const mods = (a) => a.system.equipment?.mods ?? {};
+  const extra = party.reduce((n, a) => n + (Number(mods(a)[METHOD_MOD[method]]) || 0) + (Number(mods(a)["gather.all"]) || 0), 0);
+  const skills = partyDropSkills(party.map((a) => ({
+    uuid: a.uuid, name: a.name,
+    skills: a.items.filter((i) => i.type === "skill").map((i) => ({ name: i.name, sl: i.system.sl ?? 0, effects: i.system.effects ?? [] }))
+  })), "gather");
+  const rolls = [];
+  const rows = [];
+  for (let k = 0; k < base.count + extra; k++) {
+    const roll = await new Roll("2d6").evaluate();
+    rolls.push(roll);
+    const isExtra = k >= base.count;
+    rows.push({ name: L(isExtra ? "rowExtra" : "row", { n: k + 1 }), img: "icons/svg/item-bag.svg", dice: roll.dice[0].results.map((x) => x.result), adjust: 0, ahh: isExtra ? 0 : base.ahh });
+  }
+  const card = {
+    kind: "gather", method, amount, rank, table,
+    state: "adjust", range: skills.range, rangeBy: skills.rangeBy, doubleUp: skills.doubleUp, doubleExtra: skills.doubleExtra,
+    adjusters: party.filter((a) => skills.rangeBy.some((x) => x.startsWith(a.name))).map((a) => a.uuid),
+    rows, extras: skills.extras.map((x) => ({ ...x, choice: null })),
+    party: party.map((a) => ({ uuid: a.uuid, name: a.name })), pool: [], log: []
+  };
+  if (!card.range) await finalize(card);
+  return ChatMessage.create({
+    speaker: { alias: L("gatherTitle") }, content: render(card), rolls, sound: CONFIG.sounds.dice,
+    flags: { nssq: { loot: card } }
+  });
+}
+
 /* ---------------- 계산 ---------------- */
 
 let itemIndex = null;
@@ -70,6 +128,16 @@ async function addToPool(card, name, rank, qty, from) {
 
 /** 조작을 확정: 에너미마다 드롭 → 풀, 도감 기록 */
 async function finalize(card) {
+  if (card.kind === "gather") {
+    for (const r of card.rows) {
+      const j = judgeGather({ table: card.table, dice: r.dice, adjust: r.adjust, rank: card.rank, ahh: r.ahh, doubleUp: card.doubleUp.length > 0, doubleExtra: card.doubleExtra.length > 0 });
+      Object.assign(r, { total: j.total, item: j.item, rank: j.rank, doubled: j.doubled, qty: j.qty, ambush: j.ambush });
+      if (j.ambush) card.ambush = true;
+      if (j.item) await addToPool(card, j.item, j.rank, j.qty, r.name);
+    }
+    card.state = "open";
+    return;
+  }
   for (const r of card.rows) {
     const j = judgeDrop({ drops: r.drops, dice: r.dice, adjust: r.adjust, doubleUp: card.doubleUp.length > 0 });
     Object.assign(r, { total: j.total, item: j.drop?.item ?? null, rank: j.rank, doubled: j.doubled });
@@ -84,13 +152,17 @@ async function finalize(card) {
 /* ---------------- 그리기 ---------------- */
 
 function render(card) {
-  const head = `<header class="check-header"><span class="check-label"><i class="fas fa-box-open"></i> ${esc(L("title"))}</span></header>`;
+  const gather = card.kind === "gather";
+  const head = `<header class="check-header"><span class="check-label"><i class="fas ${gather ? "fa-leaf" : "fa-box-open"}"></i> ${esc(gather ? L("gatherHead", { method: L(`m.${card.method}`), amount: L(`a.${card.amount}`), rank: card.rank }) : L("title"))}</span></header>`;
+  const ambush = card.ambush ? `<p class="ambush"><b>${esc(L("ambush"))}</b></p>` : "";
   const adj = card.state === "adjust";
   const rows = card.rows.map((r, i) => {
     const dice = `${r.dice.join("+")}${r.adjust ? ` ${r.adjust > 0 ? "+" : "−"}${Math.abs(r.adjust)}` : ""} = <b>${r.dice[0] + r.dice[1] + r.adjust}</b>`;
-    const res = adj ? "" : r.item ? `→ <b>${esc(label({ name: r.item, rank: r.rank }))}</b>${r.doubled && card.doubleUp.length ? ` <em>${esc(L("doubleUp"))}</em>` : ""}` : `→ ${esc(L("nothing"))}`;
+    const res = adj ? "" : (r.item ? `→ <b>${esc(label({ name: r.item, rank: r.rank }))}</b>${r.qty > 1 ? ` ×${r.qty}` : ""}${r.doubled && card.doubleUp.length ? ` <em>${esc(L("doubleUp"))}</em>` : ""}${r.doubled && r.qty > 1 ? ` <em>${esc(L("doubleExtra"))}</em>` : ""}` : `→ ${esc(L("nothing"))}`)
+      + (r.ambush ? ` <b class="ambush">${esc(L("ahh"))}</b>` : "");
+    const ahhMark = card.kind === "gather" && adj && r.dice[0] + r.dice[1] <= r.ahh ? ` <b class="ambush">${esc(L("ahh"))}</b>` : "";
     const btn = adj ? ` <button type="button" data-loot="adj" data-i="${i}" data-d="-1">−</button><button type="button" data-loot="adj" data-i="${i}" data-d="1">+</button>` : "";
-    return `<li><img src="${esc(r.img)}" width="20" height="20"/> ${esc(r.name)}: ${dice} ${res}${btn}</li>`;
+    return `<li><img src="${esc(r.img)}" width="20" height="20"/> ${esc(r.name)}: ${dice} ${res}${ahhMark}${btn}</li>`;
   }).join("");
   const adjNote = adj ? `<p class="notes">${esc(L("adjustHint", { n: card.range, by: card.rangeBy.join(", ") }))}</p><button type="button" data-loot="confirm"><i class="fas fa-check"></i> ${esc(L("confirm"))}</button>` : "";
   const extras = card.state === "adjust" ? "" : card.extras.map((x, j) => {
@@ -105,7 +177,7 @@ function render(card) {
     ${open && p.data ? `<select data-loot-who>${options}</select><button type="button" data-loot="take" data-e="${p.id}">${esc(L("take"))}</button>` : ""}</li>`).join("") || `<li>${esc(L(card.state === "closed" ? "closedEmpty" : "empty"))}</li>`;
   const log = card.log.length ? `<ul class="loot-log">${card.log.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>` : "";
   const close = open ? `<button type="button" data-loot="close" data-gm-only><i class="fas fa-times"></i> ${esc(L("close"))}</button>` : card.state === "closed" ? `<p class="notes">${esc(L("closed"))}</p>` : "";
-  return `<div class="nssq-loot">${head}<ul class="loot-rows">${rows || `<li>${esc(L("noEnemies"))}</li>`}</ul>${adjNote}
+  return `<div class="nssq-loot">${head}${ambush}<ul class="loot-rows">${rows || `<li>${esc(L("noEnemies"))}</li>`}</ul>${adjNote}
     ${extras ? `<ul class="loot-extras">${extras}</ul>` : ""}
     ${card.state === "adjust" ? "" : `<h4>${esc(L("pool"))}</h4><ul class="loot-pool">${pool}</ul>`}${log}${close}</div>`;
 }

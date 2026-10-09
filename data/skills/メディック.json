@@ -1115,8 +1115,8 @@
    "sl": 1,
    "description": "<p>시간을 들여 밑손질을 함으로써, 유독한 식재를 무해한 식재로 만들 수 있다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "탐색: 유독한 식재를 무해하게(단계 9)"
+   "review": "gm",
+   "effectsNote": "탐색 중 유독한 식재를 무해하게(GM이 판단)"
   },
   "_meta": {
    "className": "메딕"

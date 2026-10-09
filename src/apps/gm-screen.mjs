@@ -146,6 +146,7 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=macro]", () => createGMScreenMacro());
     html.on("click", "[data-gm=battle-start]", (ev) => openStartDialog(ev.currentTarget.dataset.preset || null));
     html.on("click", "[data-gm=battle-end]", () => openEndDialog());
+    html.on("click", "[data-gm=gather]", async () => (await import("./loot.mjs")).openGatherDialog());
     html.on("click", "[data-gm=preset-new]", () => createPreset());
     html.on("click", "[data-gm=enemy-cleanup]", () => cleanupEnemies());
     html.on("click", "[data-gm=effects-sync]", () => game.nssq.syncEffects());
