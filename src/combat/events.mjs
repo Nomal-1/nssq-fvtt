@@ -104,7 +104,7 @@ export async function runEvent(f) {
   const { resolveAndPost } = await import("./skill-use.mjs");
   await resolveAndPost({
     actor: a, combatant: c, kind: "skill", mainAction: false, followup: { type: isAttack ? "chase" : "trigger" },
-    item: { name: item.name, img: item.img, system: { effects: f.effects.filter((e) => e?.type !== "target"), sl: f.source.sl ?? 1, category: "", description: "", target: isAttack ? "적 단일" : "" } },
+    item: { name: item.name, img: item.img, system: { effects: f.effects.filter((e) => e?.type !== "target"), sl: f.source.sl ?? 1, category: "", description: "", target: isAttack ? "적 단일" : spec?.side === "ally" ? (spec.scope === "row" ? "아군 열" : "아군 전체") : "자신" } },
     units: units.map((u) => ({ actor: u.actor, combatant: u }))
   });
   return true;

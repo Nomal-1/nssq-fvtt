@@ -75,6 +75,8 @@ export async function setIdentified(actors, on) {
 /* ---------------- 도주 ---------------- */
 
 /** 도주 판정(GM): 살아 있는 참가자 전원 【회피】로 일반 행위 판정 */
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+
 /** 《전력 도주》 선언 → Map(전투원 id → 달성값 보정). 취소면 null */
 async function escapeDeclarations(combat) {
   const list = [];
@@ -93,7 +95,7 @@ async function escapeDeclarations(combat) {
   }
   const out = new Map();
   if (!list.length) return out;
-  const html = `<p>${L("dashHint")}</p>${list.map((x, k) => `<div class="form-group"><label><input type="checkbox" name="d${k}" ${x.auto ? "checked" : ""}/> ${foundry.utils.escapeHTML(x.c.name)}: 《${foundry.utils.escapeHTML(x.i.name)}》 +${x.value}</label></div>`).join("")}`;
+  const html = `<p>${L("dashHint")}</p>${list.map((x, k) => `<div class="form-group"><label><input type="checkbox" name="d${k}" ${x.auto ? "checked" : ""}/> ${esc(x.c.name)}: 《${esc(x.i.name)}》 +${x.value}</label></div>`).join("")}`;
   const picked = await Dialog.prompt({
     title: L("dashTitle"), content: html, label: L("escape"), rejectClose: false,
     callback: (h) => list.map((x, k) => !!h[0].querySelector(`[name=d${k}]`)?.checked)

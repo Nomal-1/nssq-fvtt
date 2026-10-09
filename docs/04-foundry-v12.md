@@ -85,6 +85,7 @@ nssq/
 - `foundry.applications.ux.*` 네임스페이스(TextEditor 등 v13 이동판)
 - `template.json` 방식의 타입 선언(쓰지 말고 `documentTypes` + DataModel로)
 - 동기 `roll.evaluate({async:false})`
+- `foundry.utils.escapeHTML`(v12에 없음, 서버에서 오류 확인). HTML 이스케이프는 모듈 안의 작은 `esc` 함수로
 
 ## 5. 구현 방침
 
