@@ -35,6 +35,7 @@
   <div class="nq-actions">
     {{#if canAttack}}<button type="button" data-action="normal-attack" title="{{localize 'NSSQ.Combat.normalAttackHint'}}"><i class="fas fa-fist-raised"></i> {{localize "NSSQ.Combat.normalAttack"}}</button>{{/if}}
     {{#if editable}}{{#if sheet.growth.left}}<button type="button" class="nq-growth-btn" data-action="roll-growth" title="{{localize 'NSSQ.Growth.hint'}}"><i class="fas fa-seedling"></i> {{localize "NSSQ.Growth.button"}} ({{sheet.growth.left}})</button>{{/if}}{{/if}}
+    {{#if sheet.canRollAbilities}}{{#if editable}}<button type="button" data-action="chargen" title="{{localize 'NSSQ.Chargen.sheetHint'}}"><i class="fas fa-hat-wizard"></i> {{localize "NSSQ.Chargen.sheetButton"}}</button>{{/if}}{{/if}}
     {{#if sheet.canRollAbilities}}{{#if editable}}<button type="button" data-action="roll-abilities" title="{{localize 'NSSQ.AbilityRoll.hint'}}"><i class="fas fa-dice"></i> {{localize "NSSQ.AbilityRoll.title"}}</button>{{/if}}{{/if}}
     <span class="nq-spacer"></span>
     {{#if showNpcToggle}}<label class="nq-toggle" title="{{localize 'NSSQ.Party.npcHint'}}"><input type="checkbox" name="system.npc" {{checked system.npc}}/> {{localize "NSSQ.Party.npc"}}</label>{{/if}}

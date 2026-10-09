@@ -36,13 +36,20 @@ export async function syncUniqueSkill(actor) {
   }
 }
 
+/** 작성 중(잠기기 전·경험점 0)에 클래스가 바뀌면 【HP】·【TP】를 새 최대치로(클래스 보정이 최대치를 바꾼다) */
+async function fillOnCreation(actor) {
+  const s = actor.system;
+  if (s.creation?.locked || (s.exp ?? 0) > 0) return;
+  if (s.hp.value !== s.hp.max || s.tp.value !== s.tp.max) await actor.update({ "system.hp.value": s.hp.max, "system.tp.value": s.tp.max });
+}
+
 /** 클래스 추가와 메인 클래스 지정이 연달아 오므로 잠깐 모아서 한 번만 맞춘다 */
 const timers = new Map();
 function scheduleSync(actor) {
   clearTimeout(timers.get(actor.id));
   timers.set(actor.id, setTimeout(() => {
     timers.delete(actor.id);
-    syncUniqueSkill(actor);
+    syncUniqueSkill(actor).then(() => fillOnCreation(actor));
   }, 250));
 }
 

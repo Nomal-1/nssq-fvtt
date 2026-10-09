@@ -762,7 +762,9 @@ for (const d of ["skills", "enemies", "tables"]) {
     unarmed: load("weapons.json").find((w) => !w.system.table.price)?.system.weaponType ?? null,
     // GM 스크린 참고표
     check: load("tables/check.json"),
-    levelExp: load("tables/level-exp.json")
+    levelExp: load("tables/level-exp.json"),
+    // 경력표 D666(캐릭터 작성 §9)
+    history: load("tables/history-d666.json").entries
   };
   const file = path.join(ROOT, "src", "generated", "tables.mjs");
   fs.mkdirSync(path.dirname(file), { recursive: true });

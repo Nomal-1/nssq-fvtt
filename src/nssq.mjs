@@ -37,6 +37,7 @@ import { registerExplore } from "./apps/explore.mjs";
 import { registerCheckMods } from "./chat/check-mods.mjs";
 import { registerDungeon } from "./apps/dungeon.mjs";
 import { FieldMapApp, registerFieldMap } from "./apps/fieldmap.mjs";
+import { ChargenWizard, newCharacter, registerChargen } from "./apps/chargen-wizard.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
 import { createPreset, openEndDialog, openStartDialog, registerBattle } from "./apps/battle.mjs";
 
@@ -105,6 +106,7 @@ Hooks.once("init", () => {
   registerCheckMods();
   registerDungeon();
   registerFieldMap();
+  registerChargen();
   registerEnemyLibrary();
   // 매크로·모듈용 API
   game.nssq = {
@@ -112,6 +114,7 @@ Hooks.once("init", () => {
     openGMScreen: () => GMScreen.open(),
     openBestiary: () => BestiaryApp.open(),
     openFieldMap: () => FieldMapApp.open(),
+    openChargen: (actor) => (actor ? ChargenWizard.open(actor) : newCharacter()),
     syncEffects: () => syncEffects(),
     normalAttack: (actor) => normalAttack(attackerFromContext(actor)),
     rollEscape: () => rollEscape(game.combat),

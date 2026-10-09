@@ -2,7 +2,7 @@
   <header class="shop-header">
     <span class="money"><i class="fas fa-coins"></i> {{money}}G</span>
     {{#if isGM}}<span class="shop-state {{#if open}}on{{/if}}">{{#if open}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</span>{{/if}}
-    <label class="creation"><input type="checkbox" name="creation" {{checked creation}}/> {{localize "NSSQ.Shop.creationMode"}}</label>
+    {{#if canCreation}}<label class="creation"><input type="checkbox" name="creation" {{checked creation}} {{#if forced}}disabled{{/if}}/> {{localize "NSSQ.Shop.creationMode"}}</label>{{/if}}
   </header>
   {{#if noPacks}}<p class="warn">{{localize "NSSQ.Shop.noPacks"}}</p>{{/if}}
   <nav class="shop-tabs tabs">

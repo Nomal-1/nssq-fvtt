@@ -224,6 +224,10 @@ export class NssqActorSheet extends ActorSheet {
       ev.preventDefault();
       toggleCreationLock(this.actor);
     });
+    html.on("click", "[data-action=chargen]", async (ev) => {
+      ev.preventDefault();
+      (await import("../apps/chargen-wizard.mjs")).ChargenWizard.open(this.actor);
+    });
     html.on("click", "[data-action=roll-abilities]", (ev) => {
       ev.preventDefault();
       rollAbilities(this.actor);

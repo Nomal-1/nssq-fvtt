@@ -13,7 +13,13 @@ const L = (k, d) => (d ? game.i18n.format(`NSSQ.AbilityRoll.${k}`, d) : game.i18
 
 /** 3D6을 5번 굴려 채팅에 올리고 배정 창을 연다(작성 잠금 후에는 GM만) */
 export async function rollAbilities(actor) {
-  if (actor.system.creation?.locked && !game.user.isGM) return ui.notifications.warn(L("locked"));
+  const totals = await rollAbilityTotals(actor);
+  return totals ? assignDialog(actor, totals) : null;
+}
+
+/** 3D6×5를 굴려 채팅 카드·작성 기록만 남기고 결과를 돌려준다(작성 마법사도 쓴다) */
+export async function rollAbilityTotals(actor) {
+  if (actor.system.creation?.locked && !game.user.isGM) { ui.notifications.warn(L("locked")); return null; }
   const rolls = [];
   for (let i = 0; i < 5; i++) rolls.push(await new Roll("3d6").evaluate());
   const results = rolls.map((r) => ({ dice: r.dice[0].results.map((x) => x.result), total: r.total }));
@@ -31,9 +37,9 @@ export async function rollAbilities(actor) {
     flags: { nssq: { abilityRoll: { actorUuid: actor.uuid, totals } } }
   });
   await logCreation(actor, { type: "roll", totals });
-  // 주사위 연출이 끝난 뒤 배정 창
+  // 주사위 연출이 끝난 뒤
   if (game.dice3d) await game.dice3d.waitFor3DAnimationByMessageID?.(message.id);
-  return assignDialog(actor, totals);
+  return totals;
 }
 
 /** 배정 창 */
@@ -106,6 +112,13 @@ async function apply(actor, totals, root) {
     ui.notifications.error(L("duplicate"));
     return null;
   }
+  const abilities = await applyAbilities(actor, totals, slots, { setMoney: form.querySelector("[name=setMoney]").checked });
+  ui.notifications.info(L("applied", { name: actor.name }));
+  return abilities;
+}
+
+/** 배정 적용: 기본값·굴림 기록, 【HP】·【TP】 최대, (setMoney면) 초기 소지금 */
+export async function applyAbilities(actor, totals, slots, { setMoney = false } = {}) {
   const abilities = applyAssignment(totals, slots);
   // 최대 【HP】·【TP】는 클래스 보정 등을 포함한 최종값으로 계산
   const parts = actor.system.abilityParts;
@@ -117,10 +130,9 @@ async function apply(actor, totals, root) {
     "system.hp.value": d.hpMax,
     "system.tp.value": d.tpMax
   };
-  if (form.querySelector("[name=setMoney]").checked) update["system.money"] = initialMoney(totals);
+  if (setMoney) update["system.money"] = initialMoney(totals);
   await actor.update(update);
   await logCreation(actor, { type: "assign", totals, abilities });
-  ui.notifications.info(L("applied", { name: actor.name }));
   return abilities;
 }
 

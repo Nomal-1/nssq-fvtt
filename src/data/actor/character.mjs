@@ -62,6 +62,8 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       // GM이 파티에 넣는 동료 NPC(전투에서 아군 NPC로 행동)
       npc: new foundry.data.fields.BooleanField({ initial: false }),
       history: new ArrayField(new StringField()),
+      // 퍼스낼리티(캐릭터 작성 §9, 샘플 시트의 칸)
+      profile: new SchemaField({ gender: str(""), age: str(""), hair: str(""), build: str("") }),
       description: description()
     };
   }

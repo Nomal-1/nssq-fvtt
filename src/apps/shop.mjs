@@ -122,10 +122,12 @@ export async function setHidden(uuids, hidden) {
 }
 
 class ShopApp extends Application {
-  constructor(actor, options) {
+  /** @param {{ creation?: boolean }} options creation: 캐릭터 작성 마법사에서 연 상점(GM이 닫아 놨어도 열리고 작성 모드 고정) */
+  constructor(actor, options = {}) {
     super(options);
     this.actor = actor;
-    this.creation = false;
+    this.forced = !!options.creation;
+    this.creation = this.forced;
     this.ranks = {};
     this.qty = {};
     this.docs = null;
@@ -199,6 +201,9 @@ class ShopApp extends Application {
       sellRows, refineRows,
       money: this.actor.system.money,
       creation: this.creation,
+      forced: this.forced,
+      // 작성 모드 체크는 작성이 끝나지(잠기지) 않은 캐릭터만, 잠긴 뒤에는 GM만
+      canCreation: game.user.isGM || !this.actor.system.creation?.locked,
       isGM: game.user.isGM,
       open: shopOpen(),
       tabs: TABS.map(([type, label]) => ({ type, label, rows: docs.filter((d) => d.type === type).map(rowFor) })),
@@ -260,12 +265,12 @@ class ShopApp extends Application {
     });
     html.on("click", "[data-refine]", (ev) => {
       const item = this.actor.items.get(ev.currentTarget.dataset.refine);
-      if (item) openRefineDialog(this.actor, item, { creation: this.creation }).then(() => this.render());
+      if (item) openRefineDialog(this.actor, item, { creation: this.creation, forced: this.forced }).then(() => this.render());
     });
   }
 
   async buy(id) {
-    if (!shopOpen() && !game.user.isGM) return ui.notifications.warn(L("closed"));
+    if (!shopOpen() && !game.user.isGM && !this.forced) return ui.notifications.warn(L("closed"));
     const doc = this.docs.find((d) => d.id === id);
     if (!doc || (!game.user.isGM && hiddenSet().has(doc.uuid))) return;
     const actor = this.actor;
@@ -351,19 +356,21 @@ class ShopApp extends Application {
   }
 }
 
-/** 상점 열기: 플레이어는 GM이 상점을 열었을 때만 */
-export function openShop(actor) {
+/** 상점 열기: 플레이어는 GM이 상점을 열었을 때만. creation: 작성 마법사(작성이 잠기지 않은 캐릭터만, 상점이 닫혀 있어도) */
+export function openShop(actor, { creation = false } = {}) {
   if (!actor?.isOwner) return;
-  if (!shopOpen() && !game.user.isGM) return ui.notifications.warn(L("closed"));
+  const forced = creation && !actor.system.creation?.locked;
+  if (!shopOpen() && !game.user.isGM && !forced) return ui.notifications.warn(L("closed"));
   const existing = Object.values(ui.windows).find((w) => w instanceof ShopApp && w.actor === actor);
-  if (existing) return existing.render(true, { focus: true });
-  new ShopApp(actor).render(true);
+  if (existing && existing.forced === forced) return existing.render(true, { focus: true });
+  if (existing) existing.close();
+  new ShopApp(actor, { creation: forced }).render(true);
 }
 
 /** 상점이 닫히면 플레이어의 상점 창을 닫고, 시트의 버튼 상태를 갱신한다 */
 export function onShopToggle(open) {
   for (const w of Object.values(ui.windows)) {
-    if (w instanceof ShopApp && !open && !game.user.isGM) w.close();
+    if (w instanceof ShopApp && !open && !game.user.isGM && !w.forced) w.close();
     else if (w.actor?.type === "character" || w instanceof ShopApp) w.render(false);
   }
   ui.notifications.info(open ? L("openedNotice") : L("closedNotice"));
@@ -429,8 +436,9 @@ export async function sellItems(actor, picks) {
 
 /* ---------------- 제련 ---------------- */
 
-export async function openRefineDialog(actor, item, { creation = false } = {}) {
-  if (!shopOpen() && !game.user.isGM) return ui.notifications.warn(L("closed"));
+export async function openRefineDialog(actor, item, { creation = false, forced = false } = {}) {
+  if (!shopOpen() && !game.user.isGM && !forced) return ui.notifications.warn(L("closed"));
+  const canCreation = game.user.isGM || !actor.system.creation?.locked;
   const rank = item.system.rank;
   const table = item.type === "weapon" ? tables.weapons[item.system.weaponType] : tables.armors[item.system.armorType];
   const options = tables.refinements.map((r) => ({ r, check: canRefine(item, r), price: refinePrice(r, rank) }))
@@ -443,7 +451,7 @@ export async function openRefineDialog(actor, item, { creation = false } = {}) {
       <div class="form-group"><label>${L("refineEffect")}</label><select name="r">
         ${options.map((o) => `<option value="${o.r.key}" ${o.check.ok ? "" : "disabled"}>${esc(o.r.name)} — ${o.price}G${o.check.ok ? "" : ` (${L("refineHas")})`}</option>`).join("")}
       </select></div>
-      <div class="form-group"><label><input type="checkbox" name="creation" ${creation ? "checked" : ""}/> ${L("creationMode")}</label></div>
+      ${canCreation ? `<div class="form-group"><label><input type="checkbox" name="creation" ${creation ? "checked" : ""} ${forced ? "disabled" : ""}/> ${L("creationMode")}</label></div>` : ""}
       <p class="notes">${L("refineMaterialNote", { mats: (table?.materials ?? []).join("/"), rank })}</p>
     </form>`;
   const pick = await Dialog.prompt({
@@ -451,7 +459,7 @@ export async function openRefineDialog(actor, item, { creation = false } = {}) {
     content,
     label: L("refine"),
     rejectClose: false,
-    callback: (html) => ({ key: html[0].querySelector("[name=r]").value, creation: html[0].querySelector("[name=creation]").checked })
+    callback: (html) => ({ key: html[0].querySelector("[name=r]").value, creation: forced || !!html[0].querySelector("[name=creation]")?.checked })
   });
   if (!pick) return;
   const opt = options.find((o) => o.r.key === pick.key);

@@ -45,3 +45,75 @@ export function applyAssignment(totals, slots) {
 export function initialMoney(totals) {
   return (100 - totals.reduce((a, b) => a + b, 0)) * 10;
 }
+
+/**
+ * 경력표 D666: 3D6을 작은 순으로 늘어놓은 세 자리(예: 5·1·3 → "135")
+ * @param {() => number} rng 1..6
+ * @param {{roll: string, text: string}[]} entries
+ */
+export function rollCareer(rng, entries) {
+  const dice = [rng(), rng(), rng()].sort((a, b) => a - b);
+  const roll = dice.join("");
+  return { dice, roll, entry: entries.find((e) => e.roll === roll) ?? null };
+}
+
+/**
+ * 작성 검사(캐릭터 작성 §1~§8). 각 항목 { code, ok, level: "error"|"warn", detail? }
+ * @param {object} p
+ * @param {number[]} p.rolls 3D6×5 결과
+ * @param {{str,tec,vit,agi,luc}} p.abilities 배정한 기본값
+ * @param {string|null} p.mainClass
+ * @param {string|null} p.subClass
+ * @param {{name, sl, unique, common, classKey, maxSL, prereqs}[]} p.skills
+ * @param {object[]} p.equipped 장비 중인 아이템(type, system)
+ * @param {{main, sub}} p.classes 클래스 아이템의 system(weapons·armors)
+ * @param {number} p.carried 소지 수
+ * @param {number} p.capacity 소지 상한
+ * @param {number} p.money
+ * @param {number} [p.level]
+ * @param {number} [p.bonus] GM 보너스 SL
+ * @param {(item, classes) => {ok, reason?}} p.canEquip equipment.mjs canEquip
+ * @param {object} p.skillRules { skillBudget, levelCap, prereqsMet } (skills.mjs)
+ */
+export function validateCreation(p) {
+  const out = [];
+  const add = (code, ok, level = "error", detail = "") => out.push({ code, ok: !!ok, level, detail });
+  const { skillBudget, levelCap, prereqsMet } = p.skillRules;
+  // 1 능력치: 굴린 값 5개를 하나씩
+  const vals = ABILITIES.map((k) => Number(p.abilities?.[k]) || 0).sort((a, b) => a - b);
+  const rolls = [...(p.rolls ?? [])].sort((a, b) => a - b);
+  add("abilities", rolls.length === ABILITY_ROLL_COUNT && vals.every((v, i) => v === rolls[i]));
+  // 2 메인 클래스
+  add("mainClass", !!p.mainClass);
+  // 4 스킬 SL
+  const level = p.level ?? 1;
+  const skills = (p.skills ?? []).filter((s) => (s.sl ?? 0) > 0);
+  const budget = skillBudget({ level, skills, bonus: p.bonus ?? 0 });
+  add("budgetOver", budget.left >= 0, "error", `${budget.spent}/${budget.total}`);
+  add("budgetLeft", budget.left <= 0, "warn", `${budget.left}`);
+  const slOf = (name) => Math.max(0, ...skills.filter((s) => s.name === name).map((s) => s.sl));
+  const over = skills.filter((s) => !s.unique && s.sl > levelCap(level)).map((s) => s.name);
+  add("levelCap", !over.length, "error", over.join(", "));
+  const noPre = skills.filter((s) => !prereqsMet(s.prereqs, slOf)).map((s) => s.name);
+  add("prereq", !noPre.length, "error", noPre.join(", "));
+  const subOnly = skills.filter((s) => p.subClass && s.classKey === p.subClass && s.classKey !== p.mainClass && !s.common);
+  const subBad = subOnly.filter((s) => s.maxSL?.sub == null || s.sl > s.maxSL.sub).map((s) => s.name);
+  add("subMax", !subBad.length, "error", subBad.join(", "));
+  const foreign = skills.filter((s) => !s.common && ![p.mainClass, p.subClass].includes(s.classKey)).map((s) => s.name);
+  add("foreignSkill", !foreign.length, "error", foreign.join(", "));
+  // 5 커먼 스킬 정확히 1개 SL1(레벨업 뒤에는 더 올릴 수 있으나 작성 시점은 1)
+  const commons = skills.filter((s) => s.common);
+  add("common", commons.length === 1 && commons[0].sl === 1, "error", commons.map((s) => `${s.name} ${s.sl}`).join(", "));
+  // ★ 고유 스킬: 서브가 없으면 있어야, 있으면 없어야
+  const hasUnique = skills.some((s) => s.unique);
+  add("unique", p.subClass ? !hasUnique : hasUnique, p.subClass ? "error" : "warn");
+  // 6 장비
+  const badEquip = (p.equipped ?? []).filter((i) => !p.canEquip(i, p.classes ?? {}).ok).map((i) => i.name);
+  add("equip", !badEquip.length, "error", badEquip.join(", "));
+  add("carry", (p.carried ?? 0) <= (p.capacity ?? Infinity), "error", `${p.carried}/${p.capacity}`);
+  add("money", (p.money ?? 0) >= 0);
+  return out;
+}
+
+/** 오류(level error)가 하나도 없으면 완료 가능 */
+export const creationReady = (checks) => checks.every((c) => c.ok || c.level !== "error");
