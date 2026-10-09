@@ -39,6 +39,9 @@ export async function attackEvent(message) {
   let elements;
   let category;
   const rows = [];
+  // 공격 롤 수(대상·회차마다 1회, 01 §3.5)와 굴린 대미지 다이스의 1의 수(《나찰》)
+  let rollCount = 0;
+  let ones = 0;
   if (atk) {
     attackerUuid = atk.attackerUuid;
     kind = atk.followup?.type ?? "normal";
@@ -46,6 +49,8 @@ export async function attackEvent(message) {
     elements = atk.elements ?? [];
     category = "";
     for (const t of atk.targets ?? []) {
+      rollCount++;
+      ones += [...(t.damageDice ?? []), ...(t.critDice ?? [])].filter((d) => d === 1).length;
       rows.push({ uuid: t.actorUuid, hit: !!t.hit, crit: !!t.crit, hitData: t.hit ? { dice: t.damageDice ?? [], resist: t.resist ?? 0, crit: !!t.crit, raw: t.rawDamage ?? 0, halves: Number(!!t.guarded) + Number(!!t.guardHalf) } : null });
     }
   } else if (sk && !sk.failed) {
@@ -54,6 +59,8 @@ export async function attackEvent(message) {
     const cards = sk.group ? groupMessages(sk).map((m) => m.getFlag("nssq", "skillCard")) : [sk];
     const hits = cards.flatMap((c) => (c.entries ?? []).flatMap((e) => (e.hits ?? []).filter((h) => !h.skipped).map((h) => ({ e, h }))));
     if (!hits.length) return null;
+    rollCount = hits.length;
+    ones = hits.reduce((n, { h }) => n + (h.dmg ?? []).filter((d) => d === 1).length, 0);
     attackerUuid = sk.userUuid;
     kind = sk.followup?.type === "trigger" ? "skill" : sk.followup?.type ?? "skill";
     attackKind = hits[0].h.kind ?? "physical";
@@ -81,7 +88,7 @@ export async function attackEvent(message) {
   if (!targets.length) return null;
   return {
     kind, attackerId: attacker.id, attackerUuid: attacker.actor.uuid, attackerSide: unitSide(attacker.actor),
-    attackerRow: attacker.actor.system.row ?? "front", attackKind, elements, category, targets,
+    attackerRow: attacker.actor.system.row ?? "front", attackKind, elements, category, targets, rollCount, ones,
     // 같은 공격 반복(《더블 액션》 등)·《크로스 차지》용: 그 공격의 스킬
     skillKey: sk?.skillKey ?? null, origin: atk ? { kind: "normal" } : { kind: "skill", itemId: sk.itemId ?? null, variant: sk.variant ?? null }
   };
@@ -147,8 +154,9 @@ async function perAttackCost(combat, ev) {
   const c = combat.combatants.get(ev.attackerId);
   const st = (c?.actor?.getFlag("nssq", "states") ?? []).find((s) => s.perAttack);
   if (!st) return;
-  const ones = st.perAttack.selfDamage === "ones" ? ev.targets.reduce((n, t) => n + (t.hitData?.dice ?? []).filter((d) => d === 1).length, 0) : 0;
-  const tp = Number(st.perAttack.tp ?? 0) || 0;
+  // 공격 롤마다: 1의 수는 그 행동에서 굴린 대미지 다이스 전부, 【TP】는 롤 수 × tp
+  const ones = st.perAttack.selfDamage === "ones" ? ev.ones ?? 0 : 0;
+  const tp = (Number(st.perAttack.tp ?? 0) || 0) * Math.max(1, ev.rollCount ?? 1);
   const effects = [...(ones ? [{ type: "resource", resource: "hp", delta: -ones }] : []), ...(tp ? [{ type: "resource", resource: "tp", delta: -tp }] : [])];
   if (!effects.length) return;
   const { resolveAndPost } = await import("./skill-use.mjs");

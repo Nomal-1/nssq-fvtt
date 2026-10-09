@@ -258,6 +258,27 @@ export function turnElementsOf(combat) {
   return f && f.round === combat.round ? f.elements ?? [] : [];
 }
 
+/**
+ * 「그 턴 이미 나온 〈염〉〈빙〉〈뇌〉를 부가」(attack addTurnElements, 《스피어 인볼브》): 둘 이상이면 하나를 고른다(07 #119)
+ * 활성 GM 화면(후발 행동 실행)이면 소유자에게 채팅 카드, 아니면 그 화면의 창
+ */
+async function pickTurnElement(combatant, item, effects, variant) {
+  const all = turnElementsOf(combatant?.combat);
+  const want = variantEffects(effects, variant).flatMap((e) => (e?.type === "attack" ? [].concat(e.addTurnElements ?? []) : []));
+  const els = all.filter((x) => want.includes(x));
+  if (els.length <= 1) return els;
+  const label = (x) => game.i18n.localize(`NSSQ.Resist.${x}`);
+  const text = L("chooseElement", { name: combatant.name, skill: item.name });
+  if (isActiveGM()) {
+    const { chooseOption } = await import("./late.mjs");
+    const got = await chooseOption(combatant.combat, combatant, text, els.map((x) => ({ id: x, name: label(x) })));
+    return els.includes(got) ? [got] : [els[0]];
+  }
+  const buttons = Object.fromEntries(els.map((x) => [x, { label: label(x), callback: () => x }]));
+  const got = await Dialog.wait({ title: item.name, content: `<p>${esc(text)}</p>`, buttons, close: () => els[0] }, { classes: ["nssq", "dialog"] });
+  return [got ?? els[0]];
+}
+
 /** 대상 수 제한(「(SL)명」·「같은 열의 적 2체」): 후보가 n보다 많으면 고르는 창. 취소면 null */
 async function pickSome(list, n, title) {
   if (list.length <= n) return list;
@@ -494,7 +515,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     effects: effectsAll, sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : spreadPool,
     mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(),
-    variant, category: sys.category ?? "", source: kind, ctx: { skillKey: sys.key ?? null, choices, turnElements: turnElementsOf(combatant?.combat) }
+    variant, category: sys.category ?? "", source: kind, ctx: { skillKey: sys.key ?? null, choices, turnElements: await pickTurnElement(combatant, item, effectsAll, variant) }
   });
   if (guard) await guard.commit(new Set([...r.results.values()].filter((x) => x.hits.some((h) => h.hit)).map((x) => x.id)));
   // 「최속/후발 행동」(개막 페이즈에 쓴 것): 이번 턴 행동 순서. 메인 페이즈로 넘어갈 때 이니셔티브에 반영

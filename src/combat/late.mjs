@@ -173,14 +173,24 @@ async function runGuardLate(combat, c, gl) {
 }
 
 function chooseTarget(combat, c, skill, foes, { allowSkip = false } = {}) {
+  return chooseOption(combat, c, L("chooseTarget", { name: c.name, skill }), foes.map((x) => ({ id: x.id, name: x.name })), { allowSkip })
+    .then((targetId) => combat.combatants.get(targetId) ?? null);
+}
+
+/**
+ * 활성 GM 화면에서 실행 중일 때 그 캐릭터 소유자에게 고르게 하는 채팅 카드(소유자·GM이 버튼). 고른 id(안 함이면 "-")
+ * @param {string} text 카드 문구
+ * @param {{id: string, name: string}[]} options
+ */
+export function chooseOption(combat, c, text, options, { allowSkip = false } = {}) {
   const id = foundry.utils.randomID();
   const p = new Promise((resolve) => waitingChoice.set(id, resolve));
   ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: c.actor }),
-    content: `<div class="nssq-combat-note"><i class="fas fa-crosshairs"></i> ${esc(L("chooseTarget", { name: c.name, skill }))}</div>`,
-    flags: { nssq: { lateTarget: { id, combatId: combat.id, combatantId: c.id, options: foes.map((x) => ({ id: x.id, name: x.name })), chosen: null, allowSkip } } }
+    content: `<div class="nssq-combat-note"><i class="fas fa-crosshairs"></i> ${esc(text)}</div>`,
+    flags: { nssq: { lateTarget: { id, combatId: combat.id, combatantId: c.id, options, chosen: null, allowSkip } } }
   });
-  return p.then((targetId) => combat.combatants.get(targetId) ?? null);
+  return p;
 }
 
 async function gmChoose({ messageId, targetId }) {

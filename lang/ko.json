@@ -1153,7 +1153,8 @@
       "multiNone": "함께 쓸 수 있는 스킬이 없다",
       "multiHint": "최대 {n}개를 고른다(TP 소비 없음)",
       "multiUsed": "{name}: 《{skill}》 — {list}",
-      "dualAsk": "《{name}》: 《{skill}》 — 2회 공격할까?(코스트를 한 번 더 낸다)"
+      "dualAsk": "《{name}》: 《{skill}》 — 2회 공격할까?(코스트를 한 번 더 낸다)",
+      "chooseElement": "{name}: 《{skill}》에 부가할 속성을 고른다(그 턴에 나온 속성)"
     },
     "Guard": {
       "provoke": "{skill}({holder}): 공격 대상 {from} → {to}",
@@ -1207,7 +1208,7 @@
       "delayedLate": "{name}: 《{skill}》 지연 공격 예약({n}턴 뒤 후발 행동 타이밍)",
       "delayedEnd": "{name}: 《{skill}》 지연 공격 예약({n}턴 뒤 종료 페이즈)",
       "chooseTarget": "{name}: 《{skill}》 대상을 고른다(사거리 안)",
-      "chosenTarget": "대상: {target}",
+      "chosenTarget": "선택: {target}",
       "waitingTarget": "{name}: 대상 선택 대기",
       "revenge": "{name}: 《{skill}》 후발 공격(대기 중 받은 대미지 {taken})",
       "lateRun": "후발 행동: {name}의 《{skill}》",
@@ -1254,7 +1255,8 @@
       "waiting": "{name}의 수동 반응을 기다리는 중",
       "evaded": "《{skill}》 능동 회피 {dice}+{mod} = {total} ≥ 명중 {vs} → 회피",
       "notEvaded": "《{skill}》 능동 회피 {dice}+{mod} = {total} < 명중 {vs} → 회피 실패",
-      "nullified": "《{skill}》({name}): 이 공격의 대미지와 추가 효과를 모두 무효로 했다"
+      "nullified": "《{skill}》({name}): 이 공격의 대미지와 추가 효과를 모두 무효로 했다",
+      "notEvadedAbs": "《{skill}》 능동 회피 {dice}+{mod} = {total} — 명중이 절대 성공이라 회피 실패"
     },
     "Special": {
       "noCost": "코스트가 부족하다",
