@@ -596,7 +596,9 @@
       "shuffleHint": "파티는 열마다 3칸. 살아 있는 전투원이 있으면 전열이 비지 않게 한다. 결과는 채팅에 남는다.",
       "shuffled": "진형 변화: {side} — {mode}",
       "sleepWoke": "{name}: [수면]에서 깨어났다",
-      "curseBack": "[저주]: {name}에게 실대미지 {n} 반사"
+      "curseBack": "[저주]: {name}에게 실대미지 {n} 반사",
+      "dualSecondTitle": "{name}: 두 번째 공격",
+      "dualSecondHint": "{weapon}(으)로 공격할 대상을 고른다"
     },
     "Battle": {
       "tab": "전투",

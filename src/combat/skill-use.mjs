@@ -390,16 +390,17 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   // 《이도일인》·《추영의 잔상》: 쌍수 중 그 분류 공격 스킬을 2회(TP 2회분, 2회째는 고를 수 있음)
   const twice = kind === "skill" && !free ? await askDualSkill(actor, item, effects) : null;
   if (twice) userMods.physHit = (userMods.physHit ?? 0) + twice.hitMod;
-  const post = (units) => resolveAndPost({
+  const post = (units, weaponMod = null) => resolveAndPost({
     actor, combatant, item, kind, units,
     mainAction: kind === "skill" && sys.timing === "주행동", variant, choices, stripTiming: late, skipDelayed: !!delayed, skipToken: tokenEffectOf(effects).length > 0,
-    userMods
+    userMods, weaponMod
   });
   const message = await post(targetCombatants.map((c) => ({ actor: c.actor, combatant: c })));
+  // 2회째: 기타 슬롯 무기로(성능·속성, 07 #125)
   if (twice) {
     await new Promise((r) => setTimeout(r, 300));
     const left = targetCombatants.filter(alive);
-    if (left.length) await post(left.map((c) => ({ actor: c.actor, combatant: c })));
+    if (left.length) await post(left.map((c) => ({ actor: c.actor, combatant: c })), twice.swap);
   }
   if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
   // 개막 페이즈에 쓴 스킬은 그 전투원의 개막 행동
@@ -426,7 +427,7 @@ async function askDualSkill(actor, item, effects) {
   if (cost.tp) upd["system.tp.value"] = actor.system.tp.value - cost.tp;
   if (cost.fp) upd["system.fp.value"] = actor.system.fp.value - cost.fp;
   if (Object.keys(upd).length) await actor.update(upd);
-  return { hitMod: evaluate(e.hitMod ?? 0, { SL: sk.system.sl ?? 1 }) };
+  return { hitMod: evaluate(e.hitMod ?? 0, { SL: sk.system.sl ?? 1 }), swap: dualWieldOf(actor)?.swap ?? null };
 }
 
 /** 《최종 결전의 군가》: 고른 스킬(최대 count개, 대상이 자신·전체인 것)을 코스트 없이 차례로 */
@@ -472,7 +473,7 @@ export async function useItemOutside(actor, item, targets) {
  * @param {{ type: "chase"|"counter"|"trigger" }} [followup] 이 카드가 추격·반격 등이면(연쇄 금지 판단용)
  * @param {Object<string, object>} [extra] 대상 uuid → 더한 대미지 다이스(《풀 게인》 등, engine extendDamage 결과 + count)
  */
-export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, choices = [], followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false, skipToken = false, userMods = {} }) {
+export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, choices = [], weaponMod = null, followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false, skipToken = false, userMods = {} }) {
   const sys = item.system;
   // 후발 행동으로 실행할 때는 행동 순서 효과를 빼고, 예약한 지연 공격은 다시 해석하지 않는다
   let effectsAll = sys.effects ?? [];
@@ -484,6 +485,13 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const user = unitProfile(actor, combatant);
   // 사용 때 선언한 보정(《저주의 방울 소리》 억제 공격 +5)
   for (const [k, v] of Object.entries(userMods ?? {})) user[k] = (user[k] ?? 0) + v;
+  // 다른 무기로(쌍수 스킬 2회째): 성능 차이·속성·종류
+  if (weaponMod) {
+    user.physHit += weaponMod.physHit ?? 0;
+    user.physAtk += weaponMod.physAtk ?? 0;
+    if (weaponMod.elements?.length) user.elements = weaponMod.elements;
+    if (weaponMod.weaponType) user.weaponType = weaponMod.weaponType;
+  }
   // 《돌격대장》: 이번 턴 다른 아군이 먼저 공격한 적에게는 대미지 다이스 +SL
   const vg = combatant?.combat?.getFlag("nssq", "vanguard") ?? {};
   for (const [holder, v] of Object.entries(vg)) {

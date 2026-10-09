@@ -15,6 +15,7 @@ import tables from "../generated/tables.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/attack-card.hbs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const elementLabel = (e) => (e === "none" ? game.i18n.localize("NSSQ.Combat.noElement") : game.i18n.localize(`NSSQ.Resist.${e}`));
 
 function combatantOf(actor) {
@@ -56,8 +57,13 @@ export function dualWieldOf(actor) {
   // 기타 슬롯 무기의 성능으로 바꿔 넣는다(무기 슬롯 무기의 몫을 빼고 더함). 제련은 무기 슬롯 것만(07)
   const os = weaponStats(table, { rank: other.system.rank, level: actor.system.level });
   const imbue = actor.system.statusMods?.buffs?.elements ?? [];
+  // 무기만 바꾼 값(쌍수 스킬 2회째, 《이도일인》·《추영의 잔상》): 통상 공격 보정 없이
+  const swap = {
+    physHit: -(Number(main.physHit) || 0) + os.physHit, physAtk: -(Number(main.physAtk) || 0) + os.physAtk,
+    elements: [...new Set([other.system.element || table.element, ...imbue].filter(Boolean))], weaponName: other.name, weaponType: ot, range: os.range
+  };
   return {
-    name: sk.name, sl: vars.SL, hitMod: hit,
+    name: sk.name, sl: vars.SL, hitMod: hit, swap,
     main: { physHit: hit, physAtk: atk, label: main.item.name },
     other: {
       physHit: hit - (Number(main.physHit) || 0) + os.physHit, physAtk: atk - (Number(main.physAtk) || 0) + os.physAtk,
@@ -74,7 +80,30 @@ export async function normalAttack(attacker, opts = {}) {
   if (!dual) return attackWith(attacker, opts);
   const first = await attackWith(attacker, { ...opts, weaponMod: { ...dual.main, by: dual.name } });
   if (!first) return first;
-  return attackWith(attacker, { ...opts, weaponMod: { ...dual.other, by: dual.name }, turnChecked: true });
+  // 2회째 대상은 다시 고른다(기타 슬롯 무기의 사거리 안, 07 #124)
+  const target = await secondTarget(attacker, opts, dual.other);
+  if (!target) return first;
+  return attackWith(attacker, { ...opts, target, weaponMod: { ...dual.other, by: dual.name }, turnChecked: true });
+}
+
+/** 쌍수 2회째 대상: 살아 있는 적 중 사거리 안. 하나면 그것, 여럿이면 고르는 창(처음 대상이 기본) */
+async function secondTarget(attacker, opts, weapon) {
+  const first = opts.target ?? [...game.user.targets][0];
+  const combat = game.combat;
+  const me = combatantOf(attacker);
+  if (!combat?.started || !me || !first?.actor) return first;
+  // 아군을 친 공격([혼란])은 같은 대상
+  if (friendly(attacker, first.actor)) return first;
+  const row = attacker.system.row ?? "front";
+  const range = combatProfile(attacker, me).range === "원" ? "원" : weapon.range ?? "근";
+  const list = combat.combatants.filter((c) => c.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0 && !friendly(attacker, c.actor)
+    && (opts.ignoreRange || inRange(range, row, c.actor.system.row ?? "front")));
+  if (!list.length) return null;
+  if (list.length === 1) return list[0].token;
+  const firstId = list.find((c) => c.token?.id === first.id)?.id ?? list[0].id;
+  const buttons = Object.fromEntries(list.map((c) => [c.id, { label: esc(c.name), callback: () => c.id }]));
+  const id = await Dialog.wait({ title: L("dualSecondTitle", { name: me.name }), content: `<p>${esc(L("dualSecondHint", { weapon: weapon.label ?? "" }))}</p>`, buttons, default: firstId, close: () => null }, { classes: ["nssq", "dialog"] });
+  return id ? combat.combatants.get(id)?.token ?? null : null;
 }
 
 /**
