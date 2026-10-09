@@ -245,3 +245,14 @@ export function validateMap(map) {
   }
   return { errors, warnings };
 }
+
+/**
+ * 이동 제안 투표 결과. proposal: { voters: [userId|"gm"], answers: { userId|"gm": true|false } }
+ * 한 명이라도 거절 → rejected, 모두 승낙 → accepted, 그 밖 → pending
+ */
+export function voteResult(proposal) {
+  const ans = proposal?.answers ?? {};
+  const voters = proposal?.voters ?? [];
+  if (voters.some((v) => ans[v] === false)) return "rejected";
+  return voters.every((v) => ans[v] === true) ? "accepted" : "pending";
+}

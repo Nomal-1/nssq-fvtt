@@ -4,7 +4,8 @@
  * - 지도 창(사용자마다 따로 여닫음: 토큰 도구 「지도」·단축키 M·GM 스크린)
  *   플레이어: 탐색한 에어리어·현재 위치·지금 갈 수 있는 곳·이론상 갈 수 있는 곳(밟은 에어리어의 인접)·보이는 F.O.E.
  *   GM: [진행] 전체 보기(비밀 포함)·이동·조사·채집·캠프·선택지 / [편집] 핀(에어리어)·선(통로)·트리거·F.O.E. 루트
- * - 이동: 플레이어가 갈 수 있는 에어리어를 누르면 GM에게 제안 카드(설정 fieldMapMove가 free면 바로 이동)
+ * - 이동: 플레이어가 [이동 제안] → 목적지를 고르면 투표(설정 fieldMapMove: all 참여 플레이어 전원+GM / gm GM만 / free 바로 이동). 한 명이라도 거절하면 취소, 모두 승낙하면 이동
+ * - 에어리어에 씬을 연결하면 그 씬 배경이 지도 메달·카드 그림이 된다(지도 옵션: 도착하면 그 씬으로 전환)
  * - 트리거: GM 카드 [실행]/[건너뛰기](auto면 바로). 선택지 카드: 플레이어 투표 → GM 확정
  * 비밀은 화면에서만 거른다(설정 값은 모든 클라이언트에 전송된다, 07 참조)
  */
@@ -20,8 +21,7 @@ const opt = (v, cur, label) => `<option value="${esc(v)}" ${String(v) === String
 const rid = () => foundry.utils.randomID(8);
 const W = 1000;
 const H = 700;
-const AW = 124;
-const AH = 44;
+const R = 34;
 // Font Awesome 글리프(SVG 텍스트)
 const G = { lock: "", flag: "", eye: "" };
 
@@ -35,6 +35,11 @@ export const activeMap = () => { const s = mapState(); return s.active ? allMaps
 const party = async () => (await import("./gm-screen.mjs")).partyActors();
 const areaName = (map, id) => map?.areas?.find((a) => a.id === id)?.name ?? "?";
 const areaOf = (map, id) => map?.areas?.find((a) => a.id === id) ?? null;
+/** 에어리어 그림: 직접 고른 그림 → 연결한 씬의 배경(저장할 때 sceneImg로 복사해 두어 플레이어도 본다) */
+const areaImg = (a) => a?.img || a?.sceneImg || "";
+const sceneImage = (id) => { const sc = game.scenes.get(id); return sc?.background?.src || sc?.thumb || ""; };
+/** 양피지 위 나침반(장식) */
+const compass = () => `<g class="fm-compass" transform="translate(${W - 70},${H - 78})"><circle r="38"/><circle r="30"/><path d="M0,-44 L7,-7 L44,0 L7,7 L0,44 L-7,7 L-44,0 L-7,-7 Z"/><path class="n" d="M0,-44 L7,-7 L-7,-7 Z"/><text y="-50">N</text></g>`;
 const passageLabel = (map, p) => `${areaName(map, p.a)} ${p.oneWay ? "→" : "↔"} ${areaName(map, p.b)}${p.label ? ` (${p.label})` : ""}`;
 const clock = (s) => L("clock", { seg: s.segment ?? 0, h: s.hour ?? 0, tod: game.i18n.localize(`NSSQ.Dungeon.tod.${timeOfDayAt(s.hour ?? 0)}`) });
 
@@ -45,7 +50,9 @@ async function saveMap(map) {
 
 async function setMapState(s, { undo = true } = {}) {
   const before = cur();
-  await game.settings.set("nssq", "fieldMapState", { ...s, prev: undo && before.mapId ? before : null });
+  delete before.proposal;
+  const prev = undo ? (before.mapId ? before : null) : mapState().prev ?? null;
+  await game.settings.set("nssq", "fieldMapState", { ...s, prev });
 }
 
 export function newMap(name) {
@@ -92,6 +99,7 @@ async function step(opts) {
   const map = activeMap();
   if (!map) return null;
   const s0 = cur();
+  delete s0.proposal;
   const r = FM.advance(map, s0, opts);
   if (r.error) { ui.notifications.warn(L(r.error)); return null; }
   await setMapState(r.state);
@@ -104,9 +112,17 @@ export async function moveTo(to) {
   if (!game.user.isGM) return requestMove(to);
   const r = await step({ to });
   if (!r) return;
+  await activateLinked(r.map, to);
   await post(`<h3>${esc(clock(r.state))}</h3>${arrivalHtml(r.map, r.state)}`);
   await handleEncounters(r.map, r.encounters);
   return processTriggers(r.map, r.triggers);
+}
+
+/** 지도 옵션 「도착하면 연결된 씬으로」 */
+async function activateLinked(map, areaId) {
+  if (!map.activateScene) return;
+  const scene = game.scenes.get(areaOf(map, areaId)?.sceneId);
+  if (scene && !scene.active) await scene.activate();
 }
 
 /** 그 자리에서 n세그먼트(채집·조사·캠프·지도 작성 실패 등) */
@@ -152,6 +168,7 @@ export async function teleport(to, depth = 0) {
   if (!map) return;
   const r = FM.teleport(map, cur(), to);
   await setMapState(r.state);
+  await activateLinked(map, to);
   await post(`<h3>${esc(L("moved"))}</h3>${arrivalHtml(map, r.state)}`);
   return processTriggers(map, r.triggers, depth + 1);
 }
@@ -205,7 +222,8 @@ function arrivalHtml(map, s) {
     return `<li><b>${esc(known ? a?.name : L("unknownArea"))}</b> ${a?.terrain ? `— ${esc(a.terrain)}` : ""} <small>(${esc(status)})</small>${foe.length ? ` <span class="fm-foe-warn"><i class="fas fa-skull"></i> ${esc(L("foeSign"))}</span>` : ""}</li>`;
   }).join("");
   const foeHere = v.foes.filter((f) => f.area === v.current).map((f) => f.name);
-  return `<p class="fm-here"><i class="fas fa-flag"></i> <b>${esc(here?.name ?? "")}</b>${here?.terrain ? ` — ${esc(here.terrain)}` : ""}</p>
+  const img = areaImg(here);
+  return `${img ? `<div class="fm-card-img" style="background-image:url('${esc(img)}')"></div>` : ""}<p class="fm-here"><i class="fas fa-flag"></i> <b>${esc(here?.name ?? "")}</b>${here?.terrain ? ` — ${esc(here.terrain)}` : ""}</p>
     ${foeHere.length ? `<p class="fm-foe-warn"><i class="fas fa-skull"></i> ${esc(L("foeHere"))}</p>` : ""}
     ${near ? `<ul class="fm-near">${near}</ul>` : ""}
     <button type="button" data-fm="open"><i class="fas fa-map"></i> ${esc(L("openMap"))}</button>`;
@@ -341,18 +359,99 @@ export async function openChoiceDialog() {
 export function requestMove(to) {
   const map = activeMap();
   if (!map) return;
-  emit("fieldMoveReq", { to, by: game.user.name });
-  ui.notifications.info(L("proposed", { name: areaName(map, to) }));
+  if (mapState().proposal) return ui.notifications.warn(L("proposalPending"));
+  emit("fieldPropose", { to, by: game.user.id }, { local: isActiveGM() });
+  ui.notifications.info(L("proposed", { name: (mapState().visited?.[to] ?? 0) > 0 ? areaName(map, to) : L("unknownArea") }));
 }
 
-async function onMoveRequest({ to, by }) {
+/** 이번 탐색에 참여하는 플레이어: 접속 중이고 파티 캐릭터를 소유한 사람 */
+async function partyVoters() {
+  const members = await party();
+  return game.users.filter((u) => u.active && !u.isGM && members.some((a) => a.testUserPermission(u, "OWNER"))).map((u) => u.id);
+}
+
+/** 활성 GM: 제안을 받아 설정(fieldMapMove)대로 투표를 연다 */
+async function onPropose({ to, by }) {
   if (!isActiveGM()) return;
   const map = activeMap();
+  const st = cur();
+  if (!map || st.proposal || !FM.playerView(map, st).reachable.includes(to)) return;
+  const mode = game.settings.get("nssq", "fieldMapMove");
+  if (mode === "free") return moveTo(to);
+  const voters = mode === "gm" ? ["gm"] : [...new Set([...(await partyVoters()), by]), "gm"];
+  const proposal = { id: rid(), to, by, voters, answers: { [by]: true } };
+  if (FM.voteResult(proposal) === "accepted") return moveTo(to);
+  await setMapState({ ...st, proposal }, { undo: false });
+}
+
+/** 승낙·거절·취소(제안한 사람) */
+export function answerProposal(accept, { cancel = false } = {}) {
+  const p = mapState().proposal;
+  if (!p) return;
+  const payload = { id: p.id, user: game.user.id, gm: game.user.isGM, accept, cancel };
+  return isActiveGM() ? onAnswer(payload) : emit("fieldAnswer", payload);
+}
+
+async function onAnswer({ id, user, gm, accept, cancel }) {
+  if (!isActiveGM()) return;
+  const st = cur();
+  const p = st.proposal;
+  if (!p || p.id !== id) return;
+  const map = activeMap();
+  const dest = (st.visited?.[p.to] ?? 0) > 0 ? areaName(map, p.to) : L("unknownArea");
+  const who = game.users.get(user)?.name ?? "";
+  if (cancel) {
+    if (user !== p.by && !gm) return;
+    delete st.proposal;
+    await setMapState(st, { undo: false });
+    return post(`<p><i class="fas fa-ban"></i> ${esc(L("proposalCancelled", { by: who, name: dest }))}</p>`);
+  }
+  const key = gm ? "gm" : user;
+  if (!p.voters.includes(key)) return;
+  p.answers = { ...p.answers, [key]: !!accept };
+  const result = FM.voteResult(p);
+  if (result === "pending") return setMapState(st, { undo: false });
+  delete st.proposal;
+  await setMapState(st, { undo: false });
+  if (result === "rejected") return post(`<p><i class="fas fa-times-circle"></i> ${esc(L("proposalRejected", { name: dest, by: key === "gm" ? L("gmVoter") : who }))}</p>`);
+  return moveTo(p.to);
+}
+
+/** GM: 투표를 무시하고 이동 */
+async function forceProposal() {
+  const st = cur();
+  const p = st.proposal;
+  if (!p) return;
+  delete st.proposal;
+  await setMapState(st, { undo: false });
+  return moveTo(p.to);
+}
+
+/** 투표할 사람에게 창을 띄운다(지도 창을 닫아 둔 사람도) */
+let votePrompt = null;
+function promptVote(st) {
+  const p = st?.proposal;
+  const key = game.user.isGM ? "gm" : game.user.id;
+  if (votePrompt && (!p || votePrompt.id !== p.id || p.answers?.[key] !== undefined)) { votePrompt.dialog.close(); votePrompt = null; }
+  if (!p || !p.voters.includes(key) || p.answers?.[key] !== undefined || votePrompt) return;
+  if (game.user.isGM && game.users.activeGM?.id !== game.user.id) return;
+  const map = activeMap();
   if (!map) return;
-  if (game.settings.get("nssq", "fieldMapMove") === "free") return moveTo(to);
-  return post(`<p><i class="fas fa-shoe-prints"></i> ${esc(L("proposal", { by, name: areaName(map, to) }))}</p>
-    <div class="fm-gm"><button type="button" data-fm="approve"><i class="fas fa-check"></i> ${esc(L("approve"))}</button><button type="button" data-fm="reject">${esc(L("reject"))}</button></div>`,
-  { gm: true, flags: { fieldEvent: { kind: "moveReq", to } } });
+  const a = areaOf(map, p.to);
+  const known = game.user.isGM || (st.visited?.[p.to] ?? 0) > 0;
+  const img = areaImg(a);
+  const dialog = new Dialog({
+    title: L("proposalTitle"),
+    content: `<div class="nssq-fm-vote">${img ? `<div class="thumb ${known ? "" : "fog"}" style="background-image:url('${esc(img)}')"></div>` : ""}
+      <p>${esc(L("proposalAsk", { by: game.users.get(p.by)?.name ?? "", name: known ? a?.name ?? "" : L("unknownArea") }))}</p>${a?.terrain ? `<p class="notes">${esc(a.terrain)}</p>` : ""}</div>`,
+    buttons: {
+      yes: { icon: '<i class="fas fa-check"></i>', label: L("accept"), callback: () => answerProposal(true) },
+      no: { icon: '<i class="fas fa-times"></i>', label: L("decline"), callback: () => answerProposal(false) }
+    },
+    default: "yes"
+  }, { classes: ["nssq", "dialog", "nssq-fm-vote-dialog"] });
+  dialog.render(true);
+  votePrompt = { id: p.id, dialog };
 }
 
 /* ---------------- 카드 버튼 ---------------- */
@@ -370,8 +469,6 @@ async function onCard(message, action, el) {
   if (!map) return ui.notifications.warn(L("noActive"));
   const done = (label) => message.update({ content: message.content.replace(/<div class="fm-gm">[\s\S]*?<\/div>/, `<p class="notes">${esc(label)}</p>`), "flags.nssq.fieldEvent.done": true });
   switch (action) {
-    case "approve": await done(L("approved")); return moveTo(d.to);
-    case "reject": return done(L("rejected"));
     case "run": {
       const f = findTrigger(map, d.triggerId);
       await done(L("ran"));
@@ -457,7 +554,7 @@ export class FieldMapApp extends Application {
     const live = !!(st.active && map && st.mapId === map.id);
     if (!gm) {
       if (!map) return $(`<div class="fm-wrap"><p class="fm-empty">${esc(L("noActive"))}</p></div>`);
-      return $(`<div class="fm-wrap"><div class="fm-stage">${this.svg(map, st, { player: true })}</div>${this.legend(map, st)}</div>`);
+      return $(`<div class="fm-wrap"><div class="fm-body"><div class="fm-stage">${this.svg(map, st, { player: true })}${this.legend(map, st)}</div><aside class="fm-panel player">${this.playerPanel(map, st)}</aside></div></div>`);
     }
     const maps = allMaps();
     const toolbar = `<div class="fm-toolbar">
@@ -472,7 +569,7 @@ export class FieldMapApp extends Application {
     : `<label class="fm-preview"><input type="checkbox" data-fm-act="preview" ${this.preview ? "checked" : ""}/> ${esc(L("preview"))}</label>`}
     </div>`;
     const stage = map ? this.svg(map, st, { player: this.mode === "play" && this.preview, live: this.mode === "play" && live }) : `<p class="fm-empty">${esc(L("noMaps"))}</p>`;
-    const panel = map ? (this.mode === "edit" ? this.editPanel(map) : this.playPanel(map, st, live)) : "";
+    const panel = map ? (this.mode === "edit" ? this.editPanel(map) : this.preview && live ? this.playerPanel(map, st) : this.playPanel(map, st, live)) : "";
     return $(`<div class="fm-wrap gm">${toolbar}<div class="fm-body"><div class="fm-stage">${stage}${this.mode === "play" && live ? this.legend(map, st) : ""}</div><aside class="fm-panel">${panel}</aside></div></div>`);
   }
 
@@ -485,29 +582,36 @@ export class FieldMapApp extends Application {
     const areas = player ? map.areas.filter((a) => v.shown.includes(a.id)) : map.areas;
     const passages = player ? v.passages : map.passages.map((p) => ({ ...p, state: live ? FM.passageState(st, p) : p.state }));
     const pos = (id) => { const a = areaOf(map, id); return a ? [a.x, a.y] : [0, 0]; };
+    const visited = (id) => (st.visited?.[id] ?? 0) > 0;
     const bg = map.bg?.style === "image" && map.bg.src
       ? `<image href="${esc(map.bg.src)}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice"/>`
-      : `<rect class="fm-paper" width="${W}" height="${H}" fill="url(#fm-grad)"/><rect width="${W}" height="${H}" filter="url(#fm-noise)" opacity="0.35"/>`;
+      : `<rect width="${W}" height="${H}" fill="url(#fm-grad)"/><rect width="${W}" height="${H}" filter="url(#fm-noise)" opacity="0.35"/>${compass()}`;
+    // 통로: 점선 잉크 자국(밟은 길은 실선, 지금 갈 수 있는 길은 초록으로 흐른다)
     const pLines = passages.map((p) => {
       const [x1, y1] = pos(p.a);
       const [x2, y2] = pos(p.b);
       const mx = (x1 + x2) / 2;
       const my = (y1 + y2) / 2;
-      const sel = this.sel?.kind === "passage" && this.sel.id === p.id ? "selected" : "";
-      return `<g class="fm-passage st-${p.state} ${p.oneWay ? "one-way" : ""} ${sel}" data-pid="${p.id}">
+      const cls = ["fm-passage", `st-${p.state}`];
+      if (p.oneWay) cls.push("one-way");
+      if (showState && visited(p.a) && visited(p.b)) cls.push("walked");
+      if (showState && v.current && ((p.a === v.current && v.reachable.includes(p.b)) || (p.b === v.current && v.reachable.includes(p.a))) && p.state === "open") cls.push("open-route");
+      if (this.sel?.kind === "passage" && this.sel.id === p.id) cls.push("selected");
+      return `<g class="${cls.join(" ")}" data-pid="${p.id}">
         <path class="hit" d="M${x1},${y1} L${x2},${y2}"/><path class="line" d="M${x1},${y1} L${mx},${my} L${x2},${y2}" ${p.oneWay ? `marker-mid="url(#fm-arrow)"` : ""}/>
-        ${p.state === "locked" ? `<text class="fm-glyph lock" x="${mx}" y="${my + 5}">${G.lock}</text>` : ""}
-        ${p.state === "hidden" && !player ? `<text class="fm-glyph hidden" x="${mx}" y="${my + 5}">${G.eye}</text>` : ""}
-        <title>${esc(passageLabel(map, p))} · ${esc(L(`ps.${p.state}`))}</title></g>`;
+        ${p.state === "locked" ? `<circle class="fm-badge lock" cx="${mx}" cy="${my}" r="11"/><text class="fm-glyph lock" x="${mx}" y="${my + 5}">${G.lock}</text>` : ""}
+        ${p.state === "hidden" && !player ? `<circle class="fm-badge hidden" cx="${mx}" cy="${my}" r="11"/><text class="fm-glyph hidden" x="${mx}" y="${my + 5}">${G.eye}</text>` : ""}
+        <title>${esc(player ? L(`ps.${p.state}`) : `${passageLabel(map, p)} · ${L(`ps.${p.state}`)}`)}</title></g>`;
     }).join("");
     const route = edit && this.routeFoe ? (() => {
       const f = map.foes.find((x) => x.id === this.routeFoe);
       const pts = (f?.route ?? []).map((id) => pos(id).join(",")).join(" ");
       return pts ? `<polyline class="fm-route" points="${pts}"/>` : "";
     })() : "";
-    const aBoxes = areas.map((a) => {
+    // 에어리어: 씬 배경을 담은 원형 메달 + 이름 띠
+    const nodes = areas.map((a) => {
       const cls = ["fm-area"];
-      const visited = (st.visited?.[a.id] ?? 0) > 0;
+      const seen = visited(a.id) || a.id === v.current;
       if (showState) {
         if (v.explored.includes(a.id)) cls.push("explored");
         if (v.frontier.includes(a.id)) cls.push("frontier");
@@ -515,16 +619,24 @@ export class FieldMapApp extends Application {
         if (a.id === v.current) cls.push("current");
       }
       if (!player && a.secret && !(live && (st.revealed?.areas ?? []).includes(a.id))) cls.push("secret");
-      if (!player && !showState) cls.push("explored");
-      if (!player && live && !visited && !v.frontier.includes(a.id)) cls.push("unknown");
+      if (!showState) cls.push("explored");
+      if (!player && live && !seen && !v.frontier.includes(a.id)) cls.push("unknown");
       if (this.sel?.kind === "area" && this.sel.id === a.id) cls.push("selected");
       if (edit && this.linkFrom === a.id) cls.push("link-from");
       if (edit && map.start === a.id) cls.push("start");
-      const label = player && !visited && a.id !== v.current ? (a.terrain ? a.terrain.slice(0, 10) : "?") : a.name;
-      const tip = player && !visited ? `${L("unexplored")}${a.terrain ? `: ${a.terrain}` : ""}` : `${a.name}${a.terrain ? `\n${a.terrain}` : ""}${!player && a.gmNote ? `\n[GM] ${a.gmNote}` : ""}${!player && live ? `\n${L("visits", { n: st.visited?.[a.id] ?? 0 })}` : ""}`;
+      const hide = player && !seen;
+      const img = areaImg(a);
+      const label = hide ? (a.terrain ? a.terrain.slice(0, 12) : "???") : a.name;
+      const lw = Math.max(52, [...label].length * 13 + 18);
+      const tip = hide ? `${L("unexplored")}${a.terrain ? `: ${a.terrain}` : ""}` : `${a.name}${a.terrain ? `\n${a.terrain}` : ""}${!player && a.gmNote ? `\n[GM] ${a.gmNote}` : ""}${showState ? `\n${L("visits", { n: st.visited?.[a.id] ?? 0 })}` : ""}`;
       return `<g class="${cls.join(" ")}" data-aid="${a.id}" transform="translate(${a.x},${a.y})">
-        <rect x="${-AW / 2}" y="${-AH / 2}" width="${AW}" height="${AH}" rx="9"/><text class="fm-name" y="5">${esc(label)}</text>
-        ${a.id === v.current ? `<text class="fm-glyph party" x="${-AW / 2 + 2}" y="${-AH / 2 - 4}">${G.flag}</text>` : ""}
+        <circle class="halo" r="${R + 9}"/>
+        <circle class="disc" r="${R}"/>
+        ${img ? `<image href="${esc(img)}" x="${-R}" y="${-R}" width="${R * 2}" height="${R * 2}" clip-path="url(#fm-clip)" preserveAspectRatio="xMidYMid slice" ${hide ? `filter="url(#fm-fog)"` : ""}/>` : `<text class="fm-initial" y="9">${esc(hide ? "?" : [...a.name][0] ?? "?")}</text>`}
+        ${hide && img ? `<circle class="fog" r="${R}"/><text class="fm-q" y="10">?</text>` : ""}
+        <circle class="ring" r="${R}"/>
+        <g class="plate" transform="translate(0,${R + 16})"><rect x="${-lw / 2}" y="-11" width="${lw}" height="22" rx="4"/><text y="5">${esc(label)}</text></g>
+        ${a.id === v.current ? `<g class="party" transform="translate(${-R + 2},${-R + 2})"><circle r="12"/><text class="fm-glyph" y="5">${G.flag}</text></g>` : ""}
         <title>${esc(tip)}</title></g>`;
     }).join("");
     const foeList = player ? v.foes : live ? map.foes.filter((f) => st.foePos?.[f.id] && !(st.foeGone ?? []).includes(f.id)).map((f) => ({ ...f, area: st.foePos[f.id] })) : map.foes.filter((f) => f.route?.length).map((f) => ({ ...f, area: f.route[0] }));
@@ -533,22 +645,70 @@ export class FieldMapApp extends Application {
       const [x, y] = pos(f.area);
       const k = (perArea[f.area] = (perArea[f.area] ?? 0) + 1) - 1;
       const visible = !live || player || v.foes.some((x2) => x2.id === f.id);
-      return `<g class="fm-foe ${visible ? "" : "unseen"}" transform="translate(${x + AW / 2 - 6 - k * 22},${y - AH / 2})"><circle r="10"/><text y="4">F</text><title>${esc(f.name)}</title></g>`;
+      return `<g class="fm-foe ${visible ? "" : "unseen"}" transform="translate(${x + R * 0.78 - k * 20},${y - R * 0.78})"><path d="M0,-13 L12,0 L0,13 L-12,0 Z"/><text y="4">F</text><title>F.O.E. ${esc(f.name)}</title></g>`;
     }).join("");
     return `<svg class="fm-svg ${edit ? `edit tool-${this.tool}` : ""}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
       <defs>
         <radialGradient id="fm-grad" cx="50%" cy="45%" r="75%"><stop offset="0%" stop-color="#f4e7c5"/><stop offset="70%" stop-color="#e2cc96"/><stop offset="100%" stop-color="#b8975c"/></radialGradient>
+        <radialGradient id="fm-vignette" cx="50%" cy="50%" r="70%"><stop offset="65%" stop-color="#3b2510" stop-opacity="0"/><stop offset="100%" stop-color="#3b2510" stop-opacity="0.45"/></radialGradient>
         <filter id="fm-noise"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="4" seed="7"/><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.32  0 0 0 0 0.15  0 0 0 0.9 -0.25"/></filter>
-        <marker id="fm-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fm-arrow"/></marker>
+        <filter id="fm-fog"><feColorMatrix type="saturate" values="0.05"/><feGaussianBlur stdDeviation="2.2"/></filter>
+        <filter id="fm-shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#2b1a08" flood-opacity="0.45"/></filter>
+        <clipPath id="fm-clip" clipPathUnits="objectBoundingBox"><circle cx="0.5" cy="0.5" r="0.5"/></clipPath>
+        <marker id="fm-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fm-arrow"/></marker>
       </defs>
-      <rect class="fm-bgclick" width="${W}" height="${H}" fill="transparent"/>${bg}${pLines}${route}${aBoxes}${foes}</svg>`;
+      <rect class="fm-bgclick" width="${W}" height="${H}" fill="transparent"/>${bg}<rect width="${W}" height="${H}" fill="url(#fm-vignette)" pointer-events="none"/>${pLines}${route}${nodes}${foes}</svg>`;
   }
 
   legend(map, st) {
     const here = areaOf(map, st.current);
-    const item = (cls, label) => `<span class="fm-key ${cls}"><i></i>${esc(label)}</span>`;
-    return `<footer class="fm-legend">${item("current", L("key.current"))}${item("explored", L("key.explored"))}${item("reachable", L("key.reachable"))}${item("frontier", L("key.frontier"))}<span class="fm-key foe"><i></i>F.O.E.</span>
-      <span class="fm-clock">${esc(map.name)} · ${esc(here?.name ?? "")} · ${esc(clock(st))}</span></footer>`;
+    const item = (k, label) => `<span class="fm-key ${k}" data-key="${k}"><i></i>${esc(label)}</span>`;
+    return `<footer class="fm-legend">${item("current", L("key.current"))}${item("explored", L("key.explored"))}${item("reachable", L("key.reachable"))}${item("frontier", L("key.frontier"))}${item("foe", "F.O.E.")}
+      <span class="fm-clock">${esc(here?.name ?? "")} · ${esc(clock(st))}</span></footer>`;
+  }
+
+  /* ---------- 플레이어 패널: 지금 위치·이동 제안 ---------- */
+
+  playerPanel(map, st) {
+    const v = FM.playerView(map, st);
+    const here = areaOf(map, v.current);
+    const img = areaImg(here);
+    const p = st.proposal;
+    const me = game.user.id;
+    const destCard = (id) => {
+      const a = areaOf(map, id);
+      const known = (st.visited?.[id] ?? 0) > 0;
+      const foe = v.foes.some((f) => f.area === id);
+      const im = areaImg(a);
+      return `<button type="button" class="fm-dest ${foe ? "danger" : ""}" data-fm-dest="${id}">
+        <span class="thumb ${known ? "" : "fog"}" style="${im ? `background-image:url('${esc(im)}')` : ""}">${known ? "" : "?"}</span>
+        <span class="txt"><b>${esc(known ? a.name : L("unknownArea"))}</b><small>${esc(a.terrain ?? "")}</small>${foe ? `<small class="fm-foe-warn"><i class="fas fa-skull"></i> ${esc(L("foeSign"))}</small>` : ""}</span></button>`;
+    };
+    let move;
+    if (p) {
+      const rows = (p.voters ?? []).map((u) => {
+        const a = p.answers?.[u];
+        const name = u === "gm" ? L("gmVoter") : game.users.get(u)?.name ?? "?";
+        return `<li class="${a === true ? "yes" : a === false ? "no" : "wait"}"><i class="fas ${a === true ? "fa-check" : a === false ? "fa-times" : "fa-hourglass-half"}"></i> ${esc(name)}</li>`;
+      }).join("");
+      const mine = (p.voters ?? []).includes(me) && p.answers?.[me] === undefined;
+      move = `<div class="fm-proposal"><p><b>${esc(game.users.get(p.by)?.name ?? "")}</b>: ${esc(L("proposalTo", { name: (st.visited?.[p.to] ?? 0) > 0 ? areaName(map, p.to) : L("unknownArea") }))}</p><ul>${rows}</ul>
+        ${mine ? `<div class="fm-row"><button type="button" data-fm-vote="yes"><i class="fas fa-check"></i> ${esc(L("accept"))}</button><button type="button" data-fm-vote="no"><i class="fas fa-times"></i> ${esc(L("decline"))}</button></div>` : ""}
+        ${p.by === me ? `<button type="button" data-fm-vote="cancel">${esc(L("cancelProposal"))}</button>` : ""}</div>`;
+    } else if (this.proposing) {
+      move = `<p class="fm-sub">${esc(L("pickDest"))}</p>${v.reachable.map(destCard).join("") || `<p class="notes">${esc(L("noDest"))}</p>`}
+        <button type="button" data-fm-pact="cancelPick">${esc(L("back"))}</button>`;
+    } else {
+      move = `<button type="button" class="fm-big" data-fm-pact="propose" ${v.reachable.length ? "" : "disabled"}><i class="fas fa-shoe-prints"></i> ${esc(L("proposeMove"))}</button>`;
+    }
+    const foeHere = v.foes.filter((f) => f.area === v.current);
+    return `<div class="fm-loc">
+        <div class="fm-loc-img" style="${img ? `background-image:url('${esc(img)}')` : ""}"><span class="fm-loc-name">${esc(here?.name ?? "")}</span></div>
+        <p class="fm-loc-meta">${esc(clock(st))} · ${esc(L("visits", { n: st.visited?.[v.current] ?? 0 }))}</p>
+        ${here?.terrain ? `<p class="fm-loc-terrain">${esc(here.terrain)}</p>` : ""}
+        ${foeHere.length ? `<p class="fm-foe-warn"><i class="fas fa-skull"></i> ${esc(L("foeHere"))}</p>` : ""}
+      </div>
+      <h4>${esc(L("moveHead"))}</h4>${move}`;
   }
 
   /* ---------- GM 패널: 진행 ---------- */
@@ -587,7 +747,11 @@ export class FieldMapApp extends Application {
       return `<li>${esc(f.name)} <select data-fm-foepos="${f.id}" ${gone ? "disabled" : ""}>${map.areas.map((a) => opt(a.id, st.foePos?.[f.id], a.name)).join("")}</select>
         ${gone ? `<a data-fm-act="foeRestore" data-id="${f.id}">${esc(L("restore"))}</a>` : `<a data-fm-act="foeRemove" data-id="${f.id}" title="${esc(L("remove"))}"><i class="fas fa-times"></i></a>`}</li>`;
     }).join("");
-    return `<h3>${esc(map.name)}</h3><p class="fm-clockline">${esc(clock(st))} · ${esc(areaName(map, st.current))}</p>
+    const pr = st.proposal;
+    const prop = pr ? `<section class="fm-proposal"><p><b>${esc(game.users.get(pr.by)?.name ?? "")}</b>: ${esc(L("proposalTo", { name: areaName(map, pr.to) }))}</p>
+      <ul>${pr.voters.map((u) => { const x = pr.answers?.[u]; return `<li class="${x === true ? "yes" : x === false ? "no" : "wait"}"><i class="fas ${x === true ? "fa-check" : x === false ? "fa-times" : "fa-hourglass-half"}"></i> ${esc(u === "gm" ? L("gmVoter") : game.users.get(u)?.name ?? "?")}</li>`; }).join("")}</ul>
+      <div class="fm-actions">${pr.voters.includes("gm") && pr.answers?.gm === undefined ? `${b("gmYes", "fa-check", L("accept"))}${b("gmNo", "fa-times", L("decline"))}` : ""}${b("forceMove", "fa-forward", L("forceMove"))}${b("cancelProposal", "fa-ban", L("cancelProposal"))}</div></section>` : "";
+    return `<h3>${esc(map.name)}</h3><p class="fm-clockline">${esc(clock(st))} · ${esc(areaName(map, st.current))}</p>${prop}
       <div class="fm-actions">${b("search", "fa-search", L("search"))}${b("gather", "fa-leaf", L("gather"))}${b("camp", "fa-campground", L("camp"))}${b("mapping", "fa-map-marked-alt", L("mapping"))}
         ${b("wait", "fa-hourglass-half", L("wait"))}${b("choice", "fa-question-circle", L("choice"))}${b("undo", "fa-undo", L("undo"))}</div>
       <p class="notes">${esc(L("moveHint"))}</p>${sel}
@@ -607,6 +771,9 @@ export class FieldMapApp extends Application {
         const p = `areas.${i}`;
         return `<h3>${esc(L("areaHead"))} <a data-fm-act="deselect" title="${esc(L("close"))}"><i class="fas fa-times"></i></a></h3>
           ${this.field(`${p}.name`, a.name, L("f.name"))}
+          <div class="form-group"><label>${esc(L("f.scene"))}</label><select data-path="${p}.sceneId" data-struct>${opt("", a.sceneId, L("noScene"))}${game.scenes.contents.filter((x) => !x.getFlag("nssq", "randomPreset")).map((x) => opt(x.id, a.sceneId, x.name)).join("")}</select></div>
+          <div class="form-group"><label>${esc(L("f.img"))}</label><input type="text" data-path="${p}.img" data-struct value="${esc(a.img ?? "")}" placeholder="${esc(L("f.imgHint"))}"/><button type="button" data-fm-act="pickImg" class="fm-icon"><i class="fas fa-file-import"></i></button></div>
+          ${areaImg(a) ? `<div class="fm-edit-img" style="background-image:url('${esc(areaImg(a))}')"></div>` : ""}
           ${this.field(`${p}.terrain`, a.terrain, L("f.terrain"), "text", L("f.terrainHint"))}
           ${this.field(`${p}.gmNote`, a.gmNote, L("f.gmNote"), "textarea")}
           ${this.field(`${p}.gather`, a.gather, L("f.gather"), "text", game.i18n.localize("NSSQ.Loot.tablePlaceholder"))}
@@ -642,6 +809,7 @@ export class FieldMapApp extends Application {
     return `<h3>${esc(L("mapHead"))}</h3>
       ${this.field("name", map.name, L("f.mapName"))}
       ${this.field("startHour", map.startHour ?? 8, L("startHour"), "num")}
+      ${this.field("activateScene", map.activateScene, L("f.activateScene"), "bool")}
       <div class="form-group"><label>${esc(L("f.bg"))}</label><select data-path="bg.style">${opt("parchment", map.bg?.style, L("bg.parchment"))}${opt("image", map.bg?.style, L("bg.image"))}</select></div>
       ${map.bg?.style === "image" ? `<div class="form-group"><input type="text" data-path="bg.src" value="${esc(map.bg.src)}"/><button type="button" data-fm-act="pickBg"><i class="fas fa-file-import"></i></button></div>` : ""}
       <p class="notes">${esc(L("editHint"))}</p>${check}
@@ -717,6 +885,13 @@ export class FieldMapApp extends Application {
     const root = html[0];
     const svg = root.querySelector("svg.fm-svg");
     if (svg) this.svgListeners(svg);
+    // 범례에 마우스를 올리면 그 종류만 강조
+    html.on("mouseenter", ".fm-key[data-key]", (ev) => svg?.classList.add(`hl-${ev.currentTarget.dataset.key}`));
+    html.on("mouseleave", ".fm-key[data-key]", (ev) => svg?.classList.remove(`hl-${ev.currentTarget.dataset.key}`));
+    // 플레이어 패널
+    html.on("click", "[data-fm-pact]", (ev) => { this.proposing = ev.currentTarget.dataset.fmPact === "propose"; this.render(); });
+    html.on("click", "[data-fm-dest]", (ev) => { this.proposing = false; requestMove(ev.currentTarget.dataset.fmDest); });
+    html.on("click", "[data-fm-vote]", (ev) => { const v = ev.currentTarget.dataset.fmVote; answerProposal(v === "yes", { cancel: v === "cancel" }); });
     if (!game.user.isGM) return;
     html.on("change", "[data-fm-map]", (ev) => this.switchMap(ev.currentTarget.value));
     html.on("change", "[data-path]", (ev) => this.onField(ev.currentTarget));
@@ -756,6 +931,7 @@ export class FieldMapApp extends Application {
       // 동작 종류가 바뀌면 그 동작의 칸을 비운다
       foundry.utils.setProperty(this.draft, path.replace(/\.type$/, ""), { type: v, ...(v === "choice" ? { options: [] } : {}) });
     } else foundry.utils.setProperty(this.draft, path, v);
+    if (path.endsWith(".sceneId")) foundry.utils.setProperty(this.draft, path.replace(/sceneId$/, "sceneImg"), sceneImage(v));
     this.dirty = true;
     const structural = el.dataset.struct !== undefined || el.dataset.type === "enemy" || path === "bg.style" || path.endsWith(".oneWay") || path.endsWith(".state") || path.endsWith(".name") || path.endsWith(".secret");
     if (structural) this.render();
@@ -796,6 +972,7 @@ export class FieldMapApp extends Application {
 
   async save() {
     if (!this.draft) return;
+    for (const a of this.draft.areas) if (a.sceneId) a.sceneImg = sceneImage(a.sceneId) || a.sceneImg || "";
     await saveMap(this.draft);
     this.dirty = false;
     ui.notifications.info(L("saved", { name: this.draft.name }));
@@ -829,6 +1006,7 @@ export class FieldMapApp extends Application {
       }
       case "delPassage": map.passages = map.passages.filter((p) => p.id !== this.sel.id); this.sel = null; this.dirty = true; return this.render();
       case "flip": { const p = map.passages.find((x) => x.id === this.sel.id); [p.a, p.b] = [p.b, p.a]; this.dirty = true; return this.render(); }
+      case "pickImg": { const ar = map.areas.find((x) => x.id === this.sel.id); return new FilePicker({ type: "image", current: ar.img, callback: (src) => { ar.img = src; this.dirty = true; this.render(); } }).render(true); }
       case "pickBg": return new FilePicker({ type: "image", current: map.bg?.src, callback: (src) => { map.bg = { style: "image", src }; this.dirty = true; this.render(); } }).render(true);
       case "route": this.routeFoe = this.routeFoe === id ? null : id; this.tool = "select"; this.linkFrom = null; return this.render();
       case "routeDone": this.routeFoe = null; return this.render();
@@ -863,6 +1041,10 @@ export class FieldMapApp extends Application {
       case "revealPassage": return revealThing({ passage: this.sel.id });
       case "foeRemove": return removeFoe(id);
       case "foeRestore": return removeFoe(id, { restore: true });
+      case "gmYes": return answerProposal(true);
+      case "gmNo": return answerProposal(false);
+      case "forceMove": return forceProposal();
+      case "cancelProposal": return answerProposal(false, { cancel: true });
     }
   }
 
@@ -873,7 +1055,7 @@ export class FieldMapApp extends Application {
       const pt = svg.createSVGPoint();
       pt.x = ev.clientX; pt.y = ev.clientY;
       const p = pt.matrixTransform(svg.getScreenCTM().inverse());
-      return { x: Math.round(Math.min(W - AW / 2, Math.max(AW / 2, p.x))), y: Math.round(Math.min(H - AH / 2, Math.max(AH / 2 + 10, p.y))) };
+      return { x: Math.round(Math.min(W - R - 8, Math.max(R + 8, p.x))), y: Math.round(Math.min(H - R - 34, Math.max(R + 12, p.y))) };
     };
     const edit = this.mode === "edit" && game.user.isGM;
     let drag = null;
@@ -970,12 +1152,13 @@ export function registerFieldMap() {
     scope: "world", config: false, type: Object, default: {},
     onChange: (v) => {
       FieldMapApp.refresh();
+      promptVote(v);
       if (!!v?.active !== fieldActive) { fieldActive = !!v?.active; ui.controls?.initialize(); }
     }
   });
   game.settings.register("nssq", "fieldMapMove", {
-    name: "NSSQ.FieldMap.settingMove", hint: "NSSQ.FieldMap.settingMoveHint", scope: "world", config: true, type: String, default: "approve",
-    choices: { approve: "NSSQ.FieldMap.moveApprove", free: "NSSQ.FieldMap.moveFree" }
+    name: "NSSQ.FieldMap.settingMove", hint: "NSSQ.FieldMap.settingMoveHint", scope: "world", config: true, type: String, default: "all",
+    choices: { all: "NSSQ.FieldMap.moveAll", gm: "NSSQ.FieldMap.moveGm", free: "NSSQ.FieldMap.moveFree" }
   });
   game.keybindings.register("nssq", "openFieldMap", {
     name: "NSSQ.FieldMap.keybinding", editable: [{ key: "KeyM" }], restricted: false,
@@ -986,7 +1169,8 @@ export function registerFieldMap() {
     if (!game.user.isGM && !mapState().active) return;
     controls.find((c) => c.name === "token")?.tools.push({ name: "nssq-fieldmap", title: "NSSQ.FieldMap.title", icon: "fas fa-map", button: true, onClick: () => FieldMapApp.toggle() });
   });
-  onSocket("fieldMoveReq", onMoveRequest);
+  onSocket("fieldPropose", onPropose);
+  onSocket("fieldAnswer", onAnswer);
   onSocket("fieldVote", async ({ messageId, i, userId }) => { if (isActiveGM()) { const m = game.messages.get(messageId); if (m) await vote(m, i, userId); } });
   Hooks.on("renderChatMessage", (message, html) => {
     const root = html[0];

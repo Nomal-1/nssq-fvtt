@@ -135,3 +135,13 @@ describe("필드 지도: 트리거·검사", () => {
     expect(validateMap({ ...m, foes: [{ id: "f", route: ["gate", "swamp"], mode: "loop" }] }).warnings[0].code).toBe("foeNoPassage");
   });
 });
+
+describe("필드 지도: 이동 제안 투표", () => {
+  it("모두 승낙·한 명 거절·대기", async () => {
+    const { voteResult } = await import("../../src/engine/fieldmap.mjs");
+    expect(voteResult({ voters: ["a", "b", "gm"], answers: { a: true, b: true, gm: true } })).toBe("accepted");
+    expect(voteResult({ voters: ["a", "b", "gm"], answers: { a: true, b: false } })).toBe("rejected");
+    expect(voteResult({ voters: ["a", "b", "gm"], answers: { a: true } })).toBe("pending");
+    expect(voteResult({ voters: [], answers: {} })).toBe("accepted");
+  });
+});
