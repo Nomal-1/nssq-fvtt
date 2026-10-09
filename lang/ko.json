@@ -1766,10 +1766,8 @@
       "shieldOnly": "방패",
       "strayRemoved": "클래스가 바뀌어 배울 수 없게 된 스킬 {n}개를 지웠다",
       "budget": "스킬 SL {spent}/{total} (남은 {left})",
-      "skillHint": "Lv1은 합계 SL 5, 스킬 하나에 SL 2까지. 전제 스킬이 필요하다. 서브 클래스가 없으면 ★ 고유 스킬이 따로 들어온다.",
+      "skillHint": "메인·서브 클래스 스킬을 합계 SL 5까지 배운다(Lv1은 스킬 하나에 SL 2까지, 전제 스킬 필요). 서브 클래스가 없으면 ★ 고유 스킬이 따로 들어온다. 원하면 커먼 스킬 하나를 SL1로 더 배울 수 있다(SL 5와 별도).",
       "openTree": "스킬 트리 열기",
-      "commonSkill": "커먼 스킬",
-      "commonHint": "커먼 스킬 일람에서 하나를 SL1로 배운다(SL 5와 별도).",
       "common": "커먼",
       "learned": "배운 스킬",
       "none": "(없음)",
@@ -1795,7 +1793,7 @@
         "prereq": "전제 스킬",
         "subMax": "서브 클래스 스킬은 서브 MaxSL까지",
         "foreignSkill": "메인·서브 클래스가 아닌 스킬 없음",
-        "common": "커먼 스킬 1개 SL1",
+        "common": "커먼 스킬은 하나 SL1까지",
         "unique": "★ 고유 스킬(서브가 없으면 있고, 있으면 없음)",
         "equip": "장비할 수 있는 장비만",
         "carry": "소지 수 상한",
@@ -1807,7 +1805,8 @@
       "finishHint": "완료하면 【HP】·【TP】를 최대로, 【FP】를 1로 맞추고 작성을 잠근다(GM은 풀 수 있다).",
       "fixFirst": "빨간 항목을 고친 뒤 완료할 수 있다. 노란 항목은 경고만이다.",
       "alreadyDone": "이미 작성을 완료한 캐릭터다",
-      "finished": "{name} 작성 완료"
+      "finished": "{name} 작성 완료",
+      "commonPick": "커먼 스킬(선택, 하나만, 다시 누르면 취소)"
     },
     "Session": {
       "endTitle": "세션 결과",

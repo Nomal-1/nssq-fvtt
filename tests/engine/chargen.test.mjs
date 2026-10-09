@@ -72,7 +72,10 @@ describe("작성 검사·경력표 (단계 10)", async () => {
     expect(failed(validateCreation(p))).toEqual([]);
     p = base(); p.abilities.str = 14;
     expect(failed(validateCreation(p))).toContain("abilities");
+    // 커먼 스킬은 선택(07 #162): 없어도 통과, 2개면 오류
     p = base(); p.skills = p.skills.filter((s) => !s.common);
+    expect(failed(validateCreation(p))).toEqual([]);
+    p = base(); p.skills.push({ name: "벌채", sl: 1, common: true, classKey: "common", maxSL: { main: 1 } });
     expect(failed(validateCreation(p))).toContain("common");
     p = base(); p.skills[1].sl = 3;
     expect(failed(validateCreation(p))).toEqual(expect.arrayContaining(["budgetOver", "levelCap"]));

@@ -1150,3 +1150,4 @@
 .nssq-chargen .cg-checks li.error { color: #e53935; font-weight: bold; }
 .nssq-chargen .cg-checks li.warn { color: #e0b028; }
 .nssq-chargen .cg-done { color: #4caf50; }
+.nssq-chargen .cg-sub { margin: 10px 0 4px; font-weight: bold; }

@@ -151,7 +151,7 @@ export class ChargenWizard extends Application {
     return `<div class="cg-budget"><div class="bar"><i style="width:${pct}%"></i></div><span>${esc(L("budget", { spent: b.spent, total: b.total, left: b.left }))}</span></div>
       <p class="notes">${esc(L("skillHint"))}</p>
       <button type="button" class="cg-big" data-cg="tree" ${s.mainClass ? "" : "disabled"}><i class="fas fa-sitemap"></i> ${esc(L("openTree"))}</button>
-      <h3>${esc(L("commonSkill"))}</h3><p class="notes">${esc(L("commonHint"))}</p>
+      <p class="cg-sub">${esc(L("commonPick"))}</p>
       <div class="cg-commons">${commons.map((c) => `<button type="button" class="cg-common ${mine?.system.skillKey === c.system.skillKey ? "selected" : ""}" data-cg-common="${c.uuid}" title="${esc((c.system.description ?? "").replace(/<[^>]+>/g, ""))}">${esc(c.name)}</button>`).join("")}</div>
       <h3>${esc(L("learned"))}</h3><ul class="cg-skills">${rows || `<li class="notes">${esc(L("none"))}</li>`}</ul>`;
   }
@@ -320,14 +320,16 @@ export class ChargenWizard extends Application {
     if (stray.length) ui.notifications.info(L("strayRemoved", { n: stray.length }));
   }
 
-  /** 커먼 스킬 1개(SL1): 다른 커먼 스킬은 지운다 */
+  /** 커먼 스킬(선택) 1개 SL1: 다른 커먼 스킬은 지운다. 고른 것을 다시 누르면 지운다 */
   async pickCommon(uuid) {
     if (this.locked) return;
     const src = await fromUuid(uuid);
     if (!src) return;
     const actor = this.actor;
-    const old = actor.items.filter((i) => i.type === "skill" && i.system.classKey === "common").map((i) => i.id);
-    if (old.length) await actor.deleteEmbeddedDocuments("Item", old);
+    const owned = actor.items.filter((i) => i.type === "skill" && i.system.classKey === "common");
+    const same = owned.some((i) => i.system.skillKey === src.system.skillKey);
+    if (owned.length) await actor.deleteEmbeddedDocuments("Item", owned.map((i) => i.id));
+    if (same) return;
     const d = game.items.fromCompendium(src);
     d.system.sl = 1;
     foundry.utils.setProperty(d, "_stats.compendiumSource", src.uuid);
