@@ -174,7 +174,8 @@ async function onAttackCard(message) {
     if (autoRuns(f, byId.get(f.unitId))) await runFollowup(f, ev.kind);
     else pending.push({ ...f, id: foundry.utils.randomID(), state: "pending", originKind: ev.kind });
   }
-  if (pending.length) await message.setFlag("nssq", "followups", pending);
+  // 그 사이 카드가 지워졌으면(GM이 삭제) 버튼을 달 곳이 없다
+  if (pending.length && game.messages.has(message.id)) await message.setFlag("nssq", "followups", pending);
 }
 
 /** 추격·반격·발동 실행 → 카드. 실행했으면 true */

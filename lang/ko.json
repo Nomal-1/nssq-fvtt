@@ -72,7 +72,7 @@
       "hpMultiplier": "【HP】 배수",
       "boost": "GM 재량 강화(고른 항목만)",
       "rule": "내성 0은 1, 1은 2가 된다. 해제하면 원래 값으로 돌아간다.",
-      "gmOnly": "희소종 표시(★)는 GM에게만 보인다. 이름은 바꾸지 않는다(식별 판정으로 간파, 단계 5)."
+      "gmOnly": "희소종 표시(★)는 GM에게만 보인다. 이름은 바꾸지 않는다(식별 판정으로 간파)."
     },
     "Identified": "식별",
     "Sheet": {
@@ -542,7 +542,7 @@
       "phaseHint": {
         "opening": "방어 전념·배치 변경·무기 교체·도주",
         "main": "【속도】 순 행동",
-        "end": "종료 처리(상태 이상 등은 단계 5)"
+        "end": "독·자연 회복·강화 턴 감소 등"
       },
       "phaseStart": "{round}턴 {phase}",
       "roundPhase": "{round}턴 · {phase}",
@@ -1043,7 +1043,7 @@
       "allySingle": "아군 단일",
       "noTarget": "대상이 될 수 있는 전투원이 없다(사거리 확인).",
       "reason": {
-        "noEffects": "효과 데이터가 아직 없다(단계 7)",
+        "noEffects": "효과 데이터가 없다",
         "timing": "전투 중에 직접 쓰는 스킬이 아니다",
         "notMain": "메인 페이즈에 쓴다",
         "notOpening": "개막 페이즈에 쓴다",
@@ -1105,12 +1105,12 @@
       "gmNeeded": "GM 판단 필요: {what}",
       "gmScope": "대상 범위를 해석하지 못했다(단일로 처리)",
       "type": {
-        "stance": "대기 상태(단계 8)",
-        "delayed": "지연 공격(단계 8)",
-        "counter": "반격(단계 8)",
-        "chase": "추격(단계 8)",
-        "trigger": "발동 조건 효과(단계 8)",
-        "token": "토큰(단계 8)",
+        "stance": "대기 상태",
+        "delayed": "지연 공격",
+        "counter": "반격",
+        "chase": "추격",
+        "trigger": "발동 조건 효과(조건이 맞을 때 따로 발동)",
+        "token": "토큰",
         "custom": "특수 처리"
       },
       "apply": "적용",
