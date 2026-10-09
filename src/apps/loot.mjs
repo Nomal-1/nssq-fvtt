@@ -164,7 +164,7 @@ function render(card) {
     const btn = adj ? ` <button type="button" data-loot="adj" data-i="${i}" data-d="-1">−</button><button type="button" data-loot="adj" data-i="${i}" data-d="1">+</button>` : "";
     return `<li><img src="${esc(r.img)}" width="20" height="20"/> ${esc(r.name)}: ${dice} ${res}${ahhMark}${btn}</li>`;
   }).join("");
-  const adjNote = adj ? `<p class="notes">${esc(L("adjustHint", { n: card.range, by: card.rangeBy.join(", ") }))}</p><button type="button" data-loot="confirm"><i class="fas fa-check"></i> ${esc(L("confirm"))}</button>` : "";
+  const adjNote = adj ? `<p class="notes">${esc(L(card.kind === "gather" ? "adjustHintGather" : "adjustHint", { n: card.range, by: card.rangeBy.join(", ") }))}</p><button type="button" data-loot="confirm"><i class="fas fa-check"></i> ${esc(L("confirm"))}</button>` : "";
   const extras = card.state === "adjust" ? "" : card.extras.map((x, j) => {
     const body = x.choice === "-" ? esc(L("extraSkipped")) : x.choice ? esc(L("extraTaken", { item: x.choice, n: x.count }))
       : x.choices.map((c) => `<button type="button" data-loot="extra" data-j="${j}" data-c="${esc(c)}">${esc(c)} ×${x.count}</button>`).join("")
