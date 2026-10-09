@@ -929,3 +929,4 @@
 /* 선언형 스킬 자동 사용 토글(단계 8) */
 .nssq .nq-auto { font-size: 0.8em; padding: 0 5px; border: 1px solid currentColor; border-radius: 8px; opacity: 0.55; white-space: nowrap; }
 .nssq .nq-auto.on { opacity: 1; color: #e2a400; }
+.nssq .nq-gm { font-size: 0.8em; padding: 0 5px; border-radius: 8px; background: rgba(150, 60, 60, 0.18); white-space: nowrap; }

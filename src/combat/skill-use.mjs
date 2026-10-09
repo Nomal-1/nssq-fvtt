@@ -25,6 +25,8 @@ import { decorateReactions, hasPendingReaction, pendingReaction } from "./reacti
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.SkillUse.${k}`, d) : game.i18n.localize(`NSSQ.SkillUse.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+// 상태 이상은 [독], 봉인은 이름 그대로([팔] 봉인)
+const condLabel = (id) => (CONDITIONS[id]?.kind === "bind" ? conditionName(id) : `[${conditionName(id)}]`);
 const alive = (c) => !!c.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
 
 /* ---------------- 대상 ---------------- */
@@ -37,7 +39,7 @@ const alive = (c) => !!c.actor && !c.defeated && (c.actor.system.hp?.value ?? 0)
 export function targetSpec(text = "", effects = null) {
   // 데이터의 대상 지정(type "target")이 있으면 그것을(대상 칸이 「특수」인 스킬 등)
   const o = (effects ?? []).find((e) => e?.type === "target");
-  if (o) return { side: o.side ?? "enemy", scope: o.scope ?? "single", ...(o.count ? { count: o.count } : {}), ...(o.row ? { row: o.row } : {}) };
+  if (o) return { side: o.side ?? "enemy", scope: o.scope ?? "single", ...(o.count ? { count: o.count } : {}), ...(o.row ? { row: o.row } : {}), ...(o.excludeSelf ? { excludeSelf: true } : {}) };
   const t = String(text);
   if (/자신/.test(t) && !/아군|적/.test(t)) return { side: "self", scope: "single" };
   const side = /아군/.test(t) ? "ally" : "enemy";
@@ -74,7 +76,8 @@ export function candidates(combat, user, spec, range, { allowKO = false } = {}) 
   const me = user.actor;
   const row = me.system.row ?? "front";
   return combat.combatants.filter((c) => (alive(c) || (allowKO && spec.side === "ally" && !!c.actor)) && (spec.side === "ally" ? friendly(c.actor, me) : !friendly(c.actor, me)))
-    .filter((c) => spec.side === "ally" || range === "-" || !range || inRange(range, row, c.actor.system.row ?? "front"));
+    .filter((c) => spec.side === "ally" || range === "-" || !range || inRange(range, row, c.actor.system.row ?? "front"))
+    .filter((c) => !(spec.excludeSelf && c.id === user.id));
 }
 
 /* ---------------- 목록 ---------------- */
@@ -281,12 +284,14 @@ async function rollWith(rolls, n) {
 const combatantOf = (actor) => game.combat?.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor.uuid) ?? null;
 
 /** 실행: 코스트 → 발동·효과 해석 → 결과 카드 */
-export async function executeAction(combat, combatant, kind, id, targetCombatants, { variant = null, late = false, declares = [], choices = [] } = {}) {
+export async function executeAction(combat, combatant, kind, id, targetCombatants, { variant = null, late = false, declares = [], choices = [], free = false } = {}) {
   const actor = combatant.actor;
   const item = actor.items.get(id);
   if (!item) return null;
   const sys = item.system;
   const phase = combat.getFlag("nssq", "phase");
+  // 《끝없는 원무곡》으로 다시 행동하는 차례는 후발 행동 취급
+  if (combat.getFlag("nssq", "bonusTurn") === combatant.id) late = true;
   const effects = variantEffects(sys.effects ?? [], variant);
   // 후발 행동 주행동 스킬: 메인 페이즈에 쓰면 예약만(모든 전투원 행동 뒤 실행, combat/late.mjs)
   // 《에테르 압축》: 그 턴 그 분류(술식)의 공격도 후발(이번 턴 효과 flag lateCategory)
@@ -297,7 +302,7 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   }
   // 코스트 지불(아이템은 수량 −1). 발동에 실패해도 소모(07 #9)
   const upd = {};
-  if (kind === "skill") {
+  if (kind === "skill" && !free) {
     // 《명군의 재능》으로 개막 페이즈에 쓰는 주행동 스킬: 그 스킬의 코스트도
     const early = phase === "opening" && sys.timing === "주행동" ? skillFlag(actor, "openingCategory") : null;
     const extra = early && sys.category === early.value ? { ...(early.item.system.cost ?? {}) } : {};
@@ -308,9 +313,12 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
     if (tp) upd["system.tp.value"] = Math.max(0, (actor.system.tp?.value ?? 0) - tp);
     if (fp) upd["system.fp.value"] = Math.max(0, (actor.system.fp?.value ?? 0) - fp);
     if (Object.keys(upd).length) await actor.update(upd);
-  } else {
+  } else if (kind !== "skill") {
     await item.update({ "system.quantity": Math.max(0, (sys.quantity ?? 1) - 1) });
   }
+  // 《최종 결전의 군가》: 그 분류의 주행동 스킬 여러 개를 TP 없이 한 번에
+  const multi = kind === "skill" ? effects.find((e) => e?.type === "multiUse") : null;
+  if (multi) return useMulti(combat, combatant, item, multi, late);
   // 토큰 배치(소환수·방진): 그 효과만 있는 스킬이면 카드는 배치 안내뿐(combat/tokens.mjs)
   if (combat.started && tokenEffectOf(effects).length) {
     await placeTokens(combat, combatant, item, variant);
@@ -335,6 +343,35 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   // 개막 페이즈에 쓴 스킬은 그 전투원의 개막 행동
   if (combat.getFlag("nssq", "phase") === "opening") await combatant.setFlag("nssq", "opening", "skill");
   return message;
+}
+
+/** 《최종 결전의 군가》: 고른 스킬(최대 count개, 대상이 자신·전체인 것)을 코스트 없이 차례로 */
+async function useMulti(combat, combatant, item, { category, count = 3 }, late) {
+  const actor = combatant.actor;
+  const user = unitProfile(actor, combatant);
+  const list = actor.items.filter((i) => i.type === "skill" && i.id !== item.id && i.system.timing === "주행동" && i.system.category === category && (i.system.sl ?? 0) > 0)
+    .filter((i) => { const sp = targetSpec(i.system.target, i.system.effects); return !sp.unknown && (sp.side === "self" || sp.scope === "all"); })
+    .filter((i) => canUseSkill({ ...i.system, cost: {} }, user, { phase: "main", myTurn: true }).ok);
+  if (!list.length) return ui.notifications.warn(L("multiNone")) && null;
+  const n = Math.max(1, Number(count) || 3);
+  const boxes = list.map((i, k) => `<label class="choice"><input type="checkbox" name="c" value="${i.id}" ${k < n ? "checked" : ""}/> 《${esc(i.name)}》</label>`).join("");
+  const ids = await Dialog.prompt({
+    title: L("chooseTitle", { name: item.name }), content: `<p>${esc(L("multiHint", { n }))}</p><form class="nssq-choices">${boxes}</form>`, label: L("chooseGo"), rejectClose: false,
+    callback: (html) => [...(html[0] ?? html).querySelectorAll("input[name=c]:checked")].map((x) => x.value).slice(0, n)
+  }, { classes: ["nssq", "dialog"] });
+  if (!ids?.length) return null;
+  await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-combat-note"><i class="fas fa-music"></i> ${esc(L("multiUsed", { name: combatant.name, skill: item.name, list: ids.map((x) => `《${actor.items.get(x)?.name}》`).join("") }))}</div>` });
+  let first = null;
+  for (const id of ids) {
+    const it = actor.items.get(id);
+    const sp = turnScope(combatant, it, targetSpec(it.system.target, it.system.effects));
+    const targets = sp.side === "self" ? [combatant] : candidates(combat, combatant, sp, it.system.range, { allowKO: revives(it) });
+    if (!targets.length) continue;
+    const m = await executeAction(combat, combatant, "skill", id, targets, { free: true, late });
+    first ??= m;
+  }
+  if (combat.getFlag("nssq", "phase") === "opening") await combatant.setFlag("nssq", "opening", "skill");
+  return first;
 }
 
 /**
@@ -406,6 +443,11 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
       const extraN = r.results.get(t.id)?.extraAction;
       if (extraN && units[i].combatant) await units[i].combatant.setFlag("nssq", "extraAction", (units[i].combatant.getFlag("nssq", "extraAction") ?? 0) + extraN);
     }
+  }
+  // 《끝없는 원무곡》: 대상 아군이 후발 행동 취급으로 다시 행동(메인 페이즈 끝, documents/combat.mjs afterLate)
+  if (!r.failed && combatant?.combat) {
+    const add = units.filter((u, i) => u.combatant && r.results.get(targets[i].id)?.bonusTurn).map((u) => u.combatant.id);
+    if (add.length) await combatant.combat.setFlag("nssq", "bonusTurns", [...(combatant.combat.getFlag("nssq", "bonusTurns") ?? []), ...add]);
   }
   // 토큰 1개 소멸(《비스트 귀환》·《파진》)
   const tr = r.results.get(user.id)?.tokenRemove;
@@ -604,7 +646,7 @@ function entryLines(e, card) {
   const rollText = (i) => (i.contest ? esc(L("contestRoll", { atk: "\u0001", def: "\u0002" })).replace("\u0001", chk(i.contest.atk)).replace("\u0002", chk(i.contest.def, "target"))
     : i.fixed ? esc(L("fixedRoll", { def: "\u0002", target: i.fixed.target })).replace("\u0002", chk(i.fixed.check, "target"))
       : i.forced ? esc(L("forcedRoll", { atk: "\u0001" })).replace("\u0001", chk(i.forced.atk)) : "");
-  const inflictLi = (i) => `<li class="${i.resisted || i.broken ? "resist" : "inflict"}">${esc(i.resisted ? L("inflictResisted", { label: conditionName(i.id) }) : i.id === "death" || CONDITIONS[i.id]?.depth === false ? `[${conditionName(i.id)}]` : L("inflictLine", { label: conditionName(i.id), depth: i.depth ?? "-" }))}${i.broken ? ` <em class="woke">${esc(L("brokenAt", { n: i.broken }))}</em>` : ""}${rollText(i) ? `<div class="supp-roll">${rollText(i)}</div>` : ""}</li>`;
+  const inflictLi = (i) => `<li class="${i.resisted || i.broken ? "resist" : "inflict"}">${esc(i.resisted ? L("inflictResisted", { label: condLabel(i.id) }) : i.id === "death" || CONDITIONS[i.id]?.depth === false ? condLabel(i.id) : L("inflictLine", { label: condLabel(i.id), depth: i.depth ?? "-" }))}${i.broken ? ` <em class="woke">${esc(L("brokenAt", { n: i.broken }))}</em>` : ""}${rollText(i) ? `<div class="supp-roll">${rollText(i)}</div>` : ""}</li>`;
   const buffLi = (b) => `<li class="${BUFFS[b.id]?.kind ?? "buff"}">${esc(L("buffLine", { label: buffLabel(b), turns: b.turns }))}</li>`;
   const chanceLi = (x) => `<li class="miss">${esc(L("chanceFailed", { die: x.die }))}</li>`;
   const sub = (seq) => [
@@ -649,7 +691,7 @@ function entryLines(e, card) {
   if (e.command) out.push(`<li class="state">${esc(L(`command.${e.command}`))}</li>`);
   for (const x of e.resource ?? []) {
     if (x.noEffect) out.push(`<li class="miss">${esc(L("noEffect"))}</li>`);
-    if (x.spread) out.push(`<li class="${x.spread.won ? "inflict" : "resist"}">${esc(L(x.spread.won ? "spreadWon" : "spreadLost", { label: x.spread.ids.map((id) => `[${conditionName(id)}]`).join("") || "-" }))}<div class="supp-roll">${rollText({ contest: x.spread })}</div></li>`);
+    if (x.spread) out.push(`<li class="${x.spread.won ? "inflict" : "resist"}">${esc(L(x.spread.won ? "spreadWon" : "spreadLost", { label: x.spread.ids.map(condLabel).join("") || "-" }))}<div class="supp-roll">${rollText({ contest: x.spread })}</div></li>`);
   }
   for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}${c.count !== undefined ? ` ${esc(L("cureCount", { n: c.count }))}` : ""}</li>`);
   for (const x of e.resource ?? []) if (x.chanceFailed && !x.seq) out.push(chanceLi(x));

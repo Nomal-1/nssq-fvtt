@@ -31,6 +31,7 @@ import { attackerFromContext, normalAttack, registerAttackHooks } from "./combat
 import { registerTracker, rollEscape } from "./combat/tracker.mjs";
 import { registerFormation } from "./combat/formation.mjs";
 import { registerHud } from "./combat/hud.mjs";
+import { registerSpecial } from "./combat/special.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
 import { createPreset, openEndDialog, openStartDialog, registerBattle } from "./apps/battle.mjs";
 
@@ -93,6 +94,7 @@ Hooks.once("init", () => {
   registerBattle();
   registerFormation();
   registerHud();
+  registerSpecial();
   registerEnemyLibrary();
   // 매크로·모듈용 API
   game.nssq = {

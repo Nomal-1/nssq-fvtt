@@ -1026,8 +1026,8 @@
    "sl": 1,
    "description": "<p>춤이 보이는 범위의 모두에게 강한 관심을 일으켜 주목을 끈다. 5분 정도 계속 보고 있던 상대에게만 유효하며, 원칙적으로 전투 중 사용 불가.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "전투 밖 연출(5분 이상 본 상대의 주목): GM이 처리"
+   "review": "gm",
+   "effectsNote": "전투 밖 연출(5분 이상 본 상대의 주목)"
   },
   "_meta": {
    "className": "댄서"

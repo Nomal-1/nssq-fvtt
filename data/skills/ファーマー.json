@@ -211,9 +211,12 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 메인 페이즈에 아직 행동하지 않은 상태에서 대상 '단일' 공격 롤의 대상이 되었을 때 선언. 그 공격의 대상을 원하는 아군 1명으로 바꾼다. 대신 자신은 그 턴 메인 페이즈의 주행동 권리를 잃는다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "메인 행동 전에 단일 공격의 대상이 되면 선언, 대상을 원하는 아군 1명으로: GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "redirectAlly"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -822,8 +825,8 @@
    "sl": 1,
    "description": "<p>약 5분간 늪 등 발이 묶이는 지형의 영향을 무시.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "약 5분간 늪 등 발이 묶이는 지형 무시: GM이 처리"
+   "review": "gm",
+   "effectsNote": "약 5분간 늪 등 발이 묶이는 지형 무시"
   },
   "_meta": {
    "className": "농부"

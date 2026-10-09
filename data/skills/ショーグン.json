@@ -1204,8 +1204,8 @@
    "sl": 1,
    "description": "<p>말이 통하는 NPC와 【TEC】 대항 판정, 이기면 그 NPC의 대화·행동을 일시적으로 중지시킨다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "NPC와 【TEC】 대항 판정, 이기면 대화·행동을 일시 중지: GM이 처리"
+   "review": "gm",
+   "effectsNote": "NPC와 【TEC】 대항 판정, 이기면 대화·행동을 일시 중지"
   },
   "_meta": {
    "className": "장군"

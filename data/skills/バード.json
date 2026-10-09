@@ -29,9 +29,19 @@
    "variants": [],
    "sl": 1,
    "description": "<p>타이밍 『주행동』이면서 종별 『주가』인 스킬을 최대 3개까지, 한 번의 행동으로 일제히 사용할 수 있다. 이때, TP는 소비하지 않는다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "『주가』 주행동 스킬 최대 3개를 한 번에(TP 없이): 스킬을 하나씩 쓰고 GM이 TP를 돌려줌(단계 8)"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "multiUse",
+     "category": "주가",
+     "count": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "바드"
@@ -717,9 +727,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>이 스킬은 후발 행동으로 사용한다. 메인 페이즈 행동을 마친 아군 한 명을, 후발 행동 취급으로 다시 행동하게 할 수 있다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "후발 행동으로, 메인 행동을 마친 아군 한 명이 후발 취급으로 다시 행동: GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "target",
+     "side": "ally",
+     "scope": "single",
+     "excludeSelf": true
+    },
+    {
+     "type": "actionTiming",
+     "value": "last"
+    },
+    {
+     "type": "grantLateAction"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "바드"
@@ -761,7 +784,7 @@
    "sl": 1,
    "description": "<p>소리가 들리는 범위의 전원에게 강한 호기심을 품게 하여, 주목을 모을 수 있다. 단, 5분 정도 계속해서 듣고 있는 상대에게만 효과가 있으며, 원칙적으로 전투 중에는 사용할 수 없다.</p>",
    "effects": [],
-   "review": "partial",
+   "review": "gm",
    "effectsNote": "전투 밖 연출(5분 이상 들은 상대): 주목을 모음. GM이 처리"
   },
   "_meta": {
@@ -804,7 +827,7 @@
    "sl": 1,
    "description": "<p>소리가 들리는 범위의 전원에게 우호적인 감정을 품게 할 수 있다. 단, 5분 정도 계속해서 듣고 있는 상대에게만 효과가 있으며, 원칙적으로 전투 중에는 사용할 수 없다.</p>",
    "effects": [],
-   "review": "partial",
+   "review": "gm",
    "effectsNote": "전투 밖 연출(5분 이상 들은 상대): 우호적인 감정. GM이 처리"
   },
   "_meta": {
@@ -847,7 +870,7 @@
    "sl": 1,
    "description": "<p>소리가 들리는 범위의 전원에게 강한 졸음을 느끼게 할 수 있다. 단, 5분 정도 계속해서 듣고 있는 상대에게만 효과가 있으며, 원칙적으로 전투 중에는 사용할 수 없다.</p>",
    "effects": [],
-   "review": "partial",
+   "review": "gm",
    "effectsNote": "전투 밖 연출(5분 이상 들은 상대): 강한 졸음. GM이 처리"
   },
   "_meta": {

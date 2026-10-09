@@ -819,8 +819,8 @@
    "sl": 1,
    "description": "<p>어둠 속에서도 시야 불이익을 받지 않는다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "어둠 속 시야 불이익 없음: 탐색·GM이 처리"
+   "review": "gm",
+   "effectsNote": "어둠 속 시야 불이익 없음"
   },
   "_meta": {
    "className": "발리스타"

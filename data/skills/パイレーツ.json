@@ -1118,8 +1118,8 @@
    "sl": 1,
    "description": "<p>물에 빠져 익사하지 않는다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "물에 빠져도 익사하지 않음: GM이 처리"
+   "review": "gm",
+   "effectsNote": "물에 빠져도 익사하지 않음"
   },
   "_meta": {
    "className": "파이리츠"

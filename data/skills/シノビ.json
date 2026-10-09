@@ -1032,8 +1032,8 @@
    "sl": 1,
    "description": "<p>물 위를 걸을 수 있다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "물 위를 걷는다: GM이 처리"
+   "review": "gm",
+   "effectsNote": "물 위를 걷는다"
   },
   "_meta": {
    "className": "시노비"
@@ -1070,8 +1070,8 @@
    "sl": 1,
    "description": "<p>시간 제한 없이 물속에 잠수해 있을 수 있다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "시간 제한 없이 잠수: GM이 처리"
+   "review": "gm",
+   "effectsNote": "시간 제한 없이 잠수"
   },
   "_meta": {
    "className": "시노비"
@@ -1108,8 +1108,8 @@
    "sl": 1,
    "description": "<p>높은 곳에서 뛰어내려도 다치지 않는다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "높은 곳에서 뛰어내려도 다치지 않음: GM이 처리"
+   "review": "gm",
+   "effectsNote": "높은 곳에서 뛰어내려도 다치지 않음"
   },
   "_meta": {
    "className": "시노비"

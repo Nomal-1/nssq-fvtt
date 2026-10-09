@@ -130,6 +130,11 @@ export class NssqCombat extends Combat {
         return this.update({ turn: first });
       }
       case "main": {
+        // 《끝없는 원무곡》으로 다시 행동한 차례가 끝남 → 다음 다시 행동 또는 종료 페이즈
+        if (this.getFlag("nssq", "bonusTurn")) {
+          await this.unsetFlag("nssq", "bonusTurn");
+          return this.afterLate();
+        }
         // 「그 턴 주행동 2회」(《인법: 분신》): 같은 전투원이 한 번 더
         const cur = this.combatant;
         const extra = Number(cur?.getFlag("nssq", "extraAction") ?? 0);
@@ -154,6 +159,23 @@ export class NssqCombat extends Combat {
   async endMain() {
     await this.update({ turn: null });
     await runLateActions(this);
+    return this.afterLate();
+  }
+
+  /** 후발 행동 뒤: 《끝없는 원무곡》으로 다시 행동할 전투원이 있으면 그 차례(후발 행동 취급), 없으면 종료 페이즈 */
+  async afterLate() {
+    const queue = [...(this.getFlag("nssq", "bonusTurns") ?? [])];
+    while (queue.length) {
+      const id = queue.shift();
+      const c = this.combatants.get(id);
+      const idx = this.turns.findIndex((x) => x.id === id);
+      // 이미 행동한 아군이 대상이므로 acted·대기는 보지 않는다(쓰러짐·행동 불가만)
+      if (!c || idx < 0 || c.defeated || (c.actor?.system.hp?.value ?? 0) <= 0 || actionState(c).noAction) continue;
+      await this.update({ turn: idx, "flags.nssq.bonusTurns": queue, "flags.nssq.bonusTurn": id });
+      await ChatMessage.create({ speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") }, content: `<div class="nssq-combat-note"><i class="fas fa-redo"></i> ${game.i18n.format("NSSQ.Late.bonusTurn", { name: c.name })}</div>` });
+      return this;
+    }
+    await this.update({ "flags.nssq.-=bonusTurns": null, "flags.nssq.-=bonusTurn": null });
     return this.setPhase("end", { turn: null });
   }
 

@@ -16,7 +16,7 @@ import { activationRoll } from "./usage.mjs";
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies", "multiUse", "redirectAlly", "anytime"];
 
 /** custom 핸들러 등록부: name → (ctx) => 결과 조각 */
 const CUSTOM = new Map();
@@ -338,6 +338,10 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       case "extraAction":
         // 「그 턴, 주행동을 2회」(《인법: 분신》): 이번 턴 추가 주행동 수(전투원 플래그 extraAction, 호출자가 반영)
         r.extraAction = (r.extraAction ?? 0) + Math.max(1, evaluate(e.count ?? 1, vars(t)));
+        return;
+      case "grantLateAction":
+        // 《끝없는 원무곡》: 대상이 후발 행동 취급으로 다시 행동(호출자가 전투 플래그로)
+        r.bonusTurn = true;
         return;
       case "actionTiming":
         // 「최속/후발 행동」: 이번 턴 행동 순서(전투원 플래그 timing, 호출자가 반영)

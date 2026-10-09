@@ -101,6 +101,10 @@
 | `command` | `mode` | (`when: {targetDisabled: "fear"}`와 함께) 《명하노니》: `stop`(안내만)·`enemyAttack`(다른 에너미를 통상 공격)·`selfAttack`(자신을 통상 공격). 결과를 적용할 때 실행 |
 | `spreadAilment` | `from`, `count`, `check` | 상태 이상 옮기기. 기본: 대결에서 이기면 대상의 상태 이상을 같은 열의 다른 적에게(《인법: 수경》). `from: "self"`: 자신의 상태 이상 최대 count개를 대상에게(《전화위복》) |
 | `emitImbue` | `kind` | 대상의 『속성 부여』를 해제하고 그 속성으로 적 전체 공격(《이밋 웨펀》) |
+| `multiUse` | `category`, `count` | 그 분류의 주행동 스킬 최대 count개를 TP 없이 한 번에(《최종 결전의 군가》, 고르는 창) |
+| `grantLateAction` | | 대상 아군이 후발 행동 뒤 한 번 더 행동(《끝없는 원무곡》, 전투 플래그 `bonusTurns`) |
+| `redirectAlly` | | (수동) 아직 행동 전에 단일 대상 공격을 받으면 선언해 대상을 아군으로, 자신은 주행동을 잃는다(《모나야 맞을 수 있다》, combat/guard.mjs) |
+| `anytime` | `action`(swapRow/retarget), `skillKey` | 『특수』 스킬을 전투 중 아무 때나: 파티 카드 ★ 버튼(combat/special.mjs). swapRow 배치 변경·맞바꾸기(《체인지 스텝》), retarget 그 대기 상태의 대상 바꾸기(《디바이드 체인지》) |
 | `flag` | `flag`, `value` | 규칙 스위치(타이밍 「상시」). `itemRevive`: 그 캐릭터가 쓰는 HP 회복 아이템에 부활 효과(《간이 소생》), `tokenMax`: 『소환수』 토큰 동시 유지 수(《백수의 왕기》), `campCookHp`·`campCookTp`·`campCookCure`: 캠프 때 HP·TP 회복 2배·상태 이상 회복(커먼 요리 스킬, 『조리기구 세트』 필요) |
 | `custom` | `handler` | 스키마 밖. `src/engine/custom/<handler>.mjs` |
 | `activeEvade` | `ability`(str/tec/vit/agi/luc), `bonus`, `vs`(physical/elemental, 생략 시 둘 다) | 타이밍 「수동」: 능동 회피. 대상 2D6+능력치 보너스+bonus vs 공격자 명중 달성값, 동점 회피(07 #51) |
@@ -168,6 +172,7 @@
 1. 변환기가 만든 `data/skills/*.json`에는 `effects: []`, `review: "todo"`가 들어 있다.
 2. 클래스 단위로 effects를 채운다. 자동으로 채운 것은 `review: "auto"`, 사람이 확인한 것은 `"ok"`.
 2-1. 규칙상 효과가 없는 것(로프·물통 같은 설명용 도구, 식료품)은 `review: "none"`, effects는 빈 배열.
+2-2. 전투 밖 연출·지형·NPC 반응처럼 자동화할 수 없어 **GM 개입이 반드시 필요한 것**은 `review: "gm"`, `effectsNote`에 GM이 할 일. 캐릭터 시트 스킬 줄에 「GM」 표시가 붙는다(리포트 「gm」 절).
 3. 완전히 표현하지 못하면 가능한 만큼 쓰고 `review: "partial"`, `effectsNote: "남은 처리 설명"`을 남긴다. 런타임에서는 채팅 카드에 「GM 판단 필요: …」로 표시한다.
 4. 커밋은 클래스 하나씩. `build/report.md`에 클래스별 todo/auto/partial/ok 수를 집계한다.
 5. 에너미 스킬(66종 페이지의 스킬 목록), 아이템, 장식, 제련도 같은 방식으로.

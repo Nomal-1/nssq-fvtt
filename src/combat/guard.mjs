@@ -30,6 +30,8 @@ export async function guardAttack({ attacker, targets, kind, elements, single, n
   if (!combat?.started || !targets.length) return pass(targets);
   const me = combat.combatants.find((c) => c.actor?.uuid === attacker.uuid);
   if (!me) return pass(targets);
+  // 《모나야 맞을 수 있다》: 단일 대상이 된 쪽이 아직 행동 전이면 원하는 아군에게 넘긴다
+  if (single && targets.length === 1 && !noRedirect) targets = await redirectAlly(combat, me, targets);
   const units = combat.combatants.filter((c) => c.actor).map((c) => ({
     id: c.id, side: unitSide(c.actor), row: c.actor.system.row ?? "front",
     // 행동 불가면 대기 상태는 이미 풀려 있다. 토큰의 방어(《부정형 생물》)는 배치자가 살아 있으면 그대로
@@ -95,4 +97,40 @@ export async function guardAttack({ attacker, targets, kind, elements, single, n
       await ChatMessage.create({ speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") }, content: `<div class="nssq-combat-note"><i class="fas fa-shield-alt"></i> ${lines.map(esc).join("<br>")}</div>` });
     }
   };
+}
+
+/**
+ * 수동 redirectAlly(농부 《모나야 맞을 수 있다》): 그 턴 메인 페이즈에 아직 행동하지 않았으면 선언,
+ * 공격 대상을 고른 아군 1명으로 바꾸고 자신은 그 턴 주행동 권리를 잃는다(전투원 플래그 acted)
+ */
+async function redirectAlly(combat, attackerC, targets) {
+  const t = targets[0];
+  const actor = t?.actor;
+  if (!actor || !alive(t) || unitSide(actor) === unitSide(attackerC.actor) || actionState(t).noAction) return targets;
+  const sk = actor.items.find((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "redirectAlly"));
+  if (!sk) return targets;
+  const phase = combat.getFlag("nssq", "phase");
+  const notYet = phase === "opening" || (phase === "main" && !t.getFlag("nssq", "acted") && combat.turns.findIndex((c) => c.id === t.id) > (combat.turn ?? -1));
+  const cost = sk.system.cost ?? {};
+  if (!notYet || (cost.tp ?? 0) > (actor.system.tp?.value ?? 0) || (cost.fp ?? 0) > (actor.system.fp?.value ?? 0) || !actor.isOwner) return targets;
+  const allies = combat.combatants.filter((c) => c !== t && alive(c) && unitSide(c.actor) === unitSide(actor) && c.actor.type !== "token");
+  if (!allies.length) return targets;
+  const pick = await Dialog.wait({
+    title: `${t.name} — 《${sk.name}》`,
+    content: `<p>${esc(L("redirectAsk", { target: t.name, attacker: attackerC.name, skill: `《${sk.name}》` }))}</p><form><select name="who">${allies.map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select></form>`,
+    buttons: {
+      use: { label: L("redirectUse"), callback: (html) => html[0].querySelector("[name=who]").value },
+      no: { label: L("redirectNo"), callback: () => null }
+    },
+    default: "no", close: () => null
+  }, { classes: ["nssq", "dialog"] });
+  const to = pick && combat.combatants.get(pick);
+  if (!to) return targets;
+  const upd = {};
+  if (cost.tp) upd["system.tp.value"] = actor.system.tp.value - cost.tp;
+  if (cost.fp) upd["system.fp.value"] = actor.system.fp.value - cost.fp;
+  if (Object.keys(upd).length) await actor.update(upd);
+  await t.setFlag("nssq", "acted", true);
+  await ChatMessage.create({ speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") }, content: `<div class="nssq-combat-note"><i class="fas fa-shield-alt"></i> ${esc(L("redirectAlly", { skill: `《${sk.name}》`, holder: t.name, to: to.name }))}</div>` });
+  return [to];
 }

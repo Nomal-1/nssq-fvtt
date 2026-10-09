@@ -14,6 +14,7 @@ import { combatProfile, friendly, sideOf } from "./profile.mjs";
 import { changePosition, shuffleRowsDialog } from "./formation.mjs";
 import { joinBattle, openEndDialog } from "../apps/battle.mjs";
 import { rollEscape, setIdentified, swapWeapon, toggleGuard, toggleRow } from "./tracker.mjs";
+import { anytimeSkills, useAnytime } from "./special.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { autoApplyMode, isActiveGM, requestApply } from "./apply.mjs";
 import { enemyArtFor } from "../apps/enemy-art.mjs";
@@ -299,7 +300,7 @@ function partyCard(c, combat, targetable) {
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
       <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) + `<div class="nb-fp" title="FP"><b>FP</b><span>${s.fp?.value ?? 0}</span></div>` : ""}</div>
     </div>
-    <span class="nb-member-tools">${a.isOwner ? `<a data-tool="sheet" title="${esc(L("openSheet"))}"><i class="fas fa-id-card"></i></a>` : ""}${game.user.isGM ? `<a data-tool="status" title="${esc(game.i18n.localize("NSSQ.Conditions.button"))}"><i class="fas fa-heartbeat"></i></a>` : ""}</span>
+    <span class="nb-member-tools">${a.isOwner && combat.started && !isKO(c) ? anytimeSkills(a).map((i) => `<a data-tool="special" data-item="${i.id}" title="${esc(`《${i.name}》`)}"><i class="fas fa-star"></i></a>`).join("") : ""}${a.isOwner ? `<a data-tool="sheet" title="${esc(L("openSheet"))}"><i class="fas fa-id-card"></i></a>` : ""}${game.user.isGM ? `<a data-tool="status" title="${esc(game.i18n.localize("NSSQ.Conditions.button"))}"><i class="fas fa-heartbeat"></i></a>` : ""}</span>
   </div>`;
 }
 
@@ -688,6 +689,7 @@ function bindClicks(el) {
     if ((t = hit(".nb-member [data-tool]"))) {
       const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
       if (t.dataset.tool === "sheet") return c?.actor?.sheet.render(true);
+      if (t.dataset.tool === "special") return useAnytime(combat, c, t.dataset.item);
       return StatusApp.open(c?.actor);
     }
     // 대상 고르기(공격 중) / 그 밖에는 시트 열기(권한이 있을 때)

@@ -1202,8 +1202,8 @@
    "sl": 1,
    "description": "<p>약 5분간 용암·바늘산 등의 위를 대미지 없이 걸을 수 있다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "탐색: 약 5분간 용암·바늘산 위를 대미지 없이(단계 9·GM)"
+   "review": "gm",
+   "effectsNote": "탐색: 약 5분간 용암·바늘산 위를 대미지 없이"
   },
   "_meta": {
    "className": "몽크"

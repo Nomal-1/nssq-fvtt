@@ -19,6 +19,10 @@ export const TYPES = {
   spreadAilment: { from: false, count: false, check: false },
   emitImbue: { kind: false },
   requireSelf: { when: true },
+  multiUse: { category: true, count: false },
+  grantLateAction: {},
+  redirectAlly: {},
+  anytime: { action: true, skillKey: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },
   debuff: { id: true, value: false, turns: false, param: false },
@@ -171,6 +175,7 @@ export function checkAll() {
   const errors = [];
   const counts = new Map();
   const partial = [];
+  const gm = [];
   const stage8 = [];
   // 같은 이름의 스킬(여러 클래스의 《HP 부스트》 등)은 해설이 같으면 effects도 같아야 한다
   const byName = new Map();
@@ -184,7 +189,7 @@ export function checkAll() {
     }
     const where = `${group} 《${name}》`;
     const review = holder.review ?? (holder.effects?.length ? "auto" : "todo");
-    const c = counts.get(group) ?? { todo: 0, auto: 0, partial: 0, ok: 0, none: 0 };
+    const c = counts.get(group) ?? { todo: 0, auto: 0, partial: 0, ok: 0, none: 0, gm: 0 };
     c[review] = (c[review] ?? 0) + 1;
     counts.set(group, c);
     checkEffects(holder.effects ?? [], where, errors);
@@ -193,25 +198,31 @@ export function checkAll() {
       if (!holder.effectsNote) errors.push(`${where}: partial인데 effectsNote가 없다`);
       partial.push(`${where}: ${holder.effectsNote ?? ""}`);
     }
+    // gm: 자동화할 수 없어 GM 개입이 반드시 필요한 것(전투 밖 연출·지형 등). effectsNote가 GM이 할 일
+    if (review === "gm") {
+      if (!holder.effectsNote) errors.push(`${where}: gm인데 effectsNote가 없다`);
+      gm.push(`${where}: ${holder.effectsNote ?? ""}`);
+    }
     if (review === "none" && (holder.effects ?? []).length) errors.push(`${where}: none인데 effects가 있다`);
     if (["ok", "auto"].includes(review) && !(holder.effects ?? []).length) errors.push(`${where}: ${review}인데 effects가 비었다`);
     if (usesStage8(holder.effects)) stage8.push(where);
   }
-  return { errors, counts, partial, stage8 };
+  return { errors, counts, partial, gm, stage8 };
 }
 
-export function reportMarkdown({ errors, counts, partial, stage8 }) {
-  const total = { todo: 0, auto: 0, partial: 0, ok: 0, none: 0 };
+export function reportMarkdown({ errors, counts, partial, gm = [], stage8 }) {
+  const total = { todo: 0, auto: 0, partial: 0, ok: 0, none: 0, gm: 0 };
   const rows = [...counts].map(([g, c]) => {
     for (const k of Object.keys(total)) total[k] += c[k] ?? 0;
-    return `| ${g} | ${c.todo ?? 0} | ${c.auto ?? 0} | ${c.partial ?? 0} | ${c.ok ?? 0} | ${c.none ?? 0} |`;
+    return `| ${g} | ${c.todo ?? 0} | ${c.auto ?? 0} | ${c.partial ?? 0} | ${c.ok ?? 0} | ${c.none ?? 0} | ${c.gm ?? 0} |`;
   });
   return [
     "# 효과 데이터 리포트 (tools/effects-check.mjs)", "",
-    `오류 ${errors.length}건 · todo ${total.todo} · auto ${total.auto} · partial ${total.partial} · ok ${total.ok} · none(규칙상 효과 없음) ${total.none}`, "",
-    "| 묶음 | todo | auto | partial | ok | none |", "|---|---|---|---|---|---|", ...rows, "",
+    `오류 ${errors.length}건 · todo ${total.todo} · auto ${total.auto} · partial ${total.partial} · ok ${total.ok} · none(규칙상 효과 없음) ${total.none} · gm(GM 개입 필수) ${total.gm}`, "",
+    "| 묶음 | todo | auto | partial | ok | none | gm |", "|---|---|---|---|---|---|---|", ...rows, "",
     "## 오류", ...(errors.length ? errors.map((e) => `- ${e}`) : ["없음"]), "",
     "## partial (남은 처리)", ...(partial.length ? partial.map((e) => `- ${e}`) : ["없음"]), "",
+    "## gm (자동화 불가, GM 개입 필수)", ...(gm.length ? gm.map((e) => `- ${e}`) : ["없음"]), "",
     "## 단계 8 대기(트리거·대기 상태·지연·추격·반격·토큰)", ...(stage8.length ? stage8.map((e) => `- ${e}`) : ["없음"]), ""
   ].join("\n");
 }

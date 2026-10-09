@@ -1006,8 +1006,8 @@
    "sl": 1,
    "description": "<p>약 5분간 용암·바늘산 등의 위를 피해 없이 걸을 수 있다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "약 5분간 용암·바늘산 위를 피해 없이: GM이 처리"
+   "review": "gm",
+   "effectsNote": "약 5분간 용암·바늘산 위를 피해 없이"
   },
   "_meta": {
    "className": "미스틱"

@@ -348,9 +348,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>전투 중 원하는 타이밍에 자신의 배치를 전위↔후위로 바꿀 수 있으며, 이때 동료 1명과 자리를 맞바꿀 수도 있다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "전투 중 아무 때나 자신의 전위↔후위 교대(동료 1명과 맞바꾸기 가능): GM이 배치 변경으로 처리"
+   "effects": [
+    {
+     "type": "anytime",
+     "action": "swapRow"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"
@@ -391,9 +395,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《디바이드 가드》 대기 상태 중 원하는 타이밍에 그 대상을 바꿀 수 있다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "《디바이드 가드》 대기 중 아무 때나 대상 변경: GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "anytime",
+     "action": "retarget",
+     "skillKey": "ファランクス.ディバイドガード"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"

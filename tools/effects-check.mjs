@@ -12,7 +12,7 @@ fs.writeFileSync(path.join(ROOT, "build/effects-report.md"), reportMarkdown(resu
 
 const only = process.argv.slice(2);
 const errors = only.length ? result.errors.filter((e) => only.some((g) => e.startsWith(g))) : result.errors;
-for (const [g, c] of result.counts) if (!only.length || only.includes(g)) console.log(`${g}: todo ${c.todo ?? 0}, auto ${c.auto ?? 0}, partial ${c.partial ?? 0}, ok ${c.ok ?? 0}${c.none ? `, none ${c.none}` : ""}`);
+for (const [g, c] of result.counts) if (!only.length || only.includes(g)) console.log(`${g}: todo ${c.todo ?? 0}, auto ${c.auto ?? 0}, partial ${c.partial ?? 0}, ok ${c.ok ?? 0}${c.none ? `, none ${c.none}` : ""}${c.gm ? `, gm ${c.gm}` : ""}`);
 console.log(errors.length ? `오류 ${errors.length}건\n${errors.join("\n")}` : "오류 없음");
 console.log("→ build/effects-report.md");
 process.exit(errors.length ? 1 : 0);

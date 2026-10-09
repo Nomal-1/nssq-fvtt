@@ -1144,8 +1144,8 @@
    "sl": 1,
    "description": "<p>위치를 아는 상대에게 편지 1통을 보낸다. 도착 소요 시간은 GM이 정한다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "편지 1통 전달: GM이 처리"
+   "review": "gm",
+   "effectsNote": "편지 1통 전달"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -1235,8 +1235,8 @@
    "sl": 1,
    "description": "<p>사람보다 빠르게 달리는 탈것 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 빨리 달리기 등의 판정 +3.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "탈것 동물(빨리 달리기 판정 +3): GM이 처리"
+   "review": "gm",
+   "effectsNote": "탈것 동물(빨리 달리기 판정 +3)"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -1278,8 +1278,8 @@
    "sl": 1,
    "description": "<p>헤엄치는 탈것 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 수면 위를 이동 가능.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "수면 위 이동: GM이 처리"
+   "review": "gm",
+   "effectsNote": "수면 위 이동"
   },
   "_meta": {
    "className": "비스트 킹"
@@ -1321,8 +1321,8 @@
    "sl": 1,
    "description": "<p>저공 비행하는 탈것 동물이 동행. 동물이 들어갈 수 없는 장소가 아니면 저공으로 공중 이동 가능.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "저공 비행 이동: GM이 처리"
+   "review": "gm",
+   "effectsNote": "저공 비행 이동"
   },
   "_meta": {
    "className": "비스트 킹"

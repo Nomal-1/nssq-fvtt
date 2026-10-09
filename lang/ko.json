@@ -21,7 +21,16 @@
     "Edit": "편집",
     "Delete": "삭제",
     "NoItems": "아이템이 없다",
-    "Level": "Lv",
+    "Level": {
+      "label": "레벨",
+      "toNext": "레벨은 누적 경험점으로 정해진다. Lv{level}까지 {left} 남음(누적 {total})",
+      "max": "최고 레벨(Lv15)",
+      "setHint": "GM: 이 레벨로(경험점을 그 레벨의 누적 값으로 맞춘다)",
+      "setTitle": "{name}: 레벨 맞추기",
+      "setNote": "경험점이 그 레벨의 누적 값으로 바뀐다. 경험점 10마다 능력치 성장 1회가 생긴다.",
+      "apply": "맞추기",
+      "migrated": "레벨을 경험점 기준으로 바꿨다: 경험점이 레벨보다 적던 캐릭터 {n}명의 경험점을 그 레벨의 누적 값으로 맞췄다"
+    },
     "Exp": "경험점",
     "Opening": {
       "pass": "행동 안 함",
@@ -46,16 +55,6 @@
         "pass": "행동 안 함",
         "escape": "도주"
       }
-    },
-    "Level": {
-      "label": "레벨",
-      "toNext": "레벨은 누적 경험점으로 정해진다. Lv{level}까지 {left} 남음(누적 {total})",
-      "max": "최고 레벨(Lv15)",
-      "setHint": "GM: 이 레벨로(경험점을 그 레벨의 누적 값으로 맞춘다)",
-      "setTitle": "{name}: 레벨 맞추기",
-      "setNote": "경험점이 그 레벨의 누적 값으로 바뀐다. 경험점 10마다 능력치 성장 1회가 생긴다.",
-      "apply": "맞추기",
-      "migrated": "레벨을 경험점 기준으로 바꿨다: 경험점이 레벨보다 적던 캐릭터 {n}명의 경험점을 그 레벨의 누적 값으로 맞췄다"
     },
     "Money": "소지금(G)",
     "Rarity": "희소도",
@@ -723,7 +722,9 @@
       "sharedHint": "메인 클래스에도 있는 스킬: 메인 쪽 하나로 관리한다(SL 합산 불가, MaxSL은 메인 값). 여기서 눌러도 메인 스킬이 오르내린다",
       "bonus": "보너스 SL",
       "bonusHint": "GM이 보상으로 주는 스킬 포인트. 합계 SL에 더해진다",
-      "budgetBonus": "남은 SL {left} / {total} (보너스 +{bonus})"
+      "budgetBonus": "남은 SL {left} / {total} (보너스 +{bonus})",
+      "gm": "GM",
+      "gmHint": "자동화하지 않음, GM이 처리"
     },
     "Hud": {
       "attack": "공격",
@@ -1089,8 +1090,8 @@
       "damageTotal": "합계 대미지 {n}",
       "healHp": "【HP】 {n} 회복",
       "healTp": "【TP】 {n} 회복",
-      "inflictLine": "[{label}] (심도 {depth})",
-      "inflictResisted": "[{label}] — 막았다",
+      "inflictLine": "{label} (심도 {depth})",
+      "inflictResisted": "{label} — 막았다",
       "contestRoll": "억제 대결: 공격 {atk} / 방어 {def}",
       "fixedRoll": "억제 방어 {def} (목표값 {target})",
       "forcedRoll": "반드시 걸림 — 심도: 억제 공격 {atk}",
@@ -1147,7 +1148,10 @@
       "delayedChip": "지연: {name}",
       "delayedHint": "지연 공격 예약: {round}턴 {at}에 실행",
       "atLate": "메인 페이즈 끝(후발 행동)",
-      "atEnd": "종료 페이즈 처음"
+      "atEnd": "종료 페이즈 처음",
+      "multiNone": "함께 쓸 수 있는 스킬이 없다",
+      "multiHint": "최대 {n}개를 고른다(TP 소비 없음)",
+      "multiUsed": "{name}: 《{skill}》 — {list}"
     },
     "Guard": {
       "provoke": "{skill}({holder}): 공격 대상 {from} → {to}",
@@ -1160,7 +1164,11 @@
       "defense": "{skill}({holder}): {target}의 【방어】를 {n}(으)로",
       "resist": "{target}: 【내성】 {list}",
       "coverTitle": "대신 받기",
-      "coverAsk": "{holder}의 {skill}: {target} 대신 이 공격을 받는가?"
+      "coverAsk": "{holder}의 {skill}: {target} 대신 이 공격을 받는가?",
+      "redirectAsk": "{target}이(가) {attacker}의 공격 대상이 되었다. {skill}: 대상을 아군에게 넘길까?(그 턴 주행동을 잃는다)",
+      "redirectUse": "선언",
+      "redirectNo": "안 함",
+      "redirectAlly": "{skill}({holder}): 공격 대상을 {to}(으)로 바꿨다. {holder}는 그 턴 주행동을 할 수 없다"
     },
     "Event": {
       "noCost": "{name}: 코스트가 부족해 《{skill}》 사용 불가",
@@ -1209,7 +1217,8 @@
       "declared": "{name}: 《{skill}》 선언(최속 행동, 이번 턴 주행동)",
       "notDeclared": "{name}: 《{skill}》 선언 안 함",
       "waiting": "{name}: 《{skill}》 선언 여부 선택 대기",
-      "extraAction": "{name}: 두 번째 주행동"
+      "extraAction": "{name}: 두 번째 주행동",
+      "bonusTurn": "{name}: 《끝없는 원무곡》으로 다시 행동(후발 행동 취급)"
     },
     "Chase": {
       "run": "{type}: {name}",
@@ -1241,6 +1250,18 @@
       "evaded": "《{skill}》 능동 회피 {dice}+{mod} = {total} ≥ 명중 {vs} → 회피",
       "notEvaded": "《{skill}》 능동 회피 {dice}+{mod} = {total} < 명중 {vs} → 회피 실패",
       "nullified": "《{skill}》({name}): 이 공격의 대미지와 추가 효과를 모두 무효로 했다"
+    },
+    "Special": {
+      "noCost": "코스트가 부족하다",
+      "selfOnly": "자신만 전위↔후위",
+      "swapWith": "{name}({row})와 자리 맞바꾸기",
+      "go": "사용",
+      "noStance": "그 대기 상태가 아니다",
+      "noAlly": "바꿀 수 있는 아군이 없다",
+      "retargetHint": "《{skill}》의 대상을 고른다",
+      "moved": "《{skill}》: {name}의 배치를 바꿨다",
+      "swapped": "《{skill}》: {a}와 {b}의 자리를 맞바꿨다",
+      "retargeted": "《{skill}》: {name}의 대상을 {to}(으)로 바꿨다"
     }
   }
 }

@@ -1054,8 +1054,8 @@
    "sl": 1,
    "description": "<p>아이템을 하나 소멸시키고, 아이템 매매 규칙에 따른 판매가의 절반에 해당하는 G를 얻는다. 또한, 이 대상으로 할 수 있는 것은 GM이 허가하는 아이템에 한한다.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "GM이 허가한 아이템 하나를 소멸시키고 판매가 절반의 G: 상점·GM이 처리"
+   "review": "gm",
+   "effectsNote": "GM이 허가한 아이템 하나를 소멸시키고 판매가 절반의 G"
   },
   "_meta": {
    "className": "알케미스트"

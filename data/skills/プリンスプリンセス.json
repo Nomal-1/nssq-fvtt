@@ -1086,8 +1086,8 @@
    "sl": 1,
    "description": "<p>말이 통하는 NPC와 【TEC】에 의한 대항 판정을 하여, 이에 승리하면 어떠한 지시를 내려 따르게 할 수 있다. 단, 영속적인 내용이나 NPC 측에 전혀 이익이 없는 내용은 불가.</p>",
    "effects": [],
-   "review": "partial",
-   "effectsNote": "NPC와 【TEC】 대항 판정, 이기면 지시: GM이 처리"
+   "review": "gm",
+   "effectsNote": "NPC와 【TEC】 대항 판정, 이기면 지시"
   },
   "_meta": {
    "className": "프린스/프린세스"
