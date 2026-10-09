@@ -105,6 +105,10 @@
 | `grantLateAction` | | 대상 아군이 후발 행동 뒤 한 번 더 행동(《끝없는 원무곡》, 전투 플래그 `bonusTurns`) |
 | `redirectAlly` | | (수동) 아직 행동 전에 단일 대상 공격을 받으면 선언해 대상을 아군으로, 자신은 주행동을 잃는다(《모나야 맞을 수 있다》, combat/guard.mjs) |
 | `anytime` | `action`(swapRow/retarget), `skillKey` | 『특수』 스킬을 전투 중 아무 때나: 파티 카드 ★ 버튼(combat/special.mjs). swapRow 배치 변경·맞바꾸기(《체인지 스텝》), retarget 그 대기 상태의 대상 바꾸기(《디바이드 체인지》) |
+| `healFromDamage` | (`toSelf`와 함께) | 이 행동에서 대미지를 준 다이스 수(대상 합)만큼 아군 전체 【HP】 회복(《블랙 사바스》) |
+| `nextTurn` | `effects[]` | (`toSelf`와 함께) 다음 라운드에만 쓰는 「그 턴 동안」 효과(전투원 플래그 `nextTurn`, 《차지 에지》) |
+
+C1 보강: `recoil.to: "allies"`(자신 외 아군 전원, 《레기온 스러스트》), attack `ignoreBuffs`(["defenseUp", "resistUp:pierce"], 《실버 애로》)·`addTurnElements`(그 턴 나온 속성 부가, 《스피어 인볼브》), attackBonus `resistLow`(【내성】 1·2를 하나 낮춤, 《특이점 정리》), target `count`(단일이면 n명을 한 번에, 열이면 그 열에서 n체), when `targetNotBoss`(에너미 `isFOE`·`isBoss`).
 | `flag` | `flag`, `value` | 규칙 스위치(타이밍 「상시」). `itemRevive`: 그 캐릭터가 쓰는 HP 회복 아이템에 부활 효과(《간이 소생》), `tokenMax`: 『소환수』 토큰 동시 유지 수(《백수의 왕기》), `campCookHp`·`campCookTp`·`campCookCure`: 캠프 때 HP·TP 회복 2배·상태 이상 회복(커먼 요리 스킬, 『조리기구 세트』 필요) |
 | `custom` | `handler` | 스키마 밖. `src/engine/custom/<handler>.mjs` |
 | `activeEvade` | `ability`(str/tec/vit/agi/luc), `bonus`, `vs`(physical/elemental, 생략 시 둘 다) | 타이밍 「수동」: 능동 회피. 대상 2D6+능력치 보너스+bonus vs 공격자 명중 달성값, 동점 회피(07 #51) |

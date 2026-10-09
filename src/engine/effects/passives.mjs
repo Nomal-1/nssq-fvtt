@@ -23,7 +23,7 @@ export function collectPassives(skills, ctx = {}) {
     for (const e of s.effects ?? []) {
       if (e.type === "attackBonus") {
         const v = (x) => evaluate(x ?? 0, { SL: s.sl, self: ctx.self });
-        attackBonuses.push({ name: s.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod), critDice: v(e.critDice), critUp: !!e.critUp });
+        attackBonuses.push({ name: s.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod), critDice: v(e.critDice), critUp: !!e.critUp, resistLow: !!e.resistLow });
         continue;
       }
       if (e.type === "useBonus") {
@@ -71,13 +71,15 @@ export function collectConditionResist(skills) {
 export function sumAttackBonuses(list, ctx = {}) {
   // resistMod: 대상 【내성】 보정(《정량 분석》), failAtOrBelow: 명중 판정 눈 n 이하 절대 실패(《인법: 아지랑이》, 큰 값),
   // addElement: 속성 부가(《링크 이펙트》)
-  const out = { hitMod: 0, diceMod: 0, atkMod: 0, critDice: 0, critUp: false, resistMod: 0, failAtOrBelow: 0, addElement: [], names: [] };
+  const out = { hitMod: 0, diceMod: 0, atkMod: 0, critDice: 0, critUp: false, resistMod: 0, resistLow: false, failAtOrBelow: 0, addElement: [], names: [] };
   for (const b of list ?? []) {
     if (!whenMatches(b.when, ctx)) continue;
     out.hitMod += b.hitMod ?? 0; out.diceMod += b.diceMod ?? 0; out.atkMod += b.atkMod ?? 0;
     out.critDice += b.critDice ?? 0;
     out.critUp ||= !!b.critUp;
     out.resistMod += b.resistMod ?? 0;
+    // 《특이점 정리》·《룬의 인도》: 【내성】 2는 1로, 1은 0으로
+    out.resistLow ||= !!b.resistLow;
     out.failAtOrBelow = Math.max(out.failAtOrBelow, b.failAtOrBelow ?? 0);
     out.addElement.push(...[].concat(b.addElement ?? []));
     out.names.push(b.name);

@@ -707,8 +707,7 @@
      "param": "자신"
     }
    ],
-   "review": "partial",
-   "effectsNote": "대상 (SL)명: 한 명씩 고르므로 나머지는 GM이 같은 강화를 부여"
+   "review": "ok"
   },
   "_meta": {
    "className": "댄서"

@@ -359,10 +359,15 @@
      "type": "attack",
      "kind": "physical",
      "diceMod": "SL+@self.allyCount-3"
+    },
+    {
+     "type": "recoil",
+     "mode": "ones",
+     "toSelf": true,
+     "to": "allies"
     }
    ],
-   "review": "partial",
-   "effectsNote": "아군 전원(자신 제외)이 대미지 다이스의 1의 개수만큼 대미지: GM이 처리"
+   "review": "ok"
   },
   "_meta": {
    "className": "하이랜더"
@@ -410,10 +415,15 @@
      "type": "attack",
      "kind": "physical",
      "diceMod": "SL+@self.allyCount-3"
+    },
+    {
+     "type": "recoil",
+     "mode": "ones",
+     "toSelf": true,
+     "to": "allies"
     }
    ],
-   "review": "partial",
-   "effectsNote": "아군 전원(자신 제외)이 대미지 다이스의 1의 개수만큼 대미지: GM이 처리"
+   "review": "ok"
   },
   "_meta": {
    "className": "하이랜더"
@@ -464,11 +474,15 @@
     {
      "type": "attack",
      "kind": "physical",
-     "diceMod": "SL*2"
+     "diceMod": "SL*2",
+     "addTurnElements": [
+      "fire",
+      "ice",
+      "volt"
+     ]
     }
    ],
-   "review": "partial",
-   "effectsNote": "그 턴 앞서 〈염〉〈빙〉〈뇌〉 공격이 있었으면 그 속성을 부가: GM이 처리"
+   "review": "ok"
   },
   "_meta": {
    "className": "하이랜더"
@@ -646,10 +660,15 @@
      "type": "recoil",
      "mode": "ones",
      "toSelf": true
+    },
+    {
+     "type": "recoil",
+     "mode": "ones",
+     "toSelf": true,
+     "to": "allies"
     }
    ],
-   "review": "partial",
-   "effectsNote": "자신 외 아군 전원도 대미지 다이스의 1의 개수만큼 대미지: GM이 처리(자신의 반동은 자동)"
+   "review": "ok"
   },
   "_meta": {
    "className": "하이랜더"
@@ -915,10 +934,13 @@
       "none"
      ],
      "diceMod": "SL"
+    },
+    {
+     "type": "healFromDamage",
+     "toSelf": true
     }
    ],
-   "review": "partial",
-   "effectsNote": "대미지를 준 다이스 수만큼 아군 전체 HP 회복: GM이 처리"
+   "review": "ok"
   },
   "_meta": {
    "className": "하이랜더"

@@ -989,13 +989,16 @@
      "effects": [
       {
        "type": "inflict",
-       "condition": "death"
+       "condition": "death",
+       "when": {
+        "targetNotBoss": true
+       },
+       "whenNote": true
       }
      ]
     }
    ],
-   "review": "partial",
-   "effectsNote": "F.O.E.·GM이 지정한 보스에게는 무효: GM이 확인"
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"

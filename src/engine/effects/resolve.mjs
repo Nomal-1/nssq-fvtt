@@ -8,7 +8,7 @@
 import { evaluate } from "../expr.mjs";
 import { fpFromHitChecks, resolveAttack } from "../combat.mjs";
 import { CONDITIONS, contestInflict, forcedInflict, resistCheck } from "../conditions.mjs";
-import { canonicalBuff } from "../buffs.mjs";
+import { BUFFS, canonicalBuff, paramElements } from "../buffs.mjs";
 import { whenMatches } from "./when.mjs";
 import { sumAttackBonuses } from "./passives.mjs";
 import { activationRoll } from "./usage.mjs";
@@ -17,6 +17,25 @@ import { activationRoll } from "./usage.mjs";
 export const DEFERRED_TYPES = ["delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
 export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies", "multiUse", "redirectAlly", "anytime"];
+
+/** 대상 프로필에서 그 강화의 몫을 뺀 사본. list: "defenseUp"(수치 강화) / "resistUp:pierce"(그 속성 내성 +1) */
+function ignoreBuffs(t, list) {
+  if (!list?.length || !t?.buffs?.length) return t;
+  const out = { ...t, resist: { ...(t.resist ?? {}) }, ...(t.resistAwake ? { resistAwake: { ...t.resistAwake } } : {}) };
+  for (const b of t.buffs) {
+    const id = canonicalBuff(b.id);
+    for (const ig of list) {
+      const [bid, el] = String(ig).split(":");
+      if (bid !== id) continue;
+      if (el) {
+        if (!paramElements(b.param).includes(el)) continue;
+        out.resist[el] = (out.resist[el] ?? 0) - 1;
+        if (out.resistAwake) out.resistAwake[el] = (out.resistAwake[el] ?? 0) - 1;
+      } else for (const k of BUFFS[id]?.stats ?? []) if (typeof out[k] === "number") out[k] -= Number(b.value) || 0;
+    }
+  }
+  return out;
+}
 
 /** custom 핸들러 등록부: name → (ctx) => 결과 조각 */
 const CUSTOM = new Map();
@@ -100,6 +119,9 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       : e.addElement ? [...new Set([...(user.elements ?? []).filter((x) => x !== "none"), ...[].concat(e.addElement)])] : user.elements;
     // 상시 스킬의 공격 보정(《선봉의 공명》 등)
     const pb = sumAttackBonuses(user.attackBonuses, { ...ctx, category, self: user, target: t, attack: { kind, elements } });
+    // 「그 턴 이미 〈염〉〈빙〉〈뇌〉 공격이 있었으면 그 속성 부가」(《스피어 인볼브》, ctx.turnElements)
+    const turnEls = (ctx.turnElements ?? []).filter((x) => [].concat(e.addTurnElements ?? []).includes(x));
+    if (turnEls.length) elements = [...new Set([...(elements ?? []).filter((x) => x !== "none"), ...turnEls])];
     // 이번 턴 효과의 속성 부가(《링크 이펙트》)
     if (pb.addElement.length) elements = [...new Set([...(elements ?? []).filter((x) => x !== "none"), ...pb.addElement])];
     let hitMod = evaluate(e.hitMod ?? 0, vars(t)) + pb.hitMod;
@@ -114,13 +136,15 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       if (b.element) elements = [].concat(b.element);
     }
     const r = res(t);
+    // 대상의 강화 무시(《실버 애로》 「『물리 방어 상승』·『내성 상승: 돌』 무시」): "defenseUp" / "resistUp:pierce"
+    const tt = ignoreBuffs(t, e.ignoreBuffs);
     // [수면]은 명중한 공격의 처리 뒤 풀린다: 같은 행동의 다음 회차는 깬 상태의 내성(07 #37)
-    const resist = r.sleepBroken && t.resistAwake ? t.resistAwake : t.resist;
+    const resist = r.sleepBroken && tt.resistAwake ? tt.resistAwake : tt.resist;
     const result = await resolveAttack({
       attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
-      target: { evasion: t.evasion, defense: t.defense, resist, guarding: t.guarding, guardHalf: t.guardHalf },
+      target: { evasion: t.evasion, defense: tt.defense, resist, guarding: t.guarding, guardHalf: t.guardHalf },
       kind, hitMod, diceMod,
-      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, failAtOrBelow: Math.max(Number(e.failAtOrBelow ?? 0) || 0, pb.failAtOrBelow), resistMod: pb.resistMod, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
+      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, failAtOrBelow: Math.max(Number(e.failAtOrBelow ?? 0) || 0, pb.failAtOrBelow), resistMod: pb.resistMod, resistLow: pb.resistLow, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
       diceOverride: e.fixedDice !== undefined ? evaluate(e.fixedDice, vars(t)) : null,
       rollDice
     });
@@ -254,9 +278,22 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         // 반동: 이 행동에서 지금까지 굴린 대미지 다이스의 '1' 개수만큼 대미지(toSelf와 함께, 《싱글 스러스트》)
         let ones = 0;
         for (const x of out.results.values()) for (const h of x.hits) ones += [...(h.damage?.dice ?? []), ...(h.critExtra?.dice ?? [])].filter((d) => d === 1).length;
+        // to: "allies": 자신 외의 아군 전원(《레기온 스러스트》·《게 볼그》), 호출자가 아군에게
+        if (e.to === "allies") { if (ones) out.allyRecoil = (out.allyRecoil ?? 0) + ones; return; }
         if (ones) { r.damage += ones; r.resource.push({ recoil: ones }); }
         return;
       }
+      case "healFromDamage": {
+        // 《블랙 사바스》: 대미지를 준 다이스 수(대상 모두의 합)만큼 아군 전체 【HP】 회복. 호출자가 아군에게
+        let n = 0;
+        for (const x of out.results.values()) for (const h of x.hits) if (h.hit) n += h.rawDamage ?? 0;
+        if (n) out.allyHeal = (out.allyHeal ?? 0) + n;
+        return;
+      }
+      case "nextTurn":
+        // 「다음 턴에 ○○하면」(《차지 에지》): 다음 라운드에만 쓰는 「그 턴 동안」 효과. 호출자가 전투원 플래그 nextTurn으로
+        res(user).nextTurn = { effects: e.effects ?? [], sl };
+        return;
       case "stance": {
         // 대기 상태(단계 8): 저장해 두고 공격 이벤트 때 반격·추격·가드로 쓴다(combat/stance.mjs)
         const toTarget = e.holder === "target";

@@ -98,7 +98,7 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
   const r = await resolveAttack({
     attacker: { hit: a.physHit, physAtk: a.physAtk, elemAtk: a.elemAtk, elements: atkElements, critUp: a.critUp },
     target: { evasion: d.evasion, defense: d.defense, resist: d.resist, guarding: d.guarding, guardHalf: d.guardHalf },
-    resistMod: pb.resistMod, failAtOrBelow: pb.failAtOrBelow,
+    resistMod: pb.resistMod, resistLow: pb.resistLow, failAtOrBelow: pb.failAtOrBelow,
     kind: "physical", hitMod: pb.hitMod, diceMod: pb.diceMod, atkMod: pb.atkMod, critUp: pb.critUp, critDiceMod: pb.critDice,
     rollDice
   });

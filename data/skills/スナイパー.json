@@ -481,11 +481,14 @@
     {
      "type": "attack",
      "kind": "physical",
-     "diceMod": "SL*2"
+     "diceMod": "SL*2",
+     "ignoreBuffs": [
+      "defenseUp",
+      "resistUp:pierce"
+     ]
     }
    ],
-   "review": "partial",
-   "effectsNote": "대상의 강화 『방어 상승』·『내성 상승: 〈돌〉』을 무시: GM이 그 만큼 대미지를 보정"
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"

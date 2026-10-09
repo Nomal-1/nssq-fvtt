@@ -148,6 +148,13 @@ async function onAttackCard(message) {
   const ev = await attackEvent(message);
   if (!ev) return;
   const combat = game.combat;
+  // 이번 턴에 나온 〈염〉〈빙〉〈뇌〉 공격(《스피어 인볼브》)
+  const els = (ev.elements ?? []).filter((x) => ["fire", "ice", "volt"].includes(x));
+  if (els.length) {
+    const prev = combat.getFlag("nssq", "turnElements");
+    const cur = prev?.round === combat.round ? prev.elements ?? [] : [];
+    if (els.some((x) => !cur.includes(x))) await combat.setFlag("nssq", "turnElements", { round: combat.round, elements: [...new Set([...cur, ...els])] });
+  }
   // 《돌격대장》: 이번 턴 자신이 공격한 적을 기록(같은 적을 공격하는 아군의 대미지 다이스 +SL)
   const me = combat.combatants.get(ev.attackerId);
   const vg = me?.actor.items.find((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "flag" && e.flag === "vanguard"));

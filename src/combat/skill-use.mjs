@@ -194,6 +194,12 @@ export async function beginAction(combat, combatant, kind, id) {
   const list = candidates(combat, combatant, spec, range, { allowKO: revives(item) });
   if (!list.length) return ui.notifications.warn(L("noTarget")) && null;
   if (spec.scope === "all" || spec.scope === "random") return executeAction(combat, combatant, kind, id, list, opts);
+  // 「(SL)명에게」(《트릭 삼바》): 단일 대상 n명을 한 번에 고른다
+  const n = spec.scope === "single" && spec.count ? evaluate(spec.count, { SL: item.system.sl ?? 1 }) : 1;
+  if (n > 1) {
+    const got = await pickSome(list, n, item.name);
+    return got ? executeAction(combat, combatant, kind, id, got, opts) : null;
+  }
   return { pick: list.map((c) => c.id), spec };
 }
 
@@ -246,12 +252,38 @@ async function pickVariant(item) {
   return Dialog.wait({ title: L("variantTitle", { name: item.name }), content: `<p>${esc(L("variantHint"))}</p>`, buttons, close: () => null }, { classes: ["nssq", "dialog"] });
 }
 
+/** 이번 턴에 나온 공격의 〈염〉〈빙〉〈뇌〉(전투 플래그 turnElements, combat/chase.mjs가 기록) */
+export function turnElementsOf(combat) {
+  const f = combat?.getFlag("nssq", "turnElements");
+  return f && f.round === combat.round ? f.elements ?? [] : [];
+}
+
+/** 대상 수 제한(「(SL)명」·「같은 열의 적 2체」): 후보가 n보다 많으면 고르는 창. 취소면 null */
+async function pickSome(list, n, title) {
+  if (list.length <= n) return list;
+  const boxes = list.map((c, i) => `<label class="choice"><input type="checkbox" name="c" value="${c.id}" ${i < n ? "checked" : ""}/> ${esc(c.name)}</label>`).join("");
+  const ids = await Dialog.prompt({
+    title, content: `<p>${esc(L("chooseHint", { n }))}</p><form class="nssq-choices">${boxes}</form>`, label: L("chooseGo"), rejectClose: false,
+    callback: (html) => [...(html[0] ?? html).querySelectorAll("input[name=c]:checked")].map((x) => x.value).slice(0, n)
+  }, { classes: ["nssq", "dialog"] });
+  if (!ids) return null;
+  const got = list.filter((c) => ids.includes(c.id));
+  return got.length ? got : list.slice(0, n);
+}
+
 /** 고른 카드로 실행(열 범위면 그 카드의 열 전체) */
 export async function pickTarget(combat, combatant, kind, id, picked, spec) {
   let targets = [picked];
   if (spec.scope === "row") {
     const row = picked.actor.system.row ?? "front";
     targets = candidates(combat, combatant, spec, "-", { allowKO: revives(combatant.actor.items.get(id)) }).filter((c) => (c.actor.system.row ?? "front") === row);
+    // 「같은 열의 적 2체」(《화구의 인술》): 고른 대상 + 나머지에서
+    const n = spec.count ? evaluate(spec.count, { SL: combatant.actor.items.get(id)?.system.sl ?? 1 }) : 0;
+    if (n && targets.length > n) {
+      const rest = await pickSome(targets.filter((c) => c !== picked), n - 1, combatant.actor.items.get(id)?.name ?? "");
+      if (rest === null) return null;
+      targets = [picked, ...rest];
+    }
   } else if (spec.scope === "pierce") {
     // 「관통」: 고른 대상 + 다른 열에서 순서가 가장 가까운 1체. 가장 가까운 적이 여럿이면 그중에서 다시 고른다(07 #60)
     if (spec.first) {
@@ -431,7 +463,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     effects: effectsAll, sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : spreadPool,
     mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(),
-    variant, category: sys.category ?? "", source: kind, ctx: { skillKey: sys.key ?? null, choices }
+    variant, category: sys.category ?? "", source: kind, ctx: { skillKey: sys.key ?? null, choices, turnElements: turnElementsOf(combatant?.combat) }
   });
   if (guard) await guard.commit(new Set([...r.results.values()].filter((x) => x.hits.some((h) => h.hit)).map((x) => x.id)));
   // 「최속/후발 행동」(개막 페이즈에 쓴 것): 이번 턴 행동 순서. 메인 페이즈로 넘어갈 때 이니셔티브에 반영
@@ -448,6 +480,13 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   if (!r.failed && combatant?.combat) {
     const add = units.filter((u, i) => u.combatant && r.results.get(targets[i].id)?.bonusTurn).map((u) => u.combatant.id);
     if (add.length) await combatant.combat.setFlag("nssq", "bonusTurns", [...(combatant.combat.getFlag("nssq", "bonusTurns") ?? []), ...add]);
+  }
+  // 「다음 턴」 효과(《차지 에지》): 전투원 플래그 nextTurn(다음 라운드에 「그 턴 동안」 효과처럼, combat/profile.mjs)
+  const nt = r.results.get(user.id)?.nextTurn;
+  if (nt && !r.failed && combatant?.combat) {
+    const round = combatant.combat.round + 1;
+    const keep = (combatant.getFlag("nssq", "nextTurn") ?? []).filter((x) => x.round >= combatant.combat.round);
+    await combatant.setFlag("nssq", "nextTurn", [...keep, { round, name: item.name, sl: sys.sl ?? 1, effects: nt.effects }]);
   }
   // 토큰 1개 소멸(《비스트 귀환》·《파진》)
   const tr = r.results.get(user.id)?.tokenRemove;
@@ -489,6 +528,17 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const empty = (e) => !e.hits.length && !e.damage && !e.heal?.hp && !e.heal?.tp && !e.revive && !e.sleepBroken && !e.extra
     && ![e.inflicts, e.buffs, e.cures, e.resource, e.states, e.stances].some((l) => l?.length);
   for (let i = entries.length - 1; i >= 0; i--) if (empty(entries[i]) && entries.length > 1) entries.splice(i, 1);
+  // 아군 반동(《레기온 스러스트》 「자신 외 아군 전원」)·아군 회복(《블랙 사바스》 「아군 전체」)
+  if (!r.failed && (r.allyRecoil || r.allyHeal) && combatant?.combat) {
+    const mates = combatant.combat.combatants.filter((c) => alive(c) && friendly(c.actor, actor) && c.actor.type !== "token");
+    for (const c of mates) {
+      if (c.id === combatant.id && !r.allyHeal) continue;
+      let e = entries.find((x) => x.uuid === c.actor.uuid);
+      if (!e) entries.push(e = { uuid: c.actor.uuid, name: c.name, damage: 0, extra: null, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], states: [], stances: [], hits: [], sleepBroken: false, revive: false, applied: false, before: null, reaction: null });
+      if (r.allyRecoil && c.id !== combatant.id) { e.damage += r.allyRecoil; e.resource.push({ recoil: r.allyRecoil }); }
+      if (r.allyHeal) { e.heal.hp += r.allyHeal; e.resource.push({ heal: "hp", amount: r.allyHeal }); }
+    }
+  }
   // 더한 대미지 다이스만 있는 대상(《풀 게인》: 효과 해석 결과가 없다)
   for (const [uuid, x] of Object.entries(extra ?? {})) {
     if (entries.some((e) => e.uuid === uuid)) continue;

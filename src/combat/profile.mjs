@@ -42,11 +42,13 @@ function applyTurnEffects(p, actor, combatant) {
   const bonuses = [];
   const scopes = [];
   const mods = {};
-  for (const st of combatant?.getFlag("nssq", "stances") ?? []) {
+  // 「다음 턴」 효과(《차지 에지》): 전투원 플래그 nextTurn 중 이번 라운드 것
+  const next = (combatant?.getFlag("nssq", "nextTurn") ?? []).filter((x) => x.round === combat?.round);
+  for (const st of [...(combatant?.getFlag("nssq", "stances") ?? []), ...next]) {
     const v = (x) => evaluate(x ?? 0, { SL: st.sl ?? 1 });
     for (const e of st.effects ?? []) {
       if (e?.type === "modifier") mods[e.path] = (mods[e.path] ?? 0) + v(e.value);
-      else if (e?.type === "attackBonus") bonuses.push({ name: st.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod), critDice: v(e.critDice), critUp: !!e.critUp, resistMod: v(e.resistMod), addElement: e.addElement ?? [] });
+      else if (e?.type === "attackBonus") bonuses.push({ name: st.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod), critDice: v(e.critDice), critUp: !!e.critUp, resistMod: v(e.resistMod), resistLow: !!e.resistLow, addElement: e.addElement ?? [] });
       else if (e?.type === "flag") turnFlags[e.flag] = e.value ?? true;
       else if (e?.type === "scopeChange") scopes.push({ ...e, sl: st.sl ?? 1, name: st.name });
     }
@@ -90,6 +92,8 @@ function baseProfile(actor, combatant = null) {
     guarding, acted,
     // [공포]·[마비] 판정 실패로 이번 턴 행동 불능이면 그 상태 이상 id(《명하노니》 when targetDisabled)
     disabledBy: combatant?.getFlag("nssq", "disabled") ?? null,
+    // F.O.E.·보스(《참수》 when targetNotBoss)
+    boss: actor.type === "enemy" && (!!s.isFOE || !!s.isBoss),
     level: s.level ?? 0,
     ko: (s.hp?.value ?? 0) <= 0,
     // 상태 이상·봉인·강화(단계 5): 부능력치·내성에는 액터 데이터에서 이미 반영됨

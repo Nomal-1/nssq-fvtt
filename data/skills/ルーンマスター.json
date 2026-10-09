@@ -215,7 +215,8 @@
     {
      "type": "target",
      "side": "enemy",
-     "scope": "row"
+     "scope": "row",
+     "count": 2
     },
     {
      "type": "attack",
@@ -226,8 +227,7 @@
      "diceMod": "SL-2"
     }
    ],
-   "review": "partial",
-   "effectsNote": "같은 열의 적 2체만: 3체 이상이면 GM이 1체를 빼고 적용"
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"
@@ -927,9 +927,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신의 공격 시 적의 【내성】 2는 1로, 1은 0으로 취급. 【내성】 3 이상에는 효과 없음.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "자신의 공격 때 적의 내성 2는 1로, 1은 0으로(3 이상은 그대로): GM이 대미지를 보정"
+   "effects": [
+    {
+     "type": "attackBonus",
+     "resistLow": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "룬 마스터"

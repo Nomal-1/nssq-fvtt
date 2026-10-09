@@ -567,10 +567,27 @@
      "type": "attack",
      "kind": "physical",
      "diceMod": "SL"
+    },
+    {
+     "type": "nextTurn",
+     "toSelf": true,
+     "effects": [
+      {
+       "type": "attackBonus",
+       "diceMod": "SL*3",
+       "when": {
+        "skillKey": [
+         "インペリアル.アサルトドライブ",
+         "インペリアル.三色ドライブ",
+         "インペリアル.アクセルドライブ",
+         "インペリアル.オーバードライブ"
+        ]
+       }
+      }
+     ]
     }
    ],
-   "review": "partial",
-   "effectsNote": "다음 턴에 《○○ 드라이브》를 쓰면 그 대미지 다이스 +(SL×3): GM이 처리"
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"

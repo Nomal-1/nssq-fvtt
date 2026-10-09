@@ -12,7 +12,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 
 /** 엔진이 받는 type과 필드(필수: true) */
 export const TYPES = {
-  attack: { kind: false, element: false, addElement: false, failAtOrBelow: false, copyElement: false, randomFrom: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false, fixedDice: false },
+  attack: { kind: false, element: false, addElement: false, failAtOrBelow: false, copyElement: false, randomFrom: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false, fixedDice: false, ignoreBuffs: false, addTurnElements: false },
   heal: { mode: false, bonus: false, amount: false, resource: false, revive: false },
   inflict: { condition: true, check: false, depth: false, choose: false, randomPick: false, selfSame: false },
   command: { mode: true },
@@ -51,14 +51,16 @@ export const TYPES = {
   repeat: { scope: false, cost: false },
   rallyChase: { count: false, weapons: false },
   tokenRemove: { category: false },
-  attackBonus: { hitMod: false, diceMod: false, atkMod: false, critDice: false, critUp: false, resistMod: false, addElement: false },
+  attackBonus: { hitMod: false, diceMod: false, atkMod: false, critDice: false, critUp: false, resistMod: false, addElement: false, resistLow: false },
   scopeChange: { category: false, fromSide: false, fromScope: false, scope: true, side: false },
   hostileHitFail: { value: true },
   kill: { check: true },
   immune: { condition: true },
   useBonus: { buffTurns: false, debuffTurns: false, healHp: false },
   drain: { resource: false, mode: false },
-  recoil: { mode: false },
+  recoil: { mode: false, to: false },
+  healFromDamage: {},
+  nextTurn: { effects: true },
   target: { side: true, scope: true, count: false, excludeSelf: false, row: false },
   guard: { mode: true, scope: false, optional: false },
   aura: { path: true, value: true, scope: false },

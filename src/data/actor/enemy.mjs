@@ -14,6 +14,8 @@ export class EnemyData extends foundry.abstract.TypeDataModel {
       rarity: int(0),
       attackElements: new ArrayField(str("")),
       isFOE: new BooleanField({ initial: false }),
+      // GM이 지정한 보스(《참수》 등 「F.O.E. 및 보스에게는 무효」)
+      isBoss: new BooleanField({ initial: false }),
       isRare: new BooleanField({ initial: false }),
       identified: new BooleanField({ initial: false }),
       // 식별 달성값이 【희소도】+2 이상이라 플레이어가 희소종임을 안다

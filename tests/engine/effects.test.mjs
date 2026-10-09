@@ -416,3 +416,39 @@ describe("무효과 전투 스킬 B1묶음", () => {
     expect(r.results.get("a").cures).toEqual([{ conditions: "all", kind: "buff", buffs: ["elemImbue"] }]);
   });
 });
+
+describe("부분 자동 전투 스킬 C1묶음", () => {
+  it("《특이점 정리》 resistLow: 내성 2 → 1, 3은 그대로", async () => {
+    const atk = [{ type: "attack", kind: "physical" }];
+    const u = { ...user, attackBonuses: [{ name: "특이점 정리", resistLow: true }] };
+    const r2 = await resolveEffects({ effects: atk, user: u, targets: [{ ...foe, resist: { ...R3, slash: 2 } }], rollDice: dice(5, 5, 2, 2, 2, 2, 2, 2) });
+    expect(r2.results.get("e").hits[0].resist).toBe(1);
+    const r3 = await resolveEffects({ effects: atk, user: u, targets: [foe], rollDice: dice(5, 5, 2, 2, 2, 2, 2, 2) });
+    expect(r3.results.get("e").hits[0].resist).toBe(3);
+  });
+
+  it("《실버 애로》 ignoreBuffs: 『방어 상승』 수치와 『내성 상승: 돌』 +1을 뺀다", async () => {
+    const t = { ...foe, defense: 6, resist: { ...R3, pierce: 4 }, buffs: [{ id: "defenseUp", value: 3 }, { id: "resistUp", param: "pierce" }] };
+    const r = await resolveEffects({ effects: [{ type: "attack", kind: "physical", element: ["pierce"], ignoreBuffs: ["defenseUp", "resistUp:pierce"] }], user, targets: [t], rollDice: dice(5, 5, ...Array(6).fill(2)) });
+    // 다이스 (9 − (6−3)) = 6개, 내성 4−1 = 3
+    expect(r.results.get("e").hits[0].diceCount).toBe(6);
+    expect(r.results.get("e").hits[0].resist).toBe(3);
+  });
+
+  it("《레기온 스러스트》 아군 반동·《블랙 사바스》 아군 회복·《스피어 인볼브》 그 턴 속성", async () => {
+    const a = await resolveEffects({ effects: [{ type: "attack", kind: "physical" }, { type: "recoil", mode: "ones", toSelf: true, to: "allies" }], user, targets: [foe], rollDice: dice(5, 5, 1, 1, 5, 5, 5, 5) });
+    expect(a.allyRecoil).toBe(2);
+    const b = await resolveEffects({ effects: [{ type: "attack", kind: "physical" }, { type: "healFromDamage", toSelf: true }], user, targets: [foe], rollDice: dice(5, 5, 1, 1, 5, 5, 5, 5) });
+    expect(b.allyHeal).toBe(4);
+    const c = await resolveEffects({ effects: [{ type: "attack", kind: "physical", addTurnElements: ["fire", "ice", "volt"] }], user, targets: [foe], ctx: { turnElements: ["ice"] }, rollDice: dice(5, 5, ...Array(6).fill(2)) });
+    expect(c.results.get("e").hits[0].elements).toEqual(["slash", "ice"]);
+  });
+
+  it("《참수》 targetNotBoss: F.O.E.·보스면 효과 없음", async () => {
+    const e = [{ type: "inflict", condition: "death", when: { targetNotBoss: true }, whenNote: true }];
+    const a = await resolveEffects({ effects: e, user, targets: [{ ...foe, boss: true }], rollDice: dice() });
+    expect(a.results.get("e").inflicts).toEqual([]);
+    const b = await resolveEffects({ effects: e, user, targets: [foe], rollDice: dice() });
+    expect(b.results.get("e").inflicts[0].id).toBe("death");
+  });
+});
