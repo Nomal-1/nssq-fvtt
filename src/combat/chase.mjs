@@ -259,7 +259,18 @@ export async function rallyChase(user, rally) {
   if (!target) return;
   const allies = combat.turns.filter((x) => x.id !== user.id && alive(x) && !actionState(x).noAction && (sideOf(x.actor) === "enemy") === (sideOf(user.actor) === "enemy")
     && (!rally.weapons || rally.weapons.includes(x.actor.system.equipment?.weapon?.weaponType)));
-  for (const a of allies.slice(0, rally.count)) {
+  // 「아군을 최대 n명 선택」(07 #88): 사용자가 고른다(에너미·소유자가 아닌 화면은 【속도】 순)
+  let chosen = allies.slice(0, rally.count);
+  if (allies.length && user.actor.type === "character" && user.actor.isOwner) {
+    const html = `<p>${esc(L("rallyHint", { n: rally.count }))}</p>${allies.map((a, k) => `<div class="form-group"><label><input type="checkbox" name="r${k}" ${k < rally.count ? "checked" : ""}/> ${esc(a.name)}</label></div>`).join("")}`;
+    const picked = await Dialog.prompt({
+      title: L("rallyTitle"), content: html, label: L("rallyGo"), rejectClose: false,
+      callback: (h) => allies.filter((a, k) => !!h[0].querySelector(`[name=r${k}]`)?.checked)
+    });
+    if (!picked) return;
+    chosen = picked.slice(0, rally.count);
+  }
+  for (const a of chosen) {
     await runFollowup({ unitId: a.id, type: "chase", target: target.id, name: L("rally"), attack: { kind: "physical" }, source: { buff: 0, key: "rally", sl: 1 } }, "skill");
   }
 }

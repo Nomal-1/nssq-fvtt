@@ -113,8 +113,10 @@ async function runRevenge(combat, c, st) {
   if (!alive(c) || actionState(c).noAction) return note(esc(L("cancelled", { name: c.name, skill: st.name })), c.actor);
   const p = combatProfile(c.actor, c);
   const foes = combat.combatants.filter((x) => alive(x) && !friendly(x.actor, c.actor) && inRange(p.range, p.row, x.actor.system.row ?? "front"));
-  const target = pickRandom(foes, () => CONFIG.Dice.randomUniform());
-  if (!target) return note(esc(L("noTarget", { name: c.name, skill: st.name })), c.actor);
+  if (!foes.length) return note(esc(L("noTarget", { name: c.name, skill: st.name })), c.actor);
+  // 대상은 공격 직전에 사거리 안에서 고른다(07 #95). 하나면 그것
+  const target = foes.length === 1 ? foes[0] : await chooseTarget(combat, c, st.name, foes);
+  if (!target || !alive(target)) return note(esc(L("noTarget", { name: c.name, skill: st.name })), c.actor);
   await note(esc(L("revenge", { name: c.name, skill: st.name, taken: st.taken ?? 0 })), c.actor);
   const { resolveAndPost } = await import("./skill-use.mjs");
   await resolveAndPost({
@@ -137,6 +139,52 @@ async function runLateRepeat(combat, c, lr) {
     item: { name: lr.name, img: lr.img, system: { effects: [{ type: "attack", kind: "physical", diceMod: lr.diceMod ?? 0 }], sl: lr.sl ?? 1, category: "백병", description: "", target: "적 단일" } },
     units: [{ actor: target.actor, combatant: target }]
   });
+}
+
+/* ---------------- 대상 고르기 카드(후발 공격 직전) ---------------- */
+
+const waitingChoice = new Map();
+
+/** 채팅 카드에 대상 버튼 → 그 캐릭터 소유자나 GM이 고를 때까지 기다린다(활성 GM에서 부른다) */
+function chooseTarget(combat, c, skill, foes) {
+  const id = foundry.utils.randomID();
+  const p = new Promise((resolve) => waitingChoice.set(id, resolve));
+  ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor: c.actor }),
+    content: `<div class="nssq-combat-note"><i class="fas fa-crosshairs"></i> ${esc(L("chooseTarget", { name: c.name, skill }))}</div>`,
+    flags: { nssq: { lateTarget: { id, combatId: combat.id, combatantId: c.id, options: foes.map((x) => ({ id: x.id, name: x.name })), chosen: null } } }
+  });
+  return p.then((targetId) => combat.combatants.get(targetId) ?? null);
+}
+
+async function gmChoose({ messageId, targetId }) {
+  const m = game.messages.get(messageId);
+  const data = foundry.utils.deepClone(m?.getFlag("nssq", "lateTarget"));
+  if (!data || data.chosen) return;
+  data.chosen = targetId;
+  await m.setFlag("nssq", "lateTarget", data);
+  waitingChoice.get(data.id)?.(targetId);
+  waitingChoice.delete(data.id);
+}
+
+function decorateChoice(message, el) {
+  const data = message.getFlag("nssq", "lateTarget");
+  if (!data) return;
+  const box = document.createElement("div");
+  box.className = "nssq-followups";
+  const c = game.combats.get(data.combatId)?.combatants.get(data.combatantId);
+  if (data.chosen) box.innerHTML = `<span class="notes">${esc(L("chosenTarget", { target: data.options.find((o) => o.id === data.chosen)?.name ?? "?" }))}</span>`;
+  else if (!c?.actor?.isOwner) box.innerHTML = `<span class="notes">${esc(L("waitingTarget", { name: c?.name ?? "?" }))}</span>`;
+  else {
+    for (const o of data.options) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.innerHTML = `<i class="fas fa-crosshairs"></i> ${esc(o.name)}`;
+      b.addEventListener("click", () => (isActiveGM() ? gmChoose({ messageId: message.id, targetId: o.id }) : emit("lateTarget", { messageId: message.id, targetId: o.id })));
+      box.append(b);
+    }
+  }
+  el.querySelector(".nssq-combat-note")?.append(box);
 }
 
 async function runDelayed(combat, c, d) {
@@ -268,5 +316,6 @@ function decorate(message, el) {
 
 export function registerLate() {
   onSocket("declare", (p) => { if (isActiveGM()) gmDeclare(p); });
-  Hooks.on("renderChatMessage", (message, html) => decorate(message, html[0]));
+  onSocket("lateTarget", (p) => { if (isActiveGM()) gmChoose(p); });
+  Hooks.on("renderChatMessage", (message, html) => { decorate(message, html[0]); decorateChoice(message, html[0]); });
 }

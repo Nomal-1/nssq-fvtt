@@ -95,11 +95,10 @@ export class NssqCombat extends Combat {
       // 개막 페이즈 선언(《가디언》·《성인의 가호》)
       await onOpeningPhase(this);
     }
-    // 종료 페이즈 처음: 이번 턴 지연 공격(at endPhase) → 독·자연 회복 등 → 토큰 지속 턴
+    // 종료 페이즈: 들어선 순간의 상태로 트리거(《로열 벨》·《진 회복》, 07 #86) → 지연 공격(at endPhase) → 독·자연 회복 등 → 토큰 지속 턴
     if (phase === "end") {
-      await runEndPhase(this, { delayed: await runDelayedEnd(this) });
-      // 종료 페이즈 트리거(《로열 벨》·《진 회복》): 토큰이 사라지기 전에
       await onEndPhase(this);
+      await runEndPhase(this, { delayed: await runDelayedEnd(this) });
       await tickAllTokens(this);
     }
   }
