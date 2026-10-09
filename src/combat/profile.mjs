@@ -92,6 +92,8 @@ function baseProfile(actor, combatant = null) {
     guarding, acted,
     // [공포]·[마비] 판정 실패로 이번 턴 행동 불능이면 그 상태 이상 id(《명하노니》 when targetDisabled)
     disabledBy: combatant?.getFlag("nssq", "disabled") ?? null,
+    // 이번 턴 「주행동 2회」를 얻었다(《인법: 분신》, 《다원 발도》 when selfExtraAction)
+    extraActionTurn: !!combat?.started && combatant?.getFlag("nssq", "extraActionRound") === combat.round,
     // F.O.E.·보스(《참수》 when targetNotBoss)
     boss: actor.type === "enemy" && (!!s.isFOE || !!s.isBoss),
     level: s.level ?? 0,

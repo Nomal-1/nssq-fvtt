@@ -37,6 +37,8 @@ const CHECKS = {
   targetNotActedThisTurn: (v, c) => !c.target?.acted === !!v,
   // 대상이 이번 턴 [공포]·[마비] 판정에 실패해 행동 불능(전투원 플래그 disabled = 그 상태 이상 id, 《명하노니》)
   targetDisabled: (v, c) => arr(v).includes(c.target?.disabledBy),
+  // 이번 턴 주행동 2회를 얻었다(《다원 발도》 「《인법: 분신》을 쓴 턴에만」)
+  selfExtraAction: (v, c) => !!c.self?.extraActionTurn === !!v,
   // 대상이 F.O.E.·보스가 아니다(《참수》)
   targetNotBoss: (v, c) => !c.target?.boss === !!v,
   // 자신이 상태 이상(봉인 제외) 중(《전화위복》)

@@ -35,7 +35,30 @@ export function reactionChoices(actor, kind) {
     })
     .map((i) => ({ id: i.id, name: i.name }))
     // 대기 상태 안의 능동 회피(무사 《몽상검》: 대기 중 물리 공격을 받으면 【AGI】로 능동 회피)
-    .concat(stanceOf(actor).filter((st) => reactionEffect(st.effects, kind)).map((st) => ({ id: `stance:${st.id}`, name: st.name })));
+    .concat(stanceOf(actor).filter((st) => reactionEffect(st.effects, kind)).map((st) => ({ id: `stance:${st.id}`, name: st.name })))
+    .concat(wideChoices(actor, kind));
+}
+
+/**
+ * 팔랑크스 《와이드 패링》(상시 wideEvade): 같은 열 아군이 공격받을 때 자신의 능동 회피 수동 스킬로 대신 판정
+ * 선택지 id `ally:<보유자 uuid>:<스킬 id>`. 코스트·능력치는 보유자 것
+ */
+function wideChoices(actor, kind) {
+  const combat = game.combat;
+  if (!combat?.started) return [];
+  const row = actor.system.row ?? "front";
+  const out = [];
+  for (const c of combat.combatants) {
+    const h = c.actor;
+    if (!h || h.uuid === actor.uuid || c.defeated || (h.system.hp?.value ?? 0) <= 0 || !friendly(h, actor) || (h.system.row ?? "front") !== row) continue;
+    if (!h.items.some((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "wideEvade"))) continue;
+    for (const o of reactionChoices(h, kind).filter((x) => !String(x.id).includes(":"))) {
+      const sk = h.items.get(o.id);
+      if (reactionEffect(sk?.system.effects, kind)?.type !== "activeEvade") continue;
+      out.push({ id: `ally:${h.uuid}:${o.id}`, name: `${o.name}(${c.name})`, holder: h.uuid });
+    }
+  }
+  return out;
 }
 
 /** 이 캐릭터의 대기 상태(진행 중인 전투) */
@@ -78,7 +101,8 @@ export function decorateReactions(el, message, type) {
     else if (r.state === "declined") box.innerHTML = `<span class="notes">${esc(L("declined"))}</span>`;
     else if (r.state === "pending" && !applied) {
       const actor = fromUuidSync(type === "attack" ? t.actorUuid : t.uuid);
-      if (!actor?.isOwner) {
+      // 《와이드 패링》 선택지는 보유자 소유자도 누를 수 있다
+      if (!actor?.isOwner && !r.options.some((o) => o.holder && fromUuidSync(o.holder)?.isOwner)) {
         box.innerHTML = `<span class="notes">${esc(L("waiting", { name: t.name }))}</span>`;
       } else {
         box.innerHTML = r.options.map((o) => `<button type="button" data-react="${o.id}"><i class="fas fa-shield-alt"></i> ${esc(L("use", { name: o.name }))}</button>`).join("")
@@ -99,7 +123,14 @@ async function useReaction(message, type, index, skillId) {
   const card = type === "attack" ? message.getFlag("nssq", "attack") : message.getFlag("nssq", "skillCard");
   const t = (type === "attack" ? card.targets : card.entries)[index];
   if (t?.reaction?.state !== "pending") return;
-  const actor = await fromUuid(type === "attack" ? t.actorUuid : t.uuid);
+  let actor = await fromUuid(type === "attack" ? t.actorUuid : t.uuid);
+  // 《와이드 패링》: 같은 열 아군(보유자)의 스킬·코스트·능력치로
+  if (String(skillId).startsWith("ally:")) {
+    const [, uuid, id] = String(skillId).match(/^ally:(.+):([^:]+)$/) ?? [];
+    actor = uuid ? await fromUuid(uuid) : null;
+    skillId = id;
+    if (!actor) return;
+  }
   // 대기 상태의 능동 회피는 그 대기 상태를 스킬처럼(코스트 없음)
   const st = String(skillId).startsWith("stance:") ? stanceOf(actor).find((x) => `stance:${x.id}` === skillId) : null;
   const skill = st ? { id: skillId, name: st.name, system: { effects: st.effects ?? [], sl: st.sl ?? 1, key: st.key, cost: {} } } : actor?.items.get(skillId);

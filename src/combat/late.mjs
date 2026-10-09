@@ -73,11 +73,15 @@ export async function runLateActions(combat) {
     // 《딜레이 스탭》: 대미지를 받지 않았으면 같은 대상에게 한 번 더
     const lr = c.getFlag("nssq", "lateRepeat");
     if (lr) jobs.push({ c, lateRepeat: lr });
+    // 《공방일체》: 『방어』 스킬로 대기 중이어도 후발 행동으로 통상 공격
+    const gl = guardLateOf(c);
+    if (gl) jobs.push({ c, guardLate: gl });
   }
   for (const j of jobs) {
     if (j.delayed) await runDelayed(combat, j.c, j.delayed);
     else if (j.revenge) await runRevenge(combat, j.c, j.revenge);
     else if (j.lateRepeat) await runLateRepeat(combat, j.c, j.lateRepeat);
+    else if (j.guardLate) await runGuardLate(combat, j.c, j.guardLate);
     else await runLate(combat, j.c, j.late);
   }
 }
@@ -146,13 +150,35 @@ async function runLateRepeat(combat, c, lr) {
 const waitingChoice = new Map();
 
 /** 채팅 카드에 대상 버튼 → 그 캐릭터 소유자나 GM이 고를 때까지 기다린다(활성 GM에서 부른다) */
-function chooseTarget(combat, c, skill, foes) {
+/** 《공방일체》(상시 guardLateAttack): 『방어』 분류 스킬의 대기 상태(waiting)면 그 스킬 이름 */
+function guardLateOf(c) {
+  const a = c.actor;
+  const sk = a?.items.find((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "guardLateAttack"));
+  if (!sk) return null;
+  const st = (c.getFlag("nssq", "stances") ?? []).find((s) => s.waiting && a.items.find((i) => i.system.key === s.key)?.system.category === "방어");
+  return st ? { name: sk.name, stance: st.name } : null;
+}
+
+/** 대기 중 후발 통상 공격(고르지 않으면 안 함) */
+async function runGuardLate(combat, c, gl) {
+  if (!alive(c) || actionState(c).noAction) return;
+  const p = combatProfile(c.actor, c);
+  const foes = combat.combatants.filter((x) => alive(x) && !friendly(x.actor, c.actor) && inRange(p.range, p.row, x.actor.system.row ?? "front"));
+  if (!foes.length) return;
+  const target = await chooseTarget(combat, c, gl.name, foes, { allowSkip: true });
+  if (!target || !alive(target)) return;
+  await note(esc(L("guardLate", { name: c.name, skill: gl.name, stance: gl.stance })), c.actor);
+  const { normalAttack } = await import("./attack.mjs");
+  await normalAttack(c.actor, { target: target.token, turnChecked: true });
+}
+
+function chooseTarget(combat, c, skill, foes, { allowSkip = false } = {}) {
   const id = foundry.utils.randomID();
   const p = new Promise((resolve) => waitingChoice.set(id, resolve));
   ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: c.actor }),
     content: `<div class="nssq-combat-note"><i class="fas fa-crosshairs"></i> ${esc(L("chooseTarget", { name: c.name, skill }))}</div>`,
-    flags: { nssq: { lateTarget: { id, combatId: combat.id, combatantId: c.id, options: foes.map((x) => ({ id: x.id, name: x.name })), chosen: null } } }
+    flags: { nssq: { lateTarget: { id, combatId: combat.id, combatantId: c.id, options: foes.map((x) => ({ id: x.id, name: x.name })), chosen: null, allowSkip } } }
   });
   return p.then((targetId) => combat.combatants.get(targetId) ?? null);
 }
@@ -173,7 +199,8 @@ function decorateChoice(message, el) {
   const box = document.createElement("div");
   box.className = "nssq-followups";
   const c = game.combats.get(data.combatId)?.combatants.get(data.combatantId);
-  if (data.chosen) box.innerHTML = `<span class="notes">${esc(L("chosenTarget", { target: data.options.find((o) => o.id === data.chosen)?.name ?? "?" }))}</span>`;
+  if (data.chosen === "-") box.innerHTML = `<span class="notes">${esc(L("skipped"))}</span>`;
+  else if (data.chosen) box.innerHTML = `<span class="notes">${esc(L("chosenTarget", { target: data.options.find((o) => o.id === data.chosen)?.name ?? "?" }))}</span>`;
   else if (!c?.actor?.isOwner) box.innerHTML = `<span class="notes">${esc(L("waitingTarget", { name: c?.name ?? "?" }))}</span>`;
   else {
     for (const o of data.options) {
@@ -181,6 +208,13 @@ function decorateChoice(message, el) {
       b.type = "button";
       b.innerHTML = `<i class="fas fa-crosshairs"></i> ${esc(o.name)}`;
       b.addEventListener("click", () => (isActiveGM() ? gmChoose({ messageId: message.id, targetId: o.id }) : emit("lateTarget", { messageId: message.id, targetId: o.id })));
+      box.append(b);
+    }
+    if (data.allowSkip) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = L("skip");
+      b.addEventListener("click", () => (isActiveGM() ? gmChoose({ messageId: message.id, targetId: "-" }) : emit("lateTarget", { messageId: message.id, targetId: "-" })));
       box.append(b);
     }
   }

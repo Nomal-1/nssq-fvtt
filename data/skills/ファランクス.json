@@ -888,9 +888,12 @@
    "variants": [],
    "sl": 1,
    "description": "<p>같은 열 아군이 공격 롤을 받을 때 《패링》《머티리얼 패링》로 대신 능동 회피 판정을 할 수 있다. 그 아군이 아직 능동 회피 판정을 하지 않았을 때만 가능.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "같은 열 아군이 공격받을 때 《패링》·《머티리얼 패링》으로 대신 능동 회피(그 아군이 아직 안 했을 때): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "wideEvade"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "팔랑크스"

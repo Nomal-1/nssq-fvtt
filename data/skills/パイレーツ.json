@@ -732,9 +732,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>세검과 총을 무기 슬롯·기타 슬롯에 나눠 장비하고, 통상 공격 때 각 무기로 1회씩 공격할 수 있다. 각 공격은 【물리 명중】 −3, 【물리 공격】 −(3−SL).</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "세검과 총을 무기·기타 슬롯에 나눠 장비하면 통상 공격을 무기마다 1회씩(각 물리 명중 −3, 물리 공격 −(3−SL)): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "dualWield",
+     "weapons": [
+      [
+       "세검"
+      ],
+      [
+       "총"
+      ]
+     ],
+     "hitMod": -3,
+     "atkMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "파이리츠"

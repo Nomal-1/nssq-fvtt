@@ -16,7 +16,7 @@ import { activationRoll } from "./usage.mjs";
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies", "multiUse", "redirectAlly", "anytime"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies", "multiUse", "redirectAlly", "anytime", "dualWield", "dualSkill", "wideEvade", "guardLateAttack"];
 
 /** 대상 프로필에서 그 강화의 몫을 뺀 사본. list: "defenseUp"(수치 강화) / "resistUp:pierce"(그 속성 내성 +1) */
 function ignoreBuffs(t, list) {
@@ -353,7 +353,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         // 전투 고유 상태(engine/states.mjs): 보정은 지금 SL로 계산해 둔다
         const mods = {};
         for (const m of e.mods ?? []) mods[m.path] = (mods[m.path] ?? 0) + evaluate(m.value ?? 0, vars(t));
-        r.states.push({ id: e.id, name: e.label ?? "", group: e.group ?? "", mods, ...(e.max ? { max: evaluate(e.max, vars(t)) } : {}), note: e.note ?? "" });
+        r.states.push({ id: e.id, name: e.label ?? "", group: e.group ?? "", mods, ...(e.max ? { max: evaluate(e.max, vars(t)) } : {}), note: e.note ?? "", ...(e.perAttack ? { perAttack: e.perAttack } : {}) });
         return;
       }
       case "lateRepeat":

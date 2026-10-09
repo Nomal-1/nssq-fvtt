@@ -143,11 +143,29 @@ function settled(message) {
   });
 }
 
+async function perAttackCost(combat, ev) {
+  const c = combat.combatants.get(ev.attackerId);
+  const st = (c?.actor?.getFlag("nssq", "states") ?? []).find((s) => s.perAttack);
+  if (!st) return;
+  const ones = st.perAttack.selfDamage === "ones" ? ev.targets.reduce((n, t) => n + (t.hitData?.dice ?? []).filter((d) => d === 1).length, 0) : 0;
+  const tp = Number(st.perAttack.tp ?? 0) || 0;
+  const effects = [...(ones ? [{ type: "resource", resource: "hp", delta: -ones }] : []), ...(tp ? [{ type: "resource", resource: "tp", delta: -tp }] : [])];
+  if (!effects.length) return;
+  const { resolveAndPost } = await import("./skill-use.mjs");
+  await resolveAndPost({
+    actor: c.actor, combatant: c, kind: "skill", mainAction: false, followup: { type: "trigger" },
+    item: { name: st.name, img: c.actor.img, system: { effects, sl: 1, category: "", description: "", target: "자신" } },
+    units: [{ actor: c.actor, combatant: c }]
+  });
+}
+
 /** 공격 카드 하나 처리(활성 GM) */
 async function onAttackCard(message) {
   const ev = await attackEvent(message);
   if (!ev) return;
   const combat = game.combat;
+  // 공격 롤마다 대가를 치르는 전투 고유 상태(모노노후 《나찰》 perAttack: 자신의 대미지 다이스 1의 수만큼 【HP】, 【TP】 n)
+  await perAttackCost(combat, ev);
   // 이번 턴에 나온 〈염〉〈빙〉〈뇌〉 공격(《스피어 인볼브》)
   const els = (ev.elements ?? []).filter((x) => ["fire", "ice", "volt"].includes(x));
   if (els.length) {

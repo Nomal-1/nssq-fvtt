@@ -31,9 +31,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《두 번째 칼》로 도 2자루를 동시 장비 중이면 분류 '백병' 스킬 공격도 2회 가능. 사용한 스킬 2회분 TP 소비. 2회째 스킬 공격을 일부러 발동하지 않는 것도 선택 가능.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "《두 번째 칼》로 도 2자루 장비 중이면 『백병』 스킬도 2회(TP 2회분): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "dualSkill",
+     "category": "백병"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -124,9 +128,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>종별 '도' 무기를 무기 슬롯과 기타 슬롯에 장비하고, 통상 공격 시 각 무기로 1회씩 공격. 각 공격 【물리 명중】 -3, 【물리 공격】 -(3-SL).</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "도를 무기·기타 슬롯에 함께 장비하면 통상 공격을 무기마다 1회씩(각 물리 명중 −3, 물리 공격 −(3−SL)): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "dualWield",
+     "weapons": [
+      [
+       "도"
+      ],
+      [
+       "도"
+      ]
+     ],
+     "hitMod": -3,
+     "atkMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"

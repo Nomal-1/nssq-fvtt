@@ -9,6 +9,9 @@ import { combatProfile, friendly } from "./profile.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
 import { decorateReactions, pendingReaction } from "./reaction.mjs";
 import { guardAttack } from "./guard.mjs";
+import { slotOccupant, weaponStats } from "../engine/equipment.mjs";
+import { evaluate } from "../engine/expr.mjs";
+import tables from "../generated/tables.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/attack-card.hbs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
@@ -29,12 +32,58 @@ export function attackerFromContext(actor) {
 }
 
 /**
- * 통상 공격
+ * 쌍수(상시 dualWield: 장군 《두 번째 칼》·나이트시커 《추영의 칼날》·파이리츠 《건 소드》):
+ * 무기 슬롯·기타 슬롯의 무기 종류가 weapons 두 목록에 하나씩 맞으면, 통상 공격을 무기마다 1회(각 hitMod·atkMod)
+ * @returns {{ name, sl, hitMod, main: object, other: object }|null} main/other: 공격자 프로필에 더할 값(weaponMod)
+ */
+export function dualWieldOf(actor) {
+  if (actor?.type !== "character") return null;
+  const sk = actor.items.find((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "dualWield"));
+  if (!sk) return null;
+  const e = sk.system.effects.find((x) => x?.type === "dualWield");
+  const main = actor.system.equipment?.weapon;
+  const other = slotOccupant(actor.items.contents, "other");
+  if (!main?.item || other?.type !== "weapon") return null;
+  const [A = [], B = []] = e.weapons ?? [];
+  const mt = main.weaponType;
+  const ot = other.system.weaponType;
+  if (!((A.includes(mt) && B.includes(ot)) || (A.includes(ot) && B.includes(mt)))) return null;
+  const vars = { SL: sk.system.sl ?? 1 };
+  const hit = evaluate(e.hitMod ?? 0, vars);
+  const atk = evaluate(e.atkMod ?? 0, vars);
+  const table = tables.weapons[ot];
+  if (!table) return null;
+  // 기타 슬롯 무기의 성능으로 바꿔 넣는다(무기 슬롯 무기의 몫을 빼고 더함). 제련은 무기 슬롯 것만(07)
+  const os = weaponStats(table, { rank: other.system.rank, level: actor.system.level });
+  const imbue = actor.system.statusMods?.buffs?.elements ?? [];
+  return {
+    name: sk.name, sl: vars.SL, hitMod: hit,
+    main: { physHit: hit, physAtk: atk, label: main.item.name },
+    other: {
+      physHit: hit - (Number(main.physHit) || 0) + os.physHit, physAtk: atk - (Number(main.physAtk) || 0) + os.physAtk,
+      elements: [...new Set([other.system.element || table.element, ...imbue].filter(Boolean))], weaponName: other.name, weaponType: ot, range: os.range, label: other.name
+    }
+  };
+}
+
+/**
+ * 통상 공격. 쌍수(dualWieldOf)면 무기마다 1회씩(추격·반격 등 followup은 1회)
+ */
+export async function normalAttack(attacker, opts = {}) {
+  const dual = !opts.followup && !opts.weaponMod ? dualWieldOf(attacker) : null;
+  if (!dual) return attackWith(attacker, opts);
+  const first = await attackWith(attacker, { ...opts, weaponMod: { ...dual.main, by: dual.name } });
+  if (!first) return first;
+  return attackWith(attacker, { ...opts, weaponMod: { ...dual.other, by: dual.name }, turnChecked: true });
+}
+
+/**
+ * 통상 공격 1회
  * @param {Actor} attacker
  * @param {{ ignoreRange?: boolean, target?: TokenDocument }} [opts] GM은 Shift로 사거리 무시.
  *   target: 전투 화면에서 고른 대상(없으면 캔버스에서 지정한 타깃 1개)
  */
-export async function normalAttack(attacker, { ignoreRange = false, target: picked = null, followup = null } = {}) {
+async function attackWith(attacker, { ignoreRange = false, target: picked = null, followup = null, weaponMod = null, turnChecked = false } = {}) {
   if (!attacker) return;
   const targets = picked ? [picked] : [...game.user.targets];
   if (targets.length !== 1) return ui.notifications.warn(L("pickOneTarget"));
@@ -42,6 +91,15 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
   let target = targetToken.actor;
   if (!target) return;
   const a = combatProfile(attacker, combatantOf(attacker));
+  // 쌍수: 그 무기로(명중·공격 보정, 기타 슬롯 무기의 성능·속성·사거리)
+  if (weaponMod) {
+    a.physHit += weaponMod.physHit ?? 0;
+    a.physAtk += weaponMod.physAtk ?? 0;
+    if (weaponMod.elements?.length) a.elements = weaponMod.elements;
+    if (weaponMod.weaponName) a.weaponName = weaponMod.weaponName;
+    if (weaponMod.weaponType) a.weaponType = weaponMod.weaponType;
+    if (weaponMod.range && a.range !== "원") a.range = weaponMod.range;
+  }
   let d = combatProfile(target, combatantOf(target));
   if (a.ko) return ui.notifications.warn(L("attackerKO", { name: a.name }));
   if (d.ko) return ui.notifications.warn(L("targetKO", { name: target.name }));
@@ -53,7 +111,7 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
   const combat = game.combat;
   const me = combatantOf(attacker);
   // 추격·반복 공격(followup)은 차례와 관계없이
-  if (combat?.started && me && !followup) {
+  if (combat?.started && me && !followup && !turnChecked) {
     const phase = combat.getFlag("nssq", "phase");
     const myTurn = phase === "main" && combat.combatant?.id === me.id;
     if (!myTurn) {
@@ -123,7 +181,7 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
   const flags = {
     nssq: {
       attack: {
-        attackerUuid: attacker.uuid, kind: "physical", label: followup?.by ? `${L("normalAttack")} (${followup.by})` : L("normalAttack"), ...(followup ? { followup } : {}),
+        attackerUuid: attacker.uuid, kind: "physical", label: followup?.by ? `${L("normalAttack")} (${followup.by})` : weaponMod?.by ? `${L("normalAttack")} (《${weaponMod.by}》: ${weaponMod.label ?? ""})` : L("normalAttack"), ...(followup ? { followup } : {}),
         weapon: a.weaponName, elements: atkElements, physAtk: a.physAtk, defense: d.defense,
         hitStat: a.physHit, fpGain: r.fpGain, targets: [targetEntry],
         // [저주]: 공격자가 공격 시점에 [저주]면 실대미지 절반을 되돌려 받는다(적용할 때)

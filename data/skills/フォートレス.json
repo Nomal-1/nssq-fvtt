@@ -406,9 +406,12 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 '방어' 스킬로 대기 상태여도 후발 행동으로 통상 공격 가능.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "『방어』 스킬로 대기 중이어도 후발 행동으로 통상 공격 가능: GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "guardLateAttack"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"

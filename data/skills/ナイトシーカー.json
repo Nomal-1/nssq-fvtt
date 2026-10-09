@@ -928,9 +928,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>종별 '검' 또는 '단검' 무기를 무기 슬롯과 기타 슬롯에 장비하고, 통상 공격 시 각 무기로 1회씩 공격. 각 공격 【물리 명중】 -3, 【물리 공격】 -(3-SL).</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "검·단검을 무기·기타 슬롯에 함께 장비하면 통상 공격을 무기마다 1회씩(각 물리 명중 −3, 물리 공격 −(3−SL)): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "dualWield",
+     "weapons": [
+      [
+       "검",
+       "단검"
+      ],
+      [
+       "검",
+       "단검"
+      ]
+     ],
+     "hitMod": -3,
+     "atkMod": "-(3-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
@@ -978,9 +993,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《추영의 칼날》로 무기 2개를 동시 장비 중이면 분류 '백병' 스킬 공격도 2회 가능. 사용한 스킬 2회분 TP 소비, 2회째를 일부러 발동하지 않는 것도 선택 가능. 각 공격 【물리 명중】 -(4-SL).</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "《추영의 칼날》로 쌍수 중이면 『백병』 스킬도 2회(TP 2회분, 각 물리 명중 −(4−SL)): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "dualSkill",
+     "category": "백병",
+     "hitMod": "-(4-SL)"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"

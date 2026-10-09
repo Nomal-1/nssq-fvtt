@@ -407,13 +407,18 @@
    "description": "<p>《인법: 분신》을 쓴 턴에만 사용 가능하며, 그 턴의 주행동 2회를 모두 이 스킬로 써야 한다. 물리 공격 롤, 대미지 다이스 +((SL+2)×3)개.</p>",
    "effects": [
     {
+     "type": "requireSelf",
+     "when": {
+      "selfExtraAction": true
+     }
+    },
+    {
      "type": "attack",
      "kind": "physical",
      "diceMod": "(SL+2)*3"
     }
    ],
-   "review": "partial",
-   "effectsNote": "《인법: 분신》을 쓴 턴에만, 그 턴 주행동 2회 모두 이 스킬로: GM이 확인"
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"

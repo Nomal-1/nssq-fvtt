@@ -365,16 +365,47 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
       return null;
     }
   }
-  const message = await resolveAndPost({
-    actor, combatant, item, kind,
-    units: targetCombatants.map((c) => ({ actor: c.actor, combatant: c })),
+  const userMods = declares.reduce((m, d) => { for (const [k, v] of Object.entries(d.mods ?? {})) m[k] = (m[k] ?? 0) + v; return m; }, {});
+  // 《이도일인》·《추영의 잔상》: 쌍수 중 그 분류 공격 스킬을 2회(TP 2회분, 2회째는 고를 수 있음)
+  const twice = kind === "skill" && !free ? await askDualSkill(actor, item, effects) : null;
+  if (twice) userMods.physHit = (userMods.physHit ?? 0) + twice.hitMod;
+  const post = (units) => resolveAndPost({
+    actor, combatant, item, kind, units,
     mainAction: kind === "skill" && sys.timing === "주행동", variant, choices, stripTiming: late, skipDelayed: !!delayed, skipToken: tokenEffectOf(effects).length > 0,
-    userMods: declares.reduce((m, d) => { for (const [k, v] of Object.entries(d.mods ?? {})) m[k] = (m[k] ?? 0) + v; return m; }, {})
+    userMods
   });
+  const message = await post(targetCombatants.map((c) => ({ actor: c.actor, combatant: c })));
+  if (twice) {
+    await new Promise((r) => setTimeout(r, 300));
+    const left = targetCombatants.filter(alive);
+    if (left.length) await post(left.map((c) => ({ actor: c.actor, combatant: c })));
+  }
   if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
   // 개막 페이즈에 쓴 스킬은 그 전투원의 개막 행동
   if (combat.getFlag("nssq", "phase") === "opening") await combatant.setFlag("nssq", "opening", "skill");
   return message;
+}
+
+/**
+ * 쌍수 스킬 2회(상시 dualSkill {category, hitMod}): 통상 공격 쌍수 조건(combat/attack.mjs dualWieldOf)이 맞고 그 분류의 공격 스킬이면
+ * 2회째를 쓸지 묻고, 쓰면 코스트를 한 번 더 낸다. @returns {{ hitMod }|null}
+ */
+async function askDualSkill(actor, item, effects) {
+  const sk = actor.items.find((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "dualSkill"));
+  if (!sk || !effects.some((e) => e?.type === "attack")) return null;
+  const e = sk.system.effects.find((x) => x?.type === "dualSkill");
+  if (item.system.category !== (e.category ?? "백병")) return null;
+  const { dualWieldOf } = await import("./attack.mjs");
+  if (!dualWieldOf(actor)) return null;
+  const cost = item.system.cost ?? {};
+  if ((cost.tp ?? 0) > (actor.system.tp?.value ?? 0) || (cost.fp ?? 0) > (actor.system.fp?.value ?? 0)) return null;
+  const ok = await Dialog.confirm({ title: `《${sk.name}》`, content: `<p>${esc(L("dualAsk", { skill: item.name, name: sk.name }))}</p>`, rejectClose: false });
+  if (!ok) return null;
+  const upd = {};
+  if (cost.tp) upd["system.tp.value"] = actor.system.tp.value - cost.tp;
+  if (cost.fp) upd["system.fp.value"] = actor.system.fp.value - cost.fp;
+  if (Object.keys(upd).length) await actor.update(upd);
+  return { hitMod: evaluate(e.hitMod ?? 0, { SL: sk.system.sl ?? 1 }) };
 }
 
 /** 《최종 결전의 군가》: 고른 스킬(최대 count개, 대상이 자신·전체인 것)을 코스트 없이 차례로 */
@@ -473,7 +504,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
       if (at && units[i].combatant) await units[i].combatant.setFlag("nssq", "timing", at);
       // 「그 턴 주행동 2회」(《인법: 분신》)
       const extraN = r.results.get(t.id)?.extraAction;
-      if (extraN && units[i].combatant) await units[i].combatant.setFlag("nssq", "extraAction", (units[i].combatant.getFlag("nssq", "extraAction") ?? 0) + extraN);
+      if (extraN && units[i].combatant) await units[i].combatant.update({ "flags.nssq.extraAction": (units[i].combatant.getFlag("nssq", "extraAction") ?? 0) + extraN, "flags.nssq.extraActionRound": units[i].combatant.combat?.round ?? 0 });
     }
   }
   // 《끝없는 원무곡》: 대상 아군이 후발 행동 취급으로 다시 행동(메인 페이즈 끝, documents/combat.mjs afterLate)

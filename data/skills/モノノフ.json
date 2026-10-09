@@ -791,11 +791,14 @@
        "path": "elemAtk",
        "value": "SL+1"
       }
-     ]
+     ],
+     "perAttack": {
+      "selfDamage": "ones",
+      "tp": 1
+     }
     }
    ],
-   "review": "partial",
-   "effectsNote": "나찰 중 공격 롤마다 대미지 다이스의 1 개수만큼 HP 대미지·TP 1 소모, 종료 페이즈에 임의 해제(GM [상태] 창에서 지움): GM이 처리"
+   "review": "ok"
   },
   "_meta": {
    "className": "모노노후"

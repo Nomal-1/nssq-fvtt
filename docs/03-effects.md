@@ -107,6 +107,12 @@
 | `anytime` | `action`(swapRow/retarget), `skillKey` | 『특수』 스킬을 전투 중 아무 때나: 파티 카드 ★ 버튼(combat/special.mjs). swapRow 배치 변경·맞바꾸기(《체인지 스텝》), retarget 그 대기 상태의 대상 바꾸기(《디바이드 체인지》) |
 | `healFromDamage` | (`toSelf`와 함께) | 이 행동에서 대미지를 준 다이스 수(대상 합)만큼 아군 전체 【HP】 회복(《블랙 사바스》) |
 | `nextTurn` | `effects[]` | (`toSelf`와 함께) 다음 라운드에만 쓰는 「그 턴 동안」 효과(전투원 플래그 `nextTurn`, 《차지 에지》) |
+| `dualWield` | `weapons`([[무기 종류…], [무기 종류…]]), `hitMod`, `atkMod` | (상시) 무기·기타 슬롯 무기가 두 목록에 하나씩 맞으면 통상 공격을 무기마다 1회(combat/attack.mjs `dualWieldOf`) |
+| `dualSkill` | `category`, `hitMod` | (상시) 쌍수 중 그 분류 공격 스킬을 2회(코스트 2회분, 쓸 때 묻는다) |
+| `wideEvade` | | (상시) 같은 열 아군의 반응 버튼에 자신의 능동 회피 수동 스킬을 더한다(《와이드 패링》) |
+| `guardLateAttack` | | (상시) 『방어』 스킬 대기 중 후발 행동으로 통상 공격(《공방일체》) |
+
+C2 보강: state `perAttack {selfDamage: "ones", tp}`(공격마다 대가, 《나찰》), when `selfExtraAction`(그 턴 주행동 2회를 얻음, 《다원 발도》).
 
 C1 보강: `recoil.to: "allies"`(자신 외 아군 전원, 《레기온 스러스트》), attack `ignoreBuffs`(["defenseUp", "resistUp:pierce"], 《실버 애로》)·`addTurnElements`(그 턴 나온 속성 부가, 《스피어 인볼브》), attackBonus `resistLow`(【내성】 1·2를 하나 낮춤, 《특이점 정리》), target `count`(단일이면 n명을 한 번에, 열이면 그 열에서 n체), when `targetNotBoss`(에너미 `isFOE`·`isBoss`).
 | `flag` | `flag`, `value` | 규칙 스위치(타이밍 「상시」). `itemRevive`: 그 캐릭터가 쓰는 HP 회복 아이템에 부활 효과(《간이 소생》), `tokenMax`: 『소환수』 토큰 동시 유지 수(《백수의 왕기》), `campCookHp`·`campCookTp`·`campCookCure`: 캠프 때 HP·TP 회복 2배·상태 이상 회복(커먼 요리 스킬, 『조리기구 세트』 필요) |
