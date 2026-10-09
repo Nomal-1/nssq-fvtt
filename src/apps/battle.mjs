@@ -236,6 +236,7 @@ export async function startBattle({ presetId, members, surprise = "none", identi
       <p>${actors.map((a) => esc(a.name)).join(", ")} vs ${copy.tokens.filter((t) => t.actor?.type === "enemy").map((t) => esc(t.name)).join(", ")}</p>
       ${surpriseText ? `<p class="warn">${surpriseText}</p>` : ""}</div>`
   });
+  if (surprise === "enemy") await (await import("../combat/turn-status.mjs")).preemptBlocks(combat);
   return combat;
 }
 

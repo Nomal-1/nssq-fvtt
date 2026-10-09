@@ -5,6 +5,8 @@
     {{else}}
     <button type="button" data-gm="battle-start" class="battle"><i class="fas fa-skull-crossbones"></i> {{localize "NSSQ.Battle.start"}}</button>
     {{/if}}
+    <button type="button" data-gm="camp"><i class="fas fa-campground"></i> {{localize "NSSQ.Explore.campTitle"}}</button>
+    <button type="button" data-gm="trap"><i class="fas fa-exclamation-triangle"></i> {{localize "NSSQ.Explore.trapTitle"}}</button>
     <button type="button" data-gm="gather"><i class="fas fa-leaf"></i> {{localize "NSSQ.Loot.gatherTitle"}}</button>
     <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
     <button type="button" data-gm="shop" class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</button>

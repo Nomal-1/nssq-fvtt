@@ -10,7 +10,7 @@ import { endPhaseFor } from "../engine/end-phase.mjs";
 import { pickRandom } from "../engine/combat.mjs";
 import { autoApplyMode, isActiveGM } from "./apply.mjs";
 import { normalAttack } from "./attack.mjs";
-import { combatProfile, friendly } from "./profile.mjs";
+import { combatProfile, friendly, sideOf } from "./profile.mjs";
 import { buffLabel, conditionName } from "./status.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
@@ -34,9 +34,42 @@ export function actionState(combatant) {
   const stuck = conds.find((c) => CONDITIONS[c.id]?.noAction);
   const disabled = !!combatant?.getFlag("nssq", "disabled");
   const confused = !!combatant?.getFlag("nssq", "confused");
-  const noAction = !!stuck || disabled;
-  const reason = stuck ? conditionName(stuck.id) : disabled ? conditionName(combatant.getFlag("nssq", "disabled")) : confused ? conditionName("confuse") : "";
+  const surprised = isSurprised(combatant);
+  const noAction = !!stuck || disabled || surprised;
+  const reason = stuck ? conditionName(stuck.id) : disabled ? conditionName(combatant.getFlag("nssq", "disabled")) : surprised ? L("surprised") : confused ? conditionName("confuse") : "";
   return { noAction, confused: confused && !noAction, noOpening: noAction || confused, reason };
+}
+
+/**
+ * 기습(전투 룰): 기습당한 쪽은 첫 1턴 동안 수동 행동 외에는 아무것도 할 수 없다.
+ * 전투 플래그 battle.surprise: "party"(파티가 기습 → 에너미가 당함) / "enemy"(파티가 기습당함). 《선제 블록》 성공(플래그 preempt)은 제외
+ */
+export function isSurprised(combatant) {
+  const combat = combatant?.combat;
+  const sp = combat?.getFlag("nssq", "battle")?.surprise;
+  if (!combat?.started || combat.round !== 1 || !sp || sp === "none" || !combatant.actor) return false;
+  const enemySide = sideOf(combatant.actor) === "enemy";
+  return (sp === "party" ? enemySide : !enemySide) && !combatant.getFlag("nssq", "preempt");
+}
+
+/** 파티가 기습당했을 때 《선제 블록》(효과 preemptBlock): (1D6−1) ≤ SL이면 행동 손실을 막는다 */
+export async function preemptBlocks(combat) {
+  const rolls = [];
+  const rows = [];
+  for (const c of combat.combatants) {
+    const sk = c.actor?.items.find((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "preemptBlock"));
+    if (!sk || sideOf(c.actor) === "enemy") continue;
+    const roll = await new Roll("1d6 - 1").evaluate();
+    rolls.push(roll);
+    const ok = roll.total <= (sk.system.sl ?? 0);
+    if (ok) await c.setFlag("nssq", "preempt", true);
+    rows.push(`<li class="${ok ? "ok" : "ng"}">${esc(L("preemptRow", { name: c.name, skill: sk.name, n: roll.total, sl: sk.system.sl ?? 0 }))} → ${esc(L(ok ? "preemptOk" : "preemptNg"))}</li>`);
+  }
+  if (!rows.length) return;
+  await ChatMessage.create({
+    speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") }, rolls, sound: CONFIG.sounds.dice,
+    content: `<div class="nssq-combat-note nssq-status-note"><b><i class="fas fa-shield-alt"></i> ${esc(L("preemptTitle"))}</b><ul>${rows.join("")}</ul></div>`
+  });
 }
 
 /* ---------------- 1D6 판정(개막·부여 순간) ---------------- */
