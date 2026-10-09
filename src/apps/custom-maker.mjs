@@ -744,8 +744,9 @@ export class ClassMaker extends Application {
     html.on("click", "[data-cm-preadd]", (ev) => edit(`${ev.currentTarget.dataset.cmPreadd}.0.0`, (g) => g.push([{ skill: "", sl: 1 }])));
     html.on("click", "[data-cm-preor]", (ev) => edit(`${ev.currentTarget.dataset.cmPreor}.0`, (g, gi) => g[gi].push({ skill: "", sl: 1 })));
     html.on("click", "[data-cm-predel]", (ev) => edit(ev.currentTarget.dataset.cmPredel, (g, gi, qi) => { g[gi].splice(qi, 1); if (!g[gi].length) g.splice(gi, 1); }));
-    html.on("click", "[data-cm]", async (ev) => {
-      const a = ev.currentTarget.dataset.cm;
+    // [data-mk]: 불러오기·가져오기 검색 칸(pickerHtml)의 버튼
+    html.on("click", "[data-cm], [data-mk]", async (ev) => {
+      const a = ev.currentTarget.dataset.cm ?? ev.currentTarget.dataset.mk;
       const i = Number(ev.currentTarget.dataset.i);
       this.read(html);
       switch (a) {
