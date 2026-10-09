@@ -16,7 +16,7 @@ import { activationRoll } from "./usage.mjs";
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus", "useBonus", "target", "immune"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus", "useBonus", "target", "immune", "requireAllies"];
 
 /** custom 핸들러 등록부: name → (ctx) => 결과 조각 */
 const CUSTOM = new Map();
@@ -268,6 +268,10 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         r.states.push({ id: e.id, name: e.label ?? "", group: e.group ?? "", mods, ...(e.max ? { max: evaluate(e.max, vars(t)) } : {}), note: e.note ?? "" });
         return;
       }
+      case "focus":
+        // 「그 턴, 대상 적 단일 스킬은 모두 이 대상」(에너미 워처 《타기팅》): 호출자가 전투 플래그로
+        out.focus = t.id;
+        return;
       case "rallyChase":
         // 「아군 최대 n명이 즉시 적 단일에게 추격」(《일제 사격》·《난룡의 진》): 호출자가 추격을 실행
         out.rally = { count: Math.max(1, evaluate(e.count ?? 1, vars(t))), weapons: e.weapons ?? null, target: t.id };

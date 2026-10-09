@@ -36,6 +36,8 @@ export const TYPES = {
   nullify: { scope: false },
   actionTiming: { value: true },
   extraAction: { count: false },
+  requireAllies: { name: true, count: false, sameRow: false },
+  focus: {},
   repeat: { scope: false, cost: false },
   rallyChase: { count: false, weapons: false },
   tokenRemove: { category: false },
@@ -45,7 +47,7 @@ export const TYPES = {
   useBonus: { buffTurns: false, debuffTurns: false, healHp: false },
   drain: { resource: false, mode: false },
   recoil: { mode: false },
-  target: { side: true, scope: true, count: false, excludeSelf: false },
+  target: { side: true, scope: true, count: false, excludeSelf: false, row: false },
   guard: { mode: true, scope: false, optional: false },
   aura: { path: true, value: true, scope: false },
   provoke: { count: false, to: false }

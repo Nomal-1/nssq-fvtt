@@ -35,7 +35,7 @@ const alive = (c) => !!c.actor && !c.defeated && (c.actor.system.hp?.value ?? 0)
 export function targetSpec(text = "", effects = null) {
   // 데이터의 대상 지정(type "target")이 있으면 그것을(대상 칸이 「특수」인 스킬 등)
   const o = (effects ?? []).find((e) => e?.type === "target");
-  if (o) return { side: o.side ?? "enemy", scope: o.scope ?? "single", ...(o.count ? { count: o.count } : {}) };
+  if (o) return { side: o.side ?? "enemy", scope: o.scope ?? "single", ...(o.count ? { count: o.count } : {}), ...(o.row ? { row: o.row } : {}) };
   const t = String(text);
   if (/자신/.test(t) && !/아군|적/.test(t)) return { side: "self", scope: "single" };
   const side = /아군/.test(t) ? "ally" : "enemy";
@@ -343,6 +343,11 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     ...(first ? { rolls, sound: rolls.length ? CONFIG.sounds.dice : undefined } : {}),
     flags: { nssq: { skillCard: c } }
   });
+  // 《타기팅》: 전투 플래그 focus(이번 턴)
+  if (!r.failed && r.focus && combatant?.combat) {
+    const fc = targets.find((t) => t.id === r.focus);
+    if (fc) await combatant.combat.setFlag("nssq", "focus", { targetId: r.focus, round: combatant.combat.round, side: actor.type === "enemy" ? "enemy" : "party" });
+  }
   // 아군 일제 추격(《일제 사격》·《난룡의 진》): 카드 뒤에
   const rally = !r.failed && r.rally ? r.rally : null;
   const afterPost = async (m) => {
@@ -675,9 +680,20 @@ export async function enemyUseSkill(combat, combatant, skill) {
   const n = hasVariants(skill.system.effects) ? skill.system.variants?.length ?? 0 : 0;
   const variant = n ? Math.floor(CONFIG.Dice.randomUniform() * n) : null;
   if (spec.side === "self") return executeAction(combat, combatant, "skill", skill.id, [combatant], { variant });
-  const list = candidates(combat, combatant, spec, skill.system.range, { allowKO: revives(skill) });
+  let list = candidates(combat, combatant, spec, skill.system.range, { allowKO: revives(skill) });
+  // 「적 전열 전원」 등 열을 정한 대상(연계 공격)
+  if (spec.row) list = list.filter((c) => (c.actor.system.row ?? "front") === spec.row).length ? list.filter((c) => (c.actor.system.row ?? "front") === spec.row) : list;
   if (!list.length) return null;
+  // 연계 공격: 참가자는 그 턴 행동 종료(01 §3.11)
+  const { linkPartners } = await import("./enemy-ai.mjs");
+  const partners = linkPartners(combat, combatant, skill) ?? [];
+  for (const p of partners) await p.setFlag("nssq", "acted", true);
+  if (partners.length) await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: combatant.actor }), content: `<div class="nssq-combat-note"><i class="fas fa-link"></i> ${esc(L("linkAttack", { name: combatant.name, skill: skill.name, partners: partners.map((p) => p.name).join(", ") }))}</div>` });
   if (spec.scope === "all" || spec.scope === "random") return executeAction(combat, combatant, "skill", skill.id, list, { variant });
+  // 《타기팅》: 이번 턴 이 편의 단일 대상 스킬은 지정한 대상에게(사거리 안일 때)
+  const focus = combat.getFlag("nssq", "focus");
+  const fc = focus && focus.round === combat.round && focus.side === (combatant.actor.type === "enemy" ? "enemy" : "party") ? list.find((c) => c.id === focus.targetId) : null;
+  if (fc && spec.scope === "single") return pickTarget(combat, combatant, "skill", skill.id, fc, { ...spec, variant });
   const pick = pickRandom(list, () => CONFIG.Dice.randomUniform());
   return pickTarget(combat, combatant, "skill", skill.id, pick, { ...spec, variant });
 }

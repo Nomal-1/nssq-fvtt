@@ -1588,15 +1588,21 @@
       {
        "type": "target",
        "side": "enemy",
-       "scope": "row"
+       "scope": "row",
+       "row": "front"
+      },
+      {
+       "type": "requireAllies",
+       "name": "물어뜯치",
+       "count": 2,
+       "sameRow": true
       },
       {
        "type": "attack",
        "kind": "physical"
       }
      ],
-     "review": "partial",
-     "effectsNote": "연계 공격(같은 열에 물어뜯치 2마리 이상, 참가자 전원 그 턴 행동 종료, 가장 느린 속도에 맞춤): 연계 조건·순서는 GM이 확인(단계 8). 대상은 적 전열"
+     "review": "ok"
     },
     "_key": "!actors.items!VwK7WHWiUg1d8IR1.H8AJfWxq3KCjXvR2"
    },
@@ -3433,15 +3439,21 @@
       {
        "type": "target",
        "side": "enemy",
-       "scope": "row"
+       "scope": "row",
+       "row": "front"
+      },
+      {
+       "type": "requireAllies",
+       "name": "숲달팽이",
+       "count": 2,
+       "sameRow": true
       },
       {
        "type": "attack",
        "kind": "physical"
       }
      ],
-     "review": "partial",
-     "effectsNote": "연계 공격(같은 열에 숲달팽이 2마리 이상, 참가자 전원 그 턴 행동 종료, 가장 느린 속도에 맞춤): 연계 조건·순서는 GM이 확인(단계 8). 대상은 적 전열"
+     "review": "ok"
     },
     "_key": "!actors.items!MU2vT98Avoh17aTz.Ke2w6j3UbYoLrbcA"
    }
@@ -3741,9 +3753,17 @@
      "variants": [],
      "sl": 1,
      "description": "<p>그 턴, '대상: 적 단일'인 스킬은 사거리 등의 사정으로 불가능한 것을 제외하고 모두 이 스킬의 대상이 된 자를 대상으로 한다.</p>",
-     "effects": [],
-     "review": "partial",
-     "effectsNote": "그 턴 적 단일 스킬의 대상을 모두 이 대상으로: GM이 처리(단계 8)"
+     "effects": [
+      {
+       "type": "target",
+       "side": "enemy",
+       "scope": "single"
+      },
+      {
+       "type": "focus"
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!IPjPM1o7xdpFhfJx.JZ8S6WBC0f49mmlb"
    }
@@ -4140,6 +4160,12 @@
      "description": "<p>자신과 같은 열에 괴물두리안이 2마리 이상 있을 때 사용할 수 있는 연계 공격. 자신의 【억제 공격】과 대상의 【억제 방어】로 대결 판정을 하고, 승리하면 대상에게 [독]을 준다.</p>",
      "effects": [
       {
+       "type": "requireAllies",
+       "name": "괴물두리안",
+       "count": 2,
+       "sameRow": true
+      },
+      {
        "type": "inflict",
        "condition": "poison",
        "check": {
@@ -4147,8 +4173,7 @@
        }
       }
      ],
-     "review": "partial",
-     "effectsNote": "연계 공격(같은 열에 괴물두리안 2마리 이상, 참가자 전원 그 턴 행동 종료, 가장 느린 속도에 맞춤): 연계 조건·순서는 GM이 확인(단계 8)"
+     "review": "ok"
     },
     "_key": "!actors.items!XeufLfUtJuVOzE7F.A2TQlzaw2P03g8s7"
    }

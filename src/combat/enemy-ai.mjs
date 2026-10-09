@@ -22,6 +22,24 @@ function targetsInRange(combat, me, range) {
     .filter((c) => range === "-" || range === "" || inRange(range, row, c.actor.system.row ?? "front"));
 }
 
+/**
+ * 연계 공격 조건(01 §3.11): 같은 열에 지정한 이름의 동료가 count마리 이상(살아 있고 행동 가능)
+ * @returns {boolean}
+ */
+export function linkReady(combat, me, skill) {
+  return linkPartners(combat, me, skill) !== null;
+}
+
+/** 연계 참가자(조건이 안 맞으면 null, 연계 공격이 아니면 []) */
+export function linkPartners(combat, me, skill) {
+  const req = (skill.system.effects ?? []).find((e) => e?.type === "requireAllies");
+  if (!req) return [];
+  const row = me.actor.system.row ?? "front";
+  const list = combat.combatants.filter((c) => c.id !== me.id && alive(c) && friendly(c.actor, me.actor) && c.name.includes(req.name)
+    && (!req.sameRow || (c.actor.system.row ?? "front") === row) && !c.getFlag("nssq", "waiting"));
+  return list.length >= (req.count ?? 2) ? list.slice(0, req.count ?? 2) : null;
+}
+
 /** 대상 문구: 「적 단일」 등은 무작위 하나, 그 밖(전체·열·자신)은 문구 그대로 */
 function pickTarget(combat, me, skill) {
   const t = skill.system.target ?? "";
@@ -36,7 +54,8 @@ function pickTarget(combat, me, skill) {
 export async function randomEnemyAction(combat) {
   const me = combat?.combatant;
   if (!game.user.isGM || !me?.actor || me.actor.type !== "enemy" || !alive(me)) return;
-  const skills = me.actor.items.filter((i) => i.type === "skill" && i.system.timing === "주행동");
+  // 연계 공격(requireAllies: 같은 열에 ○○이 n마리 이상)은 조건이 맞을 때만 후보
+  const skills = me.actor.items.filter((i) => i.type === "skill" && i.system.timing === "주행동" && linkReady(combat, me, i));
   const choice = pickRandom([{ kind: "attack" }, ...skills.map((s) => ({ kind: "skill", skill: s }))], rng);
   if (choice.kind === "attack") {
     const a = combatProfile(me.actor, me);
