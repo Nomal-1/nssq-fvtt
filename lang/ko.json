@@ -63,7 +63,7 @@
     "FP": "【FP】",
     "Carry": "소지 수",
     "FOE": "F.O.E.",
-    "Boss": "보스",
+    "Boss": "보스(즉사 무효)",
     "Rare": {
       "label": "희소종",
       "on": "희소종으로",
@@ -1081,6 +1081,8 @@
       "done": "효과 데이터 갱신: {n}개 바뀜"
     },
     "SkillUse": {
+      "repeatExtra": "{name}: 두 번째 주행동도 《{skill}》",
+      "repeatNoCost": "코스트가 모자라 《{skill}》를 한 번 더 쓰지 못했다.",
       "skillTitle": "{name}의 스킬",
       "itemTitle": "{name}의 아이템",
       "back": "돌아가기",

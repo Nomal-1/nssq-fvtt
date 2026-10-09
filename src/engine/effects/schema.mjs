@@ -85,7 +85,7 @@ export const TYPES = {
   aura: { path: true, value: true, scope: false },
   provoke: { count: false, to: false }
 };
-export const FLAGS = ["itemRevive", "noCarryCount", "ownLimit", "weaponElement", "tokenMax", "campCookHp", "campCookTp", "campCookCure", "openingCategory", "vanguard", "rangeAll", "anyAilment", "lateCategory", "healThreshold", "overheatLock", "markElementKey"];
+export const FLAGS = ["itemRevive", "noCarryCount", "ownLimit", "weaponElement", "tokenMax", "campCookHp", "campCookTp", "campCookCure", "openingCategory", "vanguard", "rangeAll", "anyAilment", "lateCategory", "healThreshold", "overheatLock", "markElementKey", "repeatExtraAction"];
 export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart", "escapeCheck", "hpLost", "enemyKO", "buffGained", "battleWon", "damaged", "conditionGained", "tokenGone", "bindInflicted", "useSkill"];
 
 export const COMMON = ["type", "when", "chance", "label", "variant", "toSelf", "whenNote", "always"];

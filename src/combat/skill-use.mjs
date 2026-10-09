@@ -402,10 +402,38 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
     const left = targetCombatants.filter(alive);
     if (left.length) await post(left.map((c) => ({ actor: c.actor, combatant: c })), twice.swap);
   }
+  // 「그 턴 주행동 2회를 모두 이 스킬로」(flag repeatExtraAction, 《다원 발도》): 두 번째 주행동을 묻지 않고 같은 스킬로(07 #129)
+  if (kind === "skill" && !free && !late && phase === "main" && effects.some((e) => e?.type === "flag" && e.flag === "repeatExtraAction")
+    && Number(combatant.getFlag("nssq", "extraAction") ?? 0) > 0) await repeatExtraAction(combat, combatant, item, targetCombatants, post);
   if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
   // 개막 페이즈에 쓴 스킬은 그 전투원의 개막 행동
   if (combat.getFlag("nssq", "phase") === "opening") await combatant.setFlag("nssq", "opening", "skill");
   return message;
+}
+
+/** 두 번째 주행동을 같은 스킬로: 추가 주행동을 쓰고 코스트를 한 번 더(대상이 쓰러졌으면 다시 고른다) */
+async function repeatExtraAction(combat, combatant, item, targets, post) {
+  const actor = combatant.actor;
+  await combatant.setFlag("nssq", "extraAction", 0);
+  const c = item.system.cost ?? {};
+  if ((c.tp ?? 0) > (actor.system.tp?.value ?? 0) || (c.fp ?? 0) > (actor.system.fp?.value ?? 0)) {
+    return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-combat-note">${esc(game.i18n.format("NSSQ.SkillUse.repeatNoCost", { skill: item.name }))}</div>` });
+  }
+  await new Promise((r) => setTimeout(r, 300));
+  let left = targets.filter(alive);
+  if (!left.length) {
+    const spec = turnScope(combatant, item, targetSpec(item.system.target, item.system.effects));
+    const list = candidates(combat, combatant, spec, item.system.range);
+    if (!list.length) return null;
+    left = list.length === 1 ? list : await pickSome(list, 1, item.name);
+    if (!left?.length) return null;
+  }
+  const upd = {};
+  if (c.tp) upd["system.tp.value"] = Math.max(0, (actor.system.tp?.value ?? 0) - c.tp);
+  if (c.fp) upd["system.fp.value"] = Math.max(0, (actor.system.fp?.value ?? 0) - c.fp);
+  if (Object.keys(upd).length) await actor.update(upd);
+  await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-combat-note"><i class="fas fa-redo"></i> ${esc(game.i18n.format("NSSQ.SkillUse.repeatExtra", { name: combatant.name, skill: item.name }))}</div>` });
+  return post(left.map((x) => ({ actor: x.actor, combatant: x })));
 }
 
 /**

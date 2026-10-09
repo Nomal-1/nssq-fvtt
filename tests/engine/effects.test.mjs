@@ -440,6 +440,9 @@ describe("부분 자동 전투 스킬 C1묶음", () => {
     expect(a.allyRecoil).toBe(2);
     const b = await resolveEffects({ effects: [{ type: "attack", kind: "physical" }, { type: "healFromDamage", toSelf: true }], user, targets: [foe], rollDice: dice(5, 5, 1, 1, 5, 5, 5, 5) });
     expect(b.allyHeal).toBe(4);
+    // 반감 후의 수(07 #118): 가드 중인 대상이면 4 → 2
+    const g = await resolveEffects({ effects: [{ type: "attack", kind: "physical" }, { type: "healFromDamage", toSelf: true }], user, targets: [{ ...foe, guarding: true }], rollDice: dice(5, 5, 1, 1, 5, 5, 5, 5) });
+    expect(g.allyHeal).toBe(2);
     const c = await resolveEffects({ effects: [{ type: "attack", kind: "physical", addTurnElements: ["fire", "ice", "volt"] }], user, targets: [foe], ctx: { turnElements: ["ice"] }, rollDice: dice(5, 5, ...Array(6).fill(2)) });
     expect(c.results.get("e").hits[0].elements).toEqual(["slash", "ice"]);
   });

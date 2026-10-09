@@ -413,6 +413,10 @@
      }
     },
     {
+     "type": "flag",
+     "flag": "repeatExtraAction"
+    },
+    {
      "type": "attack",
      "kind": "physical",
      "diceMod": "(SL+2)*3"

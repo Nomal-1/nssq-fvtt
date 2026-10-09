@@ -17,6 +17,12 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 
 /** 이 캐릭터가 이 공격(kind)에 쓸 수 있는 수동 스킬 */
 export function reactionChoices(actor, kind) {
+  // 《와이드 패링》이 먼저(실패하면 대상 자신의 능동 회피를 이어서 고를 수 있다)
+  return wideChoices(actor, kind).concat(ownChoices(actor, kind));
+}
+
+/** 대상 자신의 수동 스킬·대기 상태 */
+function ownChoices(actor, kind) {
   // 에너미의 수동 능동 회피(큰무당벌레 《바람의 순간》 등)도: 카드가 생기면 활성 GM이 자동으로 쓴다
   if (!actor || !["character", "enemy"].includes(actor.type)) return [];
   const s = actor.system;
@@ -36,8 +42,7 @@ export function reactionChoices(actor, kind) {
     })
     .map((i) => ({ id: i.id, name: i.name }))
     // 대기 상태 안의 능동 회피(무사 《몽상검》: 대기 중 물리 공격을 받으면 【AGI】로 능동 회피)
-    .concat(stanceOf(actor).filter((st) => reactionEffect(st.effects, kind)).map((st) => ({ id: `stance:${st.id}`, name: st.name })))
-    .concat(wideChoices(actor, kind));
+    .concat(stanceOf(actor).filter((st) => reactionEffect(st.effects, kind)).map((st) => ({ id: `stance:${st.id}`, name: st.name })));
 }
 
 /**
@@ -53,7 +58,7 @@ function wideChoices(actor, kind) {
     const h = c.actor;
     if (!h || h.uuid === actor.uuid || c.defeated || (h.system.hp?.value ?? 0) <= 0 || !friendly(h, actor) || (h.system.row ?? "front") !== row) continue;
     if (!h.items.some((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "wideEvade"))) continue;
-    for (const o of reactionChoices(h, kind).filter((x) => !String(x.id).includes(":"))) {
+    for (const o of ownChoices(h, kind).filter((x) => !String(x.id).includes(":"))) {
       const sk = h.items.get(o.id);
       if (reactionEffect(sk?.system.effects, kind)?.type !== "activeEvade") continue;
       out.push({ id: `ally:${h.uuid}:${o.id}`, name: `${o.name}(${c.name})`, holder: h.uuid });
@@ -98,15 +103,17 @@ export function decorateReactions(el, message, type) {
     if (!r) return;
     const box = document.createElement("div");
     box.className = "nssq-reaction";
-    if (r.state === "used") box.innerHTML = `<i class="fas fa-shield-alt"></i> ${esc(r.text ?? "")}`;
-    else if (r.state === "declined") box.innerHTML = `<span class="notes">${esc(L("declined"))}</span>`;
+    // 앞서 실패한 《와이드 패링》 결과
+    const prior = r.prior ? `<div><i class="fas fa-shield-alt"></i> ${esc(r.prior)}</div>` : "";
+    if (r.state === "used") box.innerHTML = `${prior}<i class="fas fa-shield-alt"></i> ${esc(r.text ?? "")}`;
+    else if (r.state === "declined") box.innerHTML = `${prior}<span class="notes">${esc(L("declined"))}</span>`;
     else if (r.state === "pending" && !applied) {
       const actor = fromUuidSync(type === "attack" ? t.actorUuid : t.uuid);
       // 《와이드 패링》 선택지는 보유자 소유자도 누를 수 있다
       if (!actor?.isOwner && !r.options.some((o) => o.holder && fromUuidSync(o.holder)?.isOwner)) {
-        box.innerHTML = `<span class="notes">${esc(L("waiting", { name: t.name }))}</span>`;
+        box.innerHTML = `${prior}<span class="notes">${esc(L("waiting", { name: t.name }))}</span>`;
       } else {
-        box.innerHTML = r.options.map((o) => `<button type="button" data-react="${o.id}"><i class="fas fa-shield-alt"></i> ${esc(L("use", { name: o.name }))}</button>`).join("")
+        box.innerHTML = prior + r.options.map((o) => `<button type="button" data-react="${o.id}"><i class="fas fa-shield-alt"></i> ${esc(L("use", { name: o.name }))}</button>`).join("")
           + `<button type="button" data-react-decline>${esc(L("decline"))}</button>`;
         box.querySelectorAll("[data-react]").forEach((b) => b.addEventListener("click", () => useReaction(message, type, i, b.dataset.react)));
         box.querySelector("[data-react-decline]")?.addEventListener("click", () => send({ messageId: message.id, type, index: i, result: { declined: true } }));
@@ -125,6 +132,7 @@ async function useReaction(message, type, index, skillId) {
   const t = (type === "attack" ? card.targets : card.entries)[index];
   if (t?.reaction?.state !== "pending") return;
   let actor = await fromUuid(type === "attack" ? t.actorUuid : t.uuid);
+  const ally = String(skillId).startsWith("ally:");
   // 《와이드 패링》: 같은 열 아군(보유자)의 스킬·코스트·능력치로
   if (String(skillId).startsWith("ally:")) {
     const [, uuid, id] = String(skillId).match(/^ally:(.+):([^:]+)$/) ?? [];
@@ -171,7 +179,7 @@ async function useReaction(message, type, index, skillId) {
   // 회피 성공 시 반격(《검의 춤》)
   const counter = r.evaded && (skill.system.effects ?? []).some((e) => e?.type === "counter" && e.onlyIfEvaded);
   const counterEff = counter ? { name: skill.name, sl: skill.system.sl ?? 1, key: skill.system.key ?? null, effects: (skill.system.effects ?? []).filter((e) => e?.type === "counter") } : null;
-  return send({ messageId: message.id, type, index, result: { evaded: r.evaded, text, ...(counter ? { counter: counterEff, reactorUuid: actor.uuid } : {}) } });
+  return send({ messageId: message.id, type, index, result: { evaded: r.evaded, text, ...(ally ? { ally: true } : {}), ...(counter ? { counter: counterEff, reactorUuid: actor.uuid } : {}) } });
 }
 
 /* ---------------- 카드 반영(GM) ---------------- */
@@ -188,6 +196,18 @@ async function gmReaction({ messageId, type, index, result }) {
   }
 }
 
+/**
+ * 《와이드 패링》 회피 실패: 대상 자신의 선택지가 남아 있으면 그대로 기다린다(원문 「실패하면 대상이 능동 회피」)
+ * @returns {boolean} 계속 기다리면 true
+ */
+function wideFailed(t, result) {
+  if (!result.ally || result.evaded) return false;
+  const rest = (t.reaction.options ?? []).filter((o) => !String(o.id).startsWith("ally:"));
+  if (!rest.length) return false;
+  t.reaction = { ...t.reaction, state: "pending", options: rest, prior: result.text };
+  return true;
+}
+
 async function updateReaction({ message, messageId, type, index, result }) {
   const { renderAttackCard } = await import("./attack.mjs");
   const { renderSkillCard, applySkillCard } = await import("./skill-use.mjs");
@@ -197,6 +217,7 @@ async function updateReaction({ message, messageId, type, index, result }) {
     const t = targets[index];
     if (t?.reaction?.state !== "pending") return;
     if (result.declined) t.reaction.state = "declined";
+    else if (wideFailed(t, result)) { /* 대상 자신의 능동 회피를 기다린다 */ }
     else {
       t.reaction = { ...t.reaction, state: "used", text: result.text };
       if (result.evaded || result.nullify) Object.assign(t, { hit: false, finalDamage: 0, rawDamage: 0 });
@@ -222,6 +243,7 @@ async function updateReaction({ message, messageId, type, index, result }) {
     x.buffs = (x.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]?.kind !== "debuff");
   };
   if (result.declined) e.reaction.state = "declined";
+  else if (wideFailed(e, result)) { /* 대상 자신의 능동 회피를 기다린다 */ }
   else {
     e.reaction = { ...e.reaction, state: "used", text: result.text };
     if (result.nullify) {

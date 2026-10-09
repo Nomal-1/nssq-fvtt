@@ -291,9 +291,9 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         return;
       }
       case "healFromDamage": {
-        // 《블랙 사바스》: 대미지를 준 다이스 수(대상 모두의 합)만큼 아군 전체 【HP】 회복. 호출자가 아군에게
+        // 《블랙 사바스》: 대미지를 준 다이스 수(대상 모두의 합, 가드 등 반감 후 — 07 #118 사용자 결정)만큼 아군 전체 【HP】 회복. 호출자가 아군에게
         let n = 0;
-        for (const x of out.results.values()) for (const h of x.hits) if (h.hit) n += h.rawDamage ?? 0;
+        for (const x of out.results.values()) for (const h of x.hits) if (h.hit) n += h.finalDamage ?? h.rawDamage ?? 0;
         if (n) out.allyHeal = (out.allyHeal ?? 0) + n;
         return;
       }
