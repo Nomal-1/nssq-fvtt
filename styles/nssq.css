@@ -972,7 +972,7 @@
 .nssq-fieldmap .fm-routing { color: #b3261e; font-weight: bold; }
 .nssq-fieldmap .fm-preview { display: flex; align-items: center; gap: 4px; }
 .nssq-fieldmap .fm-body { flex: 1; display: flex; min-height: 0; }
-.nssq-fieldmap .fm-stage { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #2a2118; }
+.nssq-fieldmap .fm-stage { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #b8975c; }
 .nssq-fieldmap .fm-wrap:not(.gm) .fm-stage { flex: 1; }
 .nssq-fieldmap .fm-svg { flex: 1; width: 100%; min-height: 0; display: block; user-select: none; }
 .nssq-fieldmap .fm-panel { width: 300px; overflow-y: auto; padding: 6px 8px; border-left: 1px solid rgba(128,128,128,0.4); }
@@ -1000,19 +1000,20 @@
 .nssq-fieldmap .fm-legend .fm-key.reachable i { border-color: #2f8f3a; }
 .nssq-fieldmap .fm-legend .fm-key.frontier i { border-style: dashed; border-color: #7a6040; background: transparent; }
 .nssq-fieldmap .fm-legend .fm-key.foe i { width: 11px; border-radius: 50%; border-color: #fff; background: #b3261e; }
-.nssq-fieldmap .fm-legend .fm-clock { margin-left: auto; }
+.nssq-fieldmap .fm-legend .fm-clock { margin-left: auto; white-space: normal; }
 /* SVG */
 .fm-svg .fm-area rect { fill: #f7ecd0; stroke: #6b4f2a; stroke-width: 1.5; }
 .fm-svg .fm-area .fm-name { text-anchor: middle; font-size: 15px; font-weight: bold; fill: #3a2a14; pointer-events: none; }
 .fm-svg .fm-area.explored rect { fill: #e8d3a0; stroke: #5a3d1a; stroke-width: 2; }
-.fm-svg .fm-area.frontier rect { fill: rgba(255,255,255,0.25); stroke: #7a6040; stroke-dasharray: 6 4; }
+.fm-svg .fm-area.frontier rect { fill: #efe2bf; stroke: #7a6040; stroke-dasharray: 6 4; }
 .fm-svg .fm-area.frontier .fm-name { font-style: italic; font-weight: normal; fill: #6b5a40; }
 .fm-svg .fm-area.reachable { cursor: pointer; }
 .fm-svg .fm-area.reachable rect { stroke: #2f8f3a; stroke-width: 3.5; }
 .fm-svg .fm-area.reachable:hover rect { fill: #d8ecc8; }
 .fm-svg .fm-area.current rect { fill: #f3d98b; stroke: #d4a017; stroke-width: 4; }
 .fm-svg .fm-area.secret rect { stroke: #7d3c98; stroke-dasharray: 4 3; }
-.fm-svg .fm-area.unknown { opacity: 0.55; }
+.fm-svg .fm-area.unknown rect { fill: #e6d8b4; stroke-opacity: 0.5; }
+.fm-svg .fm-area.unknown .fm-name { opacity: 0.55; }
 .fm-svg .fm-area.start .fm-name { text-decoration: underline; }
 .fm-svg .fm-area.selected rect, .fm-svg .fm-area.link-from rect { stroke: #1e6fd9; stroke-width: 4; }
 .fm-svg .fm-area.link-from rect { stroke-dasharray: 6 3; }

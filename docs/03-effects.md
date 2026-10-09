@@ -197,3 +197,16 @@ C1 보강: `recoil.to: "allies"`(자신 외 아군 전원, 《레기온 스러�
 4. 대상 결정(사거리·대상 범위·무작위)
 5. effects를 순서대로 해석: 대상별로 명중 → 수동 반응 기회 → 대미지/회복/부여 → onHit → 트리거(추격·반격·크리티컬)
 6. 결과를 채팅 카드로 출력하고, `autoApply` 설정에 따라 적용하거나 [적용] 버튼을 남긴다.
+
+## 7. 필드 지도 트리거(단계 9.5)
+
+스킬 효과와 따로, 필드 지도(월드 설정 `fieldMaps`)의 에어리어·지도에 붙는 트리거. GM이 지도 창 [편집]에서 만든다.
+
+```js
+{ id, on, n, once, auto, text, playerText, actions: [ { type, ... } ] }
+```
+- `on`(에어리어): `enter` 들어올 때마다 · `visit` n번째 방문 · `search` 조사했을 때 · `leave` 떠날 때
+- `on`(지도 전체): `move` 이동할 때마다 · `segment` n세그먼트마다
+- `once`: 한 번 실행하면 다시 안 나온다. `auto`: GM 확인 없이 바로 실행(아니면 GM에게 [실행]/[건너뛰기] 카드)
+- `text`: GM용 안내, `playerText`: 실행할 때 공개하는 문장
+- `actions[].type`: `message`{text} · `battle`{enemies: "가위풍뎅이*2, 숲쥐"} · `gather`{method, amount, rank}(표는 에어리어의 채집 표) · `trap`{kind, level} · `camp` · `check`(판정 요청 창) · `reveal`{area|passage} · `passage`{passage, state} · `foeRemove`{foe} · `move`{area}(시간 없음) · `choice`{text, options: [{label, actions}]}

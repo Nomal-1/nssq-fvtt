@@ -471,7 +471,7 @@ export class FieldMapApp extends Application {
         <span class="fm-sep"></span><button type="button" data-fm-act="save" class="${this.dirty ? "fm-dirty" : ""}"><i class="fas fa-save"></i> ${esc(L("save"))}</button>`
     : `<label class="fm-preview"><input type="checkbox" data-fm-act="preview" ${this.preview ? "checked" : ""}/> ${esc(L("preview"))}</label>`}
     </div>`;
-    const stage = map ? this.svg(map, st, { player: this.mode === "play" && this.preview, live }) : `<p class="fm-empty">${esc(L("noMaps"))}</p>`;
+    const stage = map ? this.svg(map, st, { player: this.mode === "play" && this.preview, live: this.mode === "play" && live }) : `<p class="fm-empty">${esc(L("noMaps"))}</p>`;
     const panel = map ? (this.mode === "edit" ? this.editPanel(map) : this.playPanel(map, st, live)) : "";
     return $(`<div class="fm-wrap gm">${toolbar}<div class="fm-body"><div class="fm-stage">${stage}${this.mode === "play" && live ? this.legend(map, st) : ""}</div><aside class="fm-panel">${panel}</aside></div></div>`);
   }
