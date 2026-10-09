@@ -954,3 +954,8 @@
 .nssq-maker-form .mk-drops input { width: 100%; }
 .nssq-maker-form .mk-foot { display: flex; gap: 6px; margin-top: 8px; }
 .mk-pre { max-height: 400px; overflow: auto; font-size: 0.85em; }
+.nssq-maker-form .mk-tools input[type=text] { flex: 1; }
+.nssq-maker-form .mk-skills li { display: flex; gap: 6px; align-items: center; }
+.nssq-maker-form .mk-skills .mk-skill-name { flex: 1; }
+.nssq-maker-form .mk-skills a.disabled { opacity: 0.3; pointer-events: none; }
+.nssq-maker-form .mk-block legend a { margin-left: 2px; }
