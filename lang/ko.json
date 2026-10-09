@@ -1289,7 +1289,7 @@
       "extraLine": "{name}《{skill}》:",
       "extraNo": "적용 안 함(식용 불가)",
       "extraSkipped": "적용하지 않음",
-      "extraTaken": "{item} ×{n}을 풀에 넣었다",
+      "extraTaken": "풀에 넣음: {item} ×{n}",
       "noData": "(아이템 데이터 없음, GM이 처리)",
       "take": "가져가기",
       "empty": "남은 것이 없다",
