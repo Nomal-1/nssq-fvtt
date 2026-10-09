@@ -48,6 +48,14 @@ export async function startDungeon({ name, level, depth, hour }) {
 
 const nextButton = () => `<button type="button" data-dungeon="next"><i class="fas fa-forward"></i> ${esc(L("next"))}</button>`;
 
+/** 임페리얼의 오버히트는 1턴(1세그먼트)당 1 회복 */
+export async function coolOverheat(n = 1) {
+  for (const a of await party()) {
+    const v = Number(a.getFlag("nssq", "overheat") ?? 0);
+    if (v > 0) await (v > n ? a.setFlag("nssq", "overheat", v - n) : a.unsetFlag("nssq", "overheat"));
+  }
+}
+
 /** 1턴 진행 → 이벤트 */
 export async function nextEvent() {
   const st = dungeonState();
@@ -58,11 +66,7 @@ export async function nextEvent() {
   await setState({ ...st, hour, done });
   const tod = timeOfDayAt(hour);
   if (tod !== game.settings.get("nssq", "timeOfDay")) await game.settings.set("nssq", "timeOfDay", tod);
-  // 임페리얼의 오버히트는 1턴당 1 회복
-  for (const a of await party()) {
-    const n = Number(a.getFlag("nssq", "overheat") ?? 0);
-    if (n > 0) await (n > 1 ? a.setFlag("nssq", "overheat", n - 1) : a.unsetFlag("nssq", "overheat"));
-  }
+  await coolOverheat(1);
   const roll = await new Roll("2d6").evaluate();
   const ev = eventFor(roll.total);
   const members = await party();
@@ -172,9 +176,9 @@ async function randomBattle(e) {
   const shuffled = [...docs].sort(() => CONFIG.Dice.randomUniform() - 0.5);
   const kinds = shuffled.slice(0, e.counts.length);
   const { enemyActorFor } = await import("./enemy-library.mjs");
-  const tokens = [];
+  const actors = [];
   const all = kinds.flatMap((d, i) => Array(e.counts[i] ?? 1).fill(d));
-  for (const [i, d] of all.entries()) {
+  for (const d of all) {
     let actor = await enemyActorFor(d.uuid);
     // 강적: 희소종(HP ×2, 내성 0→1·1→2)
     if (e.rare) {
@@ -185,13 +189,22 @@ async function randomBattle(e) {
       data.flags = { ...(data.flags ?? {}), nssq: { ...(data.flags?.nssq ?? {}), randomRare: true } };
       actor = await Actor.create(data);
     }
-    const td = await actor.getTokenDocument({ x: enemySlotX(i, all.length) - LAYOUT.grid / 2, y: LAYOUT.lanes.enemyFront - LAYOUT.grid / 2, actorLink: false });
+    actors.push(actor);
+  }
+  if (level !== target) ui.notifications.info(L("levelFallback", { want: target, got: level }));
+  return presetBattle(L("randomPresetName", { level, names: kinds.map((d) => d.name).join("·") }), actors);
+}
+
+/** 액터들로 임시 프리셋 씬(전투가 끝나면 지운다)을 만들고 개시 창. flags: 프리셋에 더할 nssq 플래그(필드 지도 F.O.E. 등) */
+export async function presetBattle(name, actors, flags = {}) {
+  const tokens = [];
+  for (const [i, actor] of actors.entries()) {
+    const td = await actor.getTokenDocument({ x: enemySlotX(i, actors.length) - LAYOUT.grid / 2, y: LAYOUT.lanes.enemyFront - LAYOUT.grid / 2, actorLink: false });
     tokens.push(td.toObject());
   }
   const b = await import("./battle.mjs");
-  const scene = await b.createPresetScene(L("randomPresetName", { level, names: kinds.map((d) => d.name).join("·") }), { randomPreset: true });
+  const scene = await b.createPresetScene(name, { randomPreset: true, ...flags });
   await scene.createEmbeddedDocuments("Token", tokens);
-  if (level !== target) ui.notifications.info(L("levelFallback", { want: target, got: level }));
   return b.openStartDialog(scene.id);
 }
 

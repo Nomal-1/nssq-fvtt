@@ -346,6 +346,8 @@ export async function endBattle(combat, result = "abort") {
     if (copy) await copy.delete();
     // 랜덤 던전의 임시 프리셋·희소종 액터는 전투가 끝나면 지운다
     const preset = game.scenes.get(info.presetId);
+    // 필드 지도 등이 결과를 본다(임시 프리셋을 지우기 전에)
+    Hooks.callAll("nssqBattleEnded", { result, preset });
     if (preset?.getFlag("nssq", "randomPreset")) {
       const rares = preset.tokens.map((t) => game.actors.get(t.actorId)).filter((a) => a?.getFlag("nssq", "randomRare"));
       await preset.delete();

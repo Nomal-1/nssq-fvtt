@@ -36,6 +36,7 @@ import { registerLoot } from "./apps/loot.mjs";
 import { registerExplore } from "./apps/explore.mjs";
 import { registerCheckMods } from "./chat/check-mods.mjs";
 import { registerDungeon } from "./apps/dungeon.mjs";
+import { FieldMapApp, registerFieldMap } from "./apps/fieldmap.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
 import { createPreset, openEndDialog, openStartDialog, registerBattle } from "./apps/battle.mjs";
 
@@ -103,12 +104,14 @@ Hooks.once("init", () => {
   registerExplore();
   registerCheckMods();
   registerDungeon();
+  registerFieldMap();
   registerEnemyLibrary();
   // 매크로·모듈용 API
   game.nssq = {
     promptCheck, rollCheck, openRequestDialog, rollAbilities, acquireItems, openShop, toggleShop,
     openGMScreen: () => GMScreen.open(),
     openBestiary: () => BestiaryApp.open(),
+    openFieldMap: () => FieldMapApp.open(),
     syncEffects: () => syncEffects(),
     normalAttack: (actor) => normalAttack(attackerFromContext(actor)),
     rollEscape: () => rollEscape(game.combat),

@@ -959,3 +959,87 @@
 .nssq-maker-form .mk-skills .mk-skill-name { flex: 1; }
 .nssq-maker-form .mk-skills a.disabled { opacity: 0.3; pointer-events: none; }
 .nssq-maker-form .mk-block legend a { margin-left: 2px; }
+
+/* ---------- 필드 지도(단계 9.5) ---------- */
+.nssq-fieldmap .window-content { padding: 0; }
+.nssq-fieldmap .fm-wrap { display: flex; flex-direction: column; height: 100%; }
+.nssq-fieldmap .fm-toolbar { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; padding: 4px 6px; border-bottom: 1px solid rgba(128,128,128,0.4); }
+.nssq-fieldmap .fm-toolbar button { flex: 0 0 auto; width: auto; line-height: 22px; padding: 0 8px; }
+.nssq-fieldmap .fm-toolbar button.active { background: rgba(212,160,23,0.35); }
+.nssq-fieldmap .fm-toolbar select { width: auto; max-width: 220px; }
+.nssq-fieldmap .fm-toolbar .fm-sep { width: 1px; height: 20px; background: rgba(128,128,128,0.5); margin: 0 4px; }
+.nssq-fieldmap .fm-toolbar .fm-dirty { box-shadow: 0 0 0 2px #d4a017 inset; }
+.nssq-fieldmap .fm-routing { color: #b3261e; font-weight: bold; }
+.nssq-fieldmap .fm-preview { display: flex; align-items: center; gap: 4px; }
+.nssq-fieldmap .fm-body { flex: 1; display: flex; min-height: 0; }
+.nssq-fieldmap .fm-stage { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #2a2118; }
+.nssq-fieldmap .fm-wrap:not(.gm) .fm-stage { flex: 1; }
+.nssq-fieldmap .fm-svg { flex: 1; width: 100%; min-height: 0; display: block; user-select: none; }
+.nssq-fieldmap .fm-panel { width: 300px; overflow-y: auto; padding: 6px 8px; border-left: 1px solid rgba(128,128,128,0.4); }
+.nssq-fieldmap .fm-panel h3 { display: flex; justify-content: space-between; align-items: center; margin: 8px 0 4px; }
+.nssq-fieldmap .fm-panel h4 { margin: 6px 0 2px; }
+.nssq-fieldmap .fm-panel .form-group { display: flex; gap: 4px; align-items: center; margin: 2px 0; }
+.nssq-fieldmap .fm-panel .form-group > label { flex: 0 0 96px; font-size: 0.9em; }
+.nssq-fieldmap .fm-panel .form-group.stacked { flex-direction: column; align-items: stretch; }
+.nssq-fieldmap .fm-panel .form-group.stacked > label { flex: none; }
+.nssq-fieldmap .fm-panel fieldset { margin: 4px 0; padding: 2px 6px 6px; border: 1px solid rgba(128,128,128,0.45); }
+.nssq-fieldmap .fm-panel legend select { width: auto; }
+.nssq-fieldmap .fm-panel .fm-action { border-left: 3px solid rgba(212,160,23,0.6); padding-left: 6px; margin: 4px 0; }
+.nssq-fieldmap .fm-panel .fm-action-head { display: flex; gap: 6px; align-items: center; }
+.nssq-fieldmap .fm-panel .fm-sub { margin: 4px 0 0; font-weight: bold; }
+.nssq-fieldmap .fm-panel .fm-actions { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+.nssq-fieldmap .fm-panel .fm-actions button { flex: 1 1 45%; }
+.nssq-fieldmap .fm-panel .fm-actions.end { margin-top: 14px; }
+.nssq-fieldmap .fm-panel .fm-issues li.err, .nssq-fieldmap .fm-danger { color: #b3261e; }
+.nssq-fieldmap .fm-panel .fm-foes li { display: flex; gap: 4px; align-items: center; }
+.nssq-fieldmap .fm-panel .fm-sel { border: 1px solid #1e6fd9; padding: 4px 6px; margin: 6px 0; }
+.nssq-fieldmap .fm-empty { padding: 24px; text-align: center; color: #e8d9b5; }
+.nssq-fieldmap .fm-legend { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 4px 8px; background: #3b2e1f; color: #f1e4c4; font-size: 0.9em; }
+.nssq-fieldmap .fm-legend .fm-key i { display: inline-block; width: 18px; height: 11px; margin-right: 4px; vertical-align: -1px; border-radius: 3px; border: 2px solid #5a3d1a; background: #e8d3a0; }
+.nssq-fieldmap .fm-legend .fm-key.current i { border-color: #d4a017; background: #f3d98b; }
+.nssq-fieldmap .fm-legend .fm-key.reachable i { border-color: #2f8f3a; }
+.nssq-fieldmap .fm-legend .fm-key.frontier i { border-style: dashed; border-color: #7a6040; background: transparent; }
+.nssq-fieldmap .fm-legend .fm-key.foe i { width: 11px; border-radius: 50%; border-color: #fff; background: #b3261e; }
+.nssq-fieldmap .fm-legend .fm-clock { margin-left: auto; }
+/* SVG */
+.fm-svg .fm-area rect { fill: #f7ecd0; stroke: #6b4f2a; stroke-width: 1.5; }
+.fm-svg .fm-area .fm-name { text-anchor: middle; font-size: 15px; font-weight: bold; fill: #3a2a14; pointer-events: none; }
+.fm-svg .fm-area.explored rect { fill: #e8d3a0; stroke: #5a3d1a; stroke-width: 2; }
+.fm-svg .fm-area.frontier rect { fill: rgba(255,255,255,0.25); stroke: #7a6040; stroke-dasharray: 6 4; }
+.fm-svg .fm-area.frontier .fm-name { font-style: italic; font-weight: normal; fill: #6b5a40; }
+.fm-svg .fm-area.reachable { cursor: pointer; }
+.fm-svg .fm-area.reachable rect { stroke: #2f8f3a; stroke-width: 3.5; }
+.fm-svg .fm-area.reachable:hover rect { fill: #d8ecc8; }
+.fm-svg .fm-area.current rect { fill: #f3d98b; stroke: #d4a017; stroke-width: 4; }
+.fm-svg .fm-area.secret rect { stroke: #7d3c98; stroke-dasharray: 4 3; }
+.fm-svg .fm-area.unknown { opacity: 0.55; }
+.fm-svg .fm-area.start .fm-name { text-decoration: underline; }
+.fm-svg .fm-area.selected rect, .fm-svg .fm-area.link-from rect { stroke: #1e6fd9; stroke-width: 4; }
+.fm-svg .fm-area.link-from rect { stroke-dasharray: 6 3; }
+.fm-svg.edit .fm-area { cursor: grab; }
+.fm-svg.edit.tool-area { cursor: crosshair; }
+.fm-svg.edit.tool-link .fm-area { cursor: alias; }
+.fm-svg .fm-passage .hit { stroke: transparent; stroke-width: 14; fill: none; cursor: pointer; }
+.fm-svg .fm-passage .line { stroke: #6b4f2a; stroke-width: 3; fill: none; stroke-linecap: round; pointer-events: none; }
+.fm-svg .fm-passage.st-locked .line { stroke: #8b2a2a; stroke-dasharray: 2 6; }
+.fm-svg .fm-passage.st-hidden .line { stroke: #7d3c98; stroke-dasharray: 6 5; opacity: 0.7; }
+.fm-svg .fm-passage.selected .line { stroke: #1e6fd9; stroke-width: 5; }
+.fm-svg .fm-arrow { fill: #6b4f2a; }
+.fm-svg .fm-glyph { font-family: "Font Awesome 6 Pro", "Font Awesome 6 Free", "Font Awesome 5 Free"; font-weight: 900; text-anchor: middle; font-size: 15px; pointer-events: none; }
+.fm-svg .fm-glyph.lock { fill: #8b2a2a; }
+.fm-svg .fm-glyph.hidden { fill: #7d3c98; }
+.fm-svg .fm-glyph.party { fill: #b3261e; font-size: 20px; text-anchor: start; }
+.fm-svg .fm-foe circle { fill: #b3261e; stroke: #fff; stroke-width: 2; }
+.fm-svg .fm-foe text { fill: #fff; font-weight: bold; font-size: 12px; text-anchor: middle; pointer-events: none; }
+.fm-svg .fm-foe.unseen { opacity: 0.45; }
+.fm-svg .fm-route { stroke: #b3261e; stroke-width: 2.5; stroke-dasharray: 8 5; fill: none; pointer-events: none; }
+/* 채팅 카드 */
+.nssq-fieldmap-card .fm-near { margin: 2px 0 4px 16px; padding: 0; }
+.nssq-fieldmap-card .fm-foe-warn { color: #b3261e; font-weight: bold; }
+.nssq-fieldmap-card .fm-gm { display: flex; gap: 4px; }
+.nssq-fieldmap-card.fm-choice ul { list-style: none; margin: 4px 0; padding: 0; }
+.nssq-fieldmap-card.fm-choice li { display: flex; gap: 4px; align-items: center; margin: 2px 0; }
+.nssq-fieldmap-card.fm-choice li button[data-fm=vote] { flex: 1; }
+.nssq-fieldmap-card.fm-choice li button[data-fm=pick] { flex: 0 0 30px; }
+.nssq-fieldmap-card.fm-choice li.chosen button { font-weight: bold; box-shadow: 0 0 0 2px #d4a017 inset; }
+.nssq-fieldmap-card.fm-choice .fm-votes { font-size: 0.85em; color: #555; min-width: 40px; }

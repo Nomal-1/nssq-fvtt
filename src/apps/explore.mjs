@@ -20,13 +20,13 @@ async function party() {
 
 /* ---------------- 캠프 ---------------- */
 
-export async function openCampDialog() {
+export async function openCampDialog(defaults = {}) {
   if (!game.user.isGM) return;
   const members = await party();
   const foods = members.flatMap((a) => carried(a).filter((i) => i.system.foodstuff && (i.system.quantity ?? 1) > 0).map((i) => ({ id: `${a.id}.${i.id}`, label: `${a.name}: ${i.name} ×${i.system.quantity ?? 1}` })));
   const tent = Math.min(0, ...members.map((a) => Number(a.system.equipment?.mods?.["checks.campDanger"]) || 0));
   const content = `<form class="nssq-camp">
-    <div class="form-group"><label>${esc(L("hours"))}</label><input type="number" name="hours" min="6" value="6"/></div>
+    <div class="form-group"><label>${esc(L("hours"))}</label><input type="number" name="hours" min="6" value="${Math.max(6, Number(defaults.hours) || 6)}"/></div>
     <div class="form-group"><label>${esc(L("danger"))}</label><input type="number" name="danger" min="0" max="6" value="0"/></div>
     ${tent ? `<p class="notes">${esc(L("tentNote", { n: -tent }))}</p>` : ""}
     <div class="form-group"><label>${esc(L("food"))}</label><select name="food">${foods.map((f) => `<option value="${esc(f.id)}">${esc(f.label)}</option>`).join("")}<option value="">${esc(L("noFood"))}</option></select></div>
