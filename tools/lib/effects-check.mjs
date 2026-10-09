@@ -26,10 +26,7 @@ export function collectHolders() {
   return out;
 }
 
-/** 단계 8에 연결할 type */
-/** flag 이름(03 §3) */
-/** trigger.on 값(03 §3) */
-
+/** 트리거계 type(단계 8에서 전투 흐름에 연결 완료, 리포트에는 참고용 목록) */
 export const STAGE8 = new Set(["stance", "trigger", "counter", "chase", "delayed", "token", "guard", "aura", "provoke"]);
 const usesStage8 = (list) => (list ?? []).some((e) => STAGE8.has(e.type) || NESTED.some((k) => usesStage8(e[k])));
 
@@ -85,6 +82,6 @@ export function reportMarkdown({ errors, counts, partial, gm = [], stage8 }) {
     "## 오류", ...(errors.length ? errors.map((e) => `- ${e}`) : ["없음"]), "",
     "## partial (남은 처리)", ...(partial.length ? partial.map((e) => `- ${e}`) : ["없음"]), "",
     "## gm (자동화 불가, GM 개입 필수)", ...(gm.length ? gm.map((e) => `- ${e}`) : ["없음"]), "",
-    "## 단계 8 대기(트리거·대기 상태·지연·추격·반격·토큰)", ...(stage8.length ? stage8.map((e) => `- ${e}`) : ["없음"]), ""
+    "## 참고: 트리거계 효과를 쓰는 스킬(단계 8에서 연결 완료, 서버 확인은 체크리스트 36~43)", ...(stage8.length ? stage8.map((e) => `- ${e}`) : ["없음"]), ""
   ].join("\n");
 }
