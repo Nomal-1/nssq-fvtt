@@ -28,3 +28,12 @@ export function trapDamage(level, kind) {
   const lv = Math.max(0, Number(level) || 0);
   return kind === "tp" ? { tp: lv * 2, hp: 0 } : { hp: lv * 3, tp: 0 };
 }
+
+/**
+ * 세션 경험점(세션 결과와 성장): 끝까지 참가 5 + 목적 달성 5 + (던전 레벨 − Lv)×2 + GM 보너스. 0 이하면 0
+ * @returns {{ total: number, parts: { participated: number, goal: number, gap: number, bonus: number } }}
+ */
+export function sessionExp({ participated = true, goal = false, dungeonLevel = 0, level = 1, bonus = 0 }) {
+  const parts = { participated: participated ? 5 : 0, goal: goal ? 5 : 0, gap: ((Number(dungeonLevel) || 0) - (Number(level) || 0)) * 2, bonus: Number(bonus) || 0 };
+  return { total: Math.max(0, parts.participated + parts.goal + parts.gap + parts.bonus), parts };
+}

@@ -42,6 +42,7 @@ export const TYPES = {
   checkFlip: {},
   checkExtraDie: {},
   rerollBonus: { value: true },
+  sessionFp: { value: true },
   forceRow: { row: false, check: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },

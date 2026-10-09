@@ -16,3 +16,11 @@ describe("캠프·트랩(9-C)", () => {
     expect(trapDamage(4, "tp")).toEqual({ hp: 0, tp: 8 });
   });
 });
+
+import { sessionExp } from "../../src/engine/explore.mjs";
+describe("세션 경험점(9-F)", () => {
+  it("5 + 5 + (던전 레벨 − Lv)×2 + 보너스, 0 이하는 0", () => {
+    expect(sessionExp({ participated: true, goal: true, dungeonLevel: 3, level: 2, bonus: 1 }).total).toBe(13);
+    expect(sessionExp({ participated: false, goal: false, dungeonLevel: 1, level: 5 }).total).toBe(0);
+  });
+});

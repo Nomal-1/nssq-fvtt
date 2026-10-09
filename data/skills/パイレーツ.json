@@ -938,9 +938,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>시나리오 시작 시 보유 FP +1.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "시나리오 개시 때 FP +1: 세션 도구(단계 9)에서"
+   "effects": [
+    {
+     "type": "sessionFp",
+     "value": 1
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "파이리츠"

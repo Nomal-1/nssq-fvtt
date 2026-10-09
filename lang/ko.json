@@ -521,7 +521,8 @@
       "macroAdded": "핫바 {slot}번에 GM 스크린 매크로를 넣었다.",
       "macroExists": "이미 핫바 {slot}번에 있다.",
       "macroNoSlot": "핫바에 빈 칸이 없다.",
-      "keybinding": "NSSQ: GM 스크린 열기"
+      "keybinding": "NSSQ: GM 스크린 열기",
+      "sessionFpBonus": "{name}: {skills} 【FP】 +{n}"
     },
     "Badge": {
       "resist": "내",
@@ -1450,6 +1451,20 @@
       "noEnemy": "그 레벨의 에너미 데이터가 없다",
       "levelFallback": "레벨 {want} 에너미가 없어 레벨 {got} 에너미로 냈다",
       "randomPresetName": "랜덤: Lv{level} {names}"
+    },
+    "Session": {
+      "endTitle": "세션 결과",
+      "endGo": "결과 적용",
+      "goal": "오프닝에서 제시된 목적을 달성했다(+5)",
+      "dungeonLevel": "도전한 던전 레벨",
+      "participated": "끝까지 참가(+5)",
+      "bonus": "GM 보너스(1~3)",
+      "money": "보수(G)",
+      "endHint": "경험점 = 참가 5 + 목적 5 + (던전 레벨 − Lv)×2 + 보너스(0 이하는 0). 레벨은 누적 경험점으로 오르고, 10의 배수마다 시트의 [성장 굴리기]",
+      "expLine": "경험점 +{n} ({p}+{g}+{gap}+{b}) → 누계 {total}",
+      "moneyLine": "{n}G",
+      "levelUp": "Lv{from} → Lv{to}",
+      "growthLeft": "능력치 성장 {n}회"
     }
   }
 }

@@ -146,6 +146,7 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=macro]", () => createGMScreenMacro());
     html.on("click", "[data-gm=battle-start]", (ev) => openStartDialog(ev.currentTarget.dataset.preset || null));
     html.on("click", "[data-gm=battle-end]", () => openEndDialog());
+    html.on("click", "[data-gm=session-end]", async () => (await import("./session.mjs")).openSessionEnd());
     html.on("click", "[data-gm=dungeon]", async () => (await import("./dungeon.mjs")).openDungeonDialog());
     html.on("click", "[data-gm=camp]", async () => (await import("./explore.mjs")).openCampDialog());
     html.on("click", "[data-gm=trap]", async () => (await import("./explore.mjs")).openTrapDialog());
@@ -187,8 +188,16 @@ export class GMScreen extends Application {
       rejectClose: false
     });
     if (!ok) return;
-    for (const a of party) await a.update({ "system.fp.value": fp });
-    await ChatMessage.create({ content: `<div class="nssq-trade"><i class="fas fa-flag"></i> ${L("sessionStarted", { fp })}</div>` });
+    // 《핫 스타트》 등 세션 시작 【FP】 보너스(효과 sessionFp)
+    const { sessionFpBonus } = await import("./session.mjs");
+    const extra = [];
+    for (const a of party) {
+      const b = sessionFpBonus(a);
+      const n = b.reduce((x, y) => x + y.value, 0);
+      await a.update({ "system.fp.value": fp + n });
+      if (n) extra.push(L("sessionFpBonus", { name: a.name, skills: b.map((x) => `《${x.name}》`).join(""), n }));
+    }
+    await ChatMessage.create({ content: `<div class="nssq-trade"><i class="fas fa-flag"></i> ${L("sessionStarted", { fp })}${extra.length ? `<br>${extra.join("<br>")}` : ""}</div>` });
   }
 }
 

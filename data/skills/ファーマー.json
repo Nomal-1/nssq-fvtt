@@ -29,9 +29,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>시나리오 시작 시 보유 FP +2.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "시나리오 개시 때 FP +2: 세션 도구(단계 9)"
+   "effects": [
+    {
+     "type": "sessionFp",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"

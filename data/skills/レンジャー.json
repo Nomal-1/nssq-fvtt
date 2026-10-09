@@ -897,9 +897,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>시나리오 개시 시점에 보유한 FP에 +1을 얻는다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "시나리오 개시 때 FP +1: 세션 도구(단계 9)에서"
+   "effects": [
+    {
+     "type": "sessionFp",
+     "value": 1
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"
