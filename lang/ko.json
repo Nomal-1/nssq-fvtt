@@ -333,7 +333,9 @@
       "accept": "실시",
       "decline": "거절",
       "declined": "{user}이(가) {name}의 판정을 거절했다: {what}",
-      "byGM": "GM 요청"
+      "byGM": "GM 요청",
+      "kinds": "판정 종류",
+      "kindsHint": "고르면 플레이어 판정 창에 그 종류가 미리 체크되어 장비·스킬 보정(예: 《지도 작성》 +2)이 들어간다. 선언·도움 스킬도 그 창에서 고를 수 있다"
     },
     "AbilityRoll": {
       "title": "능력치 굴리기",
@@ -1580,7 +1582,11 @@
         "state": "상태",
         "foe": "F.O.E.",
         "options": "선택지",
-        "label": "라벨"
+        "label": "라벨",
+        "ability": "능력치",
+        "target": "목표값",
+        "checkKind": "판정 종류",
+        "note": "안내"
       },
       "av": {
         "felling": "벌채",

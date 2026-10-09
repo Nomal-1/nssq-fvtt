@@ -16,12 +16,12 @@ const skills = (a, type) => (a?.items ?? []).filter((i) => i.type === "skill" &&
 const canPay = (a, cost = {}) => (cost.tp ?? 0) <= (a.system.tp?.value ?? 0) && (cost.fp ?? 0) <= (a.system.fp?.value ?? 0);
 const costText = (c = {}) => [c.tp ? `TP ${c.tp}` : "", c.fp ? `FP ${c.fp}` : ""].filter(Boolean).join(" ");
 
-/** 판정 대화창에 넣을 HTML(종류·선언·도움) */
-export function checkModsHtml(actor) {
+/** 판정 대화창에 넣을 HTML(종류·선언·도움). preset: GM 판정 요청 등이 미리 고른 종류(펼쳐서 보인다) */
+export function checkModsHtml(actor, { kinds: preset = [] } = {}) {
   const mods = actor.system.equipment?.mods ?? {};
   const kinds = CHECK_KINDS.map((k) => {
     const v = Number(mods[`checks.${k}`]) || 0;
-    return `<label class="choice"><input type="checkbox" name="kind" value="${k}"/> ${esc(L(`kind.${k}`))}${v ? ` <b>${v > 0 ? "+" : ""}${v}</b>` : ""}</label>`;
+    return `<label class="choice"><input type="checkbox" name="kind" value="${k}" ${preset.includes(k) ? "checked" : ""}/> ${esc(L(`kind.${k}`))}${v ? ` <b>${v > 0 ? "+" : ""}${v}</b>` : ""}</label>`;
   }).join("");
   const decl = skills(actor, "checkBonus").map((i) => {
     const e = effOf(i, "checkBonus");
@@ -33,7 +33,7 @@ export function checkModsHtml(actor) {
     const ok = canPay(a, i.system.cost);
     return `<label class="choice"><input type="checkbox" name="assist" value="${a.uuid}|${i.id}" ${ok ? "" : "disabled"}/> ${esc(a.name)} 《${esc(i.name)}》 +${effOf(i, "checkAssist").value} <small>${esc(costText(i.system.cost))}</small></label>`;
   }).join("");
-  return `<details class="nssq-check-mods"><summary>${esc(L("kindTitle"))}</summary><div class="kinds">${kinds}</div>
+  return `<details class="nssq-check-mods" ${preset.length ? "open" : ""}><summary>${esc(L("kindTitle"))}</summary><div class="kinds">${kinds}</div>
     ${decl ? `<p><b>${esc(L("declareTitle"))}</b></p><div>${decl}</div>` : ""}
     ${assist ? `<p><b>${esc(L("assistTitle"))}</b></p><div>${assist}</div>` : ""}
     <p class="notes">${esc(L("kindHint"))}</p></details>`;

@@ -12,6 +12,8 @@
 import * as FM from "../engine/fieldmap.mjs";
 import { timeOfDayAt } from "../engine/dungeon.mjs";
 import { GATHER_AMOUNT } from "../engine/loot.mjs";
+import { ABILITIES } from "../engine/derive.mjs";
+import { CHECK_KINDS } from "../chat/check-mods.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 
@@ -275,7 +277,7 @@ export async function runAction(map, a, { areaId = null, depth = 0 } = {}) {
     case "gather": return (await import("./loot.mjs")).openGatherDialog({ method: a.method, amount: a.amount, rank: a.rank, table: here?.gather ?? "" });
     case "trap": return (await import("./explore.mjs")).trap({ level: Number(a.level) || 1, kind: a.kind || "hp", uuids: (await party()).map((x) => x.uuid) });
     case "camp": return campHere();
-    case "check": return (await import("./check-request.mjs")).openRequestDialog();
+    case "check": return (await import("./check-request.mjs")).openRequestDialog((await party()).map((x) => x.id), { ability: a.ability ?? "tec", kinds: a.checkKind ? [a.checkKind] : [], target: a.target ?? null, note: a.note ?? "" });
     case "reveal": return revealThing({ area: a.area || null, passage: a.passage || null });
     case "passage": return a.passage ? setPassageState(a.passage, a.state || "open") : null;
     case "foeRemove": return a.foe ? removeFoe(a.foe) : null;
@@ -497,7 +499,7 @@ const ACTIONS = {
   gather: [["method", "select", ["felling", "mining", "picking"]], ["amount", "select", Object.keys(GATHER_AMOUNT)], ["rank", "num"]],
   trap: [["kind", "select", ["hp", "tp"]], ["level", "num"]],
   camp: [],
-  check: [],
+  check: [["ability", "ability"], ["checkKind", "checkKind"], ["target", "num"], ["note", "text"]],
   reveal: [["area", "area"], ["passage", "passage"]],
   passage: [["passage", "passage"], ["state", "select", FM.PASSAGE_STATES]],
   foeRemove: [["foe", "foe"]],
@@ -864,6 +866,8 @@ export class FieldMapApp extends Application {
           case "passage": return `<div class="form-group"><label>${esc(lab)}</label><select data-path="${fp}">${opt("", a[k], L("none"))}${map.passages.map((x) => opt(x.id, a[k], passageLabel(map, x))).join("")}</select></div>`;
           case "foe": return `<div class="form-group"><label>${esc(lab)}</label><select data-path="${fp}">${opt("", a[k], L("none"))}${map.foes.map((x) => opt(x.id, a[k], x.name)).join("")}</select></div>`;
           case "num": return this.field(fp, a[k], lab, "num");
+          case "ability": return `<div class="form-group"><label>${esc(lab)}</label><select data-path="${fp}">${ABILITIES.map((c) => opt(c, a[k] ?? "tec", game.i18n.localize(`NSSQ.Ability.${c}`))).join("")}</select></div>`;
+          case "checkKind": return `<div class="form-group"><label>${esc(lab)}</label><select data-path="${fp}">${opt("", a[k], L("none"))}${CHECK_KINDS.map((c) => opt(c, a[k], game.i18n.localize(`NSSQ.Check.kind.${c}`))).join("")}</select></div>`;
           case "textarea": return this.field(fp, a[k], lab, "textarea");
           case "enemies": return this.field(fp, a[k], lab, "text", L("af.enemiesHint"));
           case "options": return `<div class="fm-options">${(a.options ?? []).map((o, j) => `<fieldset><legend>${esc(L("option", { n: j + 1 }))} <a data-fm-del="${fp}.${j}"><i class="fas fa-trash"></i></a></legend>
@@ -1034,7 +1038,7 @@ export class FieldMapApp extends Application {
       case "gather": return gatherHere();
       case "camp": return campHere();
       case "wait": return wait(1);
-      case "mapping": return (await import("./check-request.mjs")).openRequestDialog();
+      case "mapping": return (await import("./check-request.mjs")).openRequestDialog((await party()).map((a) => a.id), { ability: "tec", kinds: ["mapping"], note: L("mapping") });
       case "choice": return openChoiceDialog();
       case "teleport": return teleport(this.sel.id);
       case "revealArea": return revealThing({ area: this.sel.id });

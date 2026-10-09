@@ -4,6 +4,7 @@
  */
 import { ABILITIES } from "../engine/derive.mjs";
 import { rollCheck } from "../chat/check.mjs";
+import { CHECK_KINDS, checkModsHtml, readCheckMods } from "../chat/check-mods.mjs";
 import { emit, onSocket } from "../socket.mjs";
 
 const open = new Map(); // requestId → Dialog
@@ -19,8 +20,10 @@ function respondersFor(actor) {
   return players.length ? players.map((u) => u.id) : [game.user.id];
 }
 
+const kindLabel = (k) => game.i18n.localize(`NSSQ.Check.kind.${k}`);
+
 function describe(req) {
-  const parts = [abilityLabel(req.ability)];
+  const parts = [abilityLabel(req.ability), ...(req.kinds ?? []).map(kindLabel)];
   if (req.modifier) parts.push(`${L("modifierShort")} ${req.modifier > 0 ? "+" : ""}${req.modifier}`);
   if (req.target !== null) parts.push(`${game.i18n.localize("NSSQ.Check.target")} ${req.target}`);
   return parts.join(" · ");
@@ -28,7 +31,11 @@ function describe(req) {
 
 /* ---------------- GM 쪽 ---------------- */
 
-export async function openRequestDialog(preselect = []) {
+/**
+ * @param {string[]} preselect 미리 고를 캐릭터 id
+ * @param {{ ability?, kinds?: string[], target?, note? }} defaults 미리 채울 값(필드 지도 지도 작성 판정·트리거 등)
+ */
+export async function openRequestDialog(preselect = [], defaults = {}) {
   if (!game.user.isGM) return;
   const characters = game.actors.filter((a) => a.type === "character");
   if (!characters.length) return ui.notifications.warn(L("noCharacters"));
@@ -46,12 +53,14 @@ export async function openRequestDialog(preselect = []) {
     <form class="nssq-request-form">
       <fieldset><legend>${L("characters")}</legend><div class="request-actors">${rows}</div></fieldset>
       <div class="form-group"><label>${game.i18n.localize("NSSQ.Check.ability")}</label>
-        <select name="ability">${ABILITIES.map((k) => `<option value="${k}">${abilityLabel(k)}</option>`).join("")}
-        <option value="">${abilityLabel(null)}</option></select></div>
+        <select name="ability">${ABILITIES.map((k) => `<option value="${k}" ${defaults.ability === k ? "selected" : ""}>${abilityLabel(k)}</option>`).join("")}
+        <option value="" ${defaults.ability === null ? "selected" : ""}>${abilityLabel(null)}</option></select></div>
+      <fieldset class="request-kinds"><legend>${L("kinds")}</legend>${CHECK_KINDS.map((k) => `<label class="choice"><input type="checkbox" name="kind" value="${k}" ${(defaults.kinds ?? []).includes(k) ? "checked" : ""}/> ${kindLabel(k)}</label>`).join("")}
+        <p class="notes">${L("kindsHint")}</p></fieldset>
       <div class="form-group"><label>${game.i18n.localize("NSSQ.Check.modifier")}</label><input type="number" name="modifier" value="0"/></div>
       <div class="form-group"><label>${game.i18n.localize("NSSQ.Check.target")}</label>
-        <input type="number" name="target" placeholder="${game.i18n.localize("NSSQ.Check.targetNone")}"/></div>
-      <div class="form-group"><label>${L("note")}</label><input type="text" name="note" placeholder="${L("notePlaceholder")}"/></div>
+        <input type="number" name="target" value="${defaults.target ?? ""}" placeholder="${game.i18n.localize("NSSQ.Check.targetNone")}"/></div>
+      <div class="form-group"><label>${L("note")}</label><input type="text" name="note" value="${escape(defaults.note ?? "")}" placeholder="${L("notePlaceholder")}"/></div>
       <div class="form-group"><label>${L("rollMode")}</label><select name="rollMode">${modes}</select></div>
     </form>`;
   const data = await Dialog.prompt({
@@ -65,6 +74,7 @@ export async function openRequestDialog(preselect = []) {
       return {
         actorIds: [...f.querySelectorAll("[name=actor]:checked")].map((i) => i.value),
         ability: f.ability.value || null,
+        kinds: [...f.querySelectorAll("[name=kind]:checked")].map((i) => i.value),
         modifier: Number(f.modifier.value) || 0,
         target: f.target.value === "" ? null : Number(f.target.value),
         note: f.note.value.trim(),
@@ -77,11 +87,11 @@ export async function openRequestDialog(preselect = []) {
   for (const actorId of data.actorIds) sendRequest({ ...data, actorId });
 }
 
-function sendRequest({ actorId, ability, modifier, target, note, rollMode }) {
+function sendRequest({ actorId, ability, kinds = [], modifier, target, note, rollMode }) {
   const actor = game.actors.get(actorId);
   const users = respondersFor(actor);
   const req = {
-    id: foundry.utils.randomID(), actorId, ability, modifier, target, note, rollMode,
+    id: foundry.utils.randomID(), actorId, ability, kinds, modifier, target, note, rollMode,
     from: game.user.id, users
   };
   emit("requestCheck", req, { local: users.includes(game.user.id) });
@@ -106,6 +116,7 @@ function showRequest(req) {
       <div class="form-group"><label>${game.i18n.format("NSSQ.Check.addDiceLabel", { fp })}</label>
         <input type="number" name="addDice" value="0" min="0" max="${fp}"/></div>
       <p class="notes">${game.i18n.localize("NSSQ.Check.addDiceHint")}</p>
+      ${checkModsHtml(actor, { kinds: req.kinds ?? [] })}
     </form>`;
   const dialog = new Dialog({
     title: L("popupTitle"),
@@ -119,7 +130,7 @@ function showRequest(req) {
           const n = Math.clamp(Number(html[0].querySelector("[name=addDice]").value) || 0, 0, fp);
           emit("requestResolved", { id: req.id, by: game.user.id });
           await rollCheck(actor, {
-            ability: req.ability, modifier: req.modifier, target: req.target, addDice: n,
+            ability: req.ability, modifier: req.modifier, target: req.target, addDice: n, checkMods: readCheckMods(html[0].querySelector("form")),
             rollMode: req.rollMode, request: { id: req.id, from: req.from, note: req.note }
           });
         }
