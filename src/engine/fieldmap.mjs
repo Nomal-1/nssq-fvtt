@@ -14,7 +14,7 @@
 import { timeOfDayAt } from "./dungeon.mjs";
 
 export const PASSAGE_STATES = ["open", "locked", "hidden"];
-export const FOE_MODES = ["stay", "loop", "pingpong"];
+export const FOE_MODES = ["stay", "loop", "pingpong", "chase"];
 export const AREA_TRIGGERS = ["enter", "visit", "search", "leave"];
 export const MAP_TRIGGERS = ["move", "segment"];
 
@@ -98,7 +98,17 @@ export function stepFoes(map, state, segment, hour) {
   for (const f of activeFoes(map, state)) {
     const route = f.route ?? [];
     const every = Math.max(1, Number(f.every) || 1);
-    if (f.mode === "stay" || route.length < 2 || segment % every !== 0 || (f.nightOnly && !night)) continue;
+    if (segment % every !== 0 || (f.nightOnly && !night)) continue;
+    // 추적: 파티가 range칸(통로 기준) 안이면 파티 쪽으로 한 칸(07 임시). 아니면 루트를 순회
+    if (f.mode === "chase" && state.current) {
+      const next = chaseStep(map, state, foePos[f.id], state.current, Math.max(1, Number(f.range) || 1));
+      if (next) {
+        used[f.id] = passageBetween(map, foePos[f.id], next)?.id ?? null;
+        foePos[f.id] = next;
+        continue;
+      }
+    }
+    if (f.mode === "stay" || route.length < 2) continue;
     const st = foeStep[f.id] ?? { i: 0, dir: 1 };
     let i = st.i;
     let dir = st.dir || 1;
@@ -113,6 +123,35 @@ export function stepFoes(map, state, segment, hour) {
     used[f.id] = from !== to ? passageBetween(map, from, to)?.id ?? null : null;
   }
   return { foePos, foeStep, used };
+}
+
+/** F.O.E.가 지나갈 수 있는 통로: 열린 통로(비밀·잠김 제외), 한 방향은 그 방향만 */
+const foeNeighbors = (map, state, id) => (map.passages ?? [])
+  .filter((p) => passageState(state, p) === "open" && (p.a === id || (!p.oneWay && p.b === id)))
+  .map((p) => otherEnd(p, id));
+
+/** from에서 to까지 최단 경로의 첫 칸(거리가 maxDist 이하일 때만). 같은 칸이면 null */
+export function chaseStep(map, state, from, to, maxDist = 1) {
+  if (!from || !to || from === to) return null;
+  const prev = new Map([[from, null]]);
+  let frontier = [from];
+  for (let d = 1; d <= maxDist && frontier.length; d++) {
+    const next = [];
+    for (const n of frontier) {
+      for (const m of foeNeighbors(map, state, n)) {
+        if (prev.has(m)) continue;
+        prev.set(m, n);
+        if (m === to) {
+          let cur = m;
+          while (prev.get(cur) !== from) cur = prev.get(cur);
+          return cur;
+        }
+        next.push(m);
+      }
+    }
+    frontier = next;
+  }
+  return null;
 }
 
 /**

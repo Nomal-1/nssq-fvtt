@@ -14,6 +14,7 @@ import { timeOfDayAt } from "../engine/dungeon.mjs";
 import { GATHER_AMOUNT } from "../engine/loot.mjs";
 import { ABILITIES } from "../engine/derive.mjs";
 import { CHECK_KINDS } from "../chat/check-mods.mjs";
+import { evaluateCheck } from "../engine/check.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 
@@ -96,10 +97,39 @@ export async function undo() {
   ui.notifications.info(L("undone"));
 }
 
+/* 지도 작성 판정(원문 예: 실패하면 1세그먼트가 더 경과): 요청 묶음마다 결과를 모아, 아무도 성공하지 못하면 1세그먼트 */
+const mapping = new Map(); // group → { size, results: Map(messageId → { success, final }) }
+
+function trackMapping(message) {
+  const req = message.getFlag("nssq", "request");
+  const st = message.getFlag("nssq", "check");
+  if (req?.tag !== "fieldMapping" || !st || !isActiveGM() || message.getFlag("nssq", "mappingDone")) return;
+  const r = evaluateCheck({ ...st, modifier: st.bonus + st.modifier });
+  const g = mapping.get(req.group) ?? { size: req.groupSize ?? 1, results: new Map() };
+  g.results.set(message.id, { success: r.success === true, final: !!(st.closed || st.rerolled || r.success === true) });
+  mapping.set(req.group, g);
+  if (g.results.size >= g.size && [...g.results.values()].every((x) => x.final)) settleGroup(req.group);
+}
+
+async function settleGroup(group) {
+  const g = mapping.get(group);
+  if (!g) return;
+  mapping.delete(group);
+  for (const id of g.results.keys()) await game.messages.get(id)?.setFlag("nssq", "mappingDone", true);
+  if ([...g.results.values()].some((x) => x.success)) return post(`<p><i class="fas fa-map-marked-alt"></i> ${esc(L("mappingOk"))}</p>`);
+  if (activeMap()) await wait(1, L("mappingFailed"));
+}
+
+/** 다음 세그먼트 행동 전에: 결과가 다 모인 묶음은 확정하지 않았어도 그 결과로 처리한다 */
+async function settleMappingBeforeStep() {
+  for (const [group, g] of [...mapping]) if (g.results.size >= g.size) await settleGroup(group);
+}
+
 /** 세그먼트 진행 공통. opts: { to } 이동 / { segments } 그 자리 */
 async function step(opts) {
   const map = activeMap();
   if (!map) return null;
+  await settleMappingBeforeStep();
   const s0 = cur();
   delete s0.proposal;
   const r = FM.advance(map, s0, opts);
@@ -803,7 +833,8 @@ export class FieldMapApp extends Application {
     const foes = map.foes.map((f, i) => `<fieldset class="fm-foe-edit"><legend>${esc(f.name || "F.O.E.")} <a data-fm-del="foes.${i}"><i class="fas fa-trash"></i></a></legend>
       ${this.field(`foes.${i}.actorLabel`, f.actorLabel, L("f.actor"), "enemy")}
       ${this.field(`foes.${i}.name`, f.name, L("f.name"))}
-      <div class="form-group"><label>${esc(L("f.mode"))}</label><select data-path="foes.${i}.mode">${FM.FOE_MODES.map((m) => opt(m, f.mode, L(`mode.${m}`))).join("")}</select></div>
+      <div class="form-group"><label>${esc(L("f.mode"))}</label><select data-path="foes.${i}.mode" data-struct>${FM.FOE_MODES.map((m) => opt(m, f.mode, L(`mode.${m}`))).join("")}</select></div>
+      ${f.mode === "chase" ? this.field(`foes.${i}.range`, f.range ?? 1, L("f.range"), "num") : ""}
       ${this.field(`foes.${i}.every`, f.every ?? 1, L("f.every"), "num")}
       ${this.field(`foes.${i}.nightOnly`, f.nightOnly, L("f.nightOnly"), "bool")}
       <p class="notes">${esc(L("f.route"))}: ${esc((f.route ?? []).map((id) => areaName(map, id)).join(" → ") || L("none"))}</p>
@@ -1038,7 +1069,7 @@ export class FieldMapApp extends Application {
       case "gather": return gatherHere();
       case "camp": return campHere();
       case "wait": return wait(1);
-      case "mapping": return (await import("./check-request.mjs")).openRequestDialog((await party()).map((a) => a.id), { ability: "tec", kinds: ["mapping"], note: L("mapping") });
+      case "mapping": return (await import("./check-request.mjs")).openRequestDialog([], { ability: "tec", kinds: ["mapping"], note: L("mapping"), tag: "fieldMapping" });
       case "choice": return openChoiceDialog();
       case "teleport": return teleport(this.sel.id);
       case "revealArea": return revealThing({ area: this.sel.id });
@@ -1173,6 +1204,8 @@ export function registerFieldMap() {
     if (!game.user.isGM && !mapState().active) return;
     controls.find((c) => c.name === "token")?.tools.push({ name: "nssq-fieldmap", title: "NSSQ.FieldMap.title", icon: "fas fa-map", button: true, onClick: () => FieldMapApp.toggle() });
   });
+  Hooks.on("createChatMessage", (m) => trackMapping(m));
+  Hooks.on("updateChatMessage", (m) => trackMapping(m));
   onSocket("fieldPropose", onPropose);
   onSocket("fieldAnswer", onAnswer);
   onSocket("fieldVote", async ({ messageId, i, userId }) => { if (isActiveGM()) { const m = game.messages.get(messageId); if (m) await vote(m, i, userId); } });

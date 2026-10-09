@@ -55,3 +55,39 @@ export async function sessionEnd({ goal, dl, members }) {
   }
   return ChatMessage.create({ speaker: { alias: L("endTitle") }, content: `<div class="nssq-session-end"><h3><i class="fas fa-trophy"></i> ${esc(L("endTitle"))}</h3><ul>${lines.join("")}</ul></div>` });
 }
+
+/* ---------------- 생활비(쇼핑과 생활: 레벨 × 10G, GM이 요구할 때) ---------------- */
+
+export async function openLivingCost() {
+  if (!game.user.isGM) return;
+  const party = (await import("./gm-screen.mjs")).partyActors();
+  const rows = party.map((a) => `<tr data-id="${a.id}"><td><input type="checkbox" name="p" checked/></td><td>${esc(a.name)} <small>Lv${a.system.level}</small></td>
+    <td><input type="number" name="cost" value="${livingCost(a.system.level)}" min="0" style="width:6em"/>G</td><td>${a.system.money ?? 0}G</td></tr>`).join("");
+  const got = await Dialog.prompt({
+    title: L("livingTitle"),
+    content: `<form class="nssq-session-end"><table><thead><tr><th></th><th></th><th>${esc(L("livingCost"))}</th><th>${esc(L("livingHave"))}</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="notes">${esc(L("livingHint"))}</p></form>`,
+    label: L("livingGo"), rejectClose: false,
+    callback: (html) => [...html[0].querySelectorAll("tbody tr")].filter((tr) => tr.querySelector("[name=p]").checked)
+      .map((tr) => ({ id: tr.dataset.id, cost: Math.max(0, Number(tr.querySelector("[name=cost]").value) || 0) }))
+  }, { classes: ["nssq", "dialog"], width: 460 });
+  if (!got?.length) return;
+  return payLiving(got);
+}
+
+/** 생활비 = 레벨 × 10G */
+export const livingCost = (level) => Math.max(1, Number(level) || 1) * 10;
+
+/** [{ id, cost }] → 소지금에서 뺀다(모자라면 0까지 내고 부족분을 카드에 적는다) */
+export async function payLiving(list) {
+  const lines = [];
+  for (const { id, cost } of list) {
+    const a = game.actors.get(id);
+    if (!a) continue;
+    const have = a.system.money ?? 0;
+    const paid = Math.min(have, cost);
+    await a.update({ "system.money": have - paid });
+    lines.push(`<li>${esc(a.name)}: −${paid}G → ${have - paid}G${paid < cost ? ` <b class="warn">${esc(L("livingShort", { n: cost - paid }))}</b>` : ""}</li>`);
+  }
+  return ChatMessage.create({ speaker: { alias: L("livingTitle") }, content: `<div class="nssq-session-card"><h3><i class="fas fa-home"></i> ${esc(L("livingTitle"))}</h3><ul>${lines.join("")}</ul></div>` });
+}

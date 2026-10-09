@@ -145,3 +145,23 @@ describe("필드 지도: 이동 제안 투표", () => {
     expect(voteResult({ voters: [], answers: {} })).toBe("accepted");
   });
 });
+
+describe("필드 지도: F.O.E. 추적", () => {
+  it("파티가 range 안이면 한 칸씩 다가가고, 밖이면 루트", async () => {
+    const { chaseStep } = await import("../../src/engine/fieldmap.mjs");
+    const m = { ...map(), foes: [{ id: "f", name: "F", mode: "chase", range: 2, every: 1, route: ["camp"] }] };
+    // 야영지(잠긴 통로) 너머라도 F.O.E.는 잠긴 통로를 못 지난다
+    let s = { ...startState(m), current: "swamp", visited: { swamp: 1 }, foePos: { f: "rock" } };
+    expect(chaseStep(m, s, "rock", "swamp", 1)).toBe("swamp");
+    expect(chaseStep(m, s, "gate", "swamp", 1)).toBe(null);
+    expect(chaseStep(m, s, "gate", "swamp", 2)).toBe("forest");
+    // 같은 칸으로 다가오면 조우
+    s = { ...s, foePos: { f: "rock" } };
+    const r = advance(m, s, {});
+    expect(r.state.foePos.f).toBe("swamp");
+    expect(r.encounters.length).toBe(1);
+    // 멀면 움직이지 않는다(루트가 1칸)
+    s = { ...startState(m), current: "gate", visited: { gate: 1 }, foePos: { f: "flower" } };
+    expect(advance(m, s, {}).state.foePos.f).toBe("flower");
+  });
+});

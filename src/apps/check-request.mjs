@@ -84,14 +84,16 @@ export async function openRequestDialog(preselect = [], defaults = {}) {
   });
   if (!data) return;
   if (!data.actorIds.length) return ui.notifications.warn(L("pickOne"));
-  for (const actorId of data.actorIds) sendRequest({ ...data, actorId });
+  // tag: 요청한 쪽이 결과를 기다리는 표식(필드 지도의 지도 작성 판정 등), group: 한 번에 보낸 요청 묶음
+  const group = foundry.utils.randomID();
+  for (const actorId of data.actorIds) sendRequest({ ...data, actorId, tag: defaults.tag ?? null, group, groupSize: data.actorIds.length });
 }
 
-function sendRequest({ actorId, ability, kinds = [], modifier, target, note, rollMode }) {
+function sendRequest({ actorId, ability, kinds = [], modifier, target, note, rollMode, tag = null, group = null, groupSize = 1 }) {
   const actor = game.actors.get(actorId);
   const users = respondersFor(actor);
   const req = {
-    id: foundry.utils.randomID(), actorId, ability, kinds, modifier, target, note, rollMode,
+    id: foundry.utils.randomID(), actorId, ability, kinds, modifier, target, note, rollMode, tag, group, groupSize,
     from: game.user.id, users
   };
   emit("requestCheck", req, { local: users.includes(game.user.id) });
@@ -131,7 +133,7 @@ function showRequest(req) {
           emit("requestResolved", { id: req.id, by: game.user.id });
           await rollCheck(actor, {
             ability: req.ability, modifier: req.modifier, target: req.target, addDice: n, checkMods: readCheckMods(html[0].querySelector("form")),
-            rollMode: req.rollMode, request: { id: req.id, from: req.from, note: req.note }
+            rollMode: req.rollMode, request: { id: req.id, from: req.from, note: req.note, tag: req.tag ?? null, group: req.group ?? null, groupSize: req.groupSize ?? 1 }
           });
         }
       },

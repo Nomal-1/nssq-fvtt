@@ -1522,7 +1522,8 @@
         "scene": "씬",
         "img": "그림",
         "imgHint": "비우면 연결한 씬의 배경",
-        "activateScene": "도착하면 연결된 씬으로 전환"
+        "activateScene": "도착하면 연결된 씬으로 전환",
+        "range": "추적 거리(칸)"
       },
       "bg": {
         "parchment": "양피지",
@@ -1609,7 +1610,8 @@
       "mode": {
         "stay": "제자리",
         "loop": "순회",
-        "pingpong": "왕복"
+        "pingpong": "왕복",
+        "chase": "추적(가까우면 쫓아옴)"
       },
       "routeSet": "루트 지정",
       "routeStop": "루트 지정 끝",
@@ -1710,7 +1712,9 @@
       "proposalRejected": "《{name}》로 이동 취소({by} 거절)",
       "proposalCancelled": "{by}의 《{name}》 이동 제안 취소",
       "forceMove": "그대로 이동",
-      "noScene": "(연결 안 함)"
+      "noScene": "(연결 안 함)",
+      "mappingOk": "지도 작성 성공",
+      "mappingFailed": "지도 작성 실패: 1세그먼트가 더 지났다"
     },
     "Chargen": {
       "title": "캐릭터 작성: {name}",
@@ -1820,7 +1824,13 @@
       "expLine": "경험점 +{n} ({p}+{g}+{gap}+{b}) → 누계 {total}",
       "moneyLine": "{n}G",
       "levelUp": "Lv{from} → Lv{to}",
-      "growthLeft": "능력치 성장 {n}회"
+      "growthLeft": "능력치 성장 {n}회",
+      "livingTitle": "생활비",
+      "livingCost": "생활비",
+      "livingHave": "소지금",
+      "livingGo": "걷기",
+      "livingHint": "생활비는 대략 레벨 × 10G(쇼핑과 생활). 적게 내겠다는 PC는 GM이 허가 여부를 판단한다. 소지금이 모자라면 있는 만큼 내고 부족분을 카드에 적는다.",
+      "livingShort": "{n}G 부족"
     },
     "Maker": {
       "skillTitle": "스킬 만들기",
