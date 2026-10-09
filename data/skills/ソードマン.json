@@ -1181,9 +1181,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신이 어떠한 공격 롤을 한 뒤, 같은 턴 안에 자신이 공격한 적과 같은 적을 공격하는 아군의 대미지 다이스에 +(SL)을 준다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "자신이 공격한 적을 같은 턴에 공격하는 아군의 대미지 다이스 +SL: GM이 처리(단계 8 트리거)"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "vanguard",
+     "value": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"

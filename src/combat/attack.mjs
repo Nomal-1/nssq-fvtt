@@ -85,6 +85,12 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
     rolls.push(r);
     return r.dice[0].results.map((x) => x.result);
   };
+  // 《돌격대장》: 이번 턴 다른 아군이 먼저 공격한 적이면 대미지 다이스 +SL
+  const me2 = combatantOf(attacker);
+  for (const [holder, v] of Object.entries(combat?.getFlag("nssq", "vanguard") ?? {})) {
+    if (holder === me2?.id || v.round !== combat.round) continue;
+    a.attackBonuses = [...(a.attackBonuses ?? []), { name: v.name, when: { targetIn: v.targets }, hitMod: 0, diceMod: v.sl ?? 1, atkMod: 0, critDice: 0, critUp: false }];
+  }
   // 상시 스킬의 공격 보정(《선봉의 공명》 등)
   const pb = sumAttackBonuses(a.attackBonuses, { self: a, target: { ...d, skills: target.items.filter((i) => i.type === "skill").map((i) => i.name) }, attack: { kind: "physical", elements: a.elements } });
   const r = await resolveAttack({

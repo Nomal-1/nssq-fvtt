@@ -29,9 +29,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 『주언』 스킬 사용 시 선언. 그 억제 공격 달성값 +5.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "『주언』 스킬 사용 때 선언, 그 억제 공격 달성값 +5: 판정 때 GM이 보정(단계 8)"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "useSkill",
+     "optional": true,
+     "when": {
+      "category": "주언"
+     },
+     "effects": [
+      {
+       "type": "modifier",
+       "path": "suppAtk",
+       "value": 5
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"

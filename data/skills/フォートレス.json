@@ -291,9 +291,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>사용 시 대기 상태. 메인 페이즈 종료 시 후발 행동으로 적 단일에게 물리 공격 롤, 대미지 다이스는 (대기 중 받은 대미지+(SL×2))개.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "대기 상태 → 메인 페이즈 종료 때 후발로 적 단일에 물리 공격, 다이스 = 대기 중 받은 대미지 + SL×2: GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "effects": [
+      {
+       "type": "revenge"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "포트리스"

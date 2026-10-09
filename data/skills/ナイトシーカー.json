@@ -241,11 +241,16 @@
     {
      "type": "attack",
      "kind": "physical",
-     "diceMod": "-(3-SL)"
+     "diceMod": "-(3-SL)",
+     "onHit": [
+      {
+       "type": "lateRepeat",
+       "diceMod": "-(3-SL)"
+      }
+     ]
     }
    ],
-   "review": "partial",
-   "effectsNote": "명중했고 메인 페이즈 끝까지 자신이 대미지를 받지 않았으면 후발 행동으로 같은 대상에게 물리 공격 1회 더(다이스 −(3−SL)): GM이 처리(단계 8)"
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"

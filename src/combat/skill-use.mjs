@@ -7,6 +7,7 @@
 import { canUseSkill } from "../engine/effects/usage.mjs";
 import { hasVariants, resolveEffects, variantEffects } from "../engine/effects/resolve.mjs";
 import { guardAttack } from "./guard.mjs";
+import { autoKey } from "../engine/triggers.mjs";
 import { delayedOf, isLateSkill, reserveDelayed, reserveLate, withoutTiming } from "./late.mjs";
 import { placeTokens, removeToken, tokenEffectOf, tokensOf } from "./tokens.mjs";
 import { addCondition, CONDITIONS, removeCondition } from "../engine/conditions.mjs";
@@ -99,6 +100,15 @@ export function unitProfile(actor, combatant) {
 }
 
 const isDrive = (item) => /드라이브/.test(item.name);
+/** 스킬에 든 flag(상시가 아닌 특수 스킬도): 그 값과 스킬(《명군의 재능》 openingCategory 등) */
+export function skillFlag(actor, flag) {
+  for (const i of actor?.items ?? []) {
+    if (i.type !== "skill" || (actor.type === "character" && (i.system.sl ?? 0) <= 0)) continue;
+    const e = (i.system.effects ?? []).find((x) => x?.type === "flag" && x.flag === flag);
+    if (e) return { value: e.value ?? true, item: i };
+  }
+  return null;
+}
 /** 해설 HTML → 툴팁용 한 줄 글 */
 const plain = (html) => String(html ?? "").replace(/<br\s*\/?>|<\/p>/gi, "\n").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/[ \t]+/g, " ").replace(/\n\s*\n+/g, "\n").trim();
 
@@ -119,9 +129,14 @@ export function actionList(combat, combatant, kind) {
       return { id: i.id, name: i.name, cost: `×${i.system.quantity}`, target: i.system.target || L("allySingle"), ok, reason, desc: plain(i.system.description) };
     });
   }
+  // 《명군의 재능》: 『호령』 주행동 스킬 하나를 개막 페이즈에(개막 행동으로, 그 스킬 FP를 더 낸다)
+  const early = phase === "opening" ? skillFlag(actor, "openingCategory") : null;
+  const openingDone = !!combatant.getFlag("nssq", "opening") || !!combatant.getFlag("nssq", "guarding");
   return actor.items.filter((i) => i.type === "skill" && ["주행동", "개막"].includes(i.system.timing) && (i.system.sl ?? 0) > 0)
     .map((i) => {
-      const r = canUseSkill(i.system, user, { phase, myTurn, drive: isDrive(i), openingDone: !!combatant.getFlag("nssq", "opening") || !!combatant.getFlag("nssq", "guarding") });
+      const asOpening = early && i.system.timing === "주행동" && i.system.category === early.value;
+      const r = asOpening ? (openingDone ? { ok: false, reason: "openingDone" } : canUseSkill({ ...i.system, cost: { tp: (i.system.cost?.tp ?? 0) + (early.item.system.cost?.tp ?? 0), fp: (i.system.cost?.fp ?? 0) + (early.item.system.cost?.fp ?? 0) } }, user, { phase: "main", myTurn: true, drive: isDrive(i) }))
+        : canUseSkill(i.system, user, { phase, myTurn, drive: isDrive(i), openingDone });
       const c = i.system.cost ?? {};
       return { id: i.id, name: i.name, cost: [c.tp ? `TP ${c.tp}` : "", c.fp ? `FP ${c.fp}` : ""].filter(Boolean).join(" ") || "-", target: i.system.target, timing: i.system.timing, range: i.system.range, ok: r.ok, reason: r.reason, desc: plain(i.system.description) };
     })
@@ -143,12 +158,40 @@ export async function beginAction(combat, combatant, kind, id) {
     spec.variant = await pickVariant(item);
     if (spec.variant === null) return null;
   }
+  // 사용 때 선언하는 스킬(trigger on useSkill, 《저주의 방울 소리》)
+  if (kind === "skill") {
+    spec.declares = await useDeclarations(actor, item);
+    if (spec.declares === null) return null;
+  }
   const range = kind === "item" ? "-" : item.system.range;
-  if (spec.side === "self") return executeAction(combat, combatant, kind, id, [combatant], { variant: spec.variant });
+  const opts = { variant: spec.variant, declares: spec.declares ?? [] };
+  if (spec.side === "self") return executeAction(combat, combatant, kind, id, [combatant], opts);
   const list = candidates(combat, combatant, spec, range, { allowKO: revives(item) });
   if (!list.length) return ui.notifications.warn(L("noTarget")) && null;
-  if (spec.scope === "all" || spec.scope === "random") return executeAction(combat, combatant, kind, id, list, { variant: spec.variant });
+  if (spec.scope === "all" || spec.scope === "random") return executeAction(combat, combatant, kind, id, list, opts);
   return { pick: list.map((c) => c.id), spec };
+}
+
+/**
+ * 스킬을 쓸 때 선언할 수 있는 스킬(trigger on useSkill): 코스트가 되면 확인(시트 「자동」이면 바로)
+ * @returns {Promise<{name, cost, mods}[]|null>} 취소면 null
+ */
+async function useDeclarations(actor, item) {
+  const out = [];
+  for (const i of actor.items.filter((x) => x.type === "skill" && (x.system.sl ?? 0) > 0 && x.id !== item.id)) {
+    const t = (i.system.effects ?? []).find((e) => e?.type === "trigger" && e.on === "useSkill");
+    if (!t || (t.when?.category && ![].concat(t.when.category).includes(item.system.category))) continue;
+    const cost = i.system.cost ?? {};
+    if ((cost.tp ?? 0) + (item.system.cost?.tp ?? 0) > (actor.system.tp?.value ?? 0) || (cost.fp ?? 0) + (item.system.cost?.fp ?? 0) > (actor.system.fp?.value ?? 0)) continue;
+    const auto = !t.optional || !!actor.getFlag("nssq", "autoTrigger")?.[autoKey(i.system.key)];
+    const ok = auto || await Dialog.confirm({ title: L("declareTitle"), content: `<p>${esc(L("declareAsk", { name: i.name, skill: item.name }))}</p>`, rejectClose: false });
+    if (ok === null) return null;
+    if (!ok) continue;
+    const mods = {};
+    for (const e of t.effects ?? []) if (e.type === "modifier") mods[e.path] = (mods[e.path] ?? 0) + (Number(e.value) || 0);
+    out.push({ name: i.name, cost, mods });
+  }
+  return out;
 }
 
 /** 선언 명칭 고르기 → 번호(취소면 null) */
@@ -180,7 +223,7 @@ export async function pickTarget(combat, combatant, kind, id, picked, spec) {
       if (nearest.length) targets.push(nearest[0]);
     }
   }
-  return executeAction(combat, combatant, kind, id, targets, { variant: spec.variant ?? null });
+  return executeAction(combat, combatant, kind, id, targets, { variant: spec.variant ?? null, declares: spec.declares ?? [] });
 }
 
 /* ---------------- 실행 ---------------- */
@@ -196,7 +239,7 @@ async function rollWith(rolls, n) {
 const combatantOf = (actor) => game.combat?.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor.uuid) ?? null;
 
 /** 실행: 코스트 → 발동·효과 해석 → 결과 카드 */
-export async function executeAction(combat, combatant, kind, id, targetCombatants, { variant = null, late = false } = {}) {
+export async function executeAction(combat, combatant, kind, id, targetCombatants, { variant = null, late = false, declares = [] } = {}) {
   const actor = combatant.actor;
   const item = actor.items.get(id);
   if (!item) return null;
@@ -210,8 +253,15 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   // 코스트 지불(아이템은 수량 −1). 발동에 실패해도 소모(07 #9)
   const upd = {};
   if (kind === "skill") {
-    if (sys.cost?.tp) upd["system.tp.value"] = Math.max(0, (actor.system.tp?.value ?? 0) - sys.cost.tp);
-    if (sys.cost?.fp) upd["system.fp.value"] = Math.max(0, (actor.system.fp?.value ?? 0) - sys.cost.fp);
+    // 《명군의 재능》으로 개막 페이즈에 쓰는 주행동 스킬: 그 스킬의 코스트도
+    const early = phase === "opening" && sys.timing === "주행동" ? skillFlag(actor, "openingCategory") : null;
+    const extra = early && sys.category === early.value ? { ...(early.item.system.cost ?? {}) } : {};
+    // 사용 때 선언(《저주의 방울 소리》 등)의 코스트
+    for (const d of declares) { extra.tp = (extra.tp ?? 0) + (d.cost?.tp ?? 0); extra.fp = (extra.fp ?? 0) + (d.cost?.fp ?? 0); }
+    const tp = (sys.cost?.tp ?? 0) + (extra.tp ?? 0);
+    const fp = (sys.cost?.fp ?? 0) + (extra.fp ?? 0);
+    if (tp) upd["system.tp.value"] = Math.max(0, (actor.system.tp?.value ?? 0) - tp);
+    if (fp) upd["system.fp.value"] = Math.max(0, (actor.system.fp?.value ?? 0) - fp);
     if (Object.keys(upd).length) await actor.update(upd);
   } else {
     await item.update({ "system.quantity": Math.max(0, (sys.quantity ?? 1) - 1) });
@@ -233,7 +283,8 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   const message = await resolveAndPost({
     actor, combatant, item, kind,
     units: targetCombatants.map((c) => ({ actor: c.actor, combatant: c })),
-    mainAction: kind === "skill" && sys.timing === "주행동", variant, stripTiming: late, skipDelayed: !!delayed, skipToken: tokenEffectOf(effects).length > 0
+    mainAction: kind === "skill" && sys.timing === "주행동", variant, stripTiming: late, skipDelayed: !!delayed, skipToken: tokenEffectOf(effects).length > 0,
+    userMods: declares.reduce((m, d) => { for (const [k, v] of Object.entries(d.mods ?? {})) m[k] = (m[k] ?? 0) + v; return m; }, {})
   });
   if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
   // 개막 페이즈에 쓴 스킬은 그 전투원의 개막 행동
@@ -255,7 +306,7 @@ export async function useItemOutside(actor, item, targets) {
  * @param {{ type: "chase"|"counter"|"trigger" }} [followup] 이 카드가 추격·반격 등이면(연쇄 금지 판단용)
  * @param {Object<string, object>} [extra] 대상 uuid → 더한 대미지 다이스(《풀 게인》 등, engine extendDamage 결과 + count)
  */
-export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false, skipToken = false }) {
+export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false, skipToken = false, userMods = {} }) {
   const sys = item.system;
   // 후발 행동으로 실행할 때는 행동 순서 효과를 빼고, 예약한 지연 공격은 다시 해석하지 않는다
   let effectsAll = sys.effects ?? [];
@@ -265,6 +316,14 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const spec = kind === "item" ? targetSpec(sys.target || "아군 단일", sys.effects) : targetSpec(sys.target, sys.effects);
   const rolls = [...extraRolls];
   const user = unitProfile(actor, combatant);
+  // 사용 때 선언한 보정(《저주의 방울 소리》 억제 공격 +5)
+  for (const [k, v] of Object.entries(userMods ?? {})) user[k] = (user[k] ?? 0) + v;
+  // 《돌격대장》: 이번 턴 다른 아군이 먼저 공격한 적에게는 대미지 다이스 +SL
+  const vg = combatant?.combat?.getFlag("nssq", "vanguard") ?? {};
+  for (const [holder, v] of Object.entries(vg)) {
+    if (holder === combatant.id || v.round !== combatant.combat.round || !v.targets?.length) continue;
+    user.attackBonuses = [...(user.attackBonuses ?? []), { name: v.name, when: { targetIn: v.targets }, hitMod: 0, diceMod: v.sl ?? 1, atkMod: 0, critDice: 0, critUp: false }];
+  }
   // 가드·도발·반사(단계 8-C): 공격 롤이 있는 스킬이면 대상·방어 값을 먼저 정한다
   const atk = variantEffects(effectsAll, variant).find((e) => e?.type === "attack");
   let guard = null;
@@ -343,6 +402,9 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     ...(first ? { rolls, sound: rolls.length ? CONFIG.sounds.dice : undefined } : {}),
     flags: { nssq: { skillCard: c } }
   });
+  // 《딜레이 스탭》: 명중했으면 후발 추가 공격 예약(메인 페이즈 끝까지 대미지를 받으면 취소, combat/events.mjs)
+  const lrep = r.results.get(user.id)?.lateRepeat;
+  if (lrep && !r.failed && combatant?.combat) await combatant.setFlag("nssq", "lateRepeat", { ...lrep, name: item.name, img: item.img, sl: sys.sl ?? 1 });
   // 《타기팅》: 전투 플래그 focus(이번 턴)
   if (!r.failed && r.focus && combatant?.combat) {
     const fc = targets.find((t) => t.id === r.focus);

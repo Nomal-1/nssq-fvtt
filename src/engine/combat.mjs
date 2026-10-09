@@ -96,7 +96,7 @@ export const halve = (n) => Math.floor(n / 2);
  * @param {() => number} [a.rng] rollDice 대신 1개씩 굴리는 함수
  * @returns {Promise<object>}
  */
-export async function resolveAttack({ attacker, target, kind = "physical", hitMod = 0, diceMod = 0, atkMod = 0, atkMultiplier = 1, halfDamage = false, critUp = false, critDiceMod = 0, failAtOrBelow = 0, rollDice, rng }) {
+export async function resolveAttack({ attacker, target, kind = "physical", hitMod = 0, diceMod = 0, atkMod = 0, atkMultiplier = 1, halfDamage = false, critUp = false, critDiceMod = 0, failAtOrBelow = 0, diceOverride = null, rollDice, rng }) {
   const roll = rollDice ?? ((n) => Array.from({ length: n }, () => rng()));
   // 스킬의 공격력 보정: (【공격】 + atkMod) × atkMultiplier(버림). 《어설트 드라이브》 등
   const boost = (v) => Math.floor(((Number(v) || 0) + atkMod) * atkMultiplier);
@@ -109,7 +109,8 @@ export async function resolveAttack({ attacker, target, kind = "physical", hitMo
   if (!result.hit) return result;
 
   const resist = effectiveResist(target.resist, attacker.elements);
-  const count = damageDiceCount({ kind, physAtk: attacker.physAtk, elemAtk: attacker.elemAtk, defense: target.defense, diceMod });
+  // diceOverride: 대미지 다이스 수를 직접(《리벤지 스마이트》 「받은 대미지 + SL×2개」)
+  const count = diceOverride !== null && diceOverride !== undefined ? Math.max(0, diceOverride) : damageDiceCount({ kind, physAtk: attacker.physAtk, elemAtk: attacker.elemAtk, defense: target.defense, diceMod });
   // critUp: 『크리티컬 업』 상태(또는 《일의전심》 같은 상시 효과)
   const first = judgeDamage(count ? await roll(count) : [], resist, { critUp: attacker.critUp || critUp });
   // 크리티컬: 4다이스 추가(+ 《일도필살》 등 critDiceMod). 추가분으로 크리티컬을 다시 판정하지 않는다(07 #2)

@@ -29,9 +29,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>분류 『호령』의 스킬을 하나, 개막 페이즈에 사용할 수 있다. (사용하는 스킬만큼의 【TP】는 평소대로 소비한다)</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "『호령』 스킬 하나를 개막 페이즈에 사용(TP는 평소대로): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "openingCategory",
+     "value": "호령"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "프린스/프린세스"

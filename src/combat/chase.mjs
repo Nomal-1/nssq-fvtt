@@ -148,6 +148,15 @@ async function onAttackCard(message) {
   const ev = await attackEvent(message);
   if (!ev) return;
   const combat = game.combat;
+  // 《돌격대장》: 이번 턴 자신이 공격한 적을 기록(같은 적을 공격하는 아군의 대미지 다이스 +SL)
+  const me = combat.combatants.get(ev.attackerId);
+  const vg = me?.actor.items.find((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "flag" && e.flag === "vanguard"));
+  if (vg) {
+    const all = foundry.utils.deepClone(combat.getFlag("nssq", "vanguard") ?? {});
+    const prev = all[me.id]?.round === combat.round ? all[me.id].targets : [];
+    all[me.id] = { round: combat.round, sl: vg.system.sl ?? 1, name: vg.name, targets: [...new Set([...prev, ...ev.targets.map((t) => t.id)])] };
+    await combat.setFlag("nssq", "vanguard", all);
+  }
   const units = combat.combatants.filter((c) => c.actor).map(unitOf);
   const byId = new Map(units.map((u) => [u.id, u]));
   const list = findReactions(ev, units).map((r) => ({ ...r, name: r.source.name ?? L("chaseBuff") }));

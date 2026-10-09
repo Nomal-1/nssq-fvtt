@@ -115,6 +115,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       target: { evasion: t.evasion, defense: t.defense, resist, guarding: t.guarding, guardHalf: t.guardHalf },
       kind, hitMod, diceMod,
       atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, failAtOrBelow: Number(e.failAtOrBelow ?? 0) || 0, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
+      diceOverride: e.fixedDice !== undefined ? evaluate(e.fixedDice, vars(t)) : null,
       rollDice
     });
     hitChecks.push(result);
@@ -268,6 +269,10 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         r.states.push({ id: e.id, name: e.label ?? "", group: e.group ?? "", mods, ...(e.max ? { max: evaluate(e.max, vars(t)) } : {}), note: e.note ?? "" });
         return;
       }
+      case "lateRepeat":
+        // 「명중했고 메인 페이즈 끝까지 대미지를 받지 않으면 후발로 한 번 더」(《딜레이 스탭》): onHit 안에서, 호출자가 예약
+        res(user).lateRepeat = { target: t.id, diceMod: e.diceMod ?? 0 };
+        return;
       case "focus":
         // 「그 턴, 대상 적 단일 스킬은 모두 이 대상」(에너미 워처 《타기팅》): 호출자가 전투 플래그로
         out.focus = t.id;

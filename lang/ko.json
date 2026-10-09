@@ -1117,6 +1117,8 @@
       "undo": "되돌리기",
       "applied": "적용함",
       "notApplied": "아직 적용하지 않음",
+      "declareTitle": "사용 때 선언",
+      "declareAsk": "《{skill}》에 《{name}》을(를) 선언하는가?",
       "linkAttack": "연계 공격: {name}의 《{skill}》(참가: {partners}, 참가자는 이번 턴 행동 종료)",
       "extraDice": "대미지 다이스 +{count}개: {dice} → 대미지 +{n}",
       "resourceDelta": "【{res}】 {n}",
@@ -1150,6 +1152,7 @@
     "Event": {
       "noCost": "{name}: 코스트가 부족해 《{skill}》 사용 불가",
       "noTarget": "{name}: 대상이 없어 《{skill}》 취소",
+      "lateRepeatCancel": "{name}: 대미지를 받아 《{skill}》 추가 공격 없음",
       "chanceOk": "{name}: 《{skill}》 1D6 = {die} ≤ {lte} → 발동",
       "chanceNg": "{name}: 《{skill}》 1D6 = {die} > {lte} → 발동하지 않음",
       "ask": {
@@ -1180,6 +1183,7 @@
       "reserved": "{name}: 《{skill}》 후발 행동으로 예약(모든 전투원이 행동한 뒤 실행)",
       "delayedLate": "{name}: 《{skill}》 지연 공격 예약({n}턴 뒤 후발 행동 타이밍)",
       "delayedEnd": "{name}: 《{skill}》 지연 공격 예약({n}턴 뒤 종료 페이즈)",
+      "revenge": "{name}: 《{skill}》 후발 공격(대기 중 받은 대미지 {taken})",
       "lateRun": "후발 행동: {name}의 《{skill}》",
       "cancelled": "{name}: 쓰러졌거나 행동할 수 없어 《{skill}》 취소",
       "noCost": "{name}: 코스트가 부족해 《{skill}》 취소",

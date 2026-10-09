@@ -137,6 +137,16 @@ export async function onHpChange(actor, before, after, sourceUuid = null, attack
     }
   }
   const foe = src && !friendly(src.actor, actor);
+  // 《리벤지 스마이트》 대기 중 받은 대미지를 센다, 《딜레이 스탭》은 대미지를 받으면 추가 공격 취소
+  const stances = c.getFlag("nssq", "stances") ?? [];
+  if (stances.some((st) => (st.effects ?? []).some((e) => e?.type === "revenge"))) {
+    await c.setFlag("nssq", "stances", stances.map((st) => ((st.effects ?? []).some((e) => e?.type === "revenge") ? { ...st, taken: (st.taken ?? 0) + (before - after) } : st)));
+  }
+  if (c.getFlag("nssq", "lateRepeat")) {
+    const lr = c.getFlag("nssq", "lateRepeat");
+    await c.unsetFlag("nssq", "lateRepeat");
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-combat-note"><i class="fas fa-times"></i> ${esc(L("lateRepeatCancel", { name: c.name, skill: lr.name }))}</div>` });
+  }
   if (foe && attackRoll) await fire(c, "damaged");
   await fire(c, "hpLost", { target: src && foe ? src : null });
   // 자신의 공격으로 적을 쓰러뜨림(《피니셔》 등). 《이 악물기》로 버텼으면 아님

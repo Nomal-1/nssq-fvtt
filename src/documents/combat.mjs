@@ -75,7 +75,8 @@ export class NssqCombat extends Combat {
       "flags.nssq.-=stances": null,
       "flags.nssq.-=late": null,
       "flags.nssq.-=acted": null,
-      "flags.nssq.-=extraAction": null
+      "flags.nssq.-=extraAction": null,
+      "flags.nssq.-=lateRepeat": null
     }));
     if (updates.length) await this.updateEmbeddedDocuments("Combatant", updates);
   }

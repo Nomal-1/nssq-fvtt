@@ -67,9 +67,17 @@ export async function runLateActions(combat) {
     if (d && (d.at ?? "nextTurnLate") === "nextTurnLate" && d.round <= combat.round) jobs.push({ c, delayed: d });
     const l = c.getFlag("nssq", "late");
     if (l) jobs.push({ c, late: l });
+    // 《리벤지 스마이트》: 대기 상태 → 후발로 적 단일에게(다이스 = 받은 대미지 + SL×2)
+    const rv = (c.getFlag("nssq", "stances") ?? []).find((st) => (st.effects ?? []).some((e) => e?.type === "revenge"));
+    if (rv) jobs.push({ c, revenge: rv });
+    // 《딜레이 스탭》: 대미지를 받지 않았으면 같은 대상에게 한 번 더
+    const lr = c.getFlag("nssq", "lateRepeat");
+    if (lr) jobs.push({ c, lateRepeat: lr });
   }
   for (const j of jobs) {
     if (j.delayed) await runDelayed(combat, j.c, j.delayed);
+    else if (j.revenge) await runRevenge(combat, j.c, j.revenge);
+    else if (j.lateRepeat) await runLateRepeat(combat, j.c, j.lateRepeat);
     else await runLate(combat, j.c, j.late);
   }
 }
@@ -97,6 +105,38 @@ async function runLate(combat, c, l) {
   await note(esc(L("lateRun", { name: c.name, skill: l.name })), c.actor);
   const { executeAction } = await import("./skill-use.mjs");
   await executeAction(combat, c, l.kind, l.itemId, targets, { variant: l.variant ?? null, late: true });
+}
+
+/** 대기 중 받은 대미지로 후발 공격(대상: 사거리 안의 적 중 무작위, 07 #95) */
+async function runRevenge(combat, c, st) {
+  await c.setFlag("nssq", "stances", (c.getFlag("nssq", "stances") ?? []).filter((x) => x.id !== st.id));
+  if (!alive(c) || actionState(c).noAction) return note(esc(L("cancelled", { name: c.name, skill: st.name })), c.actor);
+  const p = combatProfile(c.actor, c);
+  const foes = combat.combatants.filter((x) => alive(x) && !friendly(x.actor, c.actor) && inRange(p.range, p.row, x.actor.system.row ?? "front"));
+  const target = pickRandom(foes, () => CONFIG.Dice.randomUniform());
+  if (!target) return note(esc(L("noTarget", { name: c.name, skill: st.name })), c.actor);
+  await note(esc(L("revenge", { name: c.name, skill: st.name, taken: st.taken ?? 0 })), c.actor);
+  const { resolveAndPost } = await import("./skill-use.mjs");
+  await resolveAndPost({
+    actor: c.actor, combatant: c, kind: "skill", mainAction: false,
+    item: { name: st.name, img: c.actor.img, system: { effects: [{ type: "attack", kind: "physical", fixedDice: `${st.taken ?? 0}+SL*2` }], sl: st.sl ?? 1, category: "백병", description: "", target: "적 단일" } },
+    units: [{ actor: target.actor, combatant: target }]
+  });
+}
+
+/** 《딜레이 스탭》 추가 공격 */
+async function runLateRepeat(combat, c, lr) {
+  await c.unsetFlag("nssq", "lateRepeat");
+  const target = combat.combatants.get(lr.target);
+  if (!alive(c) || actionState(c).noAction) return note(esc(L("cancelled", { name: c.name, skill: lr.name })), c.actor);
+  if (!alive(target)) return note(esc(L("noTarget", { name: c.name, skill: lr.name })), c.actor);
+  await note(esc(L("lateRun", { name: c.name, skill: lr.name })), c.actor);
+  const { resolveAndPost } = await import("./skill-use.mjs");
+  await resolveAndPost({
+    actor: c.actor, combatant: c, kind: "skill", mainAction: false,
+    item: { name: lr.name, img: lr.img, system: { effects: [{ type: "attack", kind: "physical", diceMod: lr.diceMod ?? 0 }], sl: lr.sl ?? 1, category: "백병", description: "", target: "적 단일" } },
+    units: [{ actor: target.actor, combatant: target }]
+  });
 }
 
 async function runDelayed(combat, c, d) {
