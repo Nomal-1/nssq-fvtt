@@ -18,6 +18,11 @@ const CHECKS = {
   // 트리거 conditionGained: 막 걸리려는 상태 이상·봉인(c.condition = id)
   condition: (v, c) => arr(v).includes(c.condition),
   conditionKind: (v, c) => CONDITIONS[c.condition]?.kind === v,
+  // 자신이 장비한 무기 종류(《퍼니시 모어》 백병 무기, 《체이스 바인드》 사격 무기)
+  selfWeapon: (v, c) => arr(v).includes(c.self?.weaponType),
+  // 공격 이벤트: 대상이 하나인 공격(《와이드 이펙트》·《페너트레이터》 「단일」), 그 공격의 스킬(《크로스 차지》 「《딜레이 차지》 명중 시」)
+  singleTarget: (v, c) => (c.targetCount === 1) === !!v,
+  skillKey: (v, c) => arr(v).includes(c.skillKey),
   // 대상의 HP 잔량이 최대치의 절반 미만(공격 전 값, 《디 엔드》)
   targetHpBelowHalf: (v, c) => ((c.target?.hp ?? 0) * 2 < (c.target?.hpMax ?? 0)) === !!v,
   // 대상이 봉인 중

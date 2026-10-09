@@ -573,9 +573,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《딜레이 차지》 명중 시 선언. 그 《딜레이 차지》에 이어 자신의 물리 공격으로 추격.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "《딜레이 차지》 명중 시 선언: 이어서 자신의 물리 공격으로 추격(단계 8)"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "selfHit",
+     "optional": true,
+     "when": {
+      "skillKey": "ハイランダー.ディレイチャージ"
+     },
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "하이랜더"

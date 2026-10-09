@@ -1123,7 +1123,8 @@
       "followup": {
         "chase": "추격",
         "counter": "반격",
-        "delayed": "지연 공격"
+        "delayed": "지연 공격",
+        "repeat": "반복"
       },
       "lateChip": "후발: {name}",
       "lateHint": "후발 행동 예약: 모든 전투원이 행동한 뒤 【속도】 순으로 실행",
@@ -1200,6 +1201,7 @@
       "skipRange": "{actor}: 대상이 사거리 밖이라 {name} {type}하지 않는다",
       "noCost": "{actor}: 코스트가 부족해 {name} 사용 불가",
       "chaseBuff": "『추격』",
+      "rally": "추격(지시)",
       "type": {
         "chase": "추격",
         "counter": "반격",

@@ -95,4 +95,16 @@ describe("연쇄 금지(01 §3.11, 05 완료 기준)", () => {
     expect(autoRuns(r, { side: "pc", autoTrigger: {} })).toBe(false);
     expect(autoRuns(r, { side: "enemy" })).toBe(true);
   });
+
+  it("같은 공격 반복(《더블 액션》 등): 단일 대상만, 반복·추격에서는 다시 없음", () => {
+    const me = { id: "p1", side: "pc", triggers: [
+      { key: "wide", name: "와이드 이펙트", on: "crit", limit: "perAction", when: { singleTarget: true }, effects: [{ type: "repeat", scope: "row" }] }
+    ] };
+    const t = (id) => ({ id, side: "enemy", row: "front", hit: true, crit: true });
+    const ev3 = (kind, targets) => ({ kind, attackerId: "p1", attackerSide: "pc", attackKind: "physical", elements: [], category: "", targets });
+    expect(findHitTriggers(ev3("skill", [t("e1")]), me)).toHaveLength(1);
+    expect(findHitTriggers(ev3("skill", [t("e1"), t("e2")]), me)).toHaveLength(0);
+    expect(findHitTriggers(ev3("repeat", [t("e1")]), me)).toHaveLength(0);
+    expect(findHitTriggers(ev3("chase", [t("e1")]), me)).toHaveLength(0);
+  });
 });

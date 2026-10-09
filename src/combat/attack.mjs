@@ -34,7 +34,7 @@ export function attackerFromContext(actor) {
  * @param {{ ignoreRange?: boolean, target?: TokenDocument }} [opts] GM은 Shift로 사거리 무시.
  *   target: 전투 화면에서 고른 대상(없으면 캔버스에서 지정한 타깃 1개)
  */
-export async function normalAttack(attacker, { ignoreRange = false, target: picked = null } = {}) {
+export async function normalAttack(attacker, { ignoreRange = false, target: picked = null, followup = null } = {}) {
   if (!attacker) return;
   const targets = picked ? [picked] : [...game.user.targets];
   if (targets.length !== 1) return ui.notifications.warn(L("pickOneTarget"));
@@ -52,7 +52,8 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
   // 차례 확인: 진행 중인 전투의 참가자라면 메인 페이즈의 자기 차례에만. GM은 확인 후 강행할 수 있다
   const combat = game.combat;
   const me = combatantOf(attacker);
-  if (combat?.started && me) {
+  // 추격·반복 공격(followup)은 차례와 관계없이
+  if (combat?.started && me && !followup) {
     const phase = combat.getFlag("nssq", "phase");
     const myTurn = phase === "main" && combat.combatant?.id === me.id;
     if (!myTurn) {
@@ -113,7 +114,7 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
   const flags = {
     nssq: {
       attack: {
-        attackerUuid: attacker.uuid, kind: "physical", label: L("normalAttack"),
+        attackerUuid: attacker.uuid, kind: "physical", label: followup?.by ? `${L("normalAttack")} (${followup.by})` : L("normalAttack"), ...(followup ? { followup } : {}),
         weapon: a.weaponName, elements: a.elements, physAtk: a.physAtk, defense: d.defense,
         hitStat: a.physHit, fpGain: r.fpGain, targets: [targetEntry],
         // [저주]: 공격자가 공격 시점에 [저주]면 실대미지 절반을 되돌려 받는다(적용할 때)

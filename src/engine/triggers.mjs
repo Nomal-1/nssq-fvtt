@@ -122,8 +122,10 @@ export function findHitTriggers(event, attacker) {
   for (const tr of attacker?.triggers ?? []) {
     if (!["selfHit", "crit"].includes(tr.on)) continue;
     if (tr.on === "crit" && (tr.effects ?? []).some((e) => e.type === "attack") && !canChaseAfter(event.kind)) continue;
+    // 같은 공격 반복(《더블 액션》 등)은 반복한 공격·추격·반격에서 다시 나지 않는다(주행동 1회당 1번)
+    if ((tr.effects ?? []).some((e) => e.type === "repeat") && ["repeat", "chase", "counter"].includes(event.kind)) continue;
     const list = event.targets.filter((t) => enemyOf(t.side, attacker.side) && (tr.on === "crit" ? t.crit : t.hit)
-      && whenMatches(tr.when, { self: attacker, target: t, attack: { kind: event.attackKind, elements: event.elements }, category: event.category }));
+      && whenMatches(tr.when, { self: attacker, target: t, attack: { kind: event.attackKind, elements: event.elements }, category: event.category, targetCount: event.targets.length, skillKey: event.skillKey }));
     const once = tr.limit === "perAction" || (tr.on === "selfHit" && !tr.optional);
     for (const t of once ? list.slice(0, 1) : list) out.push({ key: tr.key, name: tr.name, sl: tr.sl ?? 1, on: tr.on, target: t.id, effects: tr.effects ?? [], optional: !!tr.optional });
   }

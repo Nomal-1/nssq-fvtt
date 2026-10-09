@@ -268,6 +268,10 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         r.states.push({ id: e.id, name: e.label ?? "", group: e.group ?? "", mods, ...(e.max ? { max: evaluate(e.max, vars(t)) } : {}), note: e.note ?? "" });
         return;
       }
+      case "rallyChase":
+        // 「아군 최대 n명이 즉시 적 단일에게 추격」(《일제 사격》·《난룡의 진》): 호출자가 추격을 실행
+        out.rally = { count: Math.max(1, evaluate(e.count ?? 1, vars(t))), weapons: e.weapons ?? null, target: t.id };
+        return;
       case "tokenRemove":
         // 토큰 1개를 없앤다(《비스트 귀환》·《파진》): 사용자 결과에 기록, 호출자가 처리
         res(user).tokenRemove = e.category ?? "";

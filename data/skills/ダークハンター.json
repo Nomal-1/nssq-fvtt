@@ -1175,9 +1175,35 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신의 주행동으로 봉인을 준 경우, 자신이 장비한 무기가 『백병』 분류의 무기라면 그 대상에게 통상 공격으로 추격을 한다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "자신의 주행동으로 봉인을 걸었을 때 백병 무기면 그 대상에게 통상 공격으로 추격: GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "bindInflicted",
+     "when": {
+      "selfWeapon": [
+       "주먹",
+       "단검",
+       "검",
+       "세검",
+       "창",
+       "도끼",
+       "지팡이",
+       "망치",
+       "채찍",
+       "도",
+       "포검",
+       "농기구"
+      ]
+     },
+     "effects": [
+      {
+       "type": "attack",
+       "kind": "physical"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"

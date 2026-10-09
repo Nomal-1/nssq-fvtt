@@ -81,7 +81,9 @@ export async function attackEvent(message) {
   if (!targets.length) return null;
   return {
     kind, attackerId: attacker.id, attackerUuid: attacker.actor.uuid, attackerSide: unitSide(attacker.actor),
-    attackerRow: attacker.actor.system.row ?? "front", attackKind, elements, category, targets
+    attackerRow: attacker.actor.system.row ?? "front", attackKind, elements, category, targets,
+    // 같은 공격 반복(《더블 액션》 등)·《크로스 차지》용: 그 공격의 스킬
+    skillKey: sk?.skillKey ?? null, origin: atk ? { kind: "normal" } : { kind: "skill", itemId: sk.itemId ?? null, variant: sk.variant ?? null }
   };
 }
 
@@ -154,7 +156,7 @@ async function onAttackCard(message) {
   for (const t of findHitTriggers(ev, attacker)) {
     list.push({ unitId: ev.attackerId, type: "trigger", target: t.target, name: t.name, optional: t.optional, effects: t.effects,
       source: { key: t.key, name: t.name, sl: t.sl, itemId: attacker.triggers.find((x) => x.key === t.key)?.itemId },
-      hitData: ev.targets.find((x) => x.id === t.target)?.hitData ?? null });
+      hitData: ev.targets.find((x) => x.id === t.target)?.hitData ?? null, origin: ev.origin });
   }
   if (!list.length) return;
   await settled(message);
@@ -180,6 +182,9 @@ export async function runFollowup(f, originKind = "normal") {
   if (f.type === "trigger") {
     const item = actor.items.get(f.source.itemId);
     if (!item) return false;
+    // 같은 공격을 다시(《더블 액션》·《와이드 이펙트》·《페너트레이터》)
+    const rep = f.effects.find((e) => e.type === "repeat");
+    if (rep) return repeatAttack(combat, c, target, f, rep, item);
     // 선언(「사용을 선언한다」): 코스트 지불
     if (f.optional) {
       const cost = item.system.cost ?? {};
@@ -231,6 +236,60 @@ export async function runFollowup(f, originKind = "normal") {
     actor, combatant: c, kind: "skill", mainAction: false,
     item: { name: f.name, img: actor.img, system: { effects: [{ type: "attack", ...attack }], sl: f.source?.sl ?? 1, category: "", description: "", target: "적 단일" } },
     units: [{ actor: target.actor, combatant: target }], followup: { type: f.type }
+  });
+  return true;
+}
+
+/**
+ * 아군 일제 추격(《일제 사격》·《난룡의 진》): 사용자 이외의 행동할 수 있는 아군을 【속도】 순으로 최대 count명(07 #88)
+ * weapons가 있으면 그 무기 종류를 장비한 아군만. 각자 통상 공격의 물리 공격으로 추격(사거리는 무시하지 않음)
+ */
+export async function rallyChase(user, rally) {
+  const combat = game.combat;
+  const target = combat?.combatants.get(rally.target);
+  if (!target) return;
+  const allies = combat.turns.filter((x) => x.id !== user.id && alive(x) && !actionState(x).noAction && (sideOf(x.actor) === "enemy") === (sideOf(user.actor) === "enemy")
+    && (!rally.weapons || rally.weapons.includes(x.actor.system.equipment?.weapon?.weaponType)));
+  for (const a of allies.slice(0, rally.count)) {
+    await runFollowup({ unitId: a.id, type: "chase", target: target.id, name: L("rally"), attack: { kind: "physical" }, source: { buff: 0, key: "rally", sl: 1 } }, "skill");
+  }
+}
+
+/**
+ * 같은 공격 반복: scope same(같은 대상) / row(대상과 같은 열의 다른 적 전부) / back(후위 적 1체, 무작위)
+ * cost: 스킬 공격이면 그 스킬의 코스트를 한 번 더(통상 공격은 없음)
+ */
+async function repeatAttack(combat, c, target, f, rep, trigItem) {
+  const actor = c.actor;
+  const note = (key) => ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-combat-note">${esc(L(key, { actor: c.name, name: shown(f), type: typeLabel(f) }))}</div>` });
+  const foes = combat.combatants.filter((x) => alive(x) && (sideOf(x.actor) === "enemy") !== (sideOf(actor) === "enemy"));
+  const row = target.actor.system.row ?? "front";
+  const scope = rep.scope ?? "same";
+  const targets = scope === "row" ? foes.filter((x) => x.id !== target.id && (x.actor.system.row ?? "front") === row)
+    : scope === "back" ? [foes.filter((x) => (x.actor.system.row ?? "front") === "back").sort(() => CONFIG.Dice.randomUniform() - 0.5)[0]].filter(Boolean)
+      : alive(target) ? [target] : [];
+  if (!targets.length) { await note("skipKO"); return false; }
+  const origin = f.origin ?? { kind: "normal" };
+  if (origin.kind === "normal") {
+    const { normalAttack } = await import("./attack.mjs");
+    for (const t of targets) await normalAttack(actor, { target: t.token, ignoreRange: true, followup: { type: "repeat", by: trigItem.name } });
+    return true;
+  }
+  const item = actor.items.get(origin.itemId);
+  if (!item) return false;
+  const cost = item.system.cost ?? {};
+  if (rep.cost) {
+    if ((cost.tp ?? 0) > (actor.system.tp?.value ?? 0) || (cost.fp ?? 0) > (actor.system.fp?.value ?? 0)) { await note("noCost"); return false; }
+    const upd = {};
+    if (cost.tp) upd["system.tp.value"] = (actor.system.tp?.value ?? 0) - cost.tp;
+    if (cost.fp) upd["system.fp.value"] = (actor.system.fp?.value ?? 0) - cost.fp;
+    if (Object.keys(upd).length) await actor.update(upd);
+  }
+  const { resolveAndPost } = await import("./skill-use.mjs");
+  await resolveAndPost({
+    actor, combatant: c, kind: "skill", mainAction: false, variant: origin.variant ?? null, followup: { type: "repeat", by: trigItem.name },
+    item: { id: item.id, name: item.name, img: item.img, system: { ...item.system, target: scope === "row" ? "적 열" : "적 단일" } },
+    units: targets.map((t) => ({ actor: t.actor, combatant: t }))
   });
   return true;
 }

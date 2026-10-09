@@ -740,9 +740,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상이 『적 단일』인 공격에서 크리티컬 히트 시, 대상과 같은 열의 모든 적에게도 같은 공격을 할 수 있다. 추가 TP 소비 없음.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "적 단일 공격이 크리티컬이면 대상과 같은 열의 모든 적에게도 같은 공격(TP 추가 없음): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "crit",
+     "limit": "perAction",
+     "optional": true,
+     "when": {
+      "singleTarget": true
+     },
+     "effects": [
+      {
+       "type": "repeat",
+       "scope": "row"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "워리어"

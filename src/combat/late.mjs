@@ -42,7 +42,7 @@ export async function reserveLate(combatant, kind, item, targets, variant) {
 export async function reserveDelayed(combat, combatant, item, eff, targets) {
   const turns = Math.max(1, Number(eff.turns ?? 1) || 1);
   await combatant.setFlag("nssq", "delayed", {
-    round: combat.round + turns, at: eff.at ?? "nextTurnLate", name: item.name, img: item.img, sl: item.system.sl ?? 1,
+    round: combat.round + turns, at: eff.at ?? "nextTurnLate", name: item.name, img: item.img, sl: item.system.sl ?? 1, key: item.system.key ?? null,
     effects: eff.effects ?? [], target: item.system.target ?? "", targets: targets.map((c) => c.id)
   });
   await note(esc(L(eff.at === "endPhase" ? "delayedEnd" : "delayedLate", { name: combatant.name, skill: item.name, n: turns })), combatant.actor);
@@ -107,7 +107,7 @@ async function runDelayed(combat, c, d) {
   const { resolveAndPost } = await import("./skill-use.mjs");
   await resolveAndPost({
     actor: c.actor, combatant: c, kind: "skill", mainAction: false, followup: { type: "delayed" },
-    item: { name: d.name, img: d.img, system: { effects: d.effects, sl: d.sl ?? 1, category: "", description: "", target: d.target } },
+    item: { name: d.name, img: d.img, system: { effects: d.effects, sl: d.sl ?? 1, category: "", description: "", target: d.target, key: d.key ?? null } },
     units: targets.map((t) => ({ actor: t.actor, combatant: t }))
   });
 }

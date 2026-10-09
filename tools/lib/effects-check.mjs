@@ -36,6 +36,8 @@ export const TYPES = {
   nullify: { scope: false },
   actionTiming: { value: true },
   extraAction: { count: false },
+  repeat: { scope: false, cost: false },
+  rallyChase: { count: false, weapons: false },
   tokenRemove: { category: false },
   attackBonus: { hitMod: false, diceMod: false, atkMod: false, critDice: false, critUp: false },
   kill: { check: true },
@@ -43,7 +45,7 @@ export const TYPES = {
   useBonus: { buffTurns: false, debuffTurns: false, healHp: false },
   drain: { resource: false, mode: false },
   recoil: { mode: false },
-  target: { side: true, scope: true, count: false },
+  target: { side: true, scope: true, count: false, excludeSelf: false },
   guard: { mode: true, scope: false, optional: false },
   aura: { path: true, value: true, scope: false },
   provoke: { count: false, to: false }
@@ -148,7 +150,7 @@ export function collectHolders() {
 /** flag 이름(03 §3) */
 export const FLAGS = ["itemRevive", "noCarryCount", "ownLimit", "weaponElement", "tokenMax", "campCookHp", "campCookTp", "campCookCure"];
 /** trigger.on 값(03 §3) */
-export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart", "escapeCheck", "hpLost", "enemyKO", "buffGained", "battleWon", "damaged", "conditionGained", "tokenGone"];
+export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart", "escapeCheck", "hpLost", "enemyKO", "buffGained", "battleWon", "damaged", "conditionGained", "tokenGone", "bindInflicted"];
 
 export const STAGE8 = new Set(["stance", "trigger", "counter", "chase", "delayed", "token", "guard", "aura", "provoke"]);
 const usesStage8 = (list) => (list ?? []).some((e) => STAGE8.has(e.type) || NESTED.some((k) => usesStage8(e[k])));

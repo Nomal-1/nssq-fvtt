@@ -999,9 +999,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>크리티컬 히트 시 원하면 같은 공격으로 같은 대상을 한 번 더 공격(TP도 다시 소비). 주행동 1회당 1번만 발생.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "크리티컬 히트 시 같은 공격으로 같은 대상을 한 번 더(TP 다시 소비, 주행동 1회당 1번): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "crit",
+     "limit": "perAction",
+     "optional": true,
+     "effects": [
+      {
+       "type": "repeat",
+       "scope": "same",
+       "cost": true
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"

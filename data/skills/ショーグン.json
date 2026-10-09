@@ -851,9 +851,28 @@
    "variants": [],
    "sl": 1,
    "description": "<p>강화 효과를 얻었을 때 선언. 자신 이외 아군의 【TP】 (SL) 회복. 전투당 1회.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "강화를 얻었을 때 선언, 자신 이외 아군 TP +SL(전투당 1회): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "buffGained",
+     "limit": "perBattle",
+     "optional": true,
+     "effects": [
+      {
+       "type": "target",
+       "side": "ally",
+       "scope": "all",
+       "excludeSelf": true
+      },
+      {
+       "type": "resource",
+       "resource": "tp",
+       "delta": "SL"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -1071,9 +1090,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>종별 '활'·'쇠뇌'·'총' 중 하나를 장비한 아군을 최대 (SL+1)명 선택, 즉시 적 단일에게 추격시킨다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "활·쇠뇌·총을 장비한 아군 최대 (SL+1)명이 즉시 적 단일에게 추격: GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "target",
+     "side": "enemy",
+     "scope": "single"
+    },
+    {
+     "type": "rallyChase",
+     "count": "SL+1",
+     "weapons": [
+      "활",
+      "쇠뇌",
+      "총"
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"
@@ -1118,9 +1151,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아군을 최대 (SL+1)명 선택, 즉시 적 단일에게 추격시킨다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "아군 최대 (SL+1)명이 즉시 적 단일에게 추격: GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "target",
+     "side": "enemy",
+     "scope": "single"
+    },
+    {
+     "type": "rallyChase",
+     "count": "SL+1"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "장군"

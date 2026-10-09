@@ -767,9 +767,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>크리티컬 히트 발생 시 원하면 같은 공격으로 같은 대상을 한 번 더 공격(TP도 다시 소비). 주행동 1회당 1번만 발생.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "크리티컬 히트 시 같은 공격으로 같은 대상을 한 번 더(TP 다시 소비, 주행동 1회당 1번): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "crit",
+     "limit": "perAction",
+     "optional": true,
+     "effects": [
+      {
+       "type": "repeat",
+       "scope": "same",
+       "cost": true
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"
@@ -848,9 +861,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>대상 '단일' 물리 공격이 크리티컬 히트하면 후위 적 1체에게도 같은 공격(스킬 공격이어도 【TP】는 1회분만 소비). 주행동 1회당 1번만 발생.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "단일 대상 물리 공격이 크리티컬이면 후위 적 1체에게도 같은 공격(TP 1회분, 주행동 1회당 1번): GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "trigger",
+     "on": "crit",
+     "limit": "perAction",
+     "when": {
+      "singleTarget": true,
+      "attackKind": "physical"
+     },
+     "effects": [
+      {
+       "type": "repeat",
+       "scope": "back"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "발리스타"

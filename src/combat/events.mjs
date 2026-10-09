@@ -10,6 +10,7 @@ import { whenMatches } from "../engine/effects/when.mjs";
 import { evaluate } from "../engine/expr.mjs";
 import { inRange, pickRandom } from "../engine/combat.mjs";
 import { BUFFS } from "../engine/buffs.mjs";
+import { CONDITIONS } from "../engine/conditions.mjs";
 import { isActiveGM } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 
@@ -29,6 +30,7 @@ function triggersOf(c, on) {
 /** when 조건용 자신 정보 */
 const selfCtx = (c) => ({
   hp: c.actor.system.hp?.value ?? 0, hpMax: c.actor.system.hp?.max ?? 0, conditions: c.actor.system.conditions ?? [],
+  weaponType: c.actor.system.equipment?.weapon?.weaponType ?? null,
   tokens: (c.getFlag("nssq", "tokens") ?? []).map((t) => t.key)
 });
 
@@ -92,7 +94,8 @@ export async function runEvent(f) {
   const isAttack = f.effects.some((e) => e?.type === "attack");
   if (spec?.side === "ally") {
     const row = a.system.row ?? "front";
-    units = combat.combatants.filter((x) => alive(x) && friendly(x.actor, a) && (spec.scope !== "row" || (x.actor.system.row ?? "front") === row));
+    // excludeSelf: 「자신 이외 아군」(《장수의 그릇》)
+    units = combat.combatants.filter((x) => alive(x) && friendly(x.actor, a) && (spec.scope !== "row" || (x.actor.system.row ?? "front") === row) && !(spec.excludeSelf && x.id === c.id));
   } else if (isAttack) {
     // 적 단일 공격(《피의 폭주》): 지정 대상이 없으면 사거리 안의 적 중 무작위
     const p = combatProfile(a, c);
@@ -140,10 +143,15 @@ export async function onHpChange(actor, before, after, sourceUuid = null, attack
   if (before > 0 && after <= 0 && !survived && foe) await fire(src, "enemyKO");
 }
 
-/** 상태 이상·봉인이 걸린 순간(《무아지경》: 그 상태 이상을 무효) */
-export async function onConditionGained(actor, id) {
+/**
+ * 상태 이상·봉인이 걸린 순간(《무아지경》: 그 상태 이상을 무효)
+ * 건 쪽: 자신의 주행동으로 봉인을 걸었을 때(bindInflicted, 《퍼니시 모어》·《체이스 바인드》: 그 대상에게 추격)
+ */
+export async function onConditionGained(actor, id, sourceUuid = null, main = false) {
   const c = combatantOf(actor);
   if (!c || !isActiveGM()) return;
+  const src = sourceUuid ? combatantOf(fromUuidSync(sourceUuid)) : null;
+  if (src && main && CONDITIONS[id]?.kind === "bind" && !friendly(src.actor, actor) && alive(c)) await fire(src, "bindInflicted", { target: c, ctx: { condition: id } });
   await fire(c, "conditionGained", {
     ctx: { condition: id },
     target: c,

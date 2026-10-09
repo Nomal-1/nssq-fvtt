@@ -332,6 +332,8 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     name: variant !== null && sys.variants?.[variant] ? `${item.name}《${sys.variants[variant]}》` : item.name, img: item.img, sl: kind === "skill" ? sys.sl ?? null : null,
     activation: r.activation, failed: r.failed, fpGain: r.fpGain, gm: r.gm, partial: sys.effectsNote ?? "",
     category: sys.category ?? "", ...(followup ? { followup } : {}),
+    // 같은 공격 반복·《크로스 차지》용(combat/chase.mjs)
+    itemId: item.id ?? null, variant, skillKey: sys.key ?? null, main: !!mainAction,
     description: sys.description ?? "",
     unknownScope: !!spec.unknown, entries, applied: false
   };
@@ -341,15 +343,21 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     ...(first ? { rolls, sound: rolls.length ? CONFIG.sounds.dice : undefined } : {}),
     flags: { nssq: { skillCard: c } }
   });
+  // 아군 일제 추격(《일제 사격》·《난룡의 진》): 카드 뒤에
+  const rally = !r.failed && r.rally ? r.rally : null;
+  const afterPost = async (m) => {
+    if (rally && combatant) await (await import("./chase.mjs")).rallyChase(combatant, rally);
+    return m;
+  };
   // 다회 공격은 타격마다 카드를 따로 낸다(주사위·발동 판정·GM 안내는 첫 카드에)
   const parts = splitHits(card, spec.scope === "random");
-  if (!parts) return post(card, true);
+  if (!parts) return afterPost(await post(card, true));
   let first = null;
   for (const [i, c] of parts.entries()) {
     const m = await post(c, i === 0);
     first ??= m;
   }
-  return first;
+  return afterPost(first);
 }
 
 /* ---------------- 다회 공격: 타격마다 카드 ---------------- */
@@ -485,7 +493,7 @@ export const stateModText = (mods) => Object.entries(mods ?? {}).filter(([, v]) 
 export const renderSkillCard = (card) => renderCard(card);
 
 function renderCard(card) {
-  const head = `<header class="check-header"><span class="check-label"><img src="${esc(card.img)}" width="20" height="20"/> ${esc(card.name)}${card.sl ? ` <small>SL${card.sl}</small>` : ""}${card.group ? ` <b class="seq">${esc(L("hitOf", { n: card.group.index, count: card.group.count }))}</b>` : ""}${["chase", "counter", "delayed"].includes(card.followup?.type) ? ` <b class="seq">${esc(L(`followup.${card.followup.type}`))}</b>` : ""}</span><span class="check-kind">${esc(card.userName)}</span></header>`;
+  const head = `<header class="check-header"><span class="check-label"><img src="${esc(card.img)}" width="20" height="20"/> ${esc(card.name)}${card.sl ? ` <small>SL${card.sl}</small>` : ""}${card.group ? ` <b class="seq">${esc(L("hitOf", { n: card.group.index, count: card.group.count }))}</b>` : ""}${["chase", "counter", "delayed", "repeat"].includes(card.followup?.type) ? ` <b class="seq">${esc(L(`followup.${card.followup.type}`))}</b>` : ""}</span><span class="check-kind">${esc(card.userName)}</span></header>`;
   const act = card.activation ? `<p class="activation ${card.activation.ok ? "ok" : "ng"}">${esc(L(card.activation.ok ? "activationOk" : "activationFail", { dice: card.activation.dice.join("+") }))}</p>` : "";
   const fp = card.fpGain ? `<p class="fp-gain">FP +${card.fpGain}</p>` : "";
   // 해설(데이터의 HTML)은 접어 둔다
@@ -504,7 +512,7 @@ function renderCard(card) {
 /* ---------------- 적용 ---------------- */
 
 /** 한 대상에 결과를 적용 → 되돌리기용 이전 상태 */
-async function applyEntry(actor, e, sourceUuid) {
+async function applyEntry(actor, e, sourceUuid, meta = {}) {
   const s = actor.system;
   const before = { hp: s.hp?.value, tp: s.tp?.value ?? null, conditions: s.conditions ?? [], buffs: s.buffs ?? [], states: actor.getFlag("nssq", "states") ?? [] };
   let hp = s.hp?.value ?? 0;
@@ -555,8 +563,10 @@ async function applyEntry(actor, e, sourceUuid) {
   for (const id of newly) await onInflicted(actor, id);
   // 그 밖의 트리거(단계 8-F): 【HP】 감소·상태 이상·강화
   const ev = await import("./events.mjs");
-  if (hp < (before.hp ?? 0)) await ev.onHpChange(actor, before.hp ?? 0, hp, sourceUuid, (e.hits ?? []).some((h) => h.hit));
-  for (const id of newly) await ev.onConditionGained(actor, id);
+  // 대미지·자원 감소로 줄었을 때만(회복이 최대치에 맞춰 깎인 것은 아님)
+  const lost = (e.damage ?? 0) > 0 || (e.resource ?? []).some((x) => x.resource === "hp" && ((x.delta ?? 0) < 0 || x.set !== undefined));
+  if (lost && hp < (before.hp ?? 0)) await ev.onHpChange(actor, before.hp ?? 0, hp, sourceUuid, (e.hits ?? []).some((h) => h.hit));
+  for (const id of newly) await ev.onConditionGained(actor, id, sourceUuid, !!meta.main);
   if (e.buffs?.length) await ev.onBuffsGained(actor, e.buffs.map((b) => b.id));
   // 대기 상태(단계 8): 전투원 플래그. 대기 상태가 되면 메인 행동을 하지 않는다(waiting)
   if (e.stances?.length) {
@@ -597,7 +607,7 @@ async function applyOne(message, undo) {
   for (const e of entries) {
     const actor = e.uuid ? await fromUuid(e.uuid) : null;
     if (!actor) continue;
-    if (!undo) e.before = await applyEntry(actor, e, card.userUuid);
+    if (!undo) e.before = await applyEntry(actor, e, card.userUuid, { main: !!card.main && !card.followup });
     else if (e.before) {
       const upd = { "system.hp.value": e.before.hp, "system.conditions": e.before.conditions, "system.buffs": e.before.buffs };
       if (e.before.states) upd["flags.nssq.states"] = e.before.states;

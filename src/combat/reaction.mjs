@@ -33,7 +33,15 @@ export function reactionChoices(actor, kind) {
       const cb = game.combat?.combatants.find((c) => c.actor?.uuid === actor.uuid);
       return (cb?.getFlag("nssq", "tokens") ?? []).some((t) => !tr.category || t.category === tr.category);
     })
-    .map((i) => ({ id: i.id, name: i.name }));
+    .map((i) => ({ id: i.id, name: i.name }))
+    // 대기 상태 안의 능동 회피(무사 《몽상검》: 대기 중 물리 공격을 받으면 【AGI】로 능동 회피)
+    .concat(stanceOf(actor).filter((st) => reactionEffect(st.effects, kind)).map((st) => ({ id: `stance:${st.id}`, name: st.name })));
+}
+
+/** 이 캐릭터의 대기 상태(진행 중인 전투) */
+function stanceOf(actor) {
+  const cb = game.combat?.combatants.find((c) => c.actor?.uuid === actor.uuid);
+  return cb?.getFlag("nssq", "stances") ?? [];
 }
 
 /** 카드를 만들 때: 명중했고 쓸 수 있는 수동 스킬이 있으면 기다리는 표시 */
@@ -92,7 +100,9 @@ async function useReaction(message, type, index, skillId) {
   const t = (type === "attack" ? card.targets : card.entries)[index];
   if (t?.reaction?.state !== "pending") return;
   const actor = await fromUuid(type === "attack" ? t.actorUuid : t.uuid);
-  const skill = actor?.items.get(skillId);
+  // 대기 상태의 능동 회피는 그 대기 상태를 스킬처럼(코스트 없음)
+  const st = String(skillId).startsWith("stance:") ? stanceOf(actor).find((x) => `stance:${x.id}` === skillId) : null;
+  const skill = st ? { id: skillId, name: st.name, system: { effects: st.effects ?? [], sl: st.sl ?? 1, key: st.key, cost: {} } } : actor?.items.get(skillId);
   if (!skill) return;
   const kind = type === "attack" ? card.kind : (t.hits.find((h) => h.hit)?.kind ?? "physical");
   const eff = reactionEffect(skill.system.effects, kind);
@@ -127,7 +137,8 @@ async function useReaction(message, type, index, skillId) {
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), rolls: [roll], sound: CONFIG.sounds.dice, content: `<div class="nssq-combat-note"><i class="fas fa-shield-alt"></i> ${esc(text)}</div>` });
   // 회피 성공 시 반격(《검의 춤》)
   const counter = r.evaded && (skill.system.effects ?? []).some((e) => e?.type === "counter" && e.onlyIfEvaded);
-  return send({ messageId: message.id, type, index, result: { evaded: r.evaded, text, ...(counter ? { counter: skill.id, reactorUuid: actor.uuid } : {}) } });
+  const counterEff = counter ? { name: skill.name, sl: skill.system.sl ?? 1, key: skill.system.key ?? null, effects: (skill.system.effects ?? []).filter((e) => e?.type === "counter") } : null;
+  return send({ messageId: message.id, type, index, result: { evaded: r.evaded, text, ...(counter ? { counter: counterEff, reactorUuid: actor.uuid } : {}) } });
 }
 
 /* ---------------- 카드 반영(GM) ---------------- */
@@ -138,9 +149,9 @@ async function gmReaction({ messageId, type, index, result }) {
   await updateReaction({ message, messageId, type, index, result });
   if (result.counter) {
     const reactor = await fromUuid(result.reactorUuid);
-    const skill = reactor?.items.get(result.counter);
+    const x = result.counter;
     const { counterAfterEvade } = await import("./chase.mjs");
-    if (skill) await counterAfterEvade(message, reactor.uuid, skill);
+    if (reactor) await counterAfterEvade(message, reactor.uuid, { name: x.name, system: { effects: x.effects ?? [], sl: x.sl ?? 1, key: x.key } });
   }
 }
 
