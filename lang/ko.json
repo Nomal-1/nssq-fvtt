@@ -1052,6 +1052,7 @@
         "bound": "그 부위가 봉인되어 있다",
         "weapon": "무기 조건이 맞지 않는다",
         "state": "필요한 상태(자세 등)가 아니다",
+        "selfState": "자신이 조건(상태 이상 등)을 만족하지 않는다",
         "openingDone": "이번 턴 개막 행동을 이미 했다",
         "overheat": "오버히트 중",
         "delayed": "지연 공격 대기 중",
@@ -1102,6 +1103,18 @@
         "buff": "강화 효과 해제"
       },
       "chanceFailed": "확률 발동 실패(1D6 = {die})",
+      "noEffect": "효과 없음(조건이 맞지 않는다)",
+      "spreadWon": "대항 판정 승리: 같은 열의 다른 적에게 {label} 옮긴다",
+      "spreadLost": "대항 판정 패배: 옮기지 못했다",
+      "command": {
+        "stop": "그 턴 동안 어떤 행동도 할 수 없고 【회피】 0",
+        "enemyAttack": "그 턴, 자신 이외의 에너미를 공격한다",
+        "selfAttack": "그 턴, 자기 자신을 공격한다"
+      },
+      "commandNone": "{name}: 공격할 다른 에너미가 없다",
+      "chooseTitle": "{name}: 대상 고르기",
+      "chooseHint": "{n}개를 고른다",
+      "chooseGo": "결정",
       "gmNeeded": "GM 판단 필요: {what}",
       "gmScope": "대상 범위를 해석하지 못했다(단일로 처리)",
       "type": {

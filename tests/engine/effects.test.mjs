@@ -360,3 +360,59 @@ describe("단계 7 스키마 보강", () => {
     expect(b.results.get("e").inflicts[0].resisted).toBe(true);
   });
 });
+
+describe("무효과 전투 스킬 B1묶음", () => {
+  it("《스티그마》: 고른 부위 SL곳을 한 번의 대항으로, 성공하면 자신도 같은 부위를 자신의 달성값 심도로", async () => {
+    const e = [{ type: "inflict", condition: ["bindHead", "bindArm", "bindLeg"], choose: "SL", check: { type: "contest", atkMod: "SL" }, selfSame: "atk" }];
+    // 공격 [5,5]+4+2=16 vs 방어 [1,2]+2=5 → 승리
+    const r = await resolveEffects({ effects: e, sl: 2, user, targets: [foe], rollDice: dice(5, 5, 1, 2), ctx: { choices: ["bindArm", "bindLeg"] } });
+    expect(r.results.get("e").inflicts.map((i) => [i.id, i.depth])).toEqual([["bindArm", 16], ["bindLeg", 16]]);
+    expect(r.results.get("u").inflicts.map((i) => [i.id, i.depth])).toEqual([["bindArm", 16], ["bindLeg", 16]]);
+    // 고르지 않으면 앞에서 SL곳, 지면 자신은 봉인되지 않는다
+    const l = await resolveEffects({ effects: e, sl: 1, user, targets: [foe], rollDice: dice(1, 2, 6, 6) });
+    expect(l.results.get("e").inflicts).toEqual([expect.objectContaining({ id: "bindHead", resisted: true })]);
+    expect(l.results.has("u")).toBe(false);
+  });
+
+  it("《신기한 씨앗》: 부위 중 무작위 1곳", async () => {
+    const e = [{ type: "inflict", condition: ["bindHead", "bindArm", "bindLeg"], randomPick: true, check: { type: "contest", atkMod: "SL-2" } }];
+    const r = await resolveEffects({ effects: e, sl: 2, user, targets: [foe], rng: () => 0.9, rollDice: dice(5, 5, 1, 1) });
+    expect(r.results.get("e").inflicts.map((i) => i.id)).toEqual(["bindLeg"]);
+  });
+
+  it("《명하노니》: [공포]로 행동 불능인 대상에게만, 아니면 효과 없음", async () => {
+    const e = [{ type: "command", mode: "selfAttack", when: { targetDisabled: "fear" }, whenNote: true }];
+    const a = await resolveEffects({ effects: e, user, targets: [{ ...foe, disabledBy: "fear" }], rollDice: dice() });
+    expect(a.results.get("e").command).toBe("selfAttack");
+    const b = await resolveEffects({ effects: e, user, targets: [{ ...foe, disabledBy: "paralyze" }], rollDice: dice() });
+    expect(b.results.get("e").command).toBeUndefined();
+    expect(b.results.get("e").resource).toEqual([{ noEffect: true }]);
+  });
+
+  it("《인법: 수경》: 이기면 대상의 상태 이상을 같은 열 다른 적에게 같은 심도로", async () => {
+    const t = { ...foe, row: "front", conditions: [{ id: "poison", depth: 9 }] };
+    const pool = [t, { ...foe, id: "e2", row: "front" }, { ...foe, id: "e3", row: "back" }];
+    const e = [{ type: "spreadAilment", check: { type: "contest" }, when: { targetHasAilment: true }, whenNote: true }];
+    const r = await resolveEffects({ effects: e, user, targets: [t], pool, rollDice: dice(5, 5, 1, 1) });
+    expect(r.results.get("e").resource[0].spread.won).toBe(true);
+    expect(r.results.get("e2").inflicts).toEqual([{ id: "poison", depth: 9, resisted: false }]);
+    expect(r.results.has("e3")).toBe(false);
+  });
+
+  it("《전화위복》: 자신이 상태 이상일 때만, 자신의 상태 이상을 최대 SL개 대상에게", async () => {
+    const e = [{ type: "requireSelf", when: { selfHasAilment: true } }, { type: "spreadAilment", from: "self", count: "SL" }];
+    const skill = { timing: "주행동", effects: e, cost: {} };
+    expect(canUseSkill(skill, { ...user, conditions: [] }, { phase: "main" }).reason).toBe("selfState");
+    expect(canUseSkill(skill, { ...user, conditions: [{ id: "blind", depth: 7 }] }, { phase: "main" }).ok).toBe(true);
+    const me = { ...user, conditions: [{ id: "blind", depth: 7 }, { id: "stun" }, { id: "bindArm", depth: 5 }] };
+    const r = await resolveEffects({ effects: e, sl: 1, user: me, targets: [foe], rollDice: dice() });
+    expect(r.results.get("e").inflicts).toEqual([{ id: "blind", depth: 7, resisted: false }]);
+  });
+
+  it("《이밋 웨펀》: 대상의 『속성 부여』를 해제하고 그 속성을 공격용으로", async () => {
+    const ally = { ...user, id: "a", buffs: [{ id: "elemImbue", param: "ice", turns: 2 }] };
+    const r = await resolveEffects({ effects: [{ type: "emitImbue" }], user, targets: [ally], rollDice: dice() });
+    expect(r.emit).toEqual({ element: "ice", kind: "elemental" });
+    expect(r.results.get("a").cures).toEqual([{ conditions: "all", kind: "buff", buffs: ["elemImbue"] }]);
+  });
+});

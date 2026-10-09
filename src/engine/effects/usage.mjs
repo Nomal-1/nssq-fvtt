@@ -2,6 +2,7 @@
  * 스킬 사용 가능 확인 (03 §6-1). Foundry 비의존.
  */
 import { evaluateCheck } from "../check.mjs";
+import { whenMatches } from "./when.mjs";
 
 /** 부위 → 그 부위를 막는 봉인 */
 export const PART_BIND = { 머리: "bindHead", 팔: "bindArm", 다리: "bindLeg" };
@@ -38,7 +39,7 @@ export function meetsStateReq(effects, user) {
  */
 export function canUseSkill(skill, user, ctx = {}) {
   const s = skill ?? {};
-  if (!s.effects?.some((e) => e?.type !== "requireState")) return { ok: false, reason: "noEffects" };
+  if (!s.effects?.some((e) => !["requireState", "requireSelf"].includes(e?.type))) return { ok: false, reason: "noEffects" };
   const phase = PHASE_OF[s.timing];
   if (!phase) return { ok: false, reason: "timing" };
   if (ctx.phase !== phase) return { ok: false, reason: phase === "main" ? "notMain" : "notOpening" };
@@ -50,6 +51,8 @@ export function canUseSkill(skill, user, ctx = {}) {
   if (bind && (user.conditions ?? []).some((c) => c.id === bind)) return { ok: false, reason: "bound" };
   if (!meetsWeaponReq(s.weaponReq, user)) return { ok: false, reason: "weapon" };
   if (!meetsStateReq(s.effects, user)) return { ok: false, reason: "state" };
+  // 「자신이 상태 이상일 때만 사용 가능」(《전화위복》): requireSelf의 when을 자신으로
+  if (s.effects.some((e) => e?.type === "requireSelf" && !whenMatches(e.when, { self: user }))) return { ok: false, reason: "selfState" };
   if (ctx.drive && (user.overheat ?? 0) > 0) return { ok: false, reason: "overheat" };
   if (user.delayedPending && s.effects.some((e) => e.type === "delayed")) return { ok: false, reason: "delayed" };
   // 토큰을 없애는 스킬(《비스트 귀환》 등)은 그 분류의 토큰이 있어야

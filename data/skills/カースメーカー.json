@@ -760,9 +760,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴 동안 대상은 어떤 행동도 할 수 없고 【회피】는 0으로 취급.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "[공포]로 행동 불능인 대상에게만: 그 턴 행동 불가·회피 0. GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "command",
+     "mode": "stop",
+     "when": {
+      "targetDisabled": "fear"
+     },
+     "whenNote": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -803,9 +811,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴, 대상은 자신 이외의 에너미를 공격한다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "[공포]로 행동 불능인 대상에게만: 그 턴 자신 이외의 에너미를 공격. GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "command",
+     "mode": "enemyAttack",
+     "when": {
+      "targetDisabled": "fear"
+     },
+     "whenNote": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -846,9 +862,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴 동안 사용자가 공격 대상이 되면 이 스킬의 대상이 대신 그 공격을 받는다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "[공포]로 행동 불능인 대상에게만: 그 턴 사용자 대신 공격을 받음. GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "when": {
+      "targetDisabled": "fear"
+     },
+     "whenNote": true,
+     "effects": [
+      {
+       "type": "guard",
+       "mode": "redirect"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"
@@ -889,9 +920,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>[공포]로 행동 불능인 대상에게만 유효. 그 턴, 대상은 자기 자신을 공격한다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "[공포]로 행동 불능인 대상에게만: 그 턴 자기 자신을 공격. GM이 처리(단계 8)"
+   "effects": [
+    {
+     "type": "command",
+     "mode": "selfAttack",
+     "when": {
+      "targetDisabled": "fear"
+     },
+     "whenNote": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "커스 메이커"

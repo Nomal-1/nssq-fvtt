@@ -6,6 +6,7 @@
  */
 import { canUseSkill } from "../engine/effects/usage.mjs";
 import { hasVariants, resolveEffects, variantEffects } from "../engine/effects/resolve.mjs";
+import { evaluate } from "../engine/expr.mjs";
 import { guardAttack } from "./guard.mjs";
 import { autoKey } from "../engine/triggers.mjs";
 import { delayedOf, isLateSkill, reserveDelayed, reserveLate, withoutTiming } from "./late.mjs";
@@ -180,9 +181,12 @@ export async function beginAction(combat, combatant, kind, id) {
   if (kind === "skill") {
     spec.declares = await useDeclarations(actor, item);
     if (spec.declares === null) return null;
+    // 부위 등을 고르는 부여(《스티그마》 「원하는 부위 (SL)곳」)
+    spec.choices = await pickChoices(item, spec.variant);
+    if (spec.choices === null) return null;
   }
   const range = kind === "item" ? "-" : item.system.range;
-  const opts = { variant: spec.variant, declares: spec.declares ?? [] };
+  const opts = { variant: spec.variant, declares: spec.declares ?? [], choices: spec.choices ?? [] };
   if (spec.side === "self") return executeAction(combat, combatant, kind, id, [combatant], opts);
   const list = candidates(combat, combatant, spec, range, { allowKO: revives(item) });
   if (!list.length) return ui.notifications.warn(L("noTarget")) && null;
@@ -210,6 +214,26 @@ async function useDeclarations(actor, item) {
     out.push({ name: i.name, cost, mods });
   }
   return out;
+}
+
+/** 고르는 부여(inflict choose): 체크 상자 창 → 고른 상태 이상 id 목록(고를 것이 없으면 [], 취소면 null) */
+async function pickChoices(item, variant) {
+  const e = variantEffects(item.system.effects, variant).find((x) => x?.type === "inflict" && x.choose !== undefined && [].concat(x.condition).length > 1);
+  if (!e) return [];
+  const ids = [].concat(e.condition);
+  const n = Math.max(1, evaluate(e.choose, { SL: item.system.sl ?? 1 }));
+  if (n >= ids.length) return ids;
+  const boxes = ids.map((id, i) => `<label class="choice"><input type="checkbox" name="c" value="${esc(id)}" ${i < n ? "checked" : ""}/> [${esc(conditionName(id))}]</label>`).join("");
+  return Dialog.prompt({
+    title: L("chooseTitle", { name: item.name }),
+    content: `<p>${esc(L("chooseHint", { n }))}</p><form class="nssq-choices">${boxes}</form>`,
+    label: L("chooseGo"),
+    callback: (html) => {
+      const got = [...(html[0] ?? html).querySelectorAll("input[name=c]:checked")].map((x) => x.value);
+      return (got.length ? got : ids).slice(0, n);
+    },
+    rejectClose: false
+  }, { classes: ["nssq", "dialog"] }).then((r) => r ?? null);
 }
 
 /** 선언 명칭 고르기 → 번호(취소면 null) */
@@ -241,7 +265,7 @@ export async function pickTarget(combat, combatant, kind, id, picked, spec) {
       if (nearest.length) targets.push(nearest[0]);
     }
   }
-  return executeAction(combat, combatant, kind, id, targets, { variant: spec.variant ?? null, declares: spec.declares ?? [] });
+  return executeAction(combat, combatant, kind, id, targets, { variant: spec.variant ?? null, declares: spec.declares ?? [], choices: spec.choices ?? [] });
 }
 
 /* ---------------- 실행 ---------------- */
@@ -257,7 +281,7 @@ async function rollWith(rolls, n) {
 const combatantOf = (actor) => game.combat?.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor.uuid) ?? null;
 
 /** 실행: 코스트 → 발동·효과 해석 → 결과 카드 */
-export async function executeAction(combat, combatant, kind, id, targetCombatants, { variant = null, late = false, declares = [] } = {}) {
+export async function executeAction(combat, combatant, kind, id, targetCombatants, { variant = null, late = false, declares = [], choices = [] } = {}) {
   const actor = combatant.actor;
   const item = actor.items.get(id);
   if (!item) return null;
@@ -304,7 +328,7 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   const message = await resolveAndPost({
     actor, combatant, item, kind,
     units: targetCombatants.map((c) => ({ actor: c.actor, combatant: c })),
-    mainAction: kind === "skill" && sys.timing === "주행동", variant, stripTiming: late, skipDelayed: !!delayed, skipToken: tokenEffectOf(effects).length > 0,
+    mainAction: kind === "skill" && sys.timing === "주행동", variant, choices, stripTiming: late, skipDelayed: !!delayed, skipToken: tokenEffectOf(effects).length > 0,
     userMods: declares.reduce((m, d) => { for (const [k, v] of Object.entries(d.mods ?? {})) m[k] = (m[k] ?? 0) + v; return m; }, {})
   });
   if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
@@ -327,7 +351,7 @@ export async function useItemOutside(actor, item, targets) {
  * @param {{ type: "chase"|"counter"|"trigger" }} [followup] 이 카드가 추격·반격 등이면(연쇄 금지 판단용)
  * @param {Object<string, object>} [extra] 대상 uuid → 더한 대미지 다이스(《풀 게인》 등, engine extendDamage 결과 + count)
  */
-export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false, skipToken = false, userMods = {} }) {
+export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, choices = [], followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false, skipToken = false, userMods = {} }) {
   const sys = item.system;
   // 후발 행동으로 실행할 때는 행동 순서 효과를 빼고, 예약한 지연 공격은 다시 해석하지 않는다
   let effectsAll = sys.effects ?? [];
@@ -356,13 +380,21 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const targets = units.map((u) => unitProfile(u.actor, u.combatant));
   if (guard) for (const t of targets) guard.apply(t);
   const actorOf = new Map(units.map((u, i) => [targets[i].id, u.actor]));
+  // 《인법: 수경》: 대상과 같은 편 전투원(같은 열에 상태 이상을 옮긴다)
+  let spreadPool = [];
+  if (effectsAll.some((e) => e?.type === "spreadAilment" && e.from !== "self") && units[0]?.combatant?.combat) {
+    const first = units[0].actor;
+    const mates = units[0].combatant.combat.combatants.filter((c) => alive(c) && c.actor !== first && friendly(c.actor, first));
+    spreadPool = mates.map((c) => unitProfile(c.actor, c));
+    mates.forEach((c, i) => actorOf.set(spreadPool[i].id, c.actor));
+  }
   // 흡수(drain) 등 사용자 자신에게 돌아오는 결과
   if (!actorOf.has(user.id)) actorOf.set(user.id, actor);
   const r = await resolveEffects({
     effects: effectsAll, sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
-    targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : [],
+    targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : spreadPool,
     mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(),
-    variant, category: sys.category ?? "", source: kind, ctx: { skillKey: sys.key ?? null }
+    variant, category: sys.category ?? "", source: kind, ctx: { skillKey: sys.key ?? null, choices }
   });
   if (guard) await guard.commit(new Set([...r.results.values()].filter((x) => x.hits.some((h) => h.hit)).map((x) => x.id)));
   // 「최속/후발 행동」(개막 페이즈에 쓴 것): 이번 턴 행동 순서. 메인 페이즈로 넘어갈 때 이니셔티브에 반영
@@ -404,7 +436,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     uuid: actorOf.get(x.id)?.uuid ?? null, name: x.name,
     damage: x.damage + (extra?.[actorOf.get(x.id)?.uuid]?.add ?? 0), extra: extra?.[actorOf.get(x.id)?.uuid] ?? null, heal: x.heal, inflicts: x.inflicts, buffs: x.buffs, cures: x.cures, resource: x.resource,
     states: x.states.map((st) => ({ ...st, name: st.name || item.name })),
-    sleepBroken: x.sleepBroken, revive: !!x.revive,
+    sleepBroken: x.sleepBroken, revive: !!x.revive, command: x.command ?? null,
     stances: (x.stances ?? []).map((st) => ({ ...st, name: item.name, key: sys.key ?? item.name })),
     hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist, raw: h.rawDamage ?? 0, halves: Number(!!h.guarded) + Number(!!h.halved) + Number(!!h.guardHalf), elements: h.elements ?? [] })),
     applied: false, before: null,
@@ -449,6 +481,8 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const rally = !r.failed && r.rally ? r.rally : null;
   const afterPost = async (m) => {
     if (rally && combatant) await (await import("./chase.mjs")).rallyChase(combatant, rally);
+    // 《이밋 웨펀》: 해제한 『속성 부여』의 속성으로 적 전체 공격
+    if (!r.failed && r.emit && combatant?.combat) await emitAttack(combatant, item, r.emit);
     return m;
   };
   // 다회 공격은 타격마다 카드를 따로 낸다(주사위·발동 판정·GM 안내는 첫 카드에)
@@ -460,6 +494,34 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     first ??= m;
   }
   return afterPost(first);
+}
+
+/** 《이밋 웨펀》 뒤의 속성 공격: 사용자의 적 전체(살아 있는) */
+async function emitAttack(combatant, item, { element, kind }) {
+  const foes = combatant.combat.combatants.filter((c) => alive(c) && !friendly(c.actor, combatant.actor));
+  if (!foes.length) return null;
+  const sys = item.system;
+  return resolveAndPost({
+    actor: combatant.actor, combatant, kind: "skill",
+    item: { id: null, name: item.name, img: item.img, system: { effects: [{ type: "attack", kind, element }], sl: sys.sl ?? 1, category: sys.category ?? "", key: sys.key ?? null, target: "적 전체" } },
+    units: foes.map((c) => ({ actor: c.actor, combatant: c })), mainAction: false
+  });
+}
+
+/* ---------------- 《명하노니》: 적용할 때 실행 ---------------- */
+
+/** stop: 이미 행동 불능(카드 안내만) / selfAttack: 자신을 / enemyAttack: 자신 이외의 같은 편 무작위 1체를 통상 공격 */
+async function runCommand(actor, mode) {
+  const combat = game.combat;
+  const me = combat?.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor.uuid);
+  if (!me || !alive(me) || mode === "stop") return;
+  const { normalAttack } = await import("./attack.mjs");
+  let target = me;
+  if (mode === "enemyAttack") {
+    target = pickRandom(combat.combatants.filter((c) => c !== me && alive(c) && friendly(c.actor, actor)), () => CONFIG.Dice.randomUniform());
+    if (!target) return ChatMessage.create({ speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") }, content: `<div class="nssq-combat-note">${esc(L("commandNone", { name: me.name }))}</div>` });
+  }
+  return normalAttack(actor, { target: target.token, ignoreRange: true });
 }
 
 /* ---------------- 다회 공격: 타격마다 카드 ---------------- */
@@ -584,6 +646,11 @@ function entryLines(e, card) {
     out.push(`<li class="state">${esc(L(key, { name: st.name, n: st.left }))}</li>`);
   }
   if (e.revive) out.push(`<li class="heal">${esc(L("revive"))}</li>`);
+  if (e.command) out.push(`<li class="state">${esc(L(`command.${e.command}`))}</li>`);
+  for (const x of e.resource ?? []) {
+    if (x.noEffect) out.push(`<li class="miss">${esc(L("noEffect"))}</li>`);
+    if (x.spread) out.push(`<li class="${x.spread.won ? "inflict" : "resist"}">${esc(L(x.spread.won ? "spreadWon" : "spreadLost", { label: x.spread.ids.map((id) => `[${conditionName(id)}]`).join("") || "-" }))}<div class="supp-roll">${rollText({ contest: x.spread })}</div></li>`);
+  }
   for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}${c.count !== undefined ? ` ${esc(L("cureCount", { n: c.count }))}` : ""}</li>`);
   for (const x of e.resource ?? []) if (x.chanceFailed && !x.seq) out.push(chanceLi(x));
   return out.join("");
@@ -663,6 +730,8 @@ async function applyEntry(actor, e, sourceUuid, meta = {}) {
   }
   await actor.update(upd);
   for (const id of newly) await onInflicted(actor, id);
+  // 《명하노니》: 적용 큐가 끝난 뒤 공격(공격 카드의 적용도 이 큐를 쓴다)
+  if (e.command) setTimeout(() => runCommand(actor, e.command), 0);
   // 그 밖의 트리거(단계 8-F): 【HP】 감소·상태 이상·강화
   const ev = await import("./events.mjs");
   // 대미지·자원 감소로 줄었을 때만(회복이 최대치에 맞춰 깎인 것은 아님)

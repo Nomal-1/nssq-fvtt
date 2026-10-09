@@ -35,6 +35,10 @@ const CHECKS = {
   // 《음양검의 힘》: 그 턴 「상태 이상 중인 대상」 조건을 만족한 것으로(c.self.turnFlags.anyAilment)
   targetHasAilment: (v, c) => ((c.target?.conditions ?? []).some((x) => AILMENTS.has(x.id)) || (!!v && !!c.self?.turnFlags?.anyAilment)) === !!v,
   targetNotActedThisTurn: (v, c) => !c.target?.acted === !!v,
+  // 대상이 이번 턴 [공포]·[마비] 판정에 실패해 행동 불능(전투원 플래그 disabled = 그 상태 이상 id, 《명하노니》)
+  targetDisabled: (v, c) => arr(v).includes(c.target?.disabledBy),
+  // 자신이 상태 이상(봉인 제외) 중(《전화위복》)
+  selfHasAilment: (v, c) => (c.self?.conditions ?? []).some((x) => AILMENTS.has(x.id)) === !!v,
   // 자신이 봉인 중(《저주 사슬의 은혜》)
   selfHasBind: (v, c) => (c.self?.conditions ?? []).some((x) => BINDS.has(x.id)) === !!v,
   // 자신이 배치한 토큰 중 그 tokenKey 접두사가 있는가(《진 회복》, c.self.tokens = [tokenKey])

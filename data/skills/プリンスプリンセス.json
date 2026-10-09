@@ -684,9 +684,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아군 한 명의 『속성 부여: ○』 강화 효과를 해제하고, 해제한 것과 같은 속성으로 적 전체를 대상으로 속성 공격을 한다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "아군 한 명의 『속성 부여』를 해제하고 그 속성으로 적 전체에 속성 공격: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "ally",
+     "scope": "single"
+    },
+    {
+     "type": "emitImbue"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "프린스/프린세스"

@@ -7,7 +7,7 @@
  */
 import { evaluate } from "../expr.mjs";
 import { fpFromHitChecks, resolveAttack } from "../combat.mjs";
-import { contestInflict, forcedInflict, resistCheck } from "../conditions.mjs";
+import { CONDITIONS, contestInflict, forcedInflict, resistCheck } from "../conditions.mjs";
 import { canonicalBuff } from "../buffs.mjs";
 import { whenMatches } from "./when.mjs";
 import { sumAttackBonuses } from "./passives.mjs";
@@ -16,7 +16,7 @@ import { activationRoll } from "./usage.mjs";
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "attackBonus", "useBonus", "target", "immune", "requireAllies"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies"];
 
 /** custom 핸들러 등록부: name → (ctx) => 결과 조각 */
 const CUSTOM = new Map();
@@ -73,7 +73,11 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       if (DEFERRED_TYPES.includes(e.type)) { out.deferred.push(e); out.gm.push(e.type); continue; }
       // toSelf: 대상과 관계없이 사용자 자신에게 한 번(《임팩트 애로》 사용 후 자신 [마비])
       for (const t of e.toSelf ? [user] : tgt) {
-        if (!whenMatches(e.when, { ...ctx, self: user, target: t })) continue;
+        if (!whenMatches(e.when, { ...ctx, self: user, target: t })) {
+          // whenNote: 조건이 안 맞으면 카드에 「효과 없음」(《명하노니》 [공포] 행동 불능이 아닌 대상 등)
+          if (e.whenNote) res(t).resource.push({ noEffect: true });
+          continue;
+        }
         // 확률 발동(「1D6 ≤ SL이면」 등)
         if (e.chance) {
           const sides = Number(String(e.chance.roll ?? "1d6").split("d")[1]) || 6;
@@ -181,26 +185,69 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       }
       case "inflict": {
         const ck = e.check ?? null;
+        // condition이 목록이면: choose(고른 부위 SL곳, 《스티그마》) 또는 randomPick(무작위 1개, 《신기한 씨앗》). 판정은 한 번
+        let ids = [].concat(e.condition);
+        if (ids.length > 1 && e.choose !== undefined) {
+          const n = Math.max(1, evaluate(e.choose, vars(t)));
+          ids = (ctx.choices?.length ? ids.filter((id) => ctx.choices.includes(id)) : ids).slice(0, n);
+        } else if (ids.length > 1 && e.randomPick) ids = [ids[Math.min(ids.length - 1, Math.floor(rng() * ids.length))]];
         // 완전 내성(「완전 내성: 독」)은 판정 없이 막는다
-        if ((t.immune ?? []).includes(e.condition) && ck?.type !== "forced") {
-          r.inflicts.push({ id: e.condition, depth: null, resisted: true, immune: true });
-          return;
-        }
-        // 상태 이상별 억제 방어 보정(「내성/약점: ○○」 ±n)
-        const cr = t.condResist?.[e.condition] ?? 0;
-        if (!ck) { r.inflicts.push({ id: e.condition, depth: evaluate(e.depth ?? 0, vars(t)), resisted: false }); return; }
+        const immune = ids.filter((id) => (t.immune ?? []).includes(id) && ck?.type !== "forced");
+        for (const id of immune) r.inflicts.push({ id, depth: null, resisted: true, immune: true });
+        ids = ids.filter((id) => !immune.includes(id));
+        if (!ids.length) return;
+        // 상태 이상별 억제 방어 보정(「내성/약점: ○○」 ±n). 여러 개를 한 번에 판정하면 첫 번째 것
+        const cr = t.condResist?.[ids[0]] ?? 0;
+        if (!ck) { for (const id of ids) r.inflicts.push({ id, depth: evaluate(e.depth ?? 0, vars(t)), resisted: false }); return; }
+        let row;
         if (ck.type === "forced") {
           const c = forcedInflict({ atkDice: await rollDice(2), suppAtk: user.suppAtk ?? 0 });
-          r.inflicts.push({ id: e.condition, depth: c.depth, resisted: false, forced: { atk: c.atk } });
+          row = { depth: c.depth, resisted: false, forced: { atk: c.atk } };
         } else if (ck.type === "contest") {
           // atkMod: 「대항 판정(자신 +(SL))」 공격 쪽 보정
           const c = contestInflict({ atkDice: await rollDice(2), suppAtk: (user.suppAtk ?? 0) + evaluate(ck.atkMod ?? 0, vars(t)), defDice: await rollDice(2), suppDef: (t.suppDef ?? 0) + cr });
-          r.inflicts.push({ id: e.condition, depth: c.depth, resisted: c.resisted, contest: { atk: c.atk, def: c.def } });
+          row = { depth: c.depth, resisted: c.resisted, contest: { atk: c.atk, def: c.def } };
         } else {
           const target = evaluate(ck.target, vars(t));
           const c = resistCheck({ dice: await rollDice(2), suppDef: (t.suppDef ?? 0) + cr + evaluate(ck.defMod ?? 0, vars(t)), target });
-          r.inflicts.push({ id: e.condition, depth: c.depth, resisted: c.resisted, fixed: { target, check: c.check } });
+          row = { depth: c.depth, resisted: c.resisted, fixed: { target, check: c.check } };
         }
+        // 판정 줄은 첫 번째에만
+        ids.forEach((id, i) => r.inflicts.push(i === 0 ? { id, ...row } : { id, depth: row.depth, resisted: row.resisted }));
+        // 《스티그마》: 성공하면 자신도 같은 부위를, 심도는 자신의 달성값(selfSame: "atk")
+        if (e.selfSame === "atk" && !row.resisted && row.contest) {
+          for (const id of ids) res(user).inflicts.push({ id, depth: row.contest.atk.total, resisted: false, self: true });
+        }
+        return;
+      }
+      case "command": {
+        // 《명하노니》: [공포]로 행동 불능인 대상에게(when targetDisabled). 적용할 때 실행(combat/skill-use.mjs)
+        r.command = e.mode;
+        return;
+      }
+      case "spreadAilment": {
+        if (e.from === "self") {
+          // 《전화위복》: 자신의 상태 이상을 최대 count개 대상에게(판정 없이 같은 심도)
+          const mine = (user.conditions ?? []).filter((c) => CONDITIONS[c.id]?.kind === "ailment").slice(0, Math.max(1, evaluate(e.count ?? 1, vars(t))));
+          for (const c of mine) r.inflicts.push({ id: c.id, depth: c.depth ?? null, resisted: false });
+          return;
+        }
+        // 《인법: 수경》: 대결에서 이기면 대상의 상태 이상을 같은 열의 다른 적에게(같은 심도, 대상은 그대로, 07)
+        const c = contestInflict({ atkDice: await rollDice(2), suppAtk: (user.suppAtk ?? 0) + evaluate(e.check?.atkMod ?? 0, vars(t)), defDice: await rollDice(2), suppDef: t.suppDef ?? 0 });
+        const mine = (t.conditions ?? []).filter((x) => CONDITIONS[x.id]?.kind === "ailment");
+        r.resource.push({ spread: { won: !c.resisted, atk: c.atk, def: c.def, ids: mine.map((x) => x.id) } });
+        if (c.resisted) return;
+        for (const p of pool.filter((x) => x.id !== t.id && !x.ko && (x.row ?? "front") === (t.row ?? "front"))) {
+          for (const x of mine) res(p).inflicts.push({ id: x.id, depth: x.depth ?? null, resisted: false });
+        }
+        return;
+      }
+      case "emitImbue": {
+        // 《이밋 웨펀》: 대상의 『속성 부여』를 해제하고 그 속성으로 적 전체 공격(호출자가 공격)
+        const b = (t.buffs ?? []).find((x) => canonicalBuff(x.id) === "elemImbue");
+        if (!b) { r.resource.push({ noEffect: true }); return; }
+        r.cures.push({ conditions: "all", kind: "buff", buffs: ["elemImbue"] });
+        out.emit = { element: b.param, kind: e.kind ?? "elemental" };
         return;
       }
       case "recoil": {

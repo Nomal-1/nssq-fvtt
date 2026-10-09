@@ -14,7 +14,11 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 export const TYPES = {
   attack: { kind: false, element: false, addElement: false, failAtOrBelow: false, copyElement: false, randomFrom: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false, fixedDice: false },
   heal: { mode: false, bonus: false, amount: false, resource: false, revive: false },
-  inflict: { condition: true, check: false, depth: false },
+  inflict: { condition: true, check: false, depth: false, choose: false, randomPick: false, selfSame: false },
+  command: { mode: true },
+  spreadAilment: { from: false, count: false, check: false },
+  emitImbue: { kind: false },
+  requireSelf: { when: true },
   cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },
   debuff: { id: true, value: false, turns: false, param: false },
@@ -56,7 +60,7 @@ export const TYPES = {
   aura: { path: true, value: true, scope: false },
   provoke: { count: false, to: false }
 };
-const COMMON = ["type", "when", "chance", "label", "variant", "toSelf"];
+const COMMON = ["type", "when", "chance", "label", "variant", "toSelf", "whenNote"];
 
 /** modifier path: derive가 읽는 키 */
 export const MOD_PATHS = new Set([
@@ -92,12 +96,14 @@ export function checkEffects(list, where, errors = []) {
       if (!def) errors.push(`${at}: 모르는 강화·약화 id \`${e.id}\``);
       else if (def.kind !== e.type) errors.push(`${at}: \`${e.id}\`는 ${def.kind}인데 type이 ${e.type}`);
     }
+    if (e.type === "command" && !["stop", "enemyAttack", "selfAttack"].includes(e.mode)) errors.push(`${at}: command.mode는 stop/enemyAttack/selfAttack`);
     if (e.type === "target" && (!["enemy", "ally", "self"].includes(e.side) || !["single", "row", "all", "random"].includes(e.scope))) errors.push(`${at}: target side/scope`);
     if (e.type === "kill") checkExpr(e.check?.type === "contest" ? e.check.atkMod : e.check?.target, `${at}.check`, errors);
     if (e.check?.type === "contest") checkExpr(e.check.atkMod, `${at}.check.atkMod`, errors);
     if (e.type === "inflict") {
       // death: 판정 없는 확정 즉사(《참수》 크리티컬 시)
-      if (!CONDITIONS[e.condition] && !(e.condition === "death" && !e.check)) errors.push(`${at}: 모르는 상태 이상 \`${e.condition}\``);
+      for (const c of [].concat(e.condition)) if (!CONDITIONS[c] && !(c === "death" && !e.check)) errors.push(`${at}: 모르는 상태 이상 \`${c}\``);
+      if (e.choose !== undefined) checkExpr(e.choose, `${at}.choose`, errors);
       if (e.check && !["fixed", "contest", "forced"].includes(e.check.type)) errors.push(`${at}: check.type은 fixed/contest/forced`);
       if (e.check?.type === "fixed") { checkExpr(e.check.target, `${at}.check.target`, errors); checkExpr(e.check.defMod, `${at}.check.defMod`, errors); }
     }

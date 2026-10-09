@@ -850,9 +850,23 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정(판정 +(SL)). 승리 시 [머리]/[팔]/[다리] 중 원하는 부위 (SL)곳을 봉인. 봉인 성공 시 자신도 같은 부위 봉인을 받으며, 그 심도는 자신의 달성값과 같다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "억제 공격 대항(+SL), 승리 시 [머리]/[팔]/[다리] 중 원하는 (SL)곳 봉인, 성공하면 자신도 같은 부위를 자신의 달성값 심도로: GM이 처리"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": [
+      "bindHead",
+      "bindArm",
+      "bindLeg"
+     ],
+     "choose": "SL",
+     "check": {
+      "type": "contest",
+      "atkMod": "SL"
+     },
+     "selfSame": "atk"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "하이랜더"

@@ -306,9 +306,20 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신이 상태 이상을 받고 있을 때만 사용 가능. 자신의 상태 이상을 최대 (SL)개 대상에게 전염.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "자신의 상태 이상을 최대 SL개 대상에게 전염(자신이 상태 이상일 때만): GM이 처리"
+   "effects": [
+    {
+     "type": "requireSelf",
+     "when": {
+      "selfHasAilment": true
+     }
+    },
+    {
+     "type": "spreadAilment",
+     "from": "self",
+     "count": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"
@@ -349,9 +360,22 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신의 【억제 공격】 대 대상의 【억제 방어】 대항 판정(자신 +(SL-2)), 이기면 [머리]/[팔]/[다리] 중 무작위 1부위 봉인.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "억제 대항(+SL−2), 이기면 [머리]/[팔]/[다리] 중 무작위 1부위 봉인: GM이 1D3으로 부위를 정해 처리"
+   "effects": [
+    {
+     "type": "inflict",
+     "condition": [
+      "bindHead",
+      "bindArm",
+      "bindLeg"
+     ],
+     "randomPick": true,
+     "check": {
+      "type": "contest",
+      "atkMod": "SL-2"
+     }
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"

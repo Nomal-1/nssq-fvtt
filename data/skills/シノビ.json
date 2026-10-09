@@ -515,9 +515,24 @@
    "variants": [],
    "sl": 1,
    "description": "<p>상태 이상 중인 적 1체를 골라 선언. 자신 【억제 공격】 vs 대상 【억제 방어】 대항 판정, 승리 시 대상의 상태 이상을 같은 열의 모든 적에게 옮긴다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "상태 이상 중인 적 1체와 억제 대항, 이기면 그 상태 이상을 같은 열의 모든 적에게 옮김: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "enemy",
+     "scope": "single"
+    },
+    {
+     "type": "spreadAilment",
+     "check": {
+      "type": "contest"
+     },
+     "when": {
+      "targetHasAilment": true
+     },
+     "whenNote": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"

@@ -25,7 +25,8 @@
   "chance": { "roll": "1d6", "lte": "SL" },   // 확률 발동
   "label": "…",                // 채팅 카드에 표시할 짧은 이름(선택)
   "variant": 0,                 // 선언 명칭 번호(스킬의 variants 순서). 쓸 때 고른 명칭의 효과만 적용(선택)
-  "toSelf": true                // 대상과 관계없이 사용자 자신에게 한 번(《임팩트 애로》 사용 후 자신 [마비])(선택)
+  "toSelf": true,               // 대상과 관계없이 사용자 자신에게 한 번(《임팩트 애로》 사용 후 자신 [마비])(선택)
+  "whenNote": true              // when이 안 맞으면 카드에 「효과 없음」(《명하노니》)(선택)
 }
 ```
 
@@ -61,7 +62,7 @@
 |---|---|---|
 | `attack` | `kind`(physical/elemental), `element`(생략 시 무기 기본 속성), `addElement`(무기 속성에 더함, 「〈염〉 속성을 부가한」), `failAtOrBelow`(명중 눈 합이 n 이하면 절대 실패), `randomFrom`(무작위 대상을 그 열에서만: front/back), `times`, `hitMod`, `diceMod`, `atkMod`, `atkMultiplier`, `random`, `uniqueTarget`, `onHit[]`, `bonuses[{when, hitMod?, diceMod?, atkMod?, element?}]`, `halfDamage` | 공격 롤 1회분(또는 times회) |
 | `heal` | `mode`(roll/fixed/full/percent), `bonus`/`amount`, `resource`(hp/tp), `revive` | 회복 롤 또는 고정 회복. \[전투 불능\] 대상은 `revive: true`인 효과만 회복(부활). 부활 효과가 있으면 쓰러진 아군도 대상으로 고를 수 있다. 『회복』 분류 스킬의 회복 롤에는 사용자의 `healDice` 보정이 더해진다 |
-| `inflict` | `condition`, `check: {type: fixed, target} | {type: contest, atkMod?} | {type: forced}` | 상태 이상·봉인 부여. forced: 저항 없이 반드시 걸고 심도만 사용자의 【억제 공격】 판정 달성값(07 #61) |
+| `inflict` | `condition`, `check: {type: fixed, target} | {type: contest, atkMod?} | {type: forced}` | 상태 이상·봉인 부여. forced: 저항 없이 반드시 걸고 심도만 사용자의 【억제 공격】 판정 달성값(07 #61). `condition`이 목록이면 `choose`(사용할 때 고르는 개수, 《스티그마》)·`randomPick`(무작위 1개, 《신기한 씨앗》), `selfSame: "atk"`(성공하면 자신도 같은 것을 자신의 달성값 심도로) |
 | `drain` | `resource`(hp/tp), `mode`(half: 준 대미지 절반 / quarter: 1/4 / sixes: 대미지 다이스의 6 개수) | onHit 안에서: 그 명중으로 자신 회복(《음양검: 영흡명참》) |
 | `recoil` | `mode`(ones) | `toSelf`와 함께: 이 행동에서 굴린 대미지 다이스의 '1' 개수만큼 자신이 대미지(《싱글 스러스트》) |
 | `kill` | `check: {type: fixed, target, defMod?} | {type: contest, atkMod?}` | 즉사: 억제 방어 롤 실패면 【HP】 0(카드에 \[즉사\]) |
@@ -96,6 +97,10 @@
 | `actionTiming` | `value`(first/last) | 「그 턴 최속/후발 행동」(대상에게. 자신이면 target 자신). 개막 페이즈에 쓰면 메인 페이즈 행동 순서에 반영(전투원 플래그 timing, 라운드마다 지움). 주행동 스킬에 `last`가 있으면 메인 페이즈에 쓸 때 후발 행동 예약(전투원 플래그 `late`, 코스트는 실행할 때), 모든 전투원 행동 뒤 【속도】 순 실행. 실행할 때 이 효과는 뺀다(8-D) |
 | `state` | `id`, `label`, `group?`, `mods[{path, value}]`, `max?`, `note?` | 전투 고유 상태(강화가 아님, 해제되지 않음, 전투 끝까지). 무사의 자세·《나찰》 등. 같은 `group`은 하나만, `max`가 있으면 쌓임(07 #57) |
 | `requireState` | `state` | 「《○○》 상태 한정」. 그 상태가 없으면 쓸 수 없다(사용 시 해석하지 않음) |
+| `requireSelf` | `when` | 「자신이 ○○일 때만 사용 가능」. when을 자신으로 판정(`selfHasAilment` 등, 《전화위복》) |
+| `command` | `mode` | (`when: {targetDisabled: "fear"}`와 함께) 《명하노니》: `stop`(안내만)·`enemyAttack`(다른 에너미를 통상 공격)·`selfAttack`(자신을 통상 공격). 결과를 적용할 때 실행 |
+| `spreadAilment` | `from`, `count`, `check` | 상태 이상 옮기기. 기본: 대결에서 이기면 대상의 상태 이상을 같은 열의 다른 적에게(《인법: 수경》). `from: "self"`: 자신의 상태 이상 최대 count개를 대상에게(《전화위복》) |
+| `emitImbue` | `kind` | 대상의 『속성 부여』를 해제하고 그 속성으로 적 전체 공격(《이밋 웨펀》) |
 | `flag` | `flag`, `value` | 규칙 스위치(타이밍 「상시」). `itemRevive`: 그 캐릭터가 쓰는 HP 회복 아이템에 부활 효과(《간이 소생》), `tokenMax`: 『소환수』 토큰 동시 유지 수(《백수의 왕기》), `campCookHp`·`campCookTp`·`campCookCure`: 캠프 때 HP·TP 회복 2배·상태 이상 회복(커먼 요리 스킬, 『조리기구 세트』 필요) |
 | `custom` | `handler` | 스키마 밖. `src/engine/custom/<handler>.mjs` |
 | `activeEvade` | `ability`(str/tec/vit/agi/luc), `bonus`, `vs`(physical/elemental, 생략 시 둘 다) | 타이밍 「수동」: 능동 회피. 대상 2D6+능력치 보너스+bonus vs 공격자 명중 달성값, 동점 회피(07 #51) |

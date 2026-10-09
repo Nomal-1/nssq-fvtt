@@ -88,6 +88,8 @@ function baseProfile(actor, combatant = null) {
     row: s.row ?? "front",
     hp: s.hp?.value ?? 0, hpMax: s.hp?.max ?? 0,
     guarding, acted,
+    // [공포]·[마비] 판정 실패로 이번 턴 행동 불능이면 그 상태 이상 id(《명하노니》 when targetDisabled)
+    disabledBy: combatant?.getFlag("nssq", "disabled") ?? null,
     level: s.level ?? 0,
     ko: (s.hp?.value ?? 0) <= 0,
     // 상태 이상·봉인·강화(단계 5): 부능력치·내성에는 액터 데이터에서 이미 반영됨
