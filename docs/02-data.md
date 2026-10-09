@@ -180,3 +180,9 @@ flag: `weaponElement`(제련 속성 부여), `noCarryCount`(소지 수에 안 �
 - CharacterData `profile { gender, age, hair, build }`: 퍼스낼리티(샘플 시트의 칸). `history: string[]`은 경력(D666 결과나 자유 기입).
 - 액터 플래그 `nssq.chargen { step, moneySet, done }`: 작성 마법사 진행 상태.
 - `src/generated/tables.mjs`의 `history`: 경력표 D666 56항목(`data/tables/history-d666.json`).
+
+## 커스텀 직업(직업 제작기)
+- 직업: 월드 class 아이템. 폴더 「커스텀 직업」, `system.key = "custom.<id>"`, 플래그 `nssq.customClass`.
+- 그 직업의 스킬: 월드 skill 아이템. 폴더 「커스텀 직업/<직업 이름>」(플래그 `nssq.classSkills = 직업 key`), `classKey = 직업 key`, `skillKey = 이름`, `review: "manual"`. 아이템 정렬 순서가 스킬 트리 순서.
+- 선행조건은 컴펜디움과 같은 `prereqs { all: [{ skill, sl } | { any: [{ skill, sl }] }] }`, 같은 직업 안의 스킬 이름. 검사는 `engine/skills.mjs validateClassDef`.
+- 스킬 트리(`skill-tree.mjs skillIndex`)와 ★ 자동 부여(`unique-skill.mjs`)는 컴펜디움 + 월드 클래스 아이템의 key를 가진 월드 스킬을 함께 읽는다.

@@ -1179,3 +1179,4 @@
 .nssq-class-maker .cm-tree .or circle { fill: #3a3020; stroke: #e0b028; }
 .nssq-class-maker .cm-tree .edges path { fill: none; stroke: #8aa3c2; stroke-width: 1.5; }
 .nssq-class-maker .cm-tree .edges text { fill: #e0b028; font-size: 10px; text-anchor: middle; }
+.nssq-maker-form .mk-tools button { flex: 0 0 auto; width: auto; padding: 0 10px; }
