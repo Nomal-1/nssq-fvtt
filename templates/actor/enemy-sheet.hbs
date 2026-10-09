@@ -27,6 +27,7 @@
     {{#if canAttack}}<button type="button" data-action="normal-attack" title="{{localize 'NSSQ.Combat.normalAttackHint'}}"><i class="fas fa-fist-raised"></i> {{localize "NSSQ.Combat.normalAttack"}}</button>{{/if}}
     <span class="nq-spacer"></span>
     {{#if isGM}}
+      <button type="button" data-action="enemy-maker"><i class="fas fa-tools"></i> {{localize "NSSQ.Maker.openEnemy"}}</button>
       {{#if system.isRare}}<button type="button" data-action="rare-off">{{localize "NSSQ.Rare.off"}}</button>
       {{else}}<button type="button" data-action="rare-on" title="{{localize 'NSSQ.Rare.onHint'}}">★ {{localize "NSSQ.Rare.on"}}</button>{{/if}}
     {{/if}}

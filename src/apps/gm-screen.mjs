@@ -146,6 +146,8 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=macro]", () => createGMScreenMacro());
     html.on("click", "[data-gm=battle-start]", (ev) => openStartDialog(ev.currentTarget.dataset.preset || null));
     html.on("click", "[data-gm=battle-end]", () => openEndDialog());
+    html.on("click", "[data-gm=skill-maker]", async () => (await import("./custom-maker.mjs")).openSkillMaker());
+    html.on("click", "[data-gm=enemy-maker]", async () => (await import("./custom-maker.mjs")).openEnemyMaker());
     html.on("click", "[data-gm=session-end]", async () => (await import("./session.mjs")).openSessionEnd());
     html.on("click", "[data-gm=dungeon]", async () => (await import("./dungeon.mjs")).openDungeonDialog());
     html.on("click", "[data-gm=camp]", async () => (await import("./explore.mjs")).openCampDialog());

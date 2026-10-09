@@ -939,3 +939,18 @@
 .nssq-check-mods .kinds { display: flex; flex-wrap: wrap; gap: 2px 10px; }
 .nssq-check-mods label.choice { white-space: nowrap; }
 .nssq-check .check-mod-note { display: inline-block; margin-right: 6px; font-size: 0.9em; }
+.nssq-maker .window-content { overflow-y: auto; }
+.nssq-maker-form .mk-row { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+.nssq-maker-form .mk-row input[name=name] { font-size: 1.3em; flex: 1; }
+.nssq-maker-form .mk-row img { border: none; cursor: pointer; }
+.nssq-maker-form .mk-grid, .nssq-maker-form .mk-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 4px 8px; }
+.nssq-maker-form label > span { display: block; font-size: 0.85em; opacity: 0.8; }
+.nssq-maker-form .mk-desc, .nssq-maker-form .mk-json { display: block; margin: 6px 0; }
+.nssq-maker-form .mk-json { grid-column: 1 / -1; }
+.nssq-maker-form .mk-block { margin: 6px 0; border: 1px solid rgba(128,128,128,0.4); }
+.nssq-maker-form .mk-block legend select { width: auto; }
+.nssq-maker-form .mk-errors { color: #b22; }
+.nssq-maker-form .mk-tools { display: flex; gap: 6px; margin: 6px 0; }
+.nssq-maker-form .mk-drops input { width: 100%; }
+.nssq-maker-form .mk-foot { display: flex; gap: 6px; margin-top: 8px; }
+.mk-pre { max-height: 400px; overflow: auto; font-size: 0.85em; }

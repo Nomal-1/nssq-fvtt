@@ -75,6 +75,16 @@ export class NssqItemSheet extends ItemSheet {
     return c;
   }
 
+  /** GM: 스킬은 제작기로 효과까지 편집 */
+  _getHeaderButtons() {
+    const buttons = super._getHeaderButtons();
+    if (game.user.isGM && this.item.type === "skill") {
+      buttons.unshift({ label: game.i18n.localize("NSSQ.Maker.openSkill"), class: "nssq-skill-maker", icon: "fas fa-tools",
+        onclick: async () => (await import("../apps/custom-maker.mjs")).openSkillMaker({ item: this.item }) });
+    }
+    return buttons;
+  }
+
   activateListeners(html) {
     super.activateListeners(html);
     if (!this.isEditable) return;

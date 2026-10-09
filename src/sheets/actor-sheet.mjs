@@ -188,6 +188,7 @@ export class NssqActorSheet extends ActorSheet {
     if (this.actor.type === "character") activateInventoryListeners(this, html);
     // 통상 공격: 지정(타깃)한 토큰 1개. GM은 Shift로 사거리·아군 확인 무시
     html.on("click", "[data-action=rare-on]", () => makeRare(this.actor));
+    html.on("click", "[data-action=enemy-maker]", async () => (await import("../apps/custom-maker.mjs")).openEnemyMaker({ actor: this.actor }));
     // 에너미 스킬: 식별 시 공개 켜고 끄기(GM)
     html.on("click", "[data-action=skill-reveal]", (ev) => {
       const item = this.actor.items.get(ev.currentTarget.closest("[data-item-id]")?.dataset.itemId);
