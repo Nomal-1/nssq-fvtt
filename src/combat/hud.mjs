@@ -9,6 +9,7 @@
  * 공격·【HP】 변화에는 피격 이펙트를 띄운다.
  */
 import { inRange } from "../engine/combat.mjs";
+import { BUFFS } from "../engine/buffs.mjs";
 import { normalAttack } from "./attack.mjs";
 import { combatProfile, friendly, sideOf } from "./profile.mjs";
 import { changePosition, shuffleRowsDialog } from "./formation.mjs";
@@ -546,6 +547,79 @@ function hpEffect(combatantId, delta) {
   } else popText(card, `+${delta}`, "heal");
 }
 
+
+/* ---------------- 스킬·속성 이펙트(설정 battleFx로 끌 수 있다) ---------------- */
+
+const fxOn = () => game.settings.get("nssq", "battleFx") !== false;
+const ELEMENT_FX = ["slash", "strike", "pierce", "fire", "ice", "volt"];
+
+/** 대상 그림 위에 이펙트 상자(크기 = 그림) */
+function fxBox(card, cls, ms = 900) {
+  if (!card || !fxOn()) return null;
+  const pic = card.querySelector(".art img") ?? card.querySelector(".portrait") ?? card;
+  const r = pic.getBoundingClientRect();
+  const box = document.createElement("div");
+  box.className = `nb-fx ${cls}`;
+  const size = Math.max(60, Math.min(r.width, r.height, 220));
+  Object.assign(box.style, { left: `${r.left + r.width / 2 - size / 2}px`, top: `${r.top + r.height / 2 - size / 2}px`, width: `${size}px`, height: `${size}px` });
+  ensureFx().append(box);
+  setTimeout(() => box.remove(), ms);
+  return box;
+}
+
+/** 속성 이펙트: 참(베기 자국)·괴(충격파)·돌(찌르기)·염(불꽃)·빙(얼음 조각)·뇌(번개). 속성이 여럿이면 첫 속성, 무속성은 충격파 */
+function elementFx(card, elements = [], { crit = false } = {}) {
+  const el = ELEMENT_FX.find((e) => elements.includes(e)) ?? "strike";
+  const box = fxBox(card, `el-${el}${crit ? " crit" : ""}`, 1000);
+  if (!box) return;
+  const parts = { slash: 3, strike: 2, pierce: 1, fire: 7, ice: 8, volt: 1 }[el];
+  for (let i = 0; i < parts; i++) {
+    const p = document.createElement("i");
+    p.style.setProperty("--i", i);
+    p.style.setProperty("--n", parts);
+    p.style.setProperty("--r", (Math.sin(i * 12.9898 + elements.length) * 0.5 + 0.5).toFixed(3));
+    box.append(p);
+  }
+  if (el === "volt") box.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="55,0 38,42 58,46 34,100 70,38 50,34 66,0"/></svg>`;
+}
+
+/** 회복·강화·약화·해제 이펙트 */
+function supportFx(card, kind) {
+  const box = fxBox(card, `sp-${kind}`, 1300);
+  if (!box) return;
+  const n = kind === "heal" || kind === "cure" ? 8 : 3;
+  for (let i = 0; i < n; i++) {
+    const p = document.createElement("i");
+    p.style.setProperty("--i", i);
+    p.style.setProperty("--n", n);
+    p.style.setProperty("--r", (Math.sin(i * 78.233) * 0.5 + 0.5).toFixed(3));
+    box.append(p);
+  }
+}
+
+/** 스킬 카드: 명중한 공격은 속성 이펙트, 회복·강화·약화·상태 이상·해제는 지원 이펙트(대상마다) */
+async function skillEffect(message) {
+  const card = message.getFlag("nssq", "skillCard");
+  const combat = battleCombat();
+  if (!card || !combat || collapsed || card.failed || !fxOn()) return;
+  if (game.dice3d) await game.dice3d.waitFor3DAnimationByMessageID?.(message.id);
+  for (const e of card.entries ?? []) {
+    const c = combat.combatants.find((x) => x.actor?.uuid === e.uuid);
+    const el = c && cardEl(c.id);
+    if (!el) continue;
+    const hits = (e.hits ?? []).filter((h) => h.hit);
+    hits.slice(0, 4).forEach((h, k) => setTimeout(() => elementFx(el, h.elements ?? [], { crit: h.crit }), k * 260));
+    const later = hits.length ? 300 : 0;
+    const kinds = [];
+    if (e.heal?.hp || e.heal?.tp || e.revive) kinds.push("heal");
+    const isDebuff = (b) => BUFFS[b.id]?.kind === "debuff";
+    if ((e.buffs ?? []).some((b) => !isDebuff(b))) kinds.push("buff");
+    if ((e.buffs ?? []).some(isDebuff) || (e.inflicts ?? []).some((x) => !x.resisted)) kinds.push("debuff");
+    if ((e.cures ?? []).length) kinds.push("cure");
+    kinds.forEach((k, i) => setTimeout(() => supportFx(el, k), later + i * 350));
+  }
+}
+
 /** 공격 카드가 올라오면: 맞았으면 번쩍임(크리티컬은 글자도), 빗나갔으면 MISS. 흔들림은 【HP】가 깎일 때 */
 async function attackEffect(message) {
   const card = message.getFlag("nssq", "attack");
@@ -559,6 +633,7 @@ async function attackEffect(message) {
     if (!t.hit) popText(el, L("miss"), "miss");
     else {
       hitFlash(el);
+      elementFx(el, card.elements ?? [], { crit: t.crit });
       if (t.crit) popText(el, L("critical"), "crit");
     }
   }
@@ -785,4 +860,5 @@ export function registerHud() {
   // 종료 페이즈 카드가 생기거나 적용되면 커맨드 창도
   for (const hook of ["createChatMessage", "updateChatMessage"]) Hooks.on(hook, (m) => { if (m.getFlag("nssq", "endPhase")) rerender(); });
   Hooks.on("createChatMessage", (message) => attackEffect(message));
+  Hooks.on("createChatMessage", (message) => skillEffect(message));
 }

@@ -2,6 +2,8 @@ import { onShopHiddenChange, onShopToggle } from "./apps/shop.mjs";
 
 export function registerSettings() {
   // 에너미 일러스트를 월드 액터·토큰에 적용한 표시(그림 표 크기:버전)
+  // 전투 화면의 스킬·속성 이펙트(사람마다)
+  game.settings.register("nssq", "battleFx", { name: "NSSQ.Settings.battleFx", hint: "NSSQ.Settings.battleFxHint", scope: "client", config: true, type: Boolean, default: true });
   game.settings.register("nssq", "enemyArtApplied", { scope: "world", config: false, type: String, default: "" });
   game.settings.register("nssq", "autoApply", {
     name: "NSSQ.Settings.autoApply.name",
