@@ -82,6 +82,11 @@ export class NssqItemSheet extends ItemSheet {
       buttons.unshift({ label: game.i18n.localize("NSSQ.Maker.openSkill"), class: "nssq-skill-maker", icon: "fas fa-tools",
         onclick: async () => (await import("../apps/custom-maker.mjs")).openSkillMaker({ item: this.item }) });
     }
+    // 월드의 직업(커스텀 직업)은 직업 제작기로
+    if (game.user.isGM && this.item.type === "class" && !this.item.pack && !this.item.parent) {
+      buttons.unshift({ label: game.i18n.localize("NSSQ.Maker.openClass"), class: "nssq-class-maker", icon: "fas fa-tools",
+        onclick: async () => (await import("../apps/custom-maker.mjs")).openClassMaker({ item: this.item }) });
+    }
     return buttons;
   }
 

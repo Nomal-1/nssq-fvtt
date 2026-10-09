@@ -122,6 +122,7 @@ Hooks.once("init", () => {
     endBattle: openEndDialog,
     skillMaker: async (o) => (await import("./apps/custom-maker.mjs")).openSkillMaker(o),
     enemyMaker: async (o) => (await import("./apps/custom-maker.mjs")).openEnemyMaker(o),
+    classMaker: async (o) => (await import("./apps/custom-maker.mjs")).openClassMaker(o),
     dungeon: async () => (await import("./apps/dungeon.mjs")).openDungeonDialog(),
     nextEvent: async () => (await import("./apps/dungeon.mjs")).nextEvent(),
     gather: async (o) => (await import("./apps/loot.mjs")).openGatherDialog(o),

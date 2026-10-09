@@ -1151,3 +1151,31 @@
 .nssq-chargen .cg-checks li.warn { color: #e0b028; }
 .nssq-chargen .cg-done { color: #4caf50; }
 .nssq-chargen .cg-sub { margin: 10px 0 4px; font-weight: bold; }
+
+/* ---------- 직업 제작기 ---------- */
+.nssq-class-maker .cm-cols { display: flex; gap: 10px; height: 100%; }
+.nssq-class-maker .cm-left { flex: 1 1 58%; min-width: 0; overflow-y: auto; padding-right: 4px; }
+.nssq-class-maker .cm-right { flex: 1 1 42%; min-width: 0; overflow: auto; border-left: 1px solid rgba(128,128,128,0.4); padding-left: 8px; }
+.nssq-class-maker .cm-checks { display: flex; flex-wrap: wrap; gap: 2px 10px; }
+.nssq-class-maker .cm-checks label { display: flex; align-items: center; gap: 2px; }
+.nssq-class-maker .cm-skills { list-style: none; padding: 0; margin: 4px 0; }
+.nssq-class-maker .cm-skill { border: 1px solid rgba(128,128,128,0.35); border-radius: 4px; padding: 3px 5px; margin: 3px 0; }
+.nssq-class-maker .cm-skill.unique { border-color: #e0b028; }
+.nssq-class-maker .cm-row { display: flex; align-items: center; gap: 5px; }
+.nssq-class-maker .cm-row .cm-name { flex: 1; min-width: 80px; }
+.nssq-class-maker .cm-row label { display: flex; align-items: center; gap: 2px; font-size: 0.85em; }
+.nssq-class-maker .cm-row input[type=number] { width: 38px; }
+.nssq-class-maker .cm-row a.on { color: #e0b028; }
+.nssq-class-maker .cm-timing { opacity: 0.7; min-width: 40px; }
+.nssq-class-maker .cm-pretext { display: block; opacity: 0.8; margin-left: 4px; }
+.nssq-class-maker .cm-pre { margin: 4px 0 2px 14px; }
+.nssq-class-maker .cm-group { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 2px 0; padding: 2px 4px; border-left: 3px solid rgba(224,176,40,0.6); }
+.nssq-class-maker .cm-group select { width: auto; max-width: 150px; }
+.nssq-class-maker .cm-group input { width: 40px; }
+.nssq-class-maker .cm-or { font-size: 0.8em; padding: 0 4px; border-radius: 8px; background: rgba(224,176,40,0.3); }
+.nssq-class-maker .cm-tree svg { display: block; }
+.nssq-class-maker .cm-tree .node rect { fill: #24364f; stroke: #c9a45c; }
+.nssq-class-maker .cm-tree .node text { fill: #f1e4c4; font-size: 12px; text-anchor: middle; }
+.nssq-class-maker .cm-tree .or circle { fill: #3a3020; stroke: #e0b028; }
+.nssq-class-maker .cm-tree .edges path { fill: none; stroke: #8aa3c2; stroke-width: 1.5; }
+.nssq-class-maker .cm-tree .edges text { fill: #e0b028; font-size: 10px; text-anchor: middle; }

@@ -6,12 +6,16 @@ import { uniqueSkillPlan } from "../engine/skills.mjs";
 
 let uniqueCache = null;
 async function uniqueIndex() {
-  if (uniqueCache) return uniqueCache;
-  const pack = game.packs.get("nssq.skills");
-  if (!pack) return [];
-  const index = await pack.getIndex({ fields: ["system.classKey", "system.skillKey", "system.unique"] });
-  uniqueCache = [...index].filter((e) => e.system?.unique).map((e) => ({ id: e._id, classKey: e.system.classKey, skillKey: e.system.skillKey }));
-  return uniqueCache;
+  if (!uniqueCache) {
+    const pack = game.packs.get("nssq.skills");
+    const index = pack ? await pack.getIndex({ fields: ["system.classKey", "system.skillKey", "system.unique"] }) : [];
+    uniqueCache = [...index].filter((e) => e.system?.unique).map((e) => ({ id: e._id, classKey: e.system.classKey, skillKey: e.system.skillKey }));
+  }
+  // 커스텀 직업(월드 클래스 아이템)의 ★ 스킬
+  const customKeys = new Set(game.items.filter((i) => i.type === "class").map((i) => i.system.key).filter(Boolean));
+  const world = game.items.filter((i) => i.type === "skill" && i.system.unique && customKeys.has(i.system.classKey))
+    .map((i) => ({ id: i.id, uuid: i.uuid, classKey: i.system.classKey, skillKey: i.system.skillKey }));
+  return [...uniqueCache, ...world];
 }
 
 export async function syncUniqueSkill(actor) {
@@ -26,7 +30,7 @@ export async function syncUniqueSkill(actor) {
     const data = [];
     for (const a of plan.add) {
       const entry = uniques.find((u) => u.classKey === a.classKey && u.skillKey === a.skillKey);
-      const doc = await pack.getDocument(entry.id);
+      const doc = entry.uuid ? game.items.get(entry.id) : await pack.getDocument(entry.id);
       const d = game.items.fromCompendium(doc);
       d.system.sl = 1;
       foundry.utils.setProperty(d, "_stats.compendiumSource", doc.uuid);

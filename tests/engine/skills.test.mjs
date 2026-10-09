@@ -120,3 +120,27 @@ describe("습득 규칙", () => {
     expect(brokenByLowering("B", 0, owned)).toEqual([]);
   });
 });
+
+describe("커스텀 직업 정의 검사", async () => {
+  const { validateClassDef, renamePrereqs } = await import("../../src/engine/skills.mjs");
+  const sk = (name, prereqs = [], extra = {}) => ({ name, maxSL: { main: 5, sub: 3 }, prereqs: { all: prereqs }, ...extra });
+  const codes = (r) => r.errors.map((e) => e.code);
+  it("정상", () => {
+    const r = validateClassDef({ skills: [sk("A"), sk("B", [{ skill: "A", sl: 1 }]), sk("C", [{ any: [{ skill: "A", sl: 1 }, { skill: "B", sl: 2 }] }]), sk("U", [], { unique: true, maxSL: { main: null } })] });
+    expect(r.errors).toEqual([]);
+  });
+  it("없는 선행·SL 초과·순환·★ 2개·이름 중복·서브>메인", () => {
+    expect(codes(validateClassDef({ skills: [sk("A", [{ skill: "X", sl: 1 }])] }))).toContain("missingPrereq");
+    expect(codes(validateClassDef({ skills: [sk("A"), sk("B", [{ skill: "A", sl: 6 }])] }))).toContain("prereqOverMax");
+    const cyc = validateClassDef({ skills: [sk("R"), sk("A", [{ skill: "B", sl: 1 }]), sk("B", [{ skill: "A", sl: 1 }])] });
+    expect(codes(cyc)).toContain("cycle");
+    expect(codes(validateClassDef({ skills: [sk("U1", [], { unique: true }), sk("U2", [], { unique: true })] }))).toContain("manyUnique");
+    expect(codes(validateClassDef({ skills: [sk("A"), sk("A")] }))).toContain("dupName");
+    expect(codes(validateClassDef({ skills: [sk("A", [], { maxSL: { main: 2, sub: 3 } })] }))).toContain("subOverMain");
+  });
+  it("이름 바꾸기는 선행조건도", () => {
+    const out = renamePrereqs([sk("A"), sk("B", [{ skill: "A", sl: 1 }]), sk("C", [{ any: [{ skill: "A", sl: 1 }] }])], "A", "Z");
+    expect(out[1].prereqs.all[0].skill).toBe("Z");
+    expect(out[2].prereqs.all[0].any[0].skill).toBe("Z");
+  });
+});

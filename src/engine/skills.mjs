@@ -217,3 +217,58 @@ export function brokenByLowering(name, newSL, owned) {
   const slOf = (n) => (n === name ? newSL : Math.max(0, ...owned.filter((o) => o.name === n).map((o) => o.sl)));
   return owned.filter((o) => o.name !== name && o.sl > 0 && prereqList(o.prereqs).some((p) => p.skill === name) && !prereqsMet(o.prereqs, slOf)).map((o) => o.name);
 }
+
+/**
+ * 커스텀 직업 정의 검사(커스텀 직업 제작기). 선행조건은 같은 직업 안의 스킬 이름으로 건다.
+ * @param {{ skills: {name, maxSL: {main, sub}, unique, prereqs}[] }} def
+ * @returns {{ errors: {code, name?, detail?}[], warnings: {code, name?}[] }}
+ */
+export function validateClassDef({ skills = [] }) {
+  const errors = [];
+  const warnings = [];
+  const byName = new Map();
+  for (const s of skills) {
+    const n = String(s.name ?? "").trim();
+    if (!n) { errors.push({ code: "emptyName" }); continue; }
+    if (byName.has(n)) errors.push({ code: "dupName", name: n });
+    byName.set(n, s);
+  }
+  if (!skills.length) warnings.push({ code: "noSkills" });
+  if (skills.filter((s) => s.unique).length > 1) errors.push({ code: "manyUnique" });
+  for (const s of skills) {
+    const main = Number(s.maxSL?.main);
+    const sub = s.maxSL?.sub;
+    if (!s.unique && !(main >= 1)) errors.push({ code: "badMax", name: s.name });
+    if (!s.unique && sub != null && sub !== "" && Number(sub) > main) errors.push({ code: "subOverMain", name: s.name });
+    const list = prereqList(s.prereqs);
+    if (s.unique && list.length) warnings.push({ code: "uniquePrereq", name: s.name });
+    for (const p of list) {
+      if (p.skill === s.name) { warnings.push({ code: "selfPrereq", name: s.name }); continue; }
+      const t = byName.get(p.skill);
+      if (!t) errors.push({ code: "missingPrereq", name: s.name, detail: p.skill });
+      else if (!t.unique && Number(p.sl) > Number(t.maxSL?.main ?? 1)) errors.push({ code: "prereqOverMax", name: s.name, detail: `${p.skill} SL${p.sl}` });
+    }
+  }
+  // 순환: 선행 그래프(이름 → 선행 이름들)에서 DFS
+  const deps = new Map(skills.map((s) => [s.name, prereqList(s.prereqs).map((p) => p.skill).filter((x) => x !== s.name && byName.has(x))]));
+  const state = new Map();
+  const cyc = new Set();
+  const visit = (n, path) => {
+    if (state.get(n) === 2) return;
+    if (state.get(n) === 1) { path.slice(path.indexOf(n)).forEach((x) => cyc.add(x)); return; }
+    state.set(n, 1);
+    for (const d of deps.get(n) ?? []) visit(d, [...path, d]);
+    state.set(n, 2);
+  };
+  for (const n of deps.keys()) visit(n, [n]);
+  if (cyc.size) errors.push({ code: "cycle", detail: [...cyc].join(" → ") });
+  const nonUnique = skills.filter((s) => !s.unique);
+  if (nonUnique.length && !nonUnique.some((s) => !prereqList(s.prereqs).length)) warnings.push({ code: "noRoot" });
+  return { errors, warnings };
+}
+
+/** 스킬 이름을 바꿀 때 다른 스킬의 선행조건 이름도 바꾼다(새 배열) */
+export function renamePrereqs(skills, from, to) {
+  const fix = (p) => (p.any ? { ...p, any: p.any.map((q) => (q.skill === from ? { ...q, skill: to } : q)) } : p.skill === from ? { ...p, skill: to } : p);
+  return skills.map((s) => (s.prereqs?.all?.length ? { ...s, prereqs: { ...s.prereqs, all: s.prereqs.all.map(fix) } } : s));
+}

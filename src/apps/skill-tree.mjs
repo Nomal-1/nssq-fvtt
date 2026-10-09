@@ -23,15 +23,23 @@ const OR_W = 46;
 const OR_H = 22;
 const PAD = 12;
 
-/** 스킬 팩 색인(한 번만 읽는다) */
+/** 스킬 색인: 컴펜디움(한 번만 읽는다) + 월드의 커스텀 직업 스킬(월드 클래스 아이템의 key를 classKey로 가진 스킬 아이템) */
 let indexCache = null;
-async function skillIndex() {
+async function packIndex() {
   if (indexCache) return indexCache;
   const pack = game.packs.get("nssq.skills");
   if (!pack) return [];
   const index = await pack.getIndex({ fields: ["sort", "system.classKey", "system.skillKey", "system.maxSL", "system.unique", "system.prereqs", "system.timing", "system.cost", "system.description"] });
   indexCache = [...index].filter((e) => e.type === "skill").sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
   return indexCache;
+}
+export async function skillIndex() {
+  const pack = await packIndex();
+  const customKeys = new Set(game.items.filter((i) => i.type === "class").map((i) => i.system.key).filter(Boolean));
+  const world = game.items.filter((i) => i.type === "skill" && customKeys.has(i.system.classKey))
+    .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0))
+    .map((i) => ({ _id: i.id, uuid: i.uuid, name: i.name, type: "skill", sort: i.sort, system: i.system.toObject?.() ?? i.system }));
+  return world.length ? [...pack, ...world] : pack;
 }
 
 /** 이 스킬 항목이 메인·서브·커먼 중 어느 쪽인가 */
@@ -300,7 +308,8 @@ export class SkillTree extends Application {
     if (item) {
       await item.update({ "system.sl": current + 1 });
     } else {
-      const doc = await game.packs.get("nssq.skills").getDocument(id);
+      // 컴펜디움 스킬은 팩에서, 커스텀 직업 스킬은 월드 아이템에서
+      const doc = e.uuid?.startsWith("Item.") ? game.items.get(id) : await game.packs.get("nssq.skills").getDocument(id);
       const data = game.items.fromCompendium(doc);
       data.system.sl = 1;
       foundry.utils.setProperty(data, "_stats.compendiumSource", doc.uuid);

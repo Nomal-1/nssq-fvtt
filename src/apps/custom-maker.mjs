@@ -12,7 +12,8 @@
 import { checkEffects, MOD_PATHS } from "../engine/effects/schema.mjs";
 import { CONDITIONS } from "../engine/conditions.mjs";
 import { BUFFS } from "../engine/buffs.mjs";
-import { RESISTS, SUB_STATS } from "../engine/derive.mjs";
+import { ABILITIES, RESISTS, SUB_STATS } from "../engine/derive.mjs";
+import { renamePrereqs, treeLayout, validateClassDef } from "../engine/skills.mjs";
 import { CHECK_KINDS } from "../chat/check-mods.mjs";
 import tables from "../generated/tables.mjs";
 
@@ -560,5 +561,290 @@ export class EnemyMaker extends Application {
   }
 }
 
+/* ---------------- 직업 제작기 ---------------- */
+
+const POSITIONS = ["전위", "중위", "후위"];
+let classPackCache = null;
+let skillPackCache = null;
+async function classSources() {
+  classPackCache ??= ((await game.packs.get("nssq.classes")?.getDocuments()) ?? []).filter((c) => c.type === "class");
+  return [...game.items.filter((i) => i.type === "class").map((c) => ({ uuid: c.uuid, label: `${L("world")} ${c.name}` })), ...classPackCache.map((c) => ({ uuid: c.uuid, label: c.name }))];
+}
+async function skillsOfClass(cls) {
+  const key = cls.system.key;
+  if (!cls.pack) return game.items.filter((i) => i.type === "skill" && i.system.classKey === key).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+  skillPackCache ??= ((await game.packs.get("nssq.skills")?.getDocuments()) ?? []).filter((s) => s.type === "skill");
+  return skillPackCache.filter((s) => s.system.classKey === key).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+}
+/** 선행조건 편집용: all → 그룹(대안 배열) / 되돌리기 */
+const toGroups = (prereqs) => (prereqs?.all ?? []).map((g) => (g.any ? g.any.map((q) => ({ ...q })) : [{ skill: g.skill, sl: g.sl }]));
+const fromGroups = (groups) => ({ all: groups.filter((g) => g.length).map((g) => (g.length === 1 ? { skill: g[0].skill, sl: Number(g[0].sl) || 1 } : { any: g.map((q) => ({ skill: q.skill, sl: Number(q.sl) || 1 })) })) });
+const prereqText = (prereqs) => (prereqs?.all ?? []).map((g) => (g.any ? g.any.map((q) => `${q.skill} ${q.sl}`).join(` ${L("or")} `) : `${g.skill} ${g.sl}`)).join(" + ");
+
+export class ClassMaker extends Application {
+  constructor({ item = null } = {}, options = {}) {
+    super(options);
+    this.item = item;
+    this.openRows = new Set();
+    this.issues = null;
+    this.ready = this.load(item);
+  }
+
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, { classes: ["nssq", "nq-window", "nssq-maker", "nssq-class-maker"], width: 1060, height: 780, resizable: true });
+  }
+
+  get title() { return this.item ? L("editClass", { name: this.item.name }) : L("classTitle"); }
+
+  /** 직업(아이템)과 그 스킬 → 초안 */
+  async load(src) {
+    const s = src?.system ?? {};
+    this.cls = {
+      name: src?.name ?? L("newClass"), img: src?.img ?? "icons/svg/statue.svg",
+      abilityBonus: { str: 4, tec: 4, vit: 4, agi: 4, luc: 4, ...(s.abilityBonus ?? {}) },
+      weapons: [...(s.weapons ?? [])], armors: [...(s.armors ?? ["옷"])], role: (s.role ?? []).join(", "), position: s.position ?? "전위",
+      description: (s.description ?? "").replace(/<br\s*\/?>/g, "\n").replace(/<[^>]+>/g, "")
+    };
+    const own = src && src === this.item;
+    this.skills = src ? (await skillsOfClass(src)).map((i) => { const o = i.toObject(); if (!own) delete o._id; return o; }) : [];
+  }
+
+  async loadFrom(uuid) {
+    const src = uuid && (await fromUuid(uuid));
+    if (!src) return ui.notifications.warn(L("pickFirst"));
+    await this.load(src);
+    this.loaded = src.name;
+    this.openRows.clear();
+    ui.notifications.info(L("loaded", { name: src.name }));
+    this.render();
+  }
+
+  async _renderInner() {
+    await this.ready;
+    const c = this.cls;
+    const chk = (list, v) => (list.includes(v) ? "checked" : "");
+    const names = this.skills.map((s) => s.name);
+    const skillRows = this.skills.map((s, i) => {
+      const sys = s.system;
+      const open = this.openRows.has(i);
+      const groups = toGroups(sys.prereqs);
+      const pre = open ? `<div class="cm-pre">${groups.map((g, gi) => `<div class="cm-group">${g.map((q, qi) => `${qi ? `<span class="cm-or">${esc(L("or"))}</span>` : ""}
+          <select data-cm-pre="${i}.${gi}.${qi}.skill">${opt("", q.skill, "—")}${names.filter((n) => n !== s.name).map((n) => opt(n, q.skill, n)).join("")}</select>
+          <input type="number" min="1" data-cm-pre="${i}.${gi}.${qi}.sl" value="${Number(q.sl) || 1}"/>
+          <a data-cm-predel="${i}.${gi}.${qi}" title="${esc(L("remove"))}"><i class="fas fa-times"></i></a>`).join("")}
+          <a data-cm-preor="${i}.${gi}"><i class="fas fa-code-branch"></i> ${esc(L("addOr"))}</a></div>`).join("") || `<p class="notes">${esc(L("noPrereq"))}</p>`}
+          <a data-cm-preadd="${i}"><i class="fas fa-plus"></i> ${esc(L("addPrereq"))}</a></div>` : "";
+      return `<li class="cm-skill ${sys.unique ? "unique" : ""}">
+        <div class="cm-row">
+          <input type="text" class="cm-name" data-cm-skill="${i}.name" value="${esc(s.name)}"/>
+          <small class="cm-timing">${esc(sys.timing || "")}</small>
+          <label title="${esc(L("maxMain"))}">M<input type="number" min="1" data-cm-skill="${i}.maxMain" value="${sys.maxSL?.main ?? ""}" ${sys.unique ? "disabled" : ""}/></label>
+          <label title="${esc(L("maxSub"))}">S<input type="number" min="0" data-cm-skill="${i}.maxSub" value="${sys.maxSL?.sub ?? ""}" placeholder="-" ${sys.unique ? "disabled" : ""}/></label>
+          <label title="${esc(L("uniqueHint"))}">★<input type="checkbox" data-cm-skill="${i}.unique" ${sys.unique ? "checked" : ""}/></label>
+          <a data-cm="pre" data-i="${i}" title="${esc(L("prereq"))}" class="${open ? "on" : ""}"><i class="fas fa-sitemap"></i></a>
+          <a data-cm="up" data-i="${i}" title="${esc(L("up"))}"><i class="fas fa-arrow-up"></i></a>
+          <a data-cm="down" data-i="${i}" title="${esc(L("down"))}"><i class="fas fa-arrow-down"></i></a>
+          <a data-cm="edit" data-i="${i}" title="${esc(L("edit"))}"><i class="fas fa-edit"></i></a>
+          <a data-cm="dup" data-i="${i}" title="${esc(L("duplicate"))}"><i class="fas fa-clone"></i></a>
+          <a data-cm="del" data-i="${i}" title="${esc(L("remove"))}"><i class="fas fa-trash"></i></a>
+        </div>
+        ${!open && sys.prereqs?.all?.length ? `<small class="cm-pretext">${esc(L("prereq"))}: ${esc(prereqText(sys.prereqs))}</small>` : ""}${pre}</li>`;
+    }).join("");
+    const issues = this.issues ? [...this.issues.errors.map((e) => `<li class="err">${esc(L(`cv.${e.code}`, { name: e.name ?? "", detail: e.detail ?? "" }))}</li>`), ...this.issues.warnings.map((e) => `<li>${esc(L(`cv.${e.code}`, { name: e.name ?? "", detail: "" }))}</li>`)].join("") || `<li>${esc(L("cv.ok"))}</li>` : "";
+    return $(`<form class="nssq-maker-form cm-form" autocomplete="off"><div class="cm-cols"><div class="cm-left">
+      ${pickerHtml("loadClass", L("loadClass"), "loadClass")}
+      ${this.loaded ? `<p class="notes">${esc(L("loadedFrom", { name: this.loaded }))}</p>` : ""}
+      <div class="mk-row"><img src="${esc(c.img)}" data-cm="img" width="44" height="44" title="${esc(L("img"))}"/><input type="text" name="name" value="${esc(c.name)}"/></div>
+      <h3>${esc(L("abilityBonus"))}</h3>
+      <div class="mk-grid">${ABILITIES.map((k) => `<label><span>${esc(loc(`NSSQ.Ability.${k}`))}</span><input type="number" name="ab.${k}" value="${c.abilityBonus[k] ?? 0}"/></label>`).join("")}</div>
+      <h3>${esc(L("classWeapons"))}</h3><div class="cm-checks">${Object.keys(tables.weapons).map((w) => `<label><input type="checkbox" name="w.${esc(w)}" ${chk(c.weapons, w)}/> ${esc(w)}</label>`).join("")}</div>
+      <h3>${esc(L("classArmors"))}</h3><div class="cm-checks">${Object.keys(tables.armors).map((w) => `<label><input type="checkbox" name="a.${esc(w)}" ${chk(c.armors, w)}/> ${esc(w)}</label>`).join("")}</div>
+      <div class="mk-grid"><label><span>${esc(L("role"))}</span><input type="text" name="role" value="${esc(c.role)}" placeholder="${esc(L("roleHint"))}"/></label>
+        <label><span>${esc(L("position"))}</span><select name="position">${POSITIONS.map((p) => opt(p, c.position, p)).join("")}</select></label></div>
+      <label class="mk-desc"><span>${esc(L("description"))}</span><textarea name="description" rows="2">${esc(c.description)}</textarea></label>
+      <h3>${esc(L("skills"))} <span><a data-cm="new"><i class="fas fa-plus"></i> ${esc(L("newSkill"))}</a></span></h3>
+      <p class="notes">${esc(L("classSkillHint"))}</p>
+      <ul class="cm-skills">${skillRows || `<li class="notes">${esc(L("noSkills"))}</li>`}</ul>
+      ${pickerHtml("libSkill", L("fromLibrary"), "skillLib")}
+      <footer class="mk-foot"><button type="button" data-cm="validate"><i class="fas fa-check-double"></i> ${esc(L("validate"))}</button>
+        <button type="button" data-cm="save"><i class="fas fa-save"></i> ${esc(this.item ? L("update") : L("saveClass"))}</button></footer>
+      ${issues ? `<ul class="mk-errors cm-issues">${issues}</ul>` : ""}
+    </div><div class="cm-right"><h3>${esc(L("treePreview"))}</h3>${this.treeSvg()}</div></div></form>`);
+  }
+
+  /** 트리 미리보기: 스킬 트리 창과 같은 배치(engine treeLayout) */
+  treeSvg() {
+    const list = this.skills.filter((s) => !s.system.unique).map((s) => ({ name: s.name, prereqs: s.system.prereqs }));
+    const lay = treeLayout(list);
+    const NW = 120;
+    const NH = 26;
+    const CW = 150;
+    const RH = 36;
+    const pos = new Map(lay.nodes.map((n) => [n.id, { x: 8 + n.col * CW, y: 8 + n.row * RH, or: n.kind === "or" }]));
+    const W = Math.max(300, 16 + lay.cols * CW);
+    const Hh = Math.max(60, 16 + lay.rows * RH);
+    const edges = lay.edges.map((e) => {
+      const a = pos.get(e.from);
+      const b = pos.get(e.to);
+      if (!a || !b) return "";
+      const x1 = a.x + (a.or ? 14 : NW);
+      const y1 = a.y + NH / 2;
+      const x2 = b.x;
+      const y2 = b.y + NH / 2;
+      return `<path d="M${x1},${y1} C${x1 + 18},${y1} ${x2 - 18},${y2} ${x2},${y2}"/>${e.sl ? `<text x="${(x1 + x2) / 2}" y="${(y1 + y2) / 2 - 3}">${e.sl}</text>` : ""}`;
+    }).join("");
+    const nodes = lay.nodes.map((n) => {
+      const p = pos.get(n.id);
+      return n.kind === "or" ? `<g class="or"><circle cx="${p.x + 7}" cy="${p.y + NH / 2}" r="7"/><title>${esc(n.alts.map((q) => q.skill).join(" / "))}</title></g>`
+        : `<g class="node"><rect x="${p.x}" y="${p.y}" width="${NW}" height="${NH}" rx="5"/><text x="${p.x + NW / 2}" y="${p.y + 17}">${esc(n.name.length > 9 ? `${n.name.slice(0, 9)}…` : n.name)}</text><title>${esc(n.name)}</title></g>`;
+    }).join("");
+    const uniq = this.skills.filter((s) => s.system.unique).map((s) => `★ ${s.name}`);
+    return `<div class="cm-tree"><svg width="${W}" height="${Hh}" viewBox="0 0 ${W} ${Hh}"><g class="edges">${edges}</g>${nodes}</svg></div>
+      ${lay.independent.length ? `<p class="notes">${esc(L("independent"))}: ${esc(lay.independent.join(", "))}</p>` : ""}${uniq.length ? `<p class="notes">${esc(uniq.join(", "))}</p>` : ""}`;
+  }
+
+  /** 입력 → 초안 */
+  read(html) {
+    const f = html[0].querySelector("form") ?? html[0];
+    const el = (n) => f.querySelector(`[name="${n}"]`);
+    const c = this.cls;
+    c.name = el("name").value.trim() || c.name;
+    for (const k of ABILITIES) c.abilityBonus[k] = Number(el(`ab.${k}`).value) || 0;
+    c.weapons = Object.keys(tables.weapons).filter((w) => el(`w.${w}`)?.checked);
+    c.armors = Object.keys(tables.armors).filter((w) => el(`a.${w}`)?.checked);
+    c.role = el("role").value; c.position = el("position").value; c.description = el("description").value;
+    f.querySelectorAll("[data-cm-skill]").forEach((x) => {
+      const [i, field] = x.dataset.cmSkill.split(".");
+      const s = this.skills[Number(i)];
+      if (!s) return;
+      if (field === "name") {
+        const to = x.value.trim();
+        if (to && to !== s.name) { const from = s.name; this.skills = renamePrereqs(this.skills, from, to); this.skills[Number(i)].name = to; }
+      } else if (field === "maxMain") s.system.maxSL = { ...s.system.maxSL, main: x.value === "" ? null : Number(x.value) };
+      else if (field === "maxSub") s.system.maxSL = { ...s.system.maxSL, sub: x.value === "" ? null : Number(x.value) };
+      else if (field === "unique") s.system.unique = x.checked;
+    });
+    f.querySelectorAll("[data-cm-pre]").forEach((x) => {
+      const [i, gi, qi, field] = x.dataset.cmPre.split(".");
+      const s = this.skills[Number(i)];
+      const groups = toGroups(s.system.prereqs);
+      if (!groups[gi]?.[qi]) return;
+      groups[gi][qi][field] = field === "sl" ? Number(x.value) || 1 : x.value;
+      s.system.prereqs = { ...(s.system.prereqs ?? {}), all: groups.map((g) => (g.length === 1 ? { ...g[0] } : { any: g })) };
+    });
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    this.ready.then(() => skillLibrary()).then((lib) => { this._skills = lib; fillPicker(html, "libSkill", lib); });
+    classSources().then((lib) => { this._classes = lib; fillPicker(html, "loadClass", lib); });
+    // 이름·선행조건 선택은 바뀌면 미리보기를 다시 그린다
+    html.on("change", "[data-cm-skill], [data-cm-pre]", () => { this.read(html); this.render(); });
+    const edit = (path, fn) => { this.read(html); const [i, gi, qi] = path.split(".").map(Number); const s = this.skills[i]; const groups = toGroups(s.system.prereqs); fn(groups, gi, qi); s.system.prereqs = { ...(s.system.prereqs ?? {}), ...fromGroups(groups) }; if (!groups.length) s.system.prereqs = { ...(s.system.prereqs ?? {}), all: [] }; this.render(); };
+    html.on("click", "[data-cm-preadd]", (ev) => edit(`${ev.currentTarget.dataset.cmPreadd}.0.0`, (g) => g.push([{ skill: "", sl: 1 }])));
+    html.on("click", "[data-cm-preor]", (ev) => edit(`${ev.currentTarget.dataset.cmPreor}.0`, (g, gi) => g[gi].push({ skill: "", sl: 1 })));
+    html.on("click", "[data-cm-predel]", (ev) => edit(ev.currentTarget.dataset.cmPredel, (g, gi, qi) => { g[gi].splice(qi, 1); if (!g[gi].length) g.splice(gi, 1); }));
+    html.on("click", "[data-cm]", async (ev) => {
+      const a = ev.currentTarget.dataset.cm;
+      const i = Number(ev.currentTarget.dataset.i);
+      this.read(html);
+      switch (a) {
+        case "img": return new FilePicker({ type: "image", current: this.cls.img, callback: (p) => { this.cls.img = p; this.render(); } }).render(true);
+        case "pre": if (this.openRows.has(i)) this.openRows.delete(i); else this.openRows.add(i); return this.render();
+        case "up": move(this.skills, i, -1); this.openRows.clear(); return this.render();
+        case "down": move(this.skills, i, 1); this.openRows.clear(); return this.render();
+        case "del": this.skills.splice(i, 1); this.openRows.clear(); return this.render();
+        case "dup": {
+          const o = foundry.utils.deepClone(this.skills[i]);
+          delete o._id;
+          o.name = L("copyName", { name: o.name });
+          o.system.unique = false;
+          this.skills.splice(i + 1, 0, o);
+          this.openRows.clear();
+          return this.render();
+        }
+        case "new": case "edit": return this.editSkill(a === "edit" ? i : null);
+        case "skillLib": {
+          const src = await fromUuid(pickUuid(html, "libSkill", this._skills ?? []) ?? "");
+          if (!src) return ui.notifications.warn(L("pickFirst"));
+          const o = src.toObject();
+          delete o._id;
+          // 다른 직업의 선행조건 이름은 이 직업에 맞지 않으므로 비운다
+          o.system.prereqs = { all: [] };
+          o.system.maxSL = { main: o.system.maxSL?.main ?? 1, sub: o.system.maxSL?.sub ?? null };
+          o.system.unique = false;
+          if (this.skills.some((s) => s.name === o.name)) o.name = L("copyName", { name: o.name });
+          this.skills.push(o);
+          ui.notifications.info(L("importedNoPrereq", { name: o.name }));
+          return this.render();
+        }
+        case "loadClass": return this.loadFrom(pickUuid(html, "loadClass", this._classes ?? []));
+        case "validate": this.issues = this.validate(); return this.render();
+        case "save": return this.save();
+      }
+    });
+  }
+
+  validate() {
+    return validateClassDef({ skills: this.skills.map((s) => ({ name: s.name, maxSL: s.system.maxSL, unique: !!s.system.unique, prereqs: s.system.prereqs })) });
+  }
+
+  /** 스킬 하나를 스킬 제작기로(직업 저장 때 반영) */
+  editSkill(i) {
+    const data = i === null ? null : this.skills[i];
+    const m = new SkillMaker({ item: null });
+    m.noCopy = true;
+    if (data) m.load(data);
+    m.save = async () => {
+      const { list, errors } = m.effects();
+      m.errors = errors;
+      if (errors.length) { m.render(); return ui.notifications.warn(L("hasErrors", { n: errors.length })); }
+      const dd = m.draft;
+      const sys = m.systemData(list);
+      const o = { ...(data ?? {}), name: dd.name, img: dd.img, type: "skill", system: { ...sys, prereqs: data?.system?.prereqs ?? { all: [] }, unique: !!data?.system?.unique } };
+      if (data && dd.name !== data.name) this.skills = renamePrereqs(this.skills, data.name, dd.name);
+      if (i === null) this.skills.push(o); else this.skills[i] = o;
+      m.close();
+      this.render();
+    };
+    return m.render(true);
+  }
+
+  async save() {
+    const v = this.validate();
+    this.issues = v;
+    if (v.errors.length) { this.render(); return ui.notifications.warn(L("hasErrors", { n: v.errors.length })); }
+    const c = this.cls;
+    const key = this.item?.system.key || `custom.${foundry.utils.randomID(8)}`;
+    const system = {
+      key, abilityBonus: c.abilityBonus, weapons: c.weapons, armors: c.armors,
+      role: c.role.split(/[,，、]/).map((x) => x.trim()).filter(Boolean), position: c.position,
+      description: c.description ? `<p>${esc(c.description).replace(/\n/g, "<br>")}</p>` : ""
+    };
+    const top = await folderFor("Item", "customClasses");
+    if (this.item) await this.item.update({ name: c.name, img: c.img, system });
+    else this.item = await Item.create({ name: c.name, img: c.img, type: "class", system, folder: top.id, flags: { nssq: { customClass: true } } });
+    // 그 직업의 스킬 폴더(이름이 바뀌면 따라 바꾼다)
+    let sub = game.folders.find((f) => f.type === "Item" && f.getFlag("nssq", "classSkills") === key);
+    if (!sub) sub = await Folder.create({ name: c.name, type: "Item", folder: top.id, flags: { nssq: { classSkills: key } } });
+    else if (sub.name !== c.name) await sub.update({ name: c.name });
+    const data = this.skills.map((s, i) => ({
+      ...s, type: "skill", sort: (i + 1) * 1000, folder: sub.id,
+      system: { ...s.system, classKey: key, skillKey: s.name, key: s.system.key || `custom.${foundry.utils.randomID(8)}`, review: s.system.review === "partial" ? "partial" : "manual" }
+    }));
+    const existing = game.items.filter((i) => i.type === "skill" && i.system.classKey === key);
+    const keep = new Set(data.map((d) => d._id).filter(Boolean));
+    const del = existing.filter((i) => !keep.has(i.id)).map((i) => i.id);
+    if (del.length) await Item.deleteDocuments(del);
+    const upd = data.filter((d) => d._id && game.items.get(d._id));
+    if (upd.length) await Item.updateDocuments(upd);
+    const add = data.filter((d) => !d._id || !game.items.get(d._id)).map((d) => { const o = { ...d }; delete o._id; return o; });
+    if (add.length) await Item.createDocuments(add);
+    ui.notifications.info(L("saved", { name: c.name }));
+    return this.close();
+  }
+}
+
 export const openSkillMaker = (o = {}) => game.user.isGM && new SkillMaker(o).render(true);
 export const openEnemyMaker = (o = {}) => game.user.isGM && new EnemyMaker(o).render(true);
+export const openClassMaker = (o = {}) => game.user.isGM && new ClassMaker(o).render(true);
