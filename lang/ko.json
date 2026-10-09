@@ -563,6 +563,8 @@
       "escapeChase": "추격 측",
       "escapeSuccess": "도주 성공",
       "escapeFail": "도주 실패(동점 포함)",
+      "dashTitle": "도주 판정: 선언",
+      "dashHint": "도주 판정 때 선언할 캐릭터(코스트를 낸다). 시트 「자동」을 켠 캐릭터는 처음부터 체크",
       "escapeNote": "도주에 성공하면 드롭 판정 없이 전투가 끝난다(전투 종료는 GM이 한다).",
       "formationOverflow": "파티가 6명을 넘어 {n}명은 칸이 없다.",
       "orderTitle": "순서(작을수록 왼쪽)",
@@ -1142,6 +1144,22 @@
       "resist": "{target}: 【내성】 {list}",
       "coverTitle": "대신 받기",
       "coverAsk": "{holder}의 {skill}: {target} 대신 이 공격을 받는가?"
+    },
+    "Event": {
+      "noCost": "{name}: 코스트가 부족해 《{skill}》 사용 불가",
+      "noTarget": "{name}: 대상이 없어 《{skill}》 취소",
+      "chanceOk": "{name}: 《{skill}》 1D6 = {die} ≤ {lte} → 발동",
+      "chanceNg": "{name}: 《{skill}》 1D6 = {die} > {lte} → 발동하지 않음",
+      "ask": {
+        "conditionGained": "{name}: 상태 이상·봉인이 걸렸다. 선언할 수 있는 스킬",
+        "buffGained": "{name}: 강화 효과를 얻었다. 선언할 수 있는 스킬",
+        "hpLost": "{name}: 【HP】가 줄었다. 선언할 수 있는 스킬",
+        "openingPhase": "{name}: 개막 페이즈. 선언할 수 있는 스킬",
+        "endPhase": "{name}: 종료 페이즈. 선언할 수 있는 스킬",
+        "damaged": "{name}: 대미지를 받았다. 선언할 수 있는 스킬",
+        "enemyKO": "{name}: 적을 쓰러뜨렸다. 선언할 수 있는 스킬",
+        "battleWon": "{name}: 전투 승리. 선언할 수 있는 스킬"
+      }
     },
     "Token": {
       "placed": "{name}: 토큰 「{token}」 배치({n}턴)",

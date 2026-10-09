@@ -553,6 +553,11 @@ async function applyEntry(actor, e, sourceUuid) {
   }
   await actor.update(upd);
   for (const id of newly) await onInflicted(actor, id);
+  // 그 밖의 트리거(단계 8-F): 【HP】 감소·상태 이상·강화
+  const ev = await import("./events.mjs");
+  if (hp < (before.hp ?? 0)) await ev.onHpChange(actor, before.hp ?? 0, hp, sourceUuid, (e.hits ?? []).some((h) => h.hit));
+  for (const id of newly) await ev.onConditionGained(actor, id);
+  if (e.buffs?.length) await ev.onBuffsGained(actor, e.buffs.map((b) => b.id));
   // 대기 상태(단계 8): 전투원 플래그. 대기 상태가 되면 메인 행동을 하지 않는다(waiting)
   if (e.stances?.length) {
     const cb = combatantOf(actor);

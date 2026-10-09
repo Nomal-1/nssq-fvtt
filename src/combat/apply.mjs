@@ -78,6 +78,8 @@ export async function checkSides(combat, changedSide = null) {
     await combat.setFlag("nssq", "over", over);
     if (over) {
       await ChatMessage.create({ content: `<div class="nssq-combat-note end"><i class="fas fa-flag-checkered"></i> ${L(over === "victory" ? "enemyDefeated" : "partyDefeated")}</div>` });
+      // 전투 승리(《왕의 개선가》)
+      if (over === "victory" && isActiveGM()) await (await import("./events.mjs")).onBattleWon(combat);
     }
   }
 }
@@ -110,6 +112,8 @@ async function gmApply({ messageId, index, undo = false }) {
       entry.curse = { before: cb, after: cb - back, amount: back };
     }
     targets[index] = entry;
+    // 그 밖의 트리거(단계 8-F): 《이 악물기》·《성채 기사의 마음가짐》·《피의 폭주》·《피니셔》 등
+    if (after < before) await (await import("./events.mjs")).onHpChange(actor, before, after, card.attackerUuid, true);
     const notes = [];
     if (sleep) notes.push(L("sleepWoke", { name: t.name }));
     if (back > 0) notes.push(L("curseBack", { name: attacker.token?.name ?? attacker.name, n: back }));

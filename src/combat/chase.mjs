@@ -15,7 +15,7 @@ import { emit, onSocket } from "../socket.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Chase.${k}`, d) : game.i18n.localize(`NSSQ.Chase.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const alive = (c) => !!c?.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
-const typeLabel = (f) => L(`type.${f.type === "trigger" && f.optional ? "declare" : f.type}`);
+const typeLabel = (f) => L(`type.${(f.type === "trigger" && f.optional) || f.type === "event" ? "declare" : f.type}`);
 /** 표시 이름: 스킬은 《이름》, 『추격』 강화는 그대로 */
 const shown = (f) => (f.source?.buff !== undefined ? f.name : `《${f.name}》`);
 
@@ -168,6 +168,8 @@ async function onAttackCard(message) {
 
 /** 추격·반격·발동 실행 → 카드. 실행했으면 true */
 export async function runFollowup(f, originKind = "normal") {
+  // 그 밖의 트리거(단계 8-F, combat/events.mjs)
+  if (f.type === "event") return (await import("./events.mjs")).runEvent(f);
   const combat = game.combat;
   const c = combat?.combatants.get(f.unitId);
   const target = combat?.combatants.get(f.target);
@@ -280,7 +282,7 @@ function decorate(message, el) {
     else if (f.state === "declined") row.innerHTML = `<span class="notes">${esc(L("declined", d))}</span>`;
     else if (!actor?.isOwner) row.innerHTML = `<span class="notes">${esc(L("waiting", d))}</span>`;
     else {
-      const label = f.type === "trigger" ? L("declare", d) : L("run", d);
+      const label = f.type === "trigger" || f.type === "event" ? L("declare", d) : L("run", d);
       row.innerHTML = `<button type="button" data-fu-run><i class="fas fa-angle-double-right"></i> ${esc(label)}</button><button type="button" data-fu-decline>${esc(L("decline"))}</button>`;
       row.querySelector("[data-fu-run]").addEventListener("click", () => send({ messageId: message.id, id: f.id, run: true }));
       row.querySelector("[data-fu-decline]").addEventListener("click", () => send({ messageId: message.id, id: f.id, run: false }));

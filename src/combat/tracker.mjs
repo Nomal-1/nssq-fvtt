@@ -10,6 +10,7 @@ import { normalAttack } from "./attack.mjs";
 import { combatProfile } from "./profile.mjs";
 import { actionState } from "./turn-status.mjs";
 import { recordBestiary } from "./bestiary.mjs";
+import { autoKey } from "../engine/triggers.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 
@@ -74,10 +75,49 @@ export async function setIdentified(actors, on) {
 /* ---------------- 도주 ---------------- */
 
 /** 도주 판정(GM): 살아 있는 참가자 전원 【회피】로 일반 행위 판정 */
+/** 《전력 도주》 선언 → Map(전투원 id → 달성값 보정). 취소면 null */
+async function escapeDeclarations(combat) {
+  const list = [];
+  for (const c of combat.combatants) {
+    const a = c.actor;
+    if (!a || a.type !== "character" || c.defeated || (a.system.hp?.value ?? 0) <= 0) continue;
+    for (const i of a.items.filter((x) => x.type === "skill" && (x.system.sl ?? 0) > 0)) {
+      const t = (i.system.effects ?? []).find((e) => e?.type === "trigger" && e.on === "escapeCheck");
+      if (!t) continue;
+      const cost = i.system.cost ?? {};
+      if ((cost.tp ?? 0) > (a.system.tp?.value ?? 0) || (cost.fp ?? 0) > (a.system.fp?.value ?? 0)) continue;
+      const value = (t.effects ?? []).filter((e) => e.type === "modifier" && e.path === "checks.escape").reduce((n, e) => n + (Number(e.value) || 0), 0);
+      list.push({ c, i, value, auto: !!a.getFlag("nssq", "autoTrigger")?.[autoKey(i.system.key)] });
+      break;
+    }
+  }
+  const out = new Map();
+  if (!list.length) return out;
+  const html = `<p>${L("dashHint")}</p>${list.map((x, k) => `<div class="form-group"><label><input type="checkbox" name="d${k}" ${x.auto ? "checked" : ""}/> ${foundry.utils.escapeHTML(x.c.name)}: 《${foundry.utils.escapeHTML(x.i.name)}》 +${x.value}</label></div>`).join("")}`;
+  const picked = await Dialog.prompt({
+    title: L("dashTitle"), content: html, label: L("escape"), rejectClose: false,
+    callback: (h) => list.map((x, k) => !!h[0].querySelector(`[name=d${k}]`)?.checked)
+  });
+  if (!picked) return null;
+  for (const [k, x] of list.entries()) {
+    if (!picked[k]) continue;
+    const cost = x.i.system.cost ?? {};
+    const upd = {};
+    if (cost.tp) upd["system.tp.value"] = (x.c.actor.system.tp?.value ?? 0) - cost.tp;
+    if (cost.fp) upd["system.fp.value"] = (x.c.actor.system.fp?.value ?? 0) - cost.fp;
+    if (Object.keys(upd).length) await x.c.actor.update(upd);
+    out.set(x.c.id, x.value);
+  }
+  return out;
+}
+
 export async function rollEscape(combat) {
   if (!game.user.isGM || !combat) return;
   const ok = await Dialog.confirm({ title: L("escape"), content: `<p>${L("escapeConfirm")}</p>`, rejectClose: false });
   if (!ok) return;
+  // 도주 판정 때 선언(《전력 도주》 달성값 +3): 쓸 수 있는 캐릭터를 GM이 고른다(시트 「자동」이면 처음부터 체크)
+  const dash = await escapeDeclarations(combat);
+  if (dash === null) return;
   const rows = [];
   const rolls = [];
   for (const c of combat.combatants) {
@@ -88,7 +128,7 @@ export async function rollEscape(combat) {
     if (p.conditions.some((x) => x.id === "bindLeg")) continue;
     const roll = await new Roll("2d6").evaluate();
     rolls.push(roll);
-    const r = evaluateCheck({ dice: roll.dice[0].results.map((x) => x.result), modifier: p.evasion });
+    const r = evaluateCheck({ dice: roll.dice[0].results.map((x) => x.result), modifier: p.evasion + (dash.get(c.id) ?? 0) });
     rows.push({ name: c.name, flee: p.side !== "enemy", total: r.total, dice: r.used });
   }
   const flee = rows.filter((r) => r.flee).map((r) => r.total);
