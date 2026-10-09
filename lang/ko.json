@@ -1714,7 +1714,8 @@
       "forceMove": "그대로 이동",
       "noScene": "(연결 안 함)",
       "mappingOk": "지도 작성 성공",
-      "mappingFailed": "지도 작성 실패: 1세그먼트가 더 지났다"
+      "mappingFailed": "지도 작성 실패: 1세그먼트가 더 지났다",
+      "mappingNoTarget": "지도 작성 판정에 목표값이 없어 성패를 알 수 없다. 실패면 [1세그먼트 경과]를 누른다(GM 판단)"
     },
     "Chargen": {
       "title": "캐릭터 작성: {name}",

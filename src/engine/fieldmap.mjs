@@ -108,6 +108,13 @@ export function stepFoes(map, state, segment, hour) {
         continue;
       }
     }
+    // 추적하다 루트를 벗어났으면 먼저 루트의 원래 칸으로 한 칸씩 돌아간다
+    const back = route.length ? route[(foeStep[f.id] ?? { i: 0 }).i] : null;
+    if (f.mode === "chase" && back && foePos[f.id] !== back) {
+      const next = chaseStep(map, state, foePos[f.id], back, 99);
+      if (next) { used[f.id] = passageBetween(map, foePos[f.id], next)?.id ?? null; foePos[f.id] = next; }
+      continue;
+    }
     if (f.mode === "stay" || route.length < 2) continue;
     const st = foeStep[f.id] ?? { i: 0, dir: 1 };
     let i = st.i;
@@ -197,6 +204,9 @@ export function advance(map, state, { to = null, segments = 1, hours = null } = 
   }
   const found = [];
   const trig = [];
+  // 「한 번만」 트리거는 이 진행 안에서도 한 번만(여러 세그먼트 캠프 등)
+  const pushed = new Set();
+  const push = (x) => { if (x.trigger.once && pushed.has(x.trigger.id)) return; pushed.add(x.trigger.id); trig.push(x); };
   const n = Math.max(1, segments);
   const perHour = hours ?? n;
   for (let k = 0; k < n; k++) {
@@ -207,13 +217,13 @@ export function advance(map, state, { to = null, segments = 1, hours = null } = 
     const party = moving ? { from, to, passage } : { from: s.current, to: s.current, passage: null };
     found.push(...encounters(map, s, party, foeMove));
     s = { ...s, segment, hour, foePos: foeMove.foePos, foeStep: foeMove.foeStep };
-    for (const t of triggersFor(map.triggers, "segment", { segment }, s.fired)) trig.push({ scope: "map", trigger: t });
+    for (const t of triggersFor(map.triggers, "segment", { segment }, s.fired)) push({ scope: "map", trigger: t });
     if (moving) {
-      for (const t of triggersFor(areaOf(map, from)?.triggers, "leave", {}, s.fired)) trig.push({ scope: "area", areaId: from, trigger: t });
+      for (const t of triggersFor(areaOf(map, from)?.triggers, "leave", {}, s.fired)) push({ scope: "area", areaId: from, trigger: t });
       s.current = to;
       s.visited = { ...s.visited, [to]: (s.visited?.[to] ?? 0) + 1 };
-      for (const t of triggersFor(map.triggers, "move", {}, s.fired)) trig.push({ scope: "map", trigger: t });
-      trig.push(...arrivalTriggers(map, s, to));
+      for (const t of triggersFor(map.triggers, "move", {}, s.fired)) push({ scope: "map", trigger: t });
+      arrivalTriggers(map, s, to).forEach(push);
     }
   }
   return { state: s, encounters: found, triggers: trig, passage };

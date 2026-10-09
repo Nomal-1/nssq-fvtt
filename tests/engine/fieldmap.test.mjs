@@ -165,3 +165,19 @@ describe("필드 지도: F.O.E. 추적", () => {
     expect(advance(m, s, {}).state.foePos.f).toBe("flower");
   });
 });
+
+describe("필드 지도: 리뷰 수정", () => {
+  it("여러 세그먼트 진행에서도 「한 번만」 트리거는 한 번", () => {
+    const m = { ...map(), triggers: [{ id: "o", on: "segment", n: 2, once: true }, { id: "e", on: "segment", n: 2 }] };
+    const r = advance(m, startState(m), { segments: 6 });
+    expect(r.triggers.filter((t) => t.trigger.id === "o").length).toBe(1);
+    expect(r.triggers.filter((t) => t.trigger.id === "e").length).toBe(3);
+  });
+  it("추적을 그만두면 루트로 한 칸씩 돌아간다", () => {
+    const m = { ...map(), foes: [{ id: "f", name: "F", mode: "chase", range: 1, every: 1, route: ["rock"] }] };
+    // 추적해서 늪까지 왔다가 파티가 멀어지면(입구) 바위로 돌아간다
+    let s = { ...startState(m), current: "gate", visited: { gate: 1 }, foePos: { f: "swamp" }, foeStep: { f: { i: 0, dir: 1 } } };
+    s = advance(m, s, {}).state;
+    expect(s.foePos.f).toBe("rock");
+  });
+});

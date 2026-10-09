@@ -197,6 +197,7 @@ class ShopApp extends Application {
         canRefine: (i.system.refinements ?? []).length < 2,
         materials: `${(tableOf(i)?.materials ?? []).join("/")} R${i.system.rank}+`
       }));
+    this.syncCreation();
     return {
       sellRows, refineRows,
       money: this.actor.system.money,
@@ -269,7 +270,15 @@ class ShopApp extends Application {
     });
   }
 
+  /** 작성이 잠기면(완료) 작성 모드를 끈다(GM 제외) */
+  syncCreation() {
+    if (game.user.isGM || !this.actor.system.creation?.locked) return;
+    this.forced = false;
+    this.creation = false;
+  }
+
   async buy(id) {
+    this.syncCreation();
     if (!shopOpen() && !game.user.isGM && !this.forced) return ui.notifications.warn(L("closed"));
     const doc = this.docs.find((d) => d.id === id);
     if (!doc || (!game.user.isGM && hiddenSet().has(doc.uuid))) return;

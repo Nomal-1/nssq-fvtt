@@ -579,6 +579,9 @@ async function skillsOfClass(cls) {
 /** 선행조건 편집용: all → 그룹(대안 배열) / 되돌리기 */
 const toGroups = (prereqs) => (prereqs?.all ?? []).map((g) => (g.any ? g.any.map((q) => ({ ...q })) : [{ skill: g.skill, sl: g.sl }]));
 const fromGroups = (groups) => ({ all: groups.filter((g) => g.length).map((g) => (g.length === 1 ? { skill: g[0].skill, sl: Number(g[0].sl) || 1 } : { any: g.map((q) => ({ skill: q.skill, sl: Number(q.sl) || 1 })) })) });
+/** 직업 제작기의 스킬(아이템 데이터 모양: system.prereqs)에서 선행조건 이름 바꾸기 */
+const renameInSkills = (skills, from, to) => skills.map((s) => (s.system?.prereqs?.all?.length
+  ? { ...s, system: { ...s.system, prereqs: renamePrereqs([{ prereqs: s.system.prereqs }], from, to)[0].prereqs } } : s));
 const prereqText = (prereqs) => (prereqs?.all ?? []).map((g) => (g.any ? g.any.map((q) => `${q.skill} ${q.sl}`).join(` ${L("or")} `) : `${g.skill} ${g.sl}`)).join(" + ");
 
 export class ClassMaker extends Application {
@@ -719,7 +722,7 @@ export class ClassMaker extends Application {
       if (!s) return;
       if (field === "name") {
         const to = x.value.trim();
-        if (to && to !== s.name) { const from = s.name; this.skills = renamePrereqs(this.skills, from, to); this.skills[Number(i)].name = to; }
+        if (to && to !== s.name) { const from = s.name; this.skills = renameInSkills(this.skills, from, to); this.skills[Number(i)].name = to; }
       } else if (field === "maxMain") s.system.maxSL = { ...s.system.maxSL, main: x.value === "" ? null : Number(x.value) };
       else if (field === "maxSub") s.system.maxSL = { ...s.system.maxSL, sub: x.value === "" ? null : Number(x.value) };
       else if (field === "unique") s.system.unique = x.checked;
@@ -760,6 +763,8 @@ export class ClassMaker extends Application {
           delete o._id;
           o.name = L("copyName", { name: o.name });
           o.system.unique = false;
+          o.system.key = `custom.${foundry.utils.randomID(8)}`;
+          o.system.skillKey = "";
           this.skills.splice(i + 1, 0, o);
           this.openRows.clear();
           return this.render();
@@ -774,6 +779,8 @@ export class ClassMaker extends Application {
           o.system.prereqs = { all: [] };
           o.system.maxSL = { main: o.system.maxSL?.main ?? 1, sub: o.system.maxSL?.sub ?? null };
           o.system.unique = false;
+          o.system.key = `custom.${foundry.utils.randomID(8)}`;
+          o.system.skillKey = "";
           if (this.skills.some((s) => s.name === o.name)) o.name = L("copyName", { name: o.name });
           this.skills.push(o);
           ui.notifications.info(L("importedNoPrereq", { name: o.name }));
@@ -803,7 +810,7 @@ export class ClassMaker extends Application {
       const dd = m.draft;
       const sys = m.systemData(list);
       const o = { ...(data ?? {}), name: dd.name, img: dd.img, type: "skill", system: { ...sys, prereqs: data?.system?.prereqs ?? { all: [] }, unique: !!data?.system?.unique } };
-      if (data && dd.name !== data.name) this.skills = renamePrereqs(this.skills, data.name, dd.name);
+      if (data && dd.name !== data.name) this.skills = renameInSkills(this.skills, data.name, dd.name);
       if (i === null) this.skills.push(o); else this.skills[i] = o;
       m.close();
       this.render();
@@ -829,9 +836,13 @@ export class ClassMaker extends Application {
     let sub = game.folders.find((f) => f.type === "Item" && f.getFlag("nssq", "classSkills") === key);
     if (!sub) sub = await Folder.create({ name: c.name, type: "Item", folder: top.id, flags: { nssq: { classSkills: key } } });
     else if (sub.name !== c.name) await sub.update({ name: c.name });
+    // system.key는 스킬마다 달라야 한다(대기 상태·자동 사용 등이 key로 구분). 컴펜디움에서 불러온 key도 새로
+    const seen = new Set();
+    const uniqueKey = (k) => { const ok = k && String(k).startsWith("custom.") && !seen.has(k); const out = ok ? k : `custom.${foundry.utils.randomID(8)}`; seen.add(out); return out; };
     const data = this.skills.map((s, i) => ({
       ...s, type: "skill", sort: (i + 1) * 1000, folder: sub.id,
-      system: { ...s.system, classKey: key, skillKey: s.name, key: s.system.key || `custom.${foundry.utils.randomID(8)}`, review: s.system.review === "partial" ? "partial" : "manual" }
+      // skillKey는 한 번 정하면 바꾸지 않는다(캐릭터가 배운 스킬은 classKey+skillKey로 찾으므로 이름을 바꿔도 이어지게)
+      system: { ...s.system, classKey: key, skillKey: s.system.classKey === key && s.system.skillKey ? s.system.skillKey : `sk.${foundry.utils.randomID(8)}`, key: uniqueKey(s.system.key), review: s.system.review === "partial" ? "partial" : "manual" }
     }));
     const existing = game.items.filter((i) => i.type === "skill" && i.system.classKey === key);
     const keep = new Set(data.map((d) => d._id).filter(Boolean));

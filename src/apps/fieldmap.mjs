@@ -105,7 +105,8 @@ function trackMapping(message) {
   const st = message.getFlag("nssq", "check");
   if (req?.tag !== "fieldMapping" || !st || !isActiveGM() || message.getFlag("nssq", "mappingDone")) return;
   const r = evaluateCheck({ ...st, modifier: st.bonus + st.modifier });
-  const g = mapping.get(req.group) ?? { size: req.groupSize ?? 1, results: new Map() };
+  const g = mapping.get(req.group) ?? { size: req.groupSize ?? 1, results: new Map(), noTarget: false };
+  if (st.target === null || st.target === undefined) g.noTarget = true;
   g.results.set(message.id, { success: r.success === true, final: !!(st.closed || st.rerolled || r.success === true) });
   mapping.set(req.group, g);
   if (g.results.size >= g.size && [...g.results.values()].every((x) => x.final)) settleGroup(req.group);
@@ -117,12 +118,17 @@ async function settleGroup(group) {
   mapping.delete(group);
   for (const id of g.results.keys()) await game.messages.get(id)?.setFlag("nssq", "mappingDone", true);
   if ([...g.results.values()].some((x) => x.success)) return post(`<p><i class="fas fa-map-marked-alt"></i> ${esc(L("mappingOk"))}</p>`);
+  // 목표값 없이 굴린 판정은 성패를 알 수 없으니 GM에게 맡긴다
+  if (g.noTarget) return post(`<p><i class="fas fa-map-marked-alt"></i> ${esc(L("mappingNoTarget"))}</p>`, { gm: true });
   if (activeMap()) await wait(1, L("mappingFailed"));
 }
 
-/** 다음 세그먼트 행동 전에: 결과가 다 모인 묶음은 확정하지 않았어도 그 결과로 처리한다 */
+/** 다음 세그먼트 행동 전에: 나온 결과로 처리한다(확정하지 않았거나, 요청을 거절해 결과가 모자라도) */
 async function settleMappingBeforeStep() {
-  for (const [group, g] of [...mapping]) if (g.results.size >= g.size) await settleGroup(group);
+  for (const [group, g] of [...mapping]) {
+    if (g.results.size) await settleGroup(group);
+    else mapping.delete(group);
+  }
 }
 
 /** 세그먼트 진행 공통. opts: { to } 이동 / { segments } 그 자리 */
@@ -293,6 +299,7 @@ async function processTriggers(map, list, depth = 0) {
 }
 
 async function runTrigger(map, t, areaId, depth = 0) {
+  if (t.once && (cur().fired?.[t.id] ?? 0) > 0) return;
   await setMapState(FM.markFired(cur(), t.id), { undo: false });
   if (t.playerText) await post(`<p>${esc(t.playerText).replace(/\n/g, "<br>")}</p>`);
   for (const a of t.actions ?? []) await runAction(map, a, { areaId, depth });
@@ -392,7 +399,8 @@ export function requestMove(to) {
   const map = activeMap();
   if (!map) return;
   if (mapState().proposal) return ui.notifications.warn(L("proposalPending"));
-  emit("fieldPropose", { to, by: game.user.id }, { local: isActiveGM() });
+  if (isActiveGM()) serial(() => onPropose({ to, by: game.user.id }));
+  else emit("fieldPropose", { to, by: game.user.id });
   ui.notifications.info(L("proposed", { name: (mapState().visited?.[to] ?? 0) > 0 ? areaName(map, to) : L("unknownArea") }));
 }
 
@@ -416,12 +424,16 @@ async function onPropose({ to, by }) {
   await setMapState({ ...st, proposal }, { undo: false });
 }
 
+/** 활성 GM: 제안·응답·투표를 하나씩 차례로(동시에 오면 앞의 쓰기가 끝난 상태를 읽도록) */
+let queue = Promise.resolve();
+const serial = (fn) => (queue = queue.then(fn).catch((err) => console.error(err)));
+
 /** 승낙·거절·취소(제안한 사람) */
 export function answerProposal(accept, { cancel = false } = {}) {
   const p = mapState().proposal;
   if (!p) return;
   const payload = { id: p.id, user: game.user.id, gm: game.user.isGM, accept, cancel };
-  return isActiveGM() ? onAnswer(payload) : emit("fieldAnswer", payload);
+  return isActiveGM() ? serial(() => onAnswer(payload)) : emit("fieldAnswer", payload);
 }
 
 async function onAnswer({ id, user, gm, accept, cancel }) {
@@ -493,7 +505,7 @@ async function onCard(message, action, el) {
   if (action === "open") return FieldMapApp.open();
   if (action === "vote") {
     const i = Number(el.dataset.i);
-    return isActiveGM() ? vote(message, i, game.user.id) : emit("fieldVote", { messageId: message.id, i, userId: game.user.id });
+    return isActiveGM() ? serial(() => vote(message, i, game.user.id)) : emit("fieldVote", { messageId: message.id, i, userId: game.user.id });
   }
   if (!game.user.isGM) return;
   if (action === "pick") return pick(message, Number(el.dataset.i));
@@ -1206,9 +1218,9 @@ export function registerFieldMap() {
   });
   Hooks.on("createChatMessage", (m) => trackMapping(m));
   Hooks.on("updateChatMessage", (m) => trackMapping(m));
-  onSocket("fieldPropose", onPropose);
-  onSocket("fieldAnswer", onAnswer);
-  onSocket("fieldVote", async ({ messageId, i, userId }) => { if (isActiveGM()) { const m = game.messages.get(messageId); if (m) await vote(m, i, userId); } });
+  onSocket("fieldPropose", (p) => serial(() => onPropose(p)));
+  onSocket("fieldAnswer", (p) => serial(() => onAnswer(p)));
+  onSocket("fieldVote", ({ messageId, i, userId }) => serial(async () => { if (isActiveGM()) { const m = game.messages.get(messageId); if (m) await vote(m, i, userId); } }));
   Hooks.on("renderChatMessage", (message, html) => {
     const root = html[0];
     if (!root.querySelector(".nssq-fieldmap-card")) return;
@@ -1223,7 +1235,7 @@ export function registerFieldMap() {
   // F.O.E. 전투에서 이기면 지도에서 지울지 묻는다
   Hooks.on("nssqBattleEnded", async ({ result, preset }) => {
     const foeId = preset?.getFlag("nssq", "fieldFoe");
-    if (!foeId || result !== "victory" || !isActiveGM()) return;
+    if (!foeId || result !== "victory" || !game.user.isGM) return;
     const foe = activeMap()?.foes.find((f) => f.id === foeId);
     if (foe && (await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("foeDefeatedAsk", { name: foe.name }))}</p>`, rejectClose: false }))) await removeFoe(foeId);
   });
