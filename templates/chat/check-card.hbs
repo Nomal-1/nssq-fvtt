@@ -31,6 +31,7 @@
     {{#if fpPending}}<span class="fp-gain pending">{{localize "NSSQ.FP"}} +{{fpPending}} <span class="fp-pending">({{localize "NSSQ.Check.fpOnConfirm"}})</span></span>{{/if}}
     {{#if added}}<span>{{localize "NSSQ.Check.addedNote"}} +{{added}}</span>{{/if}}
     {{#if rerolled}}<span>{{localize "NSSQ.Check.rerolledNote"}}</span>{{/if}}
+    {{#each notes as |n|}}<span class="check-mod-note">{{n}}</span>{{/each}}
   </div>
 
   <div class="check-buttons">
@@ -38,6 +39,8 @@
       {{#if fpPending}}<button type="button" data-nssq-action="confirm" data-owner-only title="{{localize 'NSSQ.Check.confirmHint'}}">{{localize "NSSQ.Check.confirm"}}</button>{{/if}}
       <button type="button" data-nssq-action="reroll" data-owner-only title="{{localize 'NSSQ.Check.rerollHint'}}">{{localize "NSSQ.Check.reroll"}}</button>
     {{/if}}
+    {{#if trick}}<button type="button" data-nssq-action="trick" data-owner-only>《{{trick}}》</button>{{/if}}
+    {{#if fortune}}<button type="button" data-nssq-action="fortune" data-owner-only>《{{fortune}}》</button>{{/if}}
     {{#unless contest}}<button type="button" data-nssq-action="contest">{{localize "NSSQ.Check.contest"}}</button>{{/unless}}
   </div>
 </div>

@@ -29,9 +29,12 @@
    "variants": [],
    "sl": 1,
    "description": "<p>일반 행위 판정 후 성패를 본 뒤 주사위 눈을 뒤집을 수 있다(1↔6, 2↔5, 3↔4). 판정 주사위 2개 모두에 동시 적용.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "일반 행위 판정의 성패를 본 뒤 두 주사위 눈을 뒤집는다(1↔6 등): 판정 카드에서 처리"
+   "effects": [
+    {
+     "type": "checkFlip"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "파이리츠"
@@ -1099,9 +1102,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>【FP】로 일반 행위 판정을 다시 굴릴 때 달성값 +1.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "FP로 일반 행위 판정을 다시 굴릴 때 달성값 +1: 판정 카드에서 처리"
+   "effects": [
+    {
+     "type": "rerollBonus",
+     "value": 1
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "파이리츠"

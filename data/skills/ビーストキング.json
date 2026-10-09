@@ -1358,9 +1358,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>F.O.E.로부터 도망치기·숨기 등의 판정 +2.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "F.O.E.로부터 도망치기·숨기 판정 +2: 판정 때 보정(단계 9)"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "checks.foeEvade",
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "비스트 킹"

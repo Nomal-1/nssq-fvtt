@@ -16,7 +16,7 @@ import { activationRoll } from "./usage.mjs";
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies", "multiUse", "redirectAlly", "anytime", "dualWield", "dualSkill", "wideEvade", "guardLateAttack", "timePenalty", "dropAdjust", "dropDoubleUp", "dropExtra", "gatherAdjust", "gatherDoubleUp", "gatherDoubleExtra", "gatherExtra", "preemptBlock", "escapeDungeon"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies", "multiUse", "redirectAlly", "anytime", "dualWield", "dualSkill", "wideEvade", "guardLateAttack", "timePenalty", "dropAdjust", "dropDoubleUp", "dropExtra", "gatherAdjust", "gatherDoubleUp", "gatherDoubleExtra", "gatherExtra", "preemptBlock", "escapeDungeon", "checkBonus", "checkAssist", "checkFlip", "checkExtraDie", "rerollBonus"];
 
 /** 대상 프로필에서 그 강화의 몫을 뺀 사본. list: "defenseUp"(수치 강화) / "resistUp:pierce"(그 속성 내성 +1) */
 function ignoreBuffs(t, list) {

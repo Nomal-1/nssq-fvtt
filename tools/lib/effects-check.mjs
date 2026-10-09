@@ -37,6 +37,11 @@ export const TYPES = {
   gatherExtra: { count: true, choices: true },
   preemptBlock: {},
   escapeDungeon: {},
+  checkBonus: { kinds: true, value: true, ability: false },
+  checkAssist: { value: true },
+  checkFlip: {},
+  checkExtraDie: {},
+  rerollBonus: { value: true },
   forceRow: { row: false, check: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },
@@ -81,7 +86,7 @@ export const TYPES = {
   aura: { path: true, value: true, scope: false },
   provoke: { count: false, to: false }
 };
-const COMMON = ["type", "when", "chance", "label", "variant", "toSelf", "whenNote"];
+const COMMON = ["type", "when", "chance", "label", "variant", "toSelf", "whenNote", "always"];
 
 /** modifier path: derive가 읽는 키 */
 export const MOD_PATHS = new Set([

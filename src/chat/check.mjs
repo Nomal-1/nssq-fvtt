@@ -4,6 +4,7 @@
  */
 import { ABILITIES } from "../engine/derive.mjs";
 import { REROLL_COST, canReroll, confirmCheck, contestWinner, evaluateCheck, rerollFPDelta, settleOnRoll } from "../engine/check.mjs";
+import { applyCheckMods, checkModsHtml, pay, postSkill, readCheckMods } from "./check-mods.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/check-card.hbs";
 
@@ -44,6 +45,7 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
       <div class="form-group"><label>${game.i18n.format("NSSQ.Check.addDiceLabel", { fp })}</label>
         <input type="number" name="addDice" value="0" min="0" max="${fp}"/></div>
       <p class="notes">${game.i18n.localize("NSSQ.Check.addDiceHint")}</p>
+      ${checkModsHtml(actor)}
     </form>`;
   return Dialog.prompt({
     title: `${actor.name} — ${game.i18n.localize(contestOf ? "NSSQ.Check.contestTitle" : "NSSQ.Check.title")}`,
@@ -57,7 +59,8 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
         ability: f.ability.value || null,
         modifier: Number(f.modifier.value) || 0,
         target,
-        addDice: Math.clamp(Number(f.addDice.value) || 0, 0, fp)
+        addDice: Math.clamp(Number(f.addDice.value) || 0, 0, fp),
+        checkMods: readCheckMods(f)
       };
     }
   });
@@ -68,7 +71,11 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
  * @param {Actor} actor
  * @param {object} o { ability, modifier, target, addDice, contestOf }
  */
-export async function rollCheck(actor, { ability = null, modifier = 0, target = null, addDice = 0, contestOf = null, rollMode = null, request = null } = {}) {
+export async function rollCheck(actor, { ability = null, modifier = 0, target = null, addDice = 0, contestOf = null, rollMode = null, request = null, checkMods = null } = {}) {
+  // 판정 종류별 보정·선언·도움(9-E): 코스트를 내고 보정·능력치 대체
+  const cm = checkMods ? await applyCheckMods(actor, checkMods) : null;
+  if (cm?.ability) ability = cm.ability;
+  modifier += cm?.modifier ?? 0;
   const bonus = ability ? actor.system.bonus?.[ability] ?? 0 : 0;
   const added = Math.max(0, addDice);
   // 새 판정을 굴리면 이 캐릭터의 확정하지 않은 이전 판정은 확정한다
@@ -76,7 +83,7 @@ export async function rollCheck(actor, { ability = null, modifier = 0, target = 
   const { roll, dice } = await rollD6(2 + added);
   const state = {
     actorUuid: actor.uuid, ability, bonus, modifier, target,
-    dice, selected: null, added, rerolled: false, fpGained: 0, fpPending: 0, closed: false,
+    dice, selected: null, added, rerolled: false, fpGained: 0, fpPending: 0, closed: false, notes: cm?.notes ?? [],
     request: request ? { note: request.note ?? "" } : null
   };
   const result = evaluateCheck({ ...state, modifier: bonus + modifier });
@@ -130,7 +137,11 @@ async function renderCard(state, { contest = false } = {}) {
     fpPending: state.fpPending,
     added: state.added,
     rerolled: state.rerolled,
-    open: !state.closed && !state.rerolled
+    open: !state.closed && !state.rerolled,
+    notes: state.notes ?? [],
+    // 판정 뒤 조작(성패를 본 뒤, 각 1번): 《트릭스터》 눈 뒤집기·《호운의 가호》 1D6 추가
+    trick: !state.tricked && postSkill(fromUuidSync(state.actorUuid), "checkFlip")?.name,
+    fortune: !state.fortune && postSkill(fromUuidSync(state.actorUuid), "checkExtraDie")?.name
   };
   return renderTemplate(TEMPLATE, data);
 }
@@ -169,7 +180,37 @@ async function onReroll(message) {
   state.fpPending = 0; // 다시 굴리기 전의 1은 【FP】를 주지 않는다
   state.selected = null;
   state.selected = evaluateCheck({ ...state, modifier: state.bonus + state.modifier }).selected;
+  // 《행운의 여신》: FP로 다시 굴리면 달성값 +n
+  const luck = postSkill(actor, "rerollBonus");
+  if (luck) {
+    const v = Number(luck.system.effects.find((e) => e?.type === "rerollBonus").value) || 1;
+    state.modifier += v;
+    state.notes = [...(state.notes ?? []), `《${luck.name}》 +${v}`];
+  }
   await changeFP(actor, rerollFPDelta());
+  await updateCard(message, state);
+}
+
+/** 《트릭스터》: 쓴 두 주사위 눈을 뒤집는다(1↔6, 2↔5, 3↔4) / 《호운의 가호》: 1D6을 더 굴려 더한다. 코스트는 스킬대로 */
+async function onPost(message, type) {
+  const state = foundry.utils.deepClone(stateOf(message));
+  const actor = await actorOf(state);
+  const sk = postSkill(actor, type);
+  if (!sk || (type === "checkFlip" ? state.tricked : state.fortune)) return;
+  const cost = sk.system.cost ?? {};
+  if ((cost.fp ?? 0) > (actor.system.fp?.value ?? 0) || (cost.tp ?? 0) > (actor.system.tp?.value ?? 0)) return ui.notifications.warn(game.i18n.localize("NSSQ.Check.noCost"));
+  await pay(actor, cost);
+  if (type === "checkFlip") {
+    state.dice = state.dice.map((v, i) => (state.selected.includes(i) ? 7 - v : v));
+    state.tricked = true;
+    state.notes = [...(state.notes ?? []), game.i18n.format("NSSQ.Check.flipped", { name: sk.name })];
+  } else {
+    const { roll, dice } = await rollD6(1);
+    await show3d(roll);
+    state.fortune = dice[0];
+    state.modifier += dice[0];
+    state.notes = [...(state.notes ?? []), game.i18n.format("NSSQ.Check.extraDie", { name: sk.name, n: dice[0] })];
+  }
   await updateCard(message, state);
 }
 
@@ -295,6 +336,8 @@ export function registerCheckHooks() {
         else if (action === "confirm") onConfirm(message);
         else if (action === "select" && canEdit) onSelect(message, Number(b.dataset.index));
         else if (action === "contest") onContest(message);
+        else if (action === "trick" && canEdit) onPost(message, "checkFlip");
+        else if (action === "fortune" && canEdit) onPost(message, "checkExtraDie");
       });
     });
   });

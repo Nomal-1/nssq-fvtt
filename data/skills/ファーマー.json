@@ -594,9 +594,15 @@
    "variants": [],
    "sl": 1,
    "description": "<p>아이템 소지 상한 +10.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "아이템 소지 상한 +10(타이밍 특수): GM이 시트 소지 수를 보정"
+   "effects": [
+    {
+     "type": "modifier",
+     "path": "carry",
+     "value": 10,
+     "always": true
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "농부"

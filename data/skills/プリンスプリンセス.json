@@ -1000,9 +1000,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 이외의 사람이 전투 이외의 일반 행위 판정을 할 때 사용한다. 대상의 달성값에 +1을 더한다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "다른 사람의 전투 밖 일반 행위 판정에 +1: 판정 때 보정으로"
+   "effects": [
+    {
+     "type": "checkAssist",
+     "value": 1
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "프린스/프린세스"
@@ -1038,9 +1042,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>교섭이나 첫인상에 관계된 판정에 +2를 얻는다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "교섭·첫인상 판정 +2: 판정 때 보정으로(타이밍 특수)"
+   "effects": [
+    {
+     "type": "checkBonus",
+     "kinds": [
+      "negotiation"
+     ],
+     "value": 2
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "프린스/프린세스"

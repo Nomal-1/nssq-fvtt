@@ -34,6 +34,7 @@ import { registerHud } from "./combat/hud.mjs";
 import { registerSpecial } from "./combat/special.mjs";
 import { registerLoot } from "./apps/loot.mjs";
 import { registerExplore } from "./apps/explore.mjs";
+import { registerCheckMods } from "./chat/check-mods.mjs";
 import { registerDungeon } from "./apps/dungeon.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
 import { createPreset, openEndDialog, openStartDialog, registerBattle } from "./apps/battle.mjs";
@@ -100,6 +101,7 @@ Hooks.once("init", () => {
   registerSpecial();
   registerLoot();
   registerExplore();
+  registerCheckMods();
   registerDungeon();
   registerEnemyLibrary();
   // 매크로·모듈용 API

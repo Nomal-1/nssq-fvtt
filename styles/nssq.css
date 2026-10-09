@@ -936,3 +936,6 @@
 .nssq-loot button { width: auto; line-height: 1.4; padding: 0 6px; margin: 0 2px; font-size: 0.9em; }
 .nssq-loot select { width: auto; font-size: 0.9em; }
 .nssq-loot .loot-log { font-size: 0.85em; opacity: 0.8; }
+.nssq-check-mods .kinds { display: flex; flex-wrap: wrap; gap: 2px 10px; }
+.nssq-check-mods label.choice { white-space: nowrap; }
+.nssq-check .check-mod-note { display: inline-block; margin-right: 6px; font-size: 0.9em; }

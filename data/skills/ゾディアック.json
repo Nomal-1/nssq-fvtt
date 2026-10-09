@@ -837,9 +837,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>시력을 쓰는 판정을 【TEC】로 할 수 있고, 달성값 +3.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "시력 판정을 【TEC】로, 달성값 +3: 판정 때 보정(타이밍 특수)"
+   "effects": [
+    {
+     "type": "checkBonus",
+     "kinds": [
+      "sight"
+     ],
+     "value": 3,
+     "ability": "tec"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -875,9 +883,17 @@
    "variants": [],
    "sl": 1,
    "description": "<p>다가오는 위험을 알아채는 판정을 【TEC】로 할 수 있고, 달성값 +3.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "위험 감지 판정을 【TEC】로, 달성값 +3: 판정 때 보정(타이밍 특수)"
+   "effects": [
+    {
+     "type": "checkBonus",
+     "kinds": [
+      "danger"
+     ],
+     "value": 3,
+     "ability": "tec"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"
@@ -913,9 +929,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>자신 이외의 인물이 전투 외 일반 행위 판정을 할 때 사용. 그 달성값 +1.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "다른 사람의 전투 밖 일반 행위 판정에 +1: 판정 때 보정"
+   "effects": [
+    {
+     "type": "checkAssist",
+     "value": 1
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"

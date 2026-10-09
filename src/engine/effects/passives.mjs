@@ -19,8 +19,9 @@ export function collectPassives(skills, ctx = {}) {
   // 스킬을 쓸 때 붙는 보정(useBonus): 강화 지속 턴 + 등. when은 사용 시점(분류 등)
   const useBonuses = [];
   for (const s of skills ?? []) {
-    if (s.timing !== "상시" || !(s.sl > 0)) continue;
-    for (const e of s.effects ?? []) {
+    if (!(s.sl > 0)) continue;
+    // 상시가 아닌 스킬도 always: true인 효과는 늘 적용(농부 《큰 바구니》 「소지 상한 +10」, 타이밍 특수)
+    for (const e of (s.effects ?? []).filter((x) => s.timing === "상시" || x?.always)) {
       if (e.type === "attackBonus") {
         const v = (x) => evaluate(x ?? 0, { SL: s.sl, self: ctx.self });
         attackBonuses.push({ name: s.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod), critDice: v(e.critDice), critUp: !!e.critUp, resistLow: !!e.resistLow });

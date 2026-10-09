@@ -29,9 +29,12 @@
    "variants": [],
    "sl": 1,
    "description": "<p>일반 행위 판정을 했을 때, 성패를 확인한 뒤에 1D6을 추가로 더 굴릴 수 있다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "일반 행위 판정의 성패를 본 뒤 1D6을 더 굴려 더한다: 판정 카드에서 GM·플레이어가 처리"
+   "effects": [
+    {
+     "type": "checkExtraDie"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "레인저"

@@ -1277,9 +1277,16 @@
    "variants": [],
    "sl": 1,
    "description": "<p>로프나 사슬을 사용한 판정 전반에 +3을 얻는다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "로프·사슬을 쓰는 판정 +3: 판정 때 보정으로(타이밍 특수)"
+   "effects": [
+    {
+     "type": "checkBonus",
+     "kinds": [
+      "rope"
+     ],
+     "value": 3
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "다크 헌터"
