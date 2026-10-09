@@ -66,7 +66,7 @@ function skillGroups(actor, items, filter = "all") {
     unique: !!s.system.unique, skillKey: s.system.skillKey, usage: skillUsage(s.system),
     // 자동화할 수 없어 GM 개입이 반드시 필요한 스킬(review "gm")
     gm: s.system.review === "gm", gmNote: s.system.effectsNote ?? "",
-    optional: hasOptional(s.system.effects), autoKey: autoKey(s.system.key), auto: !!auto[autoKey(s.system.key)],
+    optional: hasOptional(s.system.effects) || s.system.timing === "수동", autoKey: autoKey(s.system.key), auto: !!auto[autoKey(s.system.key)],
     prereq: (s.system.prereqs?.all ?? []).map((p) => (p.any ? p.any.map((q) => `${q.skill} ${q.sl}`).join(" / ") : `${p.skill} ${p.sl}`)).join(" + ")
   });
   const groups = [];

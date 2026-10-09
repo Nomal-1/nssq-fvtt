@@ -3,6 +3,7 @@
  * - 카드를 만들 때 대상이 쓸 수 있는 수동 스킬이 있으면 reaction: { state: "pending", options } 를 붙인다(명중한 대상만)
  * - 그 캐릭터 소유자·GM에게 [수동: 《패링》]·[반응 안 함] 버튼. 공격 롤 1회에 1번(01 §3.5)
  * - 능동 회피(대항 판정, 07 #51)·《완전 방어》(대미지 0·추가 효과 무효). 결과는 활성 GM이 카드에 반영
+ * - 판단할 사람에게 팝업(대상 소유 플레이어, 접속 중인 플레이어가 없으면 활성 GM). 시트 「자동」을 켠 수동 스킬은 팝업 없이 바로
  * - 자동 적용 「즉시」라도 반응을 기다리는 대상이 있으면 적용을 미룬다(반응하거나 [반응 안 함]·[적용]으로 진행)
  */
 import { activeEvade, reactionEffect } from "../engine/effects/reaction.mjs";
@@ -11,6 +12,7 @@ import { BUFFS, canonicalBuff } from "../engine/buffs.mjs";
 import { autoApplyMode, isActiveGM } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 import { emit, onSocket } from "../socket.mjs";
+import { autoKey } from "../engine/triggers.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Reaction.${k}`, d) : game.i18n.localize(`NSSQ.Reaction.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -208,6 +210,14 @@ function wideFailed(t, result) {
   return true;
 }
 
+/** 《와이드 패링》 보유자가 팝업에서 넘김: 그 보유자의 선택지만 빼고, 남은 것이 없으면 반응 안 함 */
+function passAlly(t, result) {
+  if (!result.passAlly) return false;
+  const rest = (t.reaction.options ?? []).filter((o) => o.holder !== result.passAlly);
+  t.reaction = rest.length ? { ...t.reaction, options: rest } : { ...t.reaction, state: "declined" };
+  return true;
+}
+
 async function updateReaction({ message, messageId, type, index, result }) {
   const { renderAttackCard } = await import("./attack.mjs");
   const { renderSkillCard, applySkillCard } = await import("./skill-use.mjs");
@@ -217,7 +227,7 @@ async function updateReaction({ message, messageId, type, index, result }) {
     const t = targets[index];
     if (t?.reaction?.state !== "pending") return;
     if (result.declined) t.reaction.state = "declined";
-    else if (wideFailed(t, result)) { /* 대상 자신의 능동 회피를 기다린다 */ }
+    else if (passAlly(t, result) || wideFailed(t, result)) { /* 대상 자신의 능동 회피를 기다린다 */ }
     else {
       t.reaction = { ...t.reaction, state: "used", text: result.text };
       if (result.evaded || result.nullify) Object.assign(t, { hit: false, finalDamage: 0, rawDamage: 0 });
@@ -243,7 +253,7 @@ async function updateReaction({ message, messageId, type, index, result }) {
     x.buffs = (x.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]?.kind !== "debuff");
   };
   if (result.declined) e.reaction.state = "declined";
-  else if (wideFailed(e, result)) { /* 대상 자신의 능동 회피를 기다린다 */ }
+  else if (passAlly(e, result) || wideFailed(e, result)) { /* 대상 자신의 능동 회피를 기다린다 */ }
   else {
     e.reaction = { ...e.reaction, state: "used", text: result.text };
     if (result.nullify) {
@@ -283,8 +293,106 @@ async function updateReaction({ message, messageId, type, index, result }) {
   if (list.length === card.group.count && !groupPendingReaction(card)) await applySkillCard(lastMsg.id);
 }
 
+/* ---------------- 팝업 ---------------- */
+
+/** 이 캐릭터의 반응을 정할 사용자: 접속 중인 소유 플레이어(그 캐릭터가 배정된 사람 먼저), 없으면 활성 GM */
+function responderFor(uuid) {
+  const actor = uuid ? fromUuidSync(uuid) : null;
+  if (!actor) return null;
+  const players = game.users.filter((u) => u.active && !u.isGM && actor.testUserPermission(u, "OWNER"));
+  return players.find((u) => u.character?.uuid === actor.uuid) ?? players[0] ?? game.users.activeGM ?? null;
+}
+
+const popups = new Map(); // key → 열린 Dialog
+const seen = new Set(); // 한 번 띄운(또는 자동으로 쓴) key: 닫아도 다시 띄우지 않는다(카드 버튼은 남음)
+let popupQueue = Promise.resolve();
+
+/** 이 카드에서 이 클라이언트가 판단할 반응: [{ key, index, actorUuid, options, holder }] */
+function myPending(message) {
+  const atk = message.getFlag("nssq", "attack");
+  const sk = message.getFlag("nssq", "skillCard");
+  const list = atk ? atk.targets : sk?.entries;
+  if (!list || (atk ? list.some((t) => t.applied) : sk.applied)) return [];
+  const out = [];
+  list.forEach((t, index) => {
+    const r = t?.reaction;
+    if (r?.state !== "pending") return;
+    const uuid = atk ? t.actorUuid : t.uuid;
+    if (fromUuidSync(uuid)?.type === "enemy") return;
+    const ally = r.options.filter((o) => o.holder);
+    // 《와이드 패링》이 먼저: 보유자마다 그 보유자에게
+    const groups = ally.length ? [...new Set(ally.map((o) => o.holder))].map((h) => ({ holder: h, options: ally.filter((o) => o.holder === h), who: h }))
+      : [{ holder: null, options: r.options, who: uuid }];
+    for (const g of groups) {
+      if (responderFor(g.who)?.id !== game.user.id) continue;
+      out.push({ key: `${message.id}:${index}:${g.options.map((o) => o.id).join(",")}`, index, actorUuid: uuid, options: g.options, holder: g.holder, target: t });
+    }
+  });
+  return out;
+}
+
+/** 선택지의 스킬 아이템(코스트 표시·「자동」 확인) */
+function optionItem(p, o) {
+  const m = String(o.id).match(/^ally:(.+):([^:]+)$/);
+  const actor = fromUuidSync(m ? m[1] : p.actorUuid);
+  return actor?.items.get(m ? m[2] : o.id) ?? null;
+}
+
+function scanPopups(message) {
+  const type = message.getFlag("nssq", "attack") ? "attack" : message.getFlag("nssq", "skillCard") ? "skill" : null;
+  if (!type) return;
+  const mine = myPending(message);
+  const keys = new Set(mine.map((p) => p.key));
+  // 이미 정해진(다른 곳에서 고른) 반응의 팝업은 닫는다
+  for (const [k, d] of popups) if (k.startsWith(`${message.id}:`) && !keys.has(k)) { popups.delete(k); d?.close(); }
+  for (const p of mine) {
+    if (seen.has(p.key)) continue;
+    seen.add(p.key);
+    // 「자동」을 켠 수동 스킬은 팝업 없이 바로
+    const auto = p.options.find((o) => {
+      const it = optionItem(p, o);
+      return it && !!it.actor?.getFlag("nssq", "autoTrigger")?.[autoKey(it.system.key)];
+    });
+    if (auto) { useReaction(message, type, p.index, auto.id); continue; }
+    // 하나씩 차례로
+    popupQueue = popupQueue.then(() => showPopup(message.id, type, p)).catch((e) => console.error(e));
+  }
+}
+
+function showPopup(messageId, type, p) {
+  const message = game.messages.get(messageId);
+  if (!message || !myPending(message).some((x) => x.key === p.key)) return null;
+  const card = type === "attack" ? message.getFlag("nssq", "attack") : message.getFlag("nssq", "skillCard");
+  const t = p.target;
+  const hit = type === "attack" ? { total: t.hitTotal, absSuccess: t.absSuccess } : (t.hits ?? []).find((h) => h.hit) ?? {};
+  const by = type === "attack" ? (fromUuidSync(card.attackerUuid)?.name ?? "") : card.userName;
+  const what = type === "attack" ? card.label : card.name;
+  const holder = p.holder ? fromUuidSync(p.holder) : null;
+  const content = `<p>${esc(L("popupHead", { by, what, name: t.name }))}</p><p><b>${esc(L("popupHit", { total: hit.total ?? "?" }))}</b>${hit.absSuccess ? ` ${esc(L("popupAbs"))}` : ""}</p>`
+    + (holder ? `<p class="notes">${esc(L("popupWide", { holder: holder.name, name: t.name }))}</p>` : "");
+  const buttons = {};
+  p.options.forEach((o, i) => {
+    const c = optionItem(p, o)?.system.cost ?? {};
+    const cost = [c.tp ? `TP ${c.tp}` : "", c.fp ? `FP ${c.fp}` : ""].filter(Boolean).join(" ");
+    buttons[`o${i}`] = { icon: '<i class="fas fa-shield-alt"></i>', label: esc(L("use", { name: o.name })) + (cost ? ` (${cost})` : ""), callback: () => useReaction(game.messages.get(messageId), type, p.index, o.id) };
+  });
+  buttons.no = {
+    icon: '<i class="fas fa-times"></i>', label: esc(L(holder ? "pass" : "decline")),
+    callback: () => send({ messageId, type, index: p.index, result: holder ? { passAlly: p.holder } : { declined: true } })
+  };
+  try { foundry.audio.AudioHelper.play({ src: CONFIG.sounds.notification, volume: 0.8, autoplay: true, loop: false }, false); } catch { /* 소리 없음 */ }
+  return new Promise((resolve) => {
+    const d = new Dialog({ title: L("popupTitle"), content, buttons, default: "o0", close: () => { popups.delete(p.key); resolve(); } }, { classes: ["dialog", "nssq-reaction-popup"] });
+    popups.set(p.key, d);
+    d.render(true);
+  });
+}
+
 export function registerReaction() {
   onSocket("reaction", (p) => { if (isActiveGM()) gmReaction(p); });
+  // 판단할 사람에게 팝업(카드가 생기거나 바뀔 때: 《와이드 패링》 실패 뒤 대상 자신의 차례 등)
+  Hooks.on("createChatMessage", (message) => setTimeout(() => scanPopups(message), 300));
+  Hooks.on("updateChatMessage", (message) => scanPopups(message));
   // 에너미는 수동 반응을 항상 자동으로(첫 선택지)
   Hooks.on("createChatMessage", (message) => {
     if (!isActiveGM()) return;

@@ -713,7 +713,7 @@
     },
     "Skill": {
       "auto": "자동",
-      "autoHint": "선언형 스킬: 켜면 조건이 맞을 때 묻지 않고 자동으로 사용한다(끄면 그때마다 버튼)",
+      "autoHint": "선언형·수동 스킬: 켜면 조건이 맞을 때 묻지 않고 자동으로 사용한다(끄면 그때마다 팝업·버튼)",
       "autoChase": "『추격』 자동",
       "autoChaseHint": "『추격: ○』 강화를 받았을 때, 켜면 ○가 공격하면 묻지 않고 자동으로 추격한다(끄면 그때마다 버튼)",
       "common": "커먼 스킬",
@@ -1299,6 +1299,12 @@
     "Reaction": {
       "use": "수동: 《{name}》",
       "decline": "반응 안 함",
+      "pass": "넘기기",
+      "popupTitle": "수동 스킬",
+      "popupHead": "{by}의 {what} → {name}",
+      "popupHit": "명중 {total}",
+      "popupAbs": "(절대 성공)",
+      "popupWide": "《와이드 패링》: {holder}가 {name} 대신 능동 회피할 수 있다. 넘기거나 실패하면 {name}가 고른다.",
       "declined": "수동 반응 안 함",
       "waiting": "{name}의 수동 반응을 기다리는 중",
       "evaded": "《{skill}》 능동 회피 {dice}+{mod} = {total} ≥ 명중 {vs} → 회피",
