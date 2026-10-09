@@ -779,9 +779,26 @@
    "variants": [],
    "sl": 1,
    "description": "<p>《삼색 세이버》에 의한 공격을 했을 때의 대상이 된 적에게 그 턴 동안 추가로 공격이 가해진 경우, 그 공격에는 〈염〉〈빙〉〈뇌〉 중 《삼색 세이버》에서 사용한 속성이 부가된다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "《삼색 세이버》로 공격한 적에게 그 턴 동안 가해지는 다른 공격에 그 속성을 부가: GM이 처리(단계 8 트리거)"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "flag",
+       "flag": "markElementKey",
+       "value": "ソードマン.三色セイバー"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "소드맨"

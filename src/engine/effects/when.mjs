@@ -32,7 +32,8 @@ const CHECKS = {
   // 대상의 LV가 자신보다 높다(《자이언트 킬》)
   targetLevelAbove: (v, c) => ((c.target?.level ?? 0) > (c.self?.level ?? 0)) === !!v,
   // 대상이 상태 이상(봉인 제외) 중
-  targetHasAilment: (v, c) => (c.target?.conditions ?? []).some((x) => AILMENTS.has(x.id)) === !!v,
+  // 《음양검의 힘》: 그 턴 「상태 이상 중인 대상」 조건을 만족한 것으로(c.self.turnFlags.anyAilment)
+  targetHasAilment: (v, c) => ((c.target?.conditions ?? []).some((x) => AILMENTS.has(x.id)) || (!!v && !!c.self?.turnFlags?.anyAilment)) === !!v,
   targetNotActedThisTurn: (v, c) => !c.target?.acted === !!v,
   // 자신이 봉인 중(《저주 사슬의 은혜》)
   selfHasBind: (v, c) => (c.self?.conditions ?? []).some((x) => BINDS.has(x.id)) === !!v,

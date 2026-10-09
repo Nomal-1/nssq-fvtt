@@ -762,9 +762,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안 자신의 분류 『사격』 스킬 효과 범위를 『관통』으로 변경.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 동안 자신의 『사격』 스킬 범위를 『관통』으로: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "scopeChange",
+       "category": "사격",
+       "fromSide": "enemy",
+       "scope": "pierce"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -805,9 +823,34 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안 자신의 분류 『사격』 스킬 효과 범위를 『적 열』로 변경. 단, 공격 대미지 다이스 −(4−SL)개.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 동안 자신의 『사격』 스킬 범위를 『적 열』로, 대미지 다이스 −(4−SL): GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "scopeChange",
+       "category": "사격",
+       "fromSide": "enemy",
+       "scope": "row"
+      },
+      {
+       "type": "attackBonus",
+       "diceMod": "-(4-SL)",
+       "when": {
+        "category": "사격"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"
@@ -852,9 +895,34 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안 자신의 분류 『사격』 스킬 효과 범위를 『적 전체』로 변경. 단, 공격 대미지 다이스 −(5−SL)개.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 동안 자신의 『사격』 스킬 범위를 『적 전체』로, 대미지 다이스 −(5−SL): GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "scopeChange",
+       "category": "사격",
+       "fromSide": "enemy",
+       "scope": "all"
+      },
+      {
+       "type": "attackBonus",
+       "diceMod": "-(5-SL)",
+       "when": {
+        "category": "사격"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "거너"

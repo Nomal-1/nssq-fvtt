@@ -770,9 +770,26 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안, 회복 롤을 할 때 3 이상인 눈의 개수가 【HP】 회복량으로 간주되게 된다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 동안 회복 롤에서 3 이상인 눈을 회복량으로 센다: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "flag",
+       "flag": "healThreshold",
+       "value": 3
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "메딕"
@@ -817,9 +834,28 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안, 분류 『회복』, 효과 범위 『아군 단일』인 스킬의 효과 범위를 『아군 열』로 확대한다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 동안 『회복』·『아군 단일』 스킬의 범위를 『아군 열』로: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "scopeChange",
+       "category": "회복",
+       "fromSide": "ally",
+       "fromScope": "single",
+       "scope": "row"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "메딕"

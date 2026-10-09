@@ -47,6 +47,22 @@ export function targetSpec(text = "", effects = null) {
   return { side, scope: "single", unknown: !/단일|단체|1체/.test(t) };
 }
 
+/**
+ * 이번 턴 대상 범위 변경(거너 폼·《아름다운 춤》·《스프레드 스로》·《승리의 맹세》·《일제 구호》): 전투원의 「그 턴 동안」 효과 scopeChange
+ * { category, fromSide?, fromScope?, scope, side? }: 그 분류이고 원래 범위가 맞으면 범위를 바꾼다
+ */
+export function turnScope(combatant, item, spec) {
+  if (!combatant?.actor || !item?.system) return spec;
+  for (const e of combatProfile(combatant.actor, combatant).scopeChanges ?? []) {
+    if (e.category && item.system.category !== e.category) continue;
+    if (e.fromSide && spec.side !== e.fromSide) continue;
+    if (e.fromScope && ![].concat(e.fromScope).includes(spec.scope)) continue;
+    if (spec.side === "self") continue;
+    return { ...spec, scope: e.scope, ...(e.side ? { side: e.side } : {}), unknown: false };
+  }
+  return spec;
+}
+
 /** 쓰러진 아군도 대상이 되는 효과(revive)가 있는가 */
 const revives = (item) => (item?.system.effects ?? []).some((e) => e?.type === "heal" && (e.revive
   // 《간이 소생》: 그 캐릭터가 쓰는 HP 회복 아이템
@@ -70,6 +86,8 @@ export function unitProfile(actor, combatant) {
     ...p,
     // 회복 마스터리 등: 『회복』 스킬의 회복량 다이스(상시 보정 healDice)
     healDice: s.equipment?.mods?.healDice ?? 0,
+    // 《집중 치료》: 이번 턴 회복 롤의 기준 눈
+    healThreshold: p.turnFlags?.healThreshold ?? 4,
     // 《이피션트》·《간이 소생》: 아이템 회복 +, HP 회복 아이템에 부활
     itemHeal: s.equipment?.mods?.itemHeal ?? 0,
     overheatMod: s.equipment?.mods?.overheatTurns ?? 0,
@@ -152,7 +170,7 @@ export async function beginAction(combat, combatant, kind, id) {
   if (!item) return null;
   const entry = actionList(combat, combatant, kind).find((x) => x.id === id);
   if (!entry?.ok) return ui.notifications.warn(L(`reason.${entry?.reason ?? "timing"}`)) && null;
-  const spec = { ...(kind === "item" ? targetSpec(item.system.target || "아군 단일", item.system.effects) : targetSpec(item.system.target, item.system.effects)), variant: null };
+  const spec = { ...(kind === "item" ? targetSpec(item.system.target || "아군 단일", item.system.effects) : turnScope(combatant, item, targetSpec(item.system.target, item.system.effects))), variant: null };
   // 선언 명칭(《삼색 세이버》 → 《플레임 세이버》 등)을 먼저 고른다
   if (hasVariants(item.system.effects) && item.system.variants?.length) {
     spec.variant = await pickVariant(item);
@@ -247,7 +265,10 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   const phase = combat.getFlag("nssq", "phase");
   const effects = variantEffects(sys.effects ?? [], variant);
   // 후발 행동 주행동 스킬: 메인 페이즈에 쓰면 예약만(모든 전투원 행동 뒤 실행, combat/late.mjs)
-  if (!late && kind === "skill" && combat.started && phase === "main" && sys.timing === "주행동" && isLateSkill(effects)) {
+  // 《에테르 압축》: 그 턴 그 분류(술식)의 공격도 후발(이번 턴 효과 flag lateCategory)
+  const lateCat = combatProfile(actor, combatant).turnFlags?.lateCategory;
+  const lateByTurn = lateCat && sys.category === lateCat && effects.some((e) => e?.type === "attack");
+  if (!late && kind === "skill" && combat.started && phase === "main" && sys.timing === "주행동" && (isLateSkill(effects) || lateByTurn)) {
     return reserveLate(combatant, kind, item, targetCombatants, variant);
   }
   // 코스트 지불(아이템은 수량 −1). 발동에 실패해도 소모(07 #9)
@@ -313,7 +334,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   if (stripTiming) effectsAll = withoutTiming(effectsAll);
   if (skipDelayed) effectsAll = effectsAll.filter((e) => e?.type !== "delayed");
   if (skipToken) effectsAll = effectsAll.filter((e) => e?.type !== "token");
-  const spec = kind === "item" ? targetSpec(sys.target || "아군 단일", sys.effects) : targetSpec(sys.target, sys.effects);
+  const spec = kind === "item" ? targetSpec(sys.target || "아군 단일", sys.effects) : turnScope(combatant, item, targetSpec(sys.target, sys.effects));
   const rolls = [...extraRolls];
   const user = unitProfile(actor, combatant);
   // 사용 때 선언한 보정(《저주의 방울 소리》 억제 공격 +5)
@@ -341,7 +362,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     effects: effectsAll, sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : [],
     mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(),
-    variant, category: sys.category ?? "", source: kind
+    variant, category: sys.category ?? "", source: kind, ctx: { skillKey: sys.key ?? null }
   });
   if (guard) await guard.commit(new Set([...r.results.values()].filter((x) => x.hits.some((h) => h.hit)).map((x) => x.id)));
   // 「최속/후발 행동」(개막 페이즈에 쓴 것): 이번 턴 행동 순서. 메인 페이즈로 넘어갈 때 이니셔티브에 반영
@@ -359,7 +380,21 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   if (tr !== undefined && !r.failed && combatant) await removeToken(combatant, tr || null);
   // FP(캐릭터만), 오버히트
   if (r.fpGain && actor.type === "character") await actor.update({ "system.fp.value": (actor.system.fp?.value ?? 0) + r.fpGain });
-  if (r.overheat) await actor.setFlag("nssq", "overheat", r.overheat);
+  if (r.overheat) {
+    await actor.setFlag("nssq", "overheat", r.overheat);
+    // 《리미트 오버》: 그 전투 동안 오버히트가 회복되지 않는다
+    if (user.turnFlags?.overheatLock) await actor.setFlag("nssq", "overheatLock", true);
+  }
+  // 《링크 이펙트》: 이 스킬(《삼색 세이버》)로 공격한 적에게 이번 턴 다른 공격에도 그 속성
+  const linkKey = user.turnFlags?.markElementKey;
+  if (linkKey && linkKey === sys.key && !r.failed && combatant?.combat) {
+    const els = (variantEffects(effectsAll, variant).find((e) => e?.type === "attack")?.addElement) ?? [];
+    const c0 = combatant.combat;
+    const prev = c0.getFlag("nssq", "linkMarks");
+    const marks = prev?.round === c0.round ? { ...prev.marks } : {};
+    for (const x of r.results.values()) if (x.id !== user.id && x.hits.some((h) => h.hit)) marks[x.id] = [...new Set([...(marks[x.id] ?? []), ...[].concat(els)])];
+    if (els.length) await c0.setFlag("nssq", "linkMarks", { round: c0.round, name: item.name, marks });
+  }
   else if (r.overheatReduce && !r.failed) {
     const cur = Number(actor.getFlag("nssq", "overheat") ?? 0);
     if (cur > 0) await actor.setFlag("nssq", "overheat", Math.max(0, cur - r.overheatReduce));
@@ -737,7 +772,7 @@ export function registerSkillUse() {
 
 /** 에너미 랜덤 행동: 효과가 있는 스킬이면 이 흐름으로(대상은 무작위 또는 범위 전체) */
 export async function enemyUseSkill(combat, combatant, skill) {
-  const spec = targetSpec(skill.system.target, skill.system.effects);
+  const spec = turnScope(combatant, skill, targetSpec(skill.system.target, skill.system.effects));
   // 선언 명칭이 있으면 무작위로 하나
   const n = hasVariants(skill.system.effects) ? skill.system.variants?.length ?? 0 : 0;
   const variant = n ? Math.floor(CONFIG.Dice.randomUniform() * n) : null;

@@ -29,9 +29,14 @@
    "variants": [],
    "sl": 1,
    "description": "<p>모든 무기의 사거리를 『원』으로 취급. 그 무기를 쓰는 스킬 공격에도 동일 적용.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "모든 무기의 사거리를 『원』으로(스킬 공격 포함): GM이 사거리를 무시하고 처리"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "rangeAll",
+     "value": "원"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"
@@ -629,9 +634,28 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안 모든 적은 물리 공격 명중 판정에서 주사위 눈 (SL+3) 이하가 절대 실패.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 동안 모든 적의 물리 명중 판정에서 눈 (SL+3) 이하는 절대 실패: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "hostileHitFail",
+       "value": "SL+3",
+       "when": {
+        "attackKind": "physical"
+       }
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "시노비"

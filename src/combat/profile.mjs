@@ -1,4 +1,5 @@
 import { collectConditionResist } from "../engine/effects/passives.mjs";
+import { evaluate } from "../engine/expr.mjs";
 
 /**
  * 전투에 쓰는 값을 액터 종류와 관계없이 한 모양으로 모은다.
@@ -20,7 +21,62 @@ export const friendly = (a, b) => (sideOf(a) === "enemy") === (sideOf(b) === "en
  * @param {Actor} actor
  * @param {Combatant} [combatant] 방어 전념 등 전투 중 상태
  */
+/** 스킬에 든 flag 값(특수 타이밍 스킬도). 없으면 undefined(《연기의 끄트머리》 rangeAll 등) */
+function itemFlag(actor, flag) {
+  for (const i of actor.items) {
+    if (i.type !== "skill" || (actor.type === "character" && (i.system.sl ?? 0) <= 0)) continue;
+    const e = (i.system.effects ?? []).find((x) => x?.type === "flag" && x.flag === flag);
+    if (e) return e.value ?? true;
+  }
+  return undefined;
+}
+
+/**
+ * 이번 턴 효과: 전투원의 대기 상태 기록(stances, wait: false인 「그 턴 동안」 효과 포함) 안의
+ * modifier(능력치)·attackBonus(공격 보정)·flag·scopeChange(대상 범위 변경)와,
+ * 상대 편의 hostileHitFail(《인법: 아지랑이》), 전투 플래그 linkMarks(《링크 이펙트》)
+ */
+function applyTurnEffects(p, actor, combatant) {
+  const combat = combatant?.combat;
+  const turnFlags = {};
+  const bonuses = [];
+  const scopes = [];
+  const mods = {};
+  for (const st of combatant?.getFlag("nssq", "stances") ?? []) {
+    const v = (x) => evaluate(x ?? 0, { SL: st.sl ?? 1 });
+    for (const e of st.effects ?? []) {
+      if (e?.type === "modifier") mods[e.path] = (mods[e.path] ?? 0) + v(e.value);
+      else if (e?.type === "attackBonus") bonuses.push({ name: st.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod), critDice: v(e.critDice), critUp: !!e.critUp, resistMod: v(e.resistMod), addElement: e.addElement ?? [] });
+      else if (e?.type === "flag") turnFlags[e.flag] = e.value ?? true;
+      else if (e?.type === "scopeChange") scopes.push({ ...e, sl: st.sl ?? 1, name: st.name });
+    }
+  }
+  if (combat) {
+    for (const c of combat.combatants) {
+      if (!c.actor || friendly(c.actor, actor)) continue;
+      for (const st of c.getFlag("nssq", "stances") ?? []) {
+        for (const e of st.effects ?? []) {
+          if (e?.type === "hostileHitFail") bonuses.push({ name: st.name, when: e.when ?? null, failAtOrBelow: evaluate(e.value ?? 0, { SL: st.sl ?? 1 }) });
+        }
+      }
+    }
+    const lm = combat.getFlag("nssq", "linkMarks");
+    if (lm && lm.round === combat.round) {
+      for (const [tid, els] of Object.entries(lm.marks ?? {})) bonuses.push({ name: lm.name ?? "", when: { targetIn: [tid] }, addElement: els });
+    }
+  }
+  for (const [k, v] of Object.entries(mods)) if (typeof p[k] === "number") p[k] += v;
+  p.attackBonuses = [...(p.attackBonuses ?? []), ...bonuses];
+  p.turnFlags = turnFlags;
+  p.scopeChanges = scopes;
+  return p;
+}
+
 export function combatProfile(actor, combatant = null) {
+  return applyTurnEffects(baseProfile(actor, combatant), actor, combatant);
+}
+
+function baseProfile(actor, combatant = null) {
   const s = actor.system;
   const guarding = !!combatant?.getFlag("nssq", "guarding");
   // 이번 턴 메인 페이즈 행동을 이미 했는가(차례가 지났다)
@@ -64,7 +120,8 @@ export function combatProfile(actor, combatant = null) {
       // 상시 스킬의 공격 보정(engine/effects/passives.mjs)
       attackBonuses: s.passives?.attackBonuses ?? [],
       weaponName: w?.item?.name ?? (w?.unarmed ? game.i18n.format("NSSQ.Combat.unarmed", { type: w.weaponType }) : ""),
-      range: w?.range ?? "근"
+      // 《연기의 끄트머리》: 모든 무기의 사거리를 『원』으로
+      range: itemFlag(actor, "rangeAll") ?? w?.range ?? "근"
     };
   }
   if (actor.type === "enemy") {

@@ -29,9 +29,25 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안 상태 이상이 없는 대상에게도 음양검 스킬의 추가 효과가 발동한다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 동안 상태 이상이 없는 대상에게도 음양검 추가 효과: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "flag",
+       "flag": "anyAilment"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "닥터 마구스"

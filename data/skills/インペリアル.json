@@ -829,9 +829,37 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴에 자신이 《○○ 드라이브》를 사용하면 대미지 다이스 +20개. 단, 그 드라이브 사용 후 그 전투 동안 오버히트가 전혀 회복되지 않음.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 《○○ 드라이브》 다이스 +20, 대신 그 전투 동안 오버히트가 회복되지 않음: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "attackBonus",
+       "diceMod": 20,
+       "when": {
+        "skillKey": [
+         "インペリアル.アサルトドライブ",
+         "インペリアル.三色ドライブ",
+         "インペリアル.アクセルドライブ",
+         "インペリアル.オーバードライブ"
+        ]
+       }
+      },
+      {
+       "type": "flag",
+       "flag": "overheatLock"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "임페리얼"

@@ -94,8 +94,9 @@ export async function normalAttack(attacker, { ignoreRange = false, target: pick
   // 상시 스킬의 공격 보정(《선봉의 공명》 등)
   const pb = sumAttackBonuses(a.attackBonuses, { self: a, target: { ...d, skills: target.items.filter((i) => i.type === "skill").map((i) => i.name) }, attack: { kind: "physical", elements: a.elements } });
   const r = await resolveAttack({
-    attacker: { hit: a.physHit, physAtk: a.physAtk, elemAtk: a.elemAtk, elements: a.elements, critUp: a.critUp },
+    attacker: { hit: a.physHit, physAtk: a.physAtk, elemAtk: a.elemAtk, elements: pb.addElement.length ? [...new Set([...a.elements.filter((x) => x !== "none"), ...pb.addElement])] : a.elements, critUp: a.critUp },
     target: { evasion: d.evasion, defense: d.defense, resist: d.resist, guarding: d.guarding, guardHalf: d.guardHalf },
+    resistMod: pb.resistMod, failAtOrBelow: pb.failAtOrBelow,
     kind: "physical", hitMod: pb.hitMod, diceMod: pb.diceMod, atkMod: pb.atkMod, critUp: pb.critUp, critDiceMod: pb.critDice,
     rollDice
   });

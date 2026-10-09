@@ -96,7 +96,7 @@ export const halve = (n) => Math.floor(n / 2);
  * @param {() => number} [a.rng] rollDice 대신 1개씩 굴리는 함수
  * @returns {Promise<object>}
  */
-export async function resolveAttack({ attacker, target, kind = "physical", hitMod = 0, diceMod = 0, atkMod = 0, atkMultiplier = 1, halfDamage = false, critUp = false, critDiceMod = 0, failAtOrBelow = 0, diceOverride = null, rollDice, rng }) {
+export async function resolveAttack({ attacker, target, kind = "physical", hitMod = 0, diceMod = 0, atkMod = 0, atkMultiplier = 1, halfDamage = false, critUp = false, critDiceMod = 0, failAtOrBelow = 0, diceOverride = null, resistMod = 0, rollDice, rng }) {
   const roll = rollDice ?? ((n) => Array.from({ length: n }, () => rng()));
   // 스킬의 공격력 보정: (【공격】 + atkMod) × atkMultiplier(버림). 《어설트 드라이브》 등
   const boost = (v) => Math.floor(((Number(v) || 0) + atkMod) * atkMultiplier);
@@ -108,7 +108,8 @@ export async function resolveAttack({ attacker, target, kind = "physical", hitMo
   const result = { kind, hitCheck: hit, hit: !!hit.success, fpGain: hit.fpGain };
   if (!result.hit) return result;
 
-  const resist = effectiveResist(target.resist, attacker.elements);
+  // resistMod: 대상 【내성】 보정(《정량 분석》 −1). 0 미만은 0
+  const resist = Math.max(0, effectiveResist(target.resist, attacker.elements) + resistMod);
   // diceOverride: 대미지 다이스 수를 직접(《리벤지 스마이트》 「받은 대미지 + SL×2개」)
   const count = diceOverride !== null && diceOverride !== undefined ? Math.max(0, diceOverride) : damageDiceCount({ kind, physAtk: attacker.physAtk, elemAtk: attacker.elemAtk, defense: target.defense, diceMod });
   // critUp: 『크리티컬 업』 상태(또는 《일의전심》 같은 상시 효과)

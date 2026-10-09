@@ -69,12 +69,17 @@ export function collectConditionResist(skills) {
  * @param {object} ctx { self, target, attack: { kind, elements } }
  */
 export function sumAttackBonuses(list, ctx = {}) {
-  const out = { hitMod: 0, diceMod: 0, atkMod: 0, critDice: 0, critUp: false, names: [] };
+  // resistMod: 대상 【내성】 보정(《정량 분석》), failAtOrBelow: 명중 판정 눈 n 이하 절대 실패(《인법: 아지랑이》, 큰 값),
+  // addElement: 속성 부가(《링크 이펙트》)
+  const out = { hitMod: 0, diceMod: 0, atkMod: 0, critDice: 0, critUp: false, resistMod: 0, failAtOrBelow: 0, addElement: [], names: [] };
   for (const b of list ?? []) {
     if (!whenMatches(b.when, ctx)) continue;
-    out.hitMod += b.hitMod; out.diceMod += b.diceMod; out.atkMod += b.atkMod;
+    out.hitMod += b.hitMod ?? 0; out.diceMod += b.diceMod ?? 0; out.atkMod += b.atkMod ?? 0;
     out.critDice += b.critDice ?? 0;
     out.critUp ||= !!b.critUp;
+    out.resistMod += b.resistMod ?? 0;
+    out.failAtOrBelow = Math.max(out.failAtOrBelow, b.failAtOrBelow ?? 0);
+    out.addElement.push(...[].concat(b.addElement ?? []));
     out.names.push(b.name);
   }
   return out;

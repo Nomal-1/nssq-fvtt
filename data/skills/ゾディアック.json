@@ -728,9 +728,33 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴에 자신이 하는 술식 공격 롤의 대미지 다이스 +(SL×2)개. 단 그 술식 공격은 후발 행동이 된다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 자신의 술식 공격 다이스 +(SL×2), 대신 그 공격은 후발 행동: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "attackBonus",
+       "diceMod": "SL*2",
+       "when": {
+        "category": "술식"
+       }
+      },
+      {
+       "type": "flag",
+       "flag": "lateCategory",
+       "value": "술식"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "조디악"

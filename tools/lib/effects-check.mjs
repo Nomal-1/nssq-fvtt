@@ -43,7 +43,9 @@ export const TYPES = {
   repeat: { scope: false, cost: false },
   rallyChase: { count: false, weapons: false },
   tokenRemove: { category: false },
-  attackBonus: { hitMod: false, diceMod: false, atkMod: false, critDice: false, critUp: false },
+  attackBonus: { hitMod: false, diceMod: false, atkMod: false, critDice: false, critUp: false, resistMod: false, addElement: false },
+  scopeChange: { category: false, fromSide: false, fromScope: false, scope: true, side: false },
+  hostileHitFail: { value: true },
   kill: { check: true },
   immune: { condition: true },
   useBonus: { buffTurns: false, debuffTurns: false, healHp: false },
@@ -152,7 +154,7 @@ export function collectHolders() {
 
 /** 단계 8에 연결할 type */
 /** flag 이름(03 §3) */
-export const FLAGS = ["itemRevive", "noCarryCount", "ownLimit", "weaponElement", "tokenMax", "campCookHp", "campCookTp", "campCookCure", "openingCategory", "vanguard"];
+export const FLAGS = ["itemRevive", "noCarryCount", "ownLimit", "weaponElement", "tokenMax", "campCookHp", "campCookTp", "campCookCure", "openingCategory", "vanguard", "rangeAll", "anyAilment", "lateCategory", "healThreshold", "overheatLock", "markElementKey"];
 /** trigger.on 값(03 §3) */
 export const TRIGGER_ON = ["crit", "beforeKO", "attacked", "allyAttacked", "rowAttacked", "endPhase", "openingPhase", "battleStart", "selfHit", "mainPhaseStart", "escapeCheck", "hpLost", "enemyKO", "buffGained", "battleWon", "damaged", "conditionGained", "tokenGone", "bindInflicted", "useSkill"];
 

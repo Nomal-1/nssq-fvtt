@@ -96,6 +96,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       : e.addElement ? [...new Set([...(user.elements ?? []).filter((x) => x !== "none"), ...[].concat(e.addElement)])] : user.elements;
     // 상시 스킬의 공격 보정(《선봉의 공명》 등)
     const pb = sumAttackBonuses(user.attackBonuses, { ...ctx, category, self: user, target: t, attack: { kind, elements } });
+    // 이번 턴 효과의 속성 부가(《링크 이펙트》)
+    if (pb.addElement.length) elements = [...new Set([...(elements ?? []).filter((x) => x !== "none"), ...pb.addElement])];
     let hitMod = evaluate(e.hitMod ?? 0, vars(t)) + pb.hitMod;
     let diceMod = evaluate(e.diceMod ?? 0, vars(t)) + pb.diceMod;
     let atkPlus = 0;
@@ -114,7 +116,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
       target: { evasion: t.evasion, defense: t.defense, resist, guarding: t.guarding, guardHalf: t.guardHalf },
       kind, hitMod, diceMod,
-      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, failAtOrBelow: Number(e.failAtOrBelow ?? 0) || 0, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
+      atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, failAtOrBelow: Math.max(Number(e.failAtOrBelow ?? 0) || 0, pb.failAtOrBelow), resistMod: pb.resistMod, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
       diceOverride: e.fixedDice !== undefined ? evaluate(e.fixedDice, vars(t)) : null,
       rollDice
     });
@@ -166,7 +168,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
           const mastery = category === "회복" ? user.healDice ?? 0 : 0;
           const n = Math.max(0, (user.elemAtk ?? 0) + evaluate(e.bonus ?? 0, vars(t)) + mastery);
           dice = n ? await rollDice(n) : [];
-          amount = dice.filter((v) => v >= 4).length;
+          // 《집중 치료》: 그 턴 회복 롤은 3 이상을 센다(user.healThreshold)
+          amount = dice.filter((v) => v >= (user.healThreshold ?? 4)).length;
         } else if (e.mode === "fixed") amount = evaluate(e.amount ?? 0, vars(t));
         else if (e.mode === "full") amount = max - cur;
         else if (e.mode === "percent") amount = Math.floor((max * evaluate(e.amount ?? 0, vars(t))) / 100);

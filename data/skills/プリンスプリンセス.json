@@ -427,9 +427,27 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴 동안, 분류 『호령』 스킬의 효과 범위를 『아군 전체』로 확대한다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 동안 『호령』 스킬의 범위를 『아군 전체』로: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "scopeChange",
+       "category": "호령",
+       "fromSide": "ally",
+       "scope": "all"
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "프린스/프린세스"

@@ -944,9 +944,25 @@
    "variants": [],
    "sl": 1,
    "description": "<p>그 턴, 자신이 하는 공격 롤은 적의 【내성】을 -1로 취급한다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "그 턴 자신의 공격은 적의 【내성】을 −1로 취급: GM이 처리"
+   "effects": [
+    {
+     "type": "target",
+     "side": "self",
+     "scope": "single"
+    },
+    {
+     "type": "stance",
+     "until": "endOfTurn",
+     "wait": false,
+     "effects": [
+      {
+       "type": "attackBonus",
+       "resistMod": -1
+      }
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "알케미스트"

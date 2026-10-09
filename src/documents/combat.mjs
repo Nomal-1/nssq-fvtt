@@ -39,6 +39,8 @@ export class NssqCombat extends Combat {
   }
 
   async startCombat() {
+    // 지난 전투의 《리미트 오버》 오버히트 잠금 해제
+    for (const c of this.combatants) if (c.actor?.getFlag("nssq", "overheatLock")) await c.actor.unsetFlag("nssq", "overheatLock");
     await this.refreshInitiative();
     await this.clearRoundFlags();
     await super.startCombat();
@@ -162,7 +164,8 @@ export class NssqCombat extends Combat {
     // 오버히트(《○○ 드라이브》): 턴마다 1 줄어든다
     for (const c of this.combatants) {
       const n = Number(c.actor?.getFlag("nssq", "overheat") ?? 0);
-      if (n > 0) await c.actor.setFlag("nssq", "overheat", n - 1);
+      // 《리미트 오버》로 잠긴 오버히트는 그 전투 동안 줄지 않는다
+      if (n > 0 && !c.actor.getFlag("nssq", "overheatLock")) await c.actor.setFlag("nssq", "overheat", n - 1);
     }
     await this.clearRoundFlags();
     await this.refreshInitiative();
