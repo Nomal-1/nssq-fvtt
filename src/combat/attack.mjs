@@ -9,7 +9,7 @@ import { combatProfile, friendly } from "./profile.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
 import { decorateReactions, pendingReaction } from "./reaction.mjs";
 import { guardAttack } from "./guard.mjs";
-import { slotOccupant, weaponStats } from "../engine/equipment.mjs";
+import { slotOccupant } from "../engine/equipment.mjs";
 import { evaluate } from "../engine/expr.mjs";
 import tables from "../generated/tables.mjs";
 
@@ -52,23 +52,26 @@ export function dualWieldOf(actor) {
   const vars = { SL: sk.system.sl ?? 1 };
   const hit = evaluate(e.hitMod ?? 0, vars);
   const atk = evaluate(e.atkMod ?? 0, vars);
-  const table = tables.weapons[ot];
-  if (!table) return null;
-  // 기타 슬롯 무기의 성능으로 바꿔 넣는다(무기 슬롯 무기의 몫을 빼고 더함). 제련은 무기 슬롯 것만(07)
-  const os = weaponStats(table, { rank: other.system.rank, level: actor.system.level });
-  const imbue = actor.system.statusMods?.buffs?.elements ?? [];
-  // 무기만 바꾼 값(쌍수 스킬 2회째, 《이도일인》·《추영의 잔상》): 통상 공격 보정 없이
+  if (!tables.weapons[ot]) return null;
+  // 기타 슬롯 무기를 무기 슬롯에 낀 것으로 다시 계산(그 무기의 성능·제련, 무기 슬롯 무기의 제련은 빠짐, 무기 종류별 상시 스킬도, 07 #21·#124)
+  const swapped = actor.items.contents.map((i) => {
+    if (i.id !== other.id && i.id !== main.item.id) return i;
+    const o = i.toObject();
+    o.system.slot = i.id === other.id ? "weapon" : "other";
+    return o;
+  });
+  const now = actor.system;
+  const sw = actor.system.computeDerived(swapped);
+  const ow = sw.equipment.weapon ?? {};
+  const imbue = now.statusMods?.buffs?.elements ?? [];
   const swap = {
-    physHit: -(Number(main.physHit) || 0) + os.physHit, physAtk: -(Number(main.physAtk) || 0) + os.physAtk,
-    elements: [...new Set([other.system.element || table.element, ...imbue].filter(Boolean))], weaponName: other.name, weaponType: ot, range: os.range
+    physHit: sw.sub.physHit - now.sub.physHit, physAtk: sw.sub.physAtk - now.sub.physAtk, elemAtk: sw.sub.elemAtk - now.sub.elemAtk,
+    elements: [...new Set([ow.element, ow.imbue, ...imbue].filter(Boolean))], weaponName: other.name, weaponType: ot, range: ow.range
   };
   return {
     name: sk.name, sl: vars.SL, hitMod: hit, swap,
     main: { physHit: hit, physAtk: atk, label: main.item.name },
-    other: {
-      physHit: hit - (Number(main.physHit) || 0) + os.physHit, physAtk: atk - (Number(main.physAtk) || 0) + os.physAtk,
-      elements: [...new Set([other.system.element || table.element, ...imbue].filter(Boolean))], weaponName: other.name, weaponType: ot, range: os.range, label: other.name
-    }
+    other: { ...swap, physHit: hit + swap.physHit, physAtk: atk + swap.physAtk, label: other.name }
   };
 }
 
@@ -124,6 +127,7 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
   if (weaponMod) {
     a.physHit += weaponMod.physHit ?? 0;
     a.physAtk += weaponMod.physAtk ?? 0;
+    a.elemAtk += weaponMod.elemAtk ?? 0;
     if (weaponMod.elements?.length) a.elements = weaponMod.elements;
     if (weaponMod.weaponName) a.weaponName = weaponMod.weaponName;
     if (weaponMod.weaponType) a.weaponType = weaponMod.weaponType;

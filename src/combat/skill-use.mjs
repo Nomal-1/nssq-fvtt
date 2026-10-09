@@ -489,6 +489,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   if (weaponMod) {
     user.physHit += weaponMod.physHit ?? 0;
     user.physAtk += weaponMod.physAtk ?? 0;
+    user.elemAtk += weaponMod.elemAtk ?? 0;
     if (weaponMod.elements?.length) user.elements = weaponMod.elements;
     if (weaponMod.weaponType) user.weaponType = weaponMod.weaponType;
   }

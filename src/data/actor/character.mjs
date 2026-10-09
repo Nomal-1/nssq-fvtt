@@ -87,8 +87,18 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
   }
 
   prepareDerivedData() {
+    const { hpMaxDerived, tpMaxDerived, ...rest } = this.computeDerived(this.parent?.items?.contents ?? []);
+    Object.assign(this, rest);
+    this.hp.max = hpMaxDerived;
+    this.tp.max = tpMaxDerived;
+  }
+
+  /**
+   * 장비·상시 스킬·전투 고유 상태·상태 이상·강화까지 더한 값. items를 바꿔 넣으면 그 장비였을 때의 값(쌍수 2회째 무기, combat/attack.mjs)
+   * @param {object[]} items 아이템(문서 또는 같은 모양의 평범한 객체)
+   */
+  computeDerived(items) {
     const { main } = this.classItems;
-    const items = this.parent?.items?.contents ?? [];
     // 장비(무기·방어구·장식·제련)와 소지만 해도 되는 기타 아이템의 보정. 효과에 의한 일시 보정은 단계 5
     const eq = collectEquipment(items, tables, {
       level: this.level,
@@ -103,19 +113,17 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     );
     for (const [k, v] of Object.entries(passives.mods)) eq.mods[k] = (eq.mods[k] ?? 0) + v;
     // 전투 고유 상태(무사의 자세 등, 07 #57): 강화가 아니므로 장비·상시 스킬과 같은 자리에 더한다
-    this.battleStates = this.parent?.flags?.nssq?.states ?? [];
-    for (const [k, v] of Object.entries(stateMods(this.battleStates))) eq.mods[k] = (eq.mods[k] ?? 0) + v;
-    this.passives = passives;
-    this.equipment = eq;
-    this.abilityParts = abilityBreakdown({
+    const battleStates = this.parent?.flags?.nssq?.states ?? [];
+    for (const [k, v] of Object.entries(stateMods(battleStates))) eq.mods[k] = (eq.mods[k] ?? 0) + v;
+    const abilityParts = abilityBreakdown({
       abilities: this.abilities,
       classBonus: main?.system.abilityBonus ?? {},
       level: this.level,
       equip: Object.fromEntries(ABILITIES.map((k) => [k, eq.mods[`abilities.${k}`] ?? 0]))
     });
-    this.abilityTotal = Object.fromEntries(ABILITIES.map((k) => [k, this.abilityParts[k].total]));
+    const abilityTotal = Object.fromEntries(ABILITIES.map((k) => [k, abilityParts[k].total]));
     const d = deriveCharacter({
-      abilities: this.abilityTotal,
+      abilities: abilityTotal,
       level: this.level,
       weapon: eq.weapon ?? {},
       armor: { defense: eq.armorDefense },
@@ -124,15 +132,12 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     // 내성: 저장값(기본 3, GM 지시로 변경) + 장비
     const resist = Object.fromEntries(RESISTS.map((k) => [k, (this.resist[k] ?? 0) + (eq.mods[`resist.${k}`] ?? 0)]));
     // 상태 이상·봉인·강화·약화(단계 5): 장비까지 더한 값 위에 적용. subBase는 시트 비교용
-    this.subBase = d.sub;
-    this.statusMods = { conditions: conditionMods(this.conditions), buffs: buffMods(this.buffs) };
-    const m = applyMods({ sub: d.sub, resist, hpMax: d.hpMax }, [this.statusMods.conditions, this.statusMods.buffs]);
-    this.resistTotal = m.resist;
-    this.carried = carriedCount(items);
-    this.bonus = d.bonus;
-    this.sub = m.sub;
-    this.carry = d.carry;
-    this.hp.max = m.hpMax;
-    this.tp.max = d.tpMax;
+    const statusMods = { conditions: conditionMods(this.conditions), buffs: buffMods(this.buffs) };
+    const m = applyMods({ sub: d.sub, resist, hpMax: d.hpMax }, [statusMods.conditions, statusMods.buffs]);
+    return {
+      battleStates, passives, equipment: eq, abilityParts, abilityTotal,
+      subBase: d.sub, statusMods, resistTotal: m.resist, carried: carriedCount(items),
+      bonus: d.bonus, sub: m.sub, carry: d.carry, hpMaxDerived: m.hpMax, tpMaxDerived: d.tpMax
+    };
   }
 }
