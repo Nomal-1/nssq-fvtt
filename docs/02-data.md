@@ -175,3 +175,8 @@ data/tables/random-dungeon.json, gathering.json, history-d666.json, level-exp.js
 | `checks.<identify\|escape\|campDanger>` | 특정 판정 보정(사용처는 각 단계에서 연결) |
 
 flag: `weaponElement`(제련 속성 부여), `noCarryCount`(소지 수에 안 셈), `ownLimit`(최대 소지 개수).
+
+## 단계 10 추가
+- CharacterData `profile { gender, age, hair, build }`: 퍼스낼리티(샘플 시트의 칸). `history: string[]`은 경력(D666 결과나 자유 기입).
+- 액터 플래그 `nssq.chargen { step, moneySet, done }`: 작성 마법사 진행 상태.
+- `src/generated/tables.mjs`의 `history`: 경력표 D666 56항목(`data/tables/history-d666.json`).
