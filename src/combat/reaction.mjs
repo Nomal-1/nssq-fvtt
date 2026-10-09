@@ -9,7 +9,7 @@ import { activeEvade, reactionEffect } from "../engine/effects/reaction.mjs";
 import { meetsStateReq, meetsWeaponReq, PART_BIND } from "../engine/effects/usage.mjs";
 import { BUFFS, canonicalBuff } from "../engine/buffs.mjs";
 import { autoApplyMode, isActiveGM } from "./apply.mjs";
-import { friendly } from "./profile.mjs";
+import { combatProfile, friendly } from "./profile.mjs";
 import { emit, onSocket } from "../socket.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Reaction.${k}`, d) : game.i18n.localize(`NSSQ.Reaction.${k}`));
@@ -17,7 +17,8 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 
 /** 이 캐릭터가 이 공격(kind)에 쓸 수 있는 수동 스킬 */
 export function reactionChoices(actor, kind) {
-  if (!actor || actor.type !== "character") return [];
+  // 에너미의 수동 능동 회피(큰무당벌레 《바람의 순간》 등)도: 카드가 생기면 활성 GM이 자동으로 쓴다
+  if (!actor || !["character", "enemy"].includes(actor.type)) return [];
   const s = actor.system;
   const conds = s.conditions ?? [];
   if (conds.some((c) => ["petrify", "sleep", "stun"].includes(c.id))) return [];
@@ -160,7 +161,8 @@ async function useReaction(message, type, index, skillId) {
   const hit = type === "attack" ? { total: t.hitTotal, absSuccess: t.absSuccess, absFailure: t.absFailure } : t.hits.find((h) => h.hit);
   const roll = await new Roll("2d6").evaluate();
   const r = activeEvade({
-    dice: roll.dice[0].results.map((x) => x.result), abilityBonus: actor.system.bonus?.[eff.ability] ?? 0,
+    // ability "evasion": 【회피】 값(에너미 《바람의 순간》 「(【회피】−5)에 의한 능동 회피」)
+    dice: roll.dice[0].results.map((x) => x.result), abilityBonus: eff.ability === "evasion" ? combatProfile(actor, game.combat?.combatants.find((c) => c.actor?.uuid === actor.uuid) ?? null).evasion : actor.system.bonus?.[eff.ability] ?? 0,
     bonus: eff.bonus ?? 0, sl: skill.system.sl ?? 1, attack: { total: hit.total, absSuccess: hit.absSuccess, absFailure: hit.absFailure }
   });
   const note = skill.system.effectsNote ? ` (${game.i18n.format("NSSQ.SkillUse.gmNeeded", { what: skill.system.effectsNote })})` : "";
@@ -261,4 +263,17 @@ async function updateReaction({ message, messageId, type, index, result }) {
 
 export function registerReaction() {
   onSocket("reaction", (p) => { if (isActiveGM()) gmReaction(p); });
+  // 에너미는 수동 반응을 항상 자동으로(첫 선택지)
+  Hooks.on("createChatMessage", (message) => {
+    if (!isActiveGM()) return;
+    const atk = message.getFlag("nssq", "attack");
+    const sk = message.getFlag("nssq", "skillCard");
+    const list = atk ? atk.targets : sk?.entries;
+    const type = atk ? "attack" : "skill";
+    (list ?? []).forEach((t, i) => {
+      if (t?.reaction?.state !== "pending") return;
+      const a = fromUuidSync(atk ? t.actorUuid : t.uuid);
+      if (a?.type === "enemy") setTimeout(() => useReaction(message, type, i, t.reaction.options[0].id), 200 * (i + 1));
+    });
+  });
 }

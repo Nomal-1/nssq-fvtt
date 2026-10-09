@@ -1798,9 +1798,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>(【회피】−5)에 의한 능동 회피를 한다.</p>",
-     "effects": [],
-     "review": "partial",
-     "effectsNote": "(【회피】−5)로 능동 회피(에너미 수동 반응은 아직 없음): GM이 처리"
+     "effects": [
+      {
+       "type": "activeEvade",
+       "ability": "evasion",
+       "bonus": -5
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!ESHVCRZl8uL9mNuy.KsfLwWY0ghnQAguQ"
    }
@@ -1986,9 +1991,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>낮에는 모든 행위 판정에 −2의 수정을 받는다.</p>",
-     "effects": [],
-     "review": "partial",
-     "effectsNote": "낮에는 모든 행위 판정 −2: GM이 판정 때 보정"
+     "effects": [
+      {
+       "type": "timePenalty",
+       "time": "day",
+       "value": -2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!NfjSOUroEC1f5Crr.3kta1jkDN1hi9e4o"
    },

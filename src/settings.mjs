@@ -16,6 +16,16 @@ export function registerSettings() {
     },
     default: "confirm"
   });
+  // 시간대(낮/밤): 《야행성》·《주행성》 등. 단계 9-D 던전 도구에서도 바꾼다
+  game.settings.register("nssq", "timeOfDay", {
+    name: "NSSQ.Settings.timeOfDay.name",
+    hint: "NSSQ.Settings.timeOfDay.hint",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: { none: "NSSQ.Settings.timeOfDay.none", day: "NSSQ.Settings.timeOfDay.day", night: "NSSQ.Settings.timeOfDay.night" },
+    default: "none"
+  });
   game.settings.register("nssq", "storage", {
     name: "NSSQ.Settings.storage.name",
     hint: "NSSQ.Settings.storage.hint",

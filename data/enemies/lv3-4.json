@@ -1970,10 +1970,26 @@
       {
        "type": "actionTiming",
        "value": "last"
+      },
+      {
+       "type": "stance",
+       "until": "endOfTurn",
+       "wait": false,
+       "effects": [
+        {
+         "type": "modifier",
+         "path": "physAtk",
+         "value": 10
+        },
+        {
+         "type": "modifier",
+         "path": "elemAtk",
+         "value": 10
+        }
+       ]
       }
      ],
-     "review": "partial",
-     "effectsNote": "그 턴 공격력 +10: GM이 공격 때 보정"
+     "review": "ok"
     },
     "_key": "!actors.items!TKyNx6DZleGWhHYJ.9aRnVXhi1AzgUNTQ"
    },

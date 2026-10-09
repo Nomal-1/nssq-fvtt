@@ -16,7 +16,7 @@ import { activationRoll } from "./usage.mjs";
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies", "multiUse", "redirectAlly", "anytime", "dualWield", "dualSkill", "wideEvade", "guardLateAttack"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies", "multiUse", "redirectAlly", "anytime", "dualWield", "dualSkill", "wideEvade", "guardLateAttack", "timePenalty"];
 
 /** 대상 프로필에서 그 강화의 몫을 뺀 사본. list: "defenseUp"(수치 강화) / "resistUp:pierce"(그 속성 내성 +1) */
 function ignoreBuffs(t, list) {
@@ -242,6 +242,13 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         if (e.selfSame === "atk" && !row.resisted && row.contest) {
           for (const id of ids) res(user).inflicts.push({ id, depth: row.contest.atk.total, resisted: false, self: true });
         }
+        return;
+      }
+      case "forceRow": {
+        // 강제 이동(산고래 《떠올리기》): 목표값 억제 방어 롤에 실패하면 그 열로. 적용할 때 옮긴다
+        const target = evaluate(e.check?.target ?? 0, vars(t));
+        const c = e.check ? resistCheck({ dice: await rollDice(2), suppDef: t.suppDef ?? 0, target }) : { resisted: false };
+        r.resource.push({ forceRow: e.row ?? "back", resisted: c.resisted, ...(e.check ? { fixed: { target, check: c.check } } : {}) });
         return;
       }
       case "command": {

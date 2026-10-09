@@ -111,6 +111,8 @@
 | `dualSkill` | `category`, `hitMod` | (상시) 쌍수 중 그 분류 공격 스킬을 2회(코스트 2회분, 쓸 때 묻는다) |
 | `wideEvade` | | (상시) 같은 열 아군의 반응 버튼에 자신의 능동 회피 수동 스킬을 더한다(《와이드 패링》) |
 | `guardLateAttack` | | (상시) 『방어』 스킬 대기 중 후발 행동으로 통상 공격(《공방일체》) |
+| `timePenalty` | `time`(day/night), `value` | (상시) 월드 설정 「시간대」가 그때면 명중·억제 판정 보정(《야행성》) |
+| `forceRow` | `row`, `check`(fixed) | 판정에 실패하면 그 열로 강제 이동(《떠올리기》, onHit) |
 
 C2 보강: state `perAttack {selfDamage: "ones", tp}`(공격마다 대가, 《나찰》), when `selfExtraAction`(그 턴 주행동 2회를 얻음, 《다원 발도》).
 

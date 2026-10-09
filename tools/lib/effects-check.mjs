@@ -27,6 +27,8 @@ export const TYPES = {
   dualSkill: { category: false, hitMod: false },
   wideEvade: {},
   guardLateAttack: {},
+  timePenalty: { time: true, value: true },
+  forceRow: { row: false, check: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },
   debuff: { id: true, value: false, turns: false, param: false },

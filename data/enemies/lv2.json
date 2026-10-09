@@ -753,9 +753,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>밤에는 모든 행위 판정에 −2의 수정을 받는다.</p>",
-     "effects": [],
-     "review": "partial",
-     "effectsNote": "밤에는 모든 행위 판정 −2: GM이 판정 때 보정"
+     "effects": [
+      {
+       "type": "timePenalty",
+       "time": "night",
+       "value": -2
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!30814wUWUZS3b6Cp.Uebrfsb8YvkwIy6n"
    },
@@ -2254,11 +2259,20 @@
        "kind": "physical",
        "element": [
         "pierce"
+       ],
+       "onHit": [
+        {
+         "type": "forceRow",
+         "row": "back",
+         "check": {
+          "type": "fixed",
+          "target": "@self.suppAtk+7"
+         }
+        }
        ]
       }
      ],
-     "review": "partial",
-     "effectsNote": "명중 시 억제 방어(목표값 억제 공격+7) 실패하면 강제로 후위로: GM이 배치를 바꿈"
+     "review": "ok"
     },
     "_key": "!actors.items!FtC4LvBDhGHBbDaJ.FDhiT32gqvOyy9jN"
    },
@@ -2576,9 +2590,14 @@
      "variants": [],
      "sl": 1,
      "description": "<p>(【회피】−5)에 의한 능동 회피를 한다.</p>",
-     "effects": [],
-     "review": "partial",
-     "effectsNote": "(【회피】−5)로 능동 회피(에너미 수동 반응은 아직 없음): GM이 처리"
+     "effects": [
+      {
+       "type": "activeEvade",
+       "ability": "evasion",
+       "bonus": -5
+      }
+     ],
+     "review": "ok"
     },
     "_key": "!actors.items!L2SncexdkAK2w9gS.UMhCNj1jZM2k6PUG"
    },
@@ -2864,10 +2883,26 @@
       {
        "type": "actionTiming",
        "value": "last"
+      },
+      {
+       "type": "stance",
+       "until": "endOfTurn",
+       "wait": false,
+       "effects": [
+        {
+         "type": "modifier",
+         "path": "physAtk",
+         "value": 10
+        },
+        {
+         "type": "modifier",
+         "path": "elemAtk",
+         "value": 10
+        }
+       ]
       }
      ],
-     "review": "partial",
-     "effectsNote": "그 턴 공격력 +10: GM이 공격 때 보정"
+     "review": "ok"
     },
     "_key": "!actors.items!Y8beYtW24fAiY9qA.7UdImlI5NItWMtuz"
    },

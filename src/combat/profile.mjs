@@ -67,11 +67,25 @@ function applyTurnEffects(p, actor, combatant) {
       for (const [tid, els] of Object.entries(lm.marks ?? {})) bonuses.push({ name: lm.name ?? "", when: { targetIn: [tid] }, addElement: els });
     }
   }
+  // 시간대 불이익(《야행성》 「낮에는 모든 행위 판정 −2」): 명중·억제 판정(일반 행위 판정은 9-E)
+  const tod = timeOfDay();
+  for (const i of actor.items) {
+    if (i.type !== "skill" || (actor.type === "character" && !(i.system.sl > 0))) continue;
+    for (const e of i.system.effects ?? []) {
+      if (e?.type !== "timePenalty" || e.time !== tod) continue;
+      for (const k of ["physHit", "elemHit", "suppAtk", "suppDef"]) mods[k] = (mods[k] ?? 0) + (Number(e.value) || 0);
+    }
+  }
   for (const [k, v] of Object.entries(mods)) if (typeof p[k] === "number") p[k] += v;
   p.attackBonuses = [...(p.attackBonuses ?? []), ...bonuses];
   p.turnFlags = turnFlags;
   p.scopeChanges = scopes;
   return p;
+}
+
+/** 지금 시간대(world 설정 timeOfDay: none/day/night) */
+export function timeOfDay() {
+  try { return game.settings.get("nssq", "timeOfDay") ?? "none"; } catch { return "none"; }
 }
 
 export function combatProfile(actor, combatant = null) {

@@ -246,6 +246,13 @@
       "storage": {
         "name": "창고 기능",
         "hint": "켜면 GM이 캐릭터 시트의 「장비·소지품」 탭에서 캐릭터마다 창고를 허용할 수 있다. 끄면 창고 구역이 보이지 않는다(넣어 둔 물건은 그대로 보관되고 소지 수에 들어가지 않는다)."
+      },
+      "timeOfDay": {
+        "name": "시간대",
+        "hint": "낮·밤에 따라 달라지는 효과(《야행성》·《주행성》 등)에 쓴다. 정하지 않으면 적용하지 않는다",
+        "none": "정하지 않음",
+        "day": "낮",
+        "night": "밤"
       }
     },
     "Check": {
@@ -1156,7 +1163,9 @@
       "multiHint": "최대 {n}개를 고른다(TP 소비 없음)",
       "multiUsed": "{name}: 《{skill}》 — {list}",
       "dualAsk": "《{name}》: 《{skill}》 — 2회 공격할까?(코스트를 한 번 더 낸다)",
-      "chooseElement": "{name}: 《{skill}》에 부가할 속성을 고른다(그 턴에 나온 속성)"
+      "chooseElement": "{name}: 《{skill}》에 부가할 속성을 고른다(그 턴에 나온 속성)",
+      "forceRow": "{row}(으)로 강제 이동",
+      "forceRowResisted": "{row} 강제 이동 — 막았다"
     },
     "Guard": {
       "provoke": "{skill}({holder}): 공격 대상 {from} → {to}",

@@ -802,6 +802,7 @@ function entryLines(e, card) {
   if (e.command) out.push(`<li class="state">${esc(L(`command.${e.command}`))}</li>`);
   for (const x of e.resource ?? []) {
     if (x.noEffect) out.push(`<li class="miss">${esc(L("noEffect"))}</li>`);
+    if (x.forceRow) out.push(`<li class="${x.resisted ? "resist" : "inflict"}">${esc(L(x.resisted ? "forceRowResisted" : "forceRow", { row: game.i18n.localize(`NSSQ.Row.${x.forceRow}`) }))}${x.fixed ? `<div class="supp-roll">${rollText({ fixed: x.fixed })}</div>` : ""}</li>`);
     if (x.spread) out.push(`<li class="${x.spread.won ? "inflict" : "resist"}">${esc(L(x.spread.won ? "spreadWon" : "spreadLost", { label: x.spread.ids.map(condLabel).join("") || "-" }))}<div class="supp-roll">${rollText({ contest: x.spread })}</div></li>`);
   }
   for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}${c.count !== undefined ? ` ${esc(L("cureCount", { n: c.count }))}` : ""}</li>`);
@@ -847,6 +848,19 @@ async function applyEntry(actor, e, sourceUuid, meta = {}) {
     if (x.resource === "hp") hp = x.set !== undefined ? x.set : hp + (x.delta ?? 0);
     if (x.resource === "tp" && tp !== null) tp = x.set !== undefined ? x.set : tp + (x.delta ?? 0);
   }
+  // 강제 이동(《떠올리기》): 판정에 실패했고 지금 그 열이 아니면. 파티는 빈 칸이 있을 때만(07 #130)
+  let rowMove = null;
+  for (const x of e.resource ?? []) {
+    if (!x.forceRow || x.resisted || (s.row ?? "front") === x.forceRow) continue;
+    if (actor.type === "enemy") rowMove = { row: x.forceRow, order: s.order ?? 0 };
+    else {
+      const { freePartySlot } = await import("./formation.mjs");
+      const cb = combatantOf(actor);
+      const idx = freePartySlot(cb?.parent?.scene ?? game.scenes.get(cb?.sceneId), actor, x.forceRow);
+      if (idx !== null) rowMove = { row: x.forceRow, order: idx };
+    }
+  }
+  if (rowMove) { before.row = s.row ?? "front"; before.order = s.order ?? 0; }
   let conds = [...(s.conditions ?? [])];
   if (e.sleepBroken) conds = removeCondition(conds, "sleep");
   for (const c of e.cures ?? []) {
@@ -875,6 +889,7 @@ async function applyEntry(actor, e, sourceUuid, meta = {}) {
   for (const b of e.buffs ?? []) buffs = addBuff(buffs, b).list;
   const upd = { "system.hp.value": hp, "system.conditions": conds, "system.buffs": buffs };
   if (tp !== null) upd["system.tp.value"] = tp;
+  if (rowMove) { upd["system.row"] = rowMove.row; upd["system.order"] = rowMove.order; }
   // 전투 고유 상태(같은 계열은 바꿔 끼움, engine/states.mjs)
   if (e.states?.length) {
     let states = [...before.states];
@@ -936,6 +951,7 @@ async function applyOne(message, undo) {
       const upd = { "system.hp.value": e.before.hp, "system.conditions": e.before.conditions, "system.buffs": e.before.buffs };
       if (e.before.states) upd["flags.nssq.states"] = e.before.states;
       if (e.before.tp !== null && e.before.tp !== undefined) upd["system.tp.value"] = e.before.tp;
+      if (e.before.row) { upd["system.row"] = e.before.row; upd["system.order"] = e.before.order ?? 0; }
       await actor.update(upd);
       const cb = e.before.combatant && game.combat?.combatants.get(e.before.combatant.id);
       if (cb) {

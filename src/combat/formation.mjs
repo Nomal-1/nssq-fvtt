@@ -9,6 +9,14 @@ import { sideOf } from "./profile.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 
 export const isBattleScene = (scene) => !!scene?.getFlag("nssq", "battleCopy");
+
+/** 파티 캐릭터를 그 열로 옮길 빈 칸(번호). 없으면 null(《떠올리기》 강제 이동) */
+export function freePartySlot(scene, actor, row) {
+  if (!scene) return 0;
+  const party = unitsOf(scene).party;
+  const self = party.find((u) => u.actor === actor || u.actor?.id === actor.id);
+  return partyRowSlots(party, row, self?.id).find((c) => c.free && c.occupant !== self?.id)?.index ?? null;
+}
 const isParty = (actor) => actor && actor.type !== "enemy";
 
 /** 씬의 진형 입력값 */
