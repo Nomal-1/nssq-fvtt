@@ -163,7 +163,7 @@ async function onAttackCard(message) {
   const pending = [];
   for (const f of list) {
     if (autoRuns(f, byId.get(f.unitId))) await runFollowup(f, ev.kind);
-    else pending.push({ ...f, id: foundry.utils.randomID(), state: "pending", origin: ev.kind });
+    else pending.push({ ...f, id: foundry.utils.randomID(), state: "pending", originKind: ev.kind });
   }
   if (pending.length) await message.setFlag("nssq", "followups", pending);
 }
@@ -319,7 +319,7 @@ async function gmFollowup({ messageId, id, run }) {
   if (!f || f.state !== "pending") return;
   f.state = run ? "done" : "declined";
   await message.setFlag("nssq", "followups", list);
-  if (run && !(await runFollowup(f, f.origin))) {
+  if (run && !(await runFollowup(f, f.originKind))) {
     f.state = "declined";
     await message.setFlag("nssq", "followups", list);
   }
