@@ -313,8 +313,10 @@ export async function endBattle(combat, result = "abort") {
     await ChatMessage.create({
       speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
       content: `<div class="nssq-battle-end-card"><h3><i class="fas fa-flag-checkered"></i> ${L("ended", { name: esc(info.presetName ?? "") })}: ${L(`result${result[0].toUpperCase()}${result.slice(1)}`)}</h3>
-        ${result === "victory" ? `<p class="notes">${L("dropLater")}</p>` : ""}</div>`
+</div>`
     });
+    // 승리: 드롭 판정·갈무리 카드(단계 9-A). 전투를 지우기 전에(쓰러진 에너미·참가 캐릭터를 본다)
+    if (result === "victory") await (await import("./loot.mjs")).startLoot(combat);
     // 전투가 끝나면 아군(연결된 캐릭터)의 상태 이상·봉인·강화·약화를 푼다. [석화]만 남긴다(07 #46)
     for (const c of combat.combatants) {
       const a = c.actor;

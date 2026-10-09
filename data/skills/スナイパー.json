@@ -993,9 +993,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>드롭 판정 달성값을 ±1 범위에서 임의 조정 가능.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "드롭 판정 달성값 ±1 조작(단계 9)"
+   "effects": [
+    {
+     "type": "dropAdjust",
+     "range": 1
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "스나이퍼"

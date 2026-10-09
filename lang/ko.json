@@ -652,7 +652,6 @@
       "resultAbort": "중단",
       "endHint": "원래 씬과 음악으로 돌아가고, 이번 전투용 사본 씬은 삭제된다. 캐릭터의 【HP】 등은 그대로 남는다.",
       "ended": "전투 종료 — {name}",
-      "dropLater": "드롭 판정·갈무리는 이후 단계에서 연결한다.",
       "enemyFolder": "프리셋 에너미",
       "cleanup": "에너미 정리",
       "cleanupHint": "이름·이미지·능력치까지 완전히 같은 에너미 액터만 하나로 합치고(토큰은 그 하나를 쓰게, 토큰별 수정은 유지), 어느 씬에서도 쓰지 않는 시스템 에너미는 확인 후 지운다. 복제해서 바꾼 변형은 건드리지 않는다",
@@ -1280,6 +1279,28 @@
       "moved": "《{skill}》: {name}의 배치를 바꿨다",
       "swapped": "《{skill}》: {a}와 {b}의 자리를 맞바꿨다",
       "retargeted": "《{skill}》: {name}의 대상을 {to}(으)로 바꿨다"
+    },
+    "Loot": {
+      "title": "갈무리",
+      "doubleUp": "같은 눈: 랭크 +1",
+      "nothing": "없음",
+      "adjustHint": "드롭 판정 달성값을 ±{n}까지 고칠 수 있다({by}). 다 고쳤으면 [확정]",
+      "confirm": "확정",
+      "extraLine": "{name}《{skill}》:",
+      "extraNo": "적용 안 함(식용 불가)",
+      "extraSkipped": "적용하지 않음",
+      "extraTaken": "{item} ×{n}을 풀에 넣었다",
+      "noData": "(아이템 데이터 없음, GM이 처리)",
+      "take": "가져가기",
+      "empty": "남은 것이 없다",
+      "closedEmpty": "남은 것 없음",
+      "pool": "갈무리 풀",
+      "close": "갈무리 종료",
+      "closed": "갈무리를 마쳤다(남은 것은 두고 간다)",
+      "noEnemies": "쓰러뜨린 에너미가 없다",
+      "reason": "전투 후 갈무리",
+      "took": "{name}: {item} ×{n}",
+      "notYours": "자신의 캐릭터만 고를 수 있다"
     }
   }
 }

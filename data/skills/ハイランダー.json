@@ -1074,9 +1074,18 @@
    "variants": [],
    "sl": 1,
    "description": "<p>드롭 판정 후 '고기'·'생선'·'알' 중 하나를 (SL)개 획득. 쓰러뜨린 에너미가 식용에 맞지 않다고 GM이 판단하면 적용되지 않음.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "드롭 판정 뒤 고기·생선·알 중 하나 (SL)개(식용 불가면 없음): 드롭 판정(단계 9)"
+   "effects": [
+    {
+     "type": "dropExtra",
+     "count": "SL",
+     "choices": [
+      "고기",
+      "생선",
+      "알"
+     ]
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "하이랜더"

@@ -1016,9 +1016,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>드롭 판정 달성값을 ±(SL) 범위에서 자유롭게 조정할 수 있다.</p>",
-   "effects": [],
-   "review": "partial",
-   "effectsNote": "드롭 판정 달성값 ±SL 조정(단계 9)"
+   "effects": [
+    {
+     "type": "dropAdjust",
+     "range": "SL"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "파이리츠"

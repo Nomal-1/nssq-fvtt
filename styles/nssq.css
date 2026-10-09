@@ -930,3 +930,9 @@
 .nssq .nq-auto { font-size: 0.8em; padding: 0 5px; border: 1px solid currentColor; border-radius: 8px; opacity: 0.55; white-space: nowrap; }
 .nssq .nq-auto.on { opacity: 1; color: #e2a400; }
 .nssq .nq-gm { font-size: 0.8em; padding: 0 5px; border-radius: 8px; background: rgba(150, 60, 60, 0.18); white-space: nowrap; }
+.nssq-loot ul { list-style: none; padding: 0; margin: 4px 0; }
+.nssq-loot li { margin: 2px 0; }
+.nssq-loot li img { vertical-align: middle; border: none; }
+.nssq-loot button { width: auto; line-height: 1.4; padding: 0 6px; margin: 0 2px; font-size: 0.9em; }
+.nssq-loot select { width: auto; font-size: 0.9em; }
+.nssq-loot .loot-log { font-size: 0.85em; opacity: 0.8; }
