@@ -638,6 +638,8 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     if (!r.failed && r.emit && combatant?.combat) await emitAttack(combatant, item, r.emit);
     return m;
   };
+  // 《아리아드네의 실》: 던전 긴급 탈출(전투 중이면 도주로 끝냄, apps/dungeon.mjs)
+  if (!r.failed && effectsAll.some((e) => e?.type === "escapeDungeon")) setTimeout(async () => (await import("../apps/dungeon.mjs")).escapeDungeon(combatant?.name ?? actor.name), 0);
   // 다회 공격은 타격마다 카드를 따로 낸다(주사위·발동 판정·GM 안내는 첫 카드에)
   const parts = splitHits(card, spec.scope === "random");
   if (!parts) return afterPost(await post(card, true));

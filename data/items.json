@@ -7,7 +7,11 @@
   "system": {
    "key": "アリアドネの糸",
    "price": 100,
-   "effects": [],
+   "effects": [
+    {
+     "type": "escapeDungeon"
+    }
+   ],
    "quantity": 1,
    "description": "<p>미궁에서 긴급 탈출할 수 있다. 전투 중에도 사용 가능.</p>",
    "uses": {
@@ -16,8 +20,7 @@
    },
    "materials": [],
    "foodstuff": false,
-   "review": "partial",
-   "effectsNote": "미궁에서 긴급 탈출(전투 중 가능): GM이 처리(단계 9)"
+   "review": "ok"
   }
  },
  {

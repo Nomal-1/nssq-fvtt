@@ -70,6 +70,15 @@ export async function createPreset() {
     callback: (html) => html[0].querySelector("[name=name]").value.trim() || L("presetDefaultName")
   });
   if (!name) return;
+  const scene = await createPresetScene(name);
+  ui.notifications.info(L("presetCreated", { name }));
+  await scene.view();
+  scene.sheet.render(true);
+  return scene;
+}
+
+/** 프리셋 씬 만들기(빈 씬 + 열 표시). flags: 더할 nssq 플래그(랜덤 던전의 임시 프리셋 randomPreset 등) */
+export async function createPresetScene(name, flags = {}) {
   const folder = await presetFolder();
   const scene = await Scene.create({
     name, folder: folder.id, navigation: false,
@@ -78,12 +87,9 @@ export async function createPreset() {
     tokenVision: false, fog: { exploration: false },
     grid: { size: GRID, type: 1 },
     initial: { x: CENTER_X, y: SCENE_H / 2, scale: 0.5 },
-    flags: { nssq: { battlePreset: true } }
+    flags: { nssq: { battlePreset: true, ...flags } }
   });
   await scene.createEmbeddedDocuments("Drawing", laneDrawings());
-  ui.notifications.info(L("presetCreated", { name }));
-  await scene.view();
-  scene.sheet.render(true);
   return scene;
 }
 
@@ -338,6 +344,13 @@ export async function endBattle(combat, result = "abort") {
     if (origin && game.scenes.active?.id === copy?.id) await origin.activate();
     await resumeSounds(info.previousSounds ?? []);
     if (copy) await copy.delete();
+    // 랜덤 던전의 임시 프리셋·희소종 액터는 전투가 끝나면 지운다
+    const preset = game.scenes.get(info.presetId);
+    if (preset?.getFlag("nssq", "randomPreset")) {
+      const rares = preset.tokens.map((t) => game.actors.get(t.actorId)).filter((a) => a?.getFlag("nssq", "randomRare"));
+      await preset.delete();
+      for (const a of rares) await a.delete();
+    }
   } finally {
     ending = false;
   }

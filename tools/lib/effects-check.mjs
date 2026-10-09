@@ -36,6 +36,7 @@ export const TYPES = {
   gatherDoubleExtra: {},
   gatherExtra: { count: true, choices: true },
   preemptBlock: {},
+  escapeDungeon: {},
   forceRow: { row: false, check: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },

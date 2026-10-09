@@ -106,6 +106,13 @@ export async function startGather({ method, amount, rank, table, party }) {
   });
 }
 
+/** 정해진 아이템으로 바로 갈무리 풀(랜덤 던전 보물 등). entries: [{ name, rank, qty, data, from }] */
+export async function postLootPool({ title, entries, party }) {
+  const card = { kind: "pool", title, state: "open", range: 0, rangeBy: [], doubleUp: [], adjusters: [], rows: [], extras: [], party: party.map((a) => ({ uuid: a.uuid, name: a.name })), log: [],
+    pool: entries.map((e) => ({ id: foundry.utils.randomID(), key: `${e.name}|${e.rank ?? ""}`, name: e.name, rank: e.rank ?? null, qty: e.qty ?? 1, from: [e.from ?? ""], data: e.data })) };
+  return ChatMessage.create({ speaker: { alias: title }, content: render(card), flags: { nssq: { loot: card } } });
+}
+
 /* ---------------- 계산 ---------------- */
 
 let itemIndex = null;
@@ -153,7 +160,7 @@ async function finalize(card) {
 
 function render(card) {
   const gather = card.kind === "gather";
-  const head = `<header class="check-header"><span class="check-label"><i class="fas ${gather ? "fa-leaf" : "fa-box-open"}"></i> ${esc(gather ? L("gatherHead", { method: L(`m.${card.method}`), amount: L(`a.${card.amount}`), rank: card.rank }) : L("title"))}</span></header>`;
+  const head = `<header class="check-header"><span class="check-label"><i class="fas ${gather ? "fa-leaf" : "fa-box-open"}"></i> ${esc(gather ? L("gatherHead", { method: L(`m.${card.method}`), amount: L(`a.${card.amount}`), rank: card.rank }) : card.title ?? L("title"))}</span></header>`;
   const ambush = card.ambush ? `<p class="ambush"><b>${esc(L("ambush"))}</b></p>` : "";
   const adj = card.state === "adjust";
   const rows = card.rows.map((r, i) => {
@@ -177,7 +184,7 @@ function render(card) {
     ${open && p.data ? `<select data-loot-who>${options}</select><button type="button" data-loot="take" data-e="${p.id}">${esc(L("take"))}</button>` : ""}</li>`).join("") || `<li>${esc(L(card.state === "closed" ? "closedEmpty" : "empty"))}</li>`;
   const log = card.log.length ? `<ul class="loot-log">${card.log.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>` : "";
   const close = open ? `<button type="button" data-loot="close" data-gm-only><i class="fas fa-times"></i> ${esc(L("close"))}</button>` : card.state === "closed" ? `<p class="notes">${esc(L("closed"))}</p>` : "";
-  return `<div class="nssq-loot">${head}${ambush}<ul class="loot-rows">${rows || `<li>${esc(L("noEnemies"))}</li>`}</ul>${adjNote}
+  return `<div class="nssq-loot">${head}${ambush}${card.kind === "pool" ? "" : `<ul class="loot-rows">${rows || `<li>${esc(L("noEnemies"))}</li>`}</ul>`}${adjNote}
     ${extras ? `<ul class="loot-extras">${extras}</ul>` : ""}
     ${card.state === "adjust" ? "" : `<h4>${esc(L("pool"))}</h4><ul class="loot-pool">${pool}</ul>`}${log}${close}</div>`;
 }

@@ -34,6 +34,7 @@ import { registerHud } from "./combat/hud.mjs";
 import { registerSpecial } from "./combat/special.mjs";
 import { registerLoot } from "./apps/loot.mjs";
 import { registerExplore } from "./apps/explore.mjs";
+import { registerDungeon } from "./apps/dungeon.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
 import { createPreset, openEndDialog, openStartDialog, registerBattle } from "./apps/battle.mjs";
 
@@ -99,6 +100,7 @@ Hooks.once("init", () => {
   registerSpecial();
   registerLoot();
   registerExplore();
+  registerDungeon();
   registerEnemyLibrary();
   // 매크로·모듈용 API
   game.nssq = {
@@ -110,6 +112,8 @@ Hooks.once("init", () => {
     rollEscape: () => rollEscape(game.combat),
     startBattle: openStartDialog,
     endBattle: openEndDialog,
+    dungeon: async () => (await import("./apps/dungeon.mjs")).openDungeonDialog(),
+    nextEvent: async () => (await import("./apps/dungeon.mjs")).nextEvent(),
     gather: async (o) => (await import("./apps/loot.mjs")).openGatherDialog(o),
     createBattlePreset: createPreset,
     cleanupEnemies
