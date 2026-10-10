@@ -47,6 +47,25 @@ export class ChargenWizard extends Application {
 
   get title() { return L("title", { name: this.actor.name }); }
 
+  /** 새로 만든 채 완성하지 않은 캐릭터(작성 중) */
+  get isDraft() { const f = this.actor.getFlag("nssq", "chargen") ?? {}; return !!f.draft && !f.done; }
+
+  /** 작성 중인 캐릭터를 완성 전에 닫으면 지울지 묻는다(지우지 않으면 창을 그대로 둔다) */
+  async close(options = {}) {
+    if (options.force || !game.actors.has(this.actor.id) || !this.isDraft) return super.close(options);
+    const discard = await Dialog.wait({
+      title: L("discardTitle"), content: `<p>${esc(L("discardAsk", { name: this.actor.name }))}</p>`,
+      buttons: {
+        discard: { icon: '<i class="fas fa-trash"></i>', label: L("discard"), callback: () => true },
+        keep: { icon: '<i class="fas fa-pen"></i>', label: L("keepEditing"), callback: () => false }
+      },
+      default: "keep", close: () => false
+    }, { classes: ["nssq", "dialog"] });
+    if (!discard) return null;
+    await discardDraft(this.actor);
+    return super.close(options);
+  }
+
   static open(actor) {
     if (!actor?.isOwner || actor.type !== "character") return null;
     const app = Object.values(ui.windows).find((w) => w instanceof ChargenWizard && w.actor === actor) ?? new ChargenWizard(actor);
@@ -340,7 +359,7 @@ export class ChargenWizard extends Application {
     const actor = this.actor;
     const s = actor.system;
     await actor.update({ "system.hp.value": s.hp.max, "system.tp.value": s.tp.max, "system.fp.value": 1, "system.creation.locked": true });
-    await actor.setFlag("nssq", "chargen", { ...(actor.getFlag("nssq", "chargen") ?? {}), done: true, step: "confirm" });
+    await actor.setFlag("nssq", "chargen", { ...(actor.getFlag("nssq", "chargen") ?? {}), done: true, draft: false, step: "confirm" });
     const { main, sub } = actor.system.classItems;
     const skills = actor.items.filter((i) => i.type === "skill" && ((i.system.sl ?? 0) > 0 || i.system.unique)).map((i) => `《${i.name}》${i.system.unique ? "★" : i.system.sl}`).join(" ");
     await ChatMessage.create({
@@ -361,10 +380,18 @@ async function uniqueName(classKey) {
 
 /* ---------------- 새 캐릭터 ---------------- */
 
+const DRAFT = { nssq: { chargen: { draft: true } } };
+
+/** 작성 중인 캐릭터 지우기. 지울 권한이 없으면 활성 GM에게 맡긴다 */
+async function discardDraft(actor) {
+  if (actor.canUserModify(game.user, "delete")) return actor.delete();
+  return emit("chargenDiscard", { actorId: actor.id, userId: game.user.id });
+}
+
 /** [캐릭터 작성]: GM·액터 생성 권한이 있으면 바로, 아니면 활성 GM에게 맡긴다 */
 export async function newCharacter() {
   if (game.user.isGM || game.user.can("ACTOR_CREATE")) {
-    const actor = await Actor.create({ name: L("newName"), type: "character", ownership: game.user.isGM ? {} : { [game.user.id]: 3 } });
+    const actor = await Actor.create({ name: L("newName"), type: "character", ownership: game.user.isGM ? {} : { [game.user.id]: 3 }, flags: DRAFT });
     return ChargenWizard.open(actor);
   }
   if (!game.users.activeGM) return ui.notifications.warn(L("noGM"));
@@ -378,8 +405,15 @@ export function registerChargen() {
     if (!isActiveGM()) return;
     const user = game.users.get(userId);
     if (!user) return;
-    const actor = await Actor.create({ name: L("newNameOf", { user: user.name }), type: "character", ownership: { default: 0, [userId]: 3 } });
+    const actor = await Actor.create({ name: L("newNameOf", { user: user.name }), type: "character", ownership: { default: 0, [userId]: 3 }, flags: DRAFT });
     emit("chargenOpen", { userId, actorId: actor.id });
+  });
+  // 플레이어가 작성을 취소: 작성 중이고 그 플레이어가 소유한 캐릭터만 지운다
+  onSocket("chargenDiscard", async ({ actorId, userId }) => {
+    if (!isActiveGM()) return;
+    const a = game.actors.get(actorId);
+    const f = a?.getFlag("nssq", "chargen") ?? {};
+    if (a && f.draft && !f.done && a.testUserPermission(game.users.get(userId), "OWNER")) await a.delete();
   });
   onSocket("chargenOpen", ({ userId, actorId }) => {
     if (userId !== game.user.id) return;

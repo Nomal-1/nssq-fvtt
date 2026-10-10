@@ -1910,6 +1910,7 @@
       "title": "캐릭터 작성: {name}",
       "newButton": "캐릭터 작성",
       "newName": "새 캐릭터",
+      "discardTitle": "캐릭터 작성 취소", "discardAsk": "「{name}」은(는) 아직 완성하지 않았다. 작성을 그만두면 이 캐릭터는 지워진다.", "discard": "그만두고 지운다", "keepEditing": "계속 작성",
       "newNameOf": "{user}의 캐릭터",
       "noGM": "GM이 접속해 있지 않아 캐릭터를 만들 수 없다",
       "requested": "GM에게 새 캐릭터를 요청했다. 만들어지면 작성 창이 열린다",
