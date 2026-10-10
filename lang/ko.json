@@ -512,7 +512,7 @@
       "title": "마을",
       "newName": "새 마을", "noTownName": "마을", "new": "새 마을", "edit": "편집", "none": "(마을 없음)",
       "noneGM": "마을이 없다. [새 마을]로 만든다.", "notInTown": "파티가 마을에 있지 않다.",
-      "hereMark": "(파티)", "partyHere": "파티가 이 마을에 있다. 마을에서는 늘 【HP】【TP】가 가득하고 상태 이상이 없다.", "partyAway": "파티가 이 마을에 있지 않다.",
+      "hereMark": "(파티)", "partyHere": "파티가 이 마을에 있다. 마을에서는 늘 【HP】【TP】가 가득하고 상태 이상이 없다.", "partyAway": "파티가 이 마을에 있지 않다.", "partyHereShort": "파티 체류 중 · 늘 회복된 상태", "welcome": "{name}에 어서 오세요.", "toStreet": "거리로 나간다",
       "goHere": "이 마을로 귀환", "toMap": "필드 지도로", "toRandom": "랜덤 던전으로",
       "returned": "{name}(으)로 돌아왔다", "restored": "{names}: 【HP】【TP】 최대, 상태 이상·강화·약화·오버히트 없음",
       "movedByGM": "GM이 파티를 마을로 옮겼다", "leftByGM": "던전에서 나와 마을로 돌아왔다", "returnButton": "마을로 돌아가기",
@@ -529,11 +529,20 @@
         "office": "미션(준비 중)·몬스터 도감.",
         "free": ""
       },
-      "btn": { "guild": "길드", "party": "파티(GM)", "shop": "상점", "potions": "회복약 사기", "storage": "시트(창고)", "living": "생활비 걷기", "bestiary": "몬스터 도감", "scene": "씬 보기", "sceneGM": "씬 띄우기" },
+      "greet": {
+        "guild": "모험가 길드에 어서 오세요. 무슨 일로 오셨나요?",
+        "shop": "어서 오세요! 오늘은 무엇을 찾으시나요?",
+        "inn": "어서 오세요. 푹 쉬고 가세요.",
+        "apothecary": "다친 데는 없나요? 약이라면 여기 있어요.",
+        "pub": "어서 와. 일거리라면 곧 게시판에 붙을 거야.",
+        "office": "관청입니다. 용건을 말씀하세요.",
+        "free": "…"
+      },
+      "btn": { "tree": "스킬 트리", "chargen": "새 캐릭터", "guild": "길드", "party": "파티(GM)", "shop": "상점", "potions": "회복약 사기", "storage": "시트(창고)", "living": "생활비 걷기", "bestiary": "몬스터 도감", "scene": "씬 보기", "sceneGM": "씬 띄우기" },
       "noCharacter": "쓸 캐릭터가 없다.", "pickActor": "누구로 열까", "ok": "확인",
       "back": "목록", "save": "저장", "delete": "마을 지우기", "deleteConfirm": "「{name}」을(를) 지운다.", "noName": "이름을 정한다.",
       "facilities": "시설", "addFac": "시설 추가", "up": "위로", "del": "지우기",
-      "f": { "type": "종류", "name": "이름", "img": "그림", "scene": "씬", "desc": "설명", "townName": "마을 이름", "maxRank": "상점 랭크 상한", "maxRankHint": "비우면 제한 없음(R15)" },
+      "f": { "type": "종류", "name": "이름", "img": "그림", "scene": "씬", "desc": "설명", "townName": "마을 이름", "npc": "NPC 그림", "npcName": "NPC 이름", "maxRank": "상점 랭크 상한", "maxRankHint": "비우면 제한 없음(R15)" },
       "noScene": "(연결 안 함)", "makeScene": "이 이름으로 씬을 만들어 연결(모두 시야)", "sceneFolder": "마을", "sceneMade": "씬 「{name}」을(를) 만들었다. [저장]을 눌러 남긴다.",
       "editHint": "마을은 지도에 그리지 않는 완전한 안전지대다. 《아리아드네의 실》·던전 입구의 「마을로 돌아간다」·랜덤 던전 클리어·GM의 [마을로 돌아가기]로 떠나온 마을에 도착한다."
     },

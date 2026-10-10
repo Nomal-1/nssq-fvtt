@@ -113,13 +113,13 @@ export class TownApp extends Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-town", classes: ["nssq", "nq-window", "nssq-town"], title: game.i18n.localize("NSSQ.Town.title"),
-      width: 820, height: 640, resizable: true
+      width: 1100, height: 680, resizable: true
     });
   }
 
   static open(townId = null) {
     app ??= new TownApp();
-    if (townId) app.townId = townId;
+    if (townId && townId !== app.townId) { app.townId = townId; app.facId = null; }
     return app.render(true, { focus: true });
   }
 
@@ -140,33 +140,41 @@ export class TownApp extends Application {
     const gm = game.user.isGM;
     const here = location().kind === "town" && location().townId === t?.id;
     const towns = Object.values(allTowns());
+    // GM 도구는 오른쪽 위 작은 줄(플레이어 화면에는 없음)
     const bar = gm ? `<div class="town-bar">
         <select data-town-pick>${towns.map((x) => opt(x.id, t?.id, `${x.name}${location().kind === "town" && location().townId === x.id ? ` ${L("hereMark")}` : ""}`)).join("")}${towns.length ? "" : opt("", "", L("none"))}</select>
-        <button type="button" data-town="new"><i class="fas fa-plus"></i> ${esc(L("new"))}</button>
-        ${t ? `<button type="button" data-town="edit"><i class="fas fa-pen"></i> ${esc(L("edit"))}</button>` : ""}
-        <span class="spacer"></span>
+        <button type="button" data-town="new" title="${esc(L("new"))}"><i class="fas fa-plus"></i></button>
+        ${t ? `<button type="button" data-town="edit" title="${esc(L("edit"))}"><i class="fas fa-pen"></i></button>` : ""}
         ${t && !here ? `<button type="button" data-town="goHere" class="go"><i class="fas fa-home"></i> ${esc(L("goHere"))}</button>` : ""}
         ${here ? `<button type="button" data-town="toMap" class="go"><i class="fas fa-map"></i> ${esc(L("toMap"))}</button><button type="button" data-town="toRandom" class="go"><i class="fas fa-dungeon"></i> ${esc(L("toRandom"))}</button>` : ""}
       </div>` : "";
-    if (!t) return $(`<div class="town-wrap">${bar}<p class="town-empty">${esc(gm ? L("noneGM") : L("notInTown"))}</p></div>`);
-    const cards = (t.facilities ?? []).map((f) => `<div class="town-fac" data-fid="${f.id}">
-      <div class="thumb" ${f.img ? `style="background-image:url('${esc(f.img)}')"` : ""}><i class="fas ${ICONS[f.type] ?? "fa-map-signs"}"></i></div>
-      <div class="info"><b>${esc(f.name)}</b><span class="type">${esc(L(`type.${f.type}`))}</span>${f.desc ? `<p>${esc(f.desc)}</p>` : ""}<p class="notes">${esc(L(`hint.${f.type}`))}</p></div>
-      <div class="acts">${this.facilityButtons(f, here)}</div></div>`).join("");
-    return $(`<div class="town-wrap">${bar}
-      <header class="town-head" ${t.img ? `style="background-image:linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.75)), url('${esc(t.img)}')"` : ""}>
-        <h2>${esc(t.name)}</h2>${t.desc ? `<p>${esc(t.desc)}</p>` : ""}
-        <p class="status ${here ? "here" : ""}">${esc(here ? L("partyHere") : L("partyAway"))}</p>
-      </header>
-      <div class="town-grid">${cards}</div></div>`);
+    if (!t) return $(`<div class="town-stage empty">${bar}<p class="town-empty">${esc(gm ? L("noneGM") : L("notInTown"))}</p></div>`);
+    const f = (t.facilities ?? []).find((x) => x.id === this.facId) ?? null;
+    if (!f) this.facId = null;
+    const bg = (src) => (src ? `style="background-image:url('${esc(src)}')"` : "");
+    if (!f) {
+      // 마을 화면: 마을 일러 + 시설 선택지 + 대사창
+      const menu = (t.facilities ?? []).map((x) => `<button type="button" class="town-choice" data-go="${x.id}"><i class="fas ${ICONS[x.type] ?? "fa-map-signs"}"></i><span>${esc(x.name)}</span></button>`).join("");
+      return $(`<div class="town-stage" ${bg(t.img)}>${bar}
+        <div class="town-plate"><h2>${esc(t.name)}</h2><span class="status ${here ? "here" : ""}">${esc(here ? L("partyHereShort") : L("partyAway"))}</span></div>
+        <nav class="town-menu">${menu}</nav>
+        <div class="town-talk"><p>${esc(t.desc || (here ? L("partyHere") : L("welcome", { name: t.name })))}</p></div></div>`);
+    }
+    // 시설 화면: 시설 일러(없으면 마을 일러) + NPC + 대사 + 시설 메뉴
+    const items = this.facilityButtons(f);
+    return $(`<div class="town-stage facility ${f.img ? "" : "no-img"}" ${bg(f.img || t.img)}>${bar}
+      <div class="town-plate"><h2>${esc(f.name)}</h2><span class="status">${esc(t.name)}</span></div>
+      ${f.npc ? `<img class="town-npc" src="${esc(f.npc)}" alt=""/>` : f.img ? "" : `<i class="town-fac-icon fas ${ICONS[f.type] ?? "fa-map-signs"}"></i>`}
+      <nav class="town-menu">${items}<button type="button" class="town-choice back" data-town="leaveFac"><i class="fas fa-sign-out-alt"></i><span>${esc(L("toStreet"))}</span></button></nav>
+      <div class="town-talk">${f.npcName ? `<b class="who">${esc(f.npcName)}</b>` : ""}<p>${esc(f.desc || L(`greet.${f.type}`))}</p><p class="notes">${esc(L(`hint.${f.type}`))}</p></div></div>`);
   }
 
-  facilityButtons(f, here) {
-    const b = (act, icon, label) => `<button type="button" data-fac="${act}"><i class="fas ${icon}"></i> ${esc(label)}</button>`;
+  facilityButtons(f) {
+    const b = (act, icon, label) => `<button type="button" class="town-choice" data-fac="${act}" data-fid="${f.id}"><i class="fas ${icon}"></i><span>${esc(label)}</span></button>`;
     const gm = game.user.isGM;
     const out = [];
     switch (f.type) {
-      case "guild": out.push(b("guild", "fa-users", L("btn.guild"))); if (gm) out.push(b("gmScreen", "fa-users-cog", L("btn.party"))); break;
+      case "guild": out.push(b("guild", "fa-users", L("btn.guild")), b("tree", "fa-sitemap", L("btn.tree")), b("chargen", "fa-user-plus", L("btn.chargen"))); if (gm) out.push(b("gmScreen", "fa-users-cog", L("btn.party"))); break;
       case "shop": out.push(b("shop", "fa-store", L("btn.shop"))); break;
       case "apothecary": out.push(b("shop", "fa-prescription-bottle", L("btn.potions"))); break;
       case "inn": out.push(b("sheet", "fa-box", L("btn.storage"))); if (gm) out.push(b("living", "fa-coins", L("btn.living"))); break;
@@ -174,7 +182,7 @@ export class TownApp extends Application {
       default: break;
     }
     if (f.sceneId && game.scenes.get(f.sceneId)) out.push(b("scene", "fa-eye", gm ? L("btn.sceneGM") : L("btn.scene")));
-    return out.join("") || (here ? "" : "");
+    return out.join("");
   }
 
   editorHtml() {
@@ -185,6 +193,8 @@ export class TownApp extends Application {
       <div class="form-group"><label>${esc(L("f.type"))}</label><select data-ff="${i}.type">${FACILITY_TYPES.map((x) => opt(x, f.type, L(`type.${x}`))).join("")}</select></div>
       <div class="form-group"><label>${esc(L("f.name"))}</label><input type="text" data-ff="${i}.name" value="${esc(f.name)}"/></div>
       <div class="form-group"><label>${esc(L("f.img"))}</label><input type="text" data-ff="${i}.img" value="${esc(f.img)}"/><button type="button" data-pick="${i}" class="icon"><i class="fas fa-file-import"></i></button></div>
+      <div class="form-group"><label>${esc(L("f.npc"))}</label><input type="text" data-ff="${i}.npc" value="${esc(f.npc ?? "")}"/><button type="button" data-pick="${i}.npc" class="icon"><i class="fas fa-file-import"></i></button></div>
+      <div class="form-group"><label>${esc(L("f.npcName"))}</label><input type="text" data-ff="${i}.npcName" value="${esc(f.npcName ?? "")}"/></div>
       <div class="form-group"><label>${esc(L("f.scene"))}</label><select data-ff="${i}.sceneId">${opt("", f.sceneId, L("noScene"))}${scenes.map((s) => opt(s.id, f.sceneId, s.name)).join("")}</select><button type="button" data-mkscene="${i}" class="icon" title="${esc(L("makeScene"))}"><i class="fas fa-plus"></i></button></div>
       <div class="form-group"><label>${esc(L("f.desc"))}</label><input type="text" data-ff="${i}.desc" value="${esc(f.desc)}"/></div></fieldset>`).join("");
     return `<div class="town-wrap town-edit">
@@ -218,13 +228,14 @@ export class TownApp extends Application {
       this.render();
     }));
     root.querySelectorAll("[data-pick]").forEach((el) => el.addEventListener("click", () => {
-      const k = el.dataset.pick;
+      const [k, field = "img"] = el.dataset.pick.split(".");
       const target = k === "town" ? this.draft : this.draft.facilities[Number(k)];
-      new FilePicker({ type: "image", current: target.img, callback: (src) => { target.img = src; this.render(); } }).render(true);
+      new FilePicker({ type: "image", current: target[field], callback: (src) => { target[field] = src; this.render(); } }).render(true);
     }));
     root.querySelectorAll("[data-mkscene]").forEach((el) => el.addEventListener("click", () => this.makeScene(this.draft.facilities[Number(el.dataset.mkscene)])));
     root.querySelectorAll("[data-town]").forEach((el) => el.addEventListener("click", (ev) => { ev.preventDefault(); this.onAct(el.dataset.town); }));
-    root.querySelectorAll("[data-fac]").forEach((el) => el.addEventListener("click", () => this.onFacility(el.dataset.fac, el.closest("[data-fid]")?.dataset.fid)));
+    root.querySelectorAll("[data-fac]").forEach((el) => el.addEventListener("click", () => this.onFacility(el.dataset.fac, el.dataset.fid)));
+    root.querySelectorAll("[data-go]").forEach((el) => el.addEventListener("click", () => { this.facId = el.dataset.go; this.render(); }));
   }
 
   /** 시설 이름으로 씬(모두 시야, 관찰자 권한)을 만들어 연결 */
@@ -245,6 +256,7 @@ export class TownApp extends Application {
       case "new": { const n = newTown(); await saveTown(n); this.townId = n.id; this.draft = foundry.utils.deepClone(n); return this.render(); }
       case "edit": this.draft = foundry.utils.deepClone(t); return this.render();
       case "back": this.draft = null; return this.render();
+      case "leaveFac": this.facId = null; return this.render();
       case "addFac": this.draft.facilities.push({ id: rid(), type: "free", name: L("type.free"), img: "", desc: "", sceneId: "" }); return this.render();
       case "save": {
         if (!String(this.draft.name).trim()) return ui.notifications.warn(L("noName"));
@@ -304,4 +316,6 @@ export function registerTown() {
     // 마을에 도착하면 모두에게 마을 창
     onChange: (v) => { if (v?.kind === "town") TownApp.open(v.townId); else TownApp.refresh(); }
   });
+  // 파티가 마을에 있을 때 접속한 플레이어에게도 마을 화면(전투 중이면 열지 않음)
+  Hooks.once("ready", () => { if (!game.user.isGM && location().kind === "town" && !game.combat?.started) TownApp.open(location().townId); });
 }
