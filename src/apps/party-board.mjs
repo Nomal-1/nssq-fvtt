@@ -76,10 +76,10 @@ export class PartyBoard extends Application {
     const cell = (row, i) => {
       const a = all.find((e) => e.id === draft[row][i]);
       const sel = !pending && this.sel?.row === row && this.sel?.i === i;
-      return `<div class="pb-slot ${a ? "filled" : ""} ${sel ? "sel" : ""}" data-slot="${row}:${i}">${a ? `<img src="${esc(a.img)}"/><b>${esc(a.name)}</b><small>Lv${a.level}${a.npc ? " · NPC" : ""}${a.cls ? ` · ${esc(a.cls)}` : ""}</small>` : `<span class="empty">${esc(L("emptySlot"))}</span>`}</div>`;
+      return `<div class="pb-slot ${a ? "filled" : ""} ${a && !a.online ? "offline" : ""} ${sel ? "sel" : ""}" data-slot="${row}:${i}">${a ? `<img src="${esc(a.img)}"/><b>${esc(a.name)}${a.online ? "" : ` <span class="pb-off">${esc(L("offline"))}</span>`}</b><small>Lv${a.level}${a.npc ? " · NPC" : ""}${a.cls ? ` · ${esc(a.cls)}` : ""}</small>` : `<span class="empty">${esc(L("emptySlot"))}</span>`}</div>`;
     };
     const rows = ROWS.map((r) => `<div class="pb-row"><span class="pb-rowname">${esc(game.i18n.localize(`NSSQ.Row.${r}`))}</span>${[0, 1, 2].map((i) => cell(r, i)).join("")}</div>`).join("");
-    const bench = all.filter((a) => !placed.has(a.id)).map((a) => `<div class="pb-bench ${!pending && this.sel?.id === a.id ? "sel" : ""}" data-bench="${a.id}"><img src="${esc(a.img)}"/> ${esc(a.name)}</div>`).join("");
+    const bench = all.filter((a) => !placed.has(a.id)).map((a) => `<div class="pb-bench ${!pending && this.sel?.id === a.id ? "sel" : ""} ${a.online ? "" : "offline"}" data-bench="${a.id}"><img src="${esc(a.img)}"/> ${esc(a.name)}${a.online ? "" : ` <span class="pb-off">${esc(L("offline"))}</span>`}</div>`).join("");
     let foot;
     if (pending) {
       const key = game.user.isGM ? "gm" : game.user.id;
@@ -94,6 +94,7 @@ export class PartyBoard extends Application {
     } else {
       const changed = !sameDraft(this.draft, draftFromUnits(units));
       foot = `<div class="pb-acts"><button type="button" data-pb="reset"><i class="fas fa-undo"></i> ${esc(L("reset"))}</button>
+        ${game.user.isGM ? `<button type="button" data-pb="online" title="${esc(L("onlineHint"))}"><i class="fas fa-plug"></i> ${esc(L("onlineOnly"))}</button>` : ""}
         <button type="button" data-pb="submit" class="go" ${errors.length || !changed || inBattle() ? "disabled" : ""}><i class="fas fa-paper-plane"></i> ${esc(L("submit"))}</button></div>
         ${inBattle() ? `<p class="warn">${esc(L("noBattle"))}</p>` : ""}`;
     }
@@ -136,6 +137,13 @@ export class PartyBoard extends Application {
   async onAct(act) {
     switch (act) {
       case "reset": this.draft = null; this.sel = null; return this.render();
+      case "online": {
+        // 접속 중인 플레이어의 캐릭터 + 동료 NPC만으로 초안(지금 열·순서를 살리고, 넘치면 대기석)
+        const all = await roster();
+        this.draft = draftFromUnits(all.filter((e) => e.online).map((e) => ({ id: e.id, row: e.row, order: e.order })));
+        this.sel = null;
+        return this.render();
+      }
       case "submit": return submit(this.draft);
       case "yes": case "no": return vote(act === "yes");
       case "cancel": return vote(false, true);

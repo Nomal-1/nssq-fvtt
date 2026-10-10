@@ -565,7 +565,7 @@
     "PartyBoard": {
       "title": "파티 편성", "hint": "전위·후위 각 3칸(원문 규칙). 정원 {n}명. 칸이나 대기석의 캐릭터를 누른 뒤 놓을 칸을 누른다. 바꾼 편성은 [제출]해서 승인받는다(이동 투표와 같은 설정).",
       "count": "편성 {n} / {max}명", "emptySlot": "비어 있음", "bench": "대기석", "noBench": "대기 중인 캐릭터가 없다.",
-      "reset": "지금 편성으로", "submit": "제출", "submitted": "편성안을 제출했다.", "noGM": "GM이 접속해 있지 않다.",
+      "reset": "지금 편성으로", "offline": "오프라인", "onlineOnly": "접속자만", "onlineHint": "접속 중인 플레이어의 캐릭터와 동료 NPC로 초안을 다시 짠다(넘치면 대기석)", "submit": "제출", "submitted": "편성안을 제출했다.", "noGM": "GM이 접속해 있지 않다.",
       "noBattle": "전투 중에는 편성을 바꿀 수 없다(전투 중 배치는 개막 행동으로).",
       "proposed": "{by}의 편성안", "accept": "승낙", "decline": "거절", "cancel": "편성안 취소",
       "cancelled": "편성안이 취소되었다.", "rejected": "편성안이 거절되었다.", "applied": "파티 편성 확정", "by": "제안: {name}",

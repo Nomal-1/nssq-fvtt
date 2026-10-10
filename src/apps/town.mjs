@@ -304,7 +304,7 @@ export class TownApp extends Application {
     try { hidden = localStorage.getItem("nssq.townPartyHidden") === "1"; } catch { /* 저장 못 함 */ }
     const cards = party.map((a) => {
       const mine = game.user.isGM || a.owners.includes(game.user.id);
-      return `<div class="pc ${mine ? "mine" : ""}" data-pc="${a.id}" title="${esc(a.name)}">
+      return `<div class="pc ${mine ? "mine" : ""} ${a.online === false ? "offline" : ""}" data-pc="${a.id}" title="${esc(a.name)}">
         <img src="${url(a.img)}" alt=""/>
         <div class="pc-info"><b>${esc(a.name)}</b><span>Lv${a.level} · ${esc(a.cls || "-")}</span>
           <span class="pc-sub"><em>${(a.money ?? 0).toLocaleString()}G</em>${a.sp > 0 ? ` <i class="sp">${esc(L("spLeft", { n: a.sp }))}</i>` : ""}</span></div></div>`;

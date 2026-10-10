@@ -177,7 +177,7 @@ export class FieldOverlay extends Application {
     const bar = (v, m, cls) => `<span class="bar ${cls}"><i style="width:${m ? Math.round((100 * Math.max(0, v)) / m) : 0}%"></i></span>`;
     const cards = party.map((a) => {
       const { hp, tp, bad } = a;
-      return `<div class="pc ${game.user.isGM || a.owners.includes(game.user.id) ? "mine" : ""} ${(hp?.value ?? 0) <= 0 ? "down" : ""}" data-pc="${a.id}" title="${esc(a.name)}">
+      return `<div class="pc ${game.user.isGM || a.owners.includes(game.user.id) ? "mine" : ""} ${(hp?.value ?? 0) <= 0 ? "down" : ""} ${a.online === false ? "offline" : ""}" data-pc="${a.id}" title="${esc(a.name)}">
         <img src="${esc(a.img)}" alt=""/>
         <div class="pc-info"><b>${esc(a.name)}${bad ? ` <i class="fas fa-exclamation-circle bad"></i>` : ""}</b>
           <span class="pc-hp">HP ${hp?.value ?? 0}/${hp?.max ?? 0} · TP ${tp?.value ?? 0}/${tp?.max ?? 0}</span>
