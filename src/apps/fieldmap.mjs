@@ -58,6 +58,15 @@ async function setMapState(s, { undo = true } = {}) {
   await game.settings.set("nssq", "fieldMapState", { ...s, prev });
 }
 
+/** 세그먼트 없이 시각만 h시간(전투 중 흐른 시간, apps/time-pass.mjs advanceClock). 진행 중이 아니면 null */
+export async function shiftHour(h) {
+  const s = mapState();
+  if (!s.active) return null;
+  const hour = ((s.hour ?? 0) + h) % 24;
+  await game.settings.set("nssq", "fieldMapState", { ...s, hour });
+  return hour;
+}
+
 export function newMap(name) {
   return { id: rid(), name: name || L("newMap"), bg: { style: "parchment", src: "" }, start: null, startHour: 8, areas: [], passages: [], foes: [], triggers: [] };
 }

@@ -28,6 +28,18 @@ export function registerSettings() {
     choices: { none: "NSSQ.Settings.timeOfDay.none", day: "NSSQ.Settings.timeOfDay.day", night: "NSSQ.Settings.timeOfDay.night" },
     default: "none"
   });
+  // 어둠 속 전투에서 에너미도 불이익을 받는가(07 #165)
+  game.settings.register("nssq", "darkEnemies", {
+    name: "NSSQ.Settings.darkEnemies.name",
+    hint: "NSSQ.Settings.darkEnemies.hint",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: { exceptNocturnal: "NSSQ.Settings.darkEnemies.exceptNocturnal", all: "NSSQ.Settings.darkEnemies.all", none: "NSSQ.Settings.darkEnemies.none" },
+    default: "exceptNocturnal"
+  });
+  // 전투 중 흐른 시간(분, 원작: 전투 1턴 = 2분, 60분이면 탐색 시간 1시간)
+  game.settings.register("nssq", "battleMinutes", { scope: "world", config: false, type: Number, default: 0 });
   game.settings.register("nssq", "storage", {
     name: "NSSQ.Settings.storage.name",
     hint: "NSSQ.Settings.storage.hint",

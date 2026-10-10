@@ -683,6 +683,11 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   // 《딜레이 스탭》: 명중했으면 후발 추가 공격 예약(메인 페이즈 끝까지 대미지를 받으면 취소, combat/events.mjs)
   const lrep = r.results.get(user.id)?.lateRepeat;
   if (lrep && !r.failed && combatant?.combat) await combatant.setFlag("nssq", "lateRepeat", { ...lrep, name: item.name, img: item.img, sl: sys.sl ?? 1 });
+  // 《조명탄》: 사용자 편의 어둠 불이익을 그 전투 동안 없앤다(전투 플래그 lit, 07 #165)
+  if (!r.failed && r.lightUp && combatant?.combat) {
+    const side = actor.type === "enemy" ? "enemy" : "party";
+    await combatant.combat.setFlag("nssq", "lit", { ...(combatant.combat.getFlag("nssq", "lit") ?? {}), [side]: true });
+  }
   // 《타기팅》: 전투 플래그 focus(이번 턴)
   if (!r.failed && r.focus && combatant?.combat) {
     const fc = targets.find((t) => t.id === r.focus);

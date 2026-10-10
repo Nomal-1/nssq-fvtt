@@ -45,6 +45,13 @@ export function checkModsHtml(actor, { kinds: preset = [] } = {}) {
     <p class="notes">${esc(L("kindHint"))}</p></details>`;
 }
 
+/** 탐색 중의 밤(필드 지도·랜덤 던전 진행 중이고 시간대가 밤, 전투 밖) */
+function darkField() {
+  if (game.combat?.started) return false;
+  const exploring = !!game.settings.get("nssq", "fieldMapState")?.active || !!game.settings.get("nssq", "dungeon")?.active;
+  return exploring && game.settings.get("nssq", "timeOfDay") === "night";
+}
+
 /** 선언 스킬의 판정 종류 중 하나를 골랐나(종류 지정이 없으면 언제나) */
 const kindMatch = (e, kinds) => !(e.kinds ?? []).length || e.kinds.some((k) => kinds.includes(k));
 
@@ -78,6 +85,11 @@ export async function applyCheckMods(actor, { kinds = [], declares = [], assists
     const v = Number(mods[`checks.${k}`]) || 0;
     modifier += v;
     notes.push(v ? `${L(`kind.${k}`)} ${v > 0 ? "+" : ""}${v}` : L(`kind.${k}`));
+  }
+  // 어둠(밤, 필드 지도·랜덤 던전 진행 중): 시력 판정 −2, 《나이트 비전》이면 없음(07 #165)
+  if (kinds.includes("sight") && darkField() && !actor.items.some((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "flag" && e.flag === "nightVision"))) {
+    modifier -= 2;
+    notes.push(game.i18n.localize("NSSQ.Check.darkSight"));
   }
   for (const id of declares) {
     const i = actor.items.get(id);

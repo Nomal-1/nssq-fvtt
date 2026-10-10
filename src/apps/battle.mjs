@@ -11,6 +11,7 @@ import { relayout } from "../combat/formation.mjs";
 import { enemyActorFor } from "./enemy-library.mjs";
 import { applyIdentify, identifyEnemy } from "../combat/identify.mjs";
 import { CONDITIONS } from "../engine/conditions.mjs";
+import { timeOfDay } from "../combat/profile.mjs";
 import { applyAutoIdentify, recordBestiary, recordSeen } from "../combat/bestiary.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
@@ -125,6 +126,9 @@ export async function openStartDialog(presetId = null) {
       <div class="form-group"><label>${L("identify")}</label>
         <input type="number" name="identify" value="" placeholder="${L("identifyLater")}"/></div>
       <p class="notes">${L("identifyHint")}</p>
+      <div class="form-group"><label>${L("dark")}</label>
+        <input type="checkbox" name="dark" ${timeOfDay() === "night" ? "checked" : ""}/></div>
+      <p class="notes">${L("darkHint")}</p>
       <div class="form-group"><label>${L("surprise")}</label>
         <select name="surprise">
           <option value="none">${L("surpriseNone")}</option>
@@ -145,6 +149,8 @@ export async function openStartDialog(presetId = null) {
         presetId: f.preset.value,
         members: [...f.querySelectorAll("[name=member]:checked")].map((i) => i.value),
         surprise: f.surprise.value,
+        // 시간대 기본값 그대로면 시간 흐름을 따른다(null), 바꿨으면 고정
+        dark: f.dark.checked === (timeOfDay() === "night") ? null : f.dark.checked,
         identifyValue: f.identify.value === "" ? null : Number(f.identify.value)
       };
     }
@@ -167,7 +173,10 @@ async function resumeSounds(list) {
   for (const { playlist, sound } of list) await game.playlists.get(playlist)?.sounds.get(sound)?.update({ playing: true });
 }
 
-export async function startBattle({ presetId, members, surprise = "none", identifyValue = null }) {
+export async function startBattle({ presetId, members, surprise = "none", identifyValue = null, dark = null }) {
+  // 어둠 속 전투(07 #165): 정하지 않으면 시간대가 밤일 때. 시간이 흘러 시간대가 바뀌면 따라 바뀐다(darkAuto)
+  const darkAuto = dark === null || dark === undefined;
+  if (darkAuto) dark = timeOfDay() === "night";
   if (!game.user.isGM) return;
   const preset = game.scenes.get(presetId);
   if (!preset) return;
@@ -227,7 +236,7 @@ export async function startBattle({ presetId, members, surprise = "none", identi
   // 5) 전투: 어느 씬을 보든 보이도록 씬에 묶지 않는다(전투원은 사본 씬의 토큰)
   const combat = await Combat.create({
     scene: null, active: true,
-    flags: { nssq: { battle: { presetId, presetName: preset.name, origin, copy: copy.id, previousSounds, surprise, identifyValue } } }
+    flags: { nssq: { battle: { presetId, presetName: preset.name, origin, copy: copy.id, previousSounds, surprise, identifyValue, dark: !!dark, darkAuto } } }
   });
   const combatants = copy.tokens.filter((t) => t.actor && ["character", "enemy", "token"].includes(t.actor.type))
     .map((t) => ({ tokenId: t.id, sceneId: copy.id, actorId: t.actorId, hidden: t.hidden }));
@@ -244,7 +253,7 @@ export async function startBattle({ presetId, members, surprise = "none", identi
     speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
     content: `<div class="nssq-battle-start-card"><h3><i class="fas fa-skull-crossbones"></i> ${L("started", { name: esc(preset.name) })}</h3>
       <p>${actors.map((a) => esc(a.name)).join(", ")} vs ${copy.tokens.filter((t) => t.actor?.type === "enemy").map((t) => esc(t.name)).join(", ")}</p>
-      ${surpriseText ? `<p class="warn">${surpriseText}</p>` : ""}</div>`
+      ${surpriseText ? `<p class="warn">${surpriseText}</p>` : ""}${dark ? `<p class="warn"><i class="fas fa-moon"></i> ${L("darkStarted")}</p>` : ""}</div>`
   });
   if (surprise === "enemy") await (await import("../combat/turn-status.mjs")).preemptBlocks(combat);
   return combat;
@@ -321,6 +330,8 @@ export async function endBattle(combat, result = "abort") {
   try {
     const info = combat.getFlag("nssq", "battle") ?? {};
     const copy = game.scenes.get(info.copy);
+    // 마지막 턴의 2분(원작: 전투 1턴 = 2분, 07 #165)
+    if (combat.started) await (await import("./time-pass.mjs")).battleMinutes(combat, 2);
     await ChatMessage.create({
       speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
       content: `<div class="nssq-battle-end-card"><h3><i class="fas fa-flag-checkered"></i> ${L("ended", { name: esc(info.presetName ?? "") })}: ${L(`result${result[0].toUpperCase()}${result.slice(1)}`)}</h3>

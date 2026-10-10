@@ -367,6 +367,10 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         // 「명중했고 메인 페이즈 끝까지 대미지를 받지 않으면 후발로 한 번 더」(《딜레이 스탭》): onHit 안에서, 호출자가 예약
         res(user).lateRepeat = { target: t.id, diceMod: e.diceMod ?? 0 };
         return;
+      case "lightUp":
+        // 「어둠 등의 시야 불이익을 그 전투 동안 무효」(《조명탄》): 호출자가 사용자 편의 전투 플래그 lit
+        out.lightUp = true;
+        return;
       case "focus":
         // 「그 턴, 대상 적 단일 스킬은 모두 이 대상」(에너미 워처 《타기팅》): 호출자가 전투 플래그로
         out.focus = t.id;

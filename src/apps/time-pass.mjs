@@ -14,6 +14,42 @@ import { applyEndPhase, logLine, roll2d6 } from "../combat/turn-status.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.TimePass.${k}`, d) : game.i18n.localize(`NSSQ.TimePass.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
+/**
+ * 전투 중 흐른 시간(원작 세계수의 미궁: 1걸음·전투 1턴 = 2분, 07 #165): 라운드가 지날 때마다 2분을 쌓고 60분이면 시각 +1시간.
+ * 상태 이상·오버히트는 전투의 종료 페이즈가 처리하므로 여기서는 시각(필드 지도·랜덤 던전)과 시간대, 어둠만 바꾼다
+ */
+export async function battleMinutes(combat, minutes = 2) {
+  if (!game.user.isGM) return;
+  let m = Number(game.settings.get("nssq", "battleMinutes") ?? 0) + minutes;
+  const hours = Math.floor(m / 60);
+  m -= hours * 60;
+  await game.settings.set("nssq", "battleMinutes", m);
+  if (hours > 0) await advanceClock(hours, combat);
+}
+
+/** 시각만 h시간(필드 지도·랜덤 던전의 시각과 시간대). 진행 중인 전투의 어둠(자동)도 따라 바뀐다 */
+export async function advanceClock(hours, combat = null) {
+  const { timeOfDayAt } = await import("../engine/dungeon.mjs");
+  let hour = await (await import("./fieldmap.mjs")).shiftHour(hours);
+  const dg = game.settings.get("nssq", "dungeon") ?? {};
+  if (dg.active) {
+    hour = ((dg.hour ?? 0) + hours) % 24;
+    await game.settings.set("nssq", "dungeon", { ...dg, hour });
+  }
+  if (hour === null || hour === undefined) {
+    return ChatMessage.create({ speaker: { alias: L("speaker") }, content: `<div class="nssq-combat-note"><i class="fas fa-clock"></i> ${esc(L("battleHourNoClock", { n: hours }))}</div>` });
+  }
+  const tod = timeOfDayAt(hour);
+  if (tod !== game.settings.get("nssq", "timeOfDay")) await game.settings.set("nssq", "timeOfDay", tod);
+  const info = combat?.getFlag("nssq", "battle");
+  let darkNote = "";
+  if (info?.darkAuto && !!info.dark !== (tod === "night")) {
+    await combat.setFlag("nssq", "battle", { ...info, dark: tod === "night" });
+    darkNote = ` ${L(tod === "night" ? "darkStart" : "darkEnd")}`;
+  }
+  return ChatMessage.create({ speaker: { alias: L("speaker") }, content: `<div class="nssq-combat-note"><i class="fas fa-clock"></i> ${esc(L("battleHour", { n: hours, h: hour, tod: game.i18n.localize(`NSSQ.Dungeon.tod.${tod}`) }) + darkNote)}</div>` });
+}
+
 /** 시간으로 처리할 상태 이상이 있는가(심도가 있는 것, [스턴]) */
 const ticking = (list) => (list ?? []).some((c) => CONDITIONS[c.id]?.depth || c.id === "stun");
 

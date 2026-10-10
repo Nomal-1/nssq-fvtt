@@ -76,11 +76,30 @@ function applyTurnEffects(p, actor, combatant) {
       for (const k of ["physHit", "elemHit", "suppAtk", "suppDef"]) mods[k] = (mods[k] ?? 0) + (Number(e.value) || 0);
     }
   }
+  // 어둠 속 전투(07 #165): 【물리 명중】【속성 명중】 −2. 《나이트 비전》·그 편의 《조명탄》이면 없음, 에너미는 설정 darkEnemies
+  if (darkPenalty(actor, combat)) { mods.physHit = (mods.physHit ?? 0) - DARK_PENALTY; mods.elemHit = (mods.elemHit ?? 0) - DARK_PENALTY; p.dark = true; }
   for (const [k, v] of Object.entries(mods)) if (typeof p[k] === "number") p[k] += v;
   p.attackBonuses = [...(p.attackBonuses ?? []), ...bonuses];
   p.turnFlags = turnFlags;
   p.scopeChanges = scopes;
   return p;
+}
+
+const DARK_PENALTY = 2;
+
+/** 《야행성》: 낮에 불이익을 받는 에너미(timePenalty time day) */
+const nocturnal = (actor) => actor.items.some((i) => i.type === "skill" && (i.system.effects ?? []).some((e) => e?.type === "timePenalty" && e.time === "day"));
+
+/** 이 전투원이 어둠 불이익을 받는가 */
+export function darkPenalty(actor, combat) {
+  if (!combat?.getFlag("nssq", "battle")?.dark) return false;
+  const side = actor.type === "enemy" ? "enemy" : "party";
+  if (combat.getFlag("nssq", "lit")?.[side]) return false;
+  if (itemFlag(actor, "nightVision")) return false;
+  if (actor.type !== "enemy") return true;
+  let mode = "exceptNocturnal";
+  try { mode = game.settings.get("nssq", "darkEnemies"); } catch { /* 기본값 */ }
+  return mode === "all" || (mode === "exceptNocturnal" && !nocturnal(actor));
 }
 
 /** 지금 시간대(world 설정 timeOfDay: none/day/night) */

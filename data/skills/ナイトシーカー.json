@@ -775,9 +775,13 @@
    "variants": [],
    "sl": 1,
    "description": "<p>어둠 속에서도 시야 불이익을 받지 않는다.</p>",
-   "effects": [],
-   "review": "gm",
-   "effectsNote": "어둠 속 시야 불이익 없음"
+   "effects": [
+    {
+     "type": "flag",
+     "flag": "nightVision"
+    }
+   ],
+   "review": "ok"
   },
   "_meta": {
    "className": "나이트 시커"
