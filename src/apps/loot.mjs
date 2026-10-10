@@ -173,9 +173,11 @@ function render(card) {
   }).join("");
   const adjNote = adj ? `<p class="notes">${esc(L(card.kind === "gather" ? "adjustHintGather" : "adjustHint", { n: card.range, by: card.rangeBy.join(", ") }))}</p><button type="button" data-loot="confirm"><i class="fas fa-check"></i> ${esc(L("confirm"))}</button>` : "";
   const extras = card.state === "adjust" ? "" : card.extras.map((x, j) => {
-    const body = x.choice === "-" ? esc(L("extraSkipped")) : x.choice ? esc(L("extraTaken", { item: x.choice, n: x.count }))
+    // 플레이어가 고르면 요청 → GM이 [주기]·[안 주기](07 #135). GM이 고르면 바로
+    const body = x.choice === "-" ? esc(L(x.requested ? "extraDenied" : "extraSkipped", { item: x.requested ?? "" })) : x.choice ? esc(L("extraTaken", { item: x.choice, n: x.count }))
+      : x.requested ? `${esc(L("extraRequested", { item: x.requested, n: x.count }))} <button type="button" data-loot="grant" data-j="${j}" data-gm-only>${esc(L("grant"))}</button><button type="button" data-loot="deny" data-j="${j}" data-gm-only>${esc(L("deny"))}</button>`
       : x.choices.map((c) => `<button type="button" data-loot="extra" data-j="${j}" data-c="${esc(c)}">${esc(c)} ×${x.count}</button>`).join("")
-        + `<button type="button" data-loot="extra" data-j="${j}" data-c="-">${esc(L("extraNo"))}</button>`;
+        + `<button type="button" data-loot="extra" data-j="${j}" data-c="-" data-gm-only>${esc(L("extraNo"))}</button>`;
     return `<li>${esc(L("extraLine", { name: x.name, skill: x.skill }))} ${body}</li>`;
   }).join("");
   const open = card.state === "open";
@@ -198,7 +200,8 @@ async function save(message, card) {
   await message.update({ content: render(card), "flags.nssq.loot": card });
 }
 
-function handle({ messageId, action, i, d, j, c, e, who }) {
+function handle({ messageId, action, i, d, j, c, e, who, userId }) {
+  const fromGM = !!game.users.get(userId)?.isGM;
   return enqueue(async () => {
     const message = game.messages.get(messageId);
     const card = foundry.utils.deepClone(message?.getFlag("nssq", "loot"));
@@ -212,9 +215,18 @@ function handle({ messageId, action, i, d, j, c, e, who }) {
     if (action === "confirm" && card.state === "adjust") { await finalize(card); return save(message, card); }
     if (action === "extra" && card.state === "open") {
       const x = card.extras[j];
-      if (!x || x.choice) return;
+      if (!x || x.choice || x.requested) return;
+      // 플레이어가 고른 것은 요청(GM 확인 대기)
+      if (!fromGM && c !== "-") { x.requested = c; return save(message, card); }
       x.choice = c;
       if (c !== "-") await addToPool(card, c, null, x.count, `${x.name}《${x.skill}》`);
+      return save(message, card);
+    }
+    if ((action === "grant" || action === "deny") && card.state === "open" && fromGM) {
+      const x = card.extras[j];
+      if (!x?.requested || x.choice) return;
+      x.choice = action === "grant" ? x.requested : "-";
+      if (action === "grant") await addToPool(card, x.choice, null, x.count, `${x.name}《${x.skill}》`);
       return save(message, card);
     }
     if (action === "take" && card.state === "open") {
@@ -238,7 +250,7 @@ function handle({ messageId, action, i, d, j, c, e, who }) {
   });
 }
 
-const send = (payload) => (isActiveGM() ? handle(payload) : emit("loot", payload));
+const send = (payload) => { payload.userId = game.user.id; return isActiveGM() ? handle(payload) : emit("loot", payload); };
 
 /** 버튼 권한: 조작은 GM·조작 스킬 보유자 소유자, 《사냥꾼의 후각》은 GM·보유자 소유자, 가져가기는 GM·그 캐릭터 소유자 */
 function decorate(message, html) {
@@ -249,6 +261,7 @@ function decorate(message, html) {
   el.querySelectorAll("[data-loot]").forEach((b) => {
     const a = b.dataset.loot;
     const ok = game.user.isGM || (a === "adj" || a === "confirm" ? card.adjusters.some(owns) : a === "extra" ? owns(card.extras[Number(b.dataset.j)]?.uuid) : a === "take");
+    // grant·deny는 data-gm-only
     if (!ok || (b.hasAttribute("data-gm-only") && !game.user.isGM)) return b.remove();
     b.addEventListener("click", () => {
       const payload = { messageId: message.id, action: a, i: Number(b.dataset.i), d: Number(b.dataset.d), j: Number(b.dataset.j), c: b.dataset.c, e: b.dataset.e };
@@ -269,7 +282,30 @@ function decorate(message, html) {
   }
 }
 
+/** 활성 GM에게 식료품 요청 팝업(한 요청에 한 번, 카드의 버튼은 그대로) */
+const asked = new Set();
+function requestPopups(message) {
+  const card = message.getFlag("nssq", "loot");
+  if (!card || card.state !== "open" || !isActiveGM()) return;
+  (card.extras ?? []).forEach((x, j) => {
+    const key = `${message.id}:${j}`;
+    if (!x.requested || x.choice || asked.has(key)) return;
+    asked.add(key);
+    try { foundry.audio.AudioHelper.play({ src: CONFIG.sounds.notification, volume: 0.8, autoplay: true, loop: false }, false); } catch { /* 소리 없음 */ }
+    new Dialog({
+      title: L("requestTitle"),
+      content: `<p>${esc(L("requestBody", { name: x.name, skill: x.skill, item: x.requested, n: x.count }))}</p>`,
+      buttons: {
+        grant: { icon: '<i class="fas fa-check"></i>', label: L("grant"), callback: () => send({ messageId: message.id, action: "grant", j }) },
+        deny: { icon: '<i class="fas fa-times"></i>', label: L("deny"), callback: () => send({ messageId: message.id, action: "deny", j }) }
+      },
+      default: "grant"
+    }, { classes: ["dialog", "nssq-loot-request"] }).render(true);
+  });
+}
+
 export function registerLoot() {
   onSocket("loot", (p) => { if (isActiveGM()) handle(p); });
+  Hooks.on("updateChatMessage", (message) => requestPopups(message));
   Hooks.on("renderChatMessage", (message, html) => decorate(message, html));
 }
