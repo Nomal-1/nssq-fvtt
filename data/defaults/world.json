@@ -1,0 +1,991 @@
+{
+ "version": 1,
+ "towns": [
+  {
+   "id": "nssqDefTown",
+   "name": "뿌리 마을",
+   "img": "d93b61abb05cd9837a7efe55fa9f6b01.jpg",
+   "desc": "세계수의 뿌리 곁에 자리한 탐색자의 마을. 오늘도 미궁을 향하는 이들로 북적인다.",
+   "maxRank": null,
+   "facilities": [
+    {
+     "id": "nssqDefFacGuild",
+     "type": "guild",
+     "name": "탐색자 길드",
+     "img": "c229590c5f23646682dea207df8f5ae9.jpg",
+     "npc": "i_fac_cara04_길드장(갑옷).png",
+     "npcName": "길드장",
+     "desc": "새 얼굴인가? 길드에 이름을 올리고, 동료를 꾸려 미궁에 도전해라.",
+     "sceneId": ""
+    },
+    {
+     "id": "nssqDefFacShop",
+     "type": "shop",
+     "name": "교역소",
+     "img": "733bba734172414acf8fb1ddaf034ebe.jpg",
+     "npc": "i_fac_cara03_시토토 교역소 소녀.png",
+     "npcName": "교역소 아가씨",
+     "desc": "어서 오세요! 미궁에서 가져온 소재가 있으면 새 장비로 바꿔 드릴게요.",
+     "sceneId": ""
+    },
+    {
+     "id": "nssqDefFacInn",
+     "type": "inn",
+     "name": "뿌리의 여관",
+     "img": "5facfdc79f0ac29da7097a86ffc9b6ec.jpg",
+     "npc": "i_fac_cara08_여관집 딸.png",
+     "npcName": "여관집 딸",
+     "desc": "어서 오세요~! 마을에 계시는 동안은 저희가 푹 쉬게 해 드릴게요.",
+     "sceneId": ""
+    },
+    {
+     "id": "nssqDefFacApo",
+     "type": "apothecary",
+     "name": "시약원",
+     "img": "7b7e5e11e0eace6e40f5d304a84f3462.jpg",
+     "npc": "엘프 여의사.png",
+     "npcName": "시약원 의사",
+     "desc": "다친 곳은 없나요? 마을에 돌아오면 치료는 제가 맡을게요.",
+     "sceneId": ""
+    },
+    {
+     "id": "nssqDefFacPub",
+     "type": "pub",
+     "name": "주점 「나무 그늘」",
+     "img": "자료/일러/407fcba269ba3ca3e2e64cd29588f4c9.jpg",
+     "npc": "여관주인 남자.png",
+     "npcName": "주점 주인",
+     "desc": "어서 와. 목 좀 축이고 가. 의뢰는 곧 게시판에 붙을 거야.",
+     "sceneId": ""
+    },
+    {
+     "id": "nssqDefFacOffice",
+     "type": "office",
+     "name": "마을 관청",
+     "img": "42df133e34922f222cf9e61ef1e54075.jpg",
+     "npc": "인간 귀족.png",
+     "npcName": "관청 대신",
+     "desc": "관청에 온 것을 환영하오. 미궁에서 본 마물은 도감에 기록해 두시오.",
+     "sceneId": ""
+    },
+    {
+     "id": "nssqDefFacGate",
+     "type": "gate",
+     "name": "미궁 입구",
+     "img": "자료/일러/9b302d069385319f87eaf65b94049ce3.jpg",
+     "npc": "경비병.png",
+     "npcName": "문지기",
+     "desc": "미궁으로 가는가? 준비는 단단히 해 두게.",
+     "sceneId": ""
+    }
+   ]
+  }
+ ],
+ "maps": [
+  {
+   "id": "nssqDefMapForest",
+   "name": "제1미궁 「고목의 숲」",
+   "bg": {
+    "style": "parchment",
+    "src": ""
+   },
+   "start": "fA1",
+   "startHour": 8,
+   "battleBg": "6d91cb014b8c24243b5fb25e2833e08a.jpg",
+   "battleBgm": "",
+   "areas": [
+    {
+     "id": "fA1",
+     "name": "숲의 입구",
+     "x": 120,
+     "y": 470,
+     "img": "6d91cb014b8c24243b5fb25e2833e08a.jpg",
+     "terrain": "햇살이 드는 오솔길",
+     "gmNote": "",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "fT1",
+       "on": "visit",
+       "n": 1,
+       "once": true,
+       "text": "",
+       "playerText": "",
+       "actions": [
+        {
+         "type": "message",
+         "text": "나무 사이로 길이 이어진다. 미궁 「고목의 숲」에 들어섰다.\n입구에서는 언제든 「마을로 돌아간다」를 고를 수 있다."
+        }
+       ]
+      }
+     ],
+     "encounters": [
+      {
+       "id": "nssqDefEncF1",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "fA2",
+     "name": "이끼 낀 오솔길",
+     "x": 300,
+     "y": 360,
+     "img": "자료/일러/26954f842a83210459c31b429b039f73.jpg",
+     "terrain": "나뭇잎 사이로 빛이 쏟아진다",
+     "gmNote": "",
+     "secret": false,
+     "gather": "~6: R1 풀 / 7~10: R1 꽃 / 11~: R2 풀",
+     "tags": "",
+     "triggers": [],
+     "encounters": [
+      {
+       "id": "nssqDefEncF1",
+       "weight": 2
+      },
+      {
+       "id": "nssqDefEncF2",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "fA3",
+     "name": "갈림길 공터",
+     "x": 470,
+     "y": 470,
+     "img": "07d1cb5b12ee42b903cd719b3f1fce93.jpg",
+     "terrain": "탁 트인 풀밭. 길이 셋으로 갈린다",
+     "gmNote": "",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [],
+     "encounters": [
+      {
+       "id": "nssqDefEncF2",
+       "weight": 2
+      },
+      {
+       "id": "nssqDefEncF3",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "fA4",
+     "name": "고목의 뿌리",
+     "x": 640,
+     "y": 330,
+     "img": "자료/일러/e92bc974d6de6f9920b60d04d986005a.jpg",
+     "terrain": "거대한 고목이 뿌리를 뻗고 있다",
+     "gmNote": "조사 판정 성공 시 GM이 통로 「심부의 문」을 연다",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "fT4",
+       "on": "search",
+       "n": 1,
+       "once": true,
+       "text": "",
+       "playerText": "뿌리 사이에 무언가 반짝인다.",
+       "actions": [
+        {
+         "type": "check",
+         "ability": "tec",
+         "checkKind": "",
+         "target": null,
+         "note": "뿌리 틈을 살핀다"
+        },
+        {
+         "type": "message",
+         "text": "뿌리 틈에서 낡은 열쇠를 찾았다면 「숲의 심부」로 가는 문을 열 수 있다."
+        }
+       ]
+      }
+     ],
+     "encounters": [
+      {
+       "id": "nssqDefEncF3",
+       "weight": 1
+      },
+      {
+       "id": "nssqDefEncF4",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "fA5",
+     "name": "어두운 수풀",
+     "x": 640,
+     "y": 560,
+     "img": "자료/일러/a60aac4f5e2a47571e92a91de28b3209.jpg",
+     "terrain": "빛이 거의 들지 않는 덤불",
+     "gmNote": "",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [],
+     "encounters": [
+      {
+       "id": "nssqDefEncF4",
+       "weight": 2
+      },
+      {
+       "id": "nssqDefEncF5",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "fA6",
+     "name": "숲속 샘터",
+     "x": 820,
+     "y": 220,
+     "img": "edde2c4b8c8fce7aafbd451ea7bbbfbd.jpg",
+     "terrain": "맑은 샘이 빛나는 조용한 곳",
+     "gmNote": "안전지대(조우표 없음)",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "fT6",
+       "on": "enter",
+       "n": 1,
+       "once": false,
+       "text": "",
+       "playerText": "",
+       "actions": [
+        {
+         "type": "message",
+         "text": "맑은 샘이다. 이곳에서는 마물의 기척이 느껴지지 않는다."
+        },
+        {
+         "type": "camp"
+        }
+       ]
+      }
+     ],
+     "encounters": []
+    },
+    {
+     "id": "fA7",
+     "name": "오래된 갱도 입구",
+     "x": 820,
+     "y": 600,
+     "img": "90b02300-9abd-43d3-9e07-1f68adedfb4e.png",
+     "terrain": "이끼에 덮인 갱도",
+     "gmNote": "",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "fT7",
+       "on": "search",
+       "n": 1,
+       "once": false,
+       "text": "",
+       "playerText": "갱도 벽에 광석이 박혀 있다.",
+       "actions": [
+        {
+         "type": "gather",
+         "method": "mining",
+         "amount": "some",
+         "rank": 1
+        }
+       ]
+      }
+     ],
+     "encounters": [
+      {
+       "id": "nssqDefEncF5",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "fA8",
+     "name": "숲의 심부",
+     "x": 960,
+     "y": 400,
+     "img": "자료/일러/284843472b386ef42660d3b1e0cd4980.jpg",
+     "terrain": "이끼 낀 석문이 있는 숲의 끝",
+     "gmNote": "계층 보스: 숲의 파괴자",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "fT8",
+       "on": "visit",
+       "n": 1,
+       "once": true,
+       "text": "",
+       "playerText": "거대한 그림자가 움직인다…",
+       "actions": [
+        {
+         "type": "message",
+         "text": "숲의 주인이 길을 막아선다!"
+        },
+        {
+         "type": "battle",
+         "enemies": "숲의 파괴자"
+        }
+       ]
+      }
+     ],
+     "encounters": []
+    }
+   ],
+   "passages": [
+    {
+     "id": "fP1",
+     "a": "fA1",
+     "b": "fA2",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "fP2",
+     "a": "fA2",
+     "b": "fA3",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "fP3",
+     "a": "fA1",
+     "b": "fA3",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "fP4",
+     "a": "fA3",
+     "b": "fA4",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "fP5",
+     "a": "fA3",
+     "b": "fA5",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "fP6",
+     "a": "fA4",
+     "b": "fA6",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "fP7",
+     "a": "fA5",
+     "b": "fA7",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "fP8",
+     "a": "fA6",
+     "b": "fA8",
+     "state": "locked",
+     "oneWay": false,
+     "label": "심부의 문"
+    },
+    {
+     "id": "fP9",
+     "a": "fA7",
+     "b": "fA8",
+     "state": "open",
+     "oneWay": true,
+     "label": "좁은 갱도(한 방향)"
+    }
+   ],
+   "foes": [
+    {
+     "id": "fF1",
+     "actorUuid": "Compendium.nssq.enemies.Actor.HTmXv7tUnwICTcfD",
+     "name": "광란의 뿔사슴",
+     "route": [
+      "fA3",
+      "fA4",
+      "fA6",
+      "fA4"
+     ],
+     "mode": "loop",
+     "every": 1,
+     "nightOnly": false,
+     "active": true
+    }
+   ],
+   "triggers": []
+  },
+  {
+   "id": "nssqDefMapSnow",
+   "name": "제2미궁 「눈 덮인 폐허」",
+   "bg": {
+    "style": "parchment",
+    "src": ""
+   },
+   "start": "sA1",
+   "startHour": 8,
+   "battleBg": "눈덮인숲공터.jpg",
+   "battleBgm": "",
+   "areas": [
+    {
+     "id": "sA1",
+     "name": "설원 입구",
+     "x": 120,
+     "y": 300,
+     "img": "눈덮인숲.jpg",
+     "terrain": "얼어붙은 개울이 흐르는 숲",
+     "gmNote": "",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "sT1",
+       "on": "visit",
+       "n": 1,
+       "once": true,
+       "text": "",
+       "playerText": "",
+       "actions": [
+        {
+         "type": "message",
+         "text": "숨이 하얗게 얼어붙는다. 미궁 「눈 덮인 폐허」에 들어섰다."
+        }
+       ]
+      }
+     ],
+     "encounters": [
+      {
+       "id": "nssqDefEncS1",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "sA2",
+     "name": "얼어붙은 오솔길",
+     "x": 300,
+     "y": 180,
+     "img": "8733b5e86289957b2e4577a328555a7a.jpg",
+     "terrain": "눈이 무릎까지 쌓였다",
+     "gmNote": "",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "sT2",
+       "on": "enter",
+       "n": 1,
+       "once": true,
+       "text": "",
+       "playerText": "눈 밑에 얼음 구덩이가 숨어 있다!",
+       "actions": [
+        {
+         "type": "trap",
+         "kind": "hp",
+         "level": 1
+        }
+       ]
+      }
+     ],
+     "encounters": [
+      {
+       "id": "nssqDefEncS1",
+       "weight": 2
+      },
+      {
+       "id": "nssqDefEncS2",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "sA3",
+     "name": "숲속 공터",
+     "x": 320,
+     "y": 450,
+     "img": "눈덮인숲공터.jpg",
+     "terrain": "눈보라가 그친 고요한 공터",
+     "gmNote": "",
+     "secret": false,
+     "gather": "~6: R1 풀 / 7~10: R1 나무 / 11~: R2 나무",
+     "tags": "",
+     "triggers": [],
+     "encounters": [
+      {
+       "id": "nssqDefEncS2",
+       "weight": 1
+      },
+      {
+       "id": "nssqDefEncS3",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "sA4",
+     "name": "버려진 설촌",
+     "x": 540,
+     "y": 320,
+     "img": "눈덮인마을.jpg",
+     "terrain": "사람이 떠난 마을. 불 꺼진 집들",
+     "gmNote": "안전지대(조우표 없음)",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "sT4",
+       "on": "enter",
+       "n": 1,
+       "once": false,
+       "text": "",
+       "playerText": "",
+       "actions": [
+        {
+         "type": "message",
+         "text": "빈집에 들어가 몸을 녹일 수 있다."
+        },
+        {
+         "type": "camp"
+        }
+       ]
+      }
+     ],
+     "encounters": []
+    },
+    {
+     "id": "sA5",
+     "name": "무너진 신전",
+     "x": 760,
+     "y": 180,
+     "img": "e6882b7aca4da6120373c842ef99062f.jpg",
+     "terrain": "눈 속에 기둥만 남은 신전",
+     "gmNote": "",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "sT5",
+       "on": "search",
+       "n": 1,
+       "once": true,
+       "text": "",
+       "playerText": "제단 아래에서 찬 바람이 올라온다.",
+       "actions": [
+        {
+         "type": "reveal",
+         "area": "sA6",
+         "passage": "sP6"
+        },
+        {
+         "type": "message",
+         "text": "제단 밑에 아래로 이어지는 계단을 찾았다."
+        }
+       ]
+      }
+     ],
+     "encounters": [
+      {
+       "id": "nssqDefEncS4",
+       "weight": 2
+      },
+      {
+       "id": "nssqDefEncS3",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "sA6",
+     "name": "지하 회랑",
+     "x": 760,
+     "y": 470,
+     "img": "019f9d03f3ee14f300666138c89cb064.jpg",
+     "terrain": "신전 아래로 이어진 어두운 돌 회랑",
+     "gmNote": "신전의 비밀 통로로만 들어간다",
+     "secret": true,
+     "gather": "",
+     "tags": "",
+     "triggers": [],
+     "encounters": [
+      {
+       "id": "nssqDefEncS5",
+       "weight": 1
+      }
+     ]
+    },
+    {
+     "id": "sA7",
+     "name": "옛 감옥",
+     "x": 960,
+     "y": 470,
+     "img": "ffe913d7ecc48422469b6fb6e08a5257.jpg",
+     "terrain": "녹슨 창살이 늘어선 방",
+     "gmNote": "",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "sT7",
+       "on": "search",
+       "n": 1,
+       "once": false,
+       "text": "",
+       "playerText": "무너진 벽에서 광석이 보인다.",
+       "actions": [
+        {
+         "type": "gather",
+         "method": "mining",
+         "amount": "some",
+         "rank": 2
+        }
+       ]
+      }
+     ],
+     "encounters": [
+      {
+       "id": "nssqDefEncS5",
+       "weight": 1
+      }
+     ]
+    }
+   ],
+   "passages": [
+    {
+     "id": "sP1",
+     "a": "sA1",
+     "b": "sA2",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "sP2",
+     "a": "sA1",
+     "b": "sA3",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "sP3",
+     "a": "sA2",
+     "b": "sA4",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "sP4",
+     "a": "sA3",
+     "b": "sA4",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "sP5",
+     "a": "sA4",
+     "b": "sA5",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "sP6",
+     "a": "sA5",
+     "b": "sA6",
+     "state": "hidden",
+     "oneWay": false,
+     "label": "제단 밑 계단"
+    },
+    {
+     "id": "sP7",
+     "a": "sA6",
+     "b": "sA7",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    }
+   ],
+   "foes": [
+    {
+     "id": "sF1",
+     "actorUuid": "Compendium.nssq.enemies.Actor.KxYczCGowUEWYbPU",
+     "name": "스노 드리프트",
+     "route": [
+      "sA2",
+      "sA4",
+      "sA5"
+     ],
+     "mode": "pingpong",
+     "every": 1,
+     "nightOnly": false,
+     "active": true
+    }
+   ],
+   "triggers": []
+  }
+ ],
+ "encounters": [
+  {
+   "id": "nssqDefEncF1",
+   "name": "숲쥐 무리",
+   "group": "map:nssqDefMapForest",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.9OhjQfv4rD99lj98",
+     "name": "숲쥐",
+     "img": "",
+     "count": 2,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.KecRZELx5a7oSFmT",
+     "name": "삼림나비",
+     "img": "",
+     "count": 1,
+     "row": "back"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncF2",
+   "name": "두더지와 무당벌레",
+   "group": "map:nssqDefMapForest",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.ASw9bCWyp2Nh5wgP",
+     "name": "할퀴는 두더지",
+     "img": "",
+     "count": 2,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.ESHVCRZl8uL9mNuy",
+     "name": "큰무당벌레",
+     "img": "",
+     "count": 1,
+     "row": "back"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncF3",
+   "name": "맨드레이크 밭",
+   "group": "map:nssqDefMapForest",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.KpIiQCmZMyqPtsk7",
+     "name": "맨드레이크",
+     "img": "",
+     "count": 2,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.SdlChAP93JWuod7z",
+     "name": "숲달팽이",
+     "img": "",
+     "count": 1,
+     "row": "back"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncF4",
+   "name": "독나비 떼",
+   "group": "map:nssqDefMapForest",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.9OhjQfv4rD99lj98",
+     "name": "숲쥐",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.KJE3JPG8ftpdo9iz",
+     "name": "독 뿜는 호랑나비",
+     "img": "",
+     "count": 2,
+     "row": "back"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncF5",
+   "name": "숲의 늑대",
+   "group": "map:nssqDefMapForest",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.OUkJXGCXaXFcnjmM",
+     "name": "포레스트 울프",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.9OhjQfv4rD99lj98",
+     "name": "숲쥐",
+     "img": "",
+     "count": 2,
+     "row": "front"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncS1",
+   "name": "눈토끼 무리",
+   "group": "map:nssqDefMapSnow",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.MjAL5Cwzb0ZFPiHf",
+     "name": "눈토끼",
+     "img": "",
+     "count": 2,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.TkkWQIn0kUjq3D8i",
+     "name": "재커로프",
+     "img": "",
+     "count": 1,
+     "row": "back"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncS2",
+   "name": "설원의 사냥꾼",
+   "group": "map:nssqDefMapSnow",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.Xip3z9ThebqEUPpC",
+     "name": "스라소니",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.MjAL5Cwzb0ZFPiHf",
+     "name": "눈토끼",
+     "img": "",
+     "count": 1,
+     "row": "back"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncS3",
+   "name": "멧돼지 돌진",
+   "group": "map:nssqDefMapSnow",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.Y8beYtW24fAiY9qA",
+     "name": "워보어",
+     "img": "",
+     "count": 2,
+     "row": "front"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncS4",
+   "name": "폐허의 날개",
+   "group": "map:nssqDefMapSnow",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.CdV2WTeVXTFiOB3B",
+     "name": "와일드 윙",
+     "img": "",
+     "count": 2,
+     "row": "back"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.TkkWQIn0kUjq3D8i",
+     "name": "재커로프",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncS5",
+   "name": "지하의 독충",
+   "group": "map:nssqDefMapSnow",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.VthEA1zVPAROc3xs",
+     "name": "거대지네",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.aDozrgMbDOxeahlF",
+     "name": "데스 스토커",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    }
+   ]
+  }
+ ]
+}

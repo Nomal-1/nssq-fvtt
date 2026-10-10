@@ -219,6 +219,7 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=trap]", async () => (await import("./explore.mjs")).openTrapDialog());
     html.on("click", "[data-gm=gather]", async () => (await import("./loot.mjs")).openGatherDialog());
     html.on("click", "[data-gm=preset-new]", () => createPreset());
+    html.on("click", "[data-gm=defaults]", async () => (await import("./defaults.mjs")).reseedDefaults());
     html.on("click", "[data-gm=encounters]", async () => (await import("./encounters.mjs")).EncounterApp.open());
     html.on("click", "[data-gm=enc-start]", async (ev) => (await import("./encounters.mjs")).startEncounter(ev.currentTarget.dataset.id));
     html.on("click", "[data-gm=enc-random]", async () => {

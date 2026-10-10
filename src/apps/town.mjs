@@ -13,8 +13,8 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
 const rid = () => foundry.utils.randomID();
 
-export const FACILITY_TYPES = ["guild", "shop", "inn", "apothecary", "pub", "office", "free"];
-const ICONS = { guild: "fa-users", shop: "fa-store", inn: "fa-bed", apothecary: "fa-mortar-pestle", pub: "fa-beer", office: "fa-landmark", free: "fa-map-signs" };
+export const FACILITY_TYPES = ["guild", "shop", "inn", "apothecary", "pub", "office", "gate", "free"];
+const ICONS = { guild: "fa-users", shop: "fa-store", inn: "fa-bed", apothecary: "fa-mortar-pestle", pub: "fa-beer", office: "fa-landmark", gate: "fa-dungeon", free: "fa-map-signs" };
 
 export const allTowns = () => game.settings.get("nssq", "towns") ?? {};
 export const location = () => game.settings.get("nssq", "location") ?? {};
@@ -97,6 +97,26 @@ export async function requestReturnToTown() {
   return emit("townReturn", { userId: game.user.id });
 }
 
+/** 미궁 입구: GM은 바로 들어가고, 플레이어는 GM에게 제안 */
+export async function enterMapFromTown(mapId) {
+  if (!game.user.isGM) return (await import("../socket.mjs")).emit("townGate", { userId: game.user.id, mapId });
+  const { startProgress, allMaps, FieldMapApp } = await import("./fieldmap.mjs");
+  const map = allMaps()[mapId];
+  if (!map) return null;
+  await startProgress(mapId, map.startHour ?? 8);
+  return FieldMapApp.open();
+}
+
+async function onGateRequest({ userId, mapId }) {
+  const { isActiveGM } = await import("../combat/apply.mjs");
+  if (!isActiveGM()) return;
+  const map = (await import("./fieldmap.mjs")).allMaps()[mapId];
+  if (!map) return;
+  const who = game.users.get(userId)?.name ?? "?";
+  const ok = await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("gateAsk", { who, name: map.name }))}</p>`, rejectClose: false });
+  if (ok) await enterMapFromTown(mapId);
+}
+
 async function onReturnRequest({ userId }) {
   const { isActiveGM } = await import("../combat/apply.mjs");
   if (!isActiveGM()) return;
@@ -113,7 +133,7 @@ export class TownApp extends Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-town", classes: ["nssq", "nq-window", "nssq-town"], title: game.i18n.localize("NSSQ.Town.title"),
-      width: 1100, height: 680, resizable: true
+      width: 1200, height: 700, resizable: true
     });
   }
 
@@ -140,37 +160,65 @@ export class TownApp extends Application {
     const gm = game.user.isGM;
     const here = location().kind === "town" && location().townId === t?.id;
     const towns = Object.values(allTowns());
-    // GM 도구는 오른쪽 위 작은 줄(플레이어 화면에는 없음)
+    // GM 도구는 제목 줄 아래 오른쪽 작은 줄(플레이어 화면에는 없음)
     const bar = gm ? `<div class="town-bar">
         <select data-town-pick>${towns.map((x) => opt(x.id, t?.id, `${x.name}${location().kind === "town" && location().townId === x.id ? ` ${L("hereMark")}` : ""}`)).join("")}${towns.length ? "" : opt("", "", L("none"))}</select>
         <button type="button" data-town="new" title="${esc(L("new"))}"><i class="fas fa-plus"></i></button>
         ${t ? `<button type="button" data-town="edit" title="${esc(L("edit"))}"><i class="fas fa-pen"></i></button>` : ""}
         ${t && !here ? `<button type="button" data-town="goHere" class="go"><i class="fas fa-home"></i> ${esc(L("goHere"))}</button>` : ""}
-        ${here ? `<button type="button" data-town="toMap" class="go"><i class="fas fa-map"></i> ${esc(L("toMap"))}</button><button type="button" data-town="toRandom" class="go"><i class="fas fa-dungeon"></i> ${esc(L("toRandom"))}</button>` : ""}
       </div>` : "";
     if (!t) return $(`<div class="town-stage empty">${bar}<p class="town-empty">${esc(gm ? L("noneGM") : L("notInTown"))}</p></div>`);
     const f = (t.facilities ?? []).find((x) => x.id === this.facId) ?? null;
     if (!f) this.facId = null;
-    const bg = (src) => (src ? `style="background-image:url('${esc(src)}')"` : "");
+    const bg = (src) => (src ? `style="background-image:url('${encodeURI(src)}')"` : "");
+    const top = (place, say) => `<header class="town-top">${this.clockHtml()}
+      <div class="headline"><b class="place">${esc(place)}</b><span class="say" data-say-default="${esc(say)}">${esc(say)}</span></div>
+      <div class="money">${this.moneyText()}</div></header>`;
     if (!f) {
-      // 마을 화면: 마을 일러 + 시설 선택지 + 대사창
-      const menu = (t.facilities ?? []).map((x) => `<button type="button" class="town-choice" data-go="${x.id}"><i class="fas ${ICONS[x.type] ?? "fa-map-signs"}"></i><span>${esc(x.name)}</span></button>`).join("");
-      return $(`<div class="town-stage" ${bg(t.img)}>${bar}
-        <div class="town-plate"><h2>${esc(t.name)}</h2><span class="status ${here ? "here" : ""}">${esc(here ? L("partyHereShort") : L("partyAway"))}</span></div>
+      // 마을 화면: 마을 일러 + 시설 선택지(원작의 거리 메뉴)
+      const menu = (t.facilities ?? []).map((x) => `<button type="button" class="town-choice" data-go="${x.id}" data-say="${esc(x.desc && x.type === "free" ? x.desc : L(`hint.${x.type}`))}"><i class="fas ${ICONS[x.type] ?? "fa-map-signs"}"></i><span>${esc(x.name)}</span></button>`).join("");
+      return $(`<div class="town-stage" ${bg(t.img)}>${top(t.name, t.desc || (here ? L("partyHere") : L("partyAway")))}${bar}
         <nav class="town-menu">${menu}</nav>
-        <div class="town-talk"><p>${esc(t.desc || (here ? L("partyHere") : L("welcome", { name: t.name })))}</p></div></div>`);
+        <div class="town-name"><i class="fas fa-home"></i> ${esc(t.name)}${here ? "" : ` <small>${esc(L("partyAwayShort"))}</small>`}</div></div>`);
     }
-    // 시설 화면: 시설 일러(없으면 마을 일러) + NPC + 대사 + 시설 메뉴
-    const items = this.facilityButtons(f);
-    return $(`<div class="town-stage facility ${f.img ? "" : "no-img"}" ${bg(f.img || t.img)}>${bar}
-      <div class="town-plate"><h2>${esc(f.name)}</h2><span class="status">${esc(t.name)}</span></div>
-      ${f.npc ? `<img class="town-npc" src="${esc(f.npc)}" alt=""/>` : f.img ? "" : `<i class="town-fac-icon fas ${ICONS[f.type] ?? "fa-map-signs"}"></i>`}
-      <nav class="town-menu">${items}<button type="button" class="town-choice back" data-town="leaveFac"><i class="fas fa-sign-out-alt"></i><span>${esc(L("toStreet"))}</span></button></nav>
-      <div class="town-talk">${f.npcName ? `<b class="who">${esc(f.npcName)}</b>` : ""}<p>${esc(f.desc || L(`greet.${f.type}`))}</p><p class="notes">${esc(L(`hint.${f.type}`))}</p></div></div>`);
+    // 시설 화면: 시설 일러 + NPC + 메뉴 + 파티 상태(원작의 시설 화면)
+    const items = await this.facilityButtons(f);
+    return $(`<div class="town-stage facility ${f.img ? "" : "no-img"}" ${bg(f.img || t.img)}>${top(f.name, f.desc || L(`greet.${f.type}`))}${bar}
+      ${f.npc ? `<img class="town-npc" src="${encodeURI(f.npc)}" alt=""/>` : f.img ? "" : `<i class="town-fac-icon fas ${ICONS[f.type] ?? "fa-map-signs"}"></i>`}
+      <nav class="town-menu">${items}<button type="button" class="town-choice back" data-town="leaveFac" data-say="${esc(L("say.back"))}"><i class="fas fa-sign-out-alt"></i><span>${esc(L("toStreet"))}</span></button></nav>
+      ${await this.partyHtml()}</div>`);
   }
 
-  facilityButtons(f) {
-    const b = (act, icon, label) => `<button type="button" class="town-choice" data-fac="${act}" data-fid="${f.id}"><i class="fas ${icon}"></i><span>${esc(label)}</span></button>`;
+  /** 시각: 필드 지도·랜덤 던전의 마지막 시각(없으면 시간대) */
+  clockHtml() {
+    const fm = game.settings.get("nssq", "fieldMapState") ?? {};
+    const dg = game.settings.get("nssq", "dungeon") ?? {};
+    const h = Number.isFinite(fm.hour) ? fm.hour : Number.isFinite(dg.hour) ? dg.hour : null;
+    if (h === null) return `<div class="clock"><b class="tod">${esc(game.i18n.localize(`NSSQ.Dungeon.tod.${game.settings.get("nssq", "timeOfDay") ?? "day"}`))}</b></div>`;
+    const hh = h % 24;
+    return `<div class="clock"><span class="ampm">${esc(L(hh < 12 ? "am" : "pm"))}</span><b>${String(hh % 12 === 0 && hh >= 12 ? 12 : hh % 12).padStart(2, "0")}</b></div>`;
+  }
+
+  /** 소지금: 플레이어는 대표 캐릭터, GM은 파티 합계 */
+  moneyText() {
+    const mine = game.user.character ?? game.actors.find((a) => a.type === "character" && a.isOwner && !game.user.isGM);
+    const n = game.user.isGM ? game.actors.filter((a) => a.type === "character" && !a.getFlag("nssq", "benched")).reduce((t, a) => t + (a.system.money ?? 0), 0) : mine?.system.money ?? 0;
+    return `${n.toLocaleString()} <small>G</small>`;
+  }
+
+  async partyHtml() {
+    const party = (await import("./gm-screen.mjs")).partyActors();
+    const bar = (v, m, cls) => `<span class="bar ${cls}"><i style="width:${m ? Math.round((100 * Math.max(0, v)) / m) : 0}%"></i></span>`;
+    return `<footer class="town-party">${party.map((a) => {
+      const { hp, tp } = a.system;
+      return `<div class="pc"><b>${esc(a.name)}</b>
+        <div class="stat"><span>HP</span><em>${hp?.value ?? 0}</em><span>TP</span><em>${tp?.value ?? 0}</em></div>
+        <div class="bars">${bar(hp?.value ?? 0, hp?.max ?? 0, "hp")}${bar(tp?.value ?? 0, tp?.max ?? 0, "tp")}</div></div>`;
+    }).join("")}</footer>`;
+  }
+
+  async facilityButtons(f) {
+    const b = (act, icon, label, extra = "") => `<button type="button" class="town-choice" data-fac="${act}" data-fid="${f.id}" data-say="${esc(L(`say.${act}`))}" ${extra}><i class="fas ${icon}"></i><span>${esc(label)}</span></button>`;
     const gm = game.user.isGM;
     const out = [];
     switch (f.type) {
@@ -179,6 +227,13 @@ export class TownApp extends Application {
       case "apothecary": out.push(b("shop", "fa-prescription-bottle", L("btn.potions"))); break;
       case "inn": out.push(b("sheet", "fa-box", L("btn.storage"))); if (gm) out.push(b("living", "fa-coins", L("btn.living"))); break;
       case "office": out.push(b("bestiary", "fa-book-dead", L("btn.bestiary"))); break;
+      case "gate": {
+        const maps = Object.values((await import("./fieldmap.mjs")).allMaps());
+        for (const m of maps) out.push(`<button type="button" class="town-choice" data-fac="enterMap" data-map="${m.id}" data-say="${esc(L(gm ? "say.enterMap" : "say.enterMapPL", { name: m.name }))}"><i class="fas fa-map"></i><span>${esc(m.name)}</span></button>`);
+        if (gm) out.push(b("random", "fa-dice", L("btn.random")));
+        if (!maps.length && !gm) out.push(`<p class="notes">${esc(L("noMaps"))}</p>`);
+        break;
+      }
       default: break;
     }
     if (f.sceneId && game.scenes.get(f.sceneId)) out.push(b("scene", "fa-eye", gm ? L("btn.sceneGM") : L("btn.scene")));
@@ -234,7 +289,13 @@ export class TownApp extends Application {
     }));
     root.querySelectorAll("[data-mkscene]").forEach((el) => el.addEventListener("click", () => this.makeScene(this.draft.facilities[Number(el.dataset.mkscene)])));
     root.querySelectorAll("[data-town]").forEach((el) => el.addEventListener("click", (ev) => { ev.preventDefault(); this.onAct(el.dataset.town); }));
-    root.querySelectorAll("[data-fac]").forEach((el) => el.addEventListener("click", () => this.onFacility(el.dataset.fac, el.dataset.fid)));
+    root.querySelectorAll("[data-fac]").forEach((el) => el.addEventListener("click", () => this.onFacility(el.dataset.fac, el.dataset.fid, el.dataset.map)));
+    // 메뉴에 마우스를 올리면 제목 줄에 설명(원작처럼)
+    const say = root.querySelector(".town-top .say");
+    root.querySelectorAll("[data-say]").forEach((el) => {
+      el.addEventListener("mouseenter", () => { if (say) say.textContent = el.dataset.say; });
+      el.addEventListener("mouseleave", () => { if (say) say.textContent = say.dataset.sayDefault; });
+    });
     root.querySelectorAll("[data-go]").forEach((el) => el.addEventListener("click", () => { this.facId = el.dataset.go; this.render(); }));
   }
 
@@ -278,7 +339,7 @@ export class TownApp extends Application {
   }
 
   /** 시설 버튼 */
-  async onFacility(act, fid) {
+  async onFacility(act, fid, mapId) {
     const t = this.shownTown();
     const f = t?.facilities.find((x) => x.id === fid);
     const mine = game.user.character ?? game.actors.find((a) => a.type === "character" && a.isOwner && !game.user.isGM) ?? null;
@@ -287,6 +348,8 @@ export class TownApp extends Application {
       case "sheet": { const a = await pickActor(); return a ? a.sheet.render(true) : ui.notifications.warn(L("noCharacter")); }
       case "tree": { const a = await pickActor(); if (!a) return ui.notifications.warn(L("noCharacter")); return (await import("./skill-tree.mjs")).SkillTree.open(a); }
       case "chargen": return game.nssq.openChargen();
+      case "enterMap": return enterMapFromTown(mapId);
+      case "random": return (await import("./dungeon.mjs")).openDungeonDialog();
       case "guild": return (await import("./guild.mjs")).GuildApp.open(f?.name ? `${t.name} · ${f.name}` : null);
       case "gmScreen": return game.nssq.openGMScreen();
       case "shop": { const a = await pickActor(); if (!a) return ui.notifications.warn(L("noCharacter")); return game.nssq.openShop(a); }
@@ -309,12 +372,12 @@ export class TownApp extends Application {
 }
 
 export function registerTown() {
-  import("../socket.mjs").then(({ onSocket }) => onSocket("townReturn", onReturnRequest));
+  import("../socket.mjs").then(({ onSocket }) => { onSocket("townReturn", onReturnRequest); onSocket("townGate", onGateRequest); });
   game.settings.register("nssq", "towns", { scope: "world", config: false, type: Object, default: {}, onChange: () => TownApp.refresh() });
   game.settings.register("nssq", "location", {
     scope: "world", config: false, type: Object, default: {},
     // 마을에 도착하면 모두에게 마을 창
-    onChange: (v) => { if (v?.kind === "town") TownApp.open(v.townId); else TownApp.refresh(); }
+    onChange: (v) => { if (v?.kind === "town") TownApp.open(v.townId); else if (app?.rendered) app.close(); }
   });
   // 파티가 마을에 있을 때 접속한 플레이어에게도 마을 화면(전투 중이면 열지 않음)
   Hooks.once("ready", () => { if (!game.user.isGM && location().kind === "town" && !game.combat?.started) TownApp.open(location().townId); });

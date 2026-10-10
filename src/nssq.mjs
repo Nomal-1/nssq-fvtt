@@ -39,6 +39,7 @@ import { registerDungeon } from "./apps/dungeon.mjs";
 import { EncounterApp, registerEncounters } from "./apps/encounters.mjs";
 import { TownApp, registerTown, returnToTown, requestReturnToTown } from "./apps/town.mjs";
 import { GuildApp, registerGuild } from "./apps/guild.mjs";
+import { registerDefaults, reseedDefaults } from "./apps/defaults.mjs";
 import { FieldMapApp, registerFieldMap } from "./apps/fieldmap.mjs";
 import { ChargenWizard, newCharacter, registerChargen } from "./apps/chargen-wizard.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
@@ -111,6 +112,7 @@ Hooks.once("init", () => {
   registerEncounters();
   registerTown();
   registerGuild();
+  registerDefaults();
   registerFieldMap();
   registerChargen();
   registerEnemyLibrary();
@@ -119,6 +121,7 @@ Hooks.once("init", () => {
     openEncounters: (opts) => EncounterApp.open(opts),
     openTown: (id) => TownApp.open(id),
     openGuild: () => GuildApp.open(),
+    reseedDefaults,
     returnToTown: (id, o) => (game.user.isGM ? returnToTown(id, o) : requestReturnToTown()),
     promptCheck, rollCheck, openRequestDialog, rollAbilities, acquireItems, openShop, toggleShop,
     openGMScreen: () => GMScreen.open(),

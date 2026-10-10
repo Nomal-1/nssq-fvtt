@@ -512,14 +512,21 @@
       "title": "마을",
       "newName": "새 마을", "noTownName": "마을", "new": "새 마을", "edit": "편집", "none": "(마을 없음)",
       "noneGM": "마을이 없다. [새 마을]로 만든다.", "notInTown": "파티가 마을에 있지 않다.",
-      "hereMark": "(파티)", "partyHere": "파티가 이 마을에 있다. 마을에서는 늘 【HP】【TP】가 가득하고 상태 이상이 없다.", "partyAway": "파티가 이 마을에 있지 않다.", "partyHereShort": "파티 체류 중 · 늘 회복된 상태", "welcome": "{name}에 어서 오세요.", "toStreet": "거리로 나간다",
+      "hereMark": "(파티)", "partyHere": "파티가 이 마을에 있다. 마을에서는 늘 【HP】【TP】가 가득하고 상태 이상이 없다.", "partyAway": "파티가 이 마을에 있지 않다.", "partyHereShort": "파티 체류 중 · 늘 회복된 상태", "partyAwayShort": "(파티 없음)", "am": "오전", "pm": "오후",
+      "gateAsk": "{who}이(가) 「{name}」에 들어가자고 한다. 들어갈까?", "noMaps": "들어갈 수 있는 미궁이 없다.",
+      "say": {
+        "guild": "내 캐릭터를 관리한다. 파티 참가·대기, 스킬 재분배, 직업 변경.", "tree": "스킬 트리를 열어 스킬을 배운다.", "chargen": "새 탐색자를 길드에 등록한다.",
+        "gmScreen": "GM 스크린에서 파티를 확인한다.", "shop": "장비·아이템을 사고팔고 제련한다.", "sheet": "캐릭터 시트에서 창고(소지품)를 정리한다.",
+        "living": "세션을 마칠 때 생활비를 걷는다.", "bestiary": "지금까지 만난 마물의 기록을 본다.", "scene": "이 시설의 씬을 본다.",
+        "random": "랜덤 던전 설정 창을 연다.", "enterMap": "「{name}」에 들어간다.", "enterMapPL": "「{name}」에 들어가자고 GM에게 제안한다.", "back": "거리로 나간다."
+      }, "welcome": "{name}에 어서 오세요.", "toStreet": "거리로 나간다",
       "goHere": "이 마을로 귀환", "toMap": "필드 지도로", "toRandom": "랜덤 던전으로",
       "returned": "{name}(으)로 돌아왔다", "restored": "{names}: 【HP】【TP】 최대, 상태 이상·강화·약화·오버히트 없음",
       "movedByGM": "GM이 파티를 마을로 옮겼다", "leftByGM": "던전에서 나와 마을로 돌아왔다", "returnButton": "마을로 돌아가기",
       "returnAsk": "{who}이(가) 마을로 돌아가자고 한다. 돌아갈까?", "returnBy": "{who}의 제안으로 던전 입구에서 마을로 돌아왔다",
       "shopDefault": "판매 품목: 기본(마을 밖·따로 정하지 않은 마을)",
       "shopHint": "판매 품목은 GM 스크린 「준비」 → 상점 품목에서 이 마을을 골라 정한다(처음엔 기본 설정을 따른다). 랭크 상한을 정하면 플레이어는 그 랭크까지만 산다.",
-      "type": { "guild": "길드", "shop": "상점", "inn": "여관", "apothecary": "시약원", "pub": "주점", "office": "관청", "free": "기타" },
+      "type": { "guild": "길드", "shop": "상점", "inn": "여관", "apothecary": "시약원", "pub": "주점", "office": "관청", "gate": "미궁 입구", "free": "기타" },
       "hint": {
         "guild": "캐릭터 관리·스킬 재분배·직업 변경·새 캐릭터.",
         "shop": "장비·아이템 구입, 제련, 매각.",
@@ -527,6 +534,7 @@
         "apothecary": "치료·부활은 마을에 돌아오면 자동(무료). 회복약은 상점에서.",
         "pub": "의뢰 게시판(준비 중).",
         "office": "미션(준비 중)·몬스터 도감.",
+        "gate": "미궁(필드 지도)에 들어간다.",
         "free": ""
       },
       "greet": {
@@ -536,15 +544,22 @@
         "apothecary": "다친 데는 없나요? 약이라면 여기 있어요.",
         "pub": "어서 와. 일거리라면 곧 게시판에 붙을 거야.",
         "office": "관청입니다. 용건을 말씀하세요.",
+        "gate": "미궁으로 가는가? 준비는 단단히 해 두게.",
         "free": "…"
       },
-      "btn": { "tree": "스킬 트리", "chargen": "새 캐릭터", "guild": "길드", "party": "파티(GM)", "shop": "상점", "potions": "회복약 사기", "storage": "시트(창고)", "living": "생활비 걷기", "bestiary": "몬스터 도감", "scene": "씬 보기", "sceneGM": "씬 띄우기" },
+      "btn": { "tree": "스킬 트리", "chargen": "새 캐릭터", "guild": "길드", "party": "파티(GM)", "shop": "상점", "potions": "회복약 사기", "storage": "시트(창고)", "living": "생활비 걷기", "bestiary": "몬스터 도감", "random": "랜덤 던전", "scene": "씬 보기", "sceneGM": "씬 띄우기" },
       "noCharacter": "쓸 캐릭터가 없다.", "pickActor": "누구로 열까", "ok": "확인",
       "back": "목록", "save": "저장", "delete": "마을 지우기", "deleteConfirm": "「{name}」을(를) 지운다.", "noName": "이름을 정한다.",
       "facilities": "시설", "addFac": "시설 추가", "up": "위로", "del": "지우기",
       "f": { "type": "종류", "name": "이름", "img": "그림", "scene": "씬", "desc": "설명", "townName": "마을 이름", "npc": "NPC 그림", "npcName": "NPC 이름", "maxRank": "상점 랭크 상한", "maxRankHint": "비우면 제한 없음(R15)" },
       "noScene": "(연결 안 함)", "makeScene": "이 이름으로 씬을 만들어 연결(모두 시야)", "sceneFolder": "마을", "sceneMade": "씬 「{name}」을(를) 만들었다. [저장]을 눌러 남긴다.",
       "editHint": "마을은 지도에 그리지 않는 완전한 안전지대다. 《아리아드네의 실》·던전 입구의 「마을로 돌아간다」·랜덤 던전 클리어·GM의 [마을로 돌아가기]로 떠나온 마을에 도착한다."
+    },
+    "Defaults": {
+      "title": "기본 마을·던전", "hint": "기본 제공 마을 「뿌리 마을」과 미궁 둘(고목의 숲·눈 덮인 폐허)을 원래대로 넣는다",
+      "ask": "기본 제공 마을 「뿌리 마을」, 필드 지도 「고목의 숲」·「눈 덮인 폐허」와 그 전투 구성을 원래대로 되돌린다. 기본 것을 고쳤다면 사라진다. GM이 만든 마을·지도는 그대로다.",
+      "done": "기본 마을 {towns}·지도 {maps}·전투 구성 {encounters}을(를) 넣었다.",
+      "seeded": "기본 마을 {towns}·미궁 {maps}을(를) 넣었다(GM 스크린 「준비」에서 다시 넣을 수 있다)."
     },
     "Guild": {
       "title": "길드",
