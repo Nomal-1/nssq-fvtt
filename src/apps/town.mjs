@@ -235,8 +235,8 @@ export class TownApp extends Application {
         ${t && !here ? `<button type="button" data-town="goHere" class="go"><i class="fas fa-home"></i> ${esc(L("goHere"))}</button>` : ""}
       </div>` : "";
     if (!t) return $(`<div class="town-stage empty">${bar}<p class="town-empty">${esc(gm ? L("noneGM") : L("notInTown"))}</p></div>`);
-    // 씬이 있는 마을: 창은 관리용(플레이 화면은 씬 위에 있다)
-    if (this.constructor === TownApp && gm && townSceneOf(t)) return $(this.managerHtml(t, bar, here));
+    // GM의 창은 관리용(플레이 화면은 마을 씬 위에 있다. 씬이 없으면 [마을 씬으로 보기]가 만든다)
+    if (this.constructor === TownApp && gm) return $(this.managerHtml(t, bar, here));
     const f = (t.facilities ?? []).find((x) => x.id === this.facId) ?? null;
     if (!f) this.facId = null;
     const bg = (src) => (src ? `style="background-image:url('${encodeURI(src)}')"` : "");
