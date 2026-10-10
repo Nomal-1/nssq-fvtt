@@ -60,6 +60,17 @@ export class GMScreen extends Application {
     });
   }
 
+  constructor(options = {}) {
+    super(options);
+    // 마지막으로 연 탭(이 브라우저에 기억)
+    try { const t = localStorage.getItem("nssq.gmScreenTab"); if (t) this.options.tabs[0].initial = t; } catch { /* 저장소 없음 */ }
+  }
+
+  _onChangeTab(event, tabs, active) {
+    super._onChangeTab?.(event, tabs, active);
+    try { localStorage.setItem("nssq.gmScreenTab", active); } catch { /* 저장소 없음 */ }
+  }
+
   static open() {
     if (!game.user.isGM) return;
     GMScreen.instance ??= new GMScreen();
@@ -111,7 +122,21 @@ export class GMScreen extends Application {
       bg: !!s.background?.src
     }));
     const npcCandidates = gmCharacters().map((a) => ({ id: a.id, name: a.name, img: a.img, npc: !!a.system.npc }));
+    // 상태 한 줄: 시각(필드 지도·랜덤 던전), 시간대, 어둠, 누적 전투 턴
+    const fm = game.settings.get("nssq", "fieldMapState") ?? {};
+    const dg = game.settings.get("nssq", "dungeon") ?? {};
+    const hour = fm.active ? fm.hour : dg.active ? dg.hour : null;
+    const tod = game.settings.get("nssq", "timeOfDay");
+    const status = {
+      clock: hour === null || hour === undefined ? "" : L("statusClock", { h: hour }),
+      tod: tod && tod !== "none" ? game.i18n.localize(`NSSQ.Settings.timeOfDay.${tod}`) : "",
+      night: tod === "night",
+      dark: !!battle?.getFlag("nssq", "battle")?.dark,
+      exploring: !!(fm.active || dg.active),
+      turns: game.settings.get("nssq", "battleTurns") ?? 0
+    };
     return {
+      status,
       presets,
       battle: battle ? { name: battle.getFlag("nssq", "battle").presetName, round: battle.round } : null,
       npcCandidates,
@@ -140,10 +165,10 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=request]", () => openRequestDialog());
     html.on("click", "[data-gm=shop]", () => toggleShop());
     html.on("click", "[data-gm=shop-folder]", () => ensureShopFolder());
-    // 판매 품목 설정: 「상점 품목」 탭으로 이동
-    html.on("click", "[data-gm=shop-items]", () => this._tabs?.[0]?.activate("shop"));
     html.on("click", "[data-gm=session-start]", () => this.sessionStart());
     html.on("click", "[data-gm=macro]", () => createGMScreenMacro());
+    // ⚙ 메뉴는 고르면 닫는다
+    html.on("click", ".gm-admin .menu button", (ev) => ev.currentTarget.closest("details")?.removeAttribute("open"));
     html.on("click", "[data-gm=battle-start]", (ev) => openStartDialog(ev.currentTarget.dataset.preset || null));
     html.on("click", "[data-gm=battle-end]", () => openEndDialog());
     html.on("click", "[data-gm=skill-maker]", async () => (await import("./custom-maker.mjs")).openSkillMaker());

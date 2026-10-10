@@ -425,7 +425,18 @@
 .nssq-gm-screen .window-content { padding: 8px 10px; }
 .nssq-gm-screen .gm-screen { display: flex; flex-direction: column; height: 100%; }
 .nssq-gm-screen .gm-actions { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; border: 1px solid var(--nq-gold); border-radius: 8px; background: linear-gradient(var(--nq-panel2), var(--nq-panel)); flex: 0 0 auto; }
-.nssq-gm-screen .gm-actions button { flex: 1 1 auto; width: auto; line-height: 2em; padding: 0 8px; }
+.nssq-gm-screen .gm-actions button { flex: 1 1 0; width: auto; line-height: 2.4em; padding: 0 8px; font-size: 1.05em; }
+.nssq-gm-screen .gm-actions { align-items: center; flex-wrap: nowrap; }
+.nssq-gm-screen .gm-admin { position: relative; flex: 0 0 auto; }
+.nssq-gm-screen .gm-admin summary { list-style: none; cursor: pointer; padding: 0 8px; font-size: 1.2em; color: var(--nq-mu); }
+.nssq-gm-screen .gm-admin summary::-webkit-details-marker { display: none; }
+.nssq-gm-screen .gm-admin[open] summary { color: var(--nq-gold-l); }
+.nssq-gm-screen .gm-admin .menu { position: absolute; right: 0; top: 130%; z-index: 10; display: flex; flex-direction: column; gap: 4px; padding: 6px; min-width: 190px; border: 1px solid var(--nq-gold); border-radius: 8px; background: var(--nq-bg2); }
+.nssq-gm-screen .gm-status { display: flex; flex-wrap: wrap; gap: 14px; padding: 4px 8px; color: var(--nq-mu); font-size: 0.92em; flex: 0 0 auto; }
+.nssq-gm-screen .gm-status .on { color: var(--nq-green); }
+.nssq-gm-screen .gm-tools { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.nssq-gm-screen .gm-tools button { flex: 0 1 auto; width: auto; line-height: 2.2em; padding: 0 12px; }
+.nssq-gm-screen .gm-tools button.on { border-color: var(--nq-green); color: var(--nq-green); }
 .nssq-gm-screen .gm-actions button.on { border-color: var(--nq-green); color: var(--nq-green); }
 .nssq-gm-screen .gm-actions button.battle { font-weight: 700; color: var(--nq-fp); }
 .nssq-gm-screen .gm-actions button.battle.on { border-color: var(--nq-red); color: var(--nq-red); }

@@ -7,27 +7,30 @@
     {{/if}}
     <button type="button" data-gm="fieldmap"><i class="fas fa-map"></i> {{localize "NSSQ.FieldMap.title"}}</button>
     <button type="button" data-gm="dungeon"><i class="fas fa-dungeon"></i> {{localize "NSSQ.Dungeon.title"}}</button>
-    <button type="button" data-gm="camp"><i class="fas fa-campground"></i> {{localize "NSSQ.Explore.campTitle"}}</button>
-    <button type="button" data-gm="trap"><i class="fas fa-exclamation-triangle"></i> {{localize "NSSQ.Explore.trapTitle"}}</button>
-    <button type="button" data-gm="gather"><i class="fas fa-leaf"></i> {{localize "NSSQ.Loot.gatherTitle"}}</button>
     <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
-    <button type="button" data-gm="shop" class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</button>
-    <button type="button" data-gm="shop-items" title="{{localize 'NSSQ.GMScreen.shopItemsHint'}}"><i class="fas fa-eye-slash"></i> {{localize "NSSQ.GMScreen.shopItemsButton"}}</button>
-    <button type="button" data-gm="shop-folder" title="{{localize 'NSSQ.Shop.folderHint'}}"><i class="fas fa-folder-plus"></i> {{localize "NSSQ.Shop.folderButton"}}</button>
-    <button type="button" data-gm="macro" title="{{localize 'NSSQ.GMScreen.macroHint'}}"><i class="fas fa-terminal"></i> {{localize "NSSQ.GMScreen.macro"}}</button>
-    <button type="button" data-gm="effects-sync" title="{{localize 'NSSQ.EffectsSync.hint'}}"><i class="fas fa-sync"></i> {{localize "NSSQ.EffectsSync.button"}}</button>
-    <button type="button" data-gm="skill-maker"><i class="fas fa-magic"></i> {{localize "NSSQ.Maker.skillTitle"}}</button>
-    <button type="button" data-gm="class-maker"><i class="fas fa-chess-knight"></i> {{localize "NSSQ.Maker.classTitle"}}</button>
-    <button type="button" data-gm="enemy-maker"><i class="fas fa-dragon"></i> {{localize "NSSQ.Maker.enemyTitle"}}</button>
-    <button type="button" data-gm="living"><i class="fas fa-home"></i> {{localize "NSSQ.Session.livingTitle"}}</button>
-    <button type="button" data-gm="session-end"><i class="fas fa-trophy"></i> {{localize "NSSQ.Session.endTitle"}}</button>
-    <button type="button" data-gm="session-start"><i class="fas fa-flag"></i> {{localize "NSSQ.GMScreen.sessionStart"}} ({{localize "NSSQ.FP"}} {{fpStart}})</button>
+    <details class="gm-admin">
+      <summary title="{{localize 'NSSQ.GMScreen.admin'}}"><i class="fas fa-cog"></i></summary>
+      <div class="menu">
+        <button type="button" data-gm="macro" title="{{localize 'NSSQ.GMScreen.macroHint'}}"><i class="fas fa-terminal"></i> {{localize "NSSQ.GMScreen.macro"}}</button>
+        <button type="button" data-gm="effects-sync" title="{{localize 'NSSQ.EffectsSync.hint'}}"><i class="fas fa-sync"></i> {{localize "NSSQ.EffectsSync.button"}}</button>
+      </div>
+    </details>
   </header>
+  <div class="gm-status">
+    {{#if status.clock}}<span><i class="fas fa-clock"></i> {{status.clock}}</span>{{/if}}
+    {{#if status.tod}}<span><i class="fas fa-{{#if status.night}}moon{{else}}sun{{/if}}"></i> {{status.tod}}</span>{{/if}}
+    {{#if status.dark}}<span class="warn"><i class="fas fa-eye-slash"></i> {{localize "NSSQ.GMScreen.statusDark"}}</span>{{/if}}
+    {{#if status.exploring}}<span><i class="fas fa-hourglass-half"></i> {{localize "NSSQ.GMScreen.statusTurns" n=status.turns}}</span>{{/if}}
+    <span class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</span>
+  </div>
 
   <nav class="gm-tabs tabs">
     <a class="item" data-tab="party">{{localize "NSSQ.GMScreen.party"}}</a>
+    <a class="item" data-tab="explore">{{localize "NSSQ.GMScreen.explore"}}</a>
     <a class="item" data-tab="battle">{{localize "NSSQ.Battle.tab"}}</a>
+    <a class="item" data-tab="session">{{localize "NSSQ.GMScreen.session"}}</a>
     <a class="item" data-tab="shop">{{localize "NSSQ.GMScreen.shopItems"}}</a>
+    <a class="item" data-tab="make">{{localize "NSSQ.GMScreen.make"}}</a>
     <a class="item" data-tab="reference">{{localize "NSSQ.GMScreen.reference"}}</a>
   </nav>
 
@@ -36,7 +39,7 @@
       <table class="party">
         <thead>
           <tr>
-            <th>{{localize "NSSQ.Name"}}</th><th>{{localize "NSSQ.Level"}}</th><th>{{localize "NSSQ.HP"}}</th><th>{{localize "NSSQ.TP"}}</th>
+            <th>{{localize "NSSQ.Name"}}</th><th>{{localize "NSSQ.Level.label"}}</th><th>{{localize "NSSQ.HP"}}</th><th>{{localize "NSSQ.TP"}}</th>
             <th>{{localize "NSSQ.FP"}}</th><th>{{localize "NSSQ.Carry"}}</th><th>G</th><th>{{localize "NSSQ.Row.label"}}</th>
             {{#if storageSetting}}<th>{{localize "NSSQ.Storage.title"}}</th>{{/if}}
           </tr>
@@ -74,6 +77,33 @@
       {{/if}}
     </div>
 
+    <div class="tab" data-tab="explore">
+      <div class="gm-tools">
+        <button type="button" data-gm="camp"><i class="fas fa-campground"></i> {{localize "NSSQ.Explore.campTitle"}}</button>
+        <button type="button" data-gm="trap"><i class="fas fa-exclamation-triangle"></i> {{localize "NSSQ.Explore.trapTitle"}}</button>
+        <button type="button" data-gm="gather"><i class="fas fa-leaf"></i> {{localize "NSSQ.Loot.gatherTitle"}}</button>
+      </div>
+      <p class="notes">{{localize "NSSQ.GMScreen.exploreNote"}}</p>
+    </div>
+
+    <div class="tab" data-tab="session">
+      <div class="gm-tools">
+        <button type="button" data-gm="session-start"><i class="fas fa-flag"></i> {{localize "NSSQ.GMScreen.sessionStart"}} ({{localize "NSSQ.FP"}} {{fpStart}})</button>
+        <button type="button" data-gm="living"><i class="fas fa-home"></i> {{localize "NSSQ.Session.livingTitle"}}</button>
+        <button type="button" data-gm="session-end"><i class="fas fa-trophy"></i> {{localize "NSSQ.Session.endTitle"}}</button>
+      </div>
+      <p class="notes">{{localize "NSSQ.GMScreen.sessionNote"}}</p>
+    </div>
+
+    <div class="tab" data-tab="make">
+      <div class="gm-tools">
+        <button type="button" data-gm="skill-maker"><i class="fas fa-magic"></i> {{localize "NSSQ.Maker.skillTitle"}}</button>
+        <button type="button" data-gm="class-maker"><i class="fas fa-chess-knight"></i> {{localize "NSSQ.Maker.classTitle"}}</button>
+        <button type="button" data-gm="enemy-maker"><i class="fas fa-dragon"></i> {{localize "NSSQ.Maker.enemyTitle"}}</button>
+      </div>
+      <p class="notes">{{localize "NSSQ.GMScreen.makeNote"}}</p>
+    </div>
+
     <div class="tab" data-tab="battle">
       <div class="battle-tools">
         <button type="button" data-gm="preset-new"><i class="fas fa-plus"></i> {{localize "NSSQ.Battle.newPreset"}}</button>
@@ -102,6 +132,10 @@
     </div>
 
     <div class="tab" data-tab="shop">
+      <div class="gm-tools">
+        <button type="button" data-gm="shop" class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</button>
+        <button type="button" data-gm="shop-folder" title="{{localize 'NSSQ.Shop.folderHint'}}"><i class="fas fa-folder-plus"></i> {{localize "NSSQ.Shop.folderButton"}}</button>
+      </div>
       <div class="shop-tools">
         <input type="search" name="shopFilter" value="{{shopFilter}}" placeholder="{{localize 'NSSQ.GMScreen.shopFilter'}}"/>
         <span class="notes">{{localize "NSSQ.GMScreen.shopItemsNote"}}</span>
