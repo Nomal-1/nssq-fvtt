@@ -1375,3 +1375,5 @@
 .nssq-town .town-manage .manage-card ul { margin: 6px 0; padding-left: 4px; list-style: none; columns: 2; }
 .nssq-town .town-manage .manage-card li small { color: #9cc; }
 .nssq-town .town-manage .manage-card .acts { display: flex; gap: 6px; margin: 8px 0; }
+/* Foundry의 `#hud > * { pointer-events: none; text-align: center }`보다 앞서게(ID 선택자) */
+#hud > .nssq-town.town-overlay { pointer-events: auto; text-align: left; }
