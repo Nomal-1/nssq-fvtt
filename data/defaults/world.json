@@ -73,7 +73,7 @@
      "type": "gate",
      "name": "미궁 입구",
      "img": "자료/일러/9b302d069385319f87eaf65b94049ce3.jpg",
-     "npc": "경비병.png",
+     "npc": "",
      "npcName": "문지기",
      "desc": "미궁으로 가는가? 준비는 단단히 해 두게.",
      "sceneId": ""

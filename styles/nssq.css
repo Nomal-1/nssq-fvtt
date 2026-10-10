@@ -1319,10 +1319,10 @@
 .nssq-town .town-bar button { flex: 0 0 auto; width: auto; padding: 0 8px; }
 .nssq-town .town-menu { top: 96px; left: 0; width: 300px; max-height: calc(100% - 230px); display: flex; flex-direction: column; overflow-y: auto; padding: 6px 0; border: 2px solid var(--tw-teal-l); border-left: none; border-radius: 0 14px 14px 0; background: rgba(10, 40, 38, 0.82); box-shadow: 0 4px 14px rgba(0,0,0,0.6); }
 .nssq-town .town-stage:not(.facility) .town-menu { max-height: calc(100% - 170px); }
-.nssq-town .town-choice { display: flex; align-items: center; gap: 12px; width: calc(100% - 10px); height: auto; min-height: 44px; margin: 2px 0 2px 0; padding: 4px 18px; text-align: left; font-size: 1.3em; font-weight: bold; letter-spacing: 0.02em; color: var(--tw-ink); border: none; border-bottom: 1px solid rgba(63, 143, 134, 0.6); border-radius: 0 6px 6px 0; background: linear-gradient(90deg, rgba(31, 90, 85, 0.95), rgba(31, 90, 85, 0.55)); text-shadow: 0 1px 2px #000; transition: background 0.1s, color 0.1s; }
-.nssq-town .town-choice i { width: 22px; text-align: center; font-size: 0.8em; opacity: 0.85; }
-.nssq-town .town-choice:hover, .nssq-town .town-choice:focus { background: linear-gradient(90deg, var(--tw-hi), #c9d85a); color: #1d2a12; text-shadow: none; box-shadow: none; outline: none; }
-.nssq-town .town-choice.back { margin-top: 8px; font-size: 1.1em; opacity: 0.9; }
+.nssq-town .town-menu button.town-choice { display: flex; align-items: center; gap: 12px; width: calc(100% - 10px); height: auto; min-height: 44px; margin: 2px 0 2px 0; padding: 4px 18px; text-align: left; font-size: 1.3em; font-weight: bold; letter-spacing: 0.02em; color: var(--tw-ink); border: none; border-bottom: 1px solid rgba(63, 143, 134, 0.6); border-radius: 0 6px 6px 0; background: linear-gradient(90deg, rgba(31, 90, 85, 0.95), rgba(31, 90, 85, 0.55)); text-shadow: 0 1px 2px #000; transition: background 0.1s, color 0.1s; }
+.nssq-town .town-menu button.town-choice i { width: 22px; text-align: center; font-size: 0.8em; opacity: 0.85; }
+.nssq-town .town-menu button.town-choice:is(:hover, :focus):not(:disabled) { background: linear-gradient(90deg, var(--tw-hi), #c9d85a); color: #1d2a12; text-shadow: none; box-shadow: none; outline: none; }
+.nssq-town .town-menu button.town-choice.back { margin-top: 8px; font-size: 1.1em; opacity: 0.9; }
 .nssq-town .town-menu .notes { padding: 6px 18px; }
 .nssq-town .town-npc { right: 3%; bottom: 0; height: 88%; max-width: 48%; object-fit: contain; object-position: bottom; border: none; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.7)); z-index: 0; }
 .nssq-town .town-fac-icon { right: 16%; top: 30%; font-size: 9em; color: rgba(223, 247, 238, 0.18); }
