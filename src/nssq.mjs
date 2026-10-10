@@ -114,6 +114,8 @@ Hooks.once("init", () => {
   registerDungeon();
   registerEncounters();
   registerTown();
+  // 미궁 씬 메뉴: 캔버스를 그리기 전에 훅을 걸어야 한다(init)
+  registerFieldScene();
   registerGuild();
   registerDefaults();
   registerFieldMap();
@@ -153,7 +155,6 @@ Hooks.once("ready", () => {
   registerArt();
   registerUpload();
   registerTransfer();
-  registerFieldScene();
   migrateEnemyArt();
 });
 
