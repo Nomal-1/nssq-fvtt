@@ -512,7 +512,7 @@
       "title": "마을",
       "newName": "새 마을", "noTownName": "마을", "new": "새 마을", "edit": "편집", "none": "(마을 없음)",
       "noneGM": "마을이 없다. [새 마을]로 만든다.", "notInTown": "파티가 마을에 있지 않다.",
-      "hereMark": "(파티)", "partyHere": "파티가 이 마을에 있다. 마을에서는 늘 【HP】【TP】가 가득하고 상태 이상이 없다.", "partyAway": "파티가 이 마을에 있지 않다.", "partyHereShort": "파티 체류 중 · 늘 회복된 상태", "partyAwayShort": "(파티 없음)", "am": "오전", "pm": "오후",
+      "hereMark": "(파티)", "partyHere": "파티가 이 마을에 있다. 마을에서는 늘 【HP】【TP】가 가득하고 상태 이상이 없다.", "partyAway": "파티가 이 마을에 있지 않다.", "partyHereShort": "파티 체류 중 · 늘 회복된 상태", "partyAwayShort": "(파티 없음)", "viewScene": "마을 씬으로 보기", "am": "오전", "pm": "오후",
       "gateAsk": "{who}이(가) 「{name}」에 들어가자고 한다. 들어갈까?", "noMaps": "들어갈 수 있는 미궁이 없다.",
       "say": {
         "guild": "내 캐릭터를 관리한다. 파티 참가·대기, 스킬 재분배, 직업 변경.", "tree": "스킬 트리를 열어 스킬을 배운다.", "chargen": "새 탐색자를 길드에 등록한다.",

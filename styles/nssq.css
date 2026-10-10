@@ -1360,3 +1360,9 @@
 .nssq-guild .guild-box .form-group > label { flex: 0 0 60px; }
 .nssq-guild h3 button { width: auto; float: right; font-size: 0.8em; padding: 0 8px; }
 .nssq-town-card h3 { margin: 0 0 4px; }
+/* 마을 씬 위 UI(#hud 안, 씬 좌표 1920×1080에 1280×720 설계를 확대) */
+.nssq-town.town-overlay { position: absolute; pointer-events: auto; overflow: hidden; font-family: var(--nq-font); font-size: 14px; background: #000; }
+.nssq-town.town-overlay .town-frame { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.nssq-town.town-overlay .town-stage { width: 100%; height: 100%; }
+.nssq-town.town-overlay .win-only { display: none; }
+.nssq-town.town-overlay :is(button, select) { font-family: var(--nq-font); }

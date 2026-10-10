@@ -132,3 +132,4 @@ nssq/
 - [x] #7 `game.users.activeGM` 사용(v12에 있음). `src/combat/apply.mjs`의 `isActiveGM`
 - [ ] #8 매니페스트 `grid` 키 형식(v12)과 `primaryTokenAttribute` 지원 여부
 - [ ] #6 `renderChatMessage`에서 버튼 이벤트를 위임할 때 메시지 재렌더 시의 중복 바인딩
+- [x] 씬 좌표에 HTML UI 붙이기: `#hud`(canvas.hud) 요소는 `HeadsUpDisplay#align()`이 `canvas.primary.getGlobalPosition()`·`stage.scale`로 left/top/transform을 맞춘다(v12.331 서버에서 확인, pointer-events:none·z-index 1). 자식을 씬 좌표(left/top px)에 두면 이동·확대를 따라간다. 마을 UI(`TownOverlay`)가 쓴다. `Application`(popOut:false)은 `_injectHTML`을 덮어 `#hud`에 넣는다.
