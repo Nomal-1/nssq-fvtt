@@ -506,6 +506,21 @@
     "GMScreen": {
       "title": "GM 스크린",
       "party": "파티",
+      "mode": { "prep": "준비", "town": "던전 진입 전", "dungeon": "던전 안", "battle": "전투", "reference": "참고표" },
+      "modeHint": {
+        "prep": "GM 혼자일 때: 지도·직업·스킬·에너미 만들기, 전투 프리셋, 상점 품목",
+        "town": "플레이어와 함께, 던전에 들어가기 전: 세션 시작·상점·던전 진입·세션 끝",
+        "dungeon": "필드 지도·랜덤 던전 진행 중: 탐색 도구·전투 개시",
+        "battle": "전투 중",
+        "reference": "목표값·레벨표 등"
+      },
+      "modeAuto": "지금",
+      "prepMap": "필드 지도 만들기",
+      "presets": "전투 프리셋",
+      "enterMap": "필드 지도로 던전 진입",
+      "enterDungeon": "랜덤 던전 진입",
+      "townEnd": "세션을 마칠 때:",
+      "startBattle": "전투 개시",
       "explore": "탐색",
       "session": "세션",
       "make": "제작",

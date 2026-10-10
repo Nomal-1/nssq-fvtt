@@ -55,20 +55,26 @@ export class GMScreen extends Application {
       title: game.i18n.localize("NSSQ.GMScreen.title"),
       width: 860,
       height: 680,
-      resizable: true,
-      tabs: [{ navSelector: ".gm-tabs", contentSelector: ".gm-body", initial: "party" }]
+      resizable: true
     });
   }
 
-  constructor(options = {}) {
-    super(options);
-    // 마지막으로 연 탭(이 브라우저에 기억)
-    try { const t = localStorage.getItem("nssq.gmScreenTab"); if (t) this.options.tabs[0].initial = t; } catch { /* 저장소 없음 */ }
+  /**
+   * 상황별 화면: 전투 중 → 전투, 필드 지도·랜덤 던전 진행 중 → 던전 안, 플레이어가 접속해 있으면 → 던전 진입 전, GM 혼자면 → 준비.
+   * GM이 다른 화면을 고르면 상황이 바뀔 때까지 그대로 둔다(상황이 바뀌면 그 화면으로)
+   */
+  static autoMode() {
+    if (currentBattle() || game.combat?.started) return "battle";
+    if (game.settings.get("nssq", "fieldMapState")?.active || game.settings.get("nssq", "dungeon")?.active) return "dungeon";
+    if (game.users.some((u) => u.active && !u.isGM)) return "town";
+    return "prep";
   }
 
-  _onChangeTab(event, tabs, active) {
-    super._onChangeTab?.(event, tabs, active);
-    try { localStorage.setItem("nssq.gmScreenTab", active); } catch { /* 저장소 없음 */ }
+  get mode() {
+    const auto = GMScreen.autoMode();
+    if (this.manual && this.manual.from === auto) return this.manual.mode;
+    this.manual = null;
+    return auto;
   }
 
   static open() {
@@ -135,7 +141,13 @@ export class GMScreen extends Application {
       exploring: !!(fm.active || dg.active),
       turns: game.settings.get("nssq", "battleTurns") ?? 0
     };
+    const mode = this.mode;
+    const auto = GMScreen.autoMode();
+    const modes = [["prep", "fa-tools"], ["town", "fa-home"], ["dungeon", "fa-dungeon"], ["battle", "fa-skull-crossbones"], ["reference", "fa-book"]]
+      .map(([id, icon]) => ({ id, icon, label: L(`mode.${id}`), hint: L(`modeHint.${id}`), active: id === mode, auto: id === auto && id !== "reference" }));
     return {
+      mode,
+      modes,
       status,
       presets,
       battle: battle ? { name: battle.getFlag("nssq", "battle").presetName, round: battle.round } : null,
@@ -155,6 +167,12 @@ export class GMScreen extends Application {
 
   activateListeners(html) {
     super.activateListeners(html);
+    html.on("click", "[data-mode]", (ev) => {
+      const m = ev.currentTarget.dataset.mode;
+      const auto = GMScreen.autoMode();
+      this.manual = m === auto ? null : { mode: m, from: auto };
+      this.render(false);
+    });
     html.on("click", "[data-open-actor]", (ev) => game.actors.get(ev.currentTarget.dataset.openActor)?.sheet.render(true));
     html.on("change", "[data-npc-actor]", (ev) => {
       game.actors.get(ev.currentTarget.dataset.npcActor)?.update({ "system.npc": ev.currentTarget.checked });

@@ -1,41 +1,4 @@
-<div class="gm-screen">
-  <header class="gm-actions">
-    {{#if battle}}
-    <button type="button" data-gm="battle-end" class="battle on"><i class="fas fa-flag-checkered"></i> {{localize "NSSQ.Battle.end"}} ({{battle.name}})</button>
-    {{else}}
-    <button type="button" data-gm="battle-start" class="battle"><i class="fas fa-skull-crossbones"></i> {{localize "NSSQ.Battle.start"}}</button>
-    {{/if}}
-    <button type="button" data-gm="fieldmap"><i class="fas fa-map"></i> {{localize "NSSQ.FieldMap.title"}}</button>
-    <button type="button" data-gm="dungeon"><i class="fas fa-dungeon"></i> {{localize "NSSQ.Dungeon.title"}}</button>
-    <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
-    <details class="gm-admin">
-      <summary title="{{localize 'NSSQ.GMScreen.admin'}}"><i class="fas fa-cog"></i></summary>
-      <div class="menu">
-        <button type="button" data-gm="macro" title="{{localize 'NSSQ.GMScreen.macroHint'}}"><i class="fas fa-terminal"></i> {{localize "NSSQ.GMScreen.macro"}}</button>
-        <button type="button" data-gm="effects-sync" title="{{localize 'NSSQ.EffectsSync.hint'}}"><i class="fas fa-sync"></i> {{localize "NSSQ.EffectsSync.button"}}</button>
-      </div>
-    </details>
-  </header>
-  <div class="gm-status">
-    {{#if status.clock}}<span><i class="fas fa-clock"></i> {{status.clock}}</span>{{/if}}
-    {{#if status.tod}}<span><i class="fas fa-{{#if status.night}}moon{{else}}sun{{/if}}"></i> {{status.tod}}</span>{{/if}}
-    {{#if status.dark}}<span class="warn"><i class="fas fa-eye-slash"></i> {{localize "NSSQ.GMScreen.statusDark"}}</span>{{/if}}
-    {{#if status.exploring}}<span><i class="fas fa-hourglass-half"></i> {{localize "NSSQ.GMScreen.statusTurns" n=status.turns}}</span>{{/if}}
-    <span class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</span>
-  </div>
-
-  <nav class="gm-tabs tabs">
-    <a class="item" data-tab="party">{{localize "NSSQ.GMScreen.party"}}</a>
-    <a class="item" data-tab="explore">{{localize "NSSQ.GMScreen.explore"}}</a>
-    <a class="item" data-tab="battle">{{localize "NSSQ.Battle.tab"}}</a>
-    <a class="item" data-tab="session">{{localize "NSSQ.GMScreen.session"}}</a>
-    <a class="item" data-tab="shop">{{localize "NSSQ.GMScreen.shopItems"}}</a>
-    <a class="item" data-tab="make">{{localize "NSSQ.GMScreen.make"}}</a>
-    <a class="item" data-tab="reference">{{localize "NSSQ.GMScreen.reference"}}</a>
-  </nav>
-
-  <section class="gm-body">
-    <div class="tab" data-tab="party">
+{{#*inline "partyTable"}}
       <table class="party">
         <thead>
           <tr>
@@ -65,46 +28,8 @@
           {{/each}}
         </tbody>
       </table>
-      <p class="notes">{{localize "NSSQ.GMScreen.partyNote"}}</p>
-      {{#if npcCandidates.length}}
-      <h3>{{localize "NSSQ.Party.npcSection"}}</h3>
-      <p class="notes">{{localize "NSSQ.Party.npcSectionNote"}}</p>
-      <ul class="npc-list">
-        {{#each npcCandidates as |n|}}
-        <li><label><input type="checkbox" data-npc-actor="{{n.id}}" {{checked n.npc}}/> <img src="{{n.img}}" width="20" height="20"/> {{n.name}}</label></li>
-        {{/each}}
-      </ul>
-      {{/if}}
-    </div>
-
-    <div class="tab" data-tab="explore">
-      <div class="gm-tools">
-        <button type="button" data-gm="camp"><i class="fas fa-campground"></i> {{localize "NSSQ.Explore.campTitle"}}</button>
-        <button type="button" data-gm="trap"><i class="fas fa-exclamation-triangle"></i> {{localize "NSSQ.Explore.trapTitle"}}</button>
-        <button type="button" data-gm="gather"><i class="fas fa-leaf"></i> {{localize "NSSQ.Loot.gatherTitle"}}</button>
-      </div>
-      <p class="notes">{{localize "NSSQ.GMScreen.exploreNote"}}</p>
-    </div>
-
-    <div class="tab" data-tab="session">
-      <div class="gm-tools">
-        <button type="button" data-gm="session-start"><i class="fas fa-flag"></i> {{localize "NSSQ.GMScreen.sessionStart"}} ({{localize "NSSQ.FP"}} {{fpStart}})</button>
-        <button type="button" data-gm="living"><i class="fas fa-home"></i> {{localize "NSSQ.Session.livingTitle"}}</button>
-        <button type="button" data-gm="session-end"><i class="fas fa-trophy"></i> {{localize "NSSQ.Session.endTitle"}}</button>
-      </div>
-      <p class="notes">{{localize "NSSQ.GMScreen.sessionNote"}}</p>
-    </div>
-
-    <div class="tab" data-tab="make">
-      <div class="gm-tools">
-        <button type="button" data-gm="skill-maker"><i class="fas fa-magic"></i> {{localize "NSSQ.Maker.skillTitle"}}</button>
-        <button type="button" data-gm="class-maker"><i class="fas fa-chess-knight"></i> {{localize "NSSQ.Maker.classTitle"}}</button>
-        <button type="button" data-gm="enemy-maker"><i class="fas fa-dragon"></i> {{localize "NSSQ.Maker.enemyTitle"}}</button>
-      </div>
-      <p class="notes">{{localize "NSSQ.GMScreen.makeNote"}}</p>
-    </div>
-
-    <div class="tab" data-tab="battle">
+{{/inline}}
+{{#*inline "presetList"}}
       <div class="battle-tools">
         <button type="button" data-gm="preset-new"><i class="fas fa-plus"></i> {{localize "NSSQ.Battle.newPreset"}}</button>
         <button type="button" data-gm="enemy-cleanup" title="{{localize 'NSSQ.Battle.cleanupHint'}}"><i class="fas fa-broom"></i> {{localize "NSSQ.Battle.cleanup"}}</button>
@@ -129,11 +54,43 @@
         <li class="empty">{{localize "NSSQ.Battle.noPresets"}}</li>
         {{/each}}
       </ul>
-    </div>
+{{/inline}}
+{{#*inline "status"}}
+  <div class="gm-status">
+    {{#if status.clock}}<span><i class="fas fa-clock"></i> {{status.clock}}</span>{{/if}}
+    {{#if status.tod}}<span><i class="fas fa-{{#if status.night}}moon{{else}}sun{{/if}}"></i> {{status.tod}}</span>{{/if}}
+    {{#if status.dark}}<span class="warn"><i class="fas fa-eye-slash"></i> {{localize "NSSQ.GMScreen.statusDark"}}</span>{{/if}}
+    {{#if status.exploring}}<span><i class="fas fa-hourglass-half"></i> {{localize "NSSQ.GMScreen.statusTurns" n=status.turns}}</span>{{/if}}
+    <span class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</span>
+  </div>
+{{/inline}}
+<div class="gm-screen">
+  <nav class="gm-modes">
+    {{#each modes as |m|}}
+    <a class="mode {{#if m.active}}active{{/if}} {{#if m.auto}}auto{{/if}}" data-mode="{{m.id}}" title="{{m.hint}}"><i class="fas {{m.icon}}"></i> {{m.label}}{{#if m.auto}} <span class="auto-tag">{{localize "NSSQ.GMScreen.modeAuto"}}</span>{{/if}}</a>
+    {{/each}}
+    <details class="gm-admin">
+      <summary title="{{localize 'NSSQ.GMScreen.admin'}}"><i class="fas fa-cog"></i></summary>
+      <div class="menu">
+        <button type="button" data-gm="macro" title="{{localize 'NSSQ.GMScreen.macroHint'}}"><i class="fas fa-terminal"></i> {{localize "NSSQ.GMScreen.macro"}}</button>
+        <button type="button" data-gm="effects-sync" title="{{localize 'NSSQ.EffectsSync.hint'}}"><i class="fas fa-sync"></i> {{localize "NSSQ.EffectsSync.button"}}</button>
+      </div>
+    </details>
+  </nav>
 
-    <div class="tab" data-tab="shop">
+  <section class="gm-body">
+  {{#if (nssqEq mode "prep")}}
+    <div class="gm-actions">
+      <button type="button" data-gm="fieldmap"><i class="fas fa-map"></i> {{localize "NSSQ.GMScreen.prepMap"}}</button>
+      <button type="button" data-gm="class-maker"><i class="fas fa-chess-knight"></i> {{localize "NSSQ.Maker.classTitle"}}</button>
+      <button type="button" data-gm="skill-maker"><i class="fas fa-magic"></i> {{localize "NSSQ.Maker.skillTitle"}}</button>
+      <button type="button" data-gm="enemy-maker"><i class="fas fa-dragon"></i> {{localize "NSSQ.Maker.enemyTitle"}}</button>
+    </div>
+    <details class="gm-fold" open><summary>{{localize "NSSQ.GMScreen.presets"}}</summary>
+{{> presetList}}
+    </details>
+    <details class="gm-fold"><summary>{{localize "NSSQ.GMScreen.shopItems"}}</summary>
       <div class="gm-tools">
-        <button type="button" data-gm="shop" class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</button>
         <button type="button" data-gm="shop-folder" title="{{localize 'NSSQ.Shop.folderHint'}}"><i class="fas fa-folder-plus"></i> {{localize "NSSQ.Shop.folderButton"}}</button>
       </div>
       <div class="shop-tools">
@@ -158,9 +115,76 @@
         </ul>
       </section>
       {{/each}}
-    </div>
+    </details>
+    <details class="gm-fold"><summary>{{localize "NSSQ.GMScreen.party"}}</summary>
+{{> partyTable}}
+      <p class="notes">{{localize "NSSQ.GMScreen.partyNote"}}</p>
+      {{#if npcCandidates.length}}
+      <h3>{{localize "NSSQ.Party.npcSection"}}</h3>
+      <p class="notes">{{localize "NSSQ.Party.npcSectionNote"}}</p>
+      <ul class="npc-list">
+        {{#each npcCandidates as |n|}}
+        <li><label><input type="checkbox" data-npc-actor="{{n.id}}" {{checked n.npc}}/> <img src="{{n.img}}" width="20" height="20"/> {{n.name}}</label></li>
+        {{/each}}
+      </ul>
+      {{/if}}
+    </details>
+  {{/if}}
 
-    <div class="tab" data-tab="reference">
+  {{#if (nssqEq mode "town")}}
+    <div class="gm-actions">
+      <button type="button" data-gm="session-start"><i class="fas fa-flag"></i> {{localize "NSSQ.GMScreen.sessionStart"}} ({{localize "NSSQ.FP"}} {{fpStart}})</button>
+      <button type="button" data-gm="shop" class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</button>
+      <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
+    </div>
+    <div class="gm-actions enter">
+      <button type="button" data-gm="fieldmap" class="go"><i class="fas fa-map"></i> {{localize "NSSQ.GMScreen.enterMap"}}</button>
+      <button type="button" data-gm="dungeon" class="go"><i class="fas fa-dungeon"></i> {{localize "NSSQ.GMScreen.enterDungeon"}}</button>
+    </div>
+{{> status}}
+{{> partyTable}}
+    <div class="gm-tools end">
+      <span class="notes">{{localize "NSSQ.GMScreen.townEnd"}}</span>
+      <button type="button" data-gm="living"><i class="fas fa-home"></i> {{localize "NSSQ.Session.livingTitle"}}</button>
+      <button type="button" data-gm="session-end"><i class="fas fa-trophy"></i> {{localize "NSSQ.Session.endTitle"}}</button>
+    </div>
+  {{/if}}
+
+  {{#if (nssqEq mode "dungeon")}}
+    <div class="gm-actions">
+      <button type="button" data-gm="fieldmap"><i class="fas fa-map"></i> {{localize "NSSQ.FieldMap.title"}}</button>
+      <button type="button" data-gm="dungeon"><i class="fas fa-dungeon"></i> {{localize "NSSQ.Dungeon.title"}}</button>
+      <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
+    </div>
+    <div class="gm-tools">
+      <button type="button" data-gm="camp"><i class="fas fa-campground"></i> {{localize "NSSQ.Explore.campTitle"}}</button>
+      <button type="button" data-gm="trap"><i class="fas fa-exclamation-triangle"></i> {{localize "NSSQ.Explore.trapTitle"}}</button>
+      <button type="button" data-gm="gather"><i class="fas fa-leaf"></i> {{localize "NSSQ.Loot.gatherTitle"}}</button>
+    </div>
+{{> status}}
+{{> partyTable}}
+    <details class="gm-fold" open><summary><i class="fas fa-skull-crossbones"></i> {{localize "NSSQ.GMScreen.startBattle"}}</summary>
+{{> presetList}}
+    </details>
+  {{/if}}
+
+  {{#if (nssqEq mode "battle")}}
+    <div class="gm-actions">
+      {{#if battle}}
+      <button type="button" data-gm="battle-end" class="battle on"><i class="fas fa-flag-checkered"></i> {{localize "NSSQ.Battle.end"}} ({{battle.name}})</button>
+      {{else}}
+      <button type="button" data-gm="battle-start" class="battle"><i class="fas fa-skull-crossbones"></i> {{localize "NSSQ.Battle.start"}}</button>
+      {{/if}}
+      <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
+    </div>
+{{> status}}
+{{> partyTable}}
+    <details class="gm-fold"><summary>{{localize "NSSQ.GMScreen.targets"}}</summary>
+      <table class="ref">{{#each targets as |t|}}<tr><th>{{t.value}}</th><td>{{t.text}}</td></tr>{{/each}}</table>
+    </details>
+  {{/if}}
+
+  {{#if (nssqEq mode "reference")}}
       <div class="ref-grid">
         <section>
           <h3>{{localize "NSSQ.GMScreen.targets"}}</h3>
@@ -186,6 +210,6 @@
           </table>
         </section>
       </div>
-    </div>
+  {{/if}}
   </section>
 </div>
