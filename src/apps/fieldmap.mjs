@@ -40,6 +40,8 @@ const areaName = (map, id) => map?.areas?.find((a) => a.id === id)?.name ?? "?";
 const areaOf = (map, id) => map?.areas?.find((a) => a.id === id) ?? null;
 /** 에어리어 그림: 직접 고른 그림 → 연결한 씬의 배경(저장할 때 sceneImg로 복사해 두어 플레이어도 본다) */
 const areaImg = (a) => a?.img || a?.sceneImg || "";
+/** 미궁 씬 메뉴가 떠 있으면 지도 창의 플레이어 이동 버튼은 숨긴다(보기 전용) */
+const fieldMenuShown = () => !!document.querySelector(".field-overlay");
 const sceneImage = (id) => { const sc = game.scenes.get(id); return sc?.background?.src || sc?.thumb || ""; };
 /** 양피지 위 나침반(장식) */
 /** 재생목록·곡 선택지(apps/encounters.mjs와 같은 값) */
@@ -170,6 +172,8 @@ export async function startProgress(mapId, hour, { resume = true } = {}) {
   await setMapState(s, { undo: false });
   await (await import("./time-pass.mjs")).resetBattleTurns();
   await (await import("./town.mjs")).enteredDungeon();
+  // 모두 미궁 씬으로(씬 위 메뉴로 탐색, field-scene.mjs)
+  await (await import("./field-scene.mjs")).activateFieldScene(map);
   await passTime(s.hour, 0);
   await post(`<h3><i class="fas fa-map"></i> ${esc(L("started", { name: map.name }))}</h3>${arrivalHtml(map, s)}`);
   return processTriggers(map, FM.arrivalTriggers(map, s, s.current));
@@ -852,7 +856,7 @@ export class FieldMapApp extends Application {
         ${here?.terrain ? `<p class="fm-loc-terrain">${esc(here.terrain)}</p>` : ""}
         ${foeHere.length ? `<p class="fm-foe-warn"><i class="fas fa-skull"></i> ${esc(L("foeHere"))}</p>` : ""}
       </div>
-      <h4>${esc(L("moveHead"))}</h4>${move}`;
+      ${fieldMenuShown() ? `<p class="notes">${esc(game.i18n.localize("NSSQ.FieldScene.mapReadOnly"))}</p>` : `<h4>${esc(L("moveHead"))}</h4>${move}`}`;
   }
 
   /* ---------- GM 패널: 진행 ---------- */
@@ -1349,7 +1353,8 @@ export class FieldMapApp extends Application {
     // 진행: 갈 수 있는 곳이면 이동(GM) / 제안(플레이어). GM은 그 밖이면 선택
     const map = activeMap();
     const st = mapState();
-    if (map && st.active && (!gm || map.id === this.mapId) && FM.playerView(map, st).reachable.includes(id)) return gm ? moveTo(id) : requestMove(id);
+    // 지도로 이동시키는 것은 GM만(플레이어는 미궁 씬의 메뉴로 제안)
+    if (gm && map && st.active && map.id === this.mapId && FM.playerView(map, st).reachable.includes(id)) return moveTo(id);
     if (gm) { this.sel = { kind: "area", id }; this.render(); }
   }
 

@@ -104,11 +104,11 @@ export async function requestReturnToTown() {
 /** 미궁 입구: GM은 바로 들어가고, 플레이어는 GM에게 제안 */
 export async function enterMapFromTown(mapId) {
   if (!game.user.isGM) return (await import("../socket.mjs")).emit("townGate", { userId: game.user.id, mapId });
-  const { startProgress, allMaps, FieldMapApp } = await import("./fieldmap.mjs");
+  const { startProgress, allMaps } = await import("./fieldmap.mjs");
   const map = allMaps()[mapId];
   if (!map) return null;
-  await startProgress(mapId, map.startHour ?? 8);
-  return FieldMapApp.open();
+  // 미궁 씬으로 옮겨진다(지도 창은 GM이 메뉴의 [지도]로 연다)
+  return startProgress(mapId, map.startHour ?? 8);
 }
 
 async function onGateRequest({ userId, mapId }) {

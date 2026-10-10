@@ -1420,3 +1420,21 @@
 /* 거리 화면: 파티 줄 위로 마을 이름판 */
 .nssq-town .town-stage:not(.facility) .town-name { bottom: 96px; }
 .nssq-town .town-stage:not(.facility):has(.town-party.folded) .town-name { bottom: 34px; }
+/* 미궁 씬 메뉴(마을 메뉴 스타일 재사용) */
+.nssq-town.field-overlay .town-top .money small { font-size: 0.75em; color: var(--tw-ink); }
+.nssq-town.field-overlay .fs-warn { top: 72px; right: 12px; padding: 4px 12px; border-radius: 6px; background: rgba(120, 80, 10, 0.85); border: 1px solid #e0b028; }
+.nssq-town.field-overlay .fs-warn.danger { background: rgba(130, 20, 20, 0.9); border-color: #f55; }
+.nssq-town.field-overlay .fs-locked { padding: 16px 18px; font-size: 1.1em; line-height: 1.5; }
+.nssq-town.field-overlay .fs-gmnote { left: 312px; top: 100px; padding: 4px 10px; border-radius: 6px; background: rgba(8, 24, 24, 0.85); border: 1px solid var(--tw-teal-l); font-size: 0.9em; }
+.nssq-town.field-overlay .fs-vote { padding: 8px 16px; }
+.nssq-town.field-overlay .fs-vote ul { margin: 4px 0; padding-left: 4px; list-style: none; }
+.nssq-town.field-overlay .fs-vote li.yes { color: var(--nq-green); }
+.nssq-town.field-overlay .fs-vote li.no { color: #f77; }
+.nssq-town.field-overlay .town-menu button.town-choice:disabled { opacity: 0.45; }
+.nssq-town.field-overlay .town-party .pc.down { filter: grayscale(1); opacity: 0.7; }
+.nssq-town.field-overlay .town-party .pc-info .bars { display: flex; gap: 4px; margin-top: 2px; }
+.nssq-town.field-overlay .town-party .bar { flex: 1; height: 5px; border-radius: 3px; background: rgba(0,0,0,0.5); overflow: hidden; }
+.nssq-town.field-overlay .town-party .bar i { display: block; height: 100%; }
+.nssq-town.field-overlay .town-party .bar.hp i { background: linear-gradient(90deg, #f0a020, #f6d050); }
+.nssq-town.field-overlay .town-party .bar.tp i { background: linear-gradient(90deg, #30b8e0, #80e8f8); }
+.nssq-town.field-overlay .town-party .bad { color: #f77; font-size: 0.85em; }
