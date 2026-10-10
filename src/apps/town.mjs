@@ -159,7 +159,12 @@ function fitTownView() {
   if (!canvas.ready || !canvas.scene?.getFlag("nssq", "town")) return;
   const r = canvas.dimensions.sceneRect;
   const side = ui.sidebar?._collapsed ? 40 : (ui.sidebar?.element?.[0]?.offsetWidth ?? 300) + 16;
-  const area = { l: 70, t: 46, r: window.innerWidth - side, b: window.innerHeight - 66 };
+  // 씬 컨트롤·씬 내비게이션·핫바에 가리지 않게 실제 위치로 여백을 잰다
+  const box = (id) => document.getElementById(id)?.getBoundingClientRect();
+  const area = {
+    l: Math.max(70, (box("controls")?.right ?? 60) + 8), t: Math.max(46, (box("navigation")?.bottom ?? 40) + 6),
+    r: window.innerWidth - side, b: Math.min(window.innerHeight - 66, (box("hotbar")?.top ?? window.innerHeight - 66) - 6)
+  };
   const scale = Math.min((area.r - area.l) / r.width, (area.b - area.t) / r.height);
   const x = r.x + r.width / 2 - ((area.l + area.r) / 2 - window.innerWidth / 2) / scale;
   const y = r.y + r.height / 2 - ((area.t + area.b) / 2 - window.innerHeight / 2) / scale;
