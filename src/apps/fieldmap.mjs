@@ -1064,7 +1064,8 @@ export class FieldMapApp extends Application {
     const map = this.currentMap();
     const folderName = `${L("sceneFolder")}: ${map.name}`;
     const folder = game.folders.find((f) => f.type === "Scene" && f.name === folderName) ?? await Folder.create({ name: folderName, type: "Scene" });
-    const data = { name: area.name, folder: folder.id, navigation: false };
+    // 모두에게 시야 허용: 토큰 시야·안개 끄기, 플레이어 기본 권한 「관찰자」(전투 프리셋 씬과 같은 설정)
+    const data = { name: area.name, folder: folder.id, navigation: false, tokenVision: false, fog: { exploration: false }, ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER } };
     if (area.img) {
       data.background = { src: area.img };
       // 씬 크기 = 그림 크기(못 읽으면 Foundry 기본값)
