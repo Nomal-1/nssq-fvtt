@@ -2,6 +2,7 @@ import { registerArt } from "./apps/art-config.mjs";
 import { registerUpload } from "./apps/upload.mjs";
 import { registerTransfer } from "./apps/transfer.mjs";
 import { registerFieldScene } from "./apps/field-scene.mjs";
+import { PartyBoard, registerPartyBoard } from "./apps/party-board.mjs";
 import { registerUniqueSkillHooks } from "./apps/unique-skill.mjs";
 import { migrateEnemyArt } from "./apps/enemy-art.mjs";
 import { actorModels, itemModels } from "./data/_module.mjs";
@@ -116,6 +117,7 @@ Hooks.once("init", () => {
   registerTown();
   // 미궁 씬 메뉴: 캔버스를 그리기 전에 훅을 걸어야 한다(init)
   registerFieldScene();
+  registerPartyBoard();
   registerGuild();
   registerDefaults();
   registerFieldMap();
@@ -127,6 +129,7 @@ Hooks.once("init", () => {
     openTown: (id) => TownApp.open(id),
     openGuild: () => GuildApp.open(),
     reseedDefaults,
+    openPartyBoard: () => PartyBoard.open(),
     returnToTown: (id, o) => (game.user.isGM ? returnToTown(id, o) : requestReturnToTown()),
     promptCheck, rollCheck, openRequestDialog, rollAbilities, acquireItems, openShop, toggleShop,
     openGMScreen: () => GMScreen.open(),

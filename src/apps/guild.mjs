@@ -121,7 +121,7 @@ export class GuildApp extends Application {
     }).join("");
     const clsOpts = (cur) => classes.map((c) => opt(c.uuid, cur, c.name)).join("");
     return $(`<div class="guild-wrap">
-      <section><h3>${esc(L("chars"))} <button type="button" data-g="new"><i class="fas fa-user-plus"></i> ${esc(L("newChar"))}</button></h3>
+      <section><h3>${esc(L("chars"))} <button type="button" data-g="new"><i class="fas fa-user-plus"></i> ${esc(L("newChar"))}</button><button type="button" data-g="party"><i class="fas fa-users"></i> ${esc(game.i18n.localize("NSSQ.PartyBoard.title"))}</button></h3>
         <div class="guild-cards">${rows || `<p class="notes">${esc(L("noChars"))}</p>`}</div>
         <p class="notes">${esc(L("charsHint"))}</p></section>
       ${sel ? `<section><h3>${esc(L("forChar", { name: sel.name }))}</h3>
@@ -151,6 +151,7 @@ export class GuildApp extends Application {
       case "rep": await game.user.update({ character: a.id }); return this.render();
       case "sheet": return a?.sheet.render(true);
       case "new": return game.nssq.openChargen();
+      case "party": return (await import("./party-board.mjs")).PartyBoard.open();
       case "tree": return (await import("./skill-tree.mjs")).SkillTree.open(a);
       case "respec": return respec(a);
       case "class": {

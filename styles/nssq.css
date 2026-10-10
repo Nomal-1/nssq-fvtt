@@ -1438,3 +1438,24 @@
 .nssq-town.field-overlay .town-party .bar.hp i { background: linear-gradient(90deg, #f0a020, #f6d050); }
 .nssq-town.field-overlay .town-party .bar.tp i { background: linear-gradient(90deg, #30b8e0, #80e8f8); }
 .nssq-town.field-overlay .town-party .bad { color: #f77; font-size: 0.85em; }
+/* 파티 편성판 */
+.nssq-party-board .window-content { padding: 8px 12px; }
+.nssq-party-board .pb-row { display: flex; align-items: stretch; gap: 6px; margin: 6px 0; }
+.nssq-party-board .pb-rowname { flex: 0 0 44px; display: flex; align-items: center; font-weight: bold; color: var(--nq-gold-l); }
+.nssq-party-board .pb-slot { flex: 1; min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 4px; border: 1px dashed var(--nq-line); border-radius: 8px; cursor: pointer; text-align: center; }
+.nssq-party-board .pb-slot.filled { border-style: solid; background: rgba(255,255,255,0.04); }
+.nssq-party-board .pb-slot.sel, .nssq-party-board .pb-bench.sel { border: 2px solid var(--nq-gold); background: rgba(231, 207, 138, 0.15); }
+.nssq-party-board .pb-slot:hover, .nssq-party-board .pb-bench:hover { border-color: var(--nq-gold); }
+.nssq-party-board .pb-slot img { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; object-position: top; border: none; }
+.nssq-party-board .pb-slot small { color: var(--nq-mu); }
+.nssq-party-board .pb-slot .empty { color: var(--nq-mu); font-size: 0.85em; }
+.nssq-party-board .pb-benches { display: flex; flex-wrap: wrap; gap: 4px; min-height: 36px; padding: 4px; border: 1px dashed var(--nq-line); border-radius: 8px; }
+.nssq-party-board .pb-bench { display: flex; align-items: center; gap: 4px; padding: 2px 8px 2px 2px; border: 1px solid var(--nq-line); border-radius: 16px; cursor: pointer; }
+.nssq-party-board .pb-bench img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: none; }
+.nssq-party-board .pb-count.warn, .nssq-party-board .warn { color: #f77; }
+.nssq-party-board .pb-acts, .nssq-party-board .pb-vote { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; }
+.nssq-party-board .pb-vote p { flex: 1 0 100%; margin: 0; }
+.nssq-party-board .pb-vote ul { flex: 1 0 100%; margin: 0; padding: 0; list-style: none; display: flex; gap: 10px; }
+.nssq-party-board .pb-vote li.yes { color: var(--nq-green); } .nssq-party-board .pb-vote li.no { color: #f77; }
+.nssq-party-board button { width: auto; padding: 0 12px; }
+.nssq-slot-picker .slot-cell.swap { border-color: var(--nq-gold); }

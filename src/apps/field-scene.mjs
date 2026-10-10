@@ -162,6 +162,7 @@ export class FieldOverlay extends Application {
     }
     const out = [btn(`data-fs="move" ${v.reachable.length ? "" : "disabled"}`, "fa-shoe-prints", L("move"), L("say.move"))];
     for (const [act, icon] of Object.entries(ACTS)) out.push(btn(`data-fs-act="${act}"`, icon, L(`act.${act}`), L(gm ? `say.${act}` : "say.propose", { act: L(`act.${act}`) })));
+    out.push(btn('data-fs="party"', "fa-users", L("party"), L("say.party")));
     out.push(btn('data-fs="map"', "fa-map", L("map"), L(gm ? "say.mapGM" : "say.map")));
     if (v.current === map.start) out.push(btn('data-fs="town"', "fa-home", LF(gm ? "toTown" : "toTownPropose"), L("say.town")));
     if (gm) out.push(btn('data-fs="gmScreen"', "fa-user-shield", game.i18n.localize("NSSQ.Town.gmScreen"), ""));
@@ -224,6 +225,7 @@ export class FieldOverlay extends Application {
       case "no": return answerProposal(false);
       case "cancel": return answerProposal(false, { cancel: true });
       case "map": return (await import("./fieldmap.mjs")).FieldMapApp.open();
+      case "party": return (await import("./party-board.mjs")).PartyBoard.open();
       case "gmScreen": return game.nssq.openGMScreen();
       case "town": {
         const T = await import("./town.mjs");

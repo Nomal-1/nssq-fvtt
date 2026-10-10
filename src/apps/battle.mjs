@@ -226,6 +226,8 @@ export async function startBattle({ presetId, members, surprise = "none", identi
 
   // 3) 파티 토큰: 액터와 연결(【HP】가 캐릭터에 남도록). 자리는 칸 배치(전위·후위 각 3칸)가 정한다
   const actors = members.map((id) => game.actors.get(id)).filter(Boolean);
+  // 한 열 3명 초과면 넘치는 사람을 다른 열로(기습·직접 수정 대비)
+  await (await import("./party-board.mjs")).balanceBeforeBattle(actors);
   const tokenData = [];
   for (const actor of actors) {
     const doc = await actor.getTokenDocument({ x: 0, y: SCENE_H - GRID, actorLink: true, disposition: CONST.TOKEN_DISPOSITIONS.FRIENDLY });

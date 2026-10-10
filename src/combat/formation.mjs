@@ -4,6 +4,7 @@
  */
 import { LAYOUT, PARTY_SLOTS, assignPartySlots, formationPositions, partyRowSlots, shuffleFormation } from "../engine/formation.mjs";
 import { isActiveGM } from "./apply.mjs";
+import { emit, onSocket } from "../socket.mjs";
 import { sideOf } from "./profile.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
@@ -104,12 +105,22 @@ export async function changePosition(combatant) {
   const party = scene ? unitsOf(scene).party : [];
   const self = party.find((u) => u.actor === actor || u.actor?.id === actor.id);
   const nameOf = (tokenId) => scene?.tokens.get(tokenId)?.name ?? "";
+  const combat = combatant.parent;
+  const opening = combat?.getFlag("nssq", "phase") === "opening";
+  // 위치 교환 상대: 같은 전투의 살아 있는 아군. 개막 페이즈면 아직 개막 행동을 안 한 사람만(둘 다 행동을 쓴다)
+  const partnerOf = (tokenId) => combat?.combatants.find((x) => x.tokenId === tokenId) ?? null;
+  const canSwap = (tokenId) => {
+    const p = partnerOf(tokenId);
+    return !!p && (p.actor?.system.hp?.value ?? 0) > 0 && (!opening || !p.getFlag("nssq", "opening"));
+  };
   const rowsHtml = ["front", "back"].map((row) => {
     const cells = partyRowSlots(party, row, self?.id).map((c) => {
       const mine = c.occupant && c.occupant === self?.id;
-      const label = mine ? L("slotSelf") : c.occupant ? esc(nameOf(c.occupant)) : L("slotEmpty");
-      return `<label class="slot-cell ${c.free ? "" : "taken"} ${mine ? "mine" : ""}">
-        <input type="radio" name="slot" value="${row}:${c.index}" ${mine ? "checked" : ""} ${c.free ? "" : "disabled"}/> ${label}</label>`;
+      const swap = !mine && c.occupant && canSwap(c.occupant);
+      const label = mine ? L("slotSelf") : c.occupant ? `${swap ? "⇄ " : ""}${esc(nameOf(c.occupant))}` : L("slotEmpty");
+      const value = swap ? `swap:${c.occupant}` : `${row}:${c.index}`;
+      return `<label class="slot-cell ${c.free || swap ? "" : "taken"} ${mine ? "mine" : ""} ${swap ? "swap" : ""}">
+        <input type="radio" name="slot" value="${value}" ${mine ? "checked" : ""} ${c.free || swap ? "" : "disabled"}/> ${label}</label>`;
     }).join("");
     return `<div class="slot-row"><span class="row-name">${game.i18n.localize(`NSSQ.Row.${row}`)}</span>${cells}</div>`;
   }).join("");
@@ -120,6 +131,7 @@ export async function changePosition(combatant) {
     callback: (html) => html[0].querySelector("[name=slot]:checked")?.value ?? null
   });
   if (!pick) return false;
+  if (pick.startsWith("swap:")) return requestSwap(combatant, partnerOf(pick.slice(5)), opening);
   const [row, index] = pick.split(":");
   if (row === actor.system.row && Number(index) === actor.system.order) return false;
   await actor.update({ "system.row": row, "system.order": Number(index) });
@@ -168,7 +180,66 @@ export async function shuffleRowsDialog(combat) {
   });
 }
 
+/* ---------------- 위치 교환(사용자 결정) ---------------- */
+// 원문: 개막 행동 「배치 변경」은 자기 자신만 움직인다. 개막 행동은 동시이므로 두 사람이 각자 행동을 써서 서로 자리로 가면 교환이 된다.
+// 내 캐릭터끼리(또는 GM)는 바로, 남의 캐릭터는 그 조종자가 수락하면. 개막 페이즈면 둘 다 개막 행동(배치 변경)을 쓴다.
+
+/** @returns {Promise<boolean>} 지금 바로 바꿨는가(요청을 보냈으면 false: 수락되면 활성 GM이 둘 다 처리) */
+async function requestSwap(from, to, opening) {
+  if (!from || !to) return false;
+  if (game.user.isGM || to.actor?.isOwner) {
+    await swapRows(from.actor, to.actor);
+    if (opening) await to.setFlag("nssq", "opening", "row");
+    return true;
+  }
+  const owner = game.users.find((u) => u.active && !u.isGM && to.actor?.testUserPermission(u, "OWNER")) ?? game.users.activeGM;
+  if (!owner) return false;
+  emit("swapRequest", { combatId: from.parent.id, fromId: from.id, toId: to.id, by: game.user.id, user: owner.id, opening });
+  ui.notifications.info(L("swapRequested", { name: to.name, user: owner.name }));
+  return false;
+}
+
+async function swapRows(a, b) {
+  const ra = { row: a.system.row ?? "front", order: a.system.order ?? 0 };
+  const rb = { row: b.system.row ?? "front", order: b.system.order ?? 0 };
+  await a.update({ "system.row": rb.row, "system.order": rb.order });
+  await b.update({ "system.row": ra.row, "system.order": ra.order });
+}
+
+async function onSwapRequest(p) {
+  if (p.user !== game.user.id) return;
+  const combat = game.combats.get(p.combatId);
+  const from = combat?.combatants.get(p.fromId);
+  const to = combat?.combatants.get(p.toId);
+  if (!from || !to) return;
+  const ok = await Dialog.confirm({
+    title: L("swapTitle"), rejectClose: false,
+    content: `<p>${L("swapAsk", { by: game.users.get(p.by)?.name ?? "?", from: from.name, to: to.name })}</p>${p.opening ? `<p class="notes">${L("swapCost")}</p>` : ""}`
+  });
+  emit("swapAnswer", { ...p, ok }, { local: isActiveGM() });
+}
+
+/** 활성 GM: 수락이면 둘 다 옮기고(개막 페이즈면 둘 다 개막 행동 사용), 결과를 요청자에게 */
+async function onSwapAnswer(p) {
+  if (p.by === game.user.id && !p.ok) ui.notifications.warn(L("swapDeclined"));
+  if (!isActiveGM() || !p.ok) return;
+  const combat = game.combats.get(p.combatId);
+  const from = combat?.combatants.get(p.fromId);
+  const to = combat?.combatants.get(p.toId);
+  if (!from || !to) return;
+  if (p.opening && (from.getFlag("nssq", "opening") || to.getFlag("nssq", "opening"))) return ui.notifications.warn(L("swapLate"));
+  await swapRows(from.actor, to.actor);
+  if (p.opening) { await from.setFlag("nssq", "opening", "row"); await to.setFlag("nssq", "opening", "row"); }
+  return ChatMessage.create({
+    speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
+    content: `<div class="nssq-combat-note"><i class="fas fa-exchange-alt"></i> ${esc2(L("swapped", { a: from.name, b: to.name }))}</div>`
+  });
+}
+const esc2 = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+
 export function registerFormation() {
+  onSocket("swapRequest", onSwapRequest);
+  onSocket("swapAnswer", onSwapAnswer);
   // 열·칸이 바뀌면 그 액터가 있는 전투 씬을 다시 배치
   Hooks.on("updateActor", (actor, changes) => {
     const sys = changes.system ?? {};

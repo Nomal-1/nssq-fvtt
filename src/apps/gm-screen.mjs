@@ -17,8 +17,9 @@ const playerOwned = (a) => game.users.some((u) => !u.isGM && a.testUserPermissio
 export function partyActors() {
   const chars = game.actors.filter((a) => a.type === "character");
   // 길드에서 「대기」로 둔 캐릭터는 빼고(07 #167)
-  const party = chars.filter((a) => (playerOwned(a) && !a.getFlag("nssq", "benched")) || a.system.npc);
-  return party.length ? party : chars;
+  // 대기(benched)는 NPC도 빠진다(파티 편성판). 아무도 대기가 아닌데 비면 전원
+  const party = chars.filter((a) => (playerOwned(a) || a.system.npc) && !a.getFlag("nssq", "benched"));
+  return party.length || chars.some((a) => a.getFlag("nssq", "benched")) ? party : chars;
 }
 
 /** GM만 가진 캐릭터(동료 NPC 후보) */

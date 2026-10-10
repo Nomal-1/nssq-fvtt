@@ -59,6 +59,7 @@ export async function openDungeonDialog() {
 }
 
 export async function startDungeon({ name, level, depth, hour }) {
+  if (!(await (await import("./party-board.mjs")).checkBeforeEntry())) return null;
   // 새 던전(진행 중인 것을 다시 시작해도): 누적 전투 턴을 비운다(07 #165)
   await (await import("./time-pass.mjs")).resetBattleTurns();
   await setState({ active: true, name, level, depth, done: 0, hour });

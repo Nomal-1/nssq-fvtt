@@ -160,6 +160,8 @@ export async function startProgress(mapId, hour, { resume = true } = {}) {
   if (!game.user.isGM) return;
   const map = allMaps()[mapId];
   if (!map) return;
+  // 파티 편성 검사(정원·한 열 3명)
+  if (!(await (await import("./party-board.mjs")).checkBeforeEntry())) return;
   const { errors } = FM.validateMap(map);
   if (errors.length) return ui.notifications.warn(L("hasErrors", { n: errors.length }));
   const s = FM.startState(map, { hour });

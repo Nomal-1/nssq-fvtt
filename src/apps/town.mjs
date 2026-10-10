@@ -321,7 +321,7 @@ export class TownApp extends Application {
     const gm = game.user.isGM;
     const out = [];
     switch (f.type) {
-      case "guild": out.push(b("guild", "fa-users", L("btn.guild")), b("tree", "fa-sitemap", L("btn.tree")), b("chargen", "fa-user-plus", L("btn.chargen"))); if (gm) out.push(b("gmScreen", "fa-users-cog", L("btn.party"))); break;
+      case "guild": out.push(b("guild", "fa-users", L("btn.guild")), b("party", "fa-user-friends", game.i18n.localize("NSSQ.PartyBoard.title")), b("tree", "fa-sitemap", L("btn.tree")), b("chargen", "fa-user-plus", L("btn.chargen"))); if (gm) out.push(b("gmScreen", "fa-users-cog", L("btn.party"))); break;
       case "shop": out.push(b("shop", "fa-store", L("btn.shop"))); break;
       case "apothecary": out.push(b("potions", "fa-prescription-bottle", L("btn.potions"))); break;
       case "inn": out.push(b("sheet", "fa-box", L("btn.storage"))); if (gm) out.push(b("living", "fa-coins", L("btn.living"))); break;
@@ -456,6 +456,7 @@ export class TownApp extends Application {
       case "sheet": { const a = await pickActor(); return a ? a.sheet.render(true) : ui.notifications.warn(L("noCharacter")); }
       case "tree": { const a = await pickActor(); if (!a) return ui.notifications.warn(L("noCharacter")); return (await import("./skill-tree.mjs")).SkillTree.open(a); }
       case "chargen": return game.nssq.openChargen();
+      case "party": return (await import("./party-board.mjs")).PartyBoard.open();
       case "enterMap": return enterMapFromTown(mapId);
       case "random": return (await import("./dungeon.mjs")).openDungeonDialog();
       case "guild": return (await import("./guild.mjs")).GuildApp.open(f?.name ? `${t.name} · ${f.name}` : null);
