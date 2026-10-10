@@ -471,6 +471,9 @@ export class TownOverlay extends TownApp {
 
 export function registerTown() {
   Hooks.on("canvasReady", () => syncOverlay());
+  // 접속 직후에는 캔버스를 그린 뒤 #hud를 다시 그려 덮은 UI가 지워진다 → ready·HUD 렌더 때 다시 붙인다
+  Hooks.once("ready", () => setTimeout(syncOverlay, 0));
+  Hooks.on("renderHeadsUpDisplay", () => { if (overlay && !document.body.contains(overlay.element?.[0])) setTimeout(syncOverlay, 0); });
   Hooks.on("canvasPan", () => { if (!fitting && overlay) { clearTimeout(registerTown.t); registerTown.t = setTimeout(fitTownView, 400); } });
   Hooks.on("collapseSidebar", () => setTimeout(fitTownView, 300));
   window.addEventListener("resize", () => { clearTimeout(registerTown.r); registerTown.r = setTimeout(fitTownView, 200); });
