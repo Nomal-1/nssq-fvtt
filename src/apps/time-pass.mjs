@@ -63,12 +63,13 @@ const ticking = (list) => (list ?? []).some((c) => CONDITIONS[c.id]?.depth || c.
 
 /**
  * @param {number} hours 지난 시간(세그먼트·턴)
- * @param {{ noAilments?: boolean }} [opts] noAilments: 상태 이상은 처리하지 않는다(《약효 요리》가 있는 캠프: 캠프 카드가 먼저 고친다)
+ * @param {{ noAilments?: boolean, noOverheat?: boolean }} [opts] noAilments: 상태 이상은 처리하지 않는다(《약효 요리》가 있는 캠프: 캠프 카드가 먼저 고친다).
+ *   noOverheat: 오버히트는 이미 줄였다(필드 지도 캠프: 세그먼트에서 줄이고 상태 이상만 나중에)
  */
-export async function timePasses(hours = 1, { noAilments = false } = {}) {
+export async function timePasses(hours = 1, { noAilments = false, noOverheat = false } = {}) {
   if (!game.user.isGM || !(hours > 0)) return null;
   const members = (await import("./gm-screen.mjs")).partyActors();
-  for (const a of members) {
+  for (const a of noOverheat ? [] : members) {
     const v = Number(a.getFlag("nssq", "overheat") ?? 0);
     if (v > 0) await (v > hours ? a.setFlag("nssq", "overheat", v - hours) : a.unsetFlag("nssq", "overheat"));
   }

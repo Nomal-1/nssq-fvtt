@@ -16,11 +16,12 @@ export function dropFor(drops, total) {
  * @param {{ uuid, name, skills: { name, sl, effects }[] }[]} party
  * prefix "gather"면 채집용(gatherAdjust 《홀리 기프트》·《야생의 후각》, gatherDoubleUp 《보물의 후각》·《풍작 기원》,
  * gatherDoubleExtra 《이모작》, gatherExtra 《수확자의 후각》)
- * @returns {{ range: number, rangeBy: string[], doubleUp: string[], doubleExtra: string[], extras: { uuid, name, skill, count, choices: string[] }[] }}
+ * @returns {{ range: number, rangeBy: string[], rangeUuids: string[], doubleUp: string[], doubleExtra: string[], extras: { uuid, name, skill, count, choices: string[] }[] }}
  */
 export function partyDropSkills(party, prefix = "drop") {
   let range = 0;
   let rangeBy = [];
+  let rangeUuids = [];
   const doubleUp = [];
   const doubleExtra = [];
   const extras = [];
@@ -30,14 +31,14 @@ export function partyDropSkills(party, prefix = "drop") {
       for (const e of s.effects ?? []) {
         if (e?.type === `${prefix}Adjust`) {
           const n = Math.max(0, evaluate(e.range ?? 1, { SL: s.sl }));
-          if (n > range) { range = n; rangeBy = [`${p.name}《${s.name}》`]; } else if (n === range && n > 0) rangeBy.push(`${p.name}《${s.name}》`);
+          if (n > range) { range = n; rangeBy = [`${p.name}《${s.name}》`]; rangeUuids = [p.uuid]; } else if (n === range && n > 0) { rangeBy.push(`${p.name}《${s.name}》`); rangeUuids.push(p.uuid); }
         } else if (e?.type === `${prefix}DoubleUp`) doubleUp.push(`${p.name}《${s.name}》`);
         else if (e?.type === `${prefix}DoubleExtra`) doubleExtra.push(`${p.name}《${s.name}》`);
         else if (e?.type === `${prefix}Extra`) extras.push({ uuid: p.uuid, name: p.name, skill: s.name, count: Math.max(1, evaluate(e.count ?? 1, { SL: s.sl })), choices: e.choices ?? [] });
       }
     }
   }
-  return { range, rangeBy, doubleUp, doubleExtra, extras };
+  return { range, rangeBy, rangeUuids, doubleUp, doubleExtra, extras };
 }
 
 /**

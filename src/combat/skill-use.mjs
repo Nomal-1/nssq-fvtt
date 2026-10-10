@@ -121,7 +121,7 @@ export function unitProfile(actor, combatant) {
   };
 }
 
-const isDrive = (item) => /드라이브/.test(item.name);
+export const isDrive = (item) => /드라이브/.test(item.name);
 /** 스킬에 든 flag(상시가 아닌 특수 스킬도): 그 값과 스킬(《명군의 재능》 openingCategory 등) */
 export function skillFlag(actor, flag) {
   for (const i of actor?.items ?? []) {

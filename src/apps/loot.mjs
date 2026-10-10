@@ -38,7 +38,7 @@ export async function startLoot(combat) {
   }
   const card = {
     state: "adjust", range: skills.range, rangeBy: skills.rangeBy, doubleUp: skills.doubleUp,
-    adjusters: uniq.filter((a) => skills.rangeBy.some((x) => x.startsWith(a.name))).map((a) => a.uuid),
+    adjusters: [...new Set(skills.rangeUuids)],
     rows, extras: skills.extras.map((x) => ({ ...x, choice: null })),
     party: uniq.map((a) => ({ uuid: a.uuid, name: a.name })), pool: [], log: []
   };
@@ -99,7 +99,7 @@ export async function startGather({ method, amount, rank, table, party }) {
   const card = {
     kind: "gather", method, amount, rank, table,
     state: "adjust", range: skills.range, rangeBy: skills.rangeBy, doubleUp: skills.doubleUp, doubleExtra: skills.doubleExtra,
-    adjusters: party.filter((a) => skills.rangeBy.some((x) => x.startsWith(a.name))).map((a) => a.uuid),
+    adjusters: [...new Set(skills.rangeUuids)],
     rows, extras: skills.extras.map((x) => ({ ...x, choice: null })),
     party: party.map((a) => ({ uuid: a.uuid, name: a.name })), pool: [], log: []
   };
@@ -206,6 +206,8 @@ async function save(message, card) {
 
 function handle({ messageId, action, i, d, j, c, e, who, userId }) {
   const fromGM = !!game.users.get(userId)?.isGM;
+  // 가져가기는 대기열을 오래 붙잡지 않게 따로(takeItem)
+  if (action === "take") return takeItem(messageId, e, who);
   return enqueue(async () => {
     const message = game.messages.get(messageId);
     const card = foundry.utils.deepClone(message?.getFlag("nssq", "loot"));
@@ -233,25 +235,45 @@ function handle({ messageId, action, i, d, j, c, e, who, userId }) {
       if (action === "grant") await addToPool(card, x.choice, null, x.count, `${x.name}《${x.skill}》`);
       return save(message, card);
     }
-    if (action === "take" && card.state === "open") {
-      const p = card.pool.find((y) => y.id === e);
-      const actor = who ? await fromUuid(who) : null;
-      if (!p?.data || !p.qty || !actor) return;
-      const data = foundry.utils.deepClone(p.data);
-      data.system.quantity = p.qty;
-      const r = await acquireItems(actor, [data], { source: "loot", reason: L("reason") });
-      const left = r.left.reduce((n, x) => n + (x.system?.quantity ?? 1), 0);
-      const got = p.qty - left;
-      // 다른 사람이 그 사이 고친 카드를 덮어쓰지 않게 다시 읽는다
-      const fresh = foundry.utils.deepClone(game.messages.get(messageId)?.getFlag("nssq", "loot"));
-      const q = fresh?.pool.find((y) => y.id === e);
-      if (!q) return;
-      q.qty = Math.max(0, q.qty - got);
-      if (got) fresh.log.push(L("took", { name: actor.name, item: label(q), n: got }));
-      return save(message, fresh);
-    }
     if (action === "close" && card.state === "open") { card.state = "closed"; return save(message, card); }
   });
+}
+
+/**
+ * [가져가기]: 풀의 수량을 먼저 비워 두고(대기열 안), 소지 처리는 대기열 밖에서(소지 수 정리 창이 오래 걸려도 다른 버튼이 막히지 않게),
+ * 못 가진 것은 다시 대기열에서 풀로 돌린다
+ */
+async function takeItem(messageId, e, who) {
+  const actor = who ? await fromUuid(who) : null;
+  if (!actor) return;
+  let taken = null;
+  await enqueue(async () => {
+    const message = game.messages.get(messageId);
+    const card = foundry.utils.deepClone(message?.getFlag("nssq", "loot"));
+    const p = card?.state === "open" ? card.pool.find((y) => y.id === e) : null;
+    if (!p?.data || !p.qty) return;
+    taken = { data: foundry.utils.deepClone(p.data), qty: p.qty };
+    p.qty = 0;
+    await save(message, card);
+  });
+  if (!taken) return;
+  taken.data.system.quantity = taken.qty;
+  let left = taken.qty;
+  try {
+    const r = await acquireItems(actor, [taken.data], { source: "loot", reason: L("reason") });
+    left = r.left.reduce((n, x) => n + (x.system?.quantity ?? 1), 0);
+  } finally {
+    await enqueue(async () => {
+      const message = game.messages.get(messageId);
+      const card = foundry.utils.deepClone(message?.getFlag("nssq", "loot"));
+      const q = card?.pool.find((y) => y.id === e);
+      if (!q) return;
+      q.qty += left;
+      const got = taken.qty - left;
+      if (got) card.log.push(L("took", { name: actor.name, item: label(q), n: got }));
+      await save(message, card);
+    });
+  }
 }
 
 const send = (payload) => { payload.userId = game.user.id; return isActiveGM() ? handle(payload) : emit("loot", payload); };

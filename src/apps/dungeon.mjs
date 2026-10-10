@@ -45,6 +45,8 @@ export async function openDungeonDialog() {
 }
 
 export async function startDungeon({ name, level, depth, hour }) {
+  // 새 던전(진행 중인 것을 다시 시작해도): 누적 전투 턴을 비운다(07 #165)
+  await (await import("./time-pass.mjs")).resetBattleTurns();
   await setState({ active: true, name, level, depth, done: 0, hour });
   await game.settings.set("nssq", "timeOfDay", timeOfDayAt(hour));
   return note(`<h3><i class="fas fa-dungeon"></i> ${esc(L("started", { name, level, depth }))}</h3><p>${esc(L("clock", { h: hour, tod: L(`tod.${timeOfDayAt(hour)}`) }))}</p>${nextButton()}`);

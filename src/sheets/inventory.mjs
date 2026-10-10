@@ -203,17 +203,20 @@ async function useSkillField(actor, item) {
   const N = (k, d) => (d ? game.i18n.format(`NSSQ.Skill.${k}`, d) : game.i18n.localize(`NSSQ.Skill.${k}`));
   if (game.combat?.started && game.combat.combatants.some((c) => c.actor?.uuid === actor.uuid)) return ui.notifications.warn(N("fieldInCombat"));
   const { CONDITIONS } = await import("../engine/conditions.mjs");
-  const { PART_BIND } = await import("../engine/effects/usage.mjs");
-  const conds = actor.system.conditions ?? [];
-  const stuck = conds.find((c) => CONDITIONS[c.id]?.noAction);
+  const stuck = (actor.system.conditions ?? []).some((c) => CONDITIONS[c.id]?.noAction);
   if (stuck || (actor.system.hp?.value ?? 0) <= 0) return ui.notifications.warn(N("fieldCannot", { name: actor.name }));
-  if (PART_BIND[item.system.part] && conds.some((c) => c.id === PART_BIND[item.system.part])) return ui.notifications.warn(N("fieldBound", { name: item.name }));
-  const tp = item.system.cost?.tp ?? 0;
-  if (tp > (actor.system.tp?.value ?? 0)) return ui.notifications.warn(N("fieldNoTp", { name: item.name }));
+  // 전투에서 쓸 때와 같은 검사(행동 불가·봉인·무기·토큰·오버히트·TP·FP)
+  const { canUseSkill } = await import("../engine/effects/usage.mjs");
+  const { unitProfile, isDrive, resolveAndPost } = await import("../combat/skill-use.mjs");
+  const r = canUseSkill(item.system, unitProfile(actor, null), { phase: "main", myTurn: true, drive: isDrive(item) });
+  if (!r.ok) return ui.notifications.warn(`${item.name}: ${game.i18n.localize(`NSSQ.SkillUse.reason.${r.reason}`)}`);
   const targets = await pickItemTargets(actor, item);
   if (!targets?.length) return;
-  if (tp) await actor.update({ "system.tp.value": (actor.system.tp?.value ?? 0) - tp });
-  const { resolveAndPost } = await import("../combat/skill-use.mjs");
+  const c = item.system.cost ?? {};
+  const upd = {};
+  if (c.tp) upd["system.tp.value"] = Math.max(0, (actor.system.tp?.value ?? 0) - c.tp);
+  if (c.fp) upd["system.fp.value"] = Math.max(0, (actor.system.fp?.value ?? 0) - c.fp);
+  if (Object.keys(upd).length) await actor.update(upd);
   return resolveAndPost({ actor, combatant: null, item, kind: "skill", units: targets.map((a) => ({ actor: a, combatant: null })), mainAction: false });
 }
 
