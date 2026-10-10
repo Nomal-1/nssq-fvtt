@@ -191,8 +191,8 @@ export class NssqCombat extends Combat {
     }
     await this.clearRoundFlags();
     await this.refreshInitiative();
-    // 전투 1턴 = 2분(원작), 60분이면 탐색 시각 +1시간(07 #165)
-    if (this.getFlag("nssq", "battle")) await (await import("../apps/time-pass.mjs")).battleMinutes(this, 2);
+    // 던전 진행 중 누적 전투 턴 30이면 탐색 시각 +1시간(07 #165)
+    if (this.getFlag("nssq", "battle")) await (await import("../apps/time-pass.mjs")).battleTurn(this);
     await super.nextRound();
     await this.setPhase("opening", { turn: null });
     return this;

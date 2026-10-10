@@ -15,7 +15,11 @@ const L = (k, d) => (d ? game.i18n.format(`NSSQ.Dungeon.${k}`, d) : game.i18n.lo
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 export const dungeonState = () => game.settings.get("nssq", "dungeon") ?? {};
-const setState = (s) => game.settings.set("nssq", "dungeon", s);
+const setState = async (s) => {
+  // 던전에 들어가거나 나가면 누적 전투 턴을 비운다(07 #165)
+  if (!!s.active !== !!dungeonState().active) await (await import("./time-pass.mjs")).resetBattleTurns();
+  return game.settings.set("nssq", "dungeon", s);
+};
 const party = async () => (await import("./gm-screen.mjs")).partyActors();
 const note = (html, flags = {}) => ChatMessage.create({ speaker: { alias: L("title") }, content: `<div class="nssq-dungeon">${html}</div>`, flags });
 

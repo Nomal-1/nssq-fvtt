@@ -73,6 +73,8 @@ export async function camp({ hours, danger, food, members, tent = 0, timePassed 
   const cookHp = cookTool && able.some((a) => flagOf(a, "campCookHp"));
   const cookTp = cookTool && able.some((a) => flagOf(a, "campCookTp"));
   const cookCure = cookTool && able.some((a) => flagOf(a, "campCookCure"));
+  // 야영하면 누적 전투 턴을 비운다(07 #165)
+  await (await import("./time-pass.mjs")).resetBattleTurns();
   // 캠프 시간만큼 탐색 시간이 지난다(07 #164). 《약효 요리》가 있으면 상태 이상은 이 카드가 고치므로 진행하지 않는다
   if (!timePassed) await (await import("./time-pass.mjs")).timePasses(hours, { noAilments: cookCure });
   const campHeal = Math.max(0, ...able.map((a) => Number(a.system.equipment?.mods?.campHeal) || 0));

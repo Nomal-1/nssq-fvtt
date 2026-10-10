@@ -89,6 +89,7 @@ export async function startProgress(mapId, hour) {
   if (errors.length) return ui.notifications.warn(L("hasErrors", { n: errors.length }));
   const s = FM.startState(map, { hour });
   await setMapState(s, { undo: false });
+  await (await import("./time-pass.mjs")).resetBattleTurns();
   await passTime(s.hour, 0);
   await post(`<h3><i class="fas fa-map"></i> ${esc(L("started", { name: map.name }))}</h3>${arrivalHtml(map, s)}`);
   return processTriggers(map, FM.arrivalTriggers(map, s, s.current));
@@ -97,6 +98,7 @@ export async function startProgress(mapId, hour) {
 export async function endProgress() {
   if (!game.user.isGM) return;
   await setMapState({ ...cur(), active: false }, { undo: false });
+  await (await import("./time-pass.mjs")).resetBattleTurns();
   return post(`<h3><i class="fas fa-map"></i> ${esc(L("ended"))}</h3>`);
 }
 

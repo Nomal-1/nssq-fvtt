@@ -38,8 +38,8 @@ export function registerSettings() {
     choices: { exceptNocturnal: "NSSQ.Settings.darkEnemies.exceptNocturnal", all: "NSSQ.Settings.darkEnemies.all", none: "NSSQ.Settings.darkEnemies.none" },
     default: "exceptNocturnal"
   });
-  // 전투 중 흐른 시간(분, 원작: 전투 1턴 = 2분, 60분이면 탐색 시간 1시간)
-  game.settings.register("nssq", "battleMinutes", { scope: "world", config: false, type: Number, default: 0 });
+  // 던전에 들어간 뒤 누적 전투 턴(30이면 탐색 시각 +1시간 하고 0, 던전을 나가거나 야영하면 0)
+  game.settings.register("nssq", "battleTurns", { scope: "world", config: false, type: Number, default: 0 });
   game.settings.register("nssq", "storage", {
     name: "NSSQ.Settings.storage.name",
     hint: "NSSQ.Settings.storage.hint",

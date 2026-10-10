@@ -330,8 +330,8 @@ export async function endBattle(combat, result = "abort") {
   try {
     const info = combat.getFlag("nssq", "battle") ?? {};
     const copy = game.scenes.get(info.copy);
-    // 마지막 턴의 2분(원작: 전투 1턴 = 2분, 07 #165)
-    if (combat.started) await (await import("./time-pass.mjs")).battleMinutes(combat, 2);
+    // 마지막 턴도 누적(07 #165)
+    if (combat.started) await (await import("./time-pass.mjs")).battleTurn(combat);
     await ChatMessage.create({
       speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
       content: `<div class="nssq-battle-end-card"><h3><i class="fas fa-flag-checkered"></i> ${L("ended", { name: esc(info.presetName ?? "") })}: ${L(`result${result[0].toUpperCase()}${result.slice(1)}`)}</h3>

@@ -14,17 +14,25 @@ import { applyEndPhase, logLine, roll2d6 } from "../combat/turn-status.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.TimePass.${k}`, d) : game.i18n.localize(`NSSQ.TimePass.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
+/** 던전(필드 지도·랜덤 던전)을 진행 중인가 */
+const exploring = () => !!game.settings.get("nssq", "fieldMapState")?.active || !!game.settings.get("nssq", "dungeon")?.active;
+
 /**
- * 전투 중 흐른 시간(원작 세계수의 미궁: 1걸음·전투 1턴 = 2분, 07 #165): 라운드가 지날 때마다 2분을 쌓고 60분이면 시각 +1시간.
+ * 전투 턴 누적(07 #165 사용자 결정, 원작 세계수의 미궁 「전투 1턴 = 2분, 30턴 = 1시간」): 던전 진행 중 전투 턴이 지날 때마다 1,
+ * 누적 30이면 시각 +1시간 하고 0으로. 던전을 나가거나(시작·종료) 야영하면 0(resetBattleTurns).
  * 상태 이상·오버히트는 전투의 종료 페이즈가 처리하므로 여기서는 시각(필드 지도·랜덤 던전)과 시간대, 어둠만 바꾼다
  */
-export async function battleMinutes(combat, minutes = 2) {
-  if (!game.user.isGM) return;
-  let m = Number(game.settings.get("nssq", "battleMinutes") ?? 0) + minutes;
-  const hours = Math.floor(m / 60);
-  m -= hours * 60;
-  await game.settings.set("nssq", "battleMinutes", m);
-  if (hours > 0) await advanceClock(hours, combat);
+export async function battleTurn(combat) {
+  if (!game.user.isGM || !exploring()) return;
+  const n = Number(game.settings.get("nssq", "battleTurns") ?? 0) + 1;
+  await game.settings.set("nssq", "battleTurns", n >= BATTLE_TURNS_PER_HOUR ? 0 : n);
+  if (n >= BATTLE_TURNS_PER_HOUR) await advanceClock(1, combat);
+}
+const BATTLE_TURNS_PER_HOUR = 30;
+
+/** 누적 전투 턴을 비운다(던전 시작·종료, 야영) */
+export async function resetBattleTurns() {
+  if (game.user.isGM && Number(game.settings.get("nssq", "battleTurns") ?? 0) !== 0) await game.settings.set("nssq", "battleTurns", 0);
 }
 
 /** 시각만 h시간(필드 지도·랜덤 던전의 시각과 시간대). 진행 중인 전투의 어둠(자동)도 따라 바뀐다 */
