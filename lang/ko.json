@@ -584,7 +584,7 @@
       "main": "메인", "sub": "서브", "noSub": "(서브 없음)", "pickMain": "메인 클래스를 고른다.", "same": "지금과 같은 직업이다.",
       "classBody": "메인 「{main}」, 서브 「{sub}」(으)로 바꾸고 클래스 스킬을 돌려받는다.",
       "classDone": "{name}: 직업 변경 → {main} / {sub}(스킬 {n}개 반환, 경험점 −{cost})",
-      "costLine": "{name}: 경험점 {n} 소모({from} → {to})", "levelDown": "레벨이 내려간다: Lv{from} → Lv{to}", "noExp": "경험점이 {n} 이상 있어야 한다."
+      "noRollback": "작성을 마친 캐릭터는 스킬을 되돌릴 수 없다. 다시 찍으려면 길드의 「스킬 재분배」를 쓴다.", "costLine": "{name}: 경험점 {n} 소모({from} → {to})", "levelDown": "레벨이 내려간다: Lv{from} → Lv{to}", "noExp": "경험점이 {n} 이상 있어야 한다."
     },
     "Encounter": {
       "title": "전투 구성",

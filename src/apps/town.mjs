@@ -250,6 +250,7 @@ export class TownApp extends Application {
       const menu = (t.facilities ?? []).map((x) => `<button type="button" class="town-choice" data-go="${x.id}" data-say="${esc(x.desc && x.type === "free" ? x.desc : L(`hint.${x.type}`))}"><i class="fas ${ICONS[x.type] ?? "fa-map-signs"}"></i><span>${esc(x.name)}</span></button>`).join("");
       return $(`<div class="town-stage" ${bg(t.img)}>${top(t.name, t.desc || (here ? L("partyHere") : L("partyAway")))}${bar}
         <nav class="town-menu">${menu}</nav>
+        ${await this.partyHtml()}
         <div class="town-name"><i class="fas fa-home"></i> ${esc(t.name)}${here ? "" : ` <small>${esc(L("partyAwayShort"))}</small>`}</div></div>`);
     }
     // 시설 화면: 시설 일러 + NPC + 메뉴 + 파티 상태(원작의 시설 화면)

@@ -1417,3 +1417,6 @@
 .nssq-town .town-party .pc-sub .sp { font-style: normal; margin-left: 4px; padding: 0 5px; border-radius: 6px; background: var(--tw-hi); color: #1d2a12; font-weight: bold; }
 .nssq-transfer-items { width: 100%; }
 .nssq-transfer-items td { padding: 2px 4px; }
+/* 거리 화면: 파티 줄 위로 마을 이름판 */
+.nssq-town .town-stage:not(.facility) .town-name { bottom: 96px; }
+.nssq-town .town-stage:not(.facility):has(.town-party.folded) .town-name { bottom: 34px; }

@@ -34,7 +34,8 @@ function levelAfter(actor, cost) {
 /** 클래스 스킬을 돌려받는다(★·커먼은 남김) */
 async function refundSkills(actor) {
   const ids = actor.items.filter((i) => i.type === "skill" && !i.system.unique && i.system.classKey !== "common").map((i) => i.id);
-  if (ids.length) await actor.deleteEmbeddedDocuments("Item", ids);
+  // 길드 재분배·직업 변경은 공식 경로라 「스킬 되돌리기 금지」에 걸리지 않는다
+  if (ids.length) await actor.deleteEmbeddedDocuments("Item", ids, { nssqRespec: true });
   return ids.length;
 }
 
@@ -167,4 +168,20 @@ export function registerGuild() {
     scope: "world", config: true, type: Number, default: 3
   });
   for (const h of ["updateActor", "createActor", "deleteActor", "updateUser"]) Hooks.on(h, () => GuildApp.refresh());
+  // 스킬 되돌리기 금지(사용자 결정): 작성을 마친 캐릭터는 플레이어가 스킬 SL을 낮추거나 지울 수 없다.
+  // 작성 중·GM·길드 재분배/직업 변경(nssqRespec)·★ 스킬(클래스에 따라 자동)은 예외
+  const locked = (item) => !game.user.isGM && item.type === "skill" && !item.system.unique
+    && item.parent?.type === "character" && !!item.parent.system.creation?.locked;
+  Hooks.on("preUpdateItem", (item, changes, options) => {
+    if (options.nssqRespec || !locked(item)) return true;
+    const sl = foundry.utils.getProperty(changes, "system.sl");
+    if (sl === undefined || sl >= (item.system.sl ?? 0)) return true;
+    ui.notifications.warn(L("noRollback"));
+    return false;
+  });
+  Hooks.on("preDeleteItem", (item, options) => {
+    if (options.nssqRespec || !locked(item)) return true;
+    ui.notifications.warn(L("noRollback"));
+    return false;
+  });
 }
