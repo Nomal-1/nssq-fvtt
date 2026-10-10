@@ -1,6 +1,6 @@
 {
   "name": "nssq-fvtt",
-  "version": "0.27.0",
+  "version": "0.27.1",
   "private": true,
   "type": "module",
   "description": "SRS가 아닌 세계수의 미궁 TRPG — Foundry VTT v12 시스템",

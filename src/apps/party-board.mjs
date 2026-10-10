@@ -8,6 +8,7 @@ import { draftFromUnits, ROWS, sameDraft, validateFormation } from "../engine/pa
 import { voteResult } from "../engine/fieldmap.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
+import { roster } from "./roster.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.PartyBoard.${k}`, d) : game.i18n.localize(`NSSQ.PartyBoard.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -60,9 +61,12 @@ export class PartyBoard extends Application {
   async _renderInner() {
     const p = proposal();
     const pending = !!p.id;
-    if (!this.draft || this.base !== JSON.stringify(unitsOf(await members()))) {
-      this.base = JSON.stringify(unitsOf(await members()));
-      this.draft = draftFromUnits(unitsOf(await members()));
+    // 명단(플레이어 캐릭터 + 동료 NPC)은 GM이 갱신하는 partyRoster: 권한 없는 액터도 보인다
+    const all = await roster();
+    const units = all.filter((e) => !e.benched).map((e) => ({ id: e.id, row: e.row, order: e.order }));
+    if (!this.draft || this.base !== JSON.stringify(units)) {
+      this.base = JSON.stringify(units);
+      this.draft = draftFromUnits(units);
       this.sel = null;
     }
     const draft = pending ? p.draft : this.draft;
@@ -70,12 +74,12 @@ export class PartyBoard extends Application {
     const errors = validateFormation(draft, max);
     const placed = new Set(ROWS.flatMap((r) => draft[r]).filter(Boolean));
     const cell = (row, i) => {
-      const a = game.actors.get(draft[row][i]);
+      const a = all.find((e) => e.id === draft[row][i]);
       const sel = !pending && this.sel?.row === row && this.sel?.i === i;
-      return `<div class="pb-slot ${a ? "filled" : ""} ${sel ? "sel" : ""}" data-slot="${row}:${i}">${a ? `<img src="${esc(a.img)}"/><b>${esc(a.name)}</b><small>Lv${a.system.level}${a.system.npc ? " · NPC" : ""}</small>` : `<span class="empty">${esc(L("emptySlot"))}</span>`}</div>`;
+      return `<div class="pb-slot ${a ? "filled" : ""} ${sel ? "sel" : ""}" data-slot="${row}:${i}">${a ? `<img src="${esc(a.img)}"/><b>${esc(a.name)}</b><small>Lv${a.level}${a.npc ? " · NPC" : ""}${a.cls ? ` · ${esc(a.cls)}` : ""}</small>` : `<span class="empty">${esc(L("emptySlot"))}</span>`}</div>`;
     };
     const rows = ROWS.map((r) => `<div class="pb-row"><span class="pb-rowname">${esc(game.i18n.localize(`NSSQ.Row.${r}`))}</span>${[0, 1, 2].map((i) => cell(r, i)).join("")}</div>`).join("");
-    const bench = candidates().filter((a) => !placed.has(a.id)).map((a) => `<div class="pb-bench ${!pending && this.sel?.id === a.id ? "sel" : ""}" data-bench="${a.id}"><img src="${esc(a.img)}"/> ${esc(a.name)}</div>`).join("");
+    const bench = all.filter((a) => !placed.has(a.id)).map((a) => `<div class="pb-bench ${!pending && this.sel?.id === a.id ? "sel" : ""}" data-bench="${a.id}"><img src="${esc(a.img)}"/> ${esc(a.name)}</div>`).join("");
     let foot;
     if (pending) {
       const key = game.user.isGM ? "gm" : game.user.id;
@@ -88,7 +92,7 @@ export class PartyBoard extends Application {
         ${mine ? `<button type="button" data-pb="yes" class="go"><i class="fas fa-check"></i> ${esc(L("accept"))}</button><button type="button" data-pb="no"><i class="fas fa-times"></i> ${esc(L("decline"))}</button>` : ""}
         ${p.by === game.user.id || game.user.isGM ? `<button type="button" data-pb="cancel">${esc(L("cancel"))}</button>` : ""}</div>`;
     } else {
-      const changed = !sameDraft(this.draft, draftFromUnits(unitsOf(await members())));
+      const changed = !sameDraft(this.draft, draftFromUnits(units));
       foot = `<div class="pb-acts"><button type="button" data-pb="reset"><i class="fas fa-undo"></i> ${esc(L("reset"))}</button>
         <button type="button" data-pb="submit" class="go" ${errors.length || !changed || inBattle() ? "disabled" : ""}><i class="fas fa-paper-plane"></i> ${esc(L("submit"))}</button></div>
         ${inBattle() ? `<p class="warn">${esc(L("noBattle"))}</p>` : ""}`;
@@ -235,5 +239,6 @@ export function registerPartyBoard() {
   });
   onSocket("partyPropose", (p) => onPropose(p));
   onSocket("partyVote", (p) => onVote(p));
-  for (const h of ["updateActor", "createActor", "deleteActor"]) Hooks.on(h, () => PartyBoard.refresh());
+  Hooks.on("nssqRoster", () => PartyBoard.refresh());
+  for (const h of ["updateActor", "createActor", "deleteActor"]) Hooks.on(h, () => { if (game.user.isGM) PartyBoard.refresh(); });
 }

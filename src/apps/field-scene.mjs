@@ -171,14 +171,13 @@ export class FieldOverlay extends Application {
 
   /** 파티 줄(미궁에서는 HP·TP가 중요) */
   async partyHtml() {
-    const party = (await import("./gm-screen.mjs")).partyActors();
+    const party = await (await import("./roster.mjs")).rosterMembers();
     let hidden = false;
     try { hidden = localStorage.getItem("nssq.townPartyHidden") === "1"; } catch { /* 저장 못 함 */ }
     const bar = (v, m, cls) => `<span class="bar ${cls}"><i style="width:${m ? Math.round((100 * Math.max(0, v)) / m) : 0}%"></i></span>`;
     const cards = party.map((a) => {
-      const { hp, tp } = a.system;
-      const bad = (a.system.conditions ?? []).length;
-      return `<div class="pc ${a.isOwner ? "mine" : ""} ${(hp?.value ?? 0) <= 0 ? "down" : ""}" data-pc="${a.id}" title="${esc(a.name)}">
+      const { hp, tp, bad } = a;
+      return `<div class="pc ${game.user.isGM || a.owners.includes(game.user.id) ? "mine" : ""} ${(hp?.value ?? 0) <= 0 ? "down" : ""}" data-pc="${a.id}" title="${esc(a.name)}">
         <img src="${esc(a.img)}" alt=""/>
         <div class="pc-info"><b>${esc(a.name)}${bad ? ` <i class="fas fa-exclamation-circle bad"></i>` : ""}</b>
           <span class="pc-hp">HP ${hp?.value ?? 0}/${hp?.max ?? 0} · TP ${tp?.value ?? 0}/${tp?.max ?? 0}</span>
@@ -286,6 +285,7 @@ export function registerFieldScene() {
   game.settings.register("nssq", "fieldEvents", { scope: "world", config: false, type: Array, default: [] });
   onSocket("fieldAct", onActProposal);
   Hooks.on("canvasReady", () => sync());
+  Hooks.on("nssqRoster", () => refresh());
   Hooks.once("ready", () => setTimeout(sync, 0));
   Hooks.on("renderHeadsUpDisplay", () => { if (overlay && !document.body.contains(overlay.element?.[0])) setTimeout(sync, 0); });
   Hooks.on("canvasPan", () => { if (!fitting && overlay) { clearTimeout(registerFieldScene.t); registerFieldScene.t = setTimeout(fitView, 400); } });

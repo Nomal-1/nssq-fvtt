@@ -298,18 +298,16 @@ export class TownApp extends Application {
 
   /** 파티 줄: 마을에서는 늘 가득 차 있으니 HP 대신 Lv·클래스·소지금·남은 스킬 포인트. 한 줄, 넘치면 가로 스크롤, 접기 가능 */
   async partyHtml() {
-    const party = (await import("./gm-screen.mjs")).partyActors();
-    const { skillBudget } = await import("../engine/skills.mjs");
+    // 명단은 GM이 갱신하는 partyRoster(권한 없는 동료 NPC도 보인다)
+    const party = await (await import("./roster.mjs")).rosterMembers();
     let hidden = false;
     try { hidden = localStorage.getItem("nssq.townPartyHidden") === "1"; } catch { /* 저장 못 함 */ }
     const cards = party.map((a) => {
-      const c = a.system.classItems ?? {};
-      const skills = a.items.filter((i) => i.type === "skill").map((i) => ({ sl: i.system.sl ?? 0, unique: !!i.system.unique, common: i.system.classKey === "common" }));
-      const left = skillBudget({ level: a.system.level, skills, bonus: a.system.skillBonus ?? 0 }).left;
-      return `<div class="pc ${a.isOwner ? "mine" : ""}" data-pc="${a.id}" title="${esc(a.name)}">
+      const mine = game.user.isGM || a.owners.includes(game.user.id);
+      return `<div class="pc ${mine ? "mine" : ""}" data-pc="${a.id}" title="${esc(a.name)}">
         <img src="${url(a.img)}" alt=""/>
-        <div class="pc-info"><b>${esc(a.name)}</b><span>Lv${a.system.level} · ${esc(c.main?.name ?? "-")}</span>
-          <span class="pc-sub"><em>${(a.system.money ?? 0).toLocaleString()}G</em>${left > 0 ? ` <i class="sp">${esc(L("spLeft", { n: left }))}</i>` : ""}</span></div></div>`;
+        <div class="pc-info"><b>${esc(a.name)}</b><span>Lv${a.level} · ${esc(a.cls || "-")}</span>
+          <span class="pc-sub"><em>${(a.money ?? 0).toLocaleString()}G</em>${a.sp > 0 ? ` <i class="sp">${esc(L("spLeft", { n: a.sp }))}</i>` : ""}</span></div></div>`;
     }).join("");
     return `<footer class="town-party ${hidden ? "folded" : ""}">
       <button type="button" class="pc-fold" data-town="foldParty" title="${esc(L(hidden ? "partyShow" : "partyHide"))}"><i class="fas fa-chevron-${hidden ? "up" : "down"}"></i> ${esc(L("party", { n: party.length }))}</button>
@@ -528,6 +526,7 @@ export class TownOverlay extends TownApp {
 
 export function registerTown() {
   Hooks.on("canvasReady", () => syncOverlay());
+  Hooks.on("nssqRoster", () => TownApp.refresh());
   // 접속 직후에는 캔버스를 그린 뒤 #hud를 다시 그려 덮은 UI가 지워진다 → ready·HUD 렌더 때 다시 붙인다
   Hooks.once("ready", () => setTimeout(syncOverlay, 0));
   Hooks.on("renderHeadsUpDisplay", () => { if (overlay && !document.body.contains(overlay.element?.[0])) setTimeout(syncOverlay, 0); });
