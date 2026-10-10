@@ -1369,3 +1369,9 @@
 .nssq-town.town-overlay .town-top .headline { text-align: left; }
 .nssq-town.town-overlay .town-bar select { background: rgba(8, 24, 24, 0.9); color: var(--tw-ink); border: 1px solid var(--tw-teal-l); }
 .nssq-town.town-overlay .town-bar button { background: rgba(31, 90, 85, 0.95); color: var(--tw-ink); border: 1px solid var(--tw-teal-l); }
+.nssq-town .town-manage .manage-card { left: 50%; top: 55%; transform: translate(-50%, -50%); width: 440px; padding: 14px 18px; border: 2px solid var(--tw-teal-l); border-radius: 10px; background: rgba(8, 30, 28, 0.92); }
+.nssq-town .town-manage .manage-card h2 { margin: 0 0 4px; border: none; color: #fff; }
+.nssq-town .town-manage .manage-card .status.here { color: var(--nq-green); }
+.nssq-town .town-manage .manage-card ul { margin: 6px 0; padding-left: 4px; list-style: none; columns: 2; }
+.nssq-town .town-manage .manage-card li small { color: #9cc; }
+.nssq-town .town-manage .manage-card .acts { display: flex; gap: 6px; margin: 8px 0; }

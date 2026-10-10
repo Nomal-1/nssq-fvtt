@@ -231,9 +231,12 @@ export class TownApp extends Application {
         <select data-town-pick>${towns.map((x) => opt(x.id, t?.id, `${x.name}${location().kind === "town" && location().townId === x.id ? ` ${L("hereMark")}` : ""}`)).join("")}${towns.length ? "" : opt("", "", L("none"))}</select>
         <button type="button" data-town="new" title="${esc(L("new"))}"><i class="fas fa-plus"></i></button>
         ${t ? `<button type="button" data-town="edit" title="${esc(L("edit"))}"><i class="fas fa-pen"></i></button><button type="button" data-town="viewScene" class="win-only" title="${esc(L("viewScene"))}"><i class="fas fa-map"></i></button>` : ""}
+        <button type="button" data-town="gmScreen" title="${esc(L("gmScreen"))}"><i class="fas fa-user-shield"></i></button>
         ${t && !here ? `<button type="button" data-town="goHere" class="go"><i class="fas fa-home"></i> ${esc(L("goHere"))}</button>` : ""}
       </div>` : "";
     if (!t) return $(`<div class="town-stage empty">${bar}<p class="town-empty">${esc(gm ? L("noneGM") : L("notInTown"))}</p></div>`);
+    // 씬이 있는 마을: 창은 관리용(플레이 화면은 씬 위에 있다)
+    if (this.constructor === TownApp && gm && townSceneOf(t)) return $(this.managerHtml(t, bar, here));
     const f = (t.facilities ?? []).find((x) => x.id === this.facId) ?? null;
     if (!f) this.facId = null;
     const bg = (src) => (src ? `style="background-image:url('${encodeURI(src)}')"` : "");
@@ -253,6 +256,18 @@ export class TownApp extends Application {
       ${f.npc ? `<img class="town-npc" src="${encodeURI(f.npc)}" alt=""/>` : f.img ? "" : `<i class="town-fac-icon fas ${ICONS[f.type] ?? "fa-map-signs"}"></i>`}
       <nav class="town-menu">${items}<button type="button" class="town-choice back" data-town="leaveFac" data-say="${esc(L("say.back"))}"><i class="fas fa-sign-out-alt"></i><span>${esc(L("toStreet"))}</span></button></nav>
       ${await this.partyHtml()}</div>`);
+  }
+
+  managerHtml(t, bar, here) {
+    const facs = (t.facilities ?? []).map((x) => `<li><i class="fas ${ICONS[x.type] ?? "fa-map-signs"}"></i> ${esc(x.name)} <small>${esc(L(`type.${x.type}`))}</small></li>`).join("");
+    return `<div class="town-stage town-manage" ${t.img ? `style="background-image:url('${encodeURI(t.img)}')"` : ""}>${bar}
+      <div class="manage-card"><h2><i class="fas fa-home"></i> ${esc(t.name)}</h2>
+        <p class="status ${here ? "here" : ""}">${esc(here ? L("partyHereShort") : L("partyAway"))}</p>
+        <ul>${facs}</ul>
+        <div class="acts"><button type="button" data-town="viewScene" class="go"><i class="fas fa-map"></i> ${esc(L("viewScene"))}</button>
+          <button type="button" data-town="edit"><i class="fas fa-pen"></i> ${esc(L("edit"))}</button>
+          ${here ? "" : `<button type="button" data-town="goHere"><i class="fas fa-home"></i> ${esc(L("goHere"))}</button>`}</div>
+        <p class="notes">${esc(L("manageHint"))}</p></div></div>`;
   }
 
   /** 시각: 필드 지도·랜덤 던전의 마지막 시각(없으면 시간대) */
@@ -400,6 +415,7 @@ export class TownApp extends Application {
         return this.render();
       }
       case "goHere": return returnToTown(t.id, { reason: L("movedByGM") });
+      case "gmScreen": return game.nssq.openGMScreen();
       case "viewScene": { const sc = await ensureTownScene(t); return sc?.view(); }
       case "toMap": return (await import("./fieldmap.mjs")).FieldMapApp.open();
       case "toRandom": return (await import("./dungeon.mjs")).openDungeonDialog();

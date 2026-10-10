@@ -213,7 +213,14 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=fieldmap]", async () => (await import("./fieldmap.mjs")).FieldMapApp.open());
     // 던전 나가기: 랜덤 던전 진행 중이면 그것을, 아니면 필드 지도 진행을 끝낸다
     html.on("click", "[data-gm=leave-dungeon]", async () => (await import("./town.mjs")).returnToTown(null, { reason: game.i18n.localize("NSSQ.Town.leftByGM") }));
-    html.on("click", "[data-gm=town]", async () => (await import("./town.mjs")).TownApp.open());
+    // 마을: 마을 씬이 있으면 그 씬으로(지금 파티가 있는 마을 → 첫 마을), 없으면 마을 창
+    html.on("click", "[data-gm=town]", async () => {
+      const T = await import("./town.mjs");
+      const t = T.currentTown() ?? Object.values(T.allTowns())[0] ?? null;
+      const sc = T.townSceneOf(t) ?? (t && T.location().kind === "town" ? await T.ensureTownScene(t) : null);
+      return sc ? sc.view() : T.TownApp.open(t?.id);
+    });
+    html.on("click", "[data-gm=town-manage]", async () => (await import("./town.mjs")).TownApp.open());
     html.on("click", "[data-gm=dungeon]", async () => (await import("./dungeon.mjs")).openDungeonDialog());
     html.on("click", "[data-gm=camp]", async () => (await import("./explore.mjs")).openCampDialog());
     html.on("click", "[data-gm=trap]", async () => (await import("./explore.mjs")).openTrapDialog());
