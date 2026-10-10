@@ -154,15 +154,22 @@ async function passTime(hour, segs, opts = {}) {
   if (segs > 0) await (await import("./time-pass.mjs")).timePasses(segs, opts);
 }
 
-export async function startProgress(mapId, hour) {
+export async function startProgress(mapId, hour, { resume = true } = {}) {
   if (!game.user.isGM) return;
   const map = allMaps()[mapId];
   if (!map) return;
   const { errors } = FM.validateMap(map);
   if (errors.length) return ui.notifications.warn(L("hasErrors", { n: errors.length }));
   const s = FM.startState(map, { hour });
+  // 같은 지도를 다시 들어가면 밟은 기록·공개한 비밀·통로 상태·발동한 트리거는 이어진다(입구에서, 07 #167). [처음부터]는 restart
+  const prev = mapState();
+  if (resume && prev.mapId === map.id && prev.visited) {
+    s.visited = { ...prev.visited, [s.current]: (prev.visited[s.current] ?? 0) + 1 };
+    for (const k of ["revealed", "passageState", "fired", "foeGone"]) if (prev[k]) s[k] = prev[k];
+  }
   await setMapState(s, { undo: false });
   await (await import("./time-pass.mjs")).resetBattleTurns();
+  await (await import("./town.mjs")).enteredDungeon();
   await passTime(s.hour, 0);
   await post(`<h3><i class="fas fa-map"></i> ${esc(L("started", { name: map.name }))}</h3>${arrivalHtml(map, s)}`);
   return processTriggers(map, FM.arrivalTriggers(map, s, s.current));
@@ -835,7 +842,8 @@ export class FieldMapApp extends Application {
       move = `<p class="fm-sub">${esc(L("pickDest"))}</p>${v.reachable.map(destCard).join("") || `<p class="notes">${esc(L("noDest"))}</p>`}
         <button type="button" data-fm-pact="cancelPick">${esc(L("back"))}</button>`;
     } else {
-      move = `<button type="button" class="fm-big" data-fm-pact="propose" ${v.reachable.length ? "" : "disabled"}><i class="fas fa-shoe-prints"></i> ${esc(L("proposeMove"))}</button>`;
+      move = `<button type="button" class="fm-big" data-fm-pact="propose" ${v.reachable.length ? "" : "disabled"}><i class="fas fa-shoe-prints"></i> ${esc(L("proposeMove"))}</button>`
+        + (v.current === map.start ? `<button type="button" class="fm-big" data-fm-town><i class="fas fa-home"></i> ${esc(L("toTownPropose"))}</button>` : "");
     }
     const foeHere = v.foes.filter((f) => f.area === v.current);
     return `<div class="fm-loc">
@@ -890,6 +898,7 @@ export class FieldMapApp extends Application {
     return `<h3>${esc(map.name)}</h3><p class="fm-clockline">${esc(clock(st))} · ${esc(areaName(map, st.current))}</p>${prop}
       <div class="fm-actions">${b("search", "fa-search", L("search"))}${b("gather", "fa-leaf", L("gather"))}${b("camp", "fa-campground", L("camp"))}${b("mapping", "fa-map-marked-alt", L("mapping"))}
         ${b("wait", "fa-hourglass-half", L("wait"))}${b("choice", "fa-question-circle", L("choice"))}${b("undo", "fa-undo", L("undo"))}</div>
+      ${st.current === map.start ? `<div class="fm-actions">${b("toTown", "fa-home", L("toTown"))}</div>` : ""}
       <p class="notes">${esc(L("moveHint"))}</p>${this.encounterSection(map, st)}${sel}
       ${foes ? `<h4>F.O.E.</h4><ul class="fm-foes">${foes}</ul>` : ""}
       <div class="fm-actions end">${b("restart", "fa-redo", L("restart"))}${b("end", "fa-stop", L("end"))}</div>`;
@@ -1059,6 +1068,7 @@ export class FieldMapApp extends Application {
     html.on("mouseenter", ".fm-key[data-key]", (ev) => svg?.classList.add(`hl-${ev.currentTarget.dataset.key}`));
     html.on("mouseleave", ".fm-key[data-key]", (ev) => svg?.classList.remove(`hl-${ev.currentTarget.dataset.key}`));
     // 플레이어 패널
+    html.on("click", "[data-fm-town]", async () => (await import("./town.mjs")).requestReturnToTown());
     html.on("click", "[data-fm-pact]", (ev) => { this.proposing = ev.currentTarget.dataset.fmPact === "propose"; this.render(); });
     html.on("click", "[data-fm-dest]", (ev) => { this.proposing = false; requestMove(ev.currentTarget.dataset.fmDest); });
     html.on("click", "[data-fm-vote]", (ev) => { const v = ev.currentTarget.dataset.fmVote; answerProposal(v === "yes", { cancel: v === "cancel" }); });
@@ -1237,8 +1247,9 @@ export class FieldMapApp extends Application {
       }
       // 진행
       case "start": return startProgress(map.id, Number(this.element.find("[data-fm-hour]").val()) || 0);
-      case "restart": if (await Dialog.confirm({ title: L("restart"), content: `<p>${esc(L("restartAsk"))}</p>`, rejectClose: false })) return startProgress(map.id, map.startHour ?? 8); return;
+      case "restart": if (await Dialog.confirm({ title: L("restart"), content: `<p>${esc(L("restartAsk"))}</p>`, rejectClose: false })) return startProgress(map.id, map.startHour ?? 8, { resume: false }); return;
       case "end": return endProgress();
+      case "toTown": return (await import("./town.mjs")).returnToTown(null, { reason: L("toTownReason") });
       case "undo": return undo();
       case "search": return search();
       case "gather": return gatherHere();

@@ -108,9 +108,22 @@ export async function shopCatalog() {
   return docs;
 }
 
-/** 숨긴 품목(uuid). GM 스크린 「상점 품목」 탭에서 고른다 */
-export function hiddenSet() {
-  return new Set(game.settings.get("nssq", "shopHidden") ?? []);
+/** 파티가 있는 마을(07 #167: 판매 품목·랭크 상한은 마을마다) */
+function townHere() {
+  const loc = game.settings.get("nssq", "location") ?? {};
+  return loc.kind === "town" ? (game.settings.get("nssq", "towns") ?? {})[loc.townId] ?? null : null;
+}
+
+/** 숨긴 품목(uuid). 마을에 있으면 그 마을의 목록(따로 정하지 않았으면 기본), townId를 주면 그 마을 */
+export function hiddenSet(townId = undefined) {
+  const t = townId === undefined ? townHere() : (game.settings.get("nssq", "towns") ?? {})[townId] ?? null;
+  return new Set(Array.isArray(t?.shopHidden) ? t.shopHidden : game.settings.get("nssq", "shopHidden") ?? []);
+}
+
+/** 이 마을에서 살 수 있는 장비 랭크 상한(정하지 않았으면 15) */
+export function shopMaxRank() {
+  const n = Number(townHere()?.maxRank);
+  return n > 0 ? Math.min(MAX_RANK, n) : MAX_RANK;
 }
 
 /** GM: 품목 숨김·판매 전환 */
@@ -156,19 +169,21 @@ class ShopApp extends Application {
   async getData() {
     // 숨긴 품목: 플레이어에게는 안 보이고, GM에게는 「숨김」 표시
     const hidden = hiddenSet();
-    const docs = (await this.loadDocs()).filter((d) => game.user.isGM || !hidden.has(d.uuid));
+    // 랭크 상한(마을): 플레이어는 그 위로 살 수 없다. 고정 랭크 추가 품목이 넘으면 숨김
+    const cap = game.user.isGM ? MAX_RANK : shopMaxRank();
+    const docs = (await this.loadDocs()).filter((d) => game.user.isGM || (!hidden.has(d.uuid) && !(d.nssqCustom && isRanked(d) && (d.system.rank ?? 1) > cap)));
     const level = this.actor.system.level;
-    const rankDefault = Math.min(MAX_RANK, Math.max(1, level));
+    const rankDefault = Math.min(cap, Math.max(1, level));
     const rowFor = (d) => {
       const ranked = isRanked(d);
-      const rank = ranked ? (this.ranks[d.id] ?? (d.nssqCustom ? d.system.rank : rankDefault)) : null;
+      const rank = ranked ? Math.min(cap, this.ranks[d.id] ?? (d.nssqCustom ? d.system.rank : rankDefault)) : null;
       const probe = { type: d.type, system: { ...d.system, rank } };
       const table = tableOf(d);
       const mats = table ? (table.materials ?? []).join("/") : (d.system.materials ?? []).map((m) => `${m.type} R${m.rank}`).join(", ");
       const qty = this.qty[d.id] ?? 1;
       const unit = buyPrice(probe, tables, { level });
       return {
-        id: d.id, name: d.name, img: d.img, ranked, rank, qty, unit,
+        id: d.id, name: d.name, img: d.img, ranked, rank, qty, unit, maxRank: cap,
         price: unit * qty,
         custom: !!d.nssqCustom,
         hidden: hidden.has(d.uuid),
@@ -216,7 +231,7 @@ class ShopApp extends Application {
     super.activateListeners(html);
     html.on("change", "[name=creation]", (ev) => { this.creation = ev.currentTarget.checked; this.render(); });
     html.on("change", "[data-rank]", (ev) => {
-      this.ranks[ev.currentTarget.dataset.rank] = Math.clamp(Number(ev.currentTarget.value) || 1, 1, MAX_RANK);
+      this.ranks[ev.currentTarget.dataset.rank] = Math.clamp(Number(ev.currentTarget.value) || 1, 1, game.user.isGM ? MAX_RANK : shopMaxRank());
       this.render();
     });
     html.on("change", "[data-qty]", (ev) => {
@@ -289,7 +304,9 @@ class ShopApp extends Application {
     delete data.folder;
     const level = actor.system.level;
     const ranked = isRanked(doc);
-    if (ranked) data.system.rank = this.ranks[id] ?? (doc.nssqCustom ? doc.system.rank : Math.min(MAX_RANK, Math.max(1, level)));
+    const cap = game.user.isGM ? MAX_RANK : shopMaxRank();
+    if (ranked) data.system.rank = Math.min(cap, this.ranks[id] ?? (doc.nssqCustom ? doc.system.rank : Math.max(1, level)));
+    if (ranked && doc.nssqCustom && (doc.system.rank ?? 1) > cap) return ui.notifications.warn(L("overRank", { n: cap }));
     const unit = buyPrice(data, tables, { level });
     const total = unit * qty;
     if (actor.system.money < total) return ui.notifications.warn(L("noMoney", { price: total }));

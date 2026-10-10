@@ -34,7 +34,7 @@ export async function openDungeonDialog() {
       title: L("title"), content: `<p>${esc(L("activeAsk", { name: cur.name, done: cur.done ?? 0, depth: cur.depth ?? 0 }))}</p>`,
       buttons: {
         next: { icon: '<i class="fas fa-forward"></i>', label: L("next"), callback: () => resolve("next") },
-        leave: { icon: '<i class="fas fa-door-open"></i>', label: L("leave"), callback: () => resolve("leave") },
+        leave: { icon: '<i class="fas fa-door-open"></i>', label: (cur.done ?? 0) === 0 ? L("toTown") : L("leave"), callback: () => resolve("leave") },
         restart: { icon: '<i class="fas fa-redo"></i>', label: L("restart"), callback: () => resolve("restart") }
       },
       default: "next", close: () => resolve(null)
@@ -62,6 +62,7 @@ export async function startDungeon({ name, level, depth, hour }) {
   // 새 던전(진행 중인 것을 다시 시작해도): 누적 전투 턴을 비운다(07 #165)
   await (await import("./time-pass.mjs")).resetBattleTurns();
   await setState({ active: true, name, level, depth, done: 0, hour });
+  await (await import("./town.mjs")).enteredDungeon();
   await game.settings.set("nssq", "timeOfDay", timeOfDayAt(hour));
   return note(`<h3><i class="fas fa-dungeon"></i> ${esc(L("started", { name, level, depth }))}</h3><p>${esc(L("clock", { h: hour, tod: L(`tod.${timeOfDayAt(hour)}`) }))}</p>${nextButton()}`);
 }
@@ -116,7 +117,9 @@ function eventBody(e, st, rank) {
 async function clear() {
   const st = dungeonState();
   await setState({ ...st, active: false });
-  return note(`<h3><i class="fas fa-flag-checkered"></i> ${esc(L("cleared", { name: st.name }))}</h3>`);
+  await note(`<h3><i class="fas fa-flag-checkered"></i> ${esc(L("cleared", { name: st.name }))}</h3>`);
+  // 클리어하면 마을로(07 #167)
+  return (await import("./town.mjs")).returnToTown();
 }
 
 /** GM: 던전에서 나온다(클리어하지 않고 그만둠) */
@@ -124,8 +127,8 @@ export async function leaveDungeon() {
   if (!game.user.isGM) return;
   const st = dungeonState();
   if (!st.active) return;
-  await setState({ ...st, active: false });
-  return note(`<h3><i class="fas fa-door-open"></i> ${esc(L("left", { name: st.name ?? "" }))}</h3>`);
+  await note(`<h3><i class="fas fa-door-open"></i> ${esc(L("left", { name: st.name ?? "" }))}</h3>`);
+  return (await import("./town.mjs")).returnToTown();
 }
 
 /** 《아리아드네의 실》: 긴급 탈출(전투 중이면 그 전투도 도주로 끝낸다) */
@@ -134,8 +137,9 @@ export async function escapeDungeon(by = "") {
   const battle = game.combats.find((c) => c.getFlag("nssq", "battle"));
   if (battle) await (await import("./battle.mjs")).endBattle(battle, "escape");
   const st = dungeonState();
-  if (st.active) await setState({ ...st, active: false });
-  return note(`<h3><i class="fas fa-route"></i> ${esc(L("escaped", { name: st.name ?? "", by }))}</h3>`);
+  await note(`<h3><i class="fas fa-route"></i> ${esc(L("escaped", { name: st.name ?? "", by }))}</h3>`);
+  // 《아리아드네의 실》의 도착지는 마을(07 #167). 필드 지도 진행 중이어도
+  return (await import("./town.mjs")).returnToTown();
 }
 
 /* ---------------- 이벤트 버튼(GM) ---------------- */

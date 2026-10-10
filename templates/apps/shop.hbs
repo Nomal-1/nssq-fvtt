@@ -19,7 +19,7 @@
         <li class="shop-row flexrow">
           <img src="{{r.img}}" width="24" height="24"/>
           <span class="name">{{r.name}}{{#if r.custom}} <span class="custom-tag">{{localize "NSSQ.Shop.custom"}}</span>{{/if}}{{#if r.hidden}} <span class="hidden-tag">{{localize "NSSQ.Shop.hiddenTag"}}</span>{{/if}}{{#if r.info}} <span class="info">{{r.info}}</span>{{/if}}</span>
-          {{#if r.ranked}}<label class="rank">R <input type="number" min="1" max="15" value="{{r.rank}}" data-rank="{{r.id}}"/></label>{{/if}}
+          {{#if r.ranked}}<label class="rank">R <input type="number" min="1" max="{{r.maxRank}}" value="{{r.rank}}" data-rank="{{r.id}}"/></label>{{/if}}
           <span class="mats">{{#if @root.creation}}-{{else}}{{r.materials}}{{/if}}</span>
           <span class="price" title="{{r.unit}}G × {{r.qty}}">{{r.price}}G</span>
           <label class="qty">× <input type="number" min="1" max="99" value="{{r.qty}}" data-qty="{{r.id}}"/></label>

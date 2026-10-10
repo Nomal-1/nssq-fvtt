@@ -1294,3 +1294,44 @@
 .nssq-encounters .enc-edit .form-group { display: flex; align-items: center; gap: 6px; }
 .nssq-encounters .enc-edit .form-group > label { flex: 0 0 110px; }
 .nssq-encounters .enc-edit .form-group > select { flex: 1; }
+
+/* 마을·길드(07 #167) */
+.nssq-town .window-content, .nssq-guild .window-content { padding: 8px 10px; }
+.nssq-town .town-wrap, .nssq-guild .guild-wrap { display: flex; flex-direction: column; gap: 8px; height: 100%; overflow-y: auto; }
+.nssq-town .town-bar { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.nssq-town .town-bar select { flex: 0 0 220px; }
+.nssq-town .town-bar button { flex: 0 0 auto; width: auto; padding: 0 10px; }
+.nssq-town .town-bar .spacer { flex: 1; }
+:is(.nssq-town, .nssq-guild) button.go { border-color: var(--nq-gold); color: var(--nq-gold-l); }
+.nssq-town button.danger { border-color: var(--nq-red); color: var(--nq-red); }
+.nssq-town .town-head { min-height: 120px; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--nq-gold); background: linear-gradient(135deg, #24405f, #12223a) center/cover; display: flex; flex-direction: column; justify-content: flex-end; }
+.nssq-town .town-head h2 { margin: 0; border: none; color: var(--nq-gold-l); font-family: var(--nq-title); text-shadow: 0 2px 6px #000; }
+.nssq-town .town-head p { margin: 2px 0; text-shadow: 0 1px 3px #000; }
+.nssq-town .town-head .status { color: var(--nq-mu); font-size: 0.9em; }
+.nssq-town .town-head .status.here { color: var(--nq-green); }
+.nssq-town .town-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
+.nssq-town .town-fac { display: flex; flex-direction: column; border: 1px solid var(--nq-line); border-radius: 8px; overflow: hidden; background: var(--nq-panel); }
+.nssq-town .town-fac .thumb { height: 80px; background: #1b2a40 center/cover no-repeat; display: flex; align-items: center; justify-content: center; font-size: 2em; color: rgba(231, 207, 138, 0.55); }
+.nssq-town .town-fac .info { padding: 6px 8px; flex: 1; }
+.nssq-town .town-fac .info .type { margin-left: 6px; font-size: 0.8em; color: var(--nq-mu); }
+.nssq-town .town-fac .info p { margin: 3px 0; }
+.nssq-town .town-fac .acts { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 8px 8px; }
+.nssq-town .town-fac .acts button { flex: 1 1 auto; width: auto; }
+.nssq-town .town-edit .form-group { display: flex; align-items: center; gap: 6px; }
+.nssq-town .town-edit .form-group > label { flex: 0 0 110px; }
+.nssq-town .town-edit .form-group > :is(input, select) { flex: 1; }
+.nssq-town .town-edit button.icon { flex: 0 0 auto; width: auto; }
+.nssq-town .town-fac-edit { margin: 4px 0; }
+.nssq-guild .guild-chars { width: 100%; }
+.nssq-guild .guild-chars img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; vertical-align: middle; border: none; }
+.nssq-guild .guild-chars tr.sel { background: rgba(231, 207, 138, 0.12); }
+.nssq-guild .guild-chars tr.benched { opacity: 0.6; }
+.nssq-guild .guild-chars button { width: auto; padding: 0 8px; }
+.nssq-guild .guild-chars button.on { border-color: var(--nq-green); color: var(--nq-green); }
+.nssq-guild .tag { font-size: 0.75em; padding: 0 5px; border-radius: 8px; border: 1px solid var(--nq-gold); color: var(--nq-gold-l); }
+.nssq-guild .guild-box { border: 1px solid var(--nq-line); border-radius: 8px; padding: 6px 10px; margin: 6px 0; }
+.nssq-guild .guild-box button { width: auto; padding: 0 10px; margin-right: 6px; }
+.nssq-guild .guild-box .form-group { display: flex; gap: 6px; align-items: center; }
+.nssq-guild .guild-box .form-group > label { flex: 0 0 60px; }
+.nssq-guild h3 button { width: auto; float: right; font-size: 0.8em; padding: 0 8px; }
+.nssq-town-card h3 { margin: 0 0 4px; }

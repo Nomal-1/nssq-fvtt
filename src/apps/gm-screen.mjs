@@ -16,7 +16,8 @@ const playerOwned = (a) => game.users.some((u) => !u.isGM && a.testUserPermissio
 /** 파티: 플레이어가 소유한 캐릭터 + GM이 넣은 동료 NPC. 아무도 없으면 모든 캐릭터 */
 export function partyActors() {
   const chars = game.actors.filter((a) => a.type === "character");
-  const party = chars.filter((a) => playerOwned(a) || a.system.npc);
+  // 길드에서 「대기」로 둔 캐릭터는 빼고(07 #167)
+  const party = chars.filter((a) => (playerOwned(a) && !a.getFlag("nssq", "benched")) || a.system.npc);
   return party.length ? party : chars;
 }
 
@@ -109,7 +110,10 @@ export class GMScreen extends Application {
       };
     });
     const lv = tables.levelExp;
-    const hidden = hiddenSet();
+    // 판매 품목: 기본 또는 고른 마을(07 #167)
+    const towns = game.settings.get("nssq", "towns") ?? {};
+    if (this.shopTown && !towns[this.shopTown]) this.shopTown = null;
+    const hidden = hiddenSet(this.shopTown ?? null);
     const catalog = await shopCatalog();
     const shopGroups = [
       ["weapon", "TYPES.Item.weapon"], ["armor", "TYPES.Item.armor"], ["accessory", "TYPES.Item.accessory"],
@@ -152,7 +156,10 @@ export class GMScreen extends Application {
     const rows = (hereArea?.encounters ?? []).filter((r) => encs[r.id]);
     const sum = rows.reduce((n, r) => n + (Number(r.weight) || 0), 0);
     const here = { name: hereArea?.name ?? "", encounters: rows.map((r) => ({ id: r.id, name: encs[r.id].name, pct: sum ? Math.round(((Number(r.weight) || 0) / sum) * 100) : 0 })) };
+    const loc = game.settings.get("nssq", "location") ?? {};
     return {
+      shopTowns: Object.values(towns).map((t) => ({ id: t.id, name: t.name, selected: t.id === this.shopTown })),
+      townName: loc.kind === "town" ? towns[loc.townId]?.name ?? "" : "",
       encounterCount: Object.keys(encs).length,
       here,
       mode,
@@ -205,11 +212,8 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=session-end]", async () => (await import("./session.mjs")).openSessionEnd());
     html.on("click", "[data-gm=fieldmap]", async () => (await import("./fieldmap.mjs")).FieldMapApp.open());
     // 던전 나가기: 랜덤 던전 진행 중이면 그것을, 아니면 필드 지도 진행을 끝낸다
-    html.on("click", "[data-gm=leave-dungeon]", async () => {
-      if (game.settings.get("nssq", "dungeon")?.active) return (await import("./dungeon.mjs")).leaveDungeon();
-      if (game.settings.get("nssq", "fieldMapState")?.active) return (await import("./fieldmap.mjs")).endProgress();
-      return null;
-    });
+    html.on("click", "[data-gm=leave-dungeon]", async () => (await import("./town.mjs")).returnToTown(null, { reason: game.i18n.localize("NSSQ.Town.leftByGM") }));
+    html.on("click", "[data-gm=town]", async () => (await import("./town.mjs")).TownApp.open());
     html.on("click", "[data-gm=dungeon]", async () => (await import("./dungeon.mjs")).openDungeonDialog());
     html.on("click", "[data-gm=camp]", async () => (await import("./explore.mjs")).openCampDialog());
     html.on("click", "[data-gm=trap]", async () => (await import("./explore.mjs")).openTrapDialog());
@@ -228,11 +232,13 @@ export class GMScreen extends Application {
     html.on("click", "[data-preset-view]", (ev) => game.scenes.get(ev.currentTarget.dataset.presetView)?.view());
     html.on("click", "[data-preset-config]", (ev) => game.scenes.get(ev.currentTarget.dataset.presetConfig)?.sheet.render(true));
     // 상점 품목: 체크 = 판매, 해제 = 숨김
-    html.on("change", "[data-shop-uuid]", (ev) => setHidden([ev.currentTarget.dataset.shopUuid], !ev.currentTarget.checked));
+    const hide = async (uuids, h) => (this.shopTown ? (await import("./town.mjs")).setTownHidden(this.shopTown, uuids, h) : setHidden(uuids, h));
+    html.on("change", "[data-shop-town]", (ev) => { this.shopTown = ev.currentTarget.value || null; this.render(false); });
+    html.on("change", "[data-shop-uuid]", (ev) => hide([ev.currentTarget.dataset.shopUuid], !ev.currentTarget.checked));
     html.on("click", "[data-shop-all]", (ev) => {
       const group = ev.currentTarget.closest("[data-shop-group]");
       const uuids = [...group.querySelectorAll("[data-shop-uuid]")].filter((i) => i.closest("li").style.display !== "none").map((i) => i.dataset.shopUuid);
-      setHidden(uuids, ev.currentTarget.dataset.shopAll === "hide");
+      hide(uuids, ev.currentTarget.dataset.shopAll === "hide");
     });
     html.on("input", "[name=shopFilter]", (ev) => {
       this.shopFilter = ev.currentTarget.value;

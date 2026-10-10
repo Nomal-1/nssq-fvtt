@@ -95,6 +95,7 @@
     </details>
     <details class="gm-fold"><summary>{{localize "NSSQ.GMScreen.shopItems"}}</summary>
       <div class="gm-tools">
+        <select data-shop-town><option value="">{{localize "NSSQ.Town.shopDefault"}}</option>{{#each shopTowns as |t|}}<option value="{{t.id}}" {{#if t.selected}}selected{{/if}}>{{t.name}}</option>{{/each}}</select>
         <button type="button" data-gm="shop-folder" title="{{localize 'NSSQ.Shop.folderHint'}}"><i class="fas fa-folder-plus"></i> {{localize "NSSQ.Shop.folderButton"}}</button>
       </div>
       <div class="shop-tools">
@@ -137,6 +138,7 @@
 
   {{#if (nssqEq mode "town")}}
     <div class="gm-actions">
+      <button type="button" data-gm="town" class="go"><i class="fas fa-home"></i> {{#if townName}}{{townName}}{{else}}{{localize "NSSQ.Town.title"}}{{/if}}</button>
       <button type="button" data-gm="session-start"><i class="fas fa-flag"></i> {{localize "NSSQ.GMScreen.sessionStart"}} ({{localize "NSSQ.FP"}} {{fpStart}})</button>
       <button type="button" data-gm="shop" class="{{#if shopOpen}}on{{/if}}"><i class="fas fa-store{{#unless shopOpen}}-slash{{/unless}}"></i> {{#if shopOpen}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</button>
       <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
@@ -159,7 +161,7 @@
       <button type="button" data-gm="fieldmap"><i class="fas fa-map"></i> {{localize "NSSQ.FieldMap.title"}}</button>
       <button type="button" data-gm="dungeon"><i class="fas fa-dungeon"></i> {{localize "NSSQ.Dungeon.title"}}</button>
       <button type="button" data-gm="request"><i class="fas fa-dice-d6"></i> {{localize "NSSQ.Request.title"}}</button>
-      <button type="button" data-gm="leave-dungeon"><i class="fas fa-door-open"></i> {{localize "NSSQ.Dungeon.leave"}}</button>
+      <button type="button" data-gm="leave-dungeon"><i class="fas fa-home"></i> {{localize "NSSQ.Town.returnButton"}}</button>
     </div>
     <div class="gm-tools">
       <button type="button" data-gm="camp"><i class="fas fa-campground"></i> {{localize "NSSQ.Explore.campTitle"}}</button>
