@@ -42,6 +42,16 @@ const areaOf = (map, id) => map?.areas?.find((a) => a.id === id) ?? null;
 const areaImg = (a) => a?.img || a?.sceneImg || "";
 const sceneImage = (id) => { const sc = game.scenes.get(id); return sc?.background?.src || sc?.thumb || ""; };
 /** 양피지 위 나침반(장식) */
+/** 재생목록·곡 선택지(apps/encounters.mjs와 같은 값) */
+function encBgmOptions(cur, emptyLabel) {
+  const out = [opt("", cur, emptyLabel)];
+  for (const p of game.playlists.contents) {
+    out.push(opt(p.id, cur, `♫ ${p.name}`));
+    for (const so of p.sounds.contents) out.push(opt(`${p.id}.${so.id}`, cur, `  └ ${so.name}`));
+  }
+  return out.join("");
+}
+
 /** 나침반(장식): 오른쪽 위, 지도 전체로 뻗는 방위선 */
 const CX = W - 150;
 const CY = 135;
@@ -419,7 +429,8 @@ async function battleWith(spec, name, flags) {
     for (let i = 0; i < n; i++) actors.push(actor);
   }
   if (!actors.length) return;
-  return (await import("./dungeon.mjs")).presetBattle(L("battleName", { name }), actors, flags);
+  // 던전 기본 무대(지도 battleBg·battleBgm, 07 #166)
+  return (await import("./dungeon.mjs")).presetBattle(L("battleName", { name }), actors, flags, { bg: activeMap()?.battleBg ?? "", bgm: activeMap()?.battleBgm ?? "" });
 }
 
 /* ---------------- 선택지(투표 → GM 확정) ---------------- */
@@ -604,7 +615,7 @@ async function onCard(message, action, el) {
       const actor = foe?.actorUuid ? await fromUuid(foe.actorUuid) : null;
       if (!actor) return ui.notifications.warn(L("noEnemy", { name: foe?.name ?? "" }));
       const a = actor.pack ? await (await import("./enemy-library.mjs")).enemyActorFor(actor.uuid) : actor;
-      return (await import("./dungeon.mjs")).presetBattle(L("battleName", { name: foe.name }), [a], { fieldFoe: foe.id });
+      return (await import("./dungeon.mjs")).presetBattle(L("battleName", { name: foe.name }), [a], { fieldFoe: foe.id }, { bg: map?.battleBg ?? "", bgm: map?.battleBgm ?? "" });
     }
     case "foeAvoid": return done(L("avoided"));
   }
@@ -879,7 +890,7 @@ export class FieldMapApp extends Application {
     return `<h3>${esc(map.name)}</h3><p class="fm-clockline">${esc(clock(st))} · ${esc(areaName(map, st.current))}</p>${prop}
       <div class="fm-actions">${b("search", "fa-search", L("search"))}${b("gather", "fa-leaf", L("gather"))}${b("camp", "fa-campground", L("camp"))}${b("mapping", "fa-map-marked-alt", L("mapping"))}
         ${b("wait", "fa-hourglass-half", L("wait"))}${b("choice", "fa-question-circle", L("choice"))}${b("undo", "fa-undo", L("undo"))}</div>
-      <p class="notes">${esc(L("moveHint"))}</p>${sel}
+      <p class="notes">${esc(L("moveHint"))}</p>${this.encounterSection(map, st)}${sel}
       ${foes ? `<h4>F.O.E.</h4><ul class="fm-foes">${foes}</ul>` : ""}
       <div class="fm-actions end">${b("restart", "fa-redo", L("restart"))}${b("end", "fa-stop", L("end"))}</div>`;
   }
@@ -903,6 +914,7 @@ export class FieldMapApp extends Application {
           ${this.field(`${p}.gmNote`, a.gmNote, L("f.gmNote"), "textarea")}
           ${this.field(`${p}.gather`, a.gather, L("f.gather"), "text", game.i18n.localize("NSSQ.Loot.tablePlaceholder"))}
           ${this.field(`${p}.tags`, a.tags, L("f.tags"), "text", L("f.tagsHint"))}
+          ${this.encounterTableEdit(a, p)}
           ${this.field(`${p}.secret`, a.secret, L("f.secret"), "bool")}
           <p>${map.start === a.id ? `<b><i class="fas fa-flag"></i> ${esc(L("isStart"))}</b>` : `<button type="button" data-fm-act="setStart">${esc(L("setStart"))}</button>`}</p>
           ${this.triggersHtml(`${p}.triggers`, a.triggers ?? [], FM.AREA_TRIGGERS, map)}
@@ -942,11 +954,37 @@ export class FieldMapApp extends Application {
       ${this.field("activateScene", map.activateScene, L("f.activateScene"), "bool")}
       <div class="form-group"><label>${esc(L("f.bg"))}</label><select data-path="bg.style">${opt("parchment", map.bg?.style, L("bg.parchment"))}${opt("image", map.bg?.style, L("bg.image"))}</select></div>
       ${map.bg?.style === "image" ? `<div class="form-group"><input type="text" data-path="bg.src" value="${esc(map.bg.src)}"/><button type="button" data-fm-act="pickBg"><i class="fas fa-file-import"></i></button></div>` : ""}
+      <h3>${esc(L("battleStage"))}</h3>
+      <div class="form-group"><label>${esc(L("f.battleBg"))}</label><input type="text" data-path="battleBg" value="${esc(map.battleBg ?? "")}"/><button type="button" data-fm-act="pickBattleBg" class="fm-icon"><i class="fas fa-file-import"></i></button></div>
+      <div class="form-group"><label>${esc(L("f.battleBgm"))}</label><select data-path="battleBgm">${encBgmOptions(map.battleBgm ?? "", L("f.noBgm"))}</select></div>
+      <p class="notes">${esc(L("battleStageHint"))}</p>
       <p class="notes">${esc(L("editHint"))}</p>${check}
       <h3>F.O.E. <a data-fm-add="foes" data-kind="foe"><i class="fas fa-plus"></i></a></h3>${foes}
       <datalist id="fm-enemies">${this.enemyChoices().map((x) => `<option value="${esc(x.label)}"></option>`).join("")}</datalist>
       ${this.triggersHtml("triggers", map.triggers ?? [], FM.MAP_TRIGGERS, map)}
       <p><button type="button" data-fm-act="dupMap"><i class="fas fa-copy"></i> ${esc(L("dupMap"))}</button><button type="button" data-fm-act="delMap" class="fm-danger"><i class="fas fa-trash"></i> ${esc(L("delMap"))}</button></p>`;
+  }
+
+  /** 편집: 에어리어 조우표(전투 구성 + 가중치) */
+  encounterTableEdit(a, p) {
+    const encs = Object.values(game.settings.get("nssq", "encounters") ?? {}).sort((x, y) => x.name.localeCompare(y.name, "ko"));
+    const rows = (a.encounters ?? []).map((r, j) => `<div class="fm-enc-row"><select data-path="${p}.encounters.${j}.id">${opt("", r.id, L("encPick"))}${encs.map((e) => opt(e.id, r.id, e.name)).join("")}</select>
+      <input type="number" min="0" data-path="${p}.encounters.${j}.weight" data-type="num" value="${esc(r.weight ?? 1)}" title="${esc(L("encWeight"))}"/>
+      <a data-fm-del="${p}.encounters.${j}"><i class="fas fa-times"></i></a></div>`).join("");
+    return `<h3>${esc(L("encTable"))} <a data-fm-act="addEnc" title="${esc(L("encAdd"))}"><i class="fas fa-plus"></i></a> <a data-fm-act="openEncounters" title="${esc(L("encOpen"))}"><i class="fas fa-dragon"></i></a></h3>
+      ${rows || `<p class="notes">${esc(L("encNone"))}</p>`}<p class="notes">${esc(L("encHint"))}</p>`;
+  }
+
+  /** 진행: 지금 에어리어의 조우표(먼저 보인다) */
+  encounterSection(map, st) {
+    const here = areaOf(map, st.current);
+    const all = game.settings.get("nssq", "encounters") ?? {};
+    const rows = (here?.encounters ?? []).filter((r) => all[r.id]);
+    if (!rows.length) return "";
+    const total = rows.reduce((n, r) => n + (Number(r.weight) || 0), 0);
+    return `<section class="fm-encounters"><h4><i class="fas fa-dragon"></i> ${esc(L("encHere", { name: here.name }))}</h4>
+      <div class="fm-actions"><button type="button" data-fm-act="encRandom"><i class="fas fa-dice"></i> ${esc(L("encRandom"))}</button></div>
+      <ul>${rows.map((r) => `<li><a data-fm-act="encStart" data-id="${r.id}"><i class="fas fa-skull-crossbones"></i> ${esc(all[r.id].name)}</a> <span class="notes">${total ? Math.round(((Number(r.weight) || 0) / total) * 100) : 0}%</span></li>`).join("")}</ul></section>`;
   }
 
   enemyChoices() {
@@ -1173,6 +1211,11 @@ export class FieldMapApp extends Application {
       case "delPassage": map.passages = map.passages.filter((p) => p.id !== this.sel.id); this.sel = null; this.dirty = true; return this.render();
       case "flip": { const p = map.passages.find((x) => x.id === this.sel.id); [p.a, p.b] = [p.b, p.a]; this.dirty = true; return this.render(); }
       case "makeScene": return this.makeScene(map.areas.find((x) => x.id === this.sel.id));
+      case "pickBattleBg": return new FilePicker({ type: "image", current: map.battleBg, callback: (src) => { map.battleBg = src; this.dirty = true; this.render(); } }).render(true);
+      case "addEnc": { const ar = map.areas.find((x) => x.id === this.sel.id); (ar.encounters ??= []).push({ id: "", weight: 1 }); this.dirty = true; return this.render(); }
+      case "openEncounters": return (await import("./encounters.mjs")).EncounterApp.open({ group: `map:${map.id}` });
+      case "encStart": return (await import("./encounters.mjs")).startEncounter(id, { map });
+      case "encRandom": { const here = areaOf(map, mapState().current); return (await import("./encounters.mjs")).randomEncounter(here?.encounters ?? [], { map, name: here?.name ?? "" }); }
       case "pickImg": { const ar = map.areas.find((x) => x.id === this.sel.id); return new FilePicker({ type: "image", current: ar.img, callback: (src) => { ar.img = src; this.dirty = true; this.render(); } }).render(true); }
       case "pickBg": return new FilePicker({ type: "image", current: map.bg?.src, callback: (src) => { map.bg = { style: "image", src }; this.dirty = true; this.render(); } }).render(true);
       case "route": this.routeFoe = this.routeFoe === id ? null : id; this.tool = "select"; this.linkFrom = null; return this.render();

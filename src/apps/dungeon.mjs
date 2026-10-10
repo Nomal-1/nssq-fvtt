@@ -194,15 +194,24 @@ async function randomBattle(e) {
   return presetBattle(L("randomPresetName", { level, names: kinds.map((d) => d.name).join("·") }), actors);
 }
 
-/** 액터들로 임시 프리셋 씬(전투가 끝나면 지운다)을 만들고 개시 창. flags: 프리셋에 더할 nssq 플래그(필드 지도 F.O.E. 등) */
-export async function presetBattle(name, actors, flags = {}) {
+/**
+ * 액터들로 임시 프리셋 씬(전투가 끝나면 지운다)을 만들고 개시 창.
+ * actors: Actor 또는 { actor, row: "front"|"back" }(열마다 가운데 정렬)
+ * flags: 프리셋에 더할 nssq 플래그(필드 지도 F.O.E. 등), stage: { bg, bgm }(배경 그림·"재생목록id.곡id", 07 #166)
+ */
+export async function presetBattle(name, actors, flags = {}, stage = {}) {
+  const list = actors.map((x) => (x?.actor ? { actor: x.actor, row: x.row === "back" ? "back" : "front" } : { actor: x, row: "front" }));
   const tokens = [];
-  for (const [i, actor] of actors.entries()) {
-    const td = await actor.getTokenDocument({ x: enemySlotX(i, actors.length) - LAYOUT.grid / 2, y: LAYOUT.lanes.enemyFront - LAYOUT.grid / 2, actorLink: false });
-    tokens.push(td.toObject());
+  for (const row of ["front", "back"]) {
+    const here = list.filter((x) => x.row === row);
+    for (const [i, x] of here.entries()) {
+      const y = (row === "back" ? LAYOUT.lanes.enemyBack : LAYOUT.lanes.enemyFront) - LAYOUT.grid / 2;
+      const td = await x.actor.getTokenDocument({ x: enemySlotX(i, here.length) - LAYOUT.grid / 2, y, actorLink: false });
+      tokens.push(td.toObject());
+    }
   }
   const b = await import("./battle.mjs");
-  const scene = await b.createPresetScene(name, { randomPreset: true, ...flags });
+  const scene = await b.createPresetScene(name, { randomPreset: true, ...flags }, stage);
   await scene.createEmbeddedDocuments("Token", tokens);
   return b.openStartDialog(scene.id);
 }

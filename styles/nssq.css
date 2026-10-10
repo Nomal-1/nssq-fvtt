@@ -1252,3 +1252,42 @@
 
 /* 지도 이름: 길면 줄바꿈 */
 .nssq-fieldmap .fm-panel textarea[data-path="name"] { min-height: 2.6em; height: auto; resize: vertical; white-space: pre-wrap; }
+
+/* 전투 구성(07 #166) */
+.nssq-encounters .window-content { padding: 8px 10px; }
+.nssq-encounters .enc-wrap { display: flex; flex-direction: column; gap: 6px; height: 100%; }
+.nssq-encounters .enc-toolbar { display: flex; gap: 6px; align-items: center; }
+.nssq-encounters .enc-toolbar select { flex: 0 0 220px; }
+.nssq-encounters .enc-toolbar input[type="search"] { flex: 1 1 auto; }
+.nssq-encounters .enc-toolbar button { flex: 0 0 auto; width: auto; padding: 0 10px; }
+.nssq-encounters .enc-toolbar .spacer { flex: 1; }
+.nssq-encounters .enc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; overflow-y: auto; flex: 1; align-content: start; }
+.nssq-encounters .enc-card { display: flex; flex-direction: column; border: 1px solid var(--nq-line); border-radius: 8px; overflow: hidden; background: var(--nq-panel); }
+.nssq-encounters .enc-card .thumb { position: relative; height: 90px; background: #2b2117 center/cover no-repeat; }
+.nssq-encounters .enc-card .thumb.inherited { opacity: 0.75; }
+.nssq-encounters .enc-card .thumb .tag { position: absolute; left: 6px; bottom: 4px; font-size: 0.75em; padding: 0 5px; border-radius: 6px; background: rgba(0,0,0,0.6); color: var(--nq-mu); }
+.nssq-encounters .enc-card .fav { position: absolute; right: 6px; top: 4px; color: rgba(255,255,255,0.4); text-shadow: 0 0 3px #000; }
+.nssq-encounters .enc-card .fav.on { color: var(--nq-gold-l); }
+.nssq-encounters .enc-card .info { padding: 6px 8px; flex: 1; }
+.nssq-encounters .enc-card .info .grp { margin-left: 6px; font-size: 0.8em; color: var(--nq-mu); }
+.nssq-encounters .enc-card .chips { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.nssq-encounters .chip { display: inline-flex; align-items: center; gap: 3px; font-size: 0.8em; padding: 1px 5px 1px 1px; border-radius: 10px; border: 1px solid var(--nq-line); }
+.nssq-encounters .chip.back { border-style: dashed; }
+.nssq-encounters .chip img { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; border: none; }
+.nssq-encounters .enc-card .acts { display: flex; align-items: center; gap: 8px; padding: 4px 8px 8px; }
+.nssq-encounters .enc-card .acts button { flex: 1; }
+.nssq-encounters button.go { border-color: var(--nq-gold); color: var(--nq-gold-l); }
+.nssq-encounters .enc-empty { color: var(--nq-mu); }
+.nssq-encounters .enc-edit .form-group input[type="text"] { flex: 1; }
+.nssq-encounters .enc-edit button.icon { flex: 0 0 auto; width: auto; }
+.nssq-encounters .enc-enemies { width: 100%; }
+.nssq-encounters .enc-enemies img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: none; }
+.nssq-encounters .enc-enemies input[type="number"] { width: 50px; }
+.nssq-encounters .enc-add { display: flex; gap: 6px; }
+.nssq-encounters .enc-add input { flex: 1; }
+.nssq-encounters .enc-add button { flex: 0 0 auto; width: auto; }
+.nssq-fieldmap .fm-enc-row { display: flex; gap: 4px; align-items: center; margin: 2px 0; }
+.nssq-fieldmap .fm-enc-row select { flex: 1; }
+.nssq-fieldmap .fm-enc-row input { width: 52px; flex: 0 0 auto; }
+.nssq-fieldmap .fm-encounters ul { margin: 4px 0; padding-left: 16px; }
+.nssq-gm-screen .gm-here h3 { margin: 6px 0 4px; }

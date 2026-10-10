@@ -145,7 +145,16 @@ export class GMScreen extends Application {
     const auto = GMScreen.autoMode();
     const modes = [["prep", "fa-tools"], ["town", "fa-home"], ["dungeon", "fa-dungeon"], ["battle", "fa-skull-crossbones"], ["reference", "fa-book"]]
       .map(([id, icon]) => ({ id, icon, label: L(`mode.${id}`), hint: L(`modeHint.${id}`), active: id === mode, auto: id === auto && id !== "reference" }));
+    // 던전 안: 지금 에어리어의 조우표(필드 지도 진행 중)
+    const encs = game.settings.get("nssq", "encounters") ?? {};
+    const liveMap = fm.active ? (game.settings.get("nssq", "fieldMaps") ?? {})[fm.mapId] : null;
+    const hereArea = liveMap?.areas?.find((a) => a.id === fm.current);
+    const rows = (hereArea?.encounters ?? []).filter((r) => encs[r.id]);
+    const sum = rows.reduce((n, r) => n + (Number(r.weight) || 0), 0);
+    const here = { name: hereArea?.name ?? "", encounters: rows.map((r) => ({ id: r.id, name: encs[r.id].name, pct: sum ? Math.round(((Number(r.weight) || 0) / sum) * 100) : 0 })) };
     return {
+      encounterCount: Object.keys(encs).length,
+      here,
       mode,
       modes,
       status,
@@ -200,6 +209,14 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=trap]", async () => (await import("./explore.mjs")).openTrapDialog());
     html.on("click", "[data-gm=gather]", async () => (await import("./loot.mjs")).openGatherDialog());
     html.on("click", "[data-gm=preset-new]", () => createPreset());
+    html.on("click", "[data-gm=encounters]", async () => (await import("./encounters.mjs")).EncounterApp.open());
+    html.on("click", "[data-gm=enc-start]", async (ev) => (await import("./encounters.mjs")).startEncounter(ev.currentTarget.dataset.id));
+    html.on("click", "[data-gm=enc-random]", async () => {
+      const fm = game.settings.get("nssq", "fieldMapState") ?? {};
+      const map = (game.settings.get("nssq", "fieldMaps") ?? {})[fm.mapId];
+      const area = map?.areas?.find((a) => a.id === fm.current);
+      return (await import("./encounters.mjs")).randomEncounter(area?.encounters ?? [], { map, name: area?.name ?? "" });
+    });
     html.on("click", "[data-gm=enemy-cleanup]", () => cleanupEnemies());
     html.on("click", "[data-gm=effects-sync]", () => game.nssq.syncEffects());
     html.on("click", "[data-preset-view]", (ev) => game.scenes.get(ev.currentTarget.dataset.presetView)?.view());

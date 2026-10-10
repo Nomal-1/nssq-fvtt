@@ -82,10 +82,18 @@ export async function createPreset() {
   return scene;
 }
 
-/** 프리셋 씬 만들기(빈 씬 + 열 표시). flags: 더할 nssq 플래그(랜덤 던전의 임시 프리셋 randomPreset 등) */
-export async function createPresetScene(name, flags = {}) {
+/**
+ * 프리셋 씬 만들기(빈 씬 + 열 표시). flags: 더할 nssq 플래그(랜덤 던전의 임시 프리셋 randomPreset 등)
+ * stage: { bg: 배경 그림, bgm: "재생목록id" 또는 "재생목록id.곡id" }(전투 구성·던전 기본 무대)
+ */
+export async function createPresetScene(name, flags = {}, stage = {}) {
   const folder = await presetFolder();
+  const { parseBgm } = await import("../engine/encounters.mjs");
+  const music = parseBgm(stage.bgm);
+  const playlist = music.playlist ? game.playlists.get(music.playlist) : null;
   const scene = await Scene.create({
+    ...(stage.bg ? { background: { src: stage.bg } } : {}),
+    ...(playlist ? { playlist: playlist.id, playlistSound: playlist.sounds.get(music.sound)?.id ?? null } : {}),
     name, folder: folder.id, navigation: false,
     width: SCENE_W, height: SCENE_H, padding: 0, backgroundColor: "#1a1a22",
     // 토큰과 관계없이 모두가 전체를 본다

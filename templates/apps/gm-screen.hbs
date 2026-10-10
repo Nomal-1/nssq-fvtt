@@ -86,7 +86,11 @@
       <button type="button" data-gm="skill-maker"><i class="fas fa-magic"></i> {{localize "NSSQ.Maker.skillTitle"}}</button>
       <button type="button" data-gm="enemy-maker"><i class="fas fa-dragon"></i> {{localize "NSSQ.Maker.enemyTitle"}}</button>
     </div>
-    <details class="gm-fold" open><summary>{{localize "NSSQ.GMScreen.presets"}}</summary>
+    <div class="gm-tools">
+      <button type="button" data-gm="encounters" class="go"><i class="fas fa-dragon"></i> {{localize "NSSQ.Encounter.title"}} ({{encounterCount}})</button>
+      <span class="notes">{{localize "NSSQ.GMScreen.encounterNote"}}</span>
+    </div>
+    <details class="gm-fold"><summary>{{localize "NSSQ.GMScreen.presets"}}</summary>
 {{> presetList}}
     </details>
     <details class="gm-fold"><summary>{{localize "NSSQ.GMScreen.shopItems"}}</summary>
@@ -163,7 +167,15 @@
     </div>
 {{> status}}
 {{> partyTable}}
-    <details class="gm-fold" open><summary><i class="fas fa-skull-crossbones"></i> {{localize "NSSQ.GMScreen.startBattle"}}</summary>
+    <section class="gm-here">
+      <h3><i class="fas fa-skull-crossbones"></i> {{localize "NSSQ.GMScreen.startBattle"}}{{#if here.name}} — {{here.name}}{{/if}}</h3>
+      <div class="gm-tools">
+        {{#if here.encounters.length}}<button type="button" data-gm="enc-random" class="go"><i class="fas fa-dice"></i> {{localize "NSSQ.FieldMap.encRandom"}}</button>{{/if}}
+        {{#each here.encounters as |e|}}<button type="button" data-gm="enc-start" data-id="{{e.id}}"><i class="fas fa-dragon"></i> {{e.name}} <span class="notes">{{e.pct}}%</span></button>{{/each}}
+        <button type="button" data-gm="encounters"><i class="fas fa-list"></i> {{localize "NSSQ.Encounter.title"}}</button>
+      </div>
+    </section>
+    <details class="gm-fold"><summary>{{localize "NSSQ.GMScreen.presets"}}</summary>
 {{> presetList}}
     </details>
   {{/if}}

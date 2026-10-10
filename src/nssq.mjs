@@ -36,6 +36,7 @@ import { registerLoot } from "./apps/loot.mjs";
 import { registerExplore } from "./apps/explore.mjs";
 import { registerCheckMods } from "./chat/check-mods.mjs";
 import { registerDungeon } from "./apps/dungeon.mjs";
+import { EncounterApp, registerEncounters } from "./apps/encounters.mjs";
 import { FieldMapApp, registerFieldMap } from "./apps/fieldmap.mjs";
 import { ChargenWizard, newCharacter, registerChargen } from "./apps/chargen-wizard.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
@@ -105,11 +106,13 @@ Hooks.once("init", () => {
   registerExplore();
   registerCheckMods();
   registerDungeon();
+  registerEncounters();
   registerFieldMap();
   registerChargen();
   registerEnemyLibrary();
   // 매크로·모듈용 API
   game.nssq = {
+    openEncounters: (opts) => EncounterApp.open(opts),
     promptCheck, rollCheck, openRequestDialog, rollAbilities, acquireItems, openShop, toggleShop,
     openGMScreen: () => GMScreen.open(),
     openBestiary: () => BestiaryApp.open(),
