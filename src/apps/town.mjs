@@ -176,12 +176,16 @@ function fitTownView() {
 }
 
 let overlay = null;
-/** 지금 보는 씬이 마을 씬이면 마을 UI를 덮고, 아니면 걷는다 */
+let gen = 0;
+/** 지금 보는 씬이 마을 씬이면 마을 UI를 덮고, 아니면 걷는다(늦게 끝난 옛 렌더가 붙지 않게 세대 번호) */
 function syncOverlay() {
-  if (overlay) { overlay.element?.remove(); overlay = null; }
+  gen += 1;
+  document.querySelectorAll(".town-overlay:not(.field-overlay)").forEach((e) => e.remove());
+  overlay = null;
   const tid = canvas.ready ? canvas.scene?.getFlag("nssq", "town") : null;
   if (!tid || !allTowns()[tid]) return;
   overlay = new TownOverlay();
+  overlay.gen = gen;
   overlay.townId = tid;
   overlay.render(true);
   fitTownView();
@@ -502,6 +506,7 @@ export class TownOverlay extends TownApp {
   }
 
   _injectHTML(html) {
+    if (this.gen !== gen) return;
     document.getElementById("hud")?.append(html[0]);
     this._element = html;
   }

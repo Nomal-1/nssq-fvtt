@@ -40,6 +40,7 @@ export async function ensureFieldScene(map) {
 
 /** 진행 시작·재개 때(startProgress): 미궁 씬을 만들어 활성화 */
 export async function activateFieldScene(map) {
+  if (openEvents().length) await game.settings.set("nssq", "fieldEvents", []);
   const sc = await ensureFieldScene(map);
   if (sc && !sc.active) await sc.activate();
   return sc;
@@ -76,14 +77,21 @@ function fitView() {
 /* ---------------- 메뉴 레이어 ---------------- */
 
 let overlay = null;
+let gen = 0;
+/** 메뉴 레이어를 다시 붙인다. 렌더가 비동기라 늦게 끝난 옛 레이어가 붙지 않게 세대 번호로 거른다 */
 function sync() {
-  if (overlay) { overlay.element?.remove(); overlay = null; }
+  gen += 1;
+  document.querySelectorAll(".field-overlay").forEach((e) => e.remove());
+  overlay = null;
   if (!shownMap()) return;
-  overlay = new FieldOverlay();
-  overlay.render(true);
+  const o = new FieldOverlay();
+  o.gen = gen;
+  overlay = o;
+  o.render(true);
   fitView();
 }
-const refresh = () => { if (overlay?.rendered) overlay.render(); else if (shownMap()) sync(); };
+const refresh = () => { if (overlay) { if (overlay.rendered) overlay.render(); } else if (shownMap()) sync(); };
+const openEvents = () => game.settings.get("nssq", "fieldEvents") ?? [];
 
 export class FieldOverlay extends Application {
   static get defaultOptions() {
@@ -102,7 +110,7 @@ export class FieldOverlay extends Application {
     const v = FM.playerView(map, st);
     const here = areaOf(map, v.current);
     const gm = game.user.isGM;
-    const locked = (st.events ?? []).length > 0;
+    const locked = openEvents().length > 0;
     const foeHere = v.foes.some((f) => f.area === v.current);
     const foeNear = v.foes.some((f) => f.area !== v.current && v.reachable.includes(f.area));
     const hour = Number.isFinite(st.hour) ? st.hour : null;
@@ -113,7 +121,7 @@ export class FieldOverlay extends Application {
     const warn = foeHere ? `<div class="fs-warn danger"><i class="fas fa-skull"></i> ${esc(LF("foeHere"))}</div>` : foeNear ? `<div class="fs-warn"><i class="fas fa-exclamation-triangle"></i> ${esc(L("foeNear"))}</div>` : "";
     const menu = locked && !gm ? `<div class="fs-locked"><i class="fas fa-hourglass-half"></i> ${esc(L("eventWait"))}</div>` : this.menuHtml(map, st, v);
     const stage = `<div class="town-stage facility" ${areaImg(here) || map.battleBg ? `style="background-image:url('${url(areaImg(here) || map.battleBg)}')"` : ""}>
-      ${top}${warn}<nav class="town-menu">${menu}</nav>${gm && locked ? `<div class="fs-gmnote"><i class="fas fa-bolt"></i> ${esc(L("eventGm", { n: st.events.length }))}</div>` : ""}
+      ${top}${warn}<nav class="town-menu">${menu}</nav>${gm && locked ? `<div class="fs-gmnote"><i class="fas fa-bolt"></i> ${esc(L("eventGm", { n: openEvents().length }))}</div>` : ""}
       ${await this.partyHtml()}</div>`;
     frame.append(stage);
     return root.append(frame);
@@ -176,6 +184,7 @@ export class FieldOverlay extends Application {
   }
 
   _injectHTML(html) {
+    if (this.gen !== gen) return;
     document.getElementById("hud")?.append(html[0]);
     this._element = html;
   }
@@ -252,16 +261,17 @@ async function trackEvent(message, removed = false) {
   if (!isActiveGM()) return;
   const d = message.getFlag("nssq", "fieldEvent");
   if (!d || !EVENT_KINDS.includes(d.kind)) return;
-  const st = mapState();
-  if (!st.active) return;
-  const events = new Set(st.events ?? []);
+  if (!mapState().active && !removed) return;
+  const events = new Set(openEvents());
   const open = !removed && !d.done;
   if (open === events.has(message.id)) return;
   if (open) events.add(message.id); else events.delete(message.id);
-  await game.settings.set("nssq", "fieldMapState", { ...st, events: [...events] });
+  // 지도 진행 상태(fieldMapState)와 따로 둔다(지도 쪽 저장이 덮어쓰지 않게)
+  await game.settings.set("nssq", "fieldEvents", [...events]);
 }
 
 export function registerFieldScene() {
+  game.settings.register("nssq", "fieldEvents", { scope: "world", config: false, type: Array, default: [] });
   onSocket("fieldAct", onActProposal);
   Hooks.on("canvasReady", () => sync());
   Hooks.once("ready", () => setTimeout(sync, 0));
@@ -270,7 +280,7 @@ export function registerFieldScene() {
   Hooks.on("collapseSidebar", () => setTimeout(fitView, 300));
   window.addEventListener("resize", () => { clearTimeout(registerFieldScene.r); registerFieldScene.r = setTimeout(fitView, 200); });
   for (const h of ["createSetting", "updateSetting"]) Hooks.on(h, (s) => {
-    if (s.key === "nssq.fieldMapState" || s.key === "nssq.fieldMaps") { if (shownMap()) refresh(); else if (overlay) sync(); }
+    if (["nssq.fieldMapState", "nssq.fieldMaps", "nssq.fieldEvents"].includes(s.key)) { if (shownMap()) refresh(); else if (overlay) sync(); }
   });
   Hooks.on("updateActor", (a) => { if (overlay?.rendered && a.type === "character") { clearTimeout(registerFieldScene.u); registerFieldScene.u = setTimeout(refresh, 200); } });
   Hooks.on("createChatMessage", (m) => trackEvent(m));
