@@ -30,6 +30,8 @@ function ownChoices(actor, kind) {
   const s = actor.system;
   const conds = s.conditions ?? [];
   if (conds.some((c) => ["petrify", "sleep", "stun"].includes(c.id))) return [];
+  // [마비]·[공포] 판정에 실패한 턴은 모든 행동 불가(수동 스킬 포함). [혼란]은 수동 스킬 가능
+  if (game.combat?.combatants.find((c) => c.actor?.uuid === actor.uuid)?.getFlag("nssq", "disabled")) return [];
   return actor.items.filter((i) => i.type === "skill" && i.system.timing === "수동" && (i.system.sl ?? 0) > 0 && reactionEffect(i.system.effects, kind))
     .filter((i) => (i.system.cost?.tp ?? 0) <= (s.tp?.value ?? 0) && (i.system.cost?.fp ?? 0) <= (s.fp?.value ?? 0))
     .filter((i) => !(PART_BIND[i.system.part] && conds.some((c) => c.id === PART_BIND[i.system.part])))
@@ -111,14 +113,18 @@ export function decorateReactions(el, message, type) {
     else if (r.state === "declined") box.innerHTML = `${prior}<span class="notes">${esc(L("declined"))}</span>`;
     else if (r.state === "pending" && !applied) {
       const actor = fromUuidSync(type === "attack" ? t.actorUuid : t.uuid);
-      // 《와이드 패링》 선택지는 보유자 소유자도 누를 수 있다
-      if (!actor?.isOwner && !r.options.some((o) => o.holder && fromUuidSync(o.holder)?.isOwner)) {
+      // 대상 자신의 선택지·[반응 안 함]은 대상 소유자, 《와이드 패링》 선택지·[넘기기]는 그 보유자 소유자만(GM은 모두)
+      const ownsTarget = !!actor?.isOwner;
+      const mine = r.options.filter((o) => (o.holder ? !!fromUuidSync(o.holder)?.isOwner : ownsTarget));
+      const holders = [...new Set(mine.filter((o) => o.holder).map((o) => o.holder))];
+      if (!mine.length && !ownsTarget) {
         box.innerHTML = `${prior}<span class="notes">${esc(L("waiting", { name: t.name }))}</span>`;
       } else {
-        box.innerHTML = prior + r.options.map((o) => `<button type="button" data-react="${o.id}"><i class="fas fa-shield-alt"></i> ${esc(L("use", { name: o.name }))}</button>`).join("")
-          + `<button type="button" data-react-decline>${esc(L("decline"))}</button>`;
+        box.innerHTML = prior + mine.map((o) => `<button type="button" data-react="${o.id}"><i class="fas fa-shield-alt"></i> ${esc(L("use", { name: o.name }))}</button>`).join("")
+          + (ownsTarget ? `<button type="button" data-react-decline>${esc(L("decline"))}</button>` : holders.map((h) => `<button type="button" data-react-pass="${h}">${esc(L("pass"))}</button>`).join(""));
         box.querySelectorAll("[data-react]").forEach((b) => b.addEventListener("click", () => useReaction(message, type, i, b.dataset.react)));
         box.querySelector("[data-react-decline]")?.addEventListener("click", () => send({ messageId: message.id, type, index: i, result: { declined: true } }));
+        box.querySelectorAll("[data-react-pass]").forEach((b) => b.addEventListener("click", () => send({ messageId: message.id, type, index: i, result: { passAlly: b.dataset.reactPass } })));
       }
     } else return;
     row.append(box);
@@ -149,8 +155,9 @@ async function useReaction(message, type, index, skillId) {
   const kind = type === "attack" ? card.kind : (t.hits.find((h) => h.hit)?.kind ?? "physical");
   const eff = reactionEffect(skill.system.effects, kind);
   if (!eff) return;
-  // 코스트
+  // 코스트: 카드를 만든 뒤 다른 반응에 써서 모자라면 쓸 수 없다
   const c = skill.system.cost ?? {};
+  if ((c.tp ?? 0) > (actor.system.tp?.value ?? 0) || (c.fp ?? 0) > (actor.system.fp?.value ?? 0)) return ui.notifications.warn(L("noCost", { skill: skill.name }));
   const upd = {};
   if (c.tp) upd["system.tp.value"] = Math.max(0, (actor.system.tp?.value ?? 0) - c.tp);
   if (c.fp) upd["system.fp.value"] = Math.max(0, (actor.system.fp?.value ?? 0) - c.fp);

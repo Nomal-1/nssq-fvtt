@@ -257,6 +257,11 @@ export async function applyEndPhase(messageId, undo = false) {
     const actor = await fromUuid(u.uuid);
     if (!actor) continue;
     const v = undo ? u.before : u.after;
+    // 탐색 시간 카드: 만든 뒤 상태가 바뀌었으면(다른 카드·회복 스킬) 덮어쓰지 않는다
+    if (data.field && !undo && (actor.system.hp?.value !== u.before.hp || JSON.stringify(actor.system.conditions ?? []) !== JSON.stringify(u.before.conditions ?? []))) {
+      ui.notifications.warn(game.i18n.format("NSSQ.TimePass.stale", { name: actor.name }));
+      continue;
+    }
     const upd = { "system.conditions": v.conditions, "system.buffs": v.buffs, "system.hp.value": v.hp };
     if (v.tp !== null && v.tp !== undefined) upd["system.tp.value"] = v.tp;
     await actor.update(upd);

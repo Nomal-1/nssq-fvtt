@@ -51,7 +51,8 @@ export async function advanceClock(hours, combat = null) {
   if (tod !== game.settings.get("nssq", "timeOfDay")) await game.settings.set("nssq", "timeOfDay", tod);
   const info = combat?.getFlag("nssq", "battle");
   let darkNote = "";
-  if (info?.darkAuto && !!info.dark !== (tod === "night")) {
+  // 이미 지운 전투(트래커의 [전투 종료])에는 쓰지 않는다
+  if (info?.darkAuto && game.combats.has(combat.id) && !!info.dark !== (tod === "night")) {
     await combat.setFlag("nssq", "battle", { ...info, dark: tod === "night" });
     darkNote = ` ${L(tod === "night" ? "darkStart" : "darkEnd")}`;
   }
@@ -111,6 +112,7 @@ export async function timePasses(hours = 1, { noAilments = false, noOverheat = f
     content,
     flags: { nssq: { endPhase: { updates, applied: false, round: null, combatId: null, field: true, body } } }
   });
-  if (autoApplyMode() === "auto") await applyEndPhase(message.id);
+  // 탐색 시간 카드는 「끔」이 아니면 바로 적용한다(나중에 적용하면 그사이 바뀐 상태를 덮어쓰므로)
+  if (autoApplyMode() !== "off") await applyEndPhase(message.id);
   return message;
 }

@@ -3,7 +3,7 @@
  * 소유하지 않은 액터는 소켓으로 활성 GM에게 맡긴다(04 §5.5).
  */
 import { halve, rowSwap, sideDefeated } from "../engine/combat.mjs";
-import { removeCondition } from "../engine/conditions.mjs";
+import { isPetrified, removeCondition } from "../engine/conditions.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { sideOf } from "./profile.mjs";
 import { recordBestiary } from "./bestiary.mjs";
@@ -70,8 +70,8 @@ export async function checkSides(combat, changedSide = null) {
       await ChatMessage.create({ content: `<div class="nssq-combat-note"><i class="fas fa-exchange-alt"></i> ${L(side === "enemy" ? "rowSwapEnemy" : "rowSwapParty")}</div>` });
     }
   }
-  // 전멸 판정: 한 진영이 전원 빠지면 「종료 대기」(되살아나면 해제)
-  const unitsOf = (side) => combat.combatants.filter((c) => c.actor && sideKey(c.actor) === side).map((c) => ({ ko: isOut(c) }));
+  // 전멸 판정: 한 진영이 전원 [전투 불능] 또는 [석화]면 「종료 대기」(되살아나면 해제, 01 §3.13)
+  const unitsOf = (side) => combat.combatants.filter((c) => c.actor && sideKey(c.actor) === side).map((c) => ({ ko: isOut(c), petrified: isPetrified(c.actor) }));
   const over = sideDefeated(unitsOf("enemy")) ? "victory" : sideDefeated(unitsOf("party")) ? "defeat" : null;
   const before = combat.getFlag("nssq", "over") ?? null;
   if (over !== before) {
