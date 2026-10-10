@@ -28,7 +28,21 @@ const note = (html, flags = {}) => ChatMessage.create({ speaker: { alias: L("tit
 export async function openDungeonDialog() {
   if (!game.user.isGM) return;
   const cur = dungeonState();
-  if (cur.active && !(await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("restartAsk", { name: cur.name }))}</p>`, rejectClose: false }))) return;
+  // 진행 중이면: 다음 이벤트 / 던전 나가기 / 새로 시작
+  if (cur.active) {
+    const pick = await new Promise((resolve) => new Dialog({
+      title: L("title"), content: `<p>${esc(L("activeAsk", { name: cur.name, done: cur.done ?? 0, depth: cur.depth ?? 0 }))}</p>`,
+      buttons: {
+        next: { icon: '<i class="fas fa-forward"></i>', label: L("next"), callback: () => resolve("next") },
+        leave: { icon: '<i class="fas fa-door-open"></i>', label: L("leave"), callback: () => resolve("leave") },
+        restart: { icon: '<i class="fas fa-redo"></i>', label: L("restart"), callback: () => resolve("restart") }
+      },
+      default: "next", close: () => resolve(null)
+    }).render(true));
+    if (pick === "next") return nextEvent();
+    if (pick === "leave") return leaveDungeon();
+    if (pick !== "restart") return;
+  }
   const got = await Dialog.prompt({
     title: L("startTitle"),
     content: `<form>
@@ -103,6 +117,15 @@ async function clear() {
   const st = dungeonState();
   await setState({ ...st, active: false });
   return note(`<h3><i class="fas fa-flag-checkered"></i> ${esc(L("cleared", { name: st.name }))}</h3>`);
+}
+
+/** GM: 던전에서 나온다(클리어하지 않고 그만둠) */
+export async function leaveDungeon() {
+  if (!game.user.isGM) return;
+  const st = dungeonState();
+  if (!st.active) return;
+  await setState({ ...st, active: false });
+  return note(`<h3><i class="fas fa-door-open"></i> ${esc(L("left", { name: st.name ?? "" }))}</h3>`);
 }
 
 /** 《아리아드네의 실》: 긴급 탈출(전투 중이면 그 전투도 도주로 끝낸다) */

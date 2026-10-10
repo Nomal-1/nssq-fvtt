@@ -204,6 +204,12 @@ export class GMScreen extends Application {
     html.on("click", "[data-gm=living]", async () => (await import("./session.mjs")).openLivingCost());
     html.on("click", "[data-gm=session-end]", async () => (await import("./session.mjs")).openSessionEnd());
     html.on("click", "[data-gm=fieldmap]", async () => (await import("./fieldmap.mjs")).FieldMapApp.open());
+    // 던전 나가기: 랜덤 던전 진행 중이면 그것을, 아니면 필드 지도 진행을 끝낸다
+    html.on("click", "[data-gm=leave-dungeon]", async () => {
+      if (game.settings.get("nssq", "dungeon")?.active) return (await import("./dungeon.mjs")).leaveDungeon();
+      if (game.settings.get("nssq", "fieldMapState")?.active) return (await import("./fieldmap.mjs")).endProgress();
+      return null;
+    });
     html.on("click", "[data-gm=dungeon]", async () => (await import("./dungeon.mjs")).openDungeonDialog());
     html.on("click", "[data-gm=camp]", async () => (await import("./explore.mjs")).openCampDialog());
     html.on("click", "[data-gm=trap]", async () => (await import("./explore.mjs")).openTrapDialog());
