@@ -1377,3 +1377,24 @@
 .nssq-town .town-manage .manage-card .acts { display: flex; gap: 6px; margin: 8px 0; }
 /* Foundry의 `#hud > * { pointer-events: none; text-align: center }`보다 앞서게(ID 선택자) */
 #hud > .nssq-town.town-overlay { pointer-events: auto; text-align: left; }
+/* 경력 직접 입력: 입력칸이 넓게, [추가]는 내용 크기만 */
+.nssq-chargen .cg-tools.cg-histadd input[type="text"] { flex: 1 1 auto; min-width: 0; width: auto; height: 32px; font-size: 1.05em; padding: 0 8px; }
+.nssq-chargen .cg-tools.cg-histadd button { flex: 0 0 auto; width: auto; height: 32px; padding: 0 14px; white-space: nowrap; }
+/* 길드: 캐릭터 카드 */
+.nssq-guild .guild-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 6px; }
+.nssq-guild .gc { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border: 1px solid var(--nq-line); border-radius: 8px; background: rgba(255,255,255,0.03); cursor: pointer; transition: border-color 0.1s, background 0.1s; }
+.nssq-guild .gc:hover { border-color: var(--nq-gold); background: rgba(231, 207, 138, 0.06); }
+.nssq-guild .gc.sel { border: 2px solid var(--nq-gold); background: rgba(231, 207, 138, 0.12); }
+.nssq-guild .gc.benched { opacity: 0.6; }
+.nssq-guild .gc img { flex: 0 0 56px; width: 56px; height: 56px; border-radius: 8px; object-fit: cover; object-position: top; border: 1px solid var(--nq-line); }
+.nssq-guild .gc-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.nssq-guild .gc-info b { font-size: 1.1em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nssq-guild .gc-info .sub { font-size: 0.85em; color: var(--nq-mu); }
+.nssq-guild .gc-acts { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.nssq-guild .gc-acts button { width: auto; padding: 0 8px; font-size: 0.85em; line-height: 22px; height: 24px; }
+.nssq-guild .gc-acts button.on { border-color: var(--nq-green); color: var(--nq-green); }
+.nssq-guild .gc-acts a { margin-left: 6px; }
+.nssq-shop .shop-header label.usable { margin-left: auto; }
+.nssq-shop .shop-row.unusable { opacity: 0.55; }
+.nssq-shop .shop-row:hover { background: rgba(231, 207, 138, 0.08); }
+#tooltip .nssq-shop-tip { max-width: 340px; text-align: left; line-height: 1.5; }

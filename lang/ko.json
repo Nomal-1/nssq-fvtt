@@ -427,6 +427,7 @@
       "suppDef": "억제 방어"
     },
     "Shop": {
+      "usableOnly": "장비할 수 있는 것만", "usableHint": "이 캐릭터의 메인·서브 클래스로 장비할 수 있는 무기·방어구만 보인다", "notUsable": "이 캐릭터는 장비할 수 없다",
       "title": "상점",
       "buy": "구입",
       "material": "소재",
@@ -560,6 +561,9 @@
       "ask": "기본 제공 마을 「뿌리 마을」, 필드 지도 「고목의 숲」·「눈 덮인 폐허」와 그 전투 구성을 원래대로 되돌린다. 기본 것을 고쳤다면 사라진다. GM이 만든 마을·지도는 그대로다.",
       "done": "기본 마을 {towns}·지도 {maps}·전투 구성 {encounters}을(를) 넣었다.",
       "seeded": "기본 마을 {towns}·미궁 {maps}을(를) 넣었다(GM 스크린 「준비」에서 다시 넣을 수 있다)."
+    },
+    "Upload": {
+      "noGM": "GM이 접속해 있지 않아 그림을 올릴 수 없다.", "tooBig": "그림이 너무 크다.", "failed": "그림을 올리지 못했다."
     },
     "Guild": {
       "title": "길드",
@@ -957,7 +961,7 @@
       "bust": "전투 상반신",
       "face": "카드 얼굴",
       "frameHint": "각 틀을 끌면 위치, 마우스 휠이면 확대·축소",
-      "pickFull": "기본 일러 고르기",
+      "pickFull": "서버에서 고르기", "uploadFull": "내 컴퓨터에서 올리기", "uploadFace": "얼굴 그림 올리기",
       "pickFace": "얼굴 그림 따로 고르기",
       "useActorImg": "액터 이미지 사용",
       "useFull": "전신 일러에서 자르기",
@@ -1976,7 +1980,7 @@
       "historyHint": "원하면 경력표(D666)를 3번 정도 굴리거나 직접 적는다. 인격과 배경을 정하면 완성이다.",
       "rollCareer": "경력표 굴리기(D666)",
       "careerHead": "경력표",
-      "historyFree": "직접 적기",
+      "historyFree": "직접 적기", "historyAdd": "추가",
       "remove": "지우기",
       "description": "인격·배경 메모",
       "check": {

@@ -1,4 +1,5 @@
 import { registerArt } from "./apps/art-config.mjs";
+import { registerUpload } from "./apps/upload.mjs";
 import { registerUniqueSkillHooks } from "./apps/unique-skill.mjs";
 import { migrateEnemyArt } from "./apps/enemy-art.mjs";
 import { actorModels, itemModels } from "./data/_module.mjs";
@@ -148,6 +149,7 @@ Hooks.once("ready", () => {
   registerSocket();
   registerUniqueSkillHooks();
   registerArt();
+  registerUpload();
   migrateEnemyArt();
 });
 

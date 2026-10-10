@@ -84,7 +84,7 @@ let app = null;
 export class GuildApp extends Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      id: "nssq-guild", classes: ["nssq", "nq-window", "nssq-guild"], title: game.i18n.localize("NSSQ.Guild.title"), width: 720, height: 620, resizable: true
+      id: "nssq-guild", classes: ["nssq", "nq-window", "nssq-guild"], title: game.i18n.localize("NSSQ.Guild.title"), width: 760, height: 660, resizable: true, scrollY: [".guild-wrap"]
     });
   }
 
@@ -102,20 +102,26 @@ export class GuildApp extends Application {
     const sel = game.actors.get(this.actorId);
     const classes = await classList();
     const { main, sub } = sel?.system.classItems ?? {};
+    // 캐릭터 카드: 카드를 누르면 고르고, 버튼은 참가/대기·대표·시트
     const rows = chars.map((a) => {
       const c = a.system.classItems;
       const benched = !!a.getFlag("nssq", "benched");
       const rep = game.user.character?.id === a.id;
-      return `<tr class="${a.id === this.actorId ? "sel" : ""} ${benched ? "benched" : ""}" data-aid="${a.id}">
-        <td><a data-g="pick"><img src="${esc(a.img)}"/> ${esc(a.name)}</a>${rep ? ` <span class="tag">${esc(L("rep"))}</span>` : ""}</td>
-        <td>Lv${a.system.level}</td><td>${esc(c.main?.name ?? "-")}${c.sub ? ` / ${esc(c.sub.name)}` : ""}</td><td>EXP ${a.system.exp ?? 0}</td>
-        <td><button type="button" data-g="bench" class="${benched ? "" : "on"}">${esc(benched ? L("benched") : L("inParty"))}</button></td>
-        <td>${game.user.isGM || rep ? "" : `<a data-g="rep" title="${esc(L("makeRep"))}"><i class="fas fa-user-check"></i></a>`} <a data-g="sheet" title="${esc(L("sheet"))}"><i class="fas fa-id-card"></i></a></td></tr>`;
+      const hp = a.system.hp ?? {};
+      return `<div class="gc ${a.id === this.actorId ? "sel" : ""} ${benched ? "benched" : ""}" data-aid="${a.id}" data-g="pick">
+        <img src="${esc(a.img)}" alt=""/>
+        <div class="gc-info"><b>${esc(a.name)}</b>${rep ? ` <span class="tag">${esc(L("rep"))}</span>` : ""}
+          <span>Lv${a.system.level} · ${esc(c.main?.name ?? "-")}${c.sub ? ` / ${esc(c.sub.name)}` : ""}</span>
+          <span class="sub">EXP ${a.system.exp ?? 0} · HP ${hp.value ?? 0}/${hp.max ?? 0}</span></div>
+        <div class="gc-acts">
+          <button type="button" data-g="bench" class="${benched ? "" : "on"}" title="${esc(L("charsHint"))}"><i class="fas ${benched ? "fa-bed" : "fa-flag"}"></i> ${esc(benched ? L("benched") : L("inParty"))}</button>
+          ${game.user.isGM || rep ? "" : `<a data-g="rep" title="${esc(L("makeRep"))}"><i class="fas fa-user-check"></i></a>`}
+          <a data-g="sheet" title="${esc(L("sheet"))}"><i class="fas fa-id-card"></i></a></div></div>`;
     }).join("");
     const clsOpts = (cur) => classes.map((c) => opt(c.uuid, cur, c.name)).join("");
     return $(`<div class="guild-wrap">
       <section><h3>${esc(L("chars"))} <button type="button" data-g="new"><i class="fas fa-user-plus"></i> ${esc(L("newChar"))}</button></h3>
-        <table class="guild-chars"><tbody>${rows || `<tr><td class="notes">${esc(L("noChars"))}</td></tr>`}</tbody></table>
+        <div class="guild-cards">${rows || `<p class="notes">${esc(L("noChars"))}</p>`}</div>
         <p class="notes">${esc(L("charsHint"))}</p></section>
       ${sel ? `<section><h3>${esc(L("forChar", { name: sel.name }))}</h3>
         <div class="guild-box"><b><i class="fas fa-sitemap"></i> ${esc(L("respec"))}</b><p class="notes">${esc(L("respecHint", { n: guildCost() }))}</p>
@@ -129,7 +135,11 @@ export class GuildApp extends Application {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html[0].querySelectorAll("[data-g]").forEach((el) => el.addEventListener("click", (ev) => { ev.preventDefault(); this.onAct(el.dataset.g, el.closest("[data-aid]")?.dataset.aid); }));
+    html[0].querySelectorAll("[data-g]").forEach((el) => el.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.onAct(el.dataset.g, el.closest("[data-aid]")?.dataset.aid);
+    }));
   }
 
   async onAct(act, aid) {

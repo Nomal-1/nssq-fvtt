@@ -2,6 +2,7 @@
   <header class="shop-header">
     <span class="money"><i class="fas fa-coins"></i> {{money}}G</span>
     {{#if isGM}}<span class="shop-state {{#if open}}on{{/if}}">{{#if open}}{{localize "NSSQ.Shop.isOpen"}}{{else}}{{localize "NSSQ.Shop.isClosed"}}{{/if}}</span>{{/if}}
+    {{#if hasClass}}<label class="usable" title="{{localize "NSSQ.Shop.usableHint"}}"><input type="checkbox" name="usableOnly" {{checked usableOnly}}/> {{localize "NSSQ.Shop.usableOnly"}}</label>{{/if}}
     {{#if canCreation}}<label class="creation"><input type="checkbox" name="creation" {{checked creation}} {{#if forced}}disabled{{/if}}/> {{localize "NSSQ.Shop.creationMode"}}</label>{{/if}}
   </header>
   {{#if noPacks}}<p class="warn">{{localize "NSSQ.Shop.noPacks"}}</p>{{/if}}
@@ -16,7 +17,7 @@
       <p class="notes">{{localize "NSSQ.Shop.rule"}}</p>
       <ol class="shop-list">
         {{#each t.rows as |r|}}
-        <li class="shop-row flexrow">
+        <li class="shop-row flexrow {{#if r.unusable}}unusable{{/if}}" data-tooltip="{{r.tip}}" data-tooltip-direction="LEFT">
           <img src="{{r.img}}" width="24" height="24"/>
           <span class="name">{{r.name}}{{#if r.custom}} <span class="custom-tag">{{localize "NSSQ.Shop.custom"}}</span>{{/if}}{{#if r.hidden}} <span class="hidden-tag">{{localize "NSSQ.Shop.hiddenTag"}}</span>{{/if}}{{#if r.info}} <span class="info">{{r.info}}</span>{{/if}}</span>
           {{#if r.ranked}}<label class="rank">R <input type="number" min="1" max="{{r.maxRank}}" value="{{r.rank}}" data-rank="{{r.id}}"/></label>{{/if}}

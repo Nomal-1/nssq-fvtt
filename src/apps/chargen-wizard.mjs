@@ -42,7 +42,7 @@ export class ChargenWizard extends Application {
   }
 
   static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, { classes: ["nssq", "nq-window", "nssq-chargen"], width: 760, height: 720, resizable: true });
+    return foundry.utils.mergeObject(super.defaultOptions, { classes: ["nssq", "nq-window", "nssq-chargen"], width: 760, height: 720, resizable: true, scrollY: [".cg-body"] });
   }
 
   get title() { return L("title", { name: this.actor.name }); }
@@ -198,7 +198,7 @@ export class ChargenWizard extends Application {
     return `<p class="notes">${esc(L("historyHint"))}</p>
       <div class="cg-tools"><button type="button" data-cg="career"><i class="fas fa-dice"></i> ${esc(L("rollCareer"))}</button></div>
       <ol class="cg-history">${h.map((t, i) => `<li>${esc(t)} <a data-cg-delhist="${i}" title="${esc(L("remove"))}"><i class="fas fa-times"></i></a></li>`).join("")}</ol>
-      <div class="cg-tools"><input type="text" data-cg-histtext placeholder="${esc(L("historyFree"))}"/><button type="button" data-cg="addHist"><i class="fas fa-plus"></i></button></div>
+      <div class="cg-tools cg-histadd"><input type="text" data-cg-histtext placeholder="${esc(L("historyFree"))}"/><button type="button" data-cg="addHist" title="${esc(L("historyAdd"))}"><i class="fas fa-plus"></i> ${esc(L("historyAdd"))}</button></div>
       <label class="cg-desc"><span>${esc(L("description"))}</span><textarea data-cg-field="system.description" rows="4">${esc((this.actor.system.description ?? "").replace(/<[^>]+>/g, ""))}</textarea></label>`;
   }
 
@@ -272,7 +272,8 @@ export class ChargenWizard extends Application {
     switch (a) {
       case "prev": return this.go(this.step - 1);
       case "next": return this.go(this.step + 1);
-      case "img": return new FilePicker({ type: "image", current: actor.img, callback: (p) => actor.update({ img: p }) }).render(true);
+      // 그림: 이 컴퓨터에서 올리기·자르기(art-config). 업로드 권한이 없는 플레이어는 GM이 대신 올린다
+      case "img": return (await import("./art-config.mjs")).openArtConfig(actor);
       case "roll": case "reroll": {
         if (a === "reroll" && !(await Dialog.confirm({ title: L("reroll"), content: `<p>${esc(L("rerollAsk"))}</p>`, rejectClose: false }))) return;
         const { rollAbilityTotals } = await import("./ability-roll.mjs");

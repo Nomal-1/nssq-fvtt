@@ -6,7 +6,7 @@
  * 거래는 채팅에 기록한다.
  */
 import {
-  MAX_RANK, allocateMaterials, buyPrice, canRefine, equipmentMaterialCandidates, exceedsOwnLimit, itemMaterialCandidates,
+  MAX_RANK, allocateMaterials, armorStats, buyPrice, canEquip, canRefine, weaponStats, equipmentMaterialCandidates, exceedsOwnLimit, itemMaterialCandidates,
   isPhysical, isStored, refinePrice, sellPrice, stackKey
 } from "../engine/equipment.mjs";
 import tables from "../generated/tables.mjs";
@@ -144,6 +144,8 @@ class ShopApp extends Application {
     this.ranks = {};
     this.qty = {};
     this.docs = null;
+    // 이 캐릭터가 장비할 수 있는 무기·방어구만 보기(기본 켬)
+    this.usableOnly = true;
   }
 
   static get defaultOptions() {
@@ -173,6 +175,28 @@ class ShopApp extends Application {
     const cap = game.user.isGM ? MAX_RANK : shopMaxRank();
     const docs = (await this.loadDocs()).filter((d) => game.user.isGM || (!hidden.has(d.uuid) && !(d.nssqCustom && isRanked(d) && (d.system.rank ?? 1) > cap)));
     const level = this.actor.system.level;
+    const { main, sub } = this.actor.system.classItems ?? {};
+    const classes = { main: main?.system ?? null, sub: sub?.system ?? null };
+    const hasClass = !!classes.main;
+    const usable = (d) => !hasClass || !["weapon", "armor"].includes(d.type) || canEquip(d, classes).ok;
+    const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+    const sub2 = (k) => game.i18n.localize(`NSSQ.Sub.${k}`);
+    // 마우스를 올리면 보이는 설명: 그 랭크의 성능 + 해설
+    const tipFor = (d, rank) => {
+      const out = [`<b>${esc(d.name)}</b>${rank ? ` R${rank}` : ""}`];
+      if (d.type === "weapon" && tables.weapons[d.system.weaponType]) {
+        const st = weaponStats(tables.weapons[d.system.weaponType], { rank: rank ?? 1, level });
+        out.push(["physHit", "elemHit", "physAtk", "elemAtk", "speed"].map((k) => `${sub2(k)} ${st[k] ?? 0}`).join(" · "));
+      } else if (d.type === "armor" && tables.armors[d.system.armorType]) {
+        const st = armorStats(tables.armors[d.system.armorType], { rank: rank ?? 1 });
+        out.push(["defense", "evasion", "speed"].map((k) => `${sub2(k)} ${st[k] ?? 0}`).join(" · "));
+      }
+      const desc = String(d.system.description ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+      if (d.system.effectText) out.push(esc(d.system.effectText));
+      if (desc) out.push(esc(desc.length > 300 ? `${desc.slice(0, 300)}…` : desc));
+      if (!usable(d)) out.push(`<i>${esc(L("notUsable"))}</i>`);
+      return `<div class="nssq-shop-tip">${out.join("<br>")}</div>`;
+    };
     const rankDefault = Math.min(cap, Math.max(1, level));
     const rowFor = (d) => {
       const ranked = isRanked(d);
@@ -188,6 +212,8 @@ class ShopApp extends Application {
         custom: !!d.nssqCustom,
         hidden: hidden.has(d.uuid),
         materials: mats && (table ? `${mats} R${rank}+` : mats),
+        tip: tipFor(d, rank),
+        unusable: !usable(d),
         info: d.system.effectText ?? ""
       };
     };
@@ -222,7 +248,8 @@ class ShopApp extends Application {
       canCreation: game.user.isGM || !this.actor.system.creation?.locked,
       isGM: game.user.isGM,
       open: shopOpen(),
-      tabs: TABS.map(([type, label]) => ({ type, label, rows: docs.filter((d) => d.type === type).map(rowFor) })),
+      tabs: TABS.map(([type, label]) => ({ type, label, rows: docs.filter((d) => d.type === type && (!this.usableOnly || usable(d))).map(rowFor) })),
+      hasClass, usableOnly: this.usableOnly,
       noPacks: !docs.length
     };
   }
@@ -230,6 +257,7 @@ class ShopApp extends Application {
   activateListeners(html) {
     super.activateListeners(html);
     html.on("change", "[name=creation]", (ev) => { this.creation = ev.currentTarget.checked; this.render(); });
+    html.on("change", "[name=usableOnly]", (ev) => { this.usableOnly = ev.currentTarget.checked; this.render(); });
     html.on("change", "[data-rank]", (ev) => {
       this.ranks[ev.currentTarget.dataset.rank] = Math.clamp(Number(ev.currentTarget.value) || 1, 1, game.user.isGM ? MAX_RANK : shopMaxRank());
       this.render();

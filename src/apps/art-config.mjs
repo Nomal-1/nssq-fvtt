@@ -92,21 +92,16 @@ async function renderToken(src, crop, color) {
 
 /** 전열·후열 토큰 그림을 월드 폴더에 올린다 → { front, back } 경로 */
 async function uploadTokens(actor, src, crop) {
-  const dir = `worlds/${game.world.id}/nssq-tokens`;
-  try {
-    await FilePicker.createDirectory("data", dir);
-  } catch {
-    // 이미 있음
-  }
+  const { uploadImage } = await import("./upload.mjs");
   const stamp = Date.now().toString(36);
   const out = {};
   for (const row of ["front", "back"]) {
     const blob = await renderToken(src, crop, ROW_COLOR[row]);
     if (!blob) return null;
-    const file = new File([blob], `${actor.id}-${stamp}-${row}.webp`, { type: "image/webp" });
-    const res = await FilePicker.upload("data", dir, file, {}, { notify: false });
-    if (!res?.path) return null;
-    out[row] = res.path;
+    // 업로드 권한이 없는 플레이어는 GM이 대신 올린다(upload.mjs)
+    const path = await uploadImage(blob, `${actor.id}-${stamp}-${row}.webp`);
+    if (!path) return null;
+    out[row] = path;
   }
   return out;
 }
@@ -125,6 +120,8 @@ export async function applyRowToken(actor) {
 }
 
 export async function openArtConfig(actor) {
+  // 서버 파일 고르기는 둘러보기 권한이 있을 때만(없는 플레이어는 [올리기]만)
+  const canBrowse = game.user.can("FILES_BROWSE");
   if (!actor?.isOwner) return;
   const start = artOf(actor);
   // 편집 중인 상태
@@ -145,7 +142,7 @@ export async function openArtConfig(actor) {
         <div class="art-thumb" data-thumb></div>
         <div class="art-base-info">
           <b>${L("base")}</b><p class="notes">${L("baseHint")}</p>
-          <div class="art-row"><button type="button" data-pick="full"><i class="fas fa-image"></i> ${L("pickFull")}</button>
+          <div class="art-row"><button type="button" data-upload="full" class="go"><i class="fas fa-upload"></i> ${L("uploadFull")}</button>${canBrowse ? `<button type="button" data-pick="full"><i class="fas fa-image"></i> ${L("pickFull")}</button>` : ""}
             <button type="button" data-clear="full" title="${L("useActorImg")}"><i class="fas fa-undo"></i></button></div>
           <div class="art-path" data-path="full"></div>
         </div>
@@ -166,7 +163,7 @@ export async function openArtConfig(actor) {
         <div class="art-col">
           <h4>${L("face")}</h4>
           <div class="art-frame face" data-frame="face"></div>
-          <div class="art-row"><button type="button" data-pick="face"><i class="fas fa-user"></i> ${L("pickFace")}</button>
+          <div class="art-row"><button type="button" data-upload="face"><i class="fas fa-upload"></i> ${L("uploadFace")}</button>${canBrowse ? `<button type="button" data-pick="face"><i class="fas fa-user"></i> ${L("pickFace")}</button>` : ""}
             <button type="button" data-clear="face" title="${L("useFull")}"><i class="fas fa-undo"></i></button></div>
           <div class="art-path" data-path="face"></div>
           <button type="button" data-reset="face"><i class="fas fa-crop-alt"></i> ${L("resetFrame")}</button>
@@ -230,6 +227,23 @@ export async function openArtConfig(actor) {
           }
         }).render(true);
       }));
+      // 이 컴퓨터에서 올리기(업로드 권한이 없으면 GM이 대신 올림)
+      root.querySelectorAll("[data-upload]").forEach((b) => b.addEventListener("click", async () => {
+        const key = b.dataset.upload;
+        const up = await import("./upload.mjs");
+        const file = await up.pickLocalImage();
+        if (!file) return;
+        b.disabled = true;
+        try {
+          const blob = await up.shrinkImage(file);
+          const path = blob ? await up.uploadImage(blob, `${actor.id}-${Date.now().toString(36)}-${key}.webp`) : null;
+          if (path) {
+            st[key] = path;
+            if (key === "full") st.fullUploaded = true;
+            if (key === "face") st.faceCrop = { x: 50, y: 50, s: 1 };
+          }
+        } finally { b.disabled = false; refresh(html); }
+      }));
       root.querySelectorAll("[data-clear]").forEach((b) => b.addEventListener("click", () => {
         st[b.dataset.clear] = "";
         if (b.dataset.clear === "face") st.faceCrop = { ...DEFAULT_CROP.face };
@@ -255,6 +269,8 @@ export async function openArtConfig(actor) {
     console.warn("NSSQ | token upload", e);
   }
   if (token) update["system.art"].token = token;
+  // 새로 올린 전신 그림은 캐릭터 그림(액터 이미지)으로도 쓴다
+  if (st.fullUploaded && st.full) update.img = st.full;
   else ui.notifications.warn(L("tokenUploadFailed"));
   await actor.update(update);
   if (token) await applyRowToken(actor);
