@@ -427,8 +427,7 @@ export class TownApp extends Application {
   async onFacility(act, fid, mapId) {
     const t = this.shownTown();
     const f = t?.facilities.find((x) => x.id === fid);
-    const mine = game.user.character ?? game.actors.find((a) => a.type === "character" && a.isOwner && !game.user.isGM) ?? null;
-    const pickActor = async () => mine ?? (game.user.isGM ? this.pickPartyActor() : null);
+    const pickActor = () => this.pickPartyActor();
     switch (act) {
       case "sheet": { const a = await pickActor(); return a ? a.sheet.render(true) : ui.notifications.warn(L("noCharacter")); }
       case "tree": { const a = await pickActor(); if (!a) return ui.notifications.warn(L("noCharacter")); return (await import("./skill-tree.mjs")).SkillTree.open(a); }
@@ -446,11 +445,15 @@ export class TownApp extends Application {
   }
 
   /** GM: 파티 중 누구로 열지 */
+  /** 누구로 열지: GM은 파티 중에서, 플레이어는 자기 캐릭터(대기 제외) 중에서. 둘 이상이면 고른다(처음 선택은 대표 캐릭터) */
   async pickPartyActor() {
-    const party = (await import("./gm-screen.mjs")).partyActors();
-    if (party.length <= 1) return party[0] ?? null;
+    const party = game.user.isGM
+      ? (await import("./gm-screen.mjs")).partyActors()
+      : game.actors.filter((a) => a.type === "character" && a.isOwner && !a.getFlag("nssq", "benched"));
+    if (party.length <= 1) return party[0] ?? (game.user.isGM ? null : game.user.character ?? null);
+    const cur = game.user.character?.id ?? "";
     return Dialog.prompt({
-      title: L("pickActor"), content: `<form><select name="a">${party.map((a) => opt(a.id, "", a.name)).join("")}</select></form>`,
+      title: L("pickActor"), content: `<form><select name="a">${party.map((a) => opt(a.id, cur, a.name)).join("")}</select></form>`,
       label: L("ok"), rejectClose: false, callback: (html) => game.actors.get(html[0].querySelector("[name=a]").value)
     });
   }
