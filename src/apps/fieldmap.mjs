@@ -65,10 +65,11 @@ export function newMap(name) {
 /* ---------------- 진행(GM) ---------------- */
 
 /** 시각(낮·밤 설정)과 임페리얼 오버히트(세그먼트당 −1) */
-async function passTime(hour, segs) {
+async function passTime(hour, segs, opts = {}) {
   const tod = timeOfDayAt(hour);
   if (tod !== game.settings.get("nssq", "timeOfDay")) await game.settings.set("nssq", "timeOfDay", tod);
-  if (segs > 0) await (await import("./dungeon.mjs")).coolOverheat(segs);
+  // 1세그먼트 = 1시간: 독·자연 회복·심도·오버히트(07 #164)
+  if (segs > 0) await (await import("./time-pass.mjs")).timePasses(segs, opts);
 }
 
 export async function startProgress(mapId, hour) {
@@ -131,8 +132,8 @@ async function settleMappingBeforeStep() {
   }
 }
 
-/** 세그먼트 진행 공통. opts: { to } 이동 / { segments } 그 자리 */
-async function step(opts) {
+/** 세그먼트 진행 공통. opts: { to } 이동 / { segments } 그 자리. tick: 시간 경과 옵션(timePasses) */
+async function step(opts, tick = {}) {
   const map = activeMap();
   if (!map) return null;
   await settleMappingBeforeStep();
@@ -141,7 +142,7 @@ async function step(opts) {
   const r = FM.advance(map, s0, opts);
   if (r.error) { ui.notifications.warn(L(r.error)); return null; }
   await setMapState(r.state);
-  await passTime(r.state.hour, r.state.segment - s0.segment);
+  await passTime(r.state.hour, r.state.segment - s0.segment, tick);
   return { map, ...r };
 }
 
@@ -164,8 +165,8 @@ async function activateLinked(map, areaId) {
 }
 
 /** 그 자리에서 n세그먼트(채집·조사·캠프·지도 작성 실패 등) */
-export async function wait(segments = 1, label = "") {
-  const r = await step({ segments });
+export async function wait(segments = 1, label = "", tick = {}) {
+  const r = await step({ segments }, tick);
   if (!r) return null;
   await post(`<h3>${esc(clock(r.state))}</h3><p>${esc(label || L("waited", { n: segments }))}</p>`);
   await handleEncounters(r.map, r.encounters);
@@ -196,8 +197,10 @@ export async function campHere() {
     title: L("campTitle"), content: `<form><div class="form-group"><label>${esc(L("campSegments"))}</label><input type="number" name="n" min="1" value="6"/></div></form>`,
     label: L("camp"), rejectClose: false, callback: (html) => Math.max(1, Number(html[0].querySelector("[name=n]").value) || 6)
   });
-  if (!n || !(await wait(n, L("camping", { n })))) return;
-  return (await import("./explore.mjs")).openCampDialog({ hours: n });
+  // 《약효 요리》를 할 수 있으면 캠프 카드가 먼저 고치므로 그동안 상태 이상은 진행하지 않는다
+  const { canCookCure } = await import("./explore.mjs");
+  if (!n || !(await wait(n, L("camping", { n }), { noAilments: await canCookCure() }))) return;
+  return (await import("./explore.mjs")).openCampDialog({ hours: n, timePassed: true });
 }
 
 /** 시간이 흐르지 않는 이동(트리거·GM) */

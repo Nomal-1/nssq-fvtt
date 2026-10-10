@@ -3,7 +3,7 @@
  * 결과는 채팅 카드(nssq.explore): 사람마다 【HP】·【TP】 변화. 자동 적용 「즉시」면 바로, 아니면 GM [적용]/[되돌리기]
  */
 import { campAmbush, campRecovery, trapDamage } from "../engine/explore.mjs";
-import { CONDITIONS } from "../engine/conditions.mjs";
+import { CONDITIONS, isPetrified } from "../engine/conditions.mjs";
 import { autoApplyMode, isActiveGM } from "../combat/apply.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Explore.${k}`, d) : game.i18n.localize(`NSSQ.Explore.${k}`));
@@ -19,6 +19,12 @@ async function party() {
 }
 
 /* ---------------- 캠프 ---------------- */
+
+/** 이번 캠프에서 《약효 요리》를 할 수 있나(그 스킬을 가진 사람과 『조리기구 세트』) */
+export async function canCookCure(members = null) {
+  const list = (members ?? (await party())).filter((a) => !isPetrified(a));
+  return list.some((a) => hasTool(a, COOK_TOOL)) && list.some((a) => flagOf(a, "campCookCure"));
+}
 
 export async function openCampDialog(defaults = {}) {
   if (!game.user.isGM) return;
@@ -37,13 +43,14 @@ export async function openCampDialog(defaults = {}) {
   }, { classes: ["nssq", "dialog"] });
   if (!got) return;
   if (!got.food) return ui.notifications.warn(L("needFood"));
-  return camp({ ...got, members, tent });
+  return camp({ ...got, members, tent, timePassed: !!defaults.timePassed });
 }
 
 /**
- * @param {{ hours, danger, food: "actorId.itemId", members: Actor[], tent: number }} p
+ * @param {{ hours, danger, food: "actorId.itemId", members: Actor[], tent: number, timePassed?: boolean }} p
+ *   timePassed: 시간 경과(독·자연 회복·오버히트)를 이미 처리함(필드 지도의 캠프 세그먼트)
  */
-export async function camp({ hours, danger, food, members, tent = 0 }) {
+export async function camp({ hours, danger, food, members, tent = 0, timePassed = false }) {
   // 식료품 1개(캠프 1번에 1개, 07 #141)
   const [aid, iid] = String(food).split(".");
   const fa = game.actors.get(aid);
@@ -60,11 +67,15 @@ export async function camp({ hours, danger, food, members, tent = 0 }) {
     amb = campAmbush(r.dice[0].results.map((x) => x.result), eff);
   }
   // 요리는 그 스킬을 가진 사람과 조리기구 세트가 파티에 있으면 모두에게, 《캠프 마스터》는 파티에서 가장 큰 것(07 #142)
-  const cookTool = members.some((a) => hasTool(a, COOK_TOOL));
-  const cookHp = cookTool && members.some((a) => flagOf(a, "campCookHp"));
-  const cookTp = cookTool && members.some((a) => flagOf(a, "campCookTp"));
-  const cookCure = cookTool && members.some((a) => flagOf(a, "campCookCure"));
-  const campHeal = Math.max(0, ...members.map((a) => Number(a.system.equipment?.mods?.campHeal) || 0));
+  // [석화] 중인 캐릭터의 탐색 스킬·도구는 쓰지 않는다(07 #164)
+  const able = members.filter((a) => !isPetrified(a));
+  const cookTool = able.some((a) => hasTool(a, COOK_TOOL));
+  const cookHp = cookTool && able.some((a) => flagOf(a, "campCookHp"));
+  const cookTp = cookTool && able.some((a) => flagOf(a, "campCookTp"));
+  const cookCure = cookTool && able.some((a) => flagOf(a, "campCookCure"));
+  // 캠프 시간만큼 탐색 시간이 지난다(07 #164). 《약효 요리》가 있으면 상태 이상은 이 카드가 고치므로 진행하지 않는다
+  if (!timePassed) await (await import("./time-pass.mjs")).timePasses(hours, { noAilments: cookCure });
+  const campHeal = Math.max(0, ...able.map((a) => Number(a.system.equipment?.mods?.campHeal) || 0));
   const rows = amb.ambush ? [] : members.map((a) => {
     const rec = campRecovery({ hours, level: a.system.level, campHeal, cookHp, cookTp });
     return { uuid: a.uuid, name: a.name, hp: rec.hp, tp: rec.tp, cure: cookCure, overheat: !!a.getFlag("nssq", "overheat"), before: null };

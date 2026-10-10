@@ -143,7 +143,7 @@ export async function confusedAction(combat, combatant) {
 
 /* ---------------- 종료 페이즈 ---------------- */
 
-async function roll2d6(rolls) {
+export async function roll2d6(rolls) {
   const r = await new Roll("2d6").evaluate();
   rolls.push(r);
   return r.dice[0].results.map((x) => x.result);
@@ -157,7 +157,7 @@ function poisonPower(combat, cond) {
 
 const isHidden = (actor) => !knowsEnemy(actor);
 
-function logLine(entry) {
+export function logLine(entry) {
   switch (entry.step) {
     case "poison": return L("logPoison", { n: entry.damage });
     case "effects": return L(entry.resource === "hp" ? "logRegenHp" : "logRegenTp", { n: entry.amount });

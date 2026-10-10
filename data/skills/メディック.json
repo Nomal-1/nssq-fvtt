@@ -480,7 +480,8 @@
     {
      "type": "cure",
      "conditions": "all",
-     "kind": "ailment"
+     "kind": "ailment",
+     "count": "SL"
     }
    ],
    "review": "ok"

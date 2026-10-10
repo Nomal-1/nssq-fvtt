@@ -18,7 +18,7 @@ import { inRange, pickRandom } from "../engine/combat.mjs";
 import { autoApplyMode, isActiveGM } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 import { actionState, onInflicted } from "./turn-status.mjs";
-import { buffLabel, conditionName } from "./status.mjs";
+import { buffLabel, conditionLabel, conditionName } from "./status.mjs";
 import { knowsEnemy, recordBestiary } from "./bestiary.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { decorateReactions, hasPendingReaction, pendingReaction } from "./reaction.mjs";
@@ -411,6 +411,34 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   return message;
 }
 
+/** 해제 수가 정해진 해제 효과: 대상에게 걸린 것이 더 많으면 무엇을 풀지 고른다 → cure.pick(id 목록) */
+async function pickCures(entries) {
+  for (const e of entries) {
+    const target = e.uuid ? fromUuidSync(e.uuid) : null;
+    if (!target) continue;
+    for (const c of e.cures ?? []) {
+      if (c.count === undefined || c.kind === "debuff" || c.kind === "buff") continue;
+      const match = (target.system.conditions ?? []).filter((x) => (c.conditions === "all" || c.conditions?.includes(x.id)) && (!c.kind || CONDITIONS[x.id]?.kind === c.kind));
+      if (match.length <= c.count) continue;
+      const boxes = match.map((x, i) => `<label class="choice"><input type="checkbox" name="c" value="${esc(x.id)}" ${i < c.count ? "checked" : ""}/> ${esc(conditionLabel(x))}</label>`).join("");
+      const got = await Dialog.prompt({
+        title: L("curePickTitle", { name: e.name }),
+        content: `<form><p>${esc(L("curePick", { n: c.count }))}</p><div>${boxes}</div></form>`,
+        label: L("curePickGo"), rejectClose: false,
+        render: (html) => {
+          // 정한 수까지만 고를 수 있게
+          const list = [...html[0].querySelectorAll("[name=c]")];
+          const sync = () => { const n = list.filter((x) => x.checked).length; list.forEach((x) => { x.disabled = !x.checked && n >= c.count; }); };
+          list.forEach((x) => x.addEventListener("change", sync));
+          sync();
+        },
+        callback: (html) => [...html[0].querySelectorAll("[name=c]:checked")].map((x) => x.value)
+      }, { classes: ["nssq", "dialog"] });
+      c.pick = (got ?? match.map((x) => x.id)).slice(0, c.count);
+    }
+  }
+}
+
 /** 두 번째 주행동을 같은 스킬로: 추가 주행동을 쓰고 코스트를 한 번 더(대상이 쓰러졌으면 다시 고른다) */
 async function repeatExtraAction(combat, combatant, item, targets, post) {
   const actor = combatant.actor;
@@ -617,6 +645,8 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const empty = (e) => !e.hits.length && !e.damage && !e.heal?.hp && !e.heal?.tp && !e.revive && !e.sleepBroken && !e.extra
     && ![e.inflicts, e.buffs, e.cures, e.resource, e.states, e.stances].some((l) => l?.length);
   for (let i = entries.length - 1; i >= 0; i--) if (empty(entries[i]) && entries.length > 1) entries.splice(i, 1);
+  // 「(SL)개까지 해제」(《리프레시》): 걸린 것이 더 많으면 사용자가 고른다(07 #164). 에너미는 걸린 순서대로
+  if (actor.type !== "enemy" && !r.failed) await pickCures(entries);
   // 아군 반동(《레기온 스러스트》 「자신 외 아군 전원」)·아군 회복(《블랙 사바스》 「아군 전체」)
   if (!r.failed && (r.allyRecoil || r.allyHeal) && combatant?.combat) {
     const mates = combatant.combat.combatants.filter((c) => alive(c) && friendly(c.actor, actor) && c.actor.type !== "token");
@@ -835,7 +865,7 @@ function entryLines(e, card) {
     if (x.forceRow) out.push(`<li class="${x.resisted ? "resist" : "inflict"}">${esc(L(x.resisted ? "forceRowResisted" : "forceRow", { row: game.i18n.localize(`NSSQ.Row.${x.forceRow}`) }))}${x.fixed ? `<div class="supp-roll">${rollText({ fixed: x.fixed })}</div>` : ""}</li>`);
     if (x.spread) out.push(`<li class="${x.spread.won ? "inflict" : "resist"}">${esc(L(x.spread.won ? "spreadWon" : "spreadLost", { label: x.spread.ids.map(condLabel).join("") || "-" }))}<div class="supp-roll">${rollText({ contest: x.spread })}</div></li>`);
   }
-  for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}${c.count !== undefined ? ` ${esc(L("cureCount", { n: c.count }))}` : ""}</li>`);
+  for (const c of e.cures ?? []) out.push(`<li class="cure">${esc(L(`cure.${c.kind ?? "all"}`))}${c.pick ? `: ${esc(c.pick.map(conditionName).join(", "))}` : c.count !== undefined ? ` ${esc(L("cureCount", { n: c.count }))}` : ""}</li>`);
   for (const x of e.resource ?? []) if (x.chanceFailed && !x.seq) out.push(chanceLi(x));
   return out.join("");
 }
@@ -896,7 +926,8 @@ async function applyEntry(actor, e, sourceUuid, meta = {}) {
   for (const c of e.cures ?? []) {
     if (c.kind === "debuff" || c.kind === "buff") continue;
     const match = (x) => (c.conditions === "all" || c.conditions?.includes(x.id)) && (!c.kind || CONDITIONS[x.id]?.kind === c.kind);
-    // 「(SL)개까지」: 걸린 순서대로 count개
+    // 「(SL)개까지」: 사용자가 고른 것(pick), 없으면 걸린 순서대로 count개
+    if (c.pick) { conds = conds.filter((x) => !(match(x) && c.pick.includes(x.id))); continue; }
     let left = c.count ?? Infinity;
     conds = conds.filter((x) => !(match(x) && left-- > 0));
   }

@@ -66,7 +66,9 @@ function skillGroups(actor, items, filter = "all") {
     unique: !!s.system.unique, skillKey: s.system.skillKey, usage: skillUsage(s.system),
     // 자동화할 수 없어 GM 개입이 반드시 필요한 스킬(review "gm")
     gm: s.system.review === "gm", gmNote: s.system.effectsNote ?? "",
-    optional: hasOptional(s.system.effects) || s.system.timing === "수동", autoKey: autoKey(s.system.key), auto: !!auto[autoKey(s.system.key)],
+    optional: hasOptional(s.system.effects) || s.system.timing === "수동",
+    // 필드에서 쓸 수 있는 『회복』 주행동 스킬(07 #164)
+    fieldUse: s.system.timing === "주행동" && s.system.category === "회복" && !!s.system.effects?.length, autoKey: autoKey(s.system.key), auto: !!auto[autoKey(s.system.key)],
     prereq: (s.system.prereqs?.all ?? []).map((p) => (p.any ? p.any.map((q) => `${q.skill} ${q.sl}`).join(" / ") : `${p.skill} ${p.sl}`)).join(" + ")
   });
   const groups = [];
@@ -193,6 +195,28 @@ async function pickItemTargets(actor, item) {
   });
 }
 
+/**
+ * 필드에서 『회복』 스킬 사용(07 #164, 사용자 결정): 전투 밖에서만. TP를 내고 파티원을 대상으로 효과를 해석해 결과 카드
+ * (적용은 자동 적용 설정대로). 행동 불가 상태 이상([석화]·[수면] 등)·그 부위 봉인이면 쓸 수 없다
+ */
+async function useSkillField(actor, item) {
+  const N = (k, d) => (d ? game.i18n.format(`NSSQ.Skill.${k}`, d) : game.i18n.localize(`NSSQ.Skill.${k}`));
+  if (game.combat?.started && game.combat.combatants.some((c) => c.actor?.uuid === actor.uuid)) return ui.notifications.warn(N("fieldInCombat"));
+  const { CONDITIONS } = await import("../engine/conditions.mjs");
+  const { PART_BIND } = await import("../engine/effects/usage.mjs");
+  const conds = actor.system.conditions ?? [];
+  const stuck = conds.find((c) => CONDITIONS[c.id]?.noAction);
+  if (stuck || (actor.system.hp?.value ?? 0) <= 0) return ui.notifications.warn(N("fieldCannot", { name: actor.name }));
+  if (PART_BIND[item.system.part] && conds.some((c) => c.id === PART_BIND[item.system.part])) return ui.notifications.warn(N("fieldBound", { name: item.name }));
+  const tp = item.system.cost?.tp ?? 0;
+  if (tp > (actor.system.tp?.value ?? 0)) return ui.notifications.warn(N("fieldNoTp", { name: item.name }));
+  const targets = await pickItemTargets(actor, item);
+  if (!targets?.length) return;
+  if (tp) await actor.update({ "system.tp.value": (actor.system.tp?.value ?? 0) - tp });
+  const { resolveAndPost } = await import("../combat/skill-use.mjs");
+  return resolveAndPost({ actor, combatant: null, item, kind: "skill", units: targets.map((a) => ({ actor: a, combatant: null })), mainAction: false });
+}
+
 /** 장비: 장비 가능 판정 → 같은 슬롯 비우기 → 장비. GM은 Shift로 판정 무시 */
 async function equip(actor, item, slot, force = false) {
   const { main, sub } = actor.system.classItems;
@@ -226,6 +250,11 @@ export function activateInventoryListeners(sheet, html) {
     ev.preventDefault();
     const item = itemOf(ev);
     if (item) useItem(actor, item);
+  });
+  html.on("click", "[data-action=skill-field-use]", (ev) => {
+    ev.preventDefault();
+    const item = itemOf(ev);
+    if (item) useSkillField(actor, item);
   });
   html.on("click", "[data-action=store]", (ev) => {
     ev.preventDefault();

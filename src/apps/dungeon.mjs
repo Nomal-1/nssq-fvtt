@@ -48,14 +48,6 @@ export async function startDungeon({ name, level, depth, hour }) {
 
 const nextButton = () => `<button type="button" data-dungeon="next"><i class="fas fa-forward"></i> ${esc(L("next"))}</button>`;
 
-/** 임페리얼의 오버히트는 1턴(1세그먼트)당 1 회복 */
-export async function coolOverheat(n = 1) {
-  for (const a of await party()) {
-    const v = Number(a.getFlag("nssq", "overheat") ?? 0);
-    if (v > 0) await (v > n ? a.setFlag("nssq", "overheat", v - n) : a.unsetFlag("nssq", "overheat"));
-  }
-}
-
 /** 1턴 진행 → 이벤트 */
 export async function nextEvent() {
   const st = dungeonState();
@@ -66,7 +58,8 @@ export async function nextEvent() {
   await setState({ ...st, hour, done });
   const tod = timeOfDayAt(hour);
   if (tod !== game.settings.get("nssq", "timeOfDay")) await game.settings.set("nssq", "timeOfDay", tod);
-  await coolOverheat(1);
+  // 1턴 = 1시간: 독·자연 회복·심도·오버히트(07 #164)
+  await (await import("./time-pass.mjs")).timePasses(1);
   const roll = await new Roll("2d6").evaluate();
   const ev = eventFor(roll.total);
   const members = await party();

@@ -285,6 +285,7 @@
       "contestWinner": "{name} 승리",
       "contestTargetNote": "대항 판정: {name}의 달성값 {total}이 목표값이다. 같으면 이쪽이 이긴다.",
       "contestLine": "{passive} {total} / 목표값 {target}({active}의 달성값)",
+      "petrified": "[석화]: 판정할 수 없어 실패",
       "notEnoughFPReroll": "다시 굴리려면 【FP】 {cost}이 필요하다.",
       "rerollHint": "【FP】 1 소모, 판정당 1회. 다시 굴리면 이 판정의 1로는 【FP】를 얻지 않는다.",
       "confirm": "확정",
@@ -713,6 +714,12 @@
     },
     "Skill": {
       "auto": "자동",
+      "fieldUse": "사용",
+      "fieldUseHint": "전투 밖에서 쓴다(TP를 낸다). 대상은 파티원",
+      "fieldInCombat": "전투 중에는 전투 화면에서 쓴다.",
+      "fieldCannot": "{name}은(는) 지금 행동할 수 없다.",
+      "fieldBound": "봉인 때문에 《{name}》을(를) 쓸 수 없다.",
+      "fieldNoTp": "【TP】가 모자라 《{name}》을(를) 쓸 수 없다.",
       "autoHint": "선언형·수동 스킬: 켜면 조건이 맞을 때 묻지 않고 자동으로 사용한다(끄면 그때마다 팝업·버튼)",
       "autoChase": "『추격』 자동",
       "autoChaseHint": "『추격: ○』 강화를 받았을 때, 켜면 ○가 공격하면 묻지 않고 자동으로 추격한다(끄면 그때마다 버튼)",
@@ -955,6 +962,11 @@
       "buffReplaced": "{name}: {kind}는 3종류까지라 {other}이(가) 사라지고 {label}이(가) 걸렸다",
       "blocked": "{name}: [{by}] 중이라 [{label}]은(는) 걸리지 않는다"
     },
+    "TimePass": {
+      "title": "탐색 시간 {n}시간 경과: 상태 이상",
+      "hour": "{h}시간째:",
+      "speaker": "탐색"
+    },
     "Turn": {
       "openingTitle": "개막 페이즈 판정([혼란]·[마비]·[공포])",
       "inflictTitle": "부여 순간 판정",
@@ -1081,6 +1093,9 @@
       "done": "효과 데이터 갱신: {n}개 바뀜"
     },
     "SkillUse": {
+      "curePickTitle": "{name}: 해제할 상태 이상",
+      "curePick": "{n}개까지 고른다.",
+      "curePickGo": "해제",
       "repeatExtra": "{name}: 두 번째 주행동도 《{skill}》",
       "repeatNoCost": "코스트가 모자라 《{skill}》를 한 번 더 쓰지 못했다.",
       "skillTitle": "{name}의 스킬",

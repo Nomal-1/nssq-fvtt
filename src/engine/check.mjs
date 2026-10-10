@@ -28,7 +28,9 @@ export function defaultSelection(dice) {
  * @param {number} [s.added]      【FP】로 추가한 주사위 수
  * @param {boolean} [s.rerolled]  【FP】로 다시 굴렸는가
  */
-export function evaluateCheck({ dice, selected, modifier = 0, target = null, added = 0, rerolled = false }) {
+export function evaluateCheck({ dice, selected, modifier = 0, target = null, added = 0, rerolled = false, forcedFail = false }) {
+  // 굴리지 않고 실패([석화] 중 필드 판정, 07 #164): 절대 실패처럼 다룬다(【FP】는 얻지 않는다)
+  if (forcedFail) return { selected: [], used: [], sum: 0, total: 0, absSuccess: false, absFailure: true, success: false, fpGain: 0 };
   const sel = selected?.length === 2 ? selected : defaultSelection(dice);
   const used = sel.map((i) => dice[i]);
   const sum = used[0] + used[1];

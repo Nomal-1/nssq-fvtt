@@ -28,7 +28,8 @@ export function checkModsHtml(actor, { kinds: preset = [] } = {}) {
     const ok = canPay(actor, i.system.cost);
     return `<label class="choice"><input type="checkbox" name="declare" value="${i.id}" ${ok ? "" : "disabled"}/> 《${esc(i.name)}》 +${e.value}${e.ability ? `(${esc(game.i18n.localize(`NSSQ.Ability.${e.ability}`))})` : ""} <small>${esc((e.kinds ?? []).map((k) => L(`kind.${k}`)).join("·"))} ${esc(costText(i.system.cost))}</small></label>`;
   }).join("");
-  const helpers = game.actors.filter((a) => a.type === "character" && a.id !== actor.id).flatMap((a) => skills(a, "checkAssist").map((i) => ({ a, i })));
+  // [석화] 중인 캐릭터는 도울 수 없다(07 #164)
+  const helpers = game.actors.filter((a) => a.type === "character" && a.id !== actor.id && !(a.system.conditions ?? []).some((c) => c.id === "petrify")).flatMap((a) => skills(a, "checkAssist").map((i) => ({ a, i })));
   const assist = helpers.map(({ a, i }) => {
     const ok = canPay(a, i.system.cost);
     return `<label class="choice"><input type="checkbox" name="assist" value="${a.uuid}|${i.id}" ${ok ? "" : "disabled"}/> ${esc(a.name)} 《${esc(i.name)}》 +${effOf(i, "checkAssist").value} <small>${esc(costText(i.system.cost))}</small></label>`;

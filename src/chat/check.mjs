@@ -72,6 +72,8 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
  * @param {object} o { ability, modifier, target, addDice, contestOf }
  */
 export async function rollCheck(actor, { ability = null, modifier = 0, target = null, addDice = 0, contestOf = null, rollMode = null, request = null, checkMods = null } = {}) {
+  // [석화] 중에는 판정을 굴리지 않고 실패(07 #164)
+  if ((actor.system.conditions ?? []).some((c) => c.id === "petrify")) return forcedFailure(actor, { ability, modifier, target, contestOf, rollMode, request });
   // 판정 종류별 보정·선언·도움(9-E): 코스트를 내고 보정·능력치 대체
   const cm = checkMods ? await applyCheckMods(actor, checkMods) : null;
   if (cm?.ability) ability = cm.ability;
@@ -101,6 +103,21 @@ export async function rollCheck(actor, { ability = null, modifier = 0, target = 
     sound: CONFIG.sounds.dice,
     flags
   };
+  ChatMessage.applyRollMode(data, rollMode ?? game.settings.get("core", "rollMode"));
+  return ChatMessage.create(data);
+}
+
+/** 굴리지 않은 실패 카드(같은 check 플래그라 판정 요청·지도 작성·대항이 그대로 읽는다) */
+async function forcedFailure(actor, { ability, modifier, target, contestOf, rollMode, request }) {
+  const state = {
+    actorUuid: actor.uuid, ability, bonus: ability ? actor.system.bonus?.[ability] ?? 0 : 0, modifier, target,
+    dice: [], selected: [], added: 0, rerolled: false, fpGained: 0, fpPending: 0, closed: true, forcedFail: true,
+    notes: [game.i18n.localize("NSSQ.Check.petrified")], request: request ? { note: request.note ?? "" } : null
+  };
+  const flags = { nssq: { check: state } };
+  if (contestOf) flags.nssq.contest = { of: contestOf };
+  if (request) flags.nssq.request = request;
+  const data = { speaker: ChatMessage.getSpeaker({ actor }), content: await renderCard(state, { contest: !!contestOf }), flags };
   ChatMessage.applyRollMode(data, rollMode ?? game.settings.get("core", "rollMode"));
   return ChatMessage.create(data);
 }
@@ -140,8 +157,8 @@ async function renderCard(state, { contest = false } = {}) {
     open: !state.closed && !state.rerolled,
     notes: state.notes ?? [],
     // 판정 뒤 조작(성패를 본 뒤, 각 1번): 《트릭스터》 눈 뒤집기·《호운의 가호》 1D6 추가
-    trick: !state.tricked && postSkill(fromUuidSync(state.actorUuid), "checkFlip")?.name,
-    fortune: !state.fortune && postSkill(fromUuidSync(state.actorUuid), "checkExtraDie")?.name
+    trick: !state.forcedFail && !state.tricked && postSkill(fromUuidSync(state.actorUuid), "checkFlip")?.name,
+    fortune: !state.forcedFail && !state.fortune && postSkill(fromUuidSync(state.actorUuid), "checkExtraDie")?.name
   };
   return renderTemplate(TEMPLATE, data);
 }

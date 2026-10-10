@@ -10,10 +10,14 @@ import { LAYOUT } from "../engine/formation.mjs";
 import { relayout } from "../combat/formation.mjs";
 import { enemyActorFor } from "./enemy-library.mjs";
 import { applyIdentify, identifyEnemy } from "../combat/identify.mjs";
+import { CONDITIONS } from "../engine/conditions.mjs";
 import { applyAutoIdentify, recordBestiary, recordSeen } from "../combat/bestiary.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+
+/** 전투가 끝나면 풀리는 것: [수면]·[스턴]·봉인 */
+const BATTLE_END_CLEAR = (id) => id === "sleep" || id === "stun" || CONDITIONS[id]?.kind === "bind";
 
 /* ---------------- 배치(격자 100px, 3000×2000) ---------------- */
 
@@ -324,16 +328,15 @@ export async function endBattle(combat, result = "abort") {
     });
     // 승리: 드롭 판정·갈무리 카드(단계 9-A). 전투를 지우기 전에(쓰러진 에너미·참가 캐릭터를 본다)
     if (result === "victory") await (await import("./loot.mjs")).startLoot(combat);
-    // 전투가 끝나면 아군(연결된 캐릭터)의 상태 이상·봉인·강화·약화를 푼다. [석화]만 남긴다(07 #46)
+    // 전투가 끝나면 아군(연결된 캐릭터)의 [수면]·[스턴]·봉인과 강화·약화를 푼다. 다른 상태 이상은 남는다(07 #46 사용자 결정 2026-10-10)
+    // 오버히트는 남아 탐색 시간으로 줄어든다(원문, apps/time-pass.mjs). 전투 고유 상태(무사의 자세 등)는 그 전투까지(07 #57)
     for (const c of combat.combatants) {
       const a = c.actor;
       if (!a || !c.token?.actorLink) continue;
-      const conds = (a.system.conditions ?? []).filter((x) => x.id === "petrify");
+      const conds = (a.system.conditions ?? []).filter((x) => !BATTLE_END_CLEAR(x.id));
       if (conds.length !== (a.system.conditions ?? []).length || (a.system.buffs ?? []).length) {
         await a.update({ "system.conditions": conds, "system.buffs": [] });
       }
-      // 오버히트·전투 고유 상태(무사의 자세 등)도 그 전투까지(07 #57)
-      if (a.getFlag("nssq", "overheat")) await a.unsetFlag("nssq", "overheat");
       if ((a.getFlag("nssq", "states") ?? []).length) await a.unsetFlag("nssq", "states");
     }
     // 전투 BGM 정지 → 원래 씬·음악

@@ -32,6 +32,7 @@
         <span class="nq-timing {{s.timingCls}}">{{s.timing}}</span>
         {{#if s.cost}}<span class="nq-cost">{{s.cost}}</span>{{/if}}
         {{#if s.gm}}<span class="nq-gm" title="{{localize 'NSSQ.Skill.gmHint'}}: {{s.gmNote}}"><i class="fas fa-user-tie"></i> {{localize "NSSQ.Skill.gm"}}</span>{{/if}}
+        {{#if s.fieldUse}}<a class="nq-auto nq-field-use" data-action="skill-field-use" title="{{localize 'NSSQ.Skill.fieldUseHint'}}"><i class="fas fa-hand-holding-medical"></i> {{localize "NSSQ.Skill.fieldUse"}}</a>{{/if}}
         {{#if s.optional}}<a class="nq-auto {{#if s.auto}}on{{/if}}" data-action="auto-trigger" data-key="{{s.autoKey}}" title="{{localize 'NSSQ.Skill.autoHint'}}"><i class="fas fa-bolt"></i> {{localize "NSSQ.Skill.auto"}}</a>{{/if}}
         <span class="nq-sl" title="{{#if s.prereq}}{{localize 'NSSQ.Skill.prereq'}}: {{s.prereq}}{{/if}}">SL {{s.sl}}{{#if s.max}}<em>/{{s.max}}</em>{{/if}}</span>
         {{#if @root.editable}}<a class="nq-ctl" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>{{/if}}

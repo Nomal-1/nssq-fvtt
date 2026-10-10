@@ -10,6 +10,7 @@
 import { GATHER_AMOUNT, judgeDrop, judgeGather, parseGatherTable, partyDropSkills, RANDOM_GATHER } from "../engine/loot.mjs";
 import { acquireItems } from "./acquire.mjs";
 import { recordBestiary } from "../combat/bestiary.mjs";
+import { isPetrified } from "../engine/conditions.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 
@@ -23,7 +24,8 @@ export async function startLoot(combat) {
   const foes = combat.combatants.filter((c) => c.actor?.type === "enemy" && (c.defeated || (c.actor.system.hp?.value ?? 0) <= 0));
   const party = combat.combatants.filter((c) => c.actor?.type === "character").map((c) => c.actor);
   const uniq = [...new Map(party.map((a) => [a.uuid, a])).values()];
-  const skills = partyDropSkills(uniq.map((a) => ({
+  // [석화] 중인 캐릭터의 탐색 스킬은 쓰지 않는다(07 #164)
+  const skills = partyDropSkills(uniq.filter((a) => !isPetrified(a)).map((a) => ({
     uuid: a.uuid, name: a.name,
     skills: a.items.filter((i) => i.type === "skill").map((i) => ({ name: i.name, sl: i.system.sl ?? 0, effects: i.system.effects ?? [] }))
   })));
@@ -79,8 +81,10 @@ export async function openGatherDialog(defaults = {}) {
 export async function startGather({ method, amount, rank, table, party }) {
   const base = GATHER_AMOUNT[amount] ?? GATHER_AMOUNT.little;
   const mods = (a) => a.system.equipment?.mods ?? {};
-  const extra = party.reduce((n, a) => n + (Number(mods(a)[METHOD_MOD[method]]) || 0) + (Number(mods(a)["gather.all"]) || 0), 0);
-  const skills = partyDropSkills(party.map((a) => ({
+  // [석화] 중인 캐릭터의 탐색 스킬·도구는 쓰지 않는다(07 #164)
+  const able = party.filter((a) => !isPetrified(a));
+  const extra = able.reduce((n, a) => n + (Number(mods(a)[METHOD_MOD[method]]) || 0) + (Number(mods(a)["gather.all"]) || 0), 0);
+  const skills = partyDropSkills(able.map((a) => ({
     uuid: a.uuid, name: a.name,
     skills: a.items.filter((i) => i.type === "skill").map((i) => ({ name: i.name, sl: i.system.sl ?? 0, effects: i.system.effects ?? [] }))
   })), "gather");

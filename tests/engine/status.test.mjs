@@ -15,25 +15,18 @@ describe("상태 이상·봉인", () => {
     expect(list[0].depth).toBe(12);
   });
 
-  it("상태 이상은 하나만: 다른 상태 이상은 새 것으로 덧씌운다(07 #35). 봉인은 부위마다 함께", () => {
+  it("서로 다른 상태 이상·봉인은 함께 걸린다(07 #35 사용자 결정)", () => {
     let list = addCondition([], { id: "poison", depth: 10 }).list;
     list = addCondition(list, { id: "bindArm", depth: 9 }).list;
-    list = addCondition(list, { id: "bindLeg", depth: 7 }).list;
     const r = addCondition(list, { id: "blind", depth: 8 });
-    expect(r.result).toBe("replaced");
-    expect(r.replaced.id).toBe("poison");
-    expect(r.list.map((c) => c.id)).toEqual(["bindArm", "bindLeg", "blind"]);
-    // 심도가 낮아도 다른 상태 이상이면 덧씌운다
-    expect(addCondition(r.list, { id: "poison", depth: 1 }).list.map((c) => c.id)).toEqual(["bindArm", "bindLeg", "poison"]);
-    // [스턴]은 함께 걸리고, [스턴]이 있어도 다른 상태 이상은 [스턴]을 지우지 않는다
-    const st = addCondition([{ id: "petrify", depth: null }], { id: "stun" });
-    expect(st.list.map((c) => c.id)).toEqual(["petrify", "stun"]);
-    // [석화]는 다른 상태 이상으로 덧씌워지지 않는다(스턴·봉인은 걸린다)
-    const pb = addCondition(st.list, { id: "sleep", depth: 9 });
-    expect(pb.result).toBe("blocked");
-    expect(pb.list.map((c) => c.id)).toEqual(["petrify", "stun"]);
-    expect(addCondition(st.list, { id: "bindLeg", depth: 9 }).list.map((c) => c.id)).toEqual(["petrify", "stun", "bindLeg"]);
-    expect(addCondition([{ id: "stun", depth: null }], { id: "sleep", depth: 9 }).list.map((c) => c.id)).toEqual(["stun", "sleep"]);
+    expect(r.result).toBe("added");
+    expect(r.list.map((c) => c.id)).toEqual(["poison", "bindArm", "blind"]);
+    // [석화] 중에도 다른 상태 이상이 걸린다
+    const p = addCondition([{ id: "petrify", depth: null }], { id: "sleep", depth: 9 });
+    expect(p.list.map((c) => c.id)).toEqual(["petrify", "sleep"]);
+    // 같은 것은 심도가 높을 때만 갱신(#5)
+    expect(addCondition(r.list, { id: "poison", depth: 3 }).result).toBe("ignored");
+    expect(addCondition(r.list, { id: "poison", depth: 12 }).result).toBe("updated");
   });
 
   it("석화·스턴은 심도를 기록하지 않는다", () => {
