@@ -1249,3 +1249,6 @@
 @keyframes fx-up { 0% { transform: translateY(40%); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-60%); opacity: 0; } }
 @keyframes fx-down { 0% { transform: rotate(180deg) translateY(40%); opacity: 0; } 30% { opacity: 1; } 100% { transform: rotate(180deg) translateY(-60%); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { #nssq-battle-fx .nb-fx { display: none; } }
+
+/* 지도 이름: 길면 줄바꿈 */
+.nssq-fieldmap .fm-panel textarea[data-path="name"] { min-height: 2.6em; height: auto; resize: vertical; white-space: pre-wrap; }

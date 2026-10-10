@@ -681,7 +681,7 @@ export class FieldMapApp extends Application {
     }
     const maps = allMaps();
     const toolbar = `<div class="fm-toolbar">
-      <select data-fm-map>${Object.values(maps).map((m) => opt(m.id, this.mapId, `${m.name}${st.active && st.mapId === m.id ? ` ${L("liveMark")}` : ""}`)).join("")}${map ? "" : opt("", "", L("noMaps"))}</select>
+      <select data-fm-map title="${esc(map?.name ?? "")}">${Object.values(maps).map((m) => opt(m.id, this.mapId, `${m.name}${st.active && st.mapId === m.id ? ` ${L("liveMark")}` : ""}`)).join("")}${map ? "" : opt("", "", L("noMaps"))}</select>
       <button type="button" data-fm-act="newMap"><i class="fas fa-plus"></i> ${esc(L("newMap"))}</button>
       <span class="fm-sep"></span>
       <button type="button" data-fm-act="modePlay" class="${this.mode === "play" ? "active" : ""}"><i class="fas fa-shoe-prints"></i> ${esc(L("modePlay"))}</button>
@@ -937,7 +937,7 @@ export class FieldMapApp extends Application {
       <p class="notes">${esc(L("f.route"))}: ${esc((f.route ?? []).map((id) => areaName(map, id)).join(" → ") || L("none"))}</p>
       <p><button type="button" data-fm-act="route" data-id="${f.id}">${esc(L(this.routeFoe === f.id ? "routeStop" : "routeSet"))}</button><button type="button" data-fm-act="routeClear" data-id="${f.id}">${esc(L("routeClear"))}</button></p></fieldset>`).join("");
     return `<h3>${esc(L("mapHead"))}</h3>
-      ${this.field("name", map.name, L("f.mapName"))}
+      ${this.field("name", map.name, L("f.mapName"), "textarea")}
       ${this.field("startHour", map.startHour ?? 8, L("startHour"), "num")}
       ${this.field("activateScene", map.activateScene, L("f.activateScene"), "bool")}
       <div class="form-group"><label>${esc(L("f.bg"))}</label><select data-path="bg.style">${opt("parchment", map.bg?.style, L("bg.parchment"))}${opt("image", map.bg?.style, L("bg.image"))}</select></div>
