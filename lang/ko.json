@@ -1980,7 +1980,7 @@
       "historyHint": "원하면 경력표(D666)를 3번 정도 굴리거나 직접 적는다. 인격과 배경을 정하면 완성이다.",
       "rollCareer": "경력표 굴리기(D666)",
       "careerHead": "경력표",
-      "historyFree": "직접 적기", "historyAdd": "추가",
+      "historyFree": "직접 적기", "simpleView": "간단히 보기(자세한 것은 마우스를 올리면)", "historyAdd": "추가",
       "remove": "지우기",
       "description": "인격·배경 메모",
       "check": {

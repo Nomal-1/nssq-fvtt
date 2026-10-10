@@ -1398,3 +1398,15 @@
 .nssq-shop .shop-row.unusable { opacity: 0.55; }
 .nssq-shop .shop-row:hover { background: rgba(231, 207, 138, 0.08); }
 #tooltip .nssq-shop-tip { max-width: 340px; text-align: left; line-height: 1.5; }
+/* 클래스 고르기: 간단히 보기 */
+.nssq-chargen .cg-classbar { display: flex; align-items: center; gap: 10px; padding: 6px 8px; margin-bottom: 4px; border: 1px solid var(--nq-line); border-radius: 6px; background: rgba(255,255,255,0.03); }
+.nssq-chargen .cg-classbar > span { flex: 1; }
+.nssq-chargen .cg-classbar b { color: var(--nq-gold-l); }
+.nssq-chargen .cg-classes.simple { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); }
+.nssq-chargen .cg-class.simple { align-items: center; padding: 6px; }
+.nssq-chargen .cg-class.simple img { width: 44px; height: 44px; flex-basis: 44px; }
+.nssq-chargen .cg-class.simple b { font-size: 1.1em; }
+.nssq-chargen .cg-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
+.nssq-chargen .cg-tags span { font-size: 0.75em; padding: 0 6px; border-radius: 8px; line-height: 1.5; }
+.nssq-chargen .cg-tags .cg-pos { background: rgba(224, 176, 40, 0.25); border: 1px solid #e0b028; }
+.nssq-chargen .cg-tags .cg-role { background: rgba(80, 160, 220, 0.2); border: 1px solid rgba(80, 160, 220, 0.6); }

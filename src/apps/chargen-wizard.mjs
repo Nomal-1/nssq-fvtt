@@ -138,23 +138,32 @@ export class ChargenWizard extends Application {
     const list = await classList();
     const s = this.actor.system;
     const { main, sub } = s.classItems;
+    // 간단히 보기(기본): 그림·이름·선호 진형·형태만. 자세한 것(능력치 보정·무기·방어구)은 마우스를 올리면
+    const simple = this.simpleClass ?? true;
     const card = (c, role) => {
       const sel = (role === "main" ? main : sub)?.system.key === c.system.key;
       const other = (role === "main" ? sub : main)?.system.key === c.system.key;
       const b = c.system.abilityBonus ?? {};
-      return `<button type="button" class="cg-class ${sel ? "selected" : ""}" data-cg-class="${role}" data-key="${esc(c.system.key)}" data-uuid="${c.uuid}" ${other ? "disabled" : ""}>
+      const statLine = ABILITIES.map((k) => `${ab(k)}+${b[k] ?? 0}`).join(" ");
+      const weaponLine = `${L("weapons")}: ${(c.system.weapons ?? []).join("·")}`;
+      const armorLine = `${L(role === "main" ? "armors" : "shieldOnly")}: ${role === "main" ? (c.system.armors ?? []).join("·") : (c.system.armors ?? []).includes("방패") ? "방패" : "—"}`;
+      const tags = `${c.system.position ? `<span class="cg-pos">${esc(c.system.position)}</span>` : ""}${(c.system.role ?? []).map((r) => `<span class="cg-role">${esc(r)}</span>`).join("")}`;
+      const tip = `<b>${esc(c.name)}</b><br>${role === "main" ? `${esc(statLine)}<br>` : ""}${esc(weaponLine)}<br>${esc(armorLine)}`;
+      return `<button type="button" class="cg-class ${simple ? "simple" : ""} ${sel ? "selected" : ""}" data-cg-class="${role}" data-key="${esc(c.system.key)}" data-uuid="${c.uuid}" ${other ? "disabled" : ""} ${simple ? `data-tooltip="${esc(tip)}"` : ""}>
         <img src="${esc(c.img)}"/><span class="txt"><b>${esc(c.name)}</b>
-        ${role === "main" ? `<small>${ABILITIES.map((k) => `${ab(k)}+${b[k] ?? 0}`).join(" ")}</small>` : ""}
-        <small>${esc(L("weapons"))}: ${esc((c.system.weapons ?? []).join("·"))}</small>
-        <small>${esc(L(role === "main" ? "armors" : "shieldOnly"))}: ${esc(role === "main" ? (c.system.armors ?? []).join("·") : (c.system.armors ?? []).includes("방패") ? "방패" : "—")}</small>
-        <small>${esc([...(c.system.role ?? []), c.system.position].filter(Boolean).join(" · "))}</small></span></button>`;
+        ${simple ? `<span class="cg-tags">${tags}</span>` : `${role === "main" ? `<small>${esc(statLine)}</small>` : ""}
+        <small>${esc(weaponLine)}</small>
+        <small>${esc(armorLine)}</small>
+        <small>${esc([...(c.system.role ?? []), c.system.position].filter(Boolean).join(" · "))}</small>`}</span></button>`;
     };
     const uniq = main ? await uniqueName(main.system.key) : null;
-    return `<h3>${esc(L("mainClass"))}</h3><div class="cg-classes">${list.map((c) => card(c, "main")).join("")}</div>
+    return `<div class="cg-classbar"><span>${esc(L("mainClass"))}: <b>${esc(main?.name ?? "—")}</b> · ${esc(L("subClass"))}: <b>${esc(sub?.name ?? L("noSub"))}</b></span>
+        <label><input type="checkbox" data-cg-simple ${simple ? "checked" : ""}/> ${esc(L("simpleView"))}</label></div>
+      <h3>${esc(L("mainClass"))}</h3><div class="cg-classes ${simple ? "simple" : ""}">${list.map((c) => card(c, "main")).join("")}</div>
       <h3>${esc(L("subClass"))} <small>${esc(L("subOptional"))}</small></h3>
       <p class="notes">${esc(L("subHint"))}${uniq ? ` ${esc(L("loseUnique", { name: uniq }))}` : ""}</p>
       <div class="cg-tools"><button type="button" data-cg="noSub" class="${sub ? "" : "selected"}">${esc(L("noSub"))}</button></div>
-      <div class="cg-classes sub">${main ? list.map((c) => card(c, "sub")).join("") : `<p class="notes">${esc(L("pickMainFirst"))}</p>`}</div>`;
+      <div class="cg-classes sub ${simple ? "simple" : ""}">${main ? list.map((c) => card(c, "sub")).join("") : `<p class="notes">${esc(L("pickMainFirst"))}</p>`}</div>`;
   }
 
   /* ---------- 4 스킬 ---------- */
@@ -246,6 +255,7 @@ export class ChargenWizard extends Application {
     html.on("change", "[data-cg-field]", (ev) => this.setField(ev.currentTarget.dataset.cgField, ev.currentTarget.value));
     html.on("change", "[data-cg-slot]", (ev) => { this.slots[Number(ev.currentTarget.dataset.cgSlot)] = Number(ev.currentTarget.value); this._slotsTouched = true; this.render(); });
     html.on("click", "[data-cg-go]", (ev) => this.go(Number(ev.currentTarget.dataset.cgGo)));
+    html.on("change", "[data-cg-simple]", (ev) => { this.simpleClass = ev.currentTarget.checked; this.render(); });
     html.on("click", "[data-cg-class]", (ev) => this.pickClass(ev.currentTarget.dataset.cgClass, ev.currentTarget.dataset.uuid));
     html.on("click", "[data-cg-common]", (ev) => this.pickCommon(ev.currentTarget.dataset.cgCommon));
     html.on("click", "[data-cg-delhist]", (ev) => this.setHistory((h) => h.filter((_, i) => i !== Number(ev.currentTarget.dataset.cgDelhist))));
