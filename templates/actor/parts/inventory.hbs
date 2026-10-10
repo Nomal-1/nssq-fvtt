@@ -3,6 +3,7 @@
     <span class="nq-chip {{#if inventory.over}}over{{/if}}" title="{{localize 'NSSQ.Inventory.carryHint'}}"><i class="fas fa-suitcase"></i> {{localize "NSSQ.Inventory.carried"}} <b>{{inventory.carried}} / {{inventory.carry}}</b></span>
     <span class="nq-chip"><i class="fas fa-coins"></i> <b>{{system.money}}G</b></span>
     <span class="nq-spacer"></span>
+    {{#if editable}}<button type="button" data-action="transfer" title="{{localize 'NSSQ.Transfer.hint'}}"><i class="fas fa-hand-holding"></i> {{localize "NSSQ.Transfer.button"}}</button>{{/if}}
     {{#if editable}}<button type="button" data-action="shop" {{#unless inventory.shopAvailable}}disabled title="{{localize 'NSSQ.Shop.closed'}}"{{/unless}}><i class="fas fa-store"></i> {{localize "NSSQ.Shop.title"}}</button>{{/if}}
   </header>
 
@@ -43,6 +44,7 @@
         {{#if i.usable}}<a class="nq-ctl" data-action="use" title="{{localize 'NSSQ.Inventory.use'}}"><i class="fas fa-hand-sparkles"></i></a>{{/if}}
         {{#if i.equippable}}<a class="nq-ctl" data-action="equip" title="{{localize 'NSSQ.Inventory.equip'}}"><i class="fas fa-shield-alt"></i></a>{{/if}}
         {{#if i.canSub}}<a class="nq-ctl" data-action="equip" data-slot="other" title="{{localize 'NSSQ.Inventory.equipSub'}}"><i class="fas fa-exchange-alt"></i></a>{{/if}}
+        <a class="nq-ctl" data-action="give" title="{{localize 'NSSQ.Transfer.button'}}"><i class="fas fa-hand-holding"></i></a>
         {{#if i.canStore}}<a class="nq-ctl" data-action="store" title="{{localize 'NSSQ.Storage.toStorage'}}"><i class="fas fa-warehouse"></i></a>{{/if}}
         <a class="nq-ctl" data-action="item-delete" title="{{localize 'NSSQ.Delete'}}"><i class="fas fa-trash"></i></a>
       </span>

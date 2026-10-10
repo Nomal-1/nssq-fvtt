@@ -1326,16 +1326,6 @@
 .nssq-town .town-menu .notes { padding: 6px 18px; }
 .nssq-town .town-npc { right: 3%; bottom: 0; height: 88%; max-width: 48%; object-fit: contain; object-position: bottom; border: none; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.7)); z-index: 0; }
 .nssq-town .town-fac-icon { right: 16%; top: 30%; font-size: 9em; color: rgba(223, 247, 238, 0.18); }
-.nssq-town .town-party { left: 50%; transform: translateX(-50%); bottom: 10px; width: min(92%, 900px); display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; z-index: 2; }
-.nssq-town .town-party .pc { flex: 0 0 calc(33.3% - 6px); padding: 3px 10px 5px; border: 1px solid var(--tw-teal-l); border-radius: 6px 18px 6px 18px; background: linear-gradient(180deg, rgba(31, 90, 85, 0.95), rgba(15, 53, 50, 0.95)); box-shadow: 0 2px 6px rgba(0,0,0,0.6); }
-.nssq-town .town-party .pc b { display: block; text-align: center; font-size: 1.05em; }
-.nssq-town .town-party .stat { display: flex; align-items: baseline; gap: 4px; font-size: 0.8em; }
-.nssq-town .town-party .stat em { flex: 1; text-align: right; font-style: normal; font-size: 1.35em; margin-right: 8px; }
-.nssq-town .town-party .bars { display: flex; gap: 8px; }
-.nssq-town .town-party .bar { flex: 1; height: 5px; border-radius: 3px; background: rgba(0,0,0,0.5); overflow: hidden; }
-.nssq-town .town-party .bar i { display: block; height: 100%; }
-.nssq-town .town-party .bar.hp i { background: linear-gradient(90deg, #f0a020, #f6d050); }
-.nssq-town .town-party .bar.tp i { background: linear-gradient(90deg, #30b8e0, #80e8f8); }
 .nssq-town .town-name { right: 0; bottom: 16px; padding: 6px 28px 6px 22px; font-size: 1.5em; font-weight: bold; color: #fff; text-shadow: 0 2px 4px #000; border-radius: 22px 0 0 22px; border: 2px solid var(--tw-teal-l); border-right: none; background: linear-gradient(90deg, rgba(31, 90, 85, 0.95), rgba(15, 53, 50, 0.9)); }
 .nssq-town .town-name small { font-size: 0.6em; color: #b9e0d8; }
 .nssq-town .town-stage.empty .town-empty { top: 45%; left: 0; right: 0; text-align: center; font-size: 1.2em; }
@@ -1410,3 +1400,20 @@
 .nssq-chargen .cg-tags span { font-size: 0.75em; padding: 0 6px; border-radius: 8px; line-height: 1.5; }
 .nssq-chargen .cg-tags .cg-pos { background: rgba(224, 176, 40, 0.25); border: 1px solid #e0b028; }
 .nssq-chargen .cg-tags .cg-role { background: rgba(80, 160, 220, 0.2); border: 1px solid rgba(80, 160, 220, 0.6); }
+
+/* 마을 파티 줄: 한 줄, 넘치면 가로 스크롤, 접기 */
+.nssq-town .town-party { left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; z-index: 2; }
+.nssq-town .town-party .pc-fold { align-self: center; width: auto; height: 22px; line-height: 20px; padding: 0 12px; font-size: 0.8em; border-radius: 8px 8px 0 0; border: 1px solid var(--tw-teal-l); border-bottom: none; background: rgba(15, 53, 50, 0.95); color: var(--tw-ink); }
+.nssq-town .town-party .pc-row { width: 100%; display: flex; gap: 6px; overflow-x: auto; padding: 6px 10px 8px; background: linear-gradient(0deg, rgba(8, 24, 24, 0.92), rgba(8, 24, 24, 0.7)); border-top: 2px solid var(--tw-teal-l); scrollbar-width: thin; }
+.nssq-town .town-party.folded .pc-row { display: none; }
+.nssq-town .town-party .pc { flex: 0 0 188px; display: flex; gap: 6px; align-items: center; padding: 4px 6px; border: 1px solid var(--tw-teal-l); border-radius: 6px 14px 6px 14px; background: linear-gradient(180deg, rgba(31, 90, 85, 0.95), rgba(15, 53, 50, 0.95)); cursor: default; }
+.nssq-town .town-party .pc.mine { cursor: pointer; }
+.nssq-town .town-party .pc.mine:hover { border-color: var(--tw-hi); }
+.nssq-town .town-party .pc img { flex: 0 0 40px; width: 40px; height: 40px; border-radius: 6px; object-fit: cover; object-position: top; border: 1px solid rgba(0,0,0,0.4); }
+.nssq-town .town-party .pc-info { min-width: 0; display: flex; flex-direction: column; line-height: 1.25; font-size: 0.85em; }
+.nssq-town .town-party .pc-info b { font-size: 1.1em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nssq-town .town-party .pc-info span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nssq-town .town-party .pc-sub em { font-style: normal; color: #f4f0c8; }
+.nssq-town .town-party .pc-sub .sp { font-style: normal; margin-left: 4px; padding: 0 5px; border-radius: 6px; background: var(--tw-hi); color: #1d2a12; font-weight: bold; }
+.nssq-transfer-items { width: 100%; }
+.nssq-transfer-items td { padding: 2px 4px; }

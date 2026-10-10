@@ -214,6 +214,15 @@ export class NssqActorSheet extends ActorSheet {
       ev.preventDefault();
       editAbilities(this.actor);
     });
+    // 캐릭터끼리 건네기(전투 중 불가)
+    html.on("click", "[data-action=transfer]", async (ev) => {
+      ev.preventDefault();
+      (await import("../apps/transfer.mjs")).openTransfer(this.actor);
+    });
+    html.on("click", "[data-action=give]", async (ev) => {
+      ev.preventDefault();
+      (await import("../apps/transfer.mjs")).openTransfer(this.actor, ev.currentTarget.closest("[data-item-id]")?.dataset.itemId);
+    });
     html.on("click", "[data-action=edit-art]", (ev) => {
       ev.preventDefault();
       openArtConfig(this.actor);

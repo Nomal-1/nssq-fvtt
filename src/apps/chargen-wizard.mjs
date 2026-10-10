@@ -380,7 +380,8 @@ export class ChargenWizard extends Application {
         <p>【HP】 ${actor.system.hp.max} · 【TP】 ${actor.system.tp.max} · ${actor.system.money}G</p><p><small>${esc(skills)}</small></p></div>`
     });
     ui.notifications.info(L("finished", { name: actor.name }));
-    this.render();
+    // 작성이 끝나면 창을 닫는다(사용자 요청)
+    return this.close({ force: true });
   }
 }
 
