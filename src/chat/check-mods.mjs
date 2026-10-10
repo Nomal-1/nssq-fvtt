@@ -23,13 +23,18 @@ export function checkModsHtml(actor, { kinds: preset = [] } = {}) {
     const v = Number(mods[`checks.${k}`]) || 0;
     return `<label class="choice"><input type="checkbox" name="kind" value="${k}" ${preset.includes(k) ? "checked" : ""}/> ${esc(L(`kind.${k}`))}${v ? ` <b>${v > 0 ? "+" : ""}${v}</b>` : ""}</label>`;
   }).join("");
+  // 선언은 그 스킬의 판정 종류를 체크했을 때만. 코스트 없는 것은 종류를 체크하면 함께 체크(07 #148)
   const decl = skills(actor, "checkBonus").map((i) => {
     const e = effOf(i, "checkBonus");
     const ok = canPay(actor, i.system.cost);
-    return `<label class="choice"><input type="checkbox" name="declare" value="${i.id}" ${ok ? "" : "disabled"}/> 《${esc(i.name)}》 +${e.value}${e.ability ? `(${esc(game.i18n.localize(`NSSQ.Ability.${e.ability}`))})` : ""} <small>${esc((e.kinds ?? []).map((k) => L(`kind.${k}`)).join("·"))} ${esc(costText(i.system.cost))}</small></label>`;
+    const on = kindMatch(e, preset);
+    const free = !i.system.cost?.tp && !i.system.cost?.fp;
+    return `<label class="choice"><input type="checkbox" name="declare" value="${i.id}" data-kinds="${esc((e.kinds ?? []).join(","))}" data-free="${free ? 1 : 0}" data-pay="${ok ? 1 : 0}" ${ok && on ? "" : "disabled"} ${ok && on && free ? "checked" : ""}/> 《${esc(i.name)}》 +${e.value}${e.ability ? `(${esc(game.i18n.localize(`NSSQ.Ability.${e.ability}`))})` : ""} <small>${esc((e.kinds ?? []).map((k) => L(`kind.${k}`)).join("·"))} ${esc(costText(i.system.cost))}</small></label>`;
   }).join("");
   // [석화] 중인 캐릭터는 도울 수 없다(07 #164)
-  const helpers = game.actors.filter((a) => a.type === "character" && a.id !== actor.id && !(a.system.conditions ?? []).some((c) => c.id === "petrify")).flatMap((a) => skills(a, "checkAssist").map((i) => ({ a, i })));
+  // 「전투 외 판정」: 판정하는 캐릭터가 진행 중인 전투에 있으면 도움 없음(07 #149)
+  const inBattle = !!game.combat?.started && game.combat.combatants.some((c) => c.actor?.uuid === actor.uuid);
+  const helpers = inBattle ? [] : game.actors.filter((a) => a.type === "character" && a.id !== actor.id && !(a.system.conditions ?? []).some((c) => c.id === "petrify")).flatMap((a) => skills(a, "checkAssist").map((i) => ({ a, i })));
   const assist = helpers.map(({ a, i }) => {
     const ok = canPay(a, i.system.cost);
     return `<label class="choice"><input type="checkbox" name="assist" value="${a.uuid}|${i.id}" ${ok ? "" : "disabled"}/> ${esc(a.name)} 《${esc(i.name)}》 +${effOf(i, "checkAssist").value} <small>${esc(costText(i.system.cost))}</small></label>`;
@@ -38,6 +43,20 @@ export function checkModsHtml(actor, { kinds: preset = [] } = {}) {
     ${decl ? `<p><b>${esc(L("declareTitle"))}</b></p><div>${decl}</div>` : ""}
     ${assist ? `<p><b>${esc(L("assistTitle"))}</b></p><div>${assist}</div>` : ""}
     <p class="notes">${esc(L("kindHint"))}</p></details>`;
+}
+
+/** 선언 스킬의 판정 종류 중 하나를 골랐나(종류 지정이 없으면 언제나) */
+const kindMatch = (e, kinds) => !(e.kinds ?? []).length || e.kinds.some((k) => kinds.includes(k));
+
+/** 종류 체크가 바뀌면 선언 체크칸을 켜고 끈다(대화창마다 따로 묶지 않게 문서에 한 번) */
+function syncDeclares(box) {
+  const kinds = [...box.querySelectorAll("[name=kind]:checked")].map((x) => x.value);
+  for (const d of box.querySelectorAll("[name=declare]")) {
+    const on = d.dataset.pay === "1" && kindMatch({ kinds: (d.dataset.kinds || "").split(",").filter(Boolean) }, kinds);
+    if (!on) d.checked = false;
+    else if (d.disabled && d.dataset.free === "1") d.checked = true;
+    d.disabled = !on;
+  }
 }
 
 /** 대화창 form → { kinds, declares, assists } */
@@ -63,7 +82,7 @@ export async function applyCheckMods(actor, { kinds = [], declares = [], assists
   for (const id of declares) {
     const i = actor.items.get(id);
     const e = i && effOf(i, "checkBonus");
-    if (!e || !canPay(actor, i.system.cost)) continue;
+    if (!e || !kindMatch(e, kinds) || !canPay(actor, i.system.cost)) continue;
     await pay(actor, i.system.cost);
     modifier += Number(e.value) || 0;
     if (e.ability) ability = e.ability;
@@ -96,6 +115,11 @@ export async function pay(actor, cost = {}) {
 export const postSkill = (actor, type) => skills(actor, type)[0] ?? null;
 
 export function registerCheckMods() {
+  document.addEventListener("change", (ev) => {
+    if (ev.target?.name !== "kind") return;
+    const box = ev.target.closest(".nssq-check-mods");
+    if (box) syncDeclares(box);
+  });
   onSocket("checkPay", async ({ uuid, cost }) => {
     if (game.users.activeGM?.id !== game.user.id) return;
     const a = await fromUuid(uuid);
