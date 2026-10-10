@@ -107,7 +107,7 @@ let app = null;
 export class EncounterApp extends Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      id: "nssq-encounters", classes: ["nssq", "nssq-encounters"], title: game.i18n.localize("NSSQ.Encounter.title"),
+      id: "nssq-encounters", classes: ["nssq", "nq-window", "nssq-encounters"], title: game.i18n.localize("NSSQ.Encounter.title"),
       width: 900, height: 680, resizable: true
     });
   }

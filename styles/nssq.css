@@ -1291,3 +1291,6 @@
 .nssq-fieldmap .fm-enc-row input { width: 52px; flex: 0 0 auto; }
 .nssq-fieldmap .fm-encounters ul { margin: 4px 0; padding-left: 16px; }
 .nssq-gm-screen .gm-here h3 { margin: 6px 0 4px; }
+.nssq-encounters .enc-edit .form-group { display: flex; align-items: center; gap: 6px; }
+.nssq-encounters .enc-edit .form-group > label { flex: 0 0 110px; }
+.nssq-encounters .enc-edit .form-group > select { flex: 1; }
