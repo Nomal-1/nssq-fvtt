@@ -157,6 +157,12 @@ export class NssqActorSheet extends ActorSheet {
     return created;
   }
 
+  /** 캐릭터 그림 칸을 누르면 그림 설정 창(내 컴퓨터에서 올리기·자르기). 서버 파일 고르기는 그 창 안에서(둘러보기 권한이 있을 때) */
+  _onEditImage(event) {
+    if (this.actor.type === "character" && this.actor.isOwner) return openArtConfig(this.actor);
+    return super._onEditImage(event);
+  }
+
   activateListeners(html) {
     super.activateListeners(html);
     html.on("click", "[data-action=set-level]", (ev) => {
