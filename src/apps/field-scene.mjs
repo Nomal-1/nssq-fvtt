@@ -90,7 +90,12 @@ function sync() {
   o.render(true);
   fitView();
 }
-const refresh = () => { if (overlay) { if (overlay.rendered) overlay.render(); } else if (shownMap()) sync(); };
+/** 다시 그리기. 렌더 중이면 끝난 뒤 한 번 더(그 사이의 변경을 놓치지 않게) */
+const refresh = () => {
+  if (!overlay) { if (shownMap()) sync(); return; }
+  if (overlay._state === Application.RENDER_STATES.RENDERING) overlay.dirty = true;
+  else overlay.render();
+};
 const openEvents = () => game.settings.get("nssq", "fieldEvents") ?? [];
 
 export class FieldOverlay extends Application {
@@ -181,6 +186,11 @@ export class FieldOverlay extends Application {
     return `<footer class="town-party ${hidden ? "folded" : ""}">
       <button type="button" class="pc-fold" data-fs="fold"><i class="fas fa-chevron-${hidden ? "up" : "down"}"></i> ${esc(game.i18n.format("NSSQ.Town.party", { n: party.length }))}</button>
       <div class="pc-row">${cards}</div></footer>`;
+  }
+
+  async _render(...args) {
+    await super._render(...args);
+    if (this.dirty && this.gen === gen) { this.dirty = false; this.render(); }
   }
 
   _injectHTML(html) {

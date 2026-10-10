@@ -211,7 +211,9 @@ export class TownApp extends Application {
 
   static refresh() {
     if (app?.rendered && !app.draft) app.render();
-    if (overlay?.rendered) overlay.render();
+    // 렌더 중이면 끝난 뒤 한 번 더
+    if (overlay?._state === Application.RENDER_STATES.RENDERING) overlay.dirty = true;
+    else if (overlay?.rendered) overlay.render();
   }
 
   /** 마을 고르기(창: 보는 마을만 바꿈) */
@@ -503,6 +505,11 @@ export class TownOverlay extends TownApp {
     // 마을 위에서는 휠로 확대하지 않는다
     root[0].addEventListener("wheel", (ev) => ev.stopPropagation());
     return root.append(frame);
+  }
+
+  async _render(...args) {
+    await super._render(...args);
+    if (this.dirty && this.gen === gen) { this.dirty = false; this.render(); }
   }
 
   _injectHTML(html) {
