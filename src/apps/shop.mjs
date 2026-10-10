@@ -140,6 +140,9 @@ class ShopApp extends Application {
     super(options);
     this.actor = actor;
     this.forced = !!options.creation;
+    // 시약원 등: 이 종류만 판다(매각·제련 없음)
+    this.only = options.only ?? null;
+    if (this.only?.length && this._tabs?.[0]) this._tabs[0].active = this.only[0];
     this.creation = this.forced;
     this.ranks = {};
     this.qty = {};
@@ -248,7 +251,8 @@ class ShopApp extends Application {
       canCreation: game.user.isGM || !this.actor.system.creation?.locked,
       isGM: game.user.isGM,
       open: shopOpen(),
-      tabs: TABS.map(([type, label]) => ({ type, label, rows: docs.filter((d) => d.type === type && (!this.usableOnly || usable(d))).map(rowFor) })),
+      limited: !!this.only,
+      tabs: TABS.filter(([type]) => !this.only || this.only.includes(type)).map(([type, label]) => ({ type, label, rows: docs.filter((d) => d.type === type && (!this.usableOnly || usable(d))).map(rowFor) })),
       hasClass, usableOnly: this.usableOnly,
       noPacks: !docs.length
     };
@@ -411,14 +415,14 @@ class ShopApp extends Application {
 }
 
 /** 상점 열기: 플레이어는 GM이 상점을 열었을 때만. creation: 작성 마법사(작성이 잠기지 않은 캐릭터만, 상점이 닫혀 있어도) */
-export function openShop(actor, { creation = false } = {}) {
+export function openShop(actor, { creation = false, only = null } = {}) {
   if (!actor?.isOwner) return;
   const forced = creation && !actor.system.creation?.locked;
   if (!shopOpen() && !game.user.isGM && !forced) return ui.notifications.warn(L("closed"));
   const existing = Object.values(ui.windows).find((w) => w instanceof ShopApp && w.actor === actor);
-  if (existing && existing.forced === forced) return existing.render(true, { focus: true });
+  if (existing && existing.forced === forced && String(existing.only) === String(only)) return existing.render(true, { focus: true });
   if (existing) existing.close();
-  new ShopApp(actor, { creation: forced }).render(true);
+  new ShopApp(actor, { creation: forced, only }).render(true);
 }
 
 /** 상점이 닫히면 플레이어의 상점 창을 닫고, 시트의 버튼 상태를 갱신한다 */

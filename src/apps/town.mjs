@@ -305,7 +305,7 @@ export class TownApp extends Application {
     switch (f.type) {
       case "guild": out.push(b("guild", "fa-users", L("btn.guild")), b("tree", "fa-sitemap", L("btn.tree")), b("chargen", "fa-user-plus", L("btn.chargen"))); if (gm) out.push(b("gmScreen", "fa-users-cog", L("btn.party"))); break;
       case "shop": out.push(b("shop", "fa-store", L("btn.shop"))); break;
-      case "apothecary": out.push(b("shop", "fa-prescription-bottle", L("btn.potions"))); break;
+      case "apothecary": out.push(b("potions", "fa-prescription-bottle", L("btn.potions"))); break;
       case "inn": out.push(b("sheet", "fa-box", L("btn.storage"))); if (gm) out.push(b("living", "fa-coins", L("btn.living"))); break;
       case "office": out.push(b("bestiary", "fa-book-dead", L("btn.bestiary"))); break;
       case "gate": {
@@ -437,6 +437,8 @@ export class TownApp extends Application {
       case "guild": return (await import("./guild.mjs")).GuildApp.open(f?.name ? `${t.name} · ${f.name}` : null);
       case "gmScreen": return game.nssq.openGMScreen();
       case "shop": { const a = await pickActor(); if (!a) return ui.notifications.warn(L("noCharacter")); return game.nssq.openShop(a); }
+      // 시약원: 소모품(회복약)만
+      case "potions": { const a = await pickActor(); if (!a) return ui.notifications.warn(L("noCharacter")); return game.nssq.openShop(a, { only: ["consumable"] }); }
       case "living": return (await import("./session.mjs")).openLivingCost();
       case "bestiary": return game.nssq.openBestiary();
       case "scene": { const s = game.scenes.get(f?.sceneId); if (!s) return null; return game.user.isGM ? s.activate() : s.view(); }

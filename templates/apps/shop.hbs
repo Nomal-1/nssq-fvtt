@@ -8,8 +8,8 @@
   {{#if noPacks}}<p class="warn">{{localize "NSSQ.Shop.noPacks"}}</p>{{/if}}
   <nav class="shop-tabs tabs">
     {{#each tabs as |t|}}<a class="item" data-tab="{{t.type}}">{{localize t.label}}</a>{{/each}}
-    <a class="item service" data-tab="sell"><i class="fas fa-coins"></i> {{localize "NSSQ.Shop.sellTab"}}</a>
-    <a class="item service" data-tab="refine"><i class="fas fa-hammer"></i> {{localize "NSSQ.Shop.refineTab"}}</a>
+    {{#unless limited}}<a class="item service" data-tab="sell"><i class="fas fa-coins"></i> {{localize "NSSQ.Shop.sellTab"}}</a>
+    <a class="item service" data-tab="refine"><i class="fas fa-hammer"></i> {{localize "NSSQ.Shop.refineTab"}}</a>{{/unless}}
   </nav>
   <section class="shop-body">
     {{#each tabs as |t|}}
