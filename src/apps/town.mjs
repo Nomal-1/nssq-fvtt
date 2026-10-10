@@ -12,6 +12,8 @@ const L = (k, d) => (d ? game.i18n.format(`NSSQ.Town.${k}`, d) : game.i18n.local
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
 const rid = () => foundry.utils.randomID();
+/** 그림 경로 → URL. 이미 %인코딩된 경로(업로드한 그림 등)는 그대로 */
+const url = (p) => (/%[0-9A-F]{2}/i.test(p ?? "") ? p : encodeURI(p ?? ""));
 
 export const FACILITY_TYPES = ["guild", "shop", "inn", "apothecary", "pub", "office", "gate", "free"];
 const ICONS = { guild: "fa-users", shop: "fa-store", inn: "fa-bed", apothecary: "fa-mortar-pestle", pub: "fa-beer", office: "fa-landmark", gate: "fa-dungeon", free: "fa-map-signs" };
@@ -239,7 +241,7 @@ export class TownApp extends Application {
     if (this.constructor === TownApp && gm) return $(this.managerHtml(t, bar, here));
     const f = (t.facilities ?? []).find((x) => x.id === this.facId) ?? null;
     if (!f) this.facId = null;
-    const bg = (src) => (src ? `style="background-image:url('${encodeURI(src)}')"` : "");
+    const bg = (src) => (src ? `style="background-image:url('${url(src)}')"` : "");
     const top = (place, say) => `<header class="town-top">${this.clockHtml()}
       <div class="headline"><b class="place">${esc(place)}</b><span class="say" data-say-default="${esc(say)}">${esc(say)}</span></div>
       <div class="money">${this.moneyText()}</div></header>`;
@@ -253,14 +255,14 @@ export class TownApp extends Application {
     // 시설 화면: 시설 일러 + NPC + 메뉴 + 파티 상태(원작의 시설 화면)
     const items = await this.facilityButtons(f);
     return $(`<div class="town-stage facility ${f.img ? "" : "no-img"}" ${bg(f.img || t.img)}>${top(f.name, f.desc || L(`greet.${f.type}`))}${bar}
-      ${f.npc ? `<img class="town-npc" src="${encodeURI(f.npc)}" alt=""/>` : f.img ? "" : `<i class="town-fac-icon fas ${ICONS[f.type] ?? "fa-map-signs"}"></i>`}
+      ${f.npc ? `<img class="town-npc" src="${url(f.npc)}" alt=""/>` : f.img ? "" : `<i class="town-fac-icon fas ${ICONS[f.type] ?? "fa-map-signs"}"></i>`}
       <nav class="town-menu">${items}<button type="button" class="town-choice back" data-town="leaveFac" data-say="${esc(L("say.back"))}"><i class="fas fa-sign-out-alt"></i><span>${esc(L("toStreet"))}</span></button></nav>
       ${await this.partyHtml()}</div>`);
   }
 
   managerHtml(t, bar, here) {
     const facs = (t.facilities ?? []).map((x) => `<li><i class="fas ${ICONS[x.type] ?? "fa-map-signs"}"></i> ${esc(x.name)} <small>${esc(L(`type.${x.type}`))}</small></li>`).join("");
-    return `<div class="town-stage town-manage" ${t.img ? `style="background-image:url('${encodeURI(t.img)}')"` : ""}>${bar}
+    return `<div class="town-stage town-manage" ${t.img ? `style="background-image:url('${url(t.img)}')"` : ""}>${bar}
       <div class="manage-card"><h2><i class="fas fa-home"></i> ${esc(t.name)}</h2>
         <p class="status ${here ? "here" : ""}">${esc(here ? L("partyHereShort") : L("partyAway"))}</p>
         <ul>${facs}</ul>
@@ -298,7 +300,7 @@ export class TownApp extends Application {
       const skills = a.items.filter((i) => i.type === "skill").map((i) => ({ sl: i.system.sl ?? 0, unique: !!i.system.unique, common: i.system.classKey === "common" }));
       const left = skillBudget({ level: a.system.level, skills, bonus: a.system.skillBonus ?? 0 }).left;
       return `<div class="pc ${a.isOwner ? "mine" : ""}" data-pc="${a.id}" title="${esc(a.name)}">
-        <img src="${encodeURI(a.img)}" alt=""/>
+        <img src="${url(a.img)}" alt=""/>
         <div class="pc-info"><b>${esc(a.name)}</b><span>Lv${a.system.level} · ${esc(c.main?.name ?? "-")}</span>
           <span class="pc-sub"><em>${(a.system.money ?? 0).toLocaleString()}G</em>${left > 0 ? ` <i class="sp">${esc(L("spLeft", { n: left }))}</i>` : ""}</span></div></div>`;
     }).join("");
