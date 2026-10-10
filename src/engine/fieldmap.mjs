@@ -31,8 +31,18 @@ export const areaKnown = (map, state, id) => {
   return !!a && (!a.secret || revealedHas(state, "areas", id));
 };
 
-/** 통로가 플레이어에게 보이는가: 숨김(비밀 통로)이 아니고 양 끝 에어리어를 알 수 있다 */
-export const passageKnown = (map, state, p) => passageState(state, p) !== "hidden" && areaKnown(map, state, p.a) && areaKnown(map, state, p.b);
+/**
+ * 「들어갈 수 없으면 숨김」(hideBlocked) 통로가 지금 막혀 있는가: 잠김이거나,
+ * 한 방향 통로인데 들어갈 수 있는 쪽(a)을 아직 밟지 않았다(반대쪽에서는 보이지 않는다)
+ */
+const hiddenBlocked = (state, p) => {
+  if (!p.hideBlocked) return false;
+  if (passageState(state, p) === "locked") return true;
+  return !!p.oneWay && !((state?.visited ?? {})[p.a] > 0);
+};
+
+/** 통로가 플레이어에게 보이는가: 숨김(비밀 통로)·막힌 숨김 통로가 아니고 양 끝 에어리어를 알 수 있다 */
+export const passageKnown = (map, state, p) => passageState(state, p) !== "hidden" && !hiddenBlocked(state, p) && areaKnown(map, state, p.a) && areaKnown(map, state, p.b);
 
 /** from에서 이 통로로 지금 지나갈 수 있는가 */
 export function usable(map, state, p, from) {

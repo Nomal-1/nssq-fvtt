@@ -42,7 +42,70 @@ const areaOf = (map, id) => map?.areas?.find((a) => a.id === id) ?? null;
 const areaImg = (a) => a?.img || a?.sceneImg || "";
 const sceneImage = (id) => { const sc = game.scenes.get(id); return sc?.background?.src || sc?.thumb || ""; };
 /** 양피지 위 나침반(장식) */
-const compass = () => `<g class="fm-compass" transform="translate(${W - 70},${H - 78})"><circle r="38"/><circle r="30"/><path d="M0,-44 L7,-7 L44,0 L7,7 L0,44 L-7,7 L-44,0 L-7,-7 Z"/><path class="n" d="M0,-44 L7,-7 L-7,-7 Z"/><text y="-50">N</text></g>`;
+/** 나침반(장식): 오른쪽 위, 지도 전체로 뻗는 방위선 */
+const CX = W - 150;
+const CY = 135;
+const compass = () => {
+  const rays = Array.from({ length: 32 }, (_, i) => {
+    const t = (i / 32) * Math.PI * 2;
+    return `<line x1="${CX + Math.cos(t) * 62}" y1="${CY + Math.sin(t) * 62}" x2="${CX + Math.cos(t) * 1300}" y2="${CY + Math.sin(t) * 1300}"/>`;
+  }).join("");
+  const star = (r, w, rot) => `<path transform="rotate(${rot})" d="M0,${-r} L${w},${-w} L${r},0 L${w},${w} L0,${r} L${-w},${w} L${-r},0 L${-w},${-w} Z"/>`;
+  return `<g class="fm-rays">${rays}</g><g class="fm-compass" transform="translate(${CX},${CY})"><circle r="58"/><circle r="52"/><circle r="40"/>
+    ${star(48, 7, 45)}${star(58, 9, 0)}<path class="n" d="M0,-58 L9,-9 L-9,-9 Z"/><circle class="hub" r="4"/><text y="-66">N</text></g>`;
+};
+
+/** 시드 고정 난수(지도마다 같은 찢긴 가장자리) */
+function rng(seed) {
+  let h = 2166136261;
+  for (const ch of String(seed)) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return () => { h += 0x6D2B79F5; let t = h; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+
+/** 찢긴 양피지 윤곽(시계 방향) */
+function tornPath(seed) {
+  const r = rng(seed);
+  const I = 24;
+  const pts = [];
+  const edge = (x0, y0, x1, y1, nx, ny) => {
+    const len = Math.hypot(x1 - x0, y1 - y0);
+    const n = Math.round(len / 13);
+    for (let k = 0; k < n; k++) {
+      const t = k / n;
+      // 대부분 잔 톱니, 가끔 깊게 찢긴 홈
+      const d = r() < 0.06 ? 10 + r() * 16 : r() * 9;
+      pts.push([x0 + (x1 - x0) * t + nx * d, y0 + (y1 - y0) * t + ny * d]);
+    }
+  };
+  edge(I, I, W - I, I, 0, 1);
+  edge(W - I, I, W - I, H - I, -1, 0);
+  edge(W - I, H - I, I, H - I, 0, -1);
+  edge(I, H - I, I, I, 1, 0);
+  return `M${pts.map((p) => p.map((v) => v.toFixed(1)).join(",")).join(" L")} Z`;
+}
+
+/** 얼룩(시드 고정) */
+function stains(seed) {
+  const r = rng(`${seed}:stain`);
+  return Array.from({ length: 7 }, () => `<ellipse cx="${(80 + r() * (W - 160)).toFixed(0)}" cy="${(70 + r() * (H - 140)).toFixed(0)}" rx="${(40 + r() * 110).toFixed(0)}" ry="${(30 + r() * 80).toFixed(0)}" opacity="${(0.06 + r() * 0.1).toFixed(2)}"/>`).join("");
+}
+
+/** 양피지 배경: 그림자 → 종이(그라데이션·결·얼룩·격자·방위선·나침반) → 그을린 가장자리 */
+function parchment(seed) {
+  const d = tornPath(seed);
+  const grid = [...Array.from({ length: 9 }, (_, i) => `<line x1="${(i + 1) * 100}" y1="0" x2="${(i + 1) * 100}" y2="${H}"/>`), ...Array.from({ length: 6 }, (_, i) => `<line x1="0" y1="${(i + 1) * 100}" x2="${W}" y2="${(i + 1) * 100}"/>`)].join("");
+  return `<defs><clipPath id="fm-paper"><path d="${d}"/></clipPath></defs>
+    <path d="${d}" class="fm-paper-shadow" transform="translate(5,8)" filter="url(#fm-blur)"/>
+    <g clip-path="url(#fm-paper)">
+      <rect width="${W}" height="${H}" fill="url(#fm-grad)"/>
+      <rect width="${W}" height="${H}" filter="url(#fm-noise)" opacity="0.45"/>
+      <g class="fm-stains">${stains(seed)}</g>
+      <g class="fm-grid">${grid}</g>
+      ${compass()}
+      <path d="${d}" class="fm-burn" filter="url(#fm-blur)"/>
+      <path d="${d}" class="fm-burn-edge" filter="url(#fm-blur2)"/>
+    </g>`;
+}
 const passageLabel = (map, p) => `${areaName(map, p.a)} ${p.oneWay ? "→" : "↔"} ${areaName(map, p.b)}${p.label ? ` (${p.label})` : ""}`;
 const clock = (s) => L("clock", { seg: s.segment ?? 0, h: s.hour ?? 0, tod: game.i18n.localize(`NSSQ.Dungeon.tod.${timeOfDayAt(s.hour ?? 0)}`) });
 
@@ -645,7 +708,7 @@ export class FieldMapApp extends Application {
     const visited = (id) => (st.visited?.[id] ?? 0) > 0;
     const bg = map.bg?.style === "image" && map.bg.src
       ? `<image href="${esc(map.bg.src)}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice"/>`
-      : `<rect width="${W}" height="${H}" fill="url(#fm-grad)"/><rect width="${W}" height="${H}" filter="url(#fm-noise)" opacity="0.35"/>${compass()}`;
+      : parchment(map.id);
     // 통로: 점선 잉크 자국(밟은 길은 실선, 지금 갈 수 있는 길은 초록으로 흐른다)
     const pLines = passages.map((p) => {
       const [x1, y1] = pos(p.a);
@@ -712,12 +775,14 @@ export class FieldMapApp extends Application {
         <radialGradient id="fm-grad" cx="50%" cy="45%" r="75%"><stop offset="0%" stop-color="#f4e7c5"/><stop offset="70%" stop-color="#e2cc96"/><stop offset="100%" stop-color="#b8975c"/></radialGradient>
         <radialGradient id="fm-vignette" cx="50%" cy="50%" r="70%"><stop offset="65%" stop-color="#3b2510" stop-opacity="0"/><stop offset="100%" stop-color="#3b2510" stop-opacity="0.45"/></radialGradient>
         <filter id="fm-noise"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="4" seed="7"/><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.32  0 0 0 0 0.15  0 0 0 0.9 -0.25"/></filter>
+        <filter id="fm-blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="7"/></filter>
+        <filter id="fm-blur2" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="2"/></filter>
         <filter id="fm-fog"><feColorMatrix type="saturate" values="0.05"/><feGaussianBlur stdDeviation="2.2"/></filter>
         <filter id="fm-shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#2b1a08" flood-opacity="0.45"/></filter>
         <clipPath id="fm-clip" clipPathUnits="objectBoundingBox"><circle cx="0.5" cy="0.5" r="0.5"/></clipPath>
         <marker id="fm-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fm-arrow"/></marker>
       </defs>
-      <rect class="fm-bgclick" width="${W}" height="${H}" fill="transparent"/>${bg}<rect width="${W}" height="${H}" fill="url(#fm-vignette)" pointer-events="none"/>${pLines}${route}${nodes}${foes}</svg>`;
+      <rect class="fm-bgclick" width="${W}" height="${H}" fill="transparent"/>${bg}${map.bg?.style === "image" && map.bg.src ? `<rect width="${W}" height="${H}" fill="url(#fm-vignette)" pointer-events="none"/>` : ""}${pLines}${route}${nodes}${foes}</svg>`;
   }
 
   legend(map, st) {
@@ -831,7 +896,7 @@ export class FieldMapApp extends Application {
         const p = `areas.${i}`;
         return `<h3>${esc(L("areaHead"))} <a data-fm-act="deselect" title="${esc(L("close"))}"><i class="fas fa-times"></i></a></h3>
           ${this.field(`${p}.name`, a.name, L("f.name"))}
-          <div class="form-group"><label>${esc(L("f.scene"))}</label><select data-path="${p}.sceneId" data-struct>${opt("", a.sceneId, L("noScene"))}${game.scenes.contents.filter((x) => !x.getFlag("nssq", "randomPreset")).map((x) => opt(x.id, a.sceneId, x.name)).join("")}</select></div>
+          <div class="form-group"><label>${esc(L("f.scene"))}</label><select data-path="${p}.sceneId" data-struct>${opt("", a.sceneId, L("noScene"))}${game.scenes.contents.filter((x) => !x.getFlag("nssq", "randomPreset")).map((x) => opt(x.id, a.sceneId, x.name)).join("")}</select><button type="button" data-fm-act="makeScene" class="fm-icon" title="${esc(L("makeSceneHint"))}"><i class="fas fa-plus"></i></button></div>
           <div class="form-group"><label>${esc(L("f.img"))}</label><input type="text" data-path="${p}.img" data-struct value="${esc(a.img ?? "")}" placeholder="${esc(L("f.imgHint"))}"/><button type="button" data-fm-act="pickImg" class="fm-icon"><i class="fas fa-file-import"></i></button></div>
           ${areaImg(a) ? `<div class="fm-edit-img" style="background-image:url('${esc(areaImg(a))}')"></div>` : ""}
           ${this.field(`${p}.terrain`, a.terrain, L("f.terrain"), "text", L("f.terrainHint"))}
@@ -851,8 +916,12 @@ export class FieldMapApp extends Application {
         const p = `passages.${i}`;
         return `<h3>${esc(L("passageHead"))} <a data-fm-act="deselect"><i class="fas fa-times"></i></a></h3><p>${esc(passageLabel(map, pa))}</p>
           <div class="form-group"><label>${esc(L("f.state"))}</label><select data-path="${p}.state">${FM.PASSAGE_STATES.map((x) => opt(x, pa.state, L(`ps.${x}`))).join("")}</select></div>
-          ${this.field(`${p}.oneWay`, pa.oneWay, L("f.oneWay"), "bool")}
-          <p><button type="button" data-fm-act="flip">${esc(L("flip"))}</button></p>
+          <div class="form-group"><label>${esc(L("f.direction"))}</label><select data-fm-dir>
+            ${opt("both", pa.oneWay ? "" : "both", `${areaName(map, pa.a)} ↔ ${areaName(map, pa.b)}`)}
+            ${opt("ab", pa.oneWay ? "ab" : "", `${areaName(map, pa.a)} → ${areaName(map, pa.b)}`)}
+            ${opt("ba", "", `${areaName(map, pa.b)} → ${areaName(map, pa.a)}`)}</select></div>
+          ${this.field(`${p}.hideBlocked`, pa.hideBlocked, L("f.hideBlocked"), "bool")}
+          <p class="notes">${esc(L("f.hideBlockedHint"))}</p>
           ${this.field(`${p}.label`, pa.label, L("f.label"))}
           <p class="notes">${esc(L("passageHint"))}</p>
           <p><button type="button" data-fm-act="delPassage" class="fm-danger"><i class="fas fa-trash"></i> ${esc(L("delPassage"))}</button></p>`;
@@ -958,6 +1027,17 @@ export class FieldMapApp extends Application {
     if (!game.user.isGM) return;
     html.on("change", "[data-fm-map]", (ev) => this.switchMap(ev.currentTarget.value));
     html.on("change", "[data-path]", (ev) => this.onField(ev.currentTarget));
+    // 통로 방향: 양방향 / a → b / b → a(끝을 맞바꿔 한 방향)
+    html.on("change", "[data-fm-dir]", (ev) => {
+      const map = this.currentMap();
+      const pa = map?.passages.find((x) => x.id === this.sel?.id);
+      if (!pa) return;
+      const v = ev.currentTarget.value;
+      if (v === "ba") [pa.a, pa.b] = [pa.b, pa.a];
+      pa.oneWay = v !== "both";
+      this.dirty = true;
+      this.render();
+    });
     html.on("change", "[data-fm-pstate]", (ev) => setPassageState(this.sel.id, ev.currentTarget.value));
     html.on("change", "[data-fm-foepos]", (ev) => setFoePos(ev.currentTarget.dataset.fmFoepos, ev.currentTarget.value));
     html.on("click", "[data-fm-tool]", (ev) => { this.tool = ev.currentTarget.dataset.fmTool; this.linkFrom = null; this.routeFoe = null; this.render(); });
@@ -978,6 +1058,28 @@ export class FieldMapApp extends Application {
   }
 
   /** 편집 칸 → 초안. 구조가 바뀌는 칸(data-struct)이면 다시 그린다 */
+  /** 에어리어 이름으로 씬을 만들어 연결한다(그림이 있으면 배경으로, 폴더 「필드 지도: 지도 이름」) */
+  async makeScene(area) {
+    if (!area || !game.user.isGM) return;
+    const map = this.currentMap();
+    const folderName = `${L("sceneFolder")}: ${map.name}`;
+    const folder = game.folders.find((f) => f.type === "Scene" && f.name === folderName) ?? await Folder.create({ name: folderName, type: "Scene" });
+    const data = { name: area.name, folder: folder.id, navigation: false };
+    if (area.img) {
+      data.background = { src: area.img };
+      // 씬 크기 = 그림 크기(못 읽으면 Foundry 기본값)
+      const size = await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight }); img.onerror = () => resolve(null); img.src = area.img; });
+      if (size?.width && size?.height) Object.assign(data, size);
+    }
+    const scene = await Scene.create(data);
+    if (!scene) return;
+    area.sceneId = scene.id;
+    area.sceneImg = sceneImage(scene.id) || area.img || "";
+    this.dirty = true;
+    ui.notifications.info(L("sceneMade", { name: scene.name }));
+    return this.render();
+  }
+
   onField(el) {
     if (this.mode !== "edit" || !this.draft) return;
     let v = el.type === "checkbox" ? el.checked : el.value;
@@ -1069,6 +1171,7 @@ export class FieldMapApp extends Application {
       }
       case "delPassage": map.passages = map.passages.filter((p) => p.id !== this.sel.id); this.sel = null; this.dirty = true; return this.render();
       case "flip": { const p = map.passages.find((x) => x.id === this.sel.id); [p.a, p.b] = [p.b, p.a]; this.dirty = true; return this.render(); }
+      case "makeScene": return this.makeScene(map.areas.find((x) => x.id === this.sel.id));
       case "pickImg": { const ar = map.areas.find((x) => x.id === this.sel.id); return new FilePicker({ type: "image", current: ar.img, callback: (src) => { ar.img = src; this.dirty = true; this.render(); } }).render(true); }
       case "pickBg": return new FilePicker({ type: "image", current: map.bg?.src, callback: (src) => { map.bg = { style: "image", src }; this.dirty = true; this.render(); } }).render(true);
       case "route": this.routeFoe = this.routeFoe === id ? null : id; this.tool = "select"; this.linkFrom = null; return this.render();

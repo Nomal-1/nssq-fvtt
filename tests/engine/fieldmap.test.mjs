@@ -20,6 +20,27 @@ const map = () => ({
 });
 
 describe("필드 지도: 표시 집합", () => {
+  it("들어갈 수 없으면 숨김(hideBlocked): 잠김·한 방향 반대쪽", () => {
+    const m = map();
+    m.passages.find((p) => p.id === "p6").hideBlocked = true;
+    // 꽃밭 → 동굴(비밀 아님 쪽만 보려고 동굴 대신 꽃밭 ← 바위 한 방향 통로를 추가)
+    m.passages.push({ id: "p9", a: "flower", b: "rock", oneWay: true, hideBlocked: true });
+    let s = advance(m, startState(m), { to: "forest" }).state;
+    s = advance(m, s, { to: "swamp" }).state;
+    let v = playerView(m, s);
+    expect(v.frontier).not.toContain("camp");
+    expect(v.passages.map((p) => p.id)).not.toContain("p6");
+    s = advance(m, s, { to: "rock" }).state;
+    v = playerView(m, s);
+    // 바위에서는 꽃밭 → 바위 한 방향 통로가 보이지 않는다(꽃밭을 밟기 전)
+    expect(v.passages.map((p) => p.id)).not.toContain("p9");
+    s = advance(m, s, { to: "forest" }).state;
+    s = advance(m, s, { to: "flower" }).state;
+    v = playerView(m, s);
+    expect(v.passages.map((p) => p.id)).toContain("p9");
+    expect(v.reachable).toContain("rock");
+  });
+
   it("시작: 현재·탐색·지금 갈 수 있음·이론상", () => {
     const m = map();
     const v = playerView(m, startState(m));
