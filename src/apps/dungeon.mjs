@@ -112,16 +112,18 @@ export async function nextEvent() {
   if (tod !== game.settings.get("nssq", "timeOfDay")) await game.settings.set("nssq", "timeOfDay", tod);
   // 1턴 = 1시간: 독·자연 회복·심도·오버히트(07 #164)
   await (await import("./time-pass.mjs")).timePasses(1);
-  // 이벤트 2D6은 플레이어가 굴린다(사용자 결정). 접속한 파티 플레이어가 없으면 GM이 바로
-  const members0 = await party();
-  const players = game.users.filter((u) => u.active && !u.isGM && members0.some((a) => a.testUserPermission(u, "OWNER")));
+  // 이벤트 2D6은 플레이어가 굴린다(사용자 결정): 접속한 플레이어 모두에게 팝업, 누구 하나가 굴리면 모든 팝업이 닫힌다.
+  // 채팅 카드의 버튼은 팝업을 닫아 버린 경우의 예비. 접속한 플레이어가 없으면 GM이 바로
+  const players = game.users.filter((u) => u.active && !u.isGM);
   if (players.length) {
-    return ChatMessage.create({
+    const msg = await ChatMessage.create({
       speaker: { alias: L("title") },
       content: `<div class="nssq-dungeon"><h3>${esc(L("eventHead", { done, depth: st.depth, h: hour, tod: L(`tod.${tod}`) }))}</h3>
         <p>${esc(L("rollAsk"))}</p><button type="button" data-dungeon-roll><i class="fas fa-dice"></i> ${esc(L("rollButton"))}</button></div>`,
       flags: { nssq: { dungeonRoll: { done, hour, tod } } }
     });
+    emit("dungeonRollAsk", { messageId: msg.id, users: players.map((u) => u.id), head: L("eventHead", { done, depth: st.depth, h: hour, tod: L(`tod.${tod}`) }) });
+    return msg;
   }
   return resolveEvent(await new Roll("2d6").evaluate(), { done, hour, tod });
 }
@@ -292,16 +294,58 @@ export async function presetBattle(name, actors, flags = {}, stage = {}) {
   return b.openStartDialog(scene.id);
 }
 
+/* ---------------- 이벤트 2D6 팝업 ---------------- */
+
+const rollPopups = new Map(); // messageId → Dialog
+
+function closeRollPopup(messageId) {
+  const d = rollPopups.get(messageId);
+  rollPopups.delete(messageId);
+  if (d?.rendered) d.close();
+}
+
+/** 이 클라이언트에서 이벤트 2D6을 굴린다(팝업·채팅 버튼 공통). 다른 사람의 팝업은 바로 닫게 알린다 */
+async function rollDungeonEvent(messageId) {
+  const m = game.messages.get(messageId);
+  if (!m || m.getFlag("nssq", "dungeonRoll")?.used || rollPopups.get(messageId)?.rolled) return;
+  const d = rollPopups.get(messageId);
+  if (d) d.rolled = true;
+  closeRollPopup(messageId);
+  emit("dungeonRollClose", { messageId });
+  const roll = await new Roll("2d6").evaluate();
+  await roll.toMessage({ speaker: ChatMessage.getSpeaker(), flavor: L("rollFlavor") });
+  emit("dungeonRolled", { messageId, formula: roll.formula, total: roll.total }, { local: true });
+}
+
+function showRollPopup({ messageId, users, head }) {
+  if (!users?.includes(game.user.id) || rollPopups.has(messageId)) return;
+  const dlg = new Dialog({
+    title: L("title"),
+    content: `<div class="nssq-dungeon-ask"><h3><i class="fas fa-dungeon"></i> ${esc(head ?? "")}</h3><p>${esc(L("rollAskPopup"))}</p></div>`,
+    buttons: { roll: { icon: '<i class="fas fa-dice"></i>', label: L("rollButton"), callback: () => rollDungeonEvent(messageId) } },
+    default: "roll",
+    close: () => { if (rollPopups.get(messageId) === dlg) rollPopups.delete(messageId); }
+  }, { classes: ["nssq", "dialog"], width: 360 });
+  rollPopups.set(messageId, dlg);
+  dlg.render(true);
+}
+
+const usedRolls = new Set(); // 활성 GM: 거의 동시에 둘이 굴린 경우 처음 것만
+
 export function registerDungeon() {
   game.settings.register("nssq", "dungeon", { scope: "world", config: false, type: Object, default: {} });
   game.settings.register("nssq", "dungeonStage", { scope: "world", config: false, type: Object, default: {} });
   onSocket("dungeonEscape", ({ by }) => { if (isActiveGM()) escapeDungeon(by); });
   // 플레이어가 이벤트 2D6을 굴리면 활성 GM이 이벤트를 정한다
+  onSocket("dungeonRollAsk", showRollPopup);
+  onSocket("dungeonRollClose", ({ messageId }) => closeRollPopup(messageId));
   onSocket("dungeonRolled", async ({ messageId, formula, total }) => {
     if (!isActiveGM()) return;
     const m = game.messages.get(messageId);
     const d = m?.getFlag("nssq", "dungeonRoll");
-    if (!d || d.used) return;
+    if (!d || d.used || usedRolls.has(messageId)) return;
+    usedRolls.add(messageId);
+    emit("dungeonRollClose", { messageId });
     await m.update({ "flags.nssq.dungeonRoll.used": true, content: m.content.replace(/<button[^>]*data-dungeon-roll[\s\S]*?<\/button>/, "") });
     // 주사위는 플레이어 쪽 메시지에 이미 보였다 → 결과값만 쓴다
     return resolveEvent({ total, formula }, d, true);
@@ -310,13 +354,7 @@ export function registerDungeon() {
     const rd = message.getFlag("nssq", "dungeonRoll");
     html[0].querySelectorAll("[data-dungeon-roll]").forEach((b) => {
       if (rd?.used) return b.remove();
-      b.addEventListener("click", async () => {
-        b.disabled = true;
-        const roll = await new Roll("2d6").evaluate();
-        await roll.toMessage({ speaker: ChatMessage.getSpeaker(), flavor: L("rollFlavor") });
-        const payload = { messageId: message.id, formula: roll.formula, total: roll.total };
-        emit("dungeonRolled", payload, { local: true });
-      });
+      b.addEventListener("click", () => { b.disabled = true; rollDungeonEvent(message.id); });
     });
     html[0].querySelectorAll(".nssq-dungeon [data-dungeon]").forEach((b) => {
       if (!game.user.isGM) return b.remove();
