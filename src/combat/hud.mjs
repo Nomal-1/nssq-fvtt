@@ -242,7 +242,7 @@ function enemyCard(c, combat, targetable) {
   const a = c.actor;
   const s = a.system;
   const showHp = game.user.isGM || knowsEnemy(a);
-  const cls = ["nb-enemy", s.row === "back" ? "back" : "front", isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", targetable ? "targetable" : ""].join(" ");
+  const cls = ["nb-enemy", persistClasses(c), s.row === "back" ? "back" : "front", isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", targetable ? "targetable" : ""].join(" ");
   const tools = game.user.isGM ? `<div class="gm-tools">
       <a data-tool="identify" class="${s.identified ? "on" : ""}" title="${esc(game.i18n.localize(s.identified ? "NSSQ.Combat.identifiedOn" : "NSSQ.Combat.identifiedOff"))}"><i class="fas ${s.identified ? "fa-eye" : "fa-eye-slash"}"></i></a>
       <a data-tool="row" title="${esc(game.i18n.localize("NSSQ.Combat.changeRow"))}"><i class="fas fa-arrows-alt-v"></i></a>
@@ -252,7 +252,7 @@ function enemyCard(c, combat, targetable) {
     </div>` : "";
   // 이름·【HP】·상태 표시·GM 도구를 한 덩어리(plate)로 그림에 붙인다. 그림 크기와 관계없이 전열은 그림 아래, 후열은 그림 위
   return `<div class="${cls}" data-combatant="${c.id}" data-key="e-${c.id}" data-flip title="${esc(c.name)}">
-    <div class="art"><img src="${esc(enemyImage(c))}"/></div>
+    <div class="art"><img src="${esc(enemyImage(c))}"/>${persistOverlay(c)}</div>
     <div class="plate">
       <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
       <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
@@ -287,15 +287,40 @@ function overheatChip(a) {
   return (n > 0 ? `<em class="overheat" title="${esc(S("overheatHint"))}"><i class="fas fa-fire-alt"></i> ${esc(S("overheatChip"))}</em>` : "") + states;
 }
 
+/**
+ * 지속 효과 표시(사용자 요청): 강화 중 → 카드 붉은 테두리, 방어 전념·대기 → 반투명 방패,
+ * 봉인 → 덩굴, [혼란] → 소용돌이, 그 밖의 상태 이상 → 아이콘. 그림 위에 겹친다
+ */
+const AILMENT_ICON = { poison: "fa-skull-crossbones", paralyze: "fa-bolt", sleep: "fa-moon", fear: "fa-ghost", blind: "fa-eye-slash", curse: "fa-ankh", petrify: "fa-mountain", stun: "fa-star" };
+function persistClasses(c) {
+  const a = c.actor;
+  const buffs = a?.system.buffs ?? [];
+  const isDebuff = (b) => BUFFS[b.id]?.kind === "debuff";
+  return [buffs.some((b) => !isDebuff(b)) ? "fx-buffed" : "", buffs.some(isDebuff) ? "fx-debuffed" : ""].join(" ");
+}
+function persistOverlay(c) {
+  const a = c.actor;
+  const conds = a?.system.conditions ?? [];
+  const has = (id) => conds.some((x) => x.id === id);
+  const guard = !!c.getFlag("nssq", "guarding") || (c.getFlag("nssq", "stances") ?? []).length > 0;
+  const vine = conds.some((x) => String(x.id).startsWith("bind"));
+  const icons = conds.filter((x) => AILMENT_ICON[x.id]).map((x) => `<i class="fas ${AILMENT_ICON[x.id]} ail-${x.id}"></i>`).join("");
+  return `${guard ? `<i class="nb-guard-fx fas fa-shield-alt"></i>` : ""}`
+    + (vine ? `<svg class="nb-vine" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,90 C20,70 10,50 30,40 S50,10 70,20 S95,5 100,0"/><path d="M0,30 C15,40 25,25 40,45 S60,80 80,70 S95,90 100,100"/><circle cx="30" cy="40" r="4"/><circle cx="70" cy="20" r="4"/><circle cx="80" cy="70" r="4"/></svg>` : "")
+    + (has("confuse") ? `<i class="nb-swirl fas fa-hurricane"></i>` : "")
+    + (icons ? `<span class="nb-ail-icons">${icons}</span>` : "")
+    + (has("petrify") ? `<span class="nb-stone"></span>` : "");
+}
+
 function partyCard(c, combat, targetable) {
   const a = c.actor;
   const s = a.system;
   const cls = a.type === "character" ? s.classItems?.main?.name ?? "" : "";
   const guard = c.getFlag("nssq", "guarding");
   const bar = (k, r) => `<div class="nb-bar ${k}"><b>${k.toUpperCase()}</b><i style="width:${pct(r)}%"></i><span>${r?.value ?? 0}/${r?.max ?? 0}</span></div>`;
-  const classes = ["nb-member", isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", a.isOwner && !game.user.isGM ? "mine" : "", targetable ? "targetable" : ""].join(" ");
+  const classes = ["nb-member", persistClasses(c), isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", a.isOwner && !game.user.isGM ? "mine" : "", targetable ? "targetable" : ""].join(" ");
   return `<div class="${classes}" data-combatant="${c.id}" data-key="p-${c.id}" data-flip>
-    <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}"></div>
+    <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}">${persistOverlay(c)}</div>
     <div class="info">
       <div class="line"><span class="name">${esc(nameOf(c))}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${overheatChip(a)}${stanceChips(c)}${statusChips(a)}
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
@@ -320,7 +345,7 @@ function actionMenu(combat, c) {
 }
 
 /** 개발용(tools/dev/battle-preview.mjs): 스킬 목록 열린 상태 미리보기 */
-export const _preview = { openMenu: (m) => { menu = m; } };
+export const _preview = { openMenu: (m) => { menu = m; }, fx: (combatantId, elements, crit = false) => elementFx(cardEl(combatantId), elements, { crit }) };
 
 /** 위쪽 해설 창: 목록에서 고른(마우스를 올린) 스킬·아이템의 해설·대상·사거리·코스트 */
 function skillInfoInner(x) {
@@ -525,13 +550,15 @@ function hitFlash(card) {
 }
 
 /** 대미지: 흔들림 + 붉은 번쩍임(속성은 건드리지 않는 Web Animations) */
-function hitShake(card, strong = false) {
+function hitShake(card, strong = false, huge = false) {
   if (!card) return;
-  const a = strong ? 10 : 6;
+  const a = huge ? 18 : strong ? 10 : 6;
+  // 괴: 위아래로도 크게 흔들린다
+  const v = huge ? 7 : 0;
   card.animate([
-    { transform: "translateX(0)" }, { transform: `translateX(-${a}px)` }, { transform: `translateX(${a}px)` },
-    { transform: `translateX(-${a / 2}px)` }, { transform: `translateX(${a / 2}px)` }, { transform: "translateX(0)" }
-  ], { duration: 360, easing: "ease-out" });
+    { transform: "translate(0, 0)" }, { transform: `translate(-${a}px, ${v}px)` }, { transform: `translate(${a}px, -${v}px)` },
+    { transform: `translate(-${a / 2}px, ${v / 2}px)` }, { transform: `translate(${a / 2}px, 0)` }, { transform: "translate(0, 0)" }
+  ], { duration: huge ? 520 : 360, easing: "ease-out" });
   const target = card.querySelector(".art img, .portrait") ?? card;
   target.animate([
     { filter: "brightness(2.2) saturate(0.4) drop-shadow(0 0 12px #ff4a3a)" },
@@ -552,6 +579,7 @@ function hpEffect(combatantId, delta) {
 
 const fxOn = () => game.settings.get("nssq", "battleFx") !== false;
 const ELEMENT_FX = ["slash", "strike", "pierce", "fire", "ice", "volt"];
+const NON_ELEMENT = ["none"];
 
 /** 대상 그림 위에 이펙트 상자(크기 = 그림) */
 function fxBox(card, cls, ms = 900) {
@@ -569,10 +597,13 @@ function fxBox(card, cls, ms = 900) {
 
 /** 속성 이펙트: 참(베기 자국)·괴(충격파)·돌(찌르기)·염(불꽃)·빙(얼음 조각)·뇌(번개). 속성이 여럿이면 첫 속성, 무속성은 충격파 */
 function elementFx(card, elements = [], { crit = false } = {}) {
-  const el = ELEMENT_FX.find((e) => elements.includes(e)) ?? "strike";
+  // 속성 없음(무속성)은 십자 섬광(사용자 요청)
+  const el = ELEMENT_FX.find((e) => elements.includes(e)) ?? NON_ELEMENT[0];
   const box = fxBox(card, `el-${el}${crit ? " crit" : ""}`, 1000);
   if (!box) return;
-  const parts = { slash: 3, strike: 2, pierce: 1, fire: 7, ice: 8, volt: 1 }[el];
+  // 참: 한 획 사선 / 괴: 충격 + 파편 + 큰 흔들림 / 돌: 충격파 고리
+  const parts = { slash: 1, strike: 8, pierce: 2, fire: 7, ice: 8, volt: 1, none: 2 }[el];
+  if (el === "strike") hitShake(card, true, true);
   for (let i = 0; i < parts; i++) {
     const p = document.createElement("i");
     p.style.setProperty("--i", i);

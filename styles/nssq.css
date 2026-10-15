@@ -1213,17 +1213,27 @@
 /* ---------- 전투 이펙트: 속성·지원(설정 battleFx) ---------- */
 #nssq-battle-fx .nb-fx { position: absolute; pointer-events: none; }
 #nssq-battle-fx .nb-fx i { position: absolute; display: block; }
-/* 참: 사선 베기 자국 */
-#nssq-battle-fx .el-slash i { left: -10%; top: calc(30% + var(--i) * 18%); width: 120%; height: 6px; border-radius: 3px; background: linear-gradient(90deg, transparent, #fff 40%, #cfe8ff 60%, transparent); box-shadow: 0 0 10px #9fd0ff; transform: rotate(-32deg) scaleX(0); transform-origin: left center; animation: fx-slash 0.42s ease-out calc(var(--i) * 0.07s) forwards; }
-@keyframes fx-slash { 0% { transform: rotate(-32deg) scaleX(0); opacity: 1; } 55% { transform: rotate(-32deg) scaleX(1); opacity: 1; } 100% { transform: rotate(-32deg) scaleX(1); opacity: 0; } }
-/* 괴: 충격파 고리 */
-#nssq-battle-fx .el-strike i { left: 50%; top: 50%; width: 30%; height: 30%; margin: -15% 0 0 -15%; border-radius: 50%; border: 6px solid #ffd27a; box-shadow: 0 0 18px #ff9a3a, inset 0 0 12px #fff2c0; animation: fx-ring 0.55s ease-out calc(var(--i) * 0.12s) forwards; opacity: 0; }
+/* 크기: 염·빙은 키우고 뇌는 줄여 셋을 비슷하게(번개의 약 80%, 사용자 요청). 크리티컬은 여기에 곱한다 */
+#nssq-battle-fx .nb-fx { transform: scale(calc(var(--s, 1) * var(--c, 1))); }
+#nssq-battle-fx .nb-fx.el-fire { --s: 1.45; }
+#nssq-battle-fx .nb-fx.el-ice { --s: 1.4; }
+#nssq-battle-fx .nb-fx.el-volt { --s: 0.85; }
+/* 참: 한 획 사선 베기(좌상 → 우하) */
+#nssq-battle-fx .el-slash i { left: -15%; top: 48%; width: 130%; height: 9px; border-radius: 50%; background: linear-gradient(90deg, transparent, #cfe8ff 15%, #fff 50%, #cfe8ff 85%, transparent); box-shadow: 0 0 14px #9fd0ff, 0 0 28px rgba(160, 210, 255, 0.6); transform: rotate(38deg) scaleX(0); transform-origin: left center; animation: fx-slash 0.38s cubic-bezier(.2,.9,.3,1) forwards; }
+@keyframes fx-slash { 0% { transform: rotate(38deg) scaleX(0); opacity: 1; } 45% { transform: rotate(38deg) scaleX(1); opacity: 1; } 100% { transform: rotate(38deg) scaleX(1) scaleY(0.2); opacity: 0; } }
+/* 돌: 충격파 고리(예전 괴) */
+#nssq-battle-fx .el-pierce i { left: 50%; top: 50%; width: 30%; height: 30%; margin: -15% 0 0 -15%; border-radius: 50%; border: 6px solid #e8f4ff; box-shadow: 0 0 18px #9fd0ff, inset 0 0 12px #fff; animation: fx-ring 0.55s ease-out calc(var(--i) * 0.12s) forwards; opacity: 0; }
 @keyframes fx-ring { 0% { transform: scale(0.2); opacity: 1; } 100% { transform: scale(3.2); opacity: 0; border-width: 1px; } }
-/* 돌: 찌르기 섬광 */
-#nssq-battle-fx .el-pierce i { left: -30%; top: 48%; width: 90%; height: 5px; background: linear-gradient(90deg, transparent, #e8f4ff 70%, #fff); box-shadow: 0 0 12px #bfe3ff; animation: fx-pierce 0.45s cubic-bezier(.2,.9,.3,1) forwards; }
-#nssq-battle-fx .el-pierce::after { content: ""; position: absolute; left: 58%; top: 50%; width: 26px; height: 26px; margin: -13px; border-radius: 50%; background: radial-gradient(circle, #fff, #9fd0ff 45%, transparent 70%); animation: fx-spark 0.5s ease-out 0.18s both; }
-@keyframes fx-pierce { 0% { transform: translateX(-40%); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateX(60%); opacity: 0; } }
 @keyframes fx-spark { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
+/* 괴: 중심의 큰 충격 섬광 + 사방으로 튀는 파편(+ 카드가 크게 흔들린다) */
+#nssq-battle-fx .el-strike::before { content: ""; position: absolute; inset: 15%; border-radius: 50%; background: radial-gradient(circle, #fff 0, #ffe08a 25%, #ff8a2a 50%, transparent 70%); animation: fx-impact 0.5s ease-out both; }
+#nssq-battle-fx .el-strike i { left: 50%; top: 50%; width: 8px; height: 22px; margin: -11px -4px; background: linear-gradient(#fff, #ffb84a); border-radius: 3px; transform: rotate(calc(var(--i) * 360deg / var(--n))) translateY(0); animation: fx-debris 0.55s ease-out forwards; }
+@keyframes fx-impact { 0% { transform: scale(0.2); opacity: 1; } 40% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(1.8); opacity: 0; } }
+@keyframes fx-debris { 0% { transform: rotate(calc(var(--i) * 360deg / var(--n))) translateY(0) scale(0.6); opacity: 1; } 100% { transform: rotate(calc(var(--i) * 360deg / var(--n))) translateY(-190%) scale(1); opacity: 0; } }
+/* 무속성: 금빛 십자 섬광 + 퍼지는 고리 */
+#nssq-battle-fx .el-none::after { content: ""; position: absolute; left: 50%; top: 50%; width: 30%; height: 30%; margin: -15% 0 0 -15%; border-radius: 50%; border: 3px solid rgba(255, 236, 170, 0.9); box-shadow: 0 0 16px #ffd862; animation: fx-ring 0.6s ease-out 0.12s forwards; opacity: 0; }
+#nssq-battle-fx .el-none i { left: -10%; top: 48%; width: 120%; height: 7px; border-radius: 50%; background: linear-gradient(90deg, transparent, #fff3c4 30%, #fff 50%, #fff3c4 70%, transparent); box-shadow: 0 0 14px #ffd862; transform: rotate(calc(45deg + var(--i) * 90deg)) scaleX(0); animation: fx-cross 0.45s ease-out calc(var(--i) * 0.08s) forwards; }
+@keyframes fx-cross { 0% { transform: rotate(calc(45deg + var(--i) * 90deg)) scaleX(0); opacity: 1; } 50% { transform: rotate(calc(45deg + var(--i) * 90deg)) scaleX(1); opacity: 1; } 100% { transform: rotate(calc(45deg + var(--i) * 90deg)) scaleX(1); opacity: 0; } }
 /* 염: 불꽃 */
 #nssq-battle-fx .el-fire i { left: calc(15% + var(--r) * 70%); bottom: 10%; width: 22%; height: 30%; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: radial-gradient(ellipse at 50% 70%, #fff3a0, #ffb02e 35%, #ff4a1a 65%, transparent 72%); filter: blur(1px); animation: fx-flame 0.8s ease-out calc(var(--i) * 0.05s) forwards; opacity: 0; }
 @keyframes fx-flame { 0% { transform: translateY(0) scale(0.4); opacity: 0; } 25% { opacity: 1; } 100% { transform: translateY(-120%) scale(1.3); opacity: 0; } }
@@ -1237,7 +1247,7 @@
 #nssq-battle-fx .el-volt { animation: fx-flicker 0.55s steps(2) forwards; }
 @keyframes fx-flicker { 0% { opacity: 1; } 20% { opacity: 0.2; } 40% { opacity: 1; } 70% { opacity: 0.4; } 100% { opacity: 0; } }
 /* 크리티컬: 이펙트를 크게 */
-#nssq-battle-fx .nb-fx.crit { transform: scale(1.35); filter: drop-shadow(0 0 10px #ffd862); }
+#nssq-battle-fx .nb-fx.crit { --c: 1.35; filter: drop-shadow(0 0 10px #ffd862); }
 /* 회복: 초록 빛 입자가 올라간다 */
 #nssq-battle-fx .sp-heal i, #nssq-battle-fx .sp-cure i { left: calc(10% + var(--r) * 80%); bottom: 5%; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle, #fff, #6dff9a 50%, transparent 70%); animation: fx-rise 1.1s ease-out calc(var(--i) * 0.08s) both; }
 #nssq-battle-fx .sp-cure i { background: radial-gradient(circle, #fff, #bfe6ff 50%, transparent 70%); }
@@ -1465,3 +1475,24 @@
 /* 갈무리 풀: 받을 캐릭터 선택칸이 어두운 카드에서 잘 보이게 */
 .nssq-loot select { color: #f4e9c8; background: #1b2a40; border: 1px solid var(--nq-gold); }
 .nssq-loot select option { color: #f4e9c8; background: #1b2a40; }
+
+/* 지속 효과 표시(전투 카드) */
+#nssq-battle .fx-buffed { box-shadow: 0 0 0 2px rgba(255, 70, 50, 0.85), 0 0 12px rgba(255, 60, 40, 0.7); animation: nb-buffglow 1.6s ease-in-out infinite alternate; }
+#nssq-battle .fx-debuffed:not(.fx-buffed) { box-shadow: 0 0 0 2px rgba(150, 80, 220, 0.8), 0 0 10px rgba(140, 70, 220, 0.6); }
+@keyframes nb-buffglow { from { box-shadow: 0 0 0 2px rgba(255, 70, 50, 0.6), 0 0 6px rgba(255, 60, 40, 0.4); } to { box-shadow: 0 0 0 2px rgba(255, 90, 60, 1), 0 0 16px rgba(255, 60, 40, 0.9); } }
+#nssq-battle :is(.portrait, .art) { position: relative; }
+#nssq-battle .nb-guard-fx { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 2.8em; color: rgba(140, 200, 255, 0.45); text-shadow: 0 0 10px rgba(120, 190, 255, 0.9); pointer-events: none; animation: nb-guardpulse 2s ease-in-out infinite; }
+#nssq-battle .art .nb-guard-fx { font-size: 5em; }
+@keyframes nb-guardpulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.9; } }
+#nssq-battle .nb-vine { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#nssq-battle .nb-vine path { fill: none; stroke: #4caf50; stroke-width: 5; stroke-linecap: round; filter: drop-shadow(0 0 2px #1b5e20); }
+#nssq-battle .nb-vine circle { fill: #81c784; stroke: #2e7d32; stroke-width: 1.5; }
+#nssq-battle .nb-swirl { position: absolute; right: 2px; top: 2px; font-size: 1.5em; color: #ff6ec7; text-shadow: 0 0 6px #ff2ba0; pointer-events: none; animation: nb-spin 2s linear infinite; }
+@keyframes nb-spin { to { transform: rotate(360deg); } }
+#nssq-battle .nb-ail-icons { position: absolute; left: 2px; bottom: 2px; display: flex; gap: 2px; pointer-events: none; }
+#nssq-battle .nb-ail-icons i { font-size: 0.95em; padding: 2px; border-radius: 50%; background: rgba(0,0,0,0.6); }
+#nssq-battle .nb-ail-icons .ail-poison { color: #8bff6a; } #nssq-battle .nb-ail-icons .ail-paralyze { color: #ffe14a; } #nssq-battle .nb-ail-icons .ail-sleep { color: #a9c8ff; }
+#nssq-battle .nb-ail-icons .ail-fear { color: #d0b0ff; } #nssq-battle .nb-ail-icons .ail-blind { color: #bbb; } #nssq-battle .nb-ail-icons .ail-curse { color: #ff7a7a; }
+#nssq-battle .nb-ail-icons .ail-petrify { color: #ccc; } #nssq-battle .nb-ail-icons .ail-stun { color: #ffd862; }
+#nssq-battle .nb-stone { position: absolute; inset: 0; background: rgba(140, 140, 140, 0.55); mix-blend-mode: saturation; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { #nssq-battle :is(.fx-buffed, .nb-guard-fx, .nb-swirl) { animation: none; } }
