@@ -1,0 +1,272 @@
+{
+ "folder": "추가 컨텐츠",
+ "items": [
+  {
+   "name": "마드라",
+   "type": "consumable",
+   "img": "icons/svg/pill.svg",
+   "system": {
+    "key": "ex.마드라",
+    "price": 30,
+    "effects": [
+     {
+      "type": "heal",
+      "mode": "fixed",
+      "amount": 5,
+      "resource": "tp"
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>단일 대상의 【TP】를 5 회복한다.</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "ok",
+    "effectsNote": ""
+   }
+  },
+  {
+   "name": "마드라 II",
+   "type": "consumable",
+   "img": "icons/svg/pill.svg",
+   "system": {
+    "key": "ex.마드라 II",
+    "price": 300,
+    "effects": [
+     {
+      "type": "heal",
+      "mode": "fixed",
+      "amount": 10,
+      "resource": "tp"
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>단일 대상의 【TP】를 10 회복한다.</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "ok",
+    "effectsNote": ""
+   }
+  },
+  {
+   "name": "마드라 III",
+   "type": "consumable",
+   "img": "icons/svg/pill.svg",
+   "system": {
+    "key": "ex.마드라 III",
+    "price": 1500,
+    "effects": [
+     {
+      "type": "heal",
+      "mode": "fixed",
+      "amount": 15,
+      "resource": "tp"
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>단일 대상의 【TP】를 15 회복한다.</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "ok",
+    "effectsNote": ""
+   }
+  },
+  {
+   "name": "마드라 IV",
+   "type": "consumable",
+   "img": "icons/svg/pill.svg",
+   "system": {
+    "key": "ex.마드라 IV",
+    "price": 4000,
+    "effects": [
+     {
+      "type": "heal",
+      "mode": "full",
+      "resource": "tp"
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>단일 대상의 【TP】를 전부 회복한다.</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "ok",
+    "effectsNote": ""
+   }
+  },
+  {
+   "name": "해부용 수용액",
+   "type": "consumable",
+   "img": "icons/svg/pill.svg",
+   "system": {
+    "key": "ex.해부용 수용액",
+    "price": 500,
+    "effects": [],
+    "quantity": 1,
+    "description": "<p>개막·메인 페이즈에 사용. 사용한 턴에 적을 쓰러뜨리면 일반 갈무리 뒤에 그 적의 모든 드롭 아이템을 1개씩 얻는다(쓰러진 적이 여럿이면 전부).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "gm",
+    "effectsNote": "사용한 턴에 쓰러뜨린 적의 모든 드롭 아이템을 1개씩 추가로 준다"
+   }
+  },
+  {
+   "name": "해석 글라스",
+   "type": "consumable",
+   "img": "icons/svg/pill.svg",
+   "system": {
+    "key": "ex.해석 글라스",
+    "price": 300,
+    "effects": [],
+    "quantity": 1,
+    "description": "<p>개막·메인 페이즈에 적 하나에게 사용. 그 적의 모든 정보(스킬 상세·전 드롭)를 이 전투 동안 본다. 식별한 적 없으면 식별한 것으로 취급한다(도감).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "gm",
+    "effectsNote": "대상 적의 정보를 이 전투 동안 공개하고, 도감에서 식별 처리한다"
+   }
+  },
+  {
+   "name": "STR의 보전",
+   "type": "consumable",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.STR의 보전",
+    "price": 5000,
+    "effects": [],
+    "quantity": 1,
+    "description": "<p>사용하면 그 캐릭터의 【STR】가 영구히 1 오른다(GM 보너스 칸).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "gm",
+    "effectsNote": "사용한 캐릭터의 【STR】 GM 보너스 +1"
+   }
+  },
+  {
+   "name": "TEC의 보전",
+   "type": "consumable",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.TEC의 보전",
+    "price": 5000,
+    "effects": [],
+    "quantity": 1,
+    "description": "<p>사용하면 그 캐릭터의 【TEC】가 영구히 1 오른다(GM 보너스 칸).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "gm",
+    "effectsNote": "사용한 캐릭터의 【TEC】 GM 보너스 +1"
+   }
+  },
+  {
+   "name": "VIT의 보전",
+   "type": "consumable",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.VIT의 보전",
+    "price": 5000,
+    "effects": [],
+    "quantity": 1,
+    "description": "<p>사용하면 그 캐릭터의 【VIT】가 영구히 1 오른다(GM 보너스 칸).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "gm",
+    "effectsNote": "사용한 캐릭터의 【VIT】 GM 보너스 +1"
+   }
+  },
+  {
+   "name": "AGI의 보전",
+   "type": "consumable",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.AGI의 보전",
+    "price": 5000,
+    "effects": [],
+    "quantity": 1,
+    "description": "<p>사용하면 그 캐릭터의 【AGI】가 영구히 1 오른다(GM 보너스 칸).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "gm",
+    "effectsNote": "사용한 캐릭터의 【AGI】 GM 보너스 +1"
+   }
+  },
+  {
+   "name": "LUC의 보전",
+   "type": "consumable",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.LUC의 보전",
+    "price": 5000,
+    "effects": [],
+    "quantity": 1,
+    "description": "<p>사용하면 그 캐릭터의 【LUC】가 영구히 1 오른다(GM 보너스 칸).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "gm",
+    "effectsNote": "사용한 캐릭터의 【LUC】 GM 보너스 +1"
+   }
+  },
+  {
+   "name": "비전의 서",
+   "type": "consumable",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.비전의 서",
+    "price": 5000,
+    "effects": [],
+    "quantity": 1,
+    "description": "<p>사용하면 여유 스킬 포인트(SL) 1을 얻는다. 사용하면 반드시 스킬을 습득해야 한다.</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "review": "gm",
+    "effectsNote": "사용한 캐릭터의 보너스 SL +1 → 스킬 트리에서 바로 습득"
+   }
+  }
+ ]
+}
