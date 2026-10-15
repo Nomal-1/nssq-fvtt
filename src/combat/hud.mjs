@@ -298,6 +298,9 @@ function persistClasses(c) {
   const isDebuff = (b) => BUFFS[b.id]?.kind === "debuff";
   return [buffs.some((b) => !isDebuff(b)) ? "fx-buffed" : "", buffs.some(isDebuff) ? "fx-debuffed" : ""].join(" ");
 }
+// 상태 이상별 지속 연출(CSS): 독=거품, 마비=전기, 수면=Z, 공포=푸른 떨림, 맹목=어둠, 저주=검붉은 연기, 스턴=도는 별
+const AILMENT_FX = ["poison", "paralyze", "sleep", "fear", "blind", "curse", "stun"];
+const AILMENT_FX_PARTS = { poison: 4, paralyze: 2, sleep: 3, fear: 2, blind: 0, curse: 3, stun: 3 };
 function persistOverlay(c) {
   const a = c.actor;
   const conds = a?.system.conditions ?? [];
@@ -308,6 +311,7 @@ function persistOverlay(c) {
   return `${guard ? `<i class="nb-guard-fx fas fa-shield-alt"></i>` : ""}`
     + (vine ? `<svg class="nb-vine" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,90 C20,70 10,50 30,40 S50,10 70,20 S95,5 100,0"/><path d="M0,30 C15,40 25,25 40,45 S60,80 80,70 S95,90 100,100"/><circle cx="30" cy="40" r="4"/><circle cx="70" cy="20" r="4"/><circle cx="80" cy="70" r="4"/></svg>` : "")
     + (has("confuse") ? `<svg class="nb-swirl" viewBox="0 0 40 40"><path d="M20 20 m0 -2 a2 2 0 1 1 -2 2 a4 4 0 1 1 4 4 a6 6 0 1 1 -6 -6 a8 8 0 1 1 8 8 a10 10 0 1 1 -10 -10 a12 12 0 1 1 12 12"/></svg>` : "")
+    + AILMENT_FX.filter((k) => has(k)).map((k) => `<span class="nb-ailfx fx-${k}">${"<i></i>".repeat(AILMENT_FX_PARTS[k] ?? 0)}</span>`).join("")
     + (icons ? `<span class="nb-ail-icons">${icons}</span>` : "")
     + (has("petrify") ? `<span class="nb-stone"></span>` : "");
 }

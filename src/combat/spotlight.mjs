@@ -8,6 +8,7 @@
  */
 import { evaluateCheck } from "../engine/check.mjs";
 import { isActiveGM } from "./apply.mjs";
+import { cutinStyle } from "../apps/art-config.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Spotlight.${k}`, d) : game.i18n.localize(`NSSQ.Spotlight.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -18,12 +19,14 @@ const TRIGGERS = ["crit", "absSuccess", "ailment"];
 let cutQueue = Promise.resolve();
 
 /** 컷인 하나(이 클라이언트에서만). kind: chase | counter | evade */
-export function cutIn(actor, kind) {
+export function cutIn(actor, kind, { style = null } = {}) {
   if (!actor || game.settings.get("nssq", "battleFx") === false) return cutQueue;
   cutQueue = cutQueue.then(() => new Promise((resolve) => {
     const el = document.createElement("div");
     el.className = `nssq-cutin ci-${kind}`;
-    el.innerHTML = `<div class="ci-band"></div><div class="ci-art"><img src="${esc(actor.img)}" alt=""/></div>
+    // 그림 위치·크기는 그림 설정 창의 「컷인」 프레임(system.art.cutinCrop). 캐릭터 외에는 액터 그림
+    const pic = style ?? (actor.type === "character" ? cutinStyle(actor) : `background-image: url('${esc(actor.img)}'); background-size: cover; background-position: 50% 15%;`);
+    el.innerHTML = `<div class="ci-band"></div><div class="ci-art"><div class="ci-pic" style="${pic}"></div></div>
       <div class="ci-text"><b>${esc(L(`cut.${kind}`))}</b><span>${esc(actor.name)}</span></div>`;
     document.body.append(el);
     setTimeout(() => { el.remove(); resolve(); }, 1300);

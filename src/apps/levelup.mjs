@@ -3,7 +3,7 @@
  * - 레벨은 저장값. 누적 경험점이 다음 레벨 값에 닿으면 system.levelReady → 시트 [레벨업]
  * - 레벨업: Lv +1(능력치의 클래스 보정·HP·TP는 레벨로 다시 계산), 올라간 최대 HP·TP만큼 현재 값도 올림,
  *   그때의 스킬 SL을 플래그 nssq.levelUp에 남겨 스킬 트리가 「한 스킬 +1까지」를 지키게 한다
- * - 플레이어는 레벨·경험점을 직접 못 바꾼다(preUpdateActor). 예외: 레벨업 버튼(nssqLevelUp)·길드 비용(nssqGuild)
+ * - 플레이어는 레벨·경험점을 직접 못 바꾼다(preUpdateActor). 예외: 레벨업 버튼(nssqLevelUp)·길드 비용(nssqGuild: 경험점 감소·레벨 −1)
  */
 import tables from "../generated/tables.mjs";
 import { levelFromExp } from "../engine/derive.mjs";
@@ -47,7 +47,7 @@ export function registerLevelUp() {
     if (!lvChanged && !exChanged) return;
     const okLevel = options.nssqLevelUp && !exChanged && sys.level === src.level + 1
       && levelFromExp(src.exp, tables.levelExp?.levels) >= sys.level;
-    const okGuild = options.nssqGuild && !lvChanged && sys.exp <= src.exp;
+    const okGuild = options.nssqGuild && (!exChanged || sys.exp <= src.exp) && (!lvChanged || sys.level === Math.max(1, src.level - 1));
     if (okLevel || okGuild) return;
     delete sys.level;
     delete sys.exp;

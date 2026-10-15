@@ -26,6 +26,7 @@ export function artOf(actor) {
     bustCrop: crop("bust"),
     tokenCrop: crop("token"),
     faceCrop: crop("face"),
+    cutinCrop: crop("cutin"),
     token: a.token ?? {}
   };
 }
@@ -34,6 +35,11 @@ export function artOf(actor) {
 export function faceStyle(actor) {
   const art = artOf(actor);
   return `background-image: url('${esc(art.face)}'); ${cropCss(art.faceCrop)}`;
+}
+/** 컷인 그림 style(전신 그림 + 컷인 프레임) */
+export function cutinStyle(actor) {
+  const art = artOf(actor);
+  return `background-image: url('${esc(art.full)}'); ${cropCss(art.cutinCrop)}`;
 }
 export function bustStyle(actor) {
   const art = artOf(actor);
@@ -130,7 +136,8 @@ export async function openArtConfig(actor) {
     face: actor.system.art?.face ?? "",
     bustCrop: { ...start.bustCrop },
     tokenCrop: { ...start.tokenCrop },
-    faceCrop: { ...start.faceCrop }
+    faceCrop: { ...start.faceCrop },
+    cutinCrop: { ...start.cutinCrop }
   };
   const fullSrc = () => st.full || actor.img;
   const faceSrc = () => st.face || fullSrc();
@@ -169,12 +176,20 @@ export async function openArtConfig(actor) {
           <button type="button" data-reset="face"><i class="fas fa-crop-alt"></i> ${L("resetFrame")}</button>
         </div>
       </div>
+      <div class="art-cols art-cutin">
+        <div class="art-col">
+          <h4>${L("cutin")}</h4>
+          <div class="art-frame cutin" data-frame="cutin"></div>
+          <div class="art-row"><button type="button" data-preview-cutin><i class="fas fa-bolt"></i> ${L("cutinPreview")}</button>
+            <button type="button" data-reset="cutin"><i class="fas fa-crop-alt"></i> ${L("resetFrame")}</button></div>
+        </div>
+      </div>
     </form>`;
 
   const refresh = (html) => {
     const root = html[0];
     const css = (key) => `background-image: url('${srcOf(key)}'); ${cropCss(st[`${key}Crop`])}`;
-    for (const key of ["bust", "token", "face"]) root.querySelector(`[data-frame="${key}"]`).style.cssText = css(key);
+    for (const key of ["bust", "token", "face", "cutin"]) root.querySelector(`[data-frame="${key}"]`).style.cssText = css(key);
     root.querySelector("[data-thumb]").style.backgroundImage = `url('${fullSrc()}')`;
     root.querySelector('[data-path="full"]').textContent = st.full || `(${L("useActorImg")})`;
     root.querySelector('[data-path="face"]').textContent = st.face || `(${L("useFull")})`;
@@ -213,7 +228,11 @@ export async function openArtConfig(actor) {
     options: { classes: ["nssq", "dialog"], width: 640 },
     render: (html) => {
       const root = html[0];
-      for (const key of ["bust", "token", "face"]) bindFrame(html, root.querySelector(`[data-frame="${key}"]`), key);
+      for (const key of ["bust", "token", "face", "cutin"]) bindFrame(html, root.querySelector(`[data-frame="${key}"]`), key);
+      // 지금 프레임으로 컷인 미리 보기(이 화면에서만)
+      root.querySelector("[data-preview-cutin]")?.addEventListener("click", async () => {
+        (await import("../combat/spotlight.mjs")).cutIn(actor, "chase", { style: `background-image: url('${fullSrc()}'); ${cropCss(st.cutinCrop)}` });
+      });
       root.querySelectorAll("[data-pick]").forEach((b) => b.addEventListener("click", () => {
         const key = b.dataset.pick;
         new FilePicker({
@@ -260,7 +279,7 @@ export async function openArtConfig(actor) {
   });
   if (!result) return;
 
-  const update = { "system.art": { full: st.full, face: st.face, bustCrop: st.bustCrop, tokenCrop: st.tokenCrop, faceCrop: st.faceCrop } };
+  const update = { "system.art": { full: st.full, face: st.face, bustCrop: st.bustCrop, tokenCrop: st.tokenCrop, faceCrop: st.faceCrop, cutinCrop: st.cutinCrop } };
   // 필드 토큰 그림(전열·후열)
   let token = null;
   try {

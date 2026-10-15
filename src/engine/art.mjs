@@ -12,7 +12,9 @@ export const MAX_SCALE = 8;
 export const DEFAULT_CROP = {
   bust: { x: 50, y: 0, s: 1 },
   token: { x: 50, y: 4, s: 2 },
-  face: { x: 50, y: 6, s: 2.4 }
+  face: { x: 50, y: 6, s: 2.4 },
+  // 컷인(가로로 긴 띠, 약 2:1): 얼굴·상반신 쪽
+  cutin: { x: 50, y: 14, s: 1.2 }
 };
 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));

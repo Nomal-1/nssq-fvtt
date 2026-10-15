@@ -24,6 +24,15 @@ function myCharacters() {
   return game.actors.filter((a) => a.type === "character" && (game.user.isGM ? true : a.testUserPermission(game.user, "OWNER")));
 }
 
+/** 길드 비용: 경험점 −guildCost(0까지) + 레벨 −1(1까지, 사용자 결정). 경험점이 남아 있으면 [레벨업]으로 다시 올리며 SL을 찍는다 */
+function guildPenalty(actor) {
+  return {
+    "system.exp": Math.max(0, (actor.system.exp ?? 0) - guildCost()),
+    "system.level": Math.max(1, (actor.system.level ?? 1) - 1),
+    "flags.nssq.-=levelUp": null
+  };
+}
+
 /** 클래스 스킬을 돌려받는다(★·커먼은 남김) */
 async function refundSkills(actor) {
   const ids = actor.items.filter((i) => i.type === "skill" && !i.system.unique && i.system.classKey !== "common").map((i) => i.id);
@@ -34,10 +43,10 @@ async function refundSkills(actor) {
 
 async function confirmCost(actor, title, body) {
   const cost = guildCost();
-  // 경험점이 모자라면 0까지만 깎인다(사용자 결정). 레벨은 저장값이라 내려가지 않는다(수동 레벨업)
+  // 경험점이 모자라면 0까지만 깎인다. 레벨은 1 내려간다(사용자 결정)
   return Dialog.confirm({
     title, rejectClose: false,
-    content: `<p>${body}</p><p>${esc(L("costLine", { name: actor.name, n: cost, from: actor.system.exp ?? 0, to: Math.max(0, (actor.system.exp ?? 0) - cost) }))}</p>`
+    content: `<p>${body}</p><p>${esc(L("costLine", { name: actor.name, n: cost, from: actor.system.exp ?? 0, to: Math.max(0, (actor.system.exp ?? 0) - cost) }))}</p>${actor.system.level > 1 ? `<p class="warn">${esc(L("levelDown", { from: actor.system.level, to: actor.system.level - 1 }))}</p>` : ""}`
   });
 }
 
@@ -46,7 +55,7 @@ export async function respec(actor) {
   if (!actor?.isOwner) return null;
   if (!(await confirmCost(actor, L("respec"), esc(L("respecBody"))))) return null;
   const n = await refundSkills(actor);
-  await actor.update({ "system.exp": Math.max(0, (actor.system.exp ?? 0) - guildCost()) }, { nssqGuild: true });
+  await actor.update(guildPenalty(actor), { nssqGuild: true });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-town-card"><i class="fas fa-sitemap"></i> ${esc(L("respecDone", { name: actor.name, n, cost: guildCost() }))}</div>` });
   return (await import("./skill-tree.mjs")).SkillTree.open(actor);
 }
@@ -67,7 +76,7 @@ export async function changeClass(actor, mainUuid, subUuid) {
   await actor.createEmbeddedDocuments("Item", keep.map((c) => { const d = c.toObject(); delete d._id; return d; }));
   const n = await refundSkills(actor);
   // ★ 스킬은 unique-skill.mjs 훅이 새 메인 클래스 것으로 맞춘다
-  await actor.update({ "system.mainClass": main.system.key, "system.subClass": keep[1]?.system.key ?? null, "system.exp": Math.max(0, (actor.system.exp ?? 0) - guildCost()) }, { nssqGuild: true });
+  await actor.update({ "system.mainClass": main.system.key, "system.subClass": keep[1]?.system.key ?? null, ...guildPenalty(actor) }, { nssqGuild: true });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-town-card"><i class="fas fa-exchange-alt"></i> ${esc(L("classDone", { name: actor.name, main: main.name, sub: keep[1]?.name ?? L("noSub"), n, cost: guildCost() }))}</div>` });
   return (await import("./skill-tree.mjs")).SkillTree.open(actor);
 }

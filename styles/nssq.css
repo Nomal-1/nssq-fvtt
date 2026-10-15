@@ -680,6 +680,8 @@
 .nssq-art-config .art-frame.token { width: 140px; height: 140px; border-radius: 50%; border-width: 6px; border-color: #e0b84a; }
 .nssq-art-config .art-frame.token.back { border-color: #6fd3e6; }
 .nssq-art-config .art-frame.face { width: 120px; height: 120px; }
+.nssq-art-config .art-frame.cutin { width: 291px; height: 150px; }
+.nssq-art-config .art-cutin { margin-top: 8px; }
 .nssq-art-config .art-row { display: flex; gap: 4px; margin: 4px 0; align-self: stretch; }
 .nssq-art-config .art-row button:first-child { flex: 1; }
 .nssq-art-config .art-row button:last-child { flex: 0 0 32px; width: 32px; }
@@ -1530,7 +1532,7 @@
 .nssq-cutin.ci-counter .ci-band { background: linear-gradient(90deg, rgba(40, 6, 6, 0.92), rgba(150, 20, 20, 0.92) 55%, rgba(40, 6, 6, 0.92)); }
 .nssq-cutin.ci-evade .ci-band { background: linear-gradient(90deg, rgba(4, 30, 30, 0.92), rgba(10, 120, 110, 0.92) 55%, rgba(4, 30, 30, 0.92)); }
 .nssq-cutin .ci-art { position: absolute; right: 8%; top: 30%; width: 46%; height: 38%; transform: skewY(-7deg); overflow: hidden; animation: ci-art 1.3s cubic-bezier(.2, .9, .3, 1) both; -webkit-mask-image: linear-gradient(90deg, transparent, #000 25%); mask-image: linear-gradient(90deg, transparent, #000 25%); }
-.nssq-cutin .ci-art img { width: 100%; height: 260%; object-fit: cover; object-position: 50% 12%; border: none; transform: skewY(7deg) translateY(-12%); }
+.nssq-cutin .ci-pic { position: absolute; inset: 0; background-repeat: no-repeat; transform: skewY(7deg) scale(1.15); }
 .nssq-cutin .ci-text { position: absolute; left: 8%; top: 40%; display: flex; flex-direction: column; transform: skewY(-7deg); color: #fff; text-shadow: 3px 3px 0 #000; animation: ci-text 1.3s cubic-bezier(.2, .9, .3, 1) both; }
 .nssq-cutin .ci-text b { font-size: 64px; font-style: italic; font-weight: 900; letter-spacing: 0.04em; line-height: 1; }
 .nssq-cutin .ci-text span { margin-top: 6px; font-size: 22px; font-weight: 700; }
@@ -1538,3 +1540,47 @@
 @keyframes ci-art { 0% { transform: skewY(-7deg) translateX(60%); opacity: 0; } 20% { transform: skewY(-7deg) translateX(0); opacity: 1; } 75% { transform: skewY(-7deg) translateX(-4%); opacity: 1; } 100% { transform: skewY(-7deg) translateX(-30%); opacity: 0; } }
 @keyframes ci-text { 0% { transform: skewY(-7deg) translateX(-60%); opacity: 0; } 22% { transform: skewY(-7deg) translateX(0); opacity: 1; } 75% { transform: skewY(-7deg) translateX(3%); opacity: 1; } 100% { transform: skewY(-7deg) translateX(30%); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .nssq-cutin { display: none; } }
+
+/* ---------- 상태 이상별 지속 연출(카드 얼굴·에너미 그림 위) ---------- */
+#nssq-battle .nb-ailfx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; border-radius: inherit; }
+#nssq-battle .nb-ailfx i { position: absolute; display: block; }
+/* 독: 초록·보라 거품이 올라온다 + 초록 기운 */
+#nssq-battle .fx-poison { background: linear-gradient(0deg, rgba(90, 200, 60, 0.35), transparent 60%); }
+#nssq-battle .fx-poison i { bottom: -12%; width: 16%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #e6ffd0, #6bd64a 45%, #5a2a8a 100%); opacity: 0.85; animation: ail-bubble 2.2s ease-in infinite; }
+#nssq-battle .fx-poison i:nth-child(1) { left: 12%; } #nssq-battle .fx-poison i:nth-child(2) { left: 38%; width: 11%; animation-delay: 0.6s; }
+#nssq-battle .fx-poison i:nth-child(3) { left: 62%; animation-delay: 1.1s; } #nssq-battle .fx-poison i:nth-child(4) { left: 80%; width: 9%; animation-delay: 1.6s; }
+@keyframes ail-bubble { 0% { transform: translateY(0) scale(0.6); opacity: 0; } 15% { opacity: 0.9; } 100% { transform: translateY(-420%) scale(1.1); opacity: 0; } }
+/* 마비: 노란 전기가 번쩍인다 */
+#nssq-battle .fx-paralyze i { inset: 8%; background: linear-gradient(115deg, transparent 42%, #fff7a0 45%, #ffe14a 47%, transparent 50%, transparent 58%, #ffe14a 61%, transparent 64%); filter: drop-shadow(0 0 4px #ffe14a); animation: ail-zap 1.4s steps(1) infinite; }
+#nssq-battle .fx-paralyze i:nth-child(2) { transform: scaleX(-1) rotate(20deg); animation-delay: 0.5s; }
+@keyframes ail-zap { 0%, 100% { opacity: 0; } 8% { opacity: 1; } 16% { opacity: 0; } 24% { opacity: 0.9; } 32% { opacity: 0; } }
+/* 수면: Z가 떠오른다 + 어둑하게 */
+#nssq-battle .fx-sleep { background: rgba(40, 50, 110, 0.28); }
+#nssq-battle .fx-sleep i { right: 12%; top: 40%; font-style: normal; font-weight: 900; color: #cfe0ff; text-shadow: 0 0 4px #4060c0; animation: ail-z 2.4s ease-out infinite; }
+#nssq-battle .fx-sleep i::before { content: "Z"; }
+#nssq-battle .fx-sleep i:nth-child(1) { font-size: 0.8em; } #nssq-battle .fx-sleep i:nth-child(2) { font-size: 1.1em; animation-delay: 0.8s; } #nssq-battle .fx-sleep i:nth-child(3) { font-size: 1.4em; animation-delay: 1.6s; }
+#nssq-battle .art .fx-sleep i { font-size: 1.6em; } #nssq-battle .art .fx-sleep i:nth-child(3) { font-size: 2.4em; }
+@keyframes ail-z { 0% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(60%, -160%); opacity: 0; } }
+/* 공포: 푸른 기운이 떨리고 식은땀 */
+#nssq-battle .fx-fear { background: linear-gradient(180deg, rgba(70, 90, 200, 0.45), rgba(70, 90, 200, 0.1) 70%); animation: ail-tremble 0.25s linear infinite; }
+#nssq-battle .fx-fear i { top: 18%; width: 9%; height: 14%; border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%; background: linear-gradient(#ffffff, #8fd0ff); animation: ail-sweat 1.6s ease-in infinite; }
+#nssq-battle .fx-fear i:nth-child(1) { left: 18%; } #nssq-battle .fx-fear i:nth-child(2) { right: 18%; animation-delay: 0.8s; }
+@keyframes ail-tremble { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-1.5px); } 75% { transform: translateX(1.5px); } }
+@keyframes ail-sweat { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(260%); opacity: 0; } }
+/* 맹목: 가장자리부터 어둠 */
+#nssq-battle .fx-blind { background: radial-gradient(ellipse at 50% 40%, transparent 18%, rgba(0, 0, 0, 0.85) 62%); animation: ail-dim 3s ease-in-out infinite; }
+@keyframes ail-dim { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+/* 저주: 아래에서 검붉은 연기 */
+#nssq-battle .fx-curse { background: linear-gradient(0deg, rgba(120, 10, 40, 0.45), transparent 55%); }
+#nssq-battle .fx-curse i { bottom: -20%; width: 45%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(90, 0, 50, 0.75), transparent 70%); filter: blur(3px); animation: ail-smoke 3s ease-out infinite; }
+#nssq-battle .fx-curse i:nth-child(1) { left: -5%; } #nssq-battle .fx-curse i:nth-child(2) { left: 30%; animation-delay: 1s; } #nssq-battle .fx-curse i:nth-child(3) { left: 60%; animation-delay: 2s; }
+@keyframes ail-smoke { 0% { transform: translateY(0) scale(0.6); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-150%) scale(1.4); opacity: 0; } }
+/* 스턴: 머리 위를 도는 별 */
+#nssq-battle .fx-stun i { left: 50%; top: 14%; width: 0; height: 0; animation: ail-orbit 1.5s linear infinite; }
+#nssq-battle .fx-stun i::before { content: "★"; position: absolute; transform: translate(-50%, -50%); color: #ffe14a; text-shadow: 0 0 4px #ff9a00; font-size: 0.9em; }
+#nssq-battle .art .fx-stun i::before { font-size: 1.6em; }
+#nssq-battle .fx-stun i:nth-child(2) { animation-delay: -0.5s; } #nssq-battle .fx-stun i:nth-child(3) { animation-delay: -1s; }
+@keyframes ail-orbit { 0% { transform: translate(-28px, 0) scale(0.8); } 25% { transform: translate(0, 5px) scale(1.15); } 50% { transform: translate(28px, 0) scale(0.8); } 75% { transform: translate(0, -5px) scale(0.6); } 100% { transform: translate(-28px, 0) scale(0.8); } }
+#nssq-battle .art .fx-stun i { animation-name: ail-orbit-big; }
+@keyframes ail-orbit-big { 0% { transform: translate(-60px, 0) scale(0.8); } 25% { transform: translate(0, 10px) scale(1.15); } 50% { transform: translate(60px, 0) scale(0.8); } 75% { transform: translate(0, -10px) scale(0.6); } 100% { transform: translate(-60px, 0) scale(0.8); } }
+@media (prefers-reduced-motion: reduce) { #nssq-battle .nb-ailfx, #nssq-battle .nb-ailfx i { animation: none; } }

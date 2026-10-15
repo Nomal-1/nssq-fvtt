@@ -53,6 +53,7 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         bustCrop: crop(),
         tokenCrop: crop(),
         faceCrop: crop(),
+        cutinCrop: crop(),
         // 만들어 둔 필드 토큰 그림(전열·후열 테두리)
         token: new SchemaField({ front: str(""), back: str("") })
       }),
