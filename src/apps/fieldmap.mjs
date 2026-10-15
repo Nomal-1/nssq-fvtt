@@ -290,16 +290,12 @@ export async function gatherHere() {
 
 /** 캠프: n세그먼트(기본 6) + 캠프 창 */
 export async function campHere() {
-  const n = await Dialog.prompt({
-    title: L("campTitle"), content: `<form><div class="form-group"><label>${esc(L("campSegments"))}</label><input type="number" name="n" min="6" value="6"/></div></form>`,
-    label: L("camp"), rejectClose: false, callback: (html) => Math.max(6, Number(html[0].querySelector("[name=n]").value) || 6)
+  // 캠프 창에서 시간·식료품을 정하고 확정되면 그때 세그먼트를 흘린다(취소하면 시간이 지나지 않는다).
+  // 상태 이상은 캠프 처리에서(《약효 요리》·습격 여부를 알아야 하므로). 세그먼트에서는 오버히트만
+  return (await import("./explore.mjs")).openCampDialog({
+    hours: 6, timePassed: true,
+    beforeCamp: async (n) => !!(await wait(n, L("camping", { n }), { noAilments: true }))
   });
-  // 상태 이상은 캠프 창 뒤에 처리한다(《약효 요리》·습격 여부를 알아야 하므로). 세그먼트에서는 오버히트만
-  if (!n || !(await wait(n, L("camping", { n }), { noAilments: true }))) return;
-  const done = await (await import("./explore.mjs")).openCampDialog({ hours: n, timePassed: true });
-  // 캠프를 하지 않았으면(창을 닫음·식료품 없음) 미뤄 둔 상태 이상 시간을 처리한다
-  if (!done) await (await import("./time-pass.mjs")).timePasses(n, { noOverheat: true });
-  return done;
 }
 
 /** 시간이 흐르지 않는 이동(트리거·GM) */

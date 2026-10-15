@@ -82,11 +82,28 @@ export async function nextEvent() {
   if (tod !== game.settings.get("nssq", "timeOfDay")) await game.settings.set("nssq", "timeOfDay", tod);
   // 1턴 = 1시간: 독·자연 회복·심도·오버히트(07 #164)
   await (await import("./time-pass.mjs")).timePasses(1);
-  const roll = await new Roll("2d6").evaluate();
+  // 이벤트 2D6은 플레이어가 굴린다(사용자 결정). 접속한 파티 플레이어가 없으면 GM이 바로
+  const members0 = await party();
+  const players = game.users.filter((u) => u.active && !u.isGM && members0.some((a) => a.testUserPermission(u, "OWNER")));
+  if (players.length) {
+    return ChatMessage.create({
+      speaker: { alias: L("title") },
+      content: `<div class="nssq-dungeon"><h3>${esc(L("eventHead", { done, depth: st.depth, h: hour, tod: L(`tod.${tod}`) }))}</h3>
+        <p>${esc(L("rollAsk"))}</p><button type="button" data-dungeon-roll><i class="fas fa-dice"></i> ${esc(L("rollButton"))}</button></div>`,
+      flags: { nssq: { dungeonRoll: { done, hour, tod } } }
+    });
+  }
+  return resolveEvent(await new Roll("2d6").evaluate(), { done, hour, tod });
+}
+
+/** 이벤트표 결과(2D6 굴림) → 이벤트 카드 */
+async function resolveEvent(roll, { done, hour, tod }, shown = false) {
+  const st = dungeonState();
   const ev = eventFor(roll.total);
   const members = await party();
   const ctx = { level: st.level, partySize: members.length };
-  const rolls = [roll];
+  // 플레이어가 굴려 이미 보인 주사위는 다시 붙이지 않는다
+  const rolls = shown ? [] : [roll];
   const detail = { ...ev };
   // 보조 굴림
   const d = async (f) => { const r = await new Roll(f).evaluate(); rolls.push(r); return r.total; };
@@ -247,7 +264,28 @@ export async function presetBattle(name, actors, flags = {}, stage = {}) {
 export function registerDungeon() {
   game.settings.register("nssq", "dungeon", { scope: "world", config: false, type: Object, default: {} });
   onSocket("dungeonEscape", ({ by }) => { if (isActiveGM()) escapeDungeon(by); });
+  // 플레이어가 이벤트 2D6을 굴리면 활성 GM이 이벤트를 정한다
+  onSocket("dungeonRolled", async ({ messageId, formula, total }) => {
+    if (!isActiveGM()) return;
+    const m = game.messages.get(messageId);
+    const d = m?.getFlag("nssq", "dungeonRoll");
+    if (!d || d.used) return;
+    await m.update({ "flags.nssq.dungeonRoll.used": true, content: m.content.replace(/<button[^>]*data-dungeon-roll[\s\S]*?<\/button>/, "") });
+    // 주사위는 플레이어 쪽 메시지에 이미 보였다 → 결과값만 쓴다
+    return resolveEvent({ total, formula }, d, true);
+  });
   Hooks.on("renderChatMessage", (message, html) => {
+    const rd = message.getFlag("nssq", "dungeonRoll");
+    html[0].querySelectorAll("[data-dungeon-roll]").forEach((b) => {
+      if (rd?.used) return b.remove();
+      b.addEventListener("click", async () => {
+        b.disabled = true;
+        const roll = await new Roll("2d6").evaluate();
+        await roll.toMessage({ speaker: ChatMessage.getSpeaker(), flavor: L("rollFlavor") });
+        const payload = { messageId: message.id, formula: roll.formula, total: roll.total };
+        emit("dungeonRolled", payload, { local: true });
+      });
+    });
     html[0].querySelectorAll(".nssq-dungeon [data-dungeon]").forEach((b) => {
       if (!game.user.isGM) return b.remove();
       b.addEventListener("click", () => { b.disabled = true; act(message, b.dataset.dungeon); });

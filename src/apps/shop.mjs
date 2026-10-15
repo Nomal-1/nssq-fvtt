@@ -238,7 +238,8 @@ class ShopApp extends Application {
       .map((i) => ({
         id: i.id, name: i.name, img: i.img, rank: i.system.rank, equipped: !!i.system.equipped,
         refine: refinementBadges(i),
-        canRefine: (i.system.refinements ?? []).length < 2,
+        // 2개가 차도 교체 제련은 할 수 있다
+        canRefine: true,
         materials: `${(tableOf(i)?.materials ?? []).join("/")} R${i.system.rank}+`
       }));
     this.syncCreation();
@@ -499,9 +500,13 @@ export async function openRefineDialog(actor, item, { creation = false, forced =
   const canCreation = game.user.isGM || !actor.system.creation?.locked;
   const rank = item.system.rank;
   const table = item.type === "weapon" ? tables.weapons[item.system.weaponType] : tables.armors[item.system.armorType];
-  const options = tables.refinements.map((r) => ({ r, check: canRefine(item, r), price: refinePrice(r, rank) }))
+  // 제련이 2개 찬 뒤(3번째부터)는 기존 효과 하나를 골라 지우고 새로 붙인다(사용자 결정)
+  const current = item.system.refinements ?? [];
+  const full = current.length >= 2;
+  const probe = full ? { type: item.type, system: { ...item.system, refinements: [] } } : item;
+  const options = tables.refinements.map((r) => ({ r, check: current.includes(r.key) ? { ok: false, reason: "refineDuplicate" } : canRefine(probe, r), price: refinePrice(r, rank) }))
     .filter((o) => o.check.ok || o.check.reason === "refineDuplicate");
-  if ((item.system.refinements ?? []).length >= 2) return ui.notifications.warn(L("refineFull", { name: item.name }));
+  const refName = (k) => tables.refinements.find((r) => r.key === k)?.name ?? k;
   if (!options.some((o) => o.check.ok)) return ui.notifications.warn(L("refineNone"));
   const content = `
     <form class="nssq-refine">
@@ -509,6 +514,7 @@ export async function openRefineDialog(actor, item, { creation = false, forced =
       <div class="form-group"><label>${L("refineEffect")}</label><select name="r">
         ${options.map((o) => `<option value="${o.r.key}" ${o.check.ok ? "" : "disabled"}>${esc(o.r.name)} — ${o.price}G${o.check.ok ? "" : ` (${L("refineHas")})`}</option>`).join("")}
       </select></div>
+      ${full ? `<div class="form-group"><label>${L("refineReplace")}</label><select name="replace">${current.map((k) => `<option value="${esc(k)}">${esc(refName(k))}</option>`).join("")}</select></div><p class="notes">${L("refineReplaceHint")}</p>` : ""}
       ${canCreation ? `<div class="form-group"><label><input type="checkbox" name="creation" ${creation ? "checked" : ""} ${forced ? "disabled" : ""}/> ${L("creationMode")}</label></div>` : ""}
       <p class="notes">${L("refineMaterialNote", { mats: (table?.materials ?? []).join("/"), rank })}</p>
     </form>`;
@@ -517,7 +523,7 @@ export async function openRefineDialog(actor, item, { creation = false, forced =
     content,
     label: L("refine"),
     rejectClose: false,
-    callback: (html) => ({ key: html[0].querySelector("[name=r]").value, creation: forced || !!html[0].querySelector("[name=creation]")?.checked })
+    callback: (html) => ({ key: html[0].querySelector("[name=r]").value, replace: html[0].querySelector("[name=replace]")?.value ?? null, creation: forced || !!html[0].querySelector("[name=creation]")?.checked })
   });
   if (!pick) return;
   const opt = options.find((o) => o.r.key === pick.key);
@@ -531,9 +537,11 @@ export async function openRefineDialog(actor, item, { creation = false, forced =
     material = await pickMaterial(cands, L("pickMaterial", { need }));
     if (!material) return;
   }
-  await item.update({ "system.refinements": [...(item.system.refinements ?? []), opt.r.key] });
+  const next = full ? [...current.filter((k) => k !== pick.replace), opt.r.key] : [...current, opt.r.key];
+  await item.update({ "system.refinements": next });
   if (material) await consumeMaterial(material);
   await actor.update({ "system.money": actor.system.money - opt.price });
   const matText = material ? ` · ${L("usedMaterial")}: ${material.name} R${material.system.rank}` : ` · ${L("creationMode")}`;
-  await log(actor, L("refined", { name: `${esc(item.name)} R${rank}`, effect: esc(opt.r.name), price: opt.price }) + matText);
+  const swapText = full && pick.replace ? ` · ${L("refineReplaced", { effect: esc(refName(pick.replace)) })}` : "";
+  await log(actor, L("refined", { name: `${esc(item.name)} R${rank}`, effect: esc(opt.r.name), price: opt.price }) + swapText + matText);
 }

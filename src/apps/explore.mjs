@@ -33,7 +33,7 @@ export async function openCampDialog(defaults = {}) {
   // [석화] 중인 캐릭터의 도구는 쓰지 않는다(07 #164)
   const tent = Math.min(0, ...members.filter((a) => !isPetrified(a)).map((a) => Number(a.system.equipment?.mods?.["checks.campDanger"]) || 0));
   const content = `<form class="nssq-camp">
-    <div class="form-group"><label>${esc(L("hours"))}</label><input type="number" name="hours" min="6" value="${Math.max(6, Number(defaults.hours) || 6)}" ${defaults.timePassed ? "readonly" : ""}/></div>
+    <div class="form-group"><label>${esc(L("hours"))}</label><input type="number" name="hours" min="6" value="${Math.max(6, Number(defaults.hours) || 6)}" ${defaults.timePassed && !defaults.beforeCamp ? "readonly" : ""}/></div>
     <div class="form-group"><label>${esc(L("danger"))}</label><input type="number" name="danger" min="0" max="6" value="0"/></div>
     ${tent ? `<p class="notes">${esc(L("tentNote", { n: -tent }))}</p>` : ""}
     <div class="form-group"><label>${esc(L("food"))}</label><select name="food">${foods.map((f) => `<option value="${esc(f.id)}">${esc(f.label)}</option>`).join("")}<option value="">${esc(L("noFood"))}</option></select></div>
@@ -44,6 +44,8 @@ export async function openCampDialog(defaults = {}) {
   }, { classes: ["nssq", "dialog"] });
   if (!got) return;
   if (!got.food) return ui.notifications.warn(L("needFood"));
+  // 필드 지도: 캠프가 확정된 뒤에 시간을 흘린다(취소·식료품 없음이면 시간이 지나지 않는다)
+  if (defaults.beforeCamp && !(await defaults.beforeCamp(got.hours))) return;
   return camp({ ...got, members, tent, timePassed: !!defaults.timePassed });
 }
 

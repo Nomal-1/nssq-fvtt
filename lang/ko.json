@@ -452,7 +452,7 @@
       "refineIntro": "{name} R{rank} (제련 {count}/2)",
       "refineHas": "이미 있음",
       "refineMaterialNote": "대응 소재 {mats} 중 R{rank} 이상 1개를 소모한다.",
-      "refineFull": "{name}은(는) 이미 제련이 2개다.",
+      "refineFull": "{name}은(는) 이미 제련이 2개다.", "refineReplace": "지울 효과", "refineReplaceHint": "제련은 2개까지다. 3번째부터는 기존 효과 하나를 지우고 새 효과를 붙인다(지운 효과의 비용은 돌려받지 않는다).", "refineReplaced": "{effect} 지움",
       "refineNone": "붙일 수 있는 제련이 없다.",
       "refined": "제련: {name}에 {effect} ({price}G)",
       "toggle": "상점 열기·닫기",
@@ -1619,7 +1619,7 @@
       },
       "next": "다음 이벤트",
       "noDungeon": "진행 중인 랜덤 던전이 없다",
-      "eventHead": "이벤트 {done}/{depth} — {h}시({tod})",
+      "eventHead": "이벤트 {done}/{depth} — {h}시({tod})", "rollAsk": "플레이어가 이벤트표(2D6)를 굴린다. 아무나 한 명이 [굴리기]를 누른다.", "rollButton": "이벤트 2D6 굴리기", "rollFlavor": "랜덤 던전 이벤트표(2D6)",
       "ev": {
         "2": "다람쥐다!! 가지고 있는 아리아드네의 실을 전부 도둑맞는다",
         "3": "F.O.E.와 조우! 던전 레벨보다 4레벨 높은 ★에너미",

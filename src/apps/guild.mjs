@@ -41,11 +41,11 @@ async function refundSkills(actor) {
 
 async function confirmCost(actor, title, body) {
   const cost = guildCost();
-  if ((actor.system.exp ?? 0) < cost) { ui.notifications.warn(L("noExp", { n: cost })); return false; }
+  // 경험점이 모자라면 0까지만 깎인다(사용자 결정)
   const lv = levelAfter(actor, cost);
   return Dialog.confirm({
     title, rejectClose: false,
-    content: `<p>${body}</p><p>${esc(L("costLine", { name: actor.name, n: cost, from: actor.system.exp ?? 0, to: (actor.system.exp ?? 0) - cost }))}</p>${lv < actor.system.level ? `<p class="warn">${esc(L("levelDown", { from: actor.system.level, to: lv }))}</p>` : ""}`
+    content: `<p>${body}</p><p>${esc(L("costLine", { name: actor.name, n: cost, from: actor.system.exp ?? 0, to: Math.max(0, (actor.system.exp ?? 0) - cost) }))}</p>${lv < actor.system.level ? `<p class="warn">${esc(L("levelDown", { from: actor.system.level, to: lv }))}</p>` : ""}`
   });
 }
 
@@ -54,7 +54,7 @@ export async function respec(actor) {
   if (!actor?.isOwner) return null;
   if (!(await confirmCost(actor, L("respec"), esc(L("respecBody"))))) return null;
   const n = await refundSkills(actor);
-  await actor.update({ "system.exp": (actor.system.exp ?? 0) - guildCost() });
+  await actor.update({ "system.exp": Math.max(0, (actor.system.exp ?? 0) - guildCost()) });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-town-card"><i class="fas fa-sitemap"></i> ${esc(L("respecDone", { name: actor.name, n, cost: guildCost() }))}</div>` });
   return (await import("./skill-tree.mjs")).SkillTree.open(actor);
 }
@@ -75,7 +75,7 @@ export async function changeClass(actor, mainUuid, subUuid) {
   await actor.createEmbeddedDocuments("Item", keep.map((c) => { const d = c.toObject(); delete d._id; return d; }));
   const n = await refundSkills(actor);
   // ★ 스킬은 unique-skill.mjs 훅이 새 메인 클래스 것으로 맞춘다
-  await actor.update({ "system.mainClass": main.system.key, "system.subClass": keep[1]?.system.key ?? null, "system.exp": (actor.system.exp ?? 0) - guildCost() });
+  await actor.update({ "system.mainClass": main.system.key, "system.subClass": keep[1]?.system.key ?? null, "system.exp": Math.max(0, (actor.system.exp ?? 0) - guildCost()) });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-town-card"><i class="fas fa-exchange-alt"></i> ${esc(L("classDone", { name: actor.name, main: main.name, sub: keep[1]?.name ?? L("noSub"), n, cost: guildCost() }))}</div>` });
   return (await import("./skill-tree.mjs")).SkillTree.open(actor);
 }

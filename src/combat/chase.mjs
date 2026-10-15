@@ -405,7 +405,50 @@ function decorate(message, el) {
   el.append(box);
 }
 
+/* ---------------- 선언·발동 팝업(사용자 결정) ---------------- */
+// 선택형 추격·선언(개막 페이즈의 《가디언》, 조건 발동 《금단의 술식》 등)은 채팅 버튼과 함께 조종자에게 팝업으로 묻는다.
+// 팝업을 닫으면 「안 함」. 조종하는 플레이어가 접속해 있지 않으면 GM에게
+
+const shownPopups = new Map(); // followup id → Dialog
+
+/** 이 캐릭터의 선택을 받을 사람: 접속 중인 소유 플레이어(그 캐릭터가 배정된 사람 먼저), 없으면 활성 GM */
+function deciderOf(actor) {
+  if (!actor) return null;
+  const players = game.users.filter((u) => u.active && !u.isGM && actor.testUserPermission(u, "OWNER"));
+  return players.find((u) => u.character?.id === actor.id) ?? players[0] ?? game.users.activeGM ?? null;
+}
+
+function scanFollowupPopups(message) {
+  const list = message.getFlag("nssq", "followups") ?? [];
+  for (const f of list) {
+    const open = shownPopups.get(f.id);
+    if (f.state !== "pending") { if (open) { shownPopups.delete(f.id); open.close(); } continue; }
+    if (open || shownPopups.has(f.id)) continue;
+    const c = game.combat?.combatants.get(f.unitId);
+    if (deciderOf(c?.actor)?.id !== game.user.id) continue;
+    const d = { actor: c?.name ?? "?", name: shown(f), type: typeLabel(f) };
+    const label = f.type === "trigger" || f.type === "event" ? L("declare", d) : L("run", d);
+    let answered = false;
+    const dlg = new Dialog({
+      title: `${c?.name ?? ""} — ${L(`type.${f.type === "event" ? "declare" : f.type}`)}`,
+      content: `<p>${esc(message.content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 140))}</p><p><b>${esc(label)}</b></p>`,
+      buttons: {
+        run: { icon: '<i class="fas fa-angle-double-right"></i>', label: esc(label), callback: () => { answered = true; send({ messageId: message.id, id: f.id, run: true }); } },
+        no: { icon: '<i class="fas fa-times"></i>', label: esc(L("decline")), callback: () => { answered = true; send({ messageId: message.id, id: f.id, run: false }); } }
+      },
+      default: "run",
+      // 닫으면 「안 함」
+      close: () => { shownPopups.delete(f.id); if (!answered && game.messages.get(message.id)?.getFlag("nssq", "followups")?.find((x) => x.id === f.id)?.state === "pending") send({ messageId: message.id, id: f.id, run: false }); }
+    }, { classes: ["dialog", "nssq-reaction-popup"] });
+    shownPopups.set(f.id, dlg);
+    try { foundry.audio.AudioHelper.play({ src: CONFIG.sounds.notification, volume: 0.8, autoplay: true, loop: false }, false); } catch { /* 소리 없음 */ }
+    dlg.render(true);
+  }
+}
+
 export function registerChase() {
+  Hooks.on("createChatMessage", (m) => scanFollowupPopups(m));
+  Hooks.on("updateChatMessage", (m) => scanFollowupPopups(m));
   onSocket("followup", (p) => { if (isActiveGM()) gmFollowup(p); });
   Hooks.on("createChatMessage", (message) => {
     if (!isActiveGM() || !(message.getFlag("nssq", "attack") || message.getFlag("nssq", "skillCard"))) return;

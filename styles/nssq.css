@@ -1462,3 +1462,6 @@
 .nssq-party-board :is(.pb-slot, .pb-bench).offline { opacity: 0.55; }
 .nssq-party-board .pb-off { font-size: 0.7em; padding: 0 4px; border-radius: 6px; background: rgba(128,128,128,0.4); }
 .nssq-town .town-party .pc.offline { opacity: 0.5; }
+/* 갈무리 풀: 받을 캐릭터 선택칸이 어두운 카드에서 잘 보이게 */
+.nssq-loot select { color: #f4e9c8; background: #1b2a40; border: 1px solid var(--nq-gold); }
+.nssq-loot select option { color: #f4e9c8; background: #1b2a40; }
