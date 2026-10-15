@@ -175,7 +175,7 @@ export function skillBudget({ level = 1, skills = [], bonus = 0 }) {
  * @param {boolean} [p.mainHasSame] 서브 트리에서: 메인 클래스에 같은 이름 스킬이 있다(메인 쪽만 유효)
  * @returns {{ok: boolean, max: number|null, reason?: string}}
  */
-export function canRaise({ skill, role, current = 0, slOf, level = 1, hasSub = false, budgetLeft = 0, mainHasSame = false }) {
+export function canRaise({ skill, role, current = 0, slOf, level = 1, hasSub = false, budgetLeft = 0, mainHasSame = false, levelUpBase = null }) {
   const max = role === "sub" ? skill.maxSL?.sub ?? null : skill.maxSL?.main ?? 1;
   // 고유 스킬은 서브 클래스가 없으면 자동으로 습득된다(손으로 찍지 않는다)
   if (skill.unique) {
@@ -186,6 +186,8 @@ export function canRaise({ skill, role, current = 0, slOf, level = 1, hasSub = f
   if (max === null) return { ok: false, max, reason: "subNotAllowed" };
   if (current >= max) return { ok: false, max, reason: "maxed" };
   if (!skill.unique && current + 1 > levelCap(level)) return { ok: false, max, reason: "levelCap" };
+  // 한 번의 레벨업에서 한 스킬의 SL은 1만 올린다(01 §5). levelUpBase = 레벨업 직전 SL(레벨업 직후가 아니면 null)
+  if (levelUpBase != null && current >= levelUpBase + 1) return { ok: false, max, reason: "oncePerLevel" };
   if (current === 0 && !prereqsMet(skill.prereqs, slOf)) return { ok: false, max, reason: "prereq" };
   if (!skill.unique && budgetLeft <= 0) return { ok: false, max, reason: "budget" };
   return { ok: true, max };

@@ -50,7 +50,7 @@ export async function sessionEnd({ goal, dl, members }) {
     const g = growthAvailable({ exp: fresh.system.exp, abilities: fresh.system.abilities });
     lines.push(`<li><b>${esc(a.name)}</b>: ${esc(L("expLine", { n: r.total, p: r.parts.participated, g: r.parts.goal, gap: r.parts.gap, b: r.parts.bonus, total: fresh.system.exp }))}`
       + (m.money ? ` · ${esc(L("moneyLine", { n: m.money }))}` : "")
-      + (fresh.system.level !== lv0 ? ` · <b>${esc(L("levelUp", { from: lv0, to: fresh.system.level }))}</b>` : "")
+      + (fresh.system.levelReady ? ` · <b>${esc(game.i18n.localize("NSSQ.Level.ready"))}</b>` : "")
       + (g.left > 0 ? ` · ${esc(L("growthLeft", { n: g.left }))}` : "") + `</li>`);
   }
   return ChatMessage.create({ speaker: { alias: L("endTitle") }, content: `<div class="nssq-session-end"><h3><i class="fas fa-trophy"></i> ${esc(L("endTitle"))}</h3><ul>${lines.join("")}</ul></div>` });

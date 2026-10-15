@@ -64,6 +64,7 @@ export class NssqActorSheet extends ActorSheet {
       context.expHint = next
         ? game.i18n.format("NSSQ.Level.toNext", { level: next.level, total: next.total, left: Math.max(0, next.total - (system.exp ?? 0)) })
         : game.i18n.localize("NSSQ.Level.max");
+      context.expNext = next ? (system.levelReady ? game.i18n.localize("NSSQ.Level.ready") : `/ ${next.total}`) : "";
     }
     const pct = (r) => (r?.max > 0 ? Math.clamp(Math.round((r.value / r.max) * 100), 0, 100) : 0);
     context.hpPct = pct(system.hp);
@@ -112,6 +113,7 @@ export class NssqActorSheet extends ActorSheet {
       context.expHint = next
         ? game.i18n.format("NSSQ.Level.toNext", { level: next.level, total: next.total, left: Math.max(0, next.total - (system.exp ?? 0)) })
         : game.i18n.localize("NSSQ.Level.max");
+      context.expNext = next ? (system.levelReady ? game.i18n.localize("NSSQ.Level.ready") : `/ ${next.total}`) : "";
     }
       context.sheet = characterContext(this.actor);
       context.tpPct = pct(system.tp);
@@ -165,6 +167,11 @@ export class NssqActorSheet extends ActorSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+    html.on("click", "[data-action=level-up]", async (ev) => {
+      ev.preventDefault();
+      const { levelUp } = await import("../apps/levelup.mjs");
+      levelUp(this.actor);
+    });
     html.on("click", "[data-action=set-level]", (ev) => {
       ev.preventDefault();
       setLevelDialog(this.actor);

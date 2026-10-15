@@ -80,10 +80,12 @@ async function migrateLevelExp() {
 export function registerEffectsSync() {
   game.settings.register("nssq", "effectsSyncedVersion", { scope: "world", config: false, type: String, default: "" });
   game.settings.register("nssq", "levelExpMigrated", { scope: "world", config: false, type: Boolean, default: false });
+  game.settings.register("nssq", "levelManualMigrated", { scope: "world", config: false, type: Boolean, default: false });
   Hooks.once("ready", async () => {
     const gm = game.users.activeGM;
     if (!gm || gm.id !== game.user.id) return;
     await migrateLevelExp();
+    await (await import("./levelup.mjs")).migrateManualLevel();
     if (game.settings.get("nssq", "effectsSyncedVersion") !== game.system.version) syncEffects({ quiet: true });
   });
 }

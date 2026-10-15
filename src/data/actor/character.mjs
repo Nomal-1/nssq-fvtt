@@ -83,9 +83,13 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     return { main, sub, all: classes };
   }
 
-  /** 레벨은 누적 경험점으로 정해진다(01 §8). 저장된 level은 쓰지 않는다 */
+  /**
+   * 레벨은 저장값(수동 레벨업, 사용자 요청 묶음D). 누적 경험점이 다음 레벨 값에 닿으면 levelReady가 켜지고
+   * 시트의 [레벨업]으로 올린다(apps/levelup.mjs)
+   */
   prepareBaseData() {
-    this.level = levelFromExp(this.exp, tables.levelExp?.levels);
+    this.level = Math.max(1, Number(this.level) || 1);
+    this.levelReady = levelFromExp(this.exp, tables.levelExp?.levels) > this.level;
   }
 
   prepareDerivedData() {

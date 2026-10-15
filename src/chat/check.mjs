@@ -23,6 +23,35 @@ function abilityLabel(ability) {
   return ability ? game.i18n.localize(`NSSQ.Ability.${ability}`) : game.i18n.localize("NSSQ.Check.custom");
 }
 
+/** 굴리기 전 안내(식·목표값). 대화창 입력이 바뀌면 bindCheckPreview가 다시 쓴다 */
+export function checkPreviewHtml({ bonus = 0, modifier = 0, target = null, addDice = 0 } = {}) {
+  const fixed = bonus + modifier;
+  const formula = `2D6${fixed ? (fixed > 0 ? "+" : "") + fixed : ""}`;
+  const main = target == null || target === ""
+    ? game.i18n.format("NSSQ.Check.previewOpen", { formula })
+    : game.i18n.format("NSSQ.Check.previewTarget", { formula, target });
+  const sub = [addDice > 0 ? game.i18n.format("NSSQ.Check.previewPick", { n: 2 + addDice }) : "", game.i18n.localize("NSSQ.Check.previewAbs")].filter(Boolean).join(" · ");
+  return `<div class="check-preview"><i class="fas fa-dice"></i> <b>${main}</b><small>${sub}</small></div>`;
+}
+
+/** 대화창 입력(능력치·수정치·목표값·추가 다이스)을 따라 안내를 갱신한다 */
+export function bindCheckPreview(root, { actor, ability = null, modifier = 0, target = null } = {}) {
+  const f = root.querySelector("form");
+  const box = root.querySelector(".check-preview");
+  if (!f || !box) return;
+  const update = () => {
+    const ab = f.ability ? f.ability.value || null : ability;
+    const mod = f.modifier ? Number(f.modifier.value) || 0 : modifier;
+    const tg = f.target ? (f.target.value === "" ? null : Number(f.target.value)) : target;
+    const add = Math.max(0, Number(f.addDice?.value) || 0);
+    const tmp = document.createElement("div");
+    tmp.innerHTML = checkPreviewHtml({ bonus: ab ? actor.system.bonus?.[ab] ?? 0 : 0, modifier: mod, target: tg, addDice: add });
+    box.innerHTML = tmp.firstElementChild.innerHTML;
+  };
+  f.addEventListener("input", update);
+  f.addEventListener("change", update);
+}
+
 /** 판정 전 대화창. 취소하면 null */
 export async function promptCheck(actor, { ability = null, contestOf = null } = {}) {
   const fp = actor.system.fp?.value ?? 0;
@@ -46,8 +75,10 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
         <input type="number" name="addDice" value="0" min="0" max="${fp}"/></div>
       <p class="notes">${game.i18n.localize("NSSQ.Check.addDiceHint")}</p>
       ${checkModsHtml(actor)}
+      ${checkPreviewHtml({ bonus: ability ? actor.system.bonus?.[ability] ?? 0 : 0, target: contestOf && active && stateOf(active) ? resultOf(active).total : null })}
     </form>`;
   return Dialog.prompt({
+    render: (html) => bindCheckPreview(html[0] ?? html, { actor, target: contestOf && active && stateOf(active) ? resultOf(active).total : null }),
     title: `${actor.name} — ${game.i18n.localize(contestOf ? "NSSQ.Check.contestTitle" : "NSSQ.Check.title")}`,
     content,
     label: game.i18n.localize("NSSQ.Check.roll"),

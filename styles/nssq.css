@@ -1500,3 +1500,25 @@
 #nssq-battle .nb-ail-icons .ail-petrify { color: #ccc; } #nssq-battle .nb-ail-icons .ail-stun { color: #ffd862; }
 #nssq-battle .nb-stone { position: absolute; inset: 0; background: rgba(140, 140, 140, 0.55); mix-blend-mode: saturation; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { #nssq-battle :is(.fx-buffed, .nb-guard-fx, .nb-swirl) { animation: none; } }
+
+/* ---------- 판정: 굴리기 전 안내·채팅 주사위(묶음C) ---------- */
+.check-preview { margin: 8px 0 4px; padding: 8px 10px; border: 1px solid var(--nq-gold, #c9a74a); border-radius: 6px; background: linear-gradient(180deg, rgba(201, 167, 74, 0.16), rgba(201, 167, 74, 0.04)); text-align: center; }
+.check-preview b { font-size: 1.15em; letter-spacing: 0.02em; }
+.check-preview small { display: block; margin-top: 2px; opacity: 0.75; }
+.nssq-check .check-dice { gap: 6px; }
+.nssq-check .die { width: 32px; height: 32px; line-height: 30px; font-size: 1.1em; border-radius: 7px; border: 1px solid #b9b2a0; background: linear-gradient(145deg, #ffffff, #e4dfd2); color: #2a2620; box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12), 0 2px 3px rgba(0, 0, 0, 0.35); animation: nssq-die-in 0.45s cubic-bezier(.2, 1.4, .4, 1) both; }
+.nssq-check .die:nth-child(2) { animation-delay: 0.06s; }
+.nssq-check .die:nth-child(3) { animation-delay: 0.12s; }
+.nssq-check .die:nth-child(n+4) { animation-delay: 0.18s; }
+.nssq-check .die.used { border-color: var(--nq-gold, #c9a74a); box-shadow: 0 0 0 2px var(--nq-gold, #c9a74a), 0 2px 4px rgba(0, 0, 0, 0.4); }
+.nssq-check .die.one { color: #c0392b; }
+.nssq-check .die.six { color: #1e8a4c; }
+@keyframes nssq-die-in { 0% { transform: translateY(-10px) rotate(-200deg) scale(0.4); opacity: 0; } 100% { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .nssq-check .die { animation: none; } }
+
+/* ---------- 수동 레벨업(묶음D) ---------- */
+.nq-sheet .nq-levelup { margin-left: 6px; padding: 1px 8px; width: auto; height: 22px; line-height: 18px; font-size: 0.85em; font-weight: 700; border: 1px solid var(--nq-gold, #c9a74a); border-radius: 11px; background: linear-gradient(180deg, #ffe69a, #d9a93a); color: #3a2a00; animation: nssq-lvpulse 1.6s ease-in-out infinite; cursor: pointer; }
+.nq-sheet span.nq-levelup.ready { cursor: default; display: inline-block; }
+.nq-sheet .nq-exp-next { font-size: 0.8em; opacity: 0.8; white-space: nowrap; }
+.nssq-levelup-card { padding: 6px 8px; border: 1px solid var(--nq-gold, #c9a74a); border-radius: 6px; background: rgba(201, 167, 74, 0.12); }
+@keyframes nssq-lvpulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 216, 98, 0.6); } 50% { box-shadow: 0 0 0 4px rgba(255, 216, 98, 0); } }

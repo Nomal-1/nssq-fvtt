@@ -86,6 +86,9 @@ describe("습득 규칙", () => {
   });
   it("전제 미충족·예산 없음·레벨 상한·MaxSL", () => {
     expect(canRaise({ ...base, slOf: sl({ A: 1 }) }).reason).toBe("prereq");
+    // 레벨업 한 번에 한 스킬 SL +1까지
+    expect(canRaise({ ...base, current: 1, level: 3, levelUpBase: 0 }).reason).toBe("oncePerLevel");
+    expect(canRaise({ ...base, current: 1, level: 3, levelUpBase: 1 }).ok).toBe(true);
     expect(canRaise({ ...base, budgetLeft: 0 }).reason).toBe("budget");
     expect(canRaise({ ...base, current: 2 }).reason).toBe("levelCap");
     expect(canRaise({ ...base, current: 3, level: 5 }).reason).toBe("maxed");

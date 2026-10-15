@@ -23,7 +23,15 @@
     "NoItems": "아이템이 없다",
     "Level": {
       "label": "레벨",
-      "toNext": "레벨은 누적 경험점으로 정해진다. Lv{level}까지 {left} 남음(누적 {total})",
+      "toNext": "다음 Lv{level}까지 경험점 {left} 남음(누적 {total}). 닿으면 [레벨업]",
+      "up": "레벨업",
+      "upHint": "다음 레벨로 올린다: 능력치에 메인 클래스 보정 +1회분, HP·TP 다시 계산, 스킬 SL 3 습득(한 스킬은 +1까지)",
+      "ready": "레벨업 가능",
+      "notReady": "아직 경험점이 모자란다",
+      "noBattle": "전투 중에는 레벨업할 수 없다",
+      "card": "{name}: Lv{from} → Lv{to}! 스킬 SL {sl}을 습득한다(한 스킬은 +1까지)",
+      "locked": "레벨과 경험점은 GM만 바꿀 수 있다(레벨업은 [레벨업] 버튼으로)",
+      "manualMigrated": "레벨을 수동 레벨업 방식으로 바꿨다: 캐릭터 {n}명의 레벨을 지금 경험점에 맞췄다",
       "max": "최고 레벨(Lv15)",
       "setHint": "GM: 이 레벨로(경험점을 그 레벨의 누적 값으로 맞춘다)",
       "setTitle": "{name}: 레벨 맞추기",
@@ -277,6 +285,10 @@
       "target": "목표값",
       "targetNone": "없음",
       "addDiceLabel": "【FP】로 추가할 주사위 (현재 【FP】 {fp})",
+      "previewTarget": "{formula} → {target} 이상이면 성공!",
+      "previewOpen": "{formula}을(를) 굴려 달성값을 낸다",
+      "previewPick": "D6 {n}개를 굴려 2개를 고른다",
+      "previewAbs": "6·6은 절대 성공, 1·1은 절대 실패",
       "addDiceHint": "추가한 판정에서는 굴린 주사위 중 2개를 골라 쓰고, 1이 나와도 【FP】를 얻지 않는다.",
       "roll": "굴리기",
       "rollHint": "클릭: 판정 / Shift+클릭: 바로 굴리기",
@@ -608,7 +620,7 @@
       "main": "메인", "sub": "서브", "noSub": "(서브 없음)", "pickMain": "메인 클래스를 고른다.", "same": "지금과 같은 직업이다.",
       "classBody": "메인 「{main}」, 서브 「{sub}」(으)로 바꾸고 클래스 스킬을 돌려받는다.",
       "classDone": "{name}: 직업 변경 → {main} / {sub}(스킬 {n}개 반환, 경험점 −{cost})",
-      "noRollback": "작성을 마친 캐릭터는 스킬을 되돌릴 수 없다. 다시 찍으려면 길드의 「스킬 재분배」를 쓴다.", "costLine": "{name}: 경험점 {n} 소모({from} → {to})", "levelDown": "레벨이 내려간다: Lv{from} → Lv{to}", "noExp": "경험점이 {n} 이상 있어야 한다."
+      "noRollback": "작성을 마친 캐릭터는 스킬을 되돌릴 수 없다. 다시 찍으려면 길드의 「스킬 재분배」를 쓴다.", "costLine": "{name}: 경험점 {n} 소모({from} → {to})", "noExp": "경험점이 {n} 이상 있어야 한다."
     },
     "Encounter": {
       "title": "전투 구성",
@@ -917,6 +929,7 @@
         "subNotAllowed": "서브 클래스로는 습득할 수 없다(MaxSL -)",
         "maxed": "MaxSL에 도달했다",
         "levelCap": "이 레벨에서는 더 올릴 수 없다(Lv1 최대 SL 2, 레벨업마다 +1)",
+        "oncePerLevel": "이번 레벨업에서는 이 스킬을 이미 1 올렸다(한 번의 레벨업에 한 스킬 SL +1까지)",
         "prereq": "전제 조건을 채우지 않았다",
         "budget": "남은 SL이 없다",
         "uniqueAuto": "고유 스킬은 서브 클래스가 없으면 자동으로 습득된다"

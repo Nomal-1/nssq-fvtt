@@ -44,6 +44,7 @@ import { registerDungeon } from "./apps/dungeon.mjs";
 import { EncounterApp, registerEncounters } from "./apps/encounters.mjs";
 import { TownApp, registerTown, returnToTown, requestReturnToTown } from "./apps/town.mjs";
 import { GuildApp, registerGuild } from "./apps/guild.mjs";
+import { levelUp, registerLevelUp } from "./apps/levelup.mjs";
 import { registerDefaults, reseedDefaults } from "./apps/defaults.mjs";
 import { FieldMapApp, registerFieldMap } from "./apps/fieldmap.mjs";
 import { ChargenWizard, newCharacter, registerChargen } from "./apps/chargen-wizard.mjs";
@@ -121,12 +122,14 @@ Hooks.once("init", () => {
   registerPartyBoard();
   registerRoster();
   registerGuild();
+  registerLevelUp();
   registerDefaults();
   registerFieldMap();
   registerChargen();
   registerEnemyLibrary();
   // 매크로·모듈용 API
   game.nssq = {
+    levelUp,
     openEncounters: (opts) => EncounterApp.open(opts),
     openTown: (id) => TownApp.open(id),
     openGuild: () => GuildApp.open(),

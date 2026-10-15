@@ -112,7 +112,10 @@ export class SkillTree extends Application {
       bonus: s.skillBonus ?? 0,
       skills: owned.map((o) => ({ sl: o.system.sl ?? 0, unique: !!o.system.unique, common: o.system.classKey === "common" }))
     });
-    return { main, sub, tabs, tab: tabs.find((t) => t.key === this.tab), owned, slOf, budget, level: s.level };
+    // 레벨업 직후: 그때의 SL보다 1 넘게 못 올린다(플래그 nssq.levelUp, 같은 레벨일 때만)
+    const lu = this.actor.getFlag("nssq", "levelUp");
+    const baseOf = lu?.level === s.level ? (e) => lu.sl?.[`${e.system.classKey}:${e.system.skillKey}`] ?? 0 : () => null;
+    return { main, sub, tabs, tab: tabs.find((t) => t.key === this.tab), owned, slOf, budget, level: s.level, baseOf };
   }
 
   async getData() {
@@ -131,7 +134,7 @@ export class SkillTree extends Application {
       const check = canRaise({
         skill: { name: e.name, maxSL: e.system.maxSL, unique: e.system.unique, prereqs: e.system.prereqs },
         role, current, slOf: st.slOf, level: st.level, hasSub: !!st.sub,
-        budgetLeft: st.budget.left, mainHasSame: role === "sub" && mainNames.has(e.name)
+        budgetLeft: st.budget.left, mainHasSame: role === "sub" && mainNames.has(e.name), levelUpBase: st.baseOf(e)
       });
       const ms = e.system.maxSL ?? {};
       const prereq = prereqList(e.system.prereqs).map((p) => `${p.any ? `(${L("or")}) ` : ""}${p.skill} SL${p.sl}`).join(", ");
@@ -301,7 +304,7 @@ export class SkillTree extends Application {
       const check = canRaise({
         skill: { name: e.name, maxSL: e.system.maxSL, unique: e.system.unique, prereqs: e.system.prereqs },
         role, current, slOf: st.slOf, level: st.level, hasSub: !!st.sub,
-        budgetLeft: st.budget.left, mainHasSame: role === "sub" && mainNames.has(e.name)
+        budgetLeft: st.budget.left, mainHasSame: role === "sub" && mainNames.has(e.name), levelUpBase: st.baseOf(e)
       });
       if (!check.ok) return ui.notifications.warn(`${e.name}: ${L(`reason.${check.reason}`)}`);
     }

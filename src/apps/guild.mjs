@@ -5,8 +5,6 @@
  * - 직업 변경: 경험점 −n으로 메인·서브 클래스를 바꾸고 클래스 스킬을 돌려받는다(★는 새 클래스 것으로 자동)
  * 경험점이 줄어 레벨이 내려가면 확인 창에 미리 보인다
  */
-import { levelFromExp } from "../engine/derive.mjs";
-import tables from "../generated/tables.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Guild.${k}`, d) : game.i18n.localize(`NSSQ.Guild.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -26,11 +24,6 @@ function myCharacters() {
   return game.actors.filter((a) => a.type === "character" && (game.user.isGM ? true : a.testUserPermission(game.user, "OWNER")));
 }
 
-/** 경험점을 n 줄였을 때의 레벨 */
-function levelAfter(actor, cost) {
-  return levelFromExp(Math.max(0, (actor.system.exp ?? 0) - cost), tables.levelExp?.levels);
-}
-
 /** 클래스 스킬을 돌려받는다(★·커먼은 남김) */
 async function refundSkills(actor) {
   const ids = actor.items.filter((i) => i.type === "skill" && !i.system.unique && i.system.classKey !== "common").map((i) => i.id);
@@ -41,11 +34,10 @@ async function refundSkills(actor) {
 
 async function confirmCost(actor, title, body) {
   const cost = guildCost();
-  // 경험점이 모자라면 0까지만 깎인다(사용자 결정)
-  const lv = levelAfter(actor, cost);
+  // 경험점이 모자라면 0까지만 깎인다(사용자 결정). 레벨은 저장값이라 내려가지 않는다(수동 레벨업)
   return Dialog.confirm({
     title, rejectClose: false,
-    content: `<p>${body}</p><p>${esc(L("costLine", { name: actor.name, n: cost, from: actor.system.exp ?? 0, to: Math.max(0, (actor.system.exp ?? 0) - cost) }))}</p>${lv < actor.system.level ? `<p class="warn">${esc(L("levelDown", { from: actor.system.level, to: lv }))}</p>` : ""}`
+    content: `<p>${body}</p><p>${esc(L("costLine", { name: actor.name, n: cost, from: actor.system.exp ?? 0, to: Math.max(0, (actor.system.exp ?? 0) - cost) }))}</p>`
   });
 }
 
@@ -54,7 +46,7 @@ export async function respec(actor) {
   if (!actor?.isOwner) return null;
   if (!(await confirmCost(actor, L("respec"), esc(L("respecBody"))))) return null;
   const n = await refundSkills(actor);
-  await actor.update({ "system.exp": Math.max(0, (actor.system.exp ?? 0) - guildCost()) });
+  await actor.update({ "system.exp": Math.max(0, (actor.system.exp ?? 0) - guildCost()) }, { nssqGuild: true });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-town-card"><i class="fas fa-sitemap"></i> ${esc(L("respecDone", { name: actor.name, n, cost: guildCost() }))}</div>` });
   return (await import("./skill-tree.mjs")).SkillTree.open(actor);
 }
@@ -75,7 +67,7 @@ export async function changeClass(actor, mainUuid, subUuid) {
   await actor.createEmbeddedDocuments("Item", keep.map((c) => { const d = c.toObject(); delete d._id; return d; }));
   const n = await refundSkills(actor);
   // ★ 스킬은 unique-skill.mjs 훅이 새 메인 클래스 것으로 맞춘다
-  await actor.update({ "system.mainClass": main.system.key, "system.subClass": keep[1]?.system.key ?? null, "system.exp": Math.max(0, (actor.system.exp ?? 0) - guildCost()) });
+  await actor.update({ "system.mainClass": main.system.key, "system.subClass": keep[1]?.system.key ?? null, "system.exp": Math.max(0, (actor.system.exp ?? 0) - guildCost()) }, { nssqGuild: true });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-town-card"><i class="fas fa-exchange-alt"></i> ${esc(L("classDone", { name: actor.name, main: main.name, sub: keep[1]?.name ?? L("noSub"), n, cost: guildCost() }))}</div>` });
   return (await import("./skill-tree.mjs")).SkillTree.open(actor);
 }

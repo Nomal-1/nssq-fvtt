@@ -3,7 +3,7 @@
  * 그 캐릭터를 소유한 접속 중인 플레이어에게 [실시]/[거절] 팝업이 뜬다.
  */
 import { ABILITIES } from "../engine/derive.mjs";
-import { rollCheck } from "../chat/check.mjs";
+import { bindCheckPreview, checkPreviewHtml, rollCheck } from "../chat/check.mjs";
 import { CHECK_KINDS, checkModsHtml, readCheckMods } from "../chat/check-mods.mjs";
 import { emit, onSocket } from "../socket.mjs";
 
@@ -113,12 +113,12 @@ function showRequest(req) {
     <form class="nssq-request-popup">
       <p class="request-who">${L("asked", { gm: game.users.get(req.from)?.name ?? "GM", name: actor.name })}</p>
       <p class="request-what"><b>${describe(req)}</b></p>
-      <p class="request-formula">2D6 + B ${bonus}${req.modifier ? ` ${req.modifier > 0 ? "+" : ""}${req.modifier}` : ""}</p>
       ${req.note ? `<p class="request-note">${escape(req.note)}</p>` : ""}
       <div class="form-group"><label>${game.i18n.format("NSSQ.Check.addDiceLabel", { fp })}</label>
         <input type="number" name="addDice" value="0" min="0" max="${fp}"/></div>
       <p class="notes">${game.i18n.localize("NSSQ.Check.addDiceHint")}</p>
       ${checkModsHtml(actor, { kinds: req.kinds ?? [] })}
+      ${checkPreviewHtml({ bonus, modifier: req.modifier ?? 0, target: req.target })}
     </form>`;
   const dialog = new Dialog({
     title: L("popupTitle"),
@@ -149,6 +149,7 @@ function showRequest(req) {
       }
     },
     default: "roll",
+    render: (html) => bindCheckPreview(html[0] ?? html, { actor, ability: req.ability, modifier: req.modifier ?? 0, target: req.target }),
     close: () => {
       open.delete(req.id);
       // 창을 그냥 닫으면 거절로 본다(다른 소유자가 이미 응답한 경우는 제외)
