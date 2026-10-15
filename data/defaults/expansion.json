@@ -23,9 +23,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "ok",
-    "effectsNote": ""
+    "foodstuff": false
    }
   },
   {
@@ -50,9 +48,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "ok",
-    "effectsNote": ""
+    "foodstuff": false
    }
   },
   {
@@ -77,9 +73,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "ok",
-    "effectsNote": ""
+    "foodstuff": false
    }
   },
   {
@@ -103,9 +97,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "ok",
-    "effectsNote": ""
+    "foodstuff": false
    }
   },
   {
@@ -123,9 +115,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "gm",
-    "effectsNote": "사용한 턴에 쓰러뜨린 적의 모든 드롭 아이템을 1개씩 추가로 준다"
+    "foodstuff": false
    }
   },
   {
@@ -143,9 +133,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "gm",
-    "effectsNote": "대상 적의 정보를 이 전투 동안 공개하고, 도감에서 식별 처리한다"
+    "foodstuff": false
    }
   },
   {
@@ -163,9 +151,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "gm",
-    "effectsNote": "사용한 캐릭터의 【STR】 GM 보너스 +1"
+    "foodstuff": false
    }
   },
   {
@@ -183,9 +169,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "gm",
-    "effectsNote": "사용한 캐릭터의 【TEC】 GM 보너스 +1"
+    "foodstuff": false
    }
   },
   {
@@ -203,9 +187,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "gm",
-    "effectsNote": "사용한 캐릭터의 【VIT】 GM 보너스 +1"
+    "foodstuff": false
    }
   },
   {
@@ -223,9 +205,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "gm",
-    "effectsNote": "사용한 캐릭터의 【AGI】 GM 보너스 +1"
+    "foodstuff": false
    }
   },
   {
@@ -243,9 +223,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "gm",
-    "effectsNote": "사용한 캐릭터의 【LUC】 GM 보너스 +1"
+    "foodstuff": false
    }
   },
   {
@@ -263,9 +241,7 @@
      "max": 0
     },
     "materials": [],
-    "foodstuff": false,
-    "review": "gm",
-    "effectsNote": "사용한 캐릭터의 보너스 SL +1 → 스킬 트리에서 바로 습득"
+    "foodstuff": false
    }
   }
  ]
