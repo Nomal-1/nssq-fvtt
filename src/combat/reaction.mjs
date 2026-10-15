@@ -184,7 +184,8 @@ async function useReaction(message, type, index, skillId) {
   });
   const note = skill.system.effectsNote ? ` (${game.i18n.format("NSSQ.SkillUse.gmNeeded", { what: skill.system.effectsNote })})` : "";
   const text = L(r.evaded ? "evaded" : hit.absSuccess && r.check.total >= hit.total ? "notEvadedAbs" : "notEvaded", { skill: skill.name, dice: r.check.used.join("+"), mod: r.mod, total: r.check.total, vs: hit.total }) + (r.evaded ? note : "");
-  await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), rolls: [roll], sound: CONFIG.sounds.dice, content: `<div class="nssq-combat-note"><i class="fas fa-shield-alt"></i> ${esc(text)}</div>` });
+  // 회피 성공은 플래그 evaded(컷인, combat/spotlight.mjs)
+  await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), rolls: [roll], sound: CONFIG.sounds.dice, content: `<div class="nssq-combat-note"><i class="fas fa-shield-alt"></i> ${esc(text)}</div>`, ...(r.evaded ? { flags: { nssq: { evaded: true } } } : {}) });
   // 회피 성공 시 반격(《검의 춤》)
   const counter = r.evaded && (skill.system.effects ?? []).some((e) => e?.type === "counter" && e.onlyIfEvaded);
   const counterEff = counter ? { name: skill.name, sl: skill.system.sl ?? 1, key: skill.system.key ?? null, effects: (skill.system.effects ?? []).filter((e) => e?.type === "counter") } : null;

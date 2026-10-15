@@ -6,11 +6,11 @@
  * 지도: battleBg·battleBgm(던전 기본 무대), 에어리어 encounters: [{ id, weight }](조우표)
  */
 
-/** 이 전투의 무대: 구성의 배경·BGM, 비어 있으면 던전(지도) 기본 */
-export function resolveStage(enc, map = null) {
+/** 이 전투의 무대: 구성의 배경·BGM → 에어리어 기본 → 던전(지도) 기본 */
+export function resolveStage(enc, map = null, area = null) {
   return {
-    bg: enc?.bg || map?.battleBg || "",
-    bgm: enc?.bgm || map?.battleBgm || ""
+    bg: enc?.bg || area?.battleBg || map?.battleBg || "",
+    bgm: enc?.bgm || area?.battleBgm || map?.battleBgm || ""
   };
 }
 

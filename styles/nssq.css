@@ -1522,3 +1522,19 @@
 .nq-sheet .nq-exp-next { font-size: 0.8em; opacity: 0.8; white-space: nowrap; }
 .nssq-levelup-card { padding: 6px 8px; border: 1px solid var(--nq-gold, #c9a74a); border-radius: 6px; background: rgba(201, 167, 74, 0.12); }
 @keyframes nssq-lvpulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 216, 98, 0.6); } 50% { box-shadow: 0 0 0 4px rgba(255, 216, 98, 0); } }
+
+/* ---------- 테마곡 버튼·컷인(묶음F) ---------- */
+.nssq .nq-theme-btn { right: auto; left: -6px; }
+.nssq-cutin { position: fixed; inset: 0; z-index: 10000; pointer-events: none; overflow: hidden; }
+.nssq-cutin .ci-band { position: absolute; left: -10%; right: -10%; top: 34%; height: 30%; transform: skewY(-7deg); background: linear-gradient(90deg, rgba(10, 20, 40, 0.92), rgba(20, 60, 110, 0.92) 55%, rgba(10, 20, 40, 0.92)); border-top: 4px solid #fff; border-bottom: 4px solid #fff; box-shadow: 0 0 40px rgba(0, 0, 0, 0.6); animation: ci-band 1.3s cubic-bezier(.2, .9, .3, 1) both; }
+.nssq-cutin.ci-counter .ci-band { background: linear-gradient(90deg, rgba(40, 6, 6, 0.92), rgba(150, 20, 20, 0.92) 55%, rgba(40, 6, 6, 0.92)); }
+.nssq-cutin.ci-evade .ci-band { background: linear-gradient(90deg, rgba(4, 30, 30, 0.92), rgba(10, 120, 110, 0.92) 55%, rgba(4, 30, 30, 0.92)); }
+.nssq-cutin .ci-art { position: absolute; right: 8%; top: 30%; width: 46%; height: 38%; transform: skewY(-7deg); overflow: hidden; animation: ci-art 1.3s cubic-bezier(.2, .9, .3, 1) both; -webkit-mask-image: linear-gradient(90deg, transparent, #000 25%); mask-image: linear-gradient(90deg, transparent, #000 25%); }
+.nssq-cutin .ci-art img { width: 100%; height: 260%; object-fit: cover; object-position: 50% 12%; border: none; transform: skewY(7deg) translateY(-12%); }
+.nssq-cutin .ci-text { position: absolute; left: 8%; top: 40%; display: flex; flex-direction: column; transform: skewY(-7deg); color: #fff; text-shadow: 3px 3px 0 #000; animation: ci-text 1.3s cubic-bezier(.2, .9, .3, 1) both; }
+.nssq-cutin .ci-text b { font-size: 64px; font-style: italic; font-weight: 900; letter-spacing: 0.04em; line-height: 1; }
+.nssq-cutin .ci-text span { margin-top: 6px; font-size: 22px; font-weight: 700; }
+@keyframes ci-band { 0% { transform: skewY(-7deg) scaleY(0); opacity: 1; } 15% { transform: skewY(-7deg) scaleY(1); } 80% { opacity: 1; } 100% { transform: skewY(-7deg) scaleY(1); opacity: 0; } }
+@keyframes ci-art { 0% { transform: skewY(-7deg) translateX(60%); opacity: 0; } 20% { transform: skewY(-7deg) translateX(0); opacity: 1; } 75% { transform: skewY(-7deg) translateX(-4%); opacity: 1; } 100% { transform: skewY(-7deg) translateX(-30%); opacity: 0; } }
+@keyframes ci-text { 0% { transform: skewY(-7deg) translateX(-60%); opacity: 0; } 22% { transform: skewY(-7deg) translateX(0); opacity: 1; } 75% { transform: skewY(-7deg) translateX(3%); opacity: 1; } 100% { transform: skewY(-7deg) translateX(30%); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .nssq-cutin { display: none; } }

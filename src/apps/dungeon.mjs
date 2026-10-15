@@ -43,29 +43,59 @@ export async function openDungeonDialog() {
     if (pick === "leave") return leaveDungeon();
     if (pick !== "restart") return;
   }
+  // 랜덤 던전 무대(필드·전투 배경·BGM, 사용자 요청 묶음E): 마지막 값을 설정 dungeonStage에 기억
+  const stg = game.settings.get("nssq", "dungeonStage") ?? {};
+  const { bgmOptions } = await import("./encounters.mjs");
+  const imgRow = (k) => `<div class="form-group"><label>${esc(L(`stage.${k}`))}</label><input type="text" name="${k}" value="${esc(stg[k] ?? "")}"/><button type="button" data-pick="${k}" style="flex:0 0 32px"><i class="fas fa-file-import"></i></button></div>`;
+  const bgmRow = (k) => `<div class="form-group"><label>${esc(L(`stage.${k}`))}</label><select name="${k}">${bgmOptions(stg[k] ?? "", L("stage.none"))}</select></div>`;
   const got = await Dialog.prompt({
     title: L("startTitle"),
+    render: (html) => (html[0] ?? html).querySelectorAll("[data-pick]").forEach((b) => b.addEventListener("click", () => {
+      const input = (html[0] ?? html).querySelector(`[name=${b.dataset.pick}]`);
+      new FilePicker({ type: "image", current: input.value, callback: (src) => { input.value = src; } }).render(true);
+    })),
     content: `<form>
       <div class="form-group"><label>${esc(L("name"))}</label><input type="text" name="name" value="${esc(L("defaultName"))}"/></div>
       <div class="form-group"><label>${esc(L("level"))}</label><input type="number" name="level" min="1" value="1"/></div>
       <div class="form-group"><label>${esc(L("depth"))}</label><input type="number" name="depth" min="1" value="5"/></div>
       <div class="form-group"><label>${esc(L("hour"))}</label><input type="number" name="hour" min="0" max="23" value="8"/></div>
+      <h4>${esc(L("stage.head"))}</h4>${imgRow("fieldBg")}${bgmRow("fieldBgm")}${imgRow("battleBg")}${bgmRow("battleBgm")}
+      <p class="notes">${esc(L("stage.hint"))}</p>
       <p class="notes">${esc(L("startHint"))}</p></form>`,
     label: L("start"), rejectClose: false,
-    callback: (html) => { const f = html[0].querySelector("form"); return { name: f.name.value.trim() || L("defaultName"), level: Math.max(1, Number(f.level.value) || 1), depth: Math.max(1, Number(f.depth.value) || 1), hour: Math.min(23, Math.max(0, Number(f.hour.value) || 0)) }; }
+    callback: (html) => { const f = html[0].querySelector("form"); return { name: f.name.value.trim() || L("defaultName"), level: Math.max(1, Number(f.level.value) || 1), depth: Math.max(1, Number(f.depth.value) || 1), hour: Math.min(23, Math.max(0, Number(f.hour.value) || 0)),
+      stage: Object.fromEntries(["fieldBg", "fieldBgm", "battleBg", "battleBgm"].map((k) => [k, f[k].value.trim()])) }; }
   });
   if (!got) return;
+  await game.settings.set("nssq", "dungeonStage", got.stage);
   return startDungeon(got);
 }
 
-export async function startDungeon({ name, level, depth, hour }) {
+export async function startDungeon({ name, level, depth, hour, stage = null }) {
   if (!(await (await import("./party-board.mjs")).checkBeforeEntry())) return null;
+  await activateDungeonField(name, stage ?? game.settings.get("nssq", "dungeonStage") ?? {});
   // 새 던전(진행 중인 것을 다시 시작해도): 누적 전투 턴을 비운다(07 #165)
   await (await import("./time-pass.mjs")).resetBattleTurns();
   await setState({ active: true, name, level, depth, done: 0, hour });
   await (await import("./town.mjs")).enteredDungeon();
   await game.settings.set("nssq", "timeOfDay", timeOfDayAt(hour));
   return note(`<h3><i class="fas fa-dungeon"></i> ${esc(L("started", { name, level, depth }))}</h3><p>${esc(L("clock", { h: hour, tod: L(`tod.${timeOfDayAt(hour)}`) }))}</p>${nextButton()}`);
+}
+
+/** 랜덤 던전 필드 씬: 필드 배경·BGM이 있으면 씬(플래그 nssq.randomField) 하나를 고쳐 쓰며 활성화(씬 BGM은 Foundry가 재생) */
+async function activateDungeonField(name, stage) {
+  if (!stage.fieldBg && !stage.fieldBgm) return null;
+  const { parseBgm } = await import("../engine/encounters.mjs");
+  const music = parseBgm(stage.fieldBgm);
+  const playlist = music.playlist ? game.playlists.get(music.playlist) : null;
+  const data = {
+    name: `${L("title")}: ${name}`, background: { src: stage.fieldBg || null },
+    playlist: playlist?.id ?? null, playlistSound: playlist?.sounds.get(music.sound)?.id ?? null
+  };
+  let scene = game.scenes.find((s) => s.getFlag("nssq", "randomField"));
+  if (scene) await scene.update(data);
+  else scene = await Scene.create({ ...data, width: 1920, height: 1080, padding: 0, backgroundColor: "#111", tokenVision: false, fog: { exploration: false }, flags: { nssq: { randomField: true } } });
+  return scene.activate();
 }
 
 const nextButton = () => `<button type="button" data-dungeon="next"><i class="fas fa-forward"></i> ${esc(L("next"))}</button>`;
@@ -236,7 +266,8 @@ async function randomBattle(e) {
     actors.push(actor);
   }
   if (level !== target) ui.notifications.info(L("levelFallback", { want: target, got: level }));
-  return presetBattle(L("randomPresetName", { level, names: kinds.map((d) => d.name).join("·") }), actors);
+  const stg = game.settings.get("nssq", "dungeonStage") ?? {};
+  return presetBattle(L("randomPresetName", { level, names: kinds.map((d) => d.name).join("·") }), actors, {}, { bg: stg.battleBg ?? "", bgm: stg.battleBgm ?? "" });
 }
 
 /**
@@ -263,6 +294,7 @@ export async function presetBattle(name, actors, flags = {}, stage = {}) {
 
 export function registerDungeon() {
   game.settings.register("nssq", "dungeon", { scope: "world", config: false, type: Object, default: {} });
+  game.settings.register("nssq", "dungeonStage", { scope: "world", config: false, type: Object, default: {} });
   onSocket("dungeonEscape", ({ by }) => { if (isActiveGM()) escapeDungeon(by); });
   // 플레이어가 이벤트 2D6을 굴리면 활성 GM이 이벤트를 정한다
   onSocket("dungeonRolled", async ({ messageId, formula, total }) => {

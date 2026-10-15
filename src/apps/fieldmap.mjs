@@ -624,7 +624,7 @@ async function onCard(message, action, el) {
       const actor = foe?.actorUuid ? await fromUuid(foe.actorUuid) : null;
       if (!actor) return ui.notifications.warn(L("noEnemy", { name: foe?.name ?? "" }));
       const a = actor.pack ? await (await import("./enemy-library.mjs")).enemyActorFor(actor.uuid) : actor;
-      return (await import("./dungeon.mjs")).presetBattle(L("battleName", { name: foe.name }), [a], { fieldFoe: foe.id }, { bg: map?.battleBg ?? "", bgm: map?.battleBgm ?? "" });
+      return (await import("./dungeon.mjs")).presetBattle(L("battleName", { name: foe.name }), [a], { fieldFoe: foe.id }, { bg: foe.bg || map?.battleBg || "", bgm: foe.bgm || map?.battleBgm || "" });
     }
     case "foeAvoid": return done(L("avoided"));
   }
@@ -925,6 +925,8 @@ export class FieldMapApp extends Application {
           ${this.field(`${p}.gmNote`, a.gmNote, L("f.gmNote"), "textarea")}
           ${this.field(`${p}.gather`, a.gather, L("f.gather"), "text", game.i18n.localize("NSSQ.Loot.tablePlaceholder"))}
           ${this.field(`${p}.tags`, a.tags, L("f.tags"), "text", L("f.tagsHint"))}
+          <div class="form-group"><label>${esc(L("f.areaBattleBg"))}</label><input type="text" data-path="${p}.battleBg" value="${esc(a.battleBg ?? "")}" placeholder="${esc(L("f.mapDefault"))}"/></div>
+          <div class="form-group"><label>${esc(L("f.areaBattleBgm"))}</label><select data-path="${p}.battleBgm">${encBgmOptions(a.battleBgm ?? "", L("f.mapDefault"))}</select></div>
           ${this.encounterTableEdit(a, p)}
           ${this.field(`${p}.secret`, a.secret, L("f.secret"), "bool")}
           <p>${map.start === a.id ? `<b><i class="fas fa-flag"></i> ${esc(L("isStart"))}</b>` : `<button type="button" data-fm-act="setStart">${esc(L("setStart"))}</button>`}</p>
@@ -957,6 +959,8 @@ export class FieldMapApp extends Application {
       ${f.mode === "chase" ? this.field(`foes.${i}.range`, f.range ?? 1, L("f.range"), "num") : ""}
       ${this.field(`foes.${i}.every`, f.every ?? 1, L("f.every"), "num")}
       ${this.field(`foes.${i}.nightOnly`, f.nightOnly, L("f.nightOnly"), "bool")}
+      <div class="form-group"><label>${esc(L("f.foeBg"))}</label><input type="text" data-path="foes.${i}.bg" value="${esc(f.bg ?? "")}" placeholder="${esc(L("f.mapDefault"))}"/><button type="button" data-fm-act="pickFoeBg" data-id="${i}" class="fm-icon"><i class="fas fa-file-import"></i></button></div>
+      <div class="form-group"><label>${esc(L("f.foeBgm"))}</label><select data-path="foes.${i}.bgm">${encBgmOptions(f.bgm ?? "", L("f.mapDefault"))}</select></div>
       <p class="notes">${esc(L("f.route"))}: ${esc((f.route ?? []).map((id) => areaName(map, id)).join(" → ") || L("none"))}</p>
       <p><button type="button" data-fm-act="route" data-id="${f.id}">${esc(L(this.routeFoe === f.id ? "routeStop" : "routeSet"))}</button><button type="button" data-fm-act="routeClear" data-id="${f.id}">${esc(L("routeClear"))}</button></p></fieldset>`).join("");
     return `<h3>${esc(L("mapHead"))}</h3>
@@ -979,10 +983,14 @@ export class FieldMapApp extends Application {
   /** 편집: 에어리어 조우표(전투 구성 + 가중치) */
   encounterTableEdit(a, p) {
     const encs = Object.values(game.settings.get("nssq", "encounters") ?? {}).sort((x, y) => x.name.localeCompare(y.name, "ko"));
+    // 확률(가중치 비율)을 옆에 보인다. 구성 편집·새로 만들기는 전투 구성 창을 그 구성으로 바로 연다(사용자 요청 묶음E)
+    const total = (a.encounters ?? []).reduce((n, r) => n + (r.id ? Number(r.weight) || 0 : 0), 0);
     const rows = (a.encounters ?? []).map((r, j) => `<div class="fm-enc-row"><select data-path="${p}.encounters.${j}.id">${opt("", r.id, L("encPick"))}${encs.map((e) => opt(e.id, r.id, e.name)).join("")}</select>
       <input type="number" min="0" data-path="${p}.encounters.${j}.weight" data-type="num" value="${esc(r.weight ?? 1)}" title="${esc(L("encWeight"))}"/>
+      <span class="fm-enc-pct">${r.id && total ? Math.round(((Number(r.weight) || 0) / total) * 100) : 0}%</span>
+      ${r.id ? `<a data-fm-act="encEdit" data-id="${r.id}" title="${esc(L("encEdit"))}"><i class="fas fa-pen"></i></a>` : ""}
       <a data-fm-del="${p}.encounters.${j}"><i class="fas fa-times"></i></a></div>`).join("");
-    return `<h3>${esc(L("encTable"))} <a data-fm-act="addEnc" title="${esc(L("encAdd"))}"><i class="fas fa-plus"></i></a> <a data-fm-act="openEncounters" title="${esc(L("encOpen"))}"><i class="fas fa-dragon"></i></a></h3>
+    return `<h3>${esc(L("encTable"))} <a data-fm-act="addEnc" title="${esc(L("encAdd"))}"><i class="fas fa-plus"></i></a> <a data-fm-act="encNew" title="${esc(L("encNew"))}"><i class="fas fa-file-medical"></i></a> <a data-fm-act="openEncounters" title="${esc(L("encOpen"))}"><i class="fas fa-dragon"></i></a></h3>
       ${rows || `<p class="notes">${esc(L("encNone"))}</p>`}<p class="notes">${esc(L("encHint"))}</p>`;
   }
 
@@ -1223,9 +1231,18 @@ export class FieldMapApp extends Application {
       case "delPassage": map.passages = map.passages.filter((p) => p.id !== this.sel.id); this.sel = null; this.dirty = true; return this.render();
       case "flip": { const p = map.passages.find((x) => x.id === this.sel.id); [p.a, p.b] = [p.b, p.a]; this.dirty = true; return this.render(); }
       case "makeScene": return this.makeScene(map.areas.find((x) => x.id === this.sel.id));
+      case "pickFoeBg": { const f = map.foes[Number(id)]; return f ? new FilePicker({ type: "image", current: f.bg, callback: (src) => { f.bg = src; this.dirty = true; this.render(); } }).render(true) : null; }
       case "pickBattleBg": return new FilePicker({ type: "image", current: map.battleBg, callback: (src) => { map.battleBg = src; this.dirty = true; this.render(); } }).render(true);
       case "addEnc": { const ar = map.areas.find((x) => x.id === this.sel.id); (ar.encounters ??= []).push({ id: "", weight: 1 }); this.dirty = true; return this.render(); }
       case "openEncounters": return (await import("./encounters.mjs")).EncounterApp.open({ group: `map:${map.id}` });
+      case "encEdit": return (await import("./encounters.mjs")).EncounterApp.open({ group: `map:${map.id}`, edit: id, onSave: () => this.render() });
+      case "encNew": {
+        const ar = map.areas.find((x) => x.id === this.sel.id);
+        return (await import("./encounters.mjs")).EncounterApp.open({
+          group: `map:${map.id}`, create: { group: `map:${map.id}` },
+          onSave: (eid) => { if (ar) { (ar.encounters ??= []).push({ id: eid, weight: 1 }); this.dirty = true; } this.render(); }
+        });
+      }
       case "encStart": return (await import("./encounters.mjs")).startEncounter(id, { map });
       case "encRandom": { const here = areaOf(map, mapState().current); return (await import("./encounters.mjs")).randomEncounter(here?.encounters ?? [], { map, name: here?.name ?? "" }); }
       case "pickImg": { const ar = map.areas.find((x) => x.id === this.sel.id); return new FilePicker({ type: "image", current: ar.img, callback: (src) => { ar.img = src; this.dirty = true; this.render(); } }).render(true); }

@@ -230,6 +230,10 @@ export class NssqActorSheet extends ActorSheet {
       ev.preventDefault();
       (await import("../apps/transfer.mjs")).openTransfer(this.actor, ev.currentTarget.closest("[data-item-id]")?.dataset.itemId);
     });
+    html.on("click", "[data-action=theme]", async (ev) => {
+      ev.preventDefault();
+      (await import("../combat/spotlight.mjs")).openThemeConfig(this.actor);
+    });
     html.on("click", "[data-action=edit-art]", (ev) => {
       ev.preventDefault();
       openArtConfig(this.actor);

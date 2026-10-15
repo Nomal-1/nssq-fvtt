@@ -71,7 +71,10 @@ export async function startEncounter(id, { map = null, flags = {} } = {}) {
     if (actor) actors.push({ actor, row: e.row });
   }
   if (!actors.length) return ui.notifications.warn(L("noEnemies"));
-  return (await import("./dungeon.mjs")).presetBattle(enc.name, actors, flags, resolveStage(enc, m));
+  // 진행 중인 지도의 지금 에어리어 기본 무대(에어리어 battleBg·battleBgm)
+  const st = game.settings.get("nssq", "fieldMapState") ?? {};
+  const area = m && st.active && st.mapId === m.id ? (m.areas ?? []).find((a) => a.id === st.current) ?? null : null;
+  return (await import("./dungeon.mjs")).presetBattle(enc.name, actors, flags, resolveStage(enc, m, area));
 }
 
 /** 조우표에서 가중치대로 하나 골라 시작 */
@@ -116,6 +119,10 @@ export class EncounterApp extends Application {
     if (!game.user.isGM) return null;
     app ??= new EncounterApp();
     if (opts.group !== undefined) app.group = opts.group;
+    // 필드 지도 편집에서: 그 구성을 바로 편집(edit) 또는 새로 만들기(create: { group }), 저장하면 onSave(id)
+    app.onSave = opts.onSave ?? null;
+    if (opts.edit && allEncounters()[opts.edit]) app.draft = foundry.utils.deepClone(allEncounters()[opts.edit]);
+    else if (opts.create) app.draft = { id: rid(), name: L("newName"), group: opts.create.group ?? "", bg: "", bgm: "", enemies: [], fav: false };
     return app.render(true, { focus: true });
   }
 
@@ -235,7 +242,9 @@ export class EncounterApp extends Application {
         const errs = validateEncounter(this.draft);
         if (errs.length) return ui.notifications.warn(errs.map((x) => L(x)).join(" "));
         await saveEncounter(this.draft);
+        const saved = this.draft.id;
         this.draft = null;
+        if (this.onSave) { const cb = this.onSave; this.onSave = null; cb(saved); }
         return this.render();
       }
       case "sceneStart": return (await import("./battle.mjs")).openStartDialog(el.closest("[data-scene]").dataset.scene);
