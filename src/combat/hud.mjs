@@ -307,7 +307,7 @@ function persistOverlay(c) {
   const icons = conds.filter((x) => AILMENT_ICON[x.id]).map((x) => `<i class="fas ${AILMENT_ICON[x.id]} ail-${x.id}"></i>`).join("");
   return `${guard ? `<i class="nb-guard-fx fas fa-shield-alt"></i>` : ""}`
     + (vine ? `<svg class="nb-vine" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,90 C20,70 10,50 30,40 S50,10 70,20 S95,5 100,0"/><path d="M0,30 C15,40 25,25 40,45 S60,80 80,70 S95,90 100,100"/><circle cx="30" cy="40" r="4"/><circle cx="70" cy="20" r="4"/><circle cx="80" cy="70" r="4"/></svg>` : "")
-    + (has("confuse") ? `<i class="nb-swirl fas fa-hurricane"></i>` : "")
+    + (has("confuse") ? `<svg class="nb-swirl" viewBox="0 0 40 40"><path d="M20 20 m0 -2 a2 2 0 1 1 -2 2 a4 4 0 1 1 4 4 a6 6 0 1 1 -6 -6 a8 8 0 1 1 8 8 a10 10 0 1 1 -10 -10 a12 12 0 1 1 12 12"/></svg>` : "")
     + (icons ? `<span class="nb-ail-icons">${icons}</span>` : "")
     + (has("petrify") ? `<span class="nb-stone"></span>` : "");
 }
