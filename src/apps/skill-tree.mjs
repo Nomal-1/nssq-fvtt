@@ -238,7 +238,7 @@ export class SkillTree extends Application {
       budget: st.budget,
       budgetText: this.actor.system.skillBonus ? L("budgetBonus", { ...st.budget, bonus: this.actor.system.skillBonus }) : L("budget", st.budget),
       skillBonus: this.actor.system.skillBonus ?? 0,
-      capText: L("levelCap", { level: st.level, cap: levelCap(st.level) }),
+      capText: Number.isFinite(levelCap(st.level)) ? L("levelCap", { level: st.level, cap: levelCap(st.level) }) : "",
       empty: !list.length,
       noPack: !game.packs.get("nssq.skills"),
       noClass: !st.main,

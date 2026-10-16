@@ -53,7 +53,7 @@ export function effectiveResist(resist, elements) {
 
 /**
  * 대미지 다이스 수. 물리 = 【물리 공격】 − 대상 【방어】, 속성 = 【속성 공격】. + 스킬 보정.
- * 0 이하면 0(07 #1)
+ * 0 이하면 0(01 #1)
  */
 export function damageDiceCount({ kind = "physical", physAtk = 0, elemAtk = 0, defense = 0, diceMod = 0 }) {
   const n = (kind === "physical" ? physAtk - defense : elemAtk) + diceMod;
@@ -116,7 +116,7 @@ export async function resolveAttack({ attacker, target, kind = "physical", hitMo
   const count = diceOverride !== null && diceOverride !== undefined ? Math.max(0, diceOverride) : damageDiceCount({ kind, physAtk: attacker.physAtk, elemAtk: attacker.elemAtk, defense: target.defense, diceMod });
   // critUp: 『크리티컬 업』 상태(또는 《일의전심》 같은 상시 효과)
   const first = judgeDamage(count ? await roll(count) : [], resist, { critUp: attacker.critUp || critUp });
-  // 크리티컬: 4다이스 추가(+ 《일도필살》 등 critDiceMod). 추가분으로 크리티컬을 다시 판정하지 않는다(07 #2)
+  // 크리티컬: 4다이스 추가(+ 《일도필살》 등 critDiceMod). 추가분으로 크리티컬을 다시 판정하지 않는다(01 #2)
   const extraN = CRIT_EXTRA_DICE + Math.max(0, critDiceMod);
   const extra = first.crit ? { ...judgeDamage(await roll(extraN), resist), crit: false } : null;
   const raw = first.hits + (extra?.hits ?? 0);

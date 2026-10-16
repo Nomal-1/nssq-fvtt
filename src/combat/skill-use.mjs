@@ -353,7 +353,7 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   if (!late && kind === "skill" && combat.started && phase === "main" && sys.timing === "주행동" && (isLateSkill(effects) || lateByTurn)) {
     return reserveLate(combatant, kind, item, targetCombatants, variant);
   }
-  // 코스트 지불(아이템은 수량 −1). 발동에 실패해도 소모(07 #9)
+  // 코스트 지불(아이템은 수량 −1). 발동에 실패해도 소모(01 #9)
   const upd = {};
   if (kind === "skill" && !free) {
     // 《명군의 재능》으로 개막 페이즈에 쓰는 주행동 스킬: 그 스킬의 코스트도

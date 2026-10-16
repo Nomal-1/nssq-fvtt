@@ -42,7 +42,7 @@ describe("일반 행위 판정 (01 §2, 05 필수 케이스)", () => {
     expect(r.used).toEqual([2, 4]);
   });
 
-  it("주사위를 늘린 판정의 절대 성공·실패는 고른 2개 기준 (07 #4)", () => {
+  it("주사위를 늘린 판정의 절대 성공·실패는 고른 2개 기준 (01 #4)", () => {
     expect(evaluateCheck({ dice: [6, 1, 6], added: 1 }).absSuccess).toBe(true);
     expect(evaluateCheck({ dice: [6, 1, 1], selected: [1, 2], added: 1 }).absFailure).toBe(true);
     expect(evaluateCheck({ dice: [6, 6, 1], selected: [0, 2], added: 1 }).absSuccess).toBe(false);
@@ -131,7 +131,7 @@ describe("대항 판정", () => {
     expect(contestWinner(r(3), r(20, { absFailure: true }))).toBe("active");
   });
 
-  it("양쪽 절대 실패면 수동 측 (07 #19)", () => {
+  it("양쪽 절대 실패면 수동 측 (01 #19)", () => {
     expect(contestWinner(r(5, { absFailure: true }), r(5, { absFailure: true }))).toBe("passive");
   });
 });

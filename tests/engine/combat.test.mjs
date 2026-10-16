@@ -53,7 +53,7 @@ describe("내성·대미지 (05 필수 케이스)", () => {
   it("속성 공격은 【속성 공격】 + 보정, 방어 무시", () => {
     expect(damageDiceCount({ kind: "elemental", elemAtk: 7, defense: 10, diceMod: 2 })).toBe(9);
   });
-  it("대미지 다이스 0 이하면 0(07 #1)", () => {
+  it("대미지 다이스 0 이하면 0(01 #1)", () => {
     expect(damageDiceCount({ kind: "physical", physAtk: 3, defense: 8 })).toBe(0);
   });
   it("6이 3개, 1이 1개 → 크리티컬(차이 2) / 『크리티컬 업』이면 차이 1에서도", () => {
@@ -90,7 +90,7 @@ describe("공격 롤", () => {
     expect(r.hit).toBe(true);
   });
 
-  it("크리티컬: 4다이스 추가, 추가분으로 다시 크리티컬 판정하지 않음(07 #2)", async () => {
+  it("크리티컬: 4다이스 추가, 추가분으로 다시 크리티컬 판정하지 않음(01 #2)", async () => {
     // 명중 [5,5], 대미지 [6,6,6,1,2,3] 크리 → 추가 [6,6,6,6]
     const r = await resolveAttack({ attacker, target, rng: seq(5, 5, 6, 6, 6, 1, 2, 3, 6, 6, 6, 6) });
     expect(r.crit).toBe(true);

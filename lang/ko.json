@@ -959,7 +959,7 @@
         "sameInMain": "메인 클래스에 같은 스킬이 있다(메인 쪽만 유효)",
         "subNotAllowed": "서브 클래스로는 습득할 수 없다(MaxSL -)",
         "maxed": "MaxSL에 도달했다",
-        "levelCap": "이 레벨에서는 더 올릴 수 없다(Lv1 최대 SL 2, 레벨업마다 +1)",
+        "levelCap": "Lv1은 한 스킬 SL 2까지",
         "oncePerLevel": "이번 레벨업에서는 이 스킬을 이미 1 올렸다(한 번의 레벨업에 한 스킬 SL +1까지)",
         "prereq": "전제 조건을 채우지 않았다",
         "budget": "남은 SL이 없다",

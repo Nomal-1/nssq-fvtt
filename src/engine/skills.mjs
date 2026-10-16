@@ -138,9 +138,9 @@ export function treeLayout(skills) {
   return { nodes, edges, independent, cols, rows, outside };
 }
 
-/** 한 스킬이 가질 수 있는 최대 SL: Lv1은 2, 레벨업마다 1씩(한 번에 1까지) → Lv + 1 */
+/** 한 스킬이 가질 수 있는 최대 SL: Lv1은 2(원문 캐릭터 작성). Lv2 이상은 상한 없음(레벨업 한 번에 +1 제약만, 01 #30) */
 export function levelCap(level) {
-  return Math.max(1, Number(level) || 1) + 1;
+  return (Number(level) || 1) <= 1 ? 2 : Infinity;
 }
 
 /**

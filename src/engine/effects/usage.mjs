@@ -64,7 +64,7 @@ export function canUseSkill(skill, user, ctx = {}) {
 }
 
 /**
- * 「주행동」 스킬 발동 판정: 2D6, 1이 2개면 실패(코스트는 이미 소모, 07 #9). 1이면 FP(일반 행위 판정과 같음)
+ * 「주행동」 스킬 발동 판정: 2D6, 1이 2개면 실패(코스트는 이미 소모, 01 #9). 1이면 FP(일반 행위 판정과 같음)
  * @param {number[]} dice
  * @returns {{ok: boolean, fpGain: number, check: object}}
  */

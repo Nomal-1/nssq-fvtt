@@ -71,9 +71,9 @@ describe("습득 규칙", () => {
     expect(prereqsMet(C.prereqs, sl({ B: 1, X: 1 }))).toBe(true);
     expect(prereqsMet(C.prereqs, sl({ B: 1, A: 2 }))).toBe(false);
   });
-  it("한 스킬 최대 SL: Lv1은 2, 레벨마다 +1", () => {
+  it("한 스킬 최대 SL: Lv1은 2, Lv2부터 상한 없음(01 #30)", () => {
     expect(levelCap(1)).toBe(2);
-    expect(levelCap(4)).toBe(5);
+    expect(levelCap(4)).toBe(Infinity);
   });
   it("합계 SL: 작성 5 + 레벨업마다 3, 커먼 1SL과 고유 스킬은 예산 밖", () => {
     const b = skillBudget({ level: 2, skills: [{ sl: 2 }, { sl: 1, common: true }, { sl: 1, unique: true }, { sl: 3 }] });

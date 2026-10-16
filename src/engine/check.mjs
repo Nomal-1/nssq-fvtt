@@ -35,7 +35,7 @@ export function evaluateCheck({ dice, selected, modifier = 0, target = null, add
   const used = sel.map((i) => dice[i]);
   const sum = used[0] + used[1];
   const total = sum + modifier;
-  // 07 #4: 주사위를 늘린 판정의 절대 성공·실패는 고른 2개 기준
+  // 01 #4: 주사위를 늘린 판정의 절대 성공·실패는 고른 2개 기준
   const absSuccess = used.every((v) => v === 6);
   const absFailure = used.every((v) => v === 1);
   let success = null;
@@ -56,13 +56,13 @@ export function evaluateCheck({ dice, selected, modifier = 0, target = null, add
 export function contestWinner(active, passive) {
   if (passive.absSuccess) return "passive";
   if (active.absSuccess) return "active";
-  // 07 #19: 양쪽 절대 실패면 동점과 같이 수동 측
+  // 01 #19: 양쪽 절대 실패면 동점과 같이 수동 측
   if (active.absFailure) return "passive";
   if (passive.absFailure) return "active";
   return passive.total >= active.total ? "passive" : "active";
 }
 
-export const REROLL_COST = 1; // OPEN-QUESTION #18
+export const REROLL_COST = 1; // 01 #18
 
 /**
  * 굴린 직후의 【FP】 처리.

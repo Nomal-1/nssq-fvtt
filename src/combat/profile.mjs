@@ -178,7 +178,7 @@ function baseProfile(actor, combatant = null) {
       resist: s.resistTotal ?? s.resist,
       elements: (() => { const e = withImbue(s.attackElements ?? []); return e.length ? e : ["none"]; })(),
       weaponName: "",
-      // 에너미 통상 공격의 사거리는 데이터에 없다(07 #25)
+      // 에너미 통상 공격의 사거리는 데이터에 없다(01 #25)
       range: "근"
     };
   }

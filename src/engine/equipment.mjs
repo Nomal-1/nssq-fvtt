@@ -201,7 +201,7 @@ export function buyPrice(item, tables, { level = 1 } = {}) {
   return Number(item.system?.price) || 0;
 }
 
-/** 매각 가격: 구입 가격의 50%(버림). 소재는 (R의 제곱)×50G. 제련비는 포함하지 않는다(07 #22) */
+/** 매각 가격: 구입 가격의 50%(버림). 소재는 (R의 제곱)×50G. 제련비는 포함하지 않는다(01 #22) */
 export function sellPrice(item, tables, opts = {}) {
   if (item.type === "material") return (item.system.rank ** 2) * 50;
   return Math.floor(buyPrice(item, tables, opts) / 2);
