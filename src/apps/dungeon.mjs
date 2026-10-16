@@ -263,7 +263,7 @@ async function randomBattle(e) {
       delete data._id;
       const r = rareTransform(data.system, { multiplier: 2 });
       Object.assign(data.system, { isRare: true, hp: r.hp, stats: r.stats, resist: r.resist });
-      data.flags = { ...(data.flags ?? {}), nssq: { ...(data.flags?.nssq ?? {}), randomRare: true } };
+      data.flags = { ...(data.flags ?? {}), nssq: { ...(data.flags?.nssq ?? {}), randomRare: true, rareOriginal: { hp: { ...actor.system.hp }, stats: { ...actor.system.stats }, resist: { ...actor.system.resist } } } };
       actor = await Actor.create(data);
     }
     actors.push(actor);

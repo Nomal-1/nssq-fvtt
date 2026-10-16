@@ -29,9 +29,11 @@ export async function makeRare(actor) {
   const s = actor.system;
   const original = { hp: { ...s.hp }, stats: { ...s.stats }, resist: { ...s.resist } };
   const r = rareTransform(s, opts);
+  // 이미 받은 대미지는 남긴다(난입으로 넣은 뒤 바꾸거나 전투 중에 바꿔도)
+  const hp = { max: r.hp.max, value: Math.max(0, r.hp.max - Math.max(0, (s.hp?.max ?? 0) - (s.hp?.value ?? 0))) };
   await actor.update({
     "system.isRare": true,
-    "system.hp": r.hp, "system.stats": r.stats, "system.resist": r.resist,
+    "system.hp": hp, "system.stats": r.stats, "system.resist": r.resist,
     "flags.nssq.rareOriginal": original
   });
 }

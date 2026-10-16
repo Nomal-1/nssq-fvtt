@@ -22,7 +22,7 @@ export function meetsWeaponReq(weaponReq, user) {
 }
 
 /**
- * 「《청안의 자세》 상태 한정」 같은 조건: effects의 { type: "requireState", state: id } 가 모두 있어야(07 #57)
+ * 「《청안의 자세》 상태 한정」 같은 조건: effects의 { type: "requireState", state: id } 가 모두 있어야(01 #57)
  * @param {object[]} effects
  * @param {{states?: string[]}} user states는 지금 가진 전투 고유 상태 id 목록
  */

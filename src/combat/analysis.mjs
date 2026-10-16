@@ -10,7 +10,7 @@ import { SUB_STATS, RESISTS } from "../engine/derive.mjs";
 import { CONDITIONS } from "../engine/conditions.mjs";
 import { BUFFS, MAX_KINDS, canonicalBuff } from "../engine/buffs.mjs";
 import { buffEffectText, buffLabel, conditionName } from "./status.mjs";
-import { bestiaryEntry, meetsAutoIdentify } from "./bestiary.mjs";
+import { bestiaryEntry, meetsAutoIdentify, rareMask } from "./bestiary.mjs";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const loc = (k) => game.i18n.localize(k);
@@ -30,21 +30,23 @@ export function enemyAnalysisHtml(actor, name, combatant = null) {
   const show = gm || full || known;
   const book = bestiaryEntry(actor);
   const rare = s.isRare && (gm || s.rareKnown);
+  // 간파하지 못한 희소종: 원래 데이터만(rareMask)
+  const mask = rareMask(actor);
 
   // 왼쪽: Lv·HP·부능력치·내성
   const cs = s.combatStats ?? s.stats ?? {};
   const stat = (k) => {
-    const v = cs[k];
-    const changed = v !== s.stats?.[k];
+    const v = mask ? mask.stat(k, cs[k]) : cs[k];
+    const changed = cs[k] !== s.stats?.[k];
     return `<div class="an-stat"><span>${esc(A(`short.${k}`))}</span><b class="${show && changed ? "changed" : ""}">${show ? esc(v) : Q}</b></div>`;
   };
   const resist = (k) => {
-    const v = s.resistTotal?.[k];
+    const v = mask ? mask.resist(k, s.resistTotal?.[k]) : s.resistTotal?.[k];
     const changed = v !== s.resist?.[k] && known;
     return `<div class="an-res ${k}"><span>${esc(loc(`NSSQ.Resist.${k}`))}</span><b class="${show && changed ? "changed" : ""}">${show ? esc(v) : Q}</b></div>`;
   };
   const left = `
-    <div class="an-hp"><span>HP</span><b>${show ? `${esc(s.hp?.value)} / ${esc(s.hp?.max)}` : Q}</b></div>
+    <div class="an-hp"><span>HP</span><b>${show ? `${esc((mask?.hp ?? s.hp)?.value)} / ${esc((mask?.hp ?? s.hp)?.max)}` : Q}</b></div>
     <h4>${esc(A("stats"))}</h4><div class="an-stats">${SUB_STATS.map(stat).join("")}</div>
     <h4>${esc(A("resist"))}</h4><div class="an-resists">${RESISTS.map(resist).join("")}</div>
     ${!known ? `<p class="an-note">${esc(A("unknownNote"))}</p>` : ""}`;

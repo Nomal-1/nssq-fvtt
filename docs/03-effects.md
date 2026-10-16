@@ -95,7 +95,7 @@
 | `hostileHitFail` | `value`, `when` | (stance 안) 상대 진영의 명중 판정 눈 value 이하 절대 실패(《인법: 아지랑이》) |
 | `extraAction` | `count` | 그 턴 주행동 +count회(《인법: 분신》). 메인 페이즈 그 전투원 차례에서 [턴 종료]를 누르면 한 번 더 그 전투원(전투원 플래그 `extraAction`) |
 | `actionTiming` | `value`(first/last) | 「그 턴 최속/후발 행동」(대상에게. 자신이면 target 자신). 개막 페이즈에 쓰면 메인 페이즈 행동 순서에 반영(전투원 플래그 timing, 라운드마다 지움). 주행동 스킬에 `last`가 있으면 메인 페이즈에 쓸 때 후발 행동 예약(전투원 플래그 `late`, 코스트는 실행할 때), 모든 전투원 행동 뒤 【속도】 순 실행. 실행할 때 이 효과는 뺀다(8-D) |
-| `state` | `id`, `label`, `group?`, `mods[{path, value}]`, `max?`, `note?` | 전투 고유 상태(강화가 아님, 해제되지 않음, 전투 끝까지). 무사의 자세·《나찰》 등. 같은 `group`은 하나만, `max`가 있으면 쌓임(07 #57) |
+| `state` | `id`, `label`, `group?`, `mods[{path, value}]`, `max?`, `note?` | 전투 고유 상태(강화가 아님, 해제되지 않음, 전투 끝까지). 무사의 자세·《나찰》 등. 같은 `group`은 하나만, `max`가 있으면 쌓임(01 #57) |
 | `requireState` | `state` | 「《○○》 상태 한정」. 그 상태가 없으면 쓸 수 없다(사용 시 해석하지 않음) |
 | `requireSelf` | `when` | 「자신이 ○○일 때만 사용 가능」. when을 자신으로 판정(`selfHasAilment` 등, 《전화위복》) |
 | `command` | `mode` | (`when: {targetDisabled: "fear"}`와 함께) 《명하노니》: `stop`(안내만)·`enemyAttack`(다른 에너미를 통상 공격)·`selfAttack`(자신을 통상 공격). 결과를 적용할 때 실행 |

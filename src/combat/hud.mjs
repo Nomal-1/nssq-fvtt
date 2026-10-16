@@ -27,7 +27,7 @@ import { identifyDialog } from "./identify.mjs";
 import { randomEnemyAction } from "./enemy-ai.mjs";
 import { StatusApp } from "./status.mjs";
 import { allyAnalysisHtml, enemyAnalysisHtml } from "./analysis.mjs";
-import { knowsEnemy } from "./bestiary.mjs";
+import { knowsEnemy, rareMask } from "./bestiary.mjs";
 import { actionState, confusedAction, endPhaseMessage, requestEndPhaseApply } from "./turn-status.mjs";
 import { openingLabel, requestPass, restoreOpening } from "./opening.mjs";
 import { actionList, beginAction, pickTarget, requestSkillApply } from "./skill-use.mjs";
@@ -246,6 +246,8 @@ function enemyCard(c, combat, targetable) {
   const a = c.actor;
   const s = a.system;
   const showHp = game.user.isGM || knowsEnemy(a);
+  // 간파하지 못한 희소종은 통상종 【HP】로 보인다(bestiary.mjs rareMask)
+  const hpShown = rareMask(a)?.hp ?? s.hp;
   const cls = ["nb-enemy", persistClasses(c), s.row === "back" ? "back" : "front", isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", targetable ? "targetable" : ""].join(" ");
   const tools = game.user.isGM ? `<div class="gm-tools">
       <a data-tool="identify" class="${s.identified ? "on" : ""}" title="${esc(game.i18n.localize(s.identified ? "NSSQ.Combat.identifiedOn" : "NSSQ.Combat.identifiedOff"))}"><i class="fas ${s.identified ? "fa-eye" : "fa-eye-slash"}"></i></a>
@@ -259,7 +261,7 @@ function enemyCard(c, combat, targetable) {
     <div class="art ${cycleAttrs(c).cls}" ${cycleAttrs(c).attr}><img src="${esc(enemyImage(c))}"/><div class="nb-fxbox">${persistOverlay(c)}</div></div>
     <div class="plate">
       <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
-      <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
+      <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(hpShown) : 100}%"></i>${showHp ? `<span>${hpShown?.value ?? 0}/${hpShown?.max ?? 0}</span>` : ""}</div>
       
       ${tools}
     </div>

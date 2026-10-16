@@ -19,6 +19,24 @@ export function bestiaryEntry(actor) {
 }
 
 /** 플레이어가 이 에너미의 수치를 아는가: 이번 전투에서 식별했다(자동 식별 포함, 01 #48). 도감 기록만으로는 모른다 */
+/**
+ * 희소종임을 간파하지 못한 플레이어에게 보이는 값(원문: 희소종 사실은 숨기고 원래 데이터만 공개, 사용자 결정 01 #16).
+ * 【HP】는 통상종 최대치로 보이고 받은 대미지만큼 줄어든다 → 막대가 0이 되어도 실제로는 쓰러지지 않는 연출.
+ * GM·간파 성공(rareKnown)·원래 값 기록이 없으면 null(실제 값 그대로)
+ * @returns {null | { hp: {value, max}, stat: (k, v) => number, resist: (k, v) => number }}
+ */
+export function rareMask(actor) {
+  const s = actor?.system;
+  const o = actor?.getFlag?.("nssq", "rareOriginal");
+  if (!s?.isRare || s.rareKnown || game.user.isGM || !o?.hp) return null;
+  const lost = Math.max(0, (s.hp?.max ?? 0) - (s.hp?.value ?? 0));
+  return {
+    hp: { max: o.hp.max, value: Math.max(0, o.hp.max - lost) },
+    stat: (k, v) => v - ((s.stats?.[k] ?? 0) - (o.stats?.[k] ?? s.stats?.[k] ?? 0)),
+    resist: (k, v) => v - ((s.resist?.[k] ?? 0) - (o.resist?.[k] ?? s.resist?.[k] ?? 0))
+  };
+}
+
 export function knowsEnemy(actor) {
   if (!actor || actor.type !== "enemy") return true;
   return !!actor.system.identified;

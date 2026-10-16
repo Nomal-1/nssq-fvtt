@@ -6,7 +6,7 @@ import { canUseSkill } from "../../src/engine/effects/usage.mjs";
 const jodan = { id: "bushido.jodan", name: "상단의 자세", group: "bushido.stance", mods: { physAtk: 3 } };
 const seigan = { id: "bushido.seigan", name: "청안의 자세", group: "bushido.stance", mods: { defense: 2 } };
 
-describe("전투 고유 상태(07 #57)", () => {
+describe("전투 고유 상태(01 #57)", () => {
   it("같은 계열은 하나만: 새 자세가 앞의 자세를 바꾼다", () => {
     const a = addState([], jodan);
     const b = addState(a.list, seigan);

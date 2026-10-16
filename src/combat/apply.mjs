@@ -35,6 +35,18 @@ const sideKey = (actor) => (sideOf(actor) === "enemy" ? "enemy" : "party");
  * 【HP】가 바뀌었을 때: 【HP】 0 이하면 쓰러짐 표시를 붙이고(시스템이 붙였다고 기록),
  * 되살아나면 시스템이 붙인 표시만 뗀다(GM이 직접 붙인 표시는 그대로). 그다음 진영 검사.
  */
+/**
+ * 전투 불능([전투 불능]·[석화])이 되면 자세(전투 고유 상태)·대기 상태·방어·대기 행동이 풀린다(01 #57 사용자 결정).
+ * 포검 오버히트는 풀리지 않는다(액터 플래그 overheat는 건드리지 않음)
+ */
+async function dropCombatStates(actor, combatant) {
+  if ((actor.getFlag("nssq", "states") ?? []).length) await actor.unsetFlag("nssq", "states");
+  if (!combatant) return;
+  const upd = {};
+  for (const k of ["stances", "waiting", "guarding"]) if (combatant.getFlag("nssq", k)) upd[`flags.nssq.-=${k}`] = null;
+  if (Object.keys(upd).length) await combatant.update(upd);
+}
+
 async function afterHpChange(actor) {
   const ko = (actor.system.hp?.value ?? 0) <= 0;
   // 쓰러지면 상태 이상·봉인·강화·약화가 모두 풀린다(01 #49)
@@ -45,6 +57,7 @@ async function afterHpChange(actor) {
   const combatant = combat?.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor.uuid);
   const dead = CONFIG.specialStatusEffects.DEFEATED;
   const setOverlay = async (on) => { if (actor.statuses?.has(dead) !== on) await actor.toggleStatusEffect(dead, { active: on, overlay: true }); };
+  if (ko && combat?.started) await dropCombatStates(actor, combatant);
   if (combatant) {
     const auto = !!combatant.getFlag("nssq", "autoDefeated");
     if (ko && !combatant.defeated) {
@@ -163,7 +176,12 @@ export function registerApply() {
   });
   // HP를 손으로 고쳐도 전투 불능 표시를 맞춘다
   Hooks.on("updateActor", (actor, changes) => {
-    if (!isActiveGM() || foundry.utils.getProperty(changes, "system.hp.value") === undefined) return;
-    afterHpChange(actor);
+    if (!isActiveGM()) return;
+    if (foundry.utils.getProperty(changes, "system.hp.value") !== undefined) afterHpChange(actor);
+    // [석화]도 전투 불능: 자세·대기 상태가 풀린다(01 #57)
+    else if (foundry.utils.getProperty(changes, "system.conditions") !== undefined && isPetrified(actor) && game.combat?.started) {
+      const c = game.combat.combatants.find((x) => x.actor === actor || x.actor?.uuid === actor.uuid);
+      if (c) dropCombatStates(actor, c);
+    }
   });
 }
