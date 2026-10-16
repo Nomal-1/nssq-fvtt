@@ -163,9 +163,23 @@ export async function openStartDialog(presetId = null) {
       };
     }
   });
-  if (!choice) return;
-  if (!choice.members.length) return ui.notifications.warn(L("noMembers"));
+  // 개시 창을 닫으면(취소) 그 전투용으로 만든 임시 프리셋 씬은 지운다(남으면 씬 목록에 쌓인다)
+  const dropTemp = async () => { const p = presetId ? game.scenes.get(presetId) : null; if (p?.getFlag("nssq", "randomPreset")) await p.delete(); };
+  if (!choice) return dropTemp();
+  if (!choice.members.length) { await dropTemp(); return ui.notifications.warn(L("noMembers")); }
   return startBattle(choice);
+}
+
+/** 활성 GM, 접속 때: 진행 중인 전투가 쓰지 않는 임시 프리셋·전투 사본 씬을 지운다(창을 닫지 않고 나간 경우 등) */
+async function cleanupBattleScenes() {
+  const used = new Set();
+  for (const c of game.combats) {
+    const info = c.getFlag("nssq", "battle") ?? {};
+    for (const id of [info.copy, info.presetId, c.scene?.id]) if (id) used.add(id);
+  }
+  const orphans = game.scenes.filter((s) => !used.has(s.id) && !s.active && (s.getFlag("nssq", "randomPreset") || s.getFlag("nssq", "battleCopy")));
+  if (orphans.length) await Scene.deleteDocuments(orphans.map((s) => s.id));
+  return orphans.length;
 }
 
 /** 지금 재생 중인 소리(나중에 되돌리기 위해) */
@@ -383,6 +397,7 @@ export async function endBattle(combat, result = "abort") {
 }
 
 export function registerBattle() {
+  Hooks.once("ready", () => { if (game.users.activeGM?.id === game.user.id) cleanupBattleScenes().catch((e) => console.warn("NSSQ | cleanup", e)); });
   // 트래커의 기본 [전투 종료]로 끝내도 정리한다(결과는 「중단」).
   // 훅은 모든 클라이언트에서 돌므로 접속 중인 GM 한 명만(보조 GM 등 GM이 여럿이면 사본 씬을 두 번 지우려다 오류)
   Hooks.on("deleteCombat", (combat) => {

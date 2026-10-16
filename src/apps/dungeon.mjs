@@ -114,7 +114,8 @@ export async function nextEvent() {
   await (await import("./time-pass.mjs")).timePasses(1);
   // 이벤트 2D6은 플레이어가 굴린다(사용자 결정): 접속한 플레이어 모두에게 팝업, 누구 하나가 굴리면 모든 팝업이 닫힌다.
   // 채팅 카드의 버튼은 팝업을 닫아 버린 경우의 예비. 접속한 플레이어가 없으면 GM이 바로
-  const players = game.users.filter((u) => u.active && !u.isGM);
+  // 캐릭터를 하나도 갖지 않은 계정(관전용 등)은 빼고
+  const players = game.users.filter((u) => u.active && !u.isGM && game.actors.some((a) => a.type === "character" && a.testUserPermission(u, "OWNER")));
   if (players.length) {
     const msg = await ChatMessage.create({
       speaker: { alias: L("title") },

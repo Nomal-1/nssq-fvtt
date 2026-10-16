@@ -89,7 +89,8 @@ async function autoAssignCharacter() {
 export function registerMobile() {
   game.settings.register("nssq", "mobileMode", {
     name: "NSSQ.Mobile.setting", hint: "NSSQ.Mobile.settingHint",
-    scope: "client", config: true, type: String, default: "auto",
+    // 기본 끔(사용자 결정: 옛 휴대폰 과열로 모바일 지원은 보류). 필요하면 기기마다 켬·자동으로
+    scope: "client", config: true, type: String, default: "off",
     choices: { auto: "NSSQ.Mobile.auto", on: "NSSQ.Mobile.on", off: "NSSQ.Mobile.off" },
     onChange: () => apply()
   });
