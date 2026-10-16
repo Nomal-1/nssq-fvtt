@@ -48,10 +48,10 @@ describe("연쇄 금지(01 §3.11, 05 완료 기준)", () => {
     expect(autoRuns(r, { ...p2, autoTrigger: { chaseBuff: true } })).toBe(true);
   });
 
-  it("『추격: ○』를 ○ 자신도 받았으면(《추격의 호령》 아군 열) 자기 공격은 추격하지 않는다", () => {
+  it("『추격: ○』를 ○ 자신도 받았으면(《추격의 호령》 아군 열) 자기 공격도 추격한다", () => {
     const atk = { kind: "normal", attackerId: "p1", attackerUuid: "A.p1", attackerSide: "pc", attackerRow: "front", attackKind: "physical", elements: [], category: "", targets: [{ id: "e1", side: "enemy", row: "front", hit: true }] };
     const b = [{ id: "chase", param: "A.p1" }];
-    expect(findReactions(atk, [pc("p1", { buffs: b }), pc("p2", { buffs: b }), foe]).map((r) => r.unitId)).toEqual(["p2"]);
+    expect(findReactions(atk, [pc("p1", { buffs: b }), pc("p2", { buffs: b }), foe]).map((r) => r.unitId)).toEqual(["p1", "p2"]);
   });
 
   it("대기 상태 횟수: 누적 n회면 끝", () => {
