@@ -79,9 +79,13 @@ export async function registerExpansion() {
   const have = new Map(game.items.filter((i) => i.folder?.id === folder.id).map((i) => [i.name, i]));
   const add = data.items.filter((i) => !have.has(i.name)).map((i) => ({ ...i, folder: folder.id }));
   if (add.length) await Item.createDocuments(add);
-  // 이미 있는 것은 효과·해설만 새 버전으로(가격 등 GM이 고친 값은 그대로)
-  const upd = data.items.filter((i) => have.has(i.name)).map((i) => ({ _id: have.get(i.name).id, "system.effects": i.system.effects, "system.description": i.system.description }))
-    .filter((u) => { const cur = game.items.get(u._id).system; return JSON.stringify(cur.effects) !== JSON.stringify(u["system.effects"]) || cur.description !== u["system.description"]; });
+  // 이미 있는 것은 효과·해설만 새 버전으로. 가격은 예전 기본값 그대로일 때만(oldPrices, GM이 고친 값은 그대로)
+  const upd = data.items.filter((i) => have.has(i.name)).map((i) => {
+    const cur = have.get(i.name).system;
+    const u = { _id: have.get(i.name).id, "system.effects": i.system.effects, "system.description": i.system.description };
+    if ((data.oldPrices?.[i.name] ?? []).includes(cur.price) && cur.price !== i.system.price) u["system.price"] = i.system.price;
+    return u;
+  }).filter((u) => { const cur = game.items.get(u._id).system; return "system.price" in u || JSON.stringify(cur.effects) !== JSON.stringify(u["system.effects"]) || cur.description !== u["system.description"]; });
   if (upd.length) await Item.updateDocuments(upd);
   // 능력치 편집 창의 「보전」 칸을 연다(sheets/character.mjs editAbilities)
   if (!game.settings.get("nssq", "expansion")) await game.settings.set("nssq", "expansion", true);
