@@ -267,7 +267,7 @@ export async function applyEndPhase(messageId, undo = false) {
     }
     const upd = { "system.conditions": v.conditions, "system.buffs": v.buffs, "system.hp.value": v.hp };
     if (v.tp !== null && v.tp !== undefined) upd["system.tp.value"] = v.tp;
-    await actor.update(upd);
+    await actor.update(upd, { nssqUndo: undo });
   }
   await message.setFlag("nssq", "endPhase.applied", !undo);
 }

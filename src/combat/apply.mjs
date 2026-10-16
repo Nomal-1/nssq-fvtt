@@ -39,15 +39,29 @@ const sideKey = (actor) => (sideOf(actor) === "enemy" ? "enemy" : "party");
  * 전투 불능([전투 불능]·[석화])이 되면 자세(전투 고유 상태)·대기 상태·방어·대기 행동이 풀린다(01 #57 사용자 결정).
  * 포검 오버히트는 풀리지 않는다(액터 플래그 overheat는 건드리지 않음)
  */
+// 함께 풀리는 전투원 플래그: 대기 상태·대기 행동·방어, 후발·지연 공격·반복 예약(쓰러지면 예약 취소, 사용자 결정)
+const KO_FLAGS = ["stances", "waiting", "guarding", "late", "delayed", "lateRepeat"];
+
 async function dropCombatStates(actor, combatant) {
-  if ((actor.getFlag("nssq", "states") ?? []).length) await actor.unsetFlag("nssq", "states");
-  if (!combatant) return;
-  const upd = {};
-  for (const k of ["stances", "waiting", "guarding"]) if (combatant.getFlag("nssq", k)) upd[`flags.nssq.-=${k}`] = null;
-  if (Object.keys(upd).length) await combatant.update(upd);
+  const states = actor.getFlag("nssq", "states") ?? [];
+  const flags = Object.fromEntries(KO_FLAGS.map((k) => [k, combatant?.getFlag("nssq", k)]).filter(([, v]) => v !== undefined && v !== null && v !== false));
+  if (!states.length && !Object.keys(flags).length) return;
+  // 되돌리기([되돌리기]로 쓰러짐을 취소)하면 복원하도록 남긴다(restoreCombatStates)
+  await actor.update({ "flags.nssq.koDropped": { states, flags, combatantId: combatant?.id ?? null }, "flags.nssq.-=states": null });
+  if (!combatant || !Object.keys(flags).length) return;
+  await combatant.update(Object.fromEntries(Object.keys(flags).map((k) => [`flags.nssq.-=${k}`, null])));
 }
 
-async function afterHpChange(actor) {
+/** 되돌리기로 다시 살아났을 때: 쓰러지며 풀린 자세·대기·예약을 되돌린다. 회복 스킬 등으로 살아나면 복원하지 않고 기록만 지운다 */
+async function restoreCombatStates(actor, undo) {
+  const d = actor.getFlag("nssq", "koDropped");
+  if (!d) return;
+  await actor.update({ "flags.nssq.-=koDropped": null, ...(undo && d.states?.length ? { "flags.nssq.states": d.states } : {}) });
+  const cb = undo && d.combatantId ? game.combat?.combatants.get(d.combatantId) : null;
+  if (cb && Object.keys(d.flags ?? {}).length) await cb.update(Object.fromEntries(Object.entries(d.flags).map(([k, v]) => [`flags.nssq.${k}`, v])));
+}
+
+async function afterHpChange(actor, options = {}) {
   const ko = (actor.system.hp?.value ?? 0) <= 0;
   // 쓰러지면 상태 이상·봉인·강화·약화가 모두 풀린다(01 #49)
   if (ko && ((actor.system.conditions ?? []).length || (actor.system.buffs ?? []).length)) {
@@ -59,6 +73,7 @@ async function afterHpChange(actor) {
   const setOverlay = async (on) => { if (actor.statuses?.has(dead) !== on) await actor.toggleStatusEffect(dead, { active: on, overlay: true }); };
   // [석화]도 전투 불능(석화를 거는 스킬 카드는 【HP】와 상태 이상을 함께 고친다)
   if ((ko || isPetrified(actor)) && combat?.started) await dropCombatStates(actor, combatant);
+  else if (!ko && !isPetrified(actor)) await restoreCombatStates(actor, !!options.nssqUndo);
   if (combatant) {
     const auto = !!combatant.getFlag("nssq", "autoDefeated");
     if (ko && !combatant.defeated) {
@@ -136,7 +151,8 @@ async function gmApply({ messageId, index, undo = false }) {
     if (!t.applied) return;
     const upd = { "system.hp.value": t.before };
     if (t.sleepEntry && !(actor.system.conditions ?? []).some((c) => c.id === "sleep")) upd["system.conditions"] = [...(actor.system.conditions ?? []), t.sleepEntry];
-    await actor.update(upd);
+    // nssqUndo: 쓰러짐이 되돌려지면 풀렸던 자세·대기·예약을 복원(afterHpChange)
+    await actor.update(upd, { nssqUndo: true });
     if (t.curse && attacker) await attacker.update({ "system.hp.value": t.curse.before });
     targets[index] = { ...t, applied: false, after: null, sleepEntry: null, curse: null };
   }
@@ -176,13 +192,17 @@ export function registerApply() {
     if (foundry.utils.hasProperty(changes, "turn") || foundry.utils.hasProperty(changes, "round") || foundry.utils.hasProperty(changes, "flags.nssq.phase")) checkSides(combat);
   });
   // HP를 손으로 고쳐도 전투 불능 표시를 맞춘다
-  Hooks.on("updateActor", (actor, changes) => {
+  Hooks.on("updateActor", (actor, changes, options) => {
     if (!isActiveGM()) return;
-    if (foundry.utils.getProperty(changes, "system.hp.value") !== undefined) afterHpChange(actor);
+    if (foundry.utils.getProperty(changes, "system.hp.value") !== undefined) afterHpChange(actor, options);
     // [석화]도 전투 불능: 자세·대기 상태가 풀린다(01 #57). 【HP】를 함께 바꿨으면 위에서 처리
     else if (foundry.utils.getProperty(changes, "system.conditions") !== undefined && isPetrified(actor) && game.combat?.started) {
       const c = game.combat.combatants.find((x) => x.actor === actor || x.actor?.uuid === actor.uuid);
       if (c) dropCombatStates(actor, c);
+    }
+    // [석화]가 풀리면(되돌리기면 복원, 그 밖에는 기록만 지움)
+    else if (foundry.utils.getProperty(changes, "system.conditions") !== undefined && (actor.system.hp?.value ?? 0) > 0 && actor.getFlag("nssq", "koDropped")) {
+      restoreCombatStates(actor, !!options?.nssqUndo);
     }
   });
 }

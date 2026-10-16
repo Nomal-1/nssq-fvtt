@@ -1035,7 +1035,7 @@ async function applyOne(message, undo) {
       if (e.before.states) upd["flags.nssq.states"] = e.before.states;
       if (e.before.tp !== null && e.before.tp !== undefined) upd["system.tp.value"] = e.before.tp;
       if (e.before.row) { upd["system.row"] = e.before.row; upd["system.order"] = e.before.order ?? 0; }
-      await actor.update(upd);
+      await actor.update(upd, { nssqUndo: true });
       const cb = e.before.combatant && game.combat?.combatants.get(e.before.combatant.id);
       if (cb) {
         const f = e.before.combatant;

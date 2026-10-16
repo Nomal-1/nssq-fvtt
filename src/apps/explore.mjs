@@ -168,7 +168,7 @@ async function applyCard(messageId, undo) {
       const s = a.system;
       if (undo) {
         if (!r.before) continue;
-        await a.update({ "system.hp.value": r.before.hp, "system.tp.value": r.before.tp, "system.conditions": r.before.conditions });
+        await a.update({ "system.hp.value": r.before.hp, "system.tp.value": r.before.tp, "system.conditions": r.before.conditions }, { nssqUndo: true });
         if (r.before.overheat) await a.setFlag("nssq", "overheat", r.before.overheat);
         r.before = null;
         continue;
