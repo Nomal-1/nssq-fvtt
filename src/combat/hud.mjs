@@ -334,7 +334,9 @@ function cardStateClasses(c) {
 function cardFx(c) {
   const st = persistState(c);
   const back = ailParticles(st);
-  const front = st.binds.map((k) => VINE_SVG(`nb-cardvine part-${k}`)).join("")
+  // 봉인 덩굴: 머리=위 가장자리, 다리=아래 가장자리, 팔=양옆 세로(글자를 가리지 않게)
+  const vineV = (side) => `<svg class="nb-cardvine-v ${side}" viewBox="0 0 20 100" preserveAspectRatio="none"><path d="M10,-5 C2,15 18,30 10,50 S2,80 10,105"/><path d="M6,-5 C16,20 4,40 12,60 S16,90 6,105"/><circle cx="10" cy="30" r="3"/><circle cx="9" cy="72" r="3"/></svg>`;
+  const front = st.binds.map((k) => (k === "bindArm" ? vineV("l") + vineV("r") : VINE_SVG(`nb-cardvine part-${k}`))).join("")
     + (st.guard ? `<i class="nb-card-shield fas fa-shield-alt"></i>` : "")
     + (st.waiting ? `<i class="nb-card-wait fas fa-hourglass-half"></i>` : "");
   return `<div class="nb-cardfx">${back}</div>${front ? `<div class="nb-cardfx-front">${front}</div>` : ""}`;

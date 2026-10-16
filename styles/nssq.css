@@ -1701,3 +1701,7 @@
 /* 강화·약화: 카드 테두리(기존 fx-buffed·fx-debuffed) + 얼굴 칸 배지 */
 #nssq-battle .nb-member .portrait .nb-bd-badges { right: 1px; bottom: 1px; }
 @media (prefers-reduced-motion: reduce) { #nssq-battle .nb-member.st-wait::after, #nssq-battle .nb-member.ail-fear .portrait, #nssq-battle .nb-card-shield { animation: none; } }
+#nssq-battle .nb-cardvine-v { position: absolute; top: -4%; height: 108%; width: 22px; opacity: 0.9; }
+#nssq-battle .nb-cardvine-v.l { left: -6px; } #nssq-battle .nb-cardvine-v.r { right: -6px; }
+#nssq-battle .nb-cardvine-v path { fill: none; stroke: #4caf50; stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 2px #1b5e20); vector-effect: non-scaling-stroke; }
+#nssq-battle .nb-cardvine-v circle { fill: #81c784; stroke: #2e7d32; stroke-width: 1; }
