@@ -202,6 +202,8 @@ function gmReroll({ messageId, type, index, seq }) {
 }
 
 export function requestReroll(payload) {
+  // 누른 사람 쪽에서도 먼저 본다(버튼이 사라지기 전에 누른 경우 등)
+  if (!canRerollNow(game.messages.get(payload.messageId))) return ui.notifications.warn(L("tooLate"));
   return isActiveGM() ? gmReroll(payload) : emit("fpReroll", payload);
 }
 
