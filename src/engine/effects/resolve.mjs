@@ -86,6 +86,9 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
 
   const hitChecks = [];
   let seq = 0;
+  // 【FP】 주사위 추가 선언(01 #26): 명중 판정마다 user.fpDice개, 남은 【FP】(user.fpAvail)가 닿는 데까지. 쓴 만큼 out.fpSpent
+  let fpLeft = Math.max(0, Number(user.fpAvail) || 0);
+  out.fpSpent = 0;
   const run = async (list, tgt) => {
     for (const e of list ?? []) {
       if (!e?.type || PASSIVE_TYPES.includes(e.type)) continue;
@@ -112,6 +115,12 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
   let stanceDone = false;
   // onHit 처리 중인 명중(흡수 drain이 대미지·주사위를 본다)
   let lastHit = null;
+  const fpTake = () => {
+    const k = Math.min(Math.max(0, Number(user.fpDice) || 0), fpLeft);
+    fpLeft -= k;
+    out.fpSpent += k;
+    return k;
+  };
   const attackOnce = async (e, t) => {
     const kind = e.kind ?? "physical";
     // element: 그 속성으로 / addElement: 무기 속성에 더한다(「〈염〉 속성을 부가한」)
@@ -140,17 +149,18 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     const tt = ignoreBuffs(t, e.ignoreBuffs);
     // [수면]은 명중한 공격의 처리 뒤 풀린다: 같은 행동의 다음 회차는 깬 상태의 내성(01 #37)
     const resist = r.sleepBroken && tt.resistAwake ? tt.resistAwake : tt.resist;
-    const result = await resolveAttack({
+    // 다시 굴리기(01 #26)에 쓰도록 판정 조건을 남긴다
+    const params = {
       attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
       target: { evasion: t.evasion, defense: tt.defense, resist, guarding: t.guarding, guardHalf: t.guardHalf },
       kind, hitMod, diceMod,
       atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, failAtOrBelow: Math.max(Number(e.failAtOrBelow ?? 0) || 0, pb.failAtOrBelow), resistMod: pb.resistMod, resistLow: pb.resistLow, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
       diceOverride: e.fixedDice !== undefined ? evaluate(e.fixedDice, vars(t)) : null,
-      rollDice
-    });
+    };
+    const result = await resolveAttack({ ...params, fpDice: fpTake(), rollDice });
     hitChecks.push(result);
     // seq: 이 행동 안에서 몇 번째 공격인가(다회 공격을 카드에 순서대로 보인다)
-    const hitRow = { ...result, elements, kind, seq: ++seq };
+    const hitRow = { ...result, elements, kind, seq: ++seq, params };
     r.hits.push(hitRow);
     if (result.hit) {
       r.damage += result.finalDamage ?? 0;

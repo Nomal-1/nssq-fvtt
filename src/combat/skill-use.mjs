@@ -22,6 +22,7 @@ import { buffLabel, conditionLabel, conditionName } from "./status.mjs";
 import { knowsEnemy, recordBestiary } from "./bestiary.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { decorateReactions, hasPendingReaction, pendingReaction } from "./reaction.mjs";
+import { fpNote, rerollButton } from "./fp-dice.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.SkillUse.${k}`, d) : game.i18n.localize(`NSSQ.SkillUse.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -576,6 +577,9 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   }
   // 흡수(drain) 등 사용자 자신에게 돌아오는 결과
   if (!actorOf.has(user.id)) actorOf.set(user.id, actor);
+  // 【FP】 주사위 선언(01 #26, combat/fp-dice.mjs): 명중 판정마다
+  const { declaredFpDice, spendFpDice } = await import("./fp-dice.mjs");
+  if (actor.type === "character") Object.assign(user, { fpDice: declaredFpDice(actor), fpAvail: actor.system.fp?.value ?? 0 });
   const r = await resolveEffects({
     effects: effectsAll, sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : spreadPool,
@@ -609,6 +613,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const tr = r.results.get(user.id)?.tokenRemove;
   if (tr !== undefined && !r.failed && combatant) await removeToken(combatant, tr || null);
   // FP(캐릭터만), 오버히트
+  if (actor.type === "character" && (r.fpSpent || actor.getFlag("nssq", "fpDice")) && r.results.size && [...r.results.values()].some((x) => x.hits?.length)) await spendFpDice(actor, r.fpSpent ?? 0);
   if (r.fpGain && actor.type === "character") await actor.update({ "system.fp.value": (actor.system.fp?.value ?? 0) + r.fpGain });
   if (r.overheat) {
     await actor.setFlag("nssq", "overheat", r.overheat);
@@ -636,7 +641,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     states: x.states.map((st) => ({ ...st, name: st.name || item.name })),
     sleepBroken: x.sleepBroken, revive: !!x.revive, command: x.command ?? null,
     stances: (x.stances ?? []).map((st) => ({ ...st, name: item.name, key: sys.key ?? item.name })),
-    hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist, raw: h.rawDamage ?? 0, halves: Number(!!h.guarded) + Number(!!h.halved) + Number(!!h.guardHalf), elements: h.elements ?? [] })),
+    hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, rolled: h.hitCheck?.rolled, fpDice: h.hitCheck?.fpDice ?? 0, rerolled: false, params: h.params ?? null, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist, raw: h.rawDamage ?? 0, halves: Number(!!h.guarded) + Number(!!h.halved) + Number(!!h.guardHalf), elements: h.elements ?? [] })),
     applied: false, before: null,
     // 수동 반응(단계 6-C): 명중한 공격이 있고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
     reaction: pendingReaction(actorOf.get(x.id), x.hits.find((h) => h.hit)?.kind ?? "physical", x.hits.some((h) => h.hit))
@@ -838,7 +843,9 @@ function entryLines(e, card) {
     const [pre, post] = L(h.hit ? "hitLine" : "missLine", { total: "\u0000", dice: h.dice?.join("+") ?? "" }).split("\u0000");
     let line = `${no}${esc(pre)}<span data-mask="${esc(card.kind)}">${h.total ?? "-"}</span>${esc(post ?? "")}`;
     if (h.hit) line += ` — ${esc(L("damageLine", { n: h.final, count: h.diceCount }))}${h.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}`;
+    line += fpNote(h);
     if (h.woke) line += ` <em class="woke">${esc(L("woke"))}</em>`;
+    if (h.params && !h.rerolled) line += ` ${rerollButton(`data-seq="${h.seq}"`)}`;
     const inner = h.seq ? sub(h.seq) : "";
     out.push(`<li class="${h.hit ? "hit" : "miss"}">${line}${inner ? `<ul class="per-hit">${inner}</ul>` : ""}</li>`);
   }

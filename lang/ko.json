@@ -600,6 +600,12 @@
       "done": "기본 마을 {towns}·지도 {maps}·전투 구성 {encounters}을(를) 넣었다.",
       "seeded": "기본 마을 {towns}·미궁 {maps}을(를) 넣었다(GM 스크린 「준비」에서 다시 넣을 수 있다)."
     },
+    "FpDice": {
+      "title": "{name} — 【FP】 주사위", "hint": "다음 공격의 명중 판정마다 주사위를 이만큼 더 굴리고 높은 2개를 쓴다. 판정마다 【FP】를 그만큼 쓴다(대상이 여럿이면 대상마다). 늘린 판정에서는 1이 나와도 【FP】를 얻지 않는다.",
+      "label": "더할 주사위(남은 【FP】 {fp})", "ok": "선언", "declared": "다음 명중 판정 【FP】 주사위 +{n}",
+      "added": "【FP】 주사위 +{n}({dice})", "rerolledTag": "다시 굴림",
+      "reroll": "【FP】로 다시 굴리기", "rerollHint": "이 명중 판정을 다시 굴린다(【FP】 {cost}, 판정당 한 번). 적용했으면 되돌린 뒤 다시 굴린다"
+    },
     "SkillBadge": {
       "part": "의존 부위: {part}", "noPart": "의존 부위 없음", "weapon": "필요 무기: {list}", "noWeapon": "필요 무기 없음", "bound": "그 부위가 봉인되어 쓸 수 없다"
     },
@@ -1419,6 +1425,7 @@
       "gmNeeded": "GM 판단 필요: {what}",
       "gmScope": "대상 범위를 해석하지 못했다(단일로 처리)",
       "type": {
+        "rerollHit": "다시 굴려 새로 명중한 공격의 추가 효과(다시 계산하지 않음)",
         "stance": "대기 상태",
         "delayed": "지연 공격",
         "counter": "반격",

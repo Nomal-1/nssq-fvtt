@@ -13,6 +13,8 @@ import { slotOccupant } from "../engine/equipment.mjs";
 import { evaluate } from "../engine/expr.mjs";
 import tables from "../generated/tables.mjs";
 
+import { declaredFpDice, fpNote, rerollButton, spendFpDice } from "./fp-dice.mjs";
+
 const TEMPLATE = "systems/nssq/templates/chat/attack-card.hbs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -186,13 +188,17 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
   const pb = sumAttackBonuses(a.attackBonuses, { self: a, target: { ...d, skills: target.items.filter((i) => i.type === "skill").map((i) => i.name) }, attack: { kind: "physical", elements: a.elements } });
   // 《링크 이펙트》 등으로 더한 속성까지(카드 표시도 같은 값)
   const atkElements = pb.addElement.length ? [...new Set([...a.elements.filter((x) => x !== "none"), ...pb.addElement])] : a.elements;
-  const r = await resolveAttack({
+  // 다시 굴리기(01 #26)에 쓰도록 판정 조건을 카드에 남긴다
+  const params = {
     attacker: { hit: a.physHit, physAtk: a.physAtk, elemAtk: a.elemAtk, elements: atkElements, critUp: a.critUp },
     target: { evasion: d.evasion, defense: d.defense, resist: d.resist, guarding: d.guarding, guardHalf: d.guardHalf },
     resistMod: pb.resistMod, resistLow: pb.resistLow, failAtOrBelow: pb.failAtOrBelow,
-    kind: "physical", hitMod: pb.hitMod, diceMod: pb.diceMod, atkMod: pb.atkMod, critUp: pb.critUp, critDiceMod: pb.critDice,
-    rollDice
-  });
+    kind: "physical", hitMod: pb.hitMod, diceMod: pb.diceMod, atkMod: pb.atkMod, critUp: pb.critUp, critDiceMod: pb.critDice
+  };
+  // 【FP】 주사위 선언(01 #26, combat/fp-dice.mjs)
+  const fpDice = Math.min(declaredFpDice(attacker), attacker.system.fp?.value ?? 0);
+  const r = await resolveAttack({ ...params, fpDice, rollDice });
+  if (attacker.type === "character" && (fpDice || attacker.getFlag("nssq", "fpDice"))) await spendFpDice(attacker, fpDice);
 
   // PC의 명중 판정에서 1이 나오면 【FP】(일반 행위 판정)
   if (r.fpGain && attacker.type === "character" && attacker.isOwner) {
@@ -206,6 +212,7 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
     resist: r.resist ?? null, diceCount: r.diceCount ?? 0,
     damageDice: r.damage?.dice ?? [], critDice: r.critExtra?.dice ?? [],
     crit: !!r.crit, rawDamage: r.rawDamage ?? 0, guarded: !!r.guarded, guardHalf: !!r.guardHalf, finalDamage: r.finalDamage ?? 0,
+    rolled: r.hitCheck.rolled, fpDice: r.hitCheck.fpDice ?? 0, rerolled: false, params,
     applied: false, before: null, after: null,
     // 수동 반응(단계 6-C): 명중했고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
     reaction: pendingReaction(target, "physical", r.hit)
@@ -238,7 +245,9 @@ export async function renderAttackCard(card) {
     targets: card.targets.map((t) => ({
       ...t,
       dmg: t.damageDice.map((v) => ({ v, over: v > t.resist, six: v === 6, one: v === 1 })),
-      crit4: t.critDice.map((v) => ({ v, over: v > t.resist }))
+      crit4: t.critDice.map((v) => ({ v, over: v > t.resist })),
+      // 【FP】 주사위·다시 굴리기(01 #26)
+      fpHtml: fpNote(t) + (t.params && !t.rerolled ? ` ${rerollButton("")}` : "")
     })),
     mode: autoApplyMode()
   });

@@ -1872,3 +1872,10 @@ body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
 .nssq .nq-skill .nq-skb { --skb: 26px; }
 .nq-node .nq-skb { --skb: 20px; margin-left: -6px; }
 .action-list .act .nq-skb { --skb: 20px; margin-right: 6px; }
+
+/* 명중 판정 【FP】(combat/fp-dice.mjs) */
+#nssq-battle .nb-fp.clickable { cursor: pointer; }
+#nssq-battle .nb-fp.declared { box-shadow: 0 0 0 2px #ffd34d; }
+#nssq-battle .nb-fp em { font-style: normal; margin-left: 2px; color: #ffd34d; font-size: 0.85em; }
+.nssq .fp-note { font-style: normal; font-size: 0.85em; color: #b58a1d; }
+.nssq button.fp-reroll { display: inline-flex; width: auto; padding: 0 6px; margin-left: 4px; line-height: 1.5em; font-size: 0.8em; }

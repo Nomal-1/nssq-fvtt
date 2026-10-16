@@ -403,7 +403,7 @@ function partyCard(c, combat, targetable) {
     <div class="info">
       <div class="line"><span class="name">${esc(nameOf(c))}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
-      <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) + `<div class="nb-fp" title="FP"><b>FP</b><span>${s.fp?.value ?? 0}</span></div>` : ""}</div>
+      <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) + `<div class="nb-fp ${a.isOwner ? "clickable" : ""} ${a.getFlag("nssq", "fpDice") ? "declared" : ""}" ${a.isOwner ? 'data-tool="fpDice"' : ""} title="${esc(a.getFlag("nssq", "fpDice") ? game.i18n.format("NSSQ.FpDice.declared", { n: a.getFlag("nssq", "fpDice") }) : game.i18n.localize("NSSQ.FpDice.hint"))}"><b>FP</b><span>${s.fp?.value ?? 0}${a.getFlag("nssq", "fpDice") ? `<em>+${a.getFlag("nssq", "fpDice")}</em>` : ""}</span></div>` : ""}</div>
     </div>
     <span class="nb-member-tools">${a.isOwner && combat.started && !isKO(c) ? anytimeSkills(a).map((i) => `<a data-tool="special" data-item="${i.id}" title="${esc(`《${i.name}》`)}"><i class="fas fa-star"></i></a>`).join("") : ""}${a.isOwner ? `<a data-tool="sheet" title="${esc(L("openSheet"))}"><i class="fas fa-id-card"></i></a>` : ""}${game.user.isGM ? `<a data-tool="status" title="${esc(game.i18n.localize("NSSQ.Conditions.button"))}"><i class="fas fa-heartbeat"></i></a>` : ""}</span>
   </div>`;
@@ -905,6 +905,7 @@ function bindClicks(el) {
     if ((t = hit(".nb-member [data-tool]"))) {
       const c = combat.combatants.get(t.closest("[data-combatant]")?.dataset.combatant);
       if (t.dataset.tool === "sheet") return c?.actor?.sheet.render(true);
+      if (t.dataset.tool === "fpDice") return (await import("./fp-dice.mjs")).openFpDiceDialog(c?.actor);
       if (t.dataset.tool === "special") return useAnytime(combat, c, t.dataset.item);
       return StatusApp.open(c?.actor);
     }
