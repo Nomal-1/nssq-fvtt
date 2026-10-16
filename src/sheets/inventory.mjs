@@ -9,6 +9,7 @@ import { skillBadgeHtml } from "../apps/skill-badge.mjs";
 import { retrieveItem, storageActive, storeItem } from "../apps/acquire.mjs";
 import { skillUsage } from "../engine/skills.mjs";
 import { bookOf, toggleBook } from "../combat/book.mjs";
+import { clearGrimoire, isGrimoire, recordOf, toggleGrimoire } from "../combat/grimoire.mjs";
 import { autoKey, hasOptional } from "../engine/triggers.mjs";
 
 const GROUPS = [
@@ -66,7 +67,7 @@ function skillGroups(actor, items, filter = "all") {
     max: s.system.classKey === sub?.system.key && s.system.classKey !== main?.system.key ? s.system.maxSL.sub : s.system.maxSL.main,
     timing: s.system.timing, timingCls: timingCls[s.system.timing] ?? "other",
     cost: s.system.cost?.tp ? `TP ${s.system.cost.tp}` : s.system.cost?.fp ? `FP ${s.system.cost.fp}` : "",
-    unique: !!s.system.unique, skillKey: s.system.skillKey, usage: skillUsage(s.system),
+    unique: !!s.system.unique, skillKey: s.system.skillKey, usage: skillUsage(s.system), grimoire: !!s.flags?.nssq?.grimoireOf,
     // 자동화할 수 없어 GM 개입이 반드시 필요한 스킬(review "gm")
     gm: s.system.review === "gm", gmNote: s.system.effectsNote ?? "",
     optional: hasOptional(s.system.effects) || s.system.timing === "수동",
@@ -109,7 +110,9 @@ export function inventoryContext(actor, { skillFilter = "all" } = {}) {
     refine: refinementBadges(i),
     canStore: storage && !i.system.equipped,
     // 「○○의 책」(combat/book.mjs): [활성화]
-    book: !!bookOf(i), bookOn: bookOf(i) && actor.getFlag("nssq", "activeBook") === i.id
+    book: !!bookOf(i), bookOn: bookOf(i) && actor.getFlag("nssq", "activeBook") === i.id,
+    // 그리모어(combat/grimoire.mjs): [활성화], GM은 기록 지우기
+    grimoire: isGrimoire(i), grimoireOn: isGrimoire(i) && actor.getFlag("nssq", "activeGrimoire") === i.id, grimoireClear: game.user.isGM && !!recordOf(i)
   });
   const slots = ["weapon", "armor", "other"].map((slot) => {
     const it = slotOccupant(items, slot);
@@ -280,6 +283,16 @@ export function activateInventoryListeners(sheet, html) {
   html.on("click", "[data-action=unequip]", (ev) => {
     ev.preventDefault();
     itemOf(ev)?.update({ "system.equipped": false });
+  });
+  html.on("click", "[data-action=grimoire]", (ev) => {
+    ev.preventDefault();
+    const item = itemOf(ev);
+    if (item) toggleGrimoire(actor, item);
+  });
+  html.on("click", "[data-action=grimoire-clear]", (ev) => {
+    ev.preventDefault();
+    const item = itemOf(ev);
+    if (item) clearGrimoire(item);
   });
   html.on("click", "[data-action=book]", (ev) => {
     ev.preventDefault();

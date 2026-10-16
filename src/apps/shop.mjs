@@ -103,8 +103,8 @@ function crafted(data, rank) {
 function expansionItems() {
   if (!game.settings.get("nssq", "expansion")) return [];
   const folder = game.folders.get(game.settings.get("nssq", "expansionFolder"));
-  // 「○○의 책」은 보상 전용(사용자 결정)
-  return folder ? game.items.filter((i) => i.folder?.id === folder.id && !(i.system.effects ?? []).some((e) => e?.type === "book")) : [];
+  // 「○○의 책」·그리모어는 보상 전용(사용자 결정)
+  return folder ? game.items.filter((i) => i.folder?.id === folder.id && !(i.system.effects ?? []).some((e) => ["book", "grimoire"].includes(e?.type))) : [];
 }
 
 const isRanked = (d) => d.type === "armor" || (d.type === "weapon" && !!tables.weapons[d.system.weaponType]?.price);

@@ -48,7 +48,7 @@ async function clampVitals(actor) {
 
 /** 스킬을 돌려받는다(★만 남김). Lv1에서 작성 때처럼 클래스 SL 5 + 커먼 1개(SL1)를 다시 찍는다(사용자 결정) */
 async function refundSkills(actor) {
-  const ids = actor.items.filter((i) => i.type === "skill" && !i.system.unique).map((i) => i.id);
+  const ids = actor.items.filter((i) => i.type === "skill" && !i.system.unique && !i.flags?.nssq?.grimoireOf).map((i) => i.id);
   // 길드 재분배·직업 변경은 공식 경로라 「스킬 되돌리기 금지」에 걸리지 않는다
   if (ids.length) await actor.deleteEmbeddedDocuments("Item", ids, { nssqRespec: true });
   return ids.length;
@@ -187,7 +187,7 @@ export function registerGuild() {
   for (const h of ["updateActor", "createActor", "deleteActor", "updateUser"]) Hooks.on(h, () => GuildApp.refresh());
   // 스킬 되돌리기 금지(사용자 결정): 작성을 마친 캐릭터는 플레이어가 스킬 SL을 낮추거나 지울 수 없다.
   // 작성 중·GM·길드 재분배/직업 변경(nssqRespec)·★ 스킬(클래스에 따라 자동)은 예외
-  const locked = (item) => !game.user.isGM && item.type === "skill" && !item.system.unique
+  const locked = (item) => !game.user.isGM && item.type === "skill" && !item.system.unique && !item.flags?.nssq?.grimoireOf
     && item.parent?.type === "character" && !!item.parent.system.creation?.locked;
   Hooks.on("preUpdateItem", (item, changes, options) => {
     if (options.nssqRespec || !locked(item)) return true;

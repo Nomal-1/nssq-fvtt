@@ -42,6 +42,8 @@
       {{#if @root.editable}}
       <span class="nq-ctls">
         {{#if i.usable}}<a class="nq-ctl" data-action="use" title="{{localize 'NSSQ.Inventory.use'}}"><i class="fas fa-hand-sparkles"></i></a>{{/if}}
+        {{#if i.grimoire}}<a class="nq-ctl nq-book {{#if i.grimoireOn}}on{{/if}}" data-action="grimoire" title="{{#if i.grimoireOn}}{{localize 'NSSQ.Grimoire.off'}}{{else}}{{localize 'NSSQ.Grimoire.on'}}{{/if}}"><i class="fas fa-gem"></i></a>{{/if}}
+        {{#if i.grimoireClear}}<a class="nq-ctl" data-action="grimoire-clear" title="{{localize 'NSSQ.Grimoire.clear'}}"><i class="fas fa-eraser"></i></a>{{/if}}
         {{#if i.book}}<a class="nq-ctl nq-book {{#if i.bookOn}}on{{/if}}" data-action="book" title="{{#if i.bookOn}}{{localize 'NSSQ.Book.off'}}{{else}}{{localize 'NSSQ.Book.on'}}{{/if}}"><i class="fas {{#if i.bookOn}}fa-book-open{{else}}fa-book{{/if}}"></i></a>{{/if}}
         {{#if i.equippable}}<a class="nq-ctl" data-action="equip" title="{{localize 'NSSQ.Inventory.equip'}}"><i class="fas fa-shield-alt"></i></a>{{/if}}
         {{#if i.canSub}}<a class="nq-ctl" data-action="equip" data-slot="other" title="{{localize 'NSSQ.Inventory.equipSub'}}"><i class="fas fa-exchange-alt"></i></a>{{/if}}

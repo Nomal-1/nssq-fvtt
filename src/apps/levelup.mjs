@@ -21,7 +21,7 @@ export function skillPickOpen(actor, user = game.user) {
 /** 남은 SL(습득 창구가 열려 있을 때만 의미가 있다) */
 export async function skillLeft(actor) {
   const { skillBudget } = await import("../engine/skills.mjs");
-  const skills = actor.items.filter((i) => i.type === "skill").map((i) => ({ sl: i.system.sl ?? 0, unique: !!i.system.unique, common: i.system.classKey === "common" }));
+  const skills = actor.items.filter((i) => i.type === "skill" && !i.flags?.nssq?.grimoireOf).map((i) => ({ sl: i.system.sl ?? 0, unique: !!i.system.unique, common: i.system.classKey === "common" }));
   return skillBudget({ level: actor.system.level, skills, bonus: actor.system.skillBonus ?? 0 }).left;
 }
 
@@ -51,7 +51,7 @@ async function doLevelUp(actor) {
   const from = s.level;
   const to = from + 1;
   const sl = {};
-  for (const i of actor.items) if (i.type === "skill" && !i.system.unique) sl[`${i.system.classKey}:${i.system.skillKey}`] = i.system.sl ?? 0;
+  for (const i of actor.items) if (i.type === "skill" && !i.system.unique && !i.flags?.nssq?.grimoireOf) sl[`${i.system.classKey}:${i.system.skillKey}`] = i.system.sl ?? 0;
   const hp0 = s.hp?.max ?? 0;
   const tp0 = s.tp?.max ?? 0;
   await actor.update({ "system.level": to, "flags.nssq.levelUp": { level: to, sl }, "flags.nssq.skillPick": { level: to } }, { nssqLevelUp: true });
@@ -71,7 +71,8 @@ async function doLevelUp(actor) {
 
 export function registerLevelUp() {
   // 창구가 닫혀 있으면 플레이어는 스킬을 새로 배우거나 SL을 올릴 수 없다(★ 자동 스킬·GM 예외)
-  const closed = (item) => item.type === "skill" && !item.system.unique && item.parent?.type === "character" && !skillPickOpen(item.parent);
+  // 그리모어 복사본(combat/grimoire.mjs)은 예외
+  const closed = (item) => item.type === "skill" && !item.system.unique && !item.flags?.nssq?.grimoireOf && item.parent?.type === "character" && !skillPickOpen(item.parent);
   Hooks.on("preCreateItem", (item) => {
     if (!closed(item)) return true;
     ui.notifications.warn(L("pickClosed"));

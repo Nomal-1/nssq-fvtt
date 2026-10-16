@@ -106,7 +106,8 @@ export class SkillTree extends Application {
     if (sub) tabs.push({ key: "sub", classKey: sub.system.key, label: `${sub.name} · ${L("tabSub")}` });
     tabs.push({ key: "common", classKey: "common", label: L("tabCommon") });
     if (!tabs.some((t) => t.key === this.tab)) this.tab = tabs[0].key;
-    const owned = this.actor.items.filter((i) => i.type === "skill");
+    // 그리모어 복사본은 예산·선행조건에 치지 않는다(combat/grimoire.mjs)
+    const owned = this.actor.items.filter((i) => i.type === "skill" && !i.flags?.nssq?.grimoireOf);
     const slOf = (name) => Math.max(0, ...owned.filter((o) => o.name === name).map((o) => o.system.sl ?? 0));
     const budget = skillBudget({
       level: s.level,
@@ -340,7 +341,7 @@ export class SkillTree extends Application {
     const e = index.find((x) => x._id === id);
     if (!e) return;
     if (e.system.unique && !force) return ui.notifications.warn(`${e.name}: ${L("reason.uniqueAuto")}`);
-    const owned = this.actor.items.filter((i) => i.type === "skill");
+    const owned = this.actor.items.filter((i) => i.type === "skill" && !i.flags?.nssq?.grimoireOf);
     const item = owned.find((o) => o.system.classKey === e.system.classKey && o.system.skillKey === e.system.skillKey);
     if (!item) return;
     const next = (item.system.sl ?? 1) - 1;

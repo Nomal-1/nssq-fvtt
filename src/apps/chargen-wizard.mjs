@@ -169,7 +169,8 @@ export class ChargenWizard extends Application {
   /* ---------- 4 스킬 ---------- */
   async render_skills() {
     const s = this.actor.system;
-    const skills = this.actor.items.filter((i) => i.type === "skill");
+    // 그리모어 복사본(combat/grimoire.mjs)은 예산에 치지 않는다
+    const skills = this.actor.items.filter((i) => i.type === "skill" && !i.flags?.nssq?.grimoireOf);
     const isCommon = (i) => i.system.classKey === "common";
     const b = skillBudget({ level: s.level, skills: skills.map((i) => ({ sl: i.system.sl ?? 0, unique: !!i.system.unique, common: isCommon(i) })), bonus: s.skillBonus ?? 0 });
     const commons = await commonSkills();
@@ -216,7 +217,7 @@ export class ChargenWizard extends Application {
     const a = this.actor;
     const s = a.system;
     const { main, sub } = s.classItems;
-    const skills = a.items.filter((i) => i.type === "skill").map((i) => ({
+    const skills = a.items.filter((i) => i.type === "skill" && !i.flags?.nssq?.grimoireOf).map((i) => ({
       name: i.name, sl: i.system.sl ?? 0, unique: !!i.system.unique, common: i.system.classKey === "common",
       classKey: i.system.classKey, maxSL: i.system.maxSL, prereqs: i.system.prereqs
     }));
@@ -344,7 +345,7 @@ export class ChargenWizard extends Application {
     if (add.length) await actor.createEmbeddedDocuments("Item", add);
     // 클래스가 바뀌면 그 클래스에 속하지 않게 된 스킬은 지운다(커먼·★ 제외는 ★ 동기화가 맞춘다)
     const okKeys = new Set(["common", ...keep]);
-    const stray = actor.items.filter((i) => i.type === "skill" && !i.system.unique && !okKeys.has(i.system.classKey)).map((i) => i.id);
+    const stray = actor.items.filter((i) => i.type === "skill" && !i.system.unique && !i.flags?.nssq?.grimoireOf && !okKeys.has(i.system.classKey)).map((i) => i.id);
     if (stray.length) await actor.deleteEmbeddedDocuments("Item", stray);
     await actor.update({ "system.mainClass": want.main?.system.key ?? "", "system.subClass": want.sub?.system.key ?? null });
     if (stray.length) ui.notifications.info(L("strayRemoved", { n: stray.length }));

@@ -27,7 +27,7 @@
       {{#each g.skills as |s|}}
       <li class="nq-skill" data-item-id="{{s.id}}" data-skill-key="{{s.skillKey}}">
         {{{s.badge}}}
-        <a class="nq-skill-name" data-action="item-edit">{{#if s.unique}}<span class="nq-unique" title="{{localize 'NSSQ.Skill.unique'}}">★</span>{{/if}}{{s.name}}</a>
+        <a class="nq-skill-name" data-action="item-edit">{{#if s.unique}}<span class="nq-unique" title="{{localize 'NSSQ.Skill.unique'}}">★</span>{{/if}}{{s.name}}{{#if s.grimoire}} <span class="nq-note" title="{{localize 'NSSQ.Grimoire.tag'}}"><i class="fas fa-gem"></i></span>{{/if}}</a>
         {{#if (nssqEq s.usage "explore")}}<span class="nq-usage explore" title="{{localize 'NSSQ.Skill.filterExplore'}}"><i class="fas fa-compass"></i></span>{{/if}}
         <span class="nq-timing {{s.timingCls}}">{{s.timing}}</span>
         {{#if s.cost}}<span class="nq-cost">{{s.cost}}</span>{{/if}}

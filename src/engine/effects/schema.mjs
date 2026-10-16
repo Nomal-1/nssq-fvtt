@@ -44,6 +44,7 @@ export const TYPES = {
   itemUse: { action: true, ability: false, phases: false },
   craftRank: { materials: true },
   book: { condition: true },
+  grimoire: {},
   forceRow: { row: false, check: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },
