@@ -44,29 +44,60 @@ async function themePlaylist() {
   return p;
 }
 
+const volumeOf = (v, d = 0.8) => (Number.isFinite(Number(v)) && v !== "" && v !== null && v !== undefined ? Math.clamp(Number(v), 0, 1) : d);
+
+/**
+ * 테마곡 때 멈춘 원래 곡을 다시 튼다. 그사이 다른 곡이 틀어졌거나(씬 전환·GM 조작) 그 곡이 바뀌었으면 건드리지 않는다.
+ * paused: [{ playlist, sound, time }] (테마 재생목록 플래그 nssq.paused에도 남겨 GM 새로고침 뒤에도 되살린다)
+ */
+async function resumePaused(list, paused) {
+  const othersPlaying = game.playlists.contents.some((p) => p.id !== list?.id && p.sounds.some((x) => x.playing));
+  if (!othersPlaying) {
+    for (const r of paused ?? []) {
+      const s = game.playlists.get(r.playlist)?.sounds.get(r.sound);
+      if (s && !s.playing && (s.pausedTime ?? null) === r.time) await s.update({ playing: true });
+    }
+  }
+  if (list?.getFlag("nssq", "paused")) await list.unsetFlag("nssq", "paused");
+}
+
 /** 활성 GM: 그 캐릭터의 테마곡을 한 번 튼다(이미 테마곡 중이면 무시) */
 export async function playTheme(actor, kind) {
   const th = actor?.getFlag("nssq", "theme");
   if (!isActiveGM() || busy || !th?.src || !th.on?.[kind]) return;
   busy = true;
+  let list = null;
+  let paused = [];
   try {
-    const list = await themePlaylist();
-    const paused = game.playlists.contents.filter((p) => p.id !== list.id).flatMap((p) => p.sounds.filter((s) => s.playing));
-    for (const s of paused) await s.update({ playing: false, pausedTime: s.sound?.currentTime ?? s.pausedTime ?? 0 });
+    list = await themePlaylist();
+    // 테마곡 소리를 먼저 준비한다(경로가 잘못되면 여기서 실패하고 원래 곡은 건드리지 않는다)
     let sound = list.sounds.find((s) => s.getFlag("nssq", "actor") === actor.id);
-    const data = { name: actor.name, path: th.src, volume: Math.clamp(Number(th.volume) || 0.8, 0, 1), repeat: false };
+    const data = { name: actor.name, path: th.src, volume: volumeOf(th.volume), repeat: false };
     if (sound) await sound.update({ ...data, pausedTime: 0 });
     else [sound] = await list.createEmbeddedDocuments("PlaylistSound", [{ ...data, flags: { nssq: { actor: actor.id } } }]);
+    const playing = game.playlists.contents.filter((p) => p.id !== list.id).flatMap((p) => p.sounds.filter((s) => s.playing));
+    for (const s of playing) {
+      const time = s.sound?.currentTime ?? s.pausedTime ?? 0;
+      await s.update({ playing: false, pausedTime: time });
+      paused.push({ playlist: s.parent.id, sound: s.id, time });
+    }
+    if (paused.length) await list.setFlag("nssq", "paused", paused);
     await sound.update({ playing: true });
     const seconds = Math.max(3, Number(th.seconds) || 20);
     await new Promise((resolve) => {
-      const stop = () => { clearTimeout(timer); Hooks.off("updatePlaylistSound", hook); resolve(); };
+      // 곡이 끝나면 v12는 재생목록(부모)을 갱신한다(updatePlaylist). 소리 문서를 직접 멈춰도(updatePlaylistSound) 끝
+      const check = () => { if (!list.sounds.get(sound.id)?.playing) stop(); };
+      const stop = () => { clearTimeout(timer); Hooks.off("updatePlaylistSound", h1); Hooks.off("updatePlaylist", h2); resolve(); };
       const timer = setTimeout(stop, seconds * 1000);
-      const hook = Hooks.on("updatePlaylistSound", (s, ch) => { if (s.id === sound.id && ch.playing === false) stop(); });
+      const h1 = Hooks.on("updatePlaylistSound", (s) => { if (s.id === sound.id) check(); });
+      const h2 = Hooks.on("updatePlaylist", (p) => { if (p.id === list.id) check(); });
     });
-    if (sound.playing) await sound.update({ playing: false, pausedTime: 0 });
-    for (const s of paused) if (s.parent && !s.playing) await s.update({ playing: true });
+    const now = list.sounds.get(sound.id);
+    if (now?.playing) await now.update({ playing: false, pausedTime: 0 });
+  } catch (err) {
+    console.warn("NSSQ | theme", err);
   } finally {
+    try { await resumePaused(list, paused); } catch (err) { console.warn("NSSQ | theme resume", err); }
     busy = false;
   }
 }
@@ -127,7 +158,7 @@ export async function openThemeConfig(actor) {
     callback: (html) => {
       const f = html[0].querySelector("form");
       return {
-        src: f.src.value.trim(), seconds: Math.clamp(Number(f.seconds.value) || 20, 3, 300), volume: Number(f.volume.value) || 0.8,
+        src: f.src.value.trim(), seconds: Math.clamp(Number(f.seconds.value) || 20, 3, 300), volume: volumeOf(f.volume.value),
         on: Object.fromEntries(TRIGGERS.map((k) => [k, f.querySelector(`[name="on.${k}"]`).checked]))
       };
     }
@@ -137,6 +168,13 @@ export async function openThemeConfig(actor) {
 }
 
 export function registerSpotlight() {
+  // GM이 테마곡 중에 새로고침했으면: 멈춰 둔 원래 곡을 되살린다
+  Hooks.once("ready", () => {
+    if (!isActiveGM()) return;
+    const list = game.playlists.find((x) => x.getFlag("nssq", "theme"));
+    const paused = list?.getFlag("nssq", "paused");
+    if (paused?.length) setTimeout(() => resumePaused(list, paused).catch((e) => console.warn("NSSQ | theme resume", e)), 3000);
+  });
   Hooks.on("createChatMessage", (message) => {
     const m = readMoments(message);
     if (!m.actor) return;

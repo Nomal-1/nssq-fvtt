@@ -142,7 +142,8 @@ export class SkillTree extends Application {
       const check = canRaise({
         skill: { name: e.name, maxSL: e.system.maxSL, unique: e.system.unique, prereqs: e.system.prereqs },
         role, current, slOf: st.slOf, level: st.level, hasSub: !!st.sub,
-        budgetLeft: st.budget.left, mainHasSame: role === "sub" && mainNames.has(e.name), levelUpBase: st.baseOf(e)
+        budgetLeft: st.budget.left, mainHasSame: role === "sub" && mainNames.has(e.name), levelUpBase: st.baseOf(e),
+        otherCommon: st.owned.some((o) => o.system.classKey === "common" && o.system.skillKey !== e.system.skillKey && (o.system.sl ?? 0) > 0)
       });
       const ms = e.system.maxSL ?? {};
       const prereq = prereqList(e.system.prereqs).map((p) => `${p.any ? `(${L("or")}) ` : ""}${p.skill} SL${p.sl}`).join(", ");
@@ -315,7 +316,8 @@ export class SkillTree extends Application {
       const check = canRaise({
         skill: { name: e.name, maxSL: e.system.maxSL, unique: e.system.unique, prereqs: e.system.prereqs },
         role, current, slOf: st.slOf, level: st.level, hasSub: !!st.sub,
-        budgetLeft: st.budget.left, mainHasSame: role === "sub" && mainNames.has(e.name), levelUpBase: st.baseOf(e)
+        budgetLeft: st.budget.left, mainHasSame: role === "sub" && mainNames.has(e.name), levelUpBase: st.baseOf(e),
+        otherCommon: st.owned.some((o) => o.system.classKey === "common" && o.system.skillKey !== e.system.skillKey && (o.system.sl ?? 0) > 0)
       });
       if (!check.ok) return ui.notifications.warn(`${e.name}: ${L(`reason.${check.reason}`)}`);
     }

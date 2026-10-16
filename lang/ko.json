@@ -960,6 +960,7 @@
         "subNotAllowed": "서브 클래스로는 습득할 수 없다(MaxSL -)",
         "maxed": "MaxSL에 도달했다",
         "levelCap": "Lv1은 한 스킬 SL 2까지",
+        "commonOnce": "Lv1에서는 커먼 스킬을 하나만 SL1로 배운다",
         "oncePerLevel": "이번 레벨업에서는 이 스킬을 이미 1 올렸다(한 번의 레벨업에 한 스킬 SL +1까지)",
         "prereq": "전제 조건을 채우지 않았다",
         "budget": "남은 SL이 없다",

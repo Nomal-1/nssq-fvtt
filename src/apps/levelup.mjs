@@ -28,8 +28,15 @@ export async function skillLeft(actor) {
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Level.${k}`, d) : game.i18n.localize(`NSSQ.Level.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
+const leveling = new Set(); // 진행 중인 액터 id(빠른 두 번 클릭으로 HP·TP 증가가 두 번 들어가지 않게)
+
 export async function levelUp(actor) {
-  if (!actor?.isOwner || actor.type !== "character") return null;
+  if (!actor?.isOwner || actor.type !== "character" || leveling.has(actor.id)) return null;
+  leveling.add(actor.id);
+  try { return await doLevelUp(actor); } finally { leveling.delete(actor.id); }
+}
+
+async function doLevelUp(actor) {
   if (game.combat?.started && game.combat.combatants.some((c) => c.actor?.id === actor.id)) return ui.notifications.warn(L("noBattle"));
   const s = actor.system;
   if (!s.levelReady) return ui.notifications.warn(L("notReady"));

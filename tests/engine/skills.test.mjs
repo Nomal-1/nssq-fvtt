@@ -92,6 +92,12 @@ describe("습득 규칙", () => {
     expect(canRaise({ ...base, budgetLeft: 0 }).reason).toBe("budget");
     expect(canRaise({ ...base, current: 2 }).reason).toBe("levelCap");
     expect(canRaise({ ...base, current: 3, level: 5 }).reason).toBe("maxed");
+    // Lv1 커먼: 하나만 SL1
+    const cm = { ...base, role: "common", skill: { name: "C", maxSL: { main: 3 } } };
+    expect(canRaise(cm).ok).toBe(true);
+    expect(canRaise({ ...cm, current: 1 }).reason).toBe("commonOnce");
+    expect(canRaise({ ...cm, otherCommon: true }).reason).toBe("commonOnce");
+    expect(canRaise({ ...cm, level: 2, current: 1 }).ok).toBe(true);
   });
   it("이미 가진 스킬을 올릴 때는 전제를 다시 보지 않는다", () => {
     expect(canRaise({ ...base, current: 1, slOf: sl({}) }).ok).toBe(true);
