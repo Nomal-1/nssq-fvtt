@@ -681,9 +681,12 @@
 .nssq-art-config .art-frame.token.back { border-color: #6fd3e6; }
 .nssq-art-config .art-frame.face { width: 120px; height: 120px; }
 .nssq-art-config .art-frame.cutin { width: 291px; height: 150px; }
-.nssq-art-config .art-cutin { margin-top: 8px; }
-.nssq-art-config .art-row { display: flex; gap: 4px; margin: 4px 0; align-self: stretch; }
-.nssq-art-config .art-row button:first-child { flex: 1; }
+.nssq-art-config .art-cutin { margin-top: 8px; grid-template-columns: 1fr; }
+.nssq-art-config .art-cutin .art-row { justify-content: center; }
+.nssq-art-config .art-row { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; align-self: stretch; }
+.nssq-art-config .art-row button { white-space: nowrap; }
+.nssq-art-config .art-row button:first-child { flex: 1 1 100%; }
+.nssq-art-config .art-row button:nth-child(2):not(:last-child) { flex: 1; }
 .nssq-art-config .art-row button:last-child { flex: 0 0 32px; width: 32px; }
 .nssq-art-config .art-path { align-self: stretch; font-size: 0.75em; color: var(--nq-mu); word-break: break-all; }
 /* 전투 화면 오른쪽 상반신(원작풍) */
@@ -1500,6 +1503,7 @@
 #nssq-battle .nb-ail-icons .ail-poison { color: #8bff6a; } #nssq-battle .nb-ail-icons .ail-paralyze { color: #ffe14a; } #nssq-battle .nb-ail-icons .ail-sleep { color: #a9c8ff; }
 #nssq-battle .nb-ail-icons .ail-fear { color: #d0b0ff; } #nssq-battle .nb-ail-icons .ail-blind { color: #bbb; } #nssq-battle .nb-ail-icons .ail-curse { color: #ff7a7a; }
 #nssq-battle .nb-ail-icons .ail-petrify { color: #ccc; } #nssq-battle .nb-ail-icons .ail-stun { color: #ffd862; }
+#nssq-battle .art .nb-stone { display: none; }
 #nssq-battle .nb-stone { position: absolute; inset: 0; background: rgba(140, 140, 140, 0.55); mix-blend-mode: saturation; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { #nssq-battle :is(.fx-buffed, .nb-guard-fx, .nb-swirl) { animation: none; } }
 
@@ -1596,3 +1600,6 @@
 #nssq-battle .art.ail-blind img { filter: brightness(0.45) drop-shadow(0 0 6px #000); }
 #nssq-battle .art.ail-curse img { filter: drop-shadow(0 0 12px #c0104a) drop-shadow(0 0 4px #300010); }
 #nssq-battle .art.ail-petrify img { filter: grayscale(1) brightness(0.85); }
+
+/* 그림 설정: 컷인 줄 버튼(위 art-row 규칙보다 뒤에 둬야 이긴다) */
+.nssq-art-config .art-cutin .art-row button { flex: 0 0 auto; width: auto; padding: 0 12px; white-space: nowrap; }
