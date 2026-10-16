@@ -138,7 +138,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     const r = res(t);
     // 대상의 강화 무시(《실버 애로》 「『물리 방어 상승』·『내성 상승: 돌』 무시」): "defenseUp" / "resistUp:pierce"
     const tt = ignoreBuffs(t, e.ignoreBuffs);
-    // [수면]은 명중한 공격의 처리 뒤 풀린다: 같은 행동의 다음 회차는 깬 상태의 내성(07 #37)
+    // [수면]은 명중한 공격의 처리 뒤 풀린다: 같은 행동의 다음 회차는 깬 상태의 내성(01 #37)
     const resist = r.sleepBroken && tt.resistAwake ? tt.resistAwake : tt.resist;
     const result = await resolveAttack({
       attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
@@ -155,7 +155,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     if (result.hit) {
       r.damage += result.finalDamage ?? 0;
       if (!r.sleepBroken && (t.conditions ?? []).some((c) => c.id === "sleep")) { r.sleepBroken = true; hitRow.woke = true; }
-      // 앞 회차에서 건 [수면]도 다음 명중으로 풀린다(07 #37)
+      // 앞 회차에서 건 [수면]도 다음 명중으로 풀린다(01 #37)
       const slept = r.inflicts.find((x) => x.id === "sleep" && !x.resisted && !x.broken);
       if (slept) { slept.broken = hitRow.seq; hitRow.woke = true; }
       if (e.onHit?.length) {
@@ -291,7 +291,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         return;
       }
       case "healFromDamage": {
-        // 《블랙 사바스》: 대미지를 준 다이스 수(대상 모두의 합, 가드 등 반감 후 — 07 #118 사용자 결정)만큼 아군 전체 【HP】 회복. 호출자가 아군에게
+        // 《블랙 사바스》: 대미지를 준 다이스 수(대상 모두의 합, 가드 등 반감 후 — 01 #118 사용자 결정)만큼 아군 전체 【HP】 회복. 호출자가 아군에게
         let n = 0;
         for (const x of out.results.values()) for (const h of x.hits) if (h.hit) n += h.finalDamage ?? h.rawDamage ?? 0;
         if (n) out.allyHeal = (out.allyHeal ?? 0) + n;

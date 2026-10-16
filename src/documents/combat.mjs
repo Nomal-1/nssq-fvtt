@@ -97,7 +97,7 @@ export class NssqCombat extends Combat {
       // 개막 페이즈 선언(《가디언》·《성인의 가호》)
       await onOpeningPhase(this);
     }
-    // 종료 페이즈: 들어선 순간의 상태로 트리거(《로열 벨》·《진 회복》, 07 #86) → 지연 공격(at endPhase) → 독·자연 회복 등 → 토큰 지속 턴
+    // 종료 페이즈: 들어선 순간의 상태로 트리거(《로열 벨》·《진 회복》, 01 #86) → 지연 공격(at endPhase) → 독·자연 회복 등 → 토큰 지속 턴
     if (phase === "end") {
       await onEndPhase(this);
       await runEndPhase(this, { delayed: await runDelayedEnd(this) });
@@ -191,7 +191,7 @@ export class NssqCombat extends Combat {
     }
     await this.clearRoundFlags();
     await this.refreshInitiative();
-    // 던전 진행 중 누적 전투 턴 30이면 탐색 시각 +1시간(07 #165)
+    // 던전 진행 중 누적 전투 턴 30이면 탐색 시각 +1시간(01 #165)
     if (this.getFlag("nssq", "battle")) await (await import("../apps/time-pass.mjs")).battleTurn(this);
     await super.nextRound();
     await this.setPhase("opening", { turn: null });

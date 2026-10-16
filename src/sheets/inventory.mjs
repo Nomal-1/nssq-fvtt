@@ -67,7 +67,7 @@ function skillGroups(actor, items, filter = "all") {
     // 자동화할 수 없어 GM 개입이 반드시 필요한 스킬(review "gm")
     gm: s.system.review === "gm", gmNote: s.system.effectsNote ?? "",
     optional: hasOptional(s.system.effects) || s.system.timing === "수동",
-    // 필드에서 쓸 수 있는 『회복』 주행동 스킬(07 #164)
+    // 필드에서 쓸 수 있는 『회복』 주행동 스킬(01 #164)
     fieldUse: s.system.timing === "주행동" && s.system.category === "회복" && !!s.system.effects?.length, autoKey: autoKey(s.system.key), auto: !!auto[autoKey(s.system.key)],
     prereq: (s.system.prereqs?.all ?? []).map((p) => (p.any ? p.any.map((q) => `${q.skill} ${q.sl}`).join(" / ") : `${p.skill} ${p.sl}`)).join(" + ")
   });
@@ -196,7 +196,7 @@ async function pickItemTargets(actor, item) {
 }
 
 /**
- * 필드에서 『회복』 스킬 사용(07 #164, 사용자 결정): 전투 밖에서만. TP를 내고 파티원을 대상으로 효과를 해석해 결과 카드
+ * 필드에서 『회복』 스킬 사용(01 #164, 사용자 결정): 전투 밖에서만. TP를 내고 파티원을 대상으로 효과를 해석해 결과 카드
  * (적용은 자동 적용 설정대로). 행동 불가 상태 이상([석화]·[수면] 등)·그 부위 봉인이면 쓸 수 없다
  */
 async function useSkillField(actor, item) {

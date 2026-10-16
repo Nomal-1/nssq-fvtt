@@ -103,7 +103,7 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
  * @param {object} o { ability, modifier, target, addDice, contestOf }
  */
 export async function rollCheck(actor, { ability = null, modifier = 0, target = null, addDice = 0, contestOf = null, rollMode = null, request = null, checkMods = null } = {}) {
-  // [석화] 중에는 판정을 굴리지 않고 실패(07 #164)
+  // [석화] 중에는 판정을 굴리지 않고 실패(01 #164)
   if ((actor.system.conditions ?? []).some((c) => c.id === "petrify")) return forcedFailure(actor, { ability, modifier, target, contestOf, rollMode, request });
   // 판정 종류별 보정·선언·도움(9-E): 코스트를 내고 보정·능력치 대체
   const cm = checkMods ? await applyCheckMods(actor, checkMods) : null;

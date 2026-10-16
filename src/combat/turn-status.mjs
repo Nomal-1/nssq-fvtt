@@ -2,8 +2,8 @@
  * 상태 이상의 턴 진행(단계 5-B)
  * - 개막 페이즈와 부여 순간: [혼란]·[마비]·[공포] 1D6, 1~3이면 그 턴 행동 불가(혼란은 혼란 행동)
  * - 행동 가능 여부: [석화]·[수면]·[스턴]·판정 실패는 행동 불가(메인 차례 건너뜀, 개막 행동 없음)
- * - [혼란] 행동: 자신을 뺀 같은 열 아군 중 무작위에게 통상 공격(없으면 아무것도 하지 않음, 07 #42)
- * - 종료 페이즈 6단계(engine/end-phase.mjs) → 결과 카드, autoApply를 따른다(07 #45)
+ * - [혼란] 행동: 자신을 뺀 같은 열 아군 중 무작위에게 통상 공격(없으면 아무것도 하지 않음, 01 #42)
+ * - 종료 페이즈 6단계(engine/end-phase.mjs) → 결과 카드, autoApply를 따른다(01 #45)
  */
 import { CONDITIONS, openingRollFails } from "../engine/conditions.mjs";
 import { endPhaseFor } from "../engine/end-phase.mjs";
@@ -149,7 +149,7 @@ export async function roll2d6(rolls) {
   return r.dice[0].results.map((x) => x.result);
 }
 
-/** 독의 대미지: 건 자가 전투에 있으면 현재 【억제 공격】, 없으면 기록값(07 #43) */
+/** 독의 대미지: 건 자가 전투에 있으면 현재 【억제 공격】, 없으면 기록값(01 #43) */
 function poisonPower(combat, cond) {
   const src = cond.source ? combat.combatants.find((x) => x.actor?.uuid === cond.source && alive(x)) : null;
   return src ? combatProfile(src.actor, src).suppAtk : cond.sourceSuppAtk;

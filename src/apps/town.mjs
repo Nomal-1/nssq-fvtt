@@ -1,5 +1,5 @@
 /**
- * 마을(07 #167, 사용자 결정): 지도에 그리지 않는 완전한 안전지대. 필드 지도는 던전 안(언제든 위험해질 수 있는 곳)만.
+ * 마을(01 #167, 사용자 결정): 지도에 그리지 않는 완전한 안전지대. 필드 지도는 던전 안(언제든 위험해질 수 있는 곳)만.
  * - 월드 설정 towns { id: { id, name, img, desc, facilities: [{ id, type, name, img, desc, sceneId }], shopHidden? } }
  * - 월드 설정 location { kind: "town"|"dungeon"|"", townId }: 파티가 지금 있는 곳
  * - 귀환(returnToTown): 《아리아드네의 실》·던전 입구의 「마을로 돌아간다」·랜덤 던전 클리어·GM [던전 나가기]
@@ -480,7 +480,7 @@ export class TownApp extends Application {
   }
 }
 
-/** 마을 씬 위에 덮는 마을 UI(07 #167, 사용자 결정: 씬에 박는다, 시설은 각자 따로 본다) */
+/** 마을 씬 위에 덮는 마을 UI(01 #167, 사용자 결정: 씬에 박는다, 시설은 각자 따로 본다) */
 export class TownOverlay extends TownApp {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, { id: `nssq-town-overlay-${rid()}`, popOut: false, resizable: false });

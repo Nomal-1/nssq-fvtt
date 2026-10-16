@@ -37,7 +37,7 @@ const sideKey = (actor) => (sideOf(actor) === "enemy" ? "enemy" : "party");
  */
 async function afterHpChange(actor) {
   const ko = (actor.system.hp?.value ?? 0) <= 0;
-  // 쓰러지면 상태 이상·봉인·강화·약화가 모두 풀린다(07 #49)
+  // 쓰러지면 상태 이상·봉인·강화·약화가 모두 풀린다(01 #49)
   if (ko && ((actor.system.conditions ?? []).length || (actor.system.buffs ?? []).length)) {
     await actor.update({ "system.conditions": [], "system.buffs": [] });
   }
@@ -50,7 +50,7 @@ async function afterHpChange(actor) {
     if (ko && !combatant.defeated) {
       await combatant.update({ defeated: true, "flags.nssq.autoDefeated": true }, { nssqAuto: true });
       await setOverlay(true);
-      // 도감: 처치 기록(정보 공개, 07 #47)
+      // 도감: 처치 기록(정보 공개, 01 #47)
       if (actor.type === "enemy") await recordBestiary(actor, { defeated: 1 });
     } else if (!ko && combatant.defeated && auto) {
       await combatant.update({ defeated: false, "flags.nssq.-=autoDefeated": null }, { nssqAuto: true });
@@ -99,12 +99,12 @@ async function gmApply({ messageId, index, undo = false }) {
     const before = actor.system.hp.value;
     const after = before - (t.finalDamage ?? 0);
     const upd = { "system.hp.value": after };
-    // [수면]: 명중한 공격의 처리 직후 풀린다(07 #37)
+    // [수면]: 명중한 공격의 처리 직후 풀린다(01 #37)
     const sleep = t.hit ? (actor.system.conditions ?? []).find((c) => c.id === "sleep") : null;
     if (sleep) upd["system.conditions"] = removeCondition(actor.system.conditions, "sleep");
     await actor.update(upd);
     const entry = { ...t, applied: true, before, after, sleepEntry: sleep ?? null, curse: null };
-    // [저주]: 실대미지의 절반(버림)이 공격자에게(방어·내성 무시, 쓰러질 수 있다 07 #44)
+    // [저주]: 실대미지의 절반(버림)이 공격자에게(방어·내성 무시, 쓰러질 수 있다 01 #44)
     const back = card.curse && attacker ? halve(t.finalDamage ?? 0) : 0;
     if (back > 0) {
       const cb = attacker.system.hp.value;

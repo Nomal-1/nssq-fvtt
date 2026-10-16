@@ -97,7 +97,7 @@ export function findReactions(event, units) {
     // 『추격: ○』 강화: ○(param = 액터 uuid)가 공격 롤을 하면 추격할 수 있다(선택)
     if (canChaseAfter(event.kind) && !u.ko) {
       (u.buffs ?? []).forEach((b, i) => {
-        // ○ 자신도 받았으면 자기 공격도 추격한다(《추격의 호령》 아군 열, 07 #169 사용자 결정)
+        // ○ 자신도 받았으면 자기 공격도 추격한다(《추격의 호령》 아군 열, 01 #169 사용자 결정)
         if (b.id !== "chase" || !b.param || b.param !== event.attackerUuid) return;
         const foe = event.targets.find((t) => enemyOf(t.side, u.side));
         if (foe) out.push({ unitId: u.id, type: "chase", target: foe.id, attack: { kind: "physical" }, optional: true, source: { buff: i, key: "chaseBuff", sl: 1 } });

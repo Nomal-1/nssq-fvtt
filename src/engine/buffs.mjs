@@ -2,7 +2,7 @@
  * 강화 효과·약화 효과 (01 §3.10). Foundry 비의존 순수 함수.
  * 저장 모양: { id, value, turns, param } — param은 속성(내성 부여 등)이나 추격 대상 문구
  *
- * 01 표 밖의 이름(07 #39, 사용자 결정)
+ * 01 표 밖의 이름(01 #39, 사용자 결정)
  * - 『물리 방어 상승』·『물리 방어 저하』는 『방어 상승』·『방어 저하』와 같은 것(ALIASES로 바꿔 저장)
  * - 『공격 상승』·『물리 명중 상승』·『억제 공격 상승』·『내성 상승』·『내성 저하』는 원문 스킬·에너미에 나온다
  * - 『공격 저하』·『물리 명중 저하』·『억제 공격 저하』는 원문에 없다. 기능·대항은 넣되 custom(커스텀 스킬 전용):
@@ -56,13 +56,13 @@ export const BUFFS = {
 };
 export const BUFF_IDS = Object.keys(BUFFS);
 
-/** 원문의 다른 이름 → 같은 효과(07 #39) */
+/** 원문의 다른 이름 → 같은 효과(01 #39) */
 export const ALIASES = { physDefUp: "defenseUp", physDefDown: "defenseDown" };
 export const canonicalBuff = (id) => ALIASES[id] ?? id;
 
 /**
  * 속성 param: "fire" 한 개, "fire,ice,volt"(염빙뇌) 같은 여러 개, "all"(전체).
- * 여러 속성이어도 강화 1종류로 센다(07 #39). 내성 증감은 속성마다 ±1
+ * 여러 속성이어도 강화 1종류로 센다(01 #39). 내성 증감은 속성마다 ±1
  */
 export function paramElements(param) {
   if (param === "all") return [...RESISTS];
@@ -71,7 +71,7 @@ export function paramElements(param) {
 
 const keyOf = (b) => `${b.id}|${BUFFS[b.id]?.param ? b.param ?? "" : ""}`;
 
-/** 같은 종류 둘 중 남길 것: 수치가 큰 쪽, 같으면 남은 턴이 긴 쪽(07 #36) */
+/** 같은 종류 둘 중 남길 것: 수치가 큰 쪽, 같으면 남은 턴이 긴 쪽(01 #36) */
 function stronger(a, b) {
   const def = BUFFS[a.id];
   if (def.value && a.value !== b.value) return a.value > b.value ? a : b;
@@ -103,8 +103,8 @@ export function isInferior(existing, incoming) {
 /**
  * 강화·약화 부여. 목록 순서 = 걸린 순서(갱신된 것은 맨 뒤로)
  * - 대항 효과가 있으면 둘 다 소멸(countered)
- * - 같은 종류면 큰 효과 하나만(07 #36, 3종류가 차 있어도 같음)
- * - 같은 분류가 이미 3종류면(07 #7, 사용자 결정): 새 효과의 하위 호환인 것이 있으면 그것을,
+ * - 같은 종류면 큰 효과 하나만(01 #36, 3종류가 차 있어도 같음)
+ * - 같은 분류가 이미 3종류면(01 #7, 사용자 결정): 새 효과의 하위 호환인 것이 있으면 그것을,
  *   없으면 가장 먼저 걸린 것(갱신된 것은 갱신한 때 걸린 것으로 본다)을 지우고 새 효과를 건다(replaced)
  * @returns {{list: object[], result: "added"|"updated"|"ignored"|"countered"|"replaced", removed?: object}}
  */
@@ -114,7 +114,7 @@ export function addBuff(list, { id, value = 0, turns = 1, param = "" }) {
   const cur = list ?? [];
   if (!def) return { list: [...cur], result: "ignored" };
   const entry = { id, value: def.value ? Number(value) || 0 : 0, turns: Math.max(1, Number(turns) || 1), param: def.param ? String(param ?? "") : "" };
-  // 대항: 같은 param(있으면)의 반대 효과가 있으면 둘 다 소멸(속성이 정확히 같을 때만, 07 #41)
+  // 대항: 같은 param(있으면)의 반대 효과가 있으면 둘 다 소멸(속성이 정확히 같을 때만, 01 #41)
   if (def.counter) {
     const j = cur.findIndex((b) => b.id === def.counter && (!def.param || (b.param ?? "") === entry.param));
     if (j >= 0) return { list: cur.filter((_, k) => k !== j), result: "countered", removed: cur[j] };
@@ -150,7 +150,7 @@ export function buffMods(list) {
     if (!def) continue;
     const v = Number(b.value) || 0;
     for (const k of def.stats ?? []) add[k] = (add[k] ?? 0) + (def.sign ?? 1) * v;
-    // 내성 부여·내성 상승 +1, 약점 부여·내성 저하 −1(내성 상승·저하는 원문에 수치가 없어 ±1, 07 #39). 지정 속성마다
+    // 내성 부여·내성 상승 +1, 약점 부여·내성 저하 −1(내성 상승·저하는 원문에 수치가 없어 ±1, 01 #39). 지정 속성마다
     const delta = { resistGrant: 1, resistUp: 1, weaknessGrant: -1, resistDown: -1 }[b.id];
     if (delta) for (const el of paramElements(b.param)) resistAdd[el] = (resistAdd[el] ?? 0) + delta;
     if (b.id === "elemImbue" && IMBUE_ELEMENTS.includes(b.param) && !elements.includes(b.param)) elements.push(b.param);

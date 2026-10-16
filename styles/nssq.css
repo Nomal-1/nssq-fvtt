@@ -1269,7 +1269,7 @@
 /* 지도 이름: 길면 줄바꿈 */
 .nssq-fieldmap .fm-panel textarea[data-path="name"] { min-height: 2.6em; height: auto; resize: vertical; white-space: pre-wrap; }
 
-/* 전투 구성(07 #166) */
+/* 전투 구성(01 #166) */
 .nssq-encounters .window-content { padding: 8px 10px; }
 .nssq-encounters .enc-wrap { display: flex; flex-direction: column; gap: 6px; height: 100%; }
 .nssq-encounters .enc-toolbar { display: flex; gap: 6px; align-items: center; }
@@ -1311,7 +1311,7 @@
 .nssq-encounters .enc-edit .form-group > label { flex: 0 0 110px; }
 .nssq-encounters .enc-edit .form-group > select { flex: 1; }
 
-/* 마을·길드(07 #167) */
+/* 마을·길드(01 #167) */
 .nssq-guild .window-content { padding: 8px 10px; }
 .nssq-town .window-content { padding: 0; }
 .nssq-town .town-edit { padding: 8px 10px; }

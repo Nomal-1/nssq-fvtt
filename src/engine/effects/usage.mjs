@@ -11,7 +11,7 @@ export const PART_BIND = { 머리: "bindHead", 팔: "bindArm", 다리: "bindLeg"
 const PHASE_OF = { 주행동: "main", 개막: "opening" };
 
 /**
- * 스킬의 「무기」 칸 조건: 무기 슬롯의 무기 종류가 들어 있거나, 「방패」면 방패를 장비(기타 슬롯)했을 때(07 #56)
+ * 스킬의 「무기」 칸 조건: 무기 슬롯의 무기 종류가 들어 있거나, 「방패」면 방패를 장비(기타 슬롯)했을 때(01 #56)
  * @param {string[]} weaponReq
  * @param {{weaponType?: string, shield?: boolean}} user
  */

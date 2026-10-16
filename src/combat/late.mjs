@@ -111,14 +111,14 @@ async function runLate(combat, c, l) {
   await executeAction(combat, c, l.kind, l.itemId, targets, { variant: l.variant ?? null, late: true });
 }
 
-/** 대기 중 받은 대미지로 후발 공격(대상: 사거리 안의 적 중 무작위, 07 #95) */
+/** 대기 중 받은 대미지로 후발 공격(대상: 사거리 안의 적 중 무작위, 01 #95) */
 async function runRevenge(combat, c, st) {
   await c.setFlag("nssq", "stances", (c.getFlag("nssq", "stances") ?? []).filter((x) => x.id !== st.id));
   if (!alive(c) || actionState(c).noAction) return note(esc(L("cancelled", { name: c.name, skill: st.name })), c.actor);
   const p = combatProfile(c.actor, c);
   const foes = combat.combatants.filter((x) => alive(x) && !friendly(x.actor, c.actor) && inRange(p.range, p.row, x.actor.system.row ?? "front"));
   if (!foes.length) return note(esc(L("noTarget", { name: c.name, skill: st.name })), c.actor);
-  // 대상은 공격 직전에 사거리 안에서 고른다(07 #95). 하나면 그것
+  // 대상은 공격 직전에 사거리 안에서 고른다(01 #95). 하나면 그것
   const target = foes.length === 1 ? foes[0] : await chooseTarget(combat, c, st.name, foes);
   if (!target || !alive(target)) return note(esc(L("noTarget", { name: c.name, skill: st.name })), c.actor);
   await note(esc(L("revenge", { name: c.name, skill: st.name, taken: st.taken ?? 0 })), c.actor);

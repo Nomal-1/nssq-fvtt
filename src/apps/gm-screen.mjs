@@ -16,7 +16,7 @@ const playerOwned = (a) => game.users.some((u) => !u.isGM && a.testUserPermissio
 /** 파티: 플레이어가 소유한 캐릭터 + GM이 넣은 동료 NPC. 아무도 없으면 모든 캐릭터 */
 export function partyActors() {
   const chars = game.actors.filter((a) => a.type === "character");
-  // 길드에서 「대기」로 둔 캐릭터는 빼고(07 #167)
+  // 길드에서 「대기」로 둔 캐릭터는 빼고(01 #167)
   // 대기(benched)는 NPC도 빠진다(파티 편성판). 아무도 대기가 아닌데 비면 전원
   const party = chars.filter((a) => (playerOwned(a) || a.system.npc) && !a.getFlag("nssq", "benched"));
   return party.length || chars.some((a) => a.getFlag("nssq", "benched")) ? party : chars;
@@ -111,7 +111,7 @@ export class GMScreen extends Application {
       };
     });
     const lv = tables.levelExp;
-    // 판매 품목: 기본 또는 고른 마을(07 #167)
+    // 판매 품목: 기본 또는 고른 마을(01 #167)
     const towns = game.settings.get("nssq", "towns") ?? {};
     if (this.shopTown && !towns[this.shopTown]) this.shopTown = null;
     const hidden = hiddenSet(this.shopTown ?? null);

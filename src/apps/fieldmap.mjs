@@ -152,7 +152,7 @@ export function newMap(name) {
 async function passTime(hour, segs, opts = {}) {
   const tod = timeOfDayAt(hour);
   if (tod !== game.settings.get("nssq", "timeOfDay")) await game.settings.set("nssq", "timeOfDay", tod);
-  // 1세그먼트 = 1시간: 독·자연 회복·심도·오버히트(07 #164)
+  // 1세그먼트 = 1시간: 독·자연 회복·심도·오버히트(01 #164)
   if (segs > 0) await (await import("./time-pass.mjs")).timePasses(segs, opts);
 }
 
@@ -165,7 +165,7 @@ export async function startProgress(mapId, hour, { resume = true } = {}) {
   const { errors } = FM.validateMap(map);
   if (errors.length) return ui.notifications.warn(L("hasErrors", { n: errors.length }));
   const s = FM.startState(map, { hour });
-  // 같은 지도를 다시 들어가면 밟은 기록·공개한 비밀·통로 상태·발동한 트리거는 이어진다(입구에서, 07 #167). [처음부터]는 restart
+  // 같은 지도를 다시 들어가면 밟은 기록·공개한 비밀·통로 상태·발동한 트리거는 이어진다(입구에서, 01 #167). [처음부터]는 restart
   const prev = mapState();
   if (resume && prev.mapId === map.id && prev.visited) {
     s.visited = { ...prev.visited, [s.current]: (prev.visited[s.current] ?? 0) + 1 };
@@ -438,7 +438,7 @@ async function battleWith(spec, name, flags) {
     for (let i = 0; i < n; i++) actors.push(actor);
   }
   if (!actors.length) return;
-  // 던전 기본 무대(지도 battleBg·battleBgm, 07 #166)
+  // 던전 기본 무대(지도 battleBg·battleBgm, 01 #166)
   return (await import("./dungeon.mjs")).presetBattle(L("battleName", { name }), actors, flags, { bg: activeMap()?.battleBg ?? "", bgm: activeMap()?.battleBgm ?? "" });
 }
 

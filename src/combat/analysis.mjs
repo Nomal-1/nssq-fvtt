@@ -1,6 +1,6 @@
 /**
  * 에너미 「자세히 보기」(원작의 에너미 정보 화면처럼): 전투 화면에서 에너미 카드를 누르면 뜬다.
- * 공개 범위(07 #47·#48, 사용자 결정) — 도감 기록과 관계없이 이번 전투의 식별 결과대로. 예외: 처치 수가 자동 식별 기준 이상
+ * 공개 범위(01 #47·#48, 사용자 결정) — 도감 기록과 관계없이 이번 전투의 식별 결과대로. 예외: 처치 수가 자동 식별 기준 이상
  * - 기준 이상(자동 식별): Lv·【HP】·부능력치·내성·모든 스킬 사양·모든 DROP
  * - 식별 성공: Lv·【HP】·부능력치·내성, 「식별 시 공개」 스킬과 쓴 적 있는 스킬은 이름·의존 부위만, 얻은 적 있는 DROP
  * - 식별 실패: 모두 ???. 지금 걸린 상태 이상·강화·약화는 보인다(눈에 보이는 것)
@@ -24,7 +24,7 @@ const dropText = (d) => `${d.max === null || d.max === undefined ? `${d.min}~` :
 export function enemyAnalysisHtml(actor, name, combatant = null) {
   const s = actor?.system ?? {};
   const gm = game.user.isGM;
-  // 공개 단계(07 #47·#48): full = 도감 처치 수가 자동 식별 기준 이상(전부), known = 이번 전투 식별 성공
+  // 공개 단계(01 #47·#48): full = 도감 처치 수가 자동 식별 기준 이상(전부), known = 이번 전투 식별 성공
   const full = meetsAutoIdentify(actor);
   const known = !!s.identified;
   const show = gm || full || known;

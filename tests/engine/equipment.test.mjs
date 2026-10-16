@@ -121,7 +121,7 @@ describe("구입 소재", () => {
     expect(equipmentMaterialCandidates(inv, tables.weapons["검"], 2).map((m) => m.id)).toEqual(["m금속2"]);
     expect(equipmentMaterialCandidates(inv, tables.weapons["검"], 3)).toEqual([]);
   });
-  it("아이템: 같은 종류, R이 정확히 같을 것(07 #23), 수량 0은 제외", () => {
+  it("아이템: 같은 종류, R이 정확히 같을 것(01 #23), 수량 0은 제외", () => {
     expect(itemMaterialCandidates(inv, { type: "가죽", rank: 5 }).length).toBe(1);
     expect(itemMaterialCandidates(inv, { type: "가죽", rank: 4 })).toEqual([]);
     expect(itemMaterialCandidates(inv, { type: "풀", rank: 4 })).toEqual([]);
@@ -158,7 +158,7 @@ describe("장비 보정 합산", () => {
     expect(r.mods).toMatchObject({ physHit: 1 + 2, speed: 3 - 3 - 4, evasion: -1, "abilities.str": 1 });
   });
 
-  it("서브웨펀은 성능·제련을 더하지 않고, 무기 슬롯이 비었으니 맨손(07 #21·#20)", () => {
+  it("서브웨펀은 성능·제련을 더하지 않고, 무기 슬롯이 비었으니 맨손(01 #21·#20)", () => {
     const r = collectEquipment([weapon("세검", 2, { equipped: true, slot: "other" })], tables, { level: 2 });
     expect(r.weapon).toMatchObject({ unarmed: true, weaponType: "주먹", physAtk: 2, element: "strike" });
     expect(r.mods).toEqual({ physHit: 0, elemHit: 0, speed: 0 });

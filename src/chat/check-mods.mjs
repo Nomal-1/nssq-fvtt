@@ -23,7 +23,7 @@ export function checkModsHtml(actor, { kinds: preset = [] } = {}) {
     const v = Number(mods[`checks.${k}`]) || 0;
     return `<label class="choice"><input type="checkbox" name="kind" value="${k}" ${preset.includes(k) ? "checked" : ""}/> ${esc(L(`kind.${k}`))}${v ? ` <b>${v > 0 ? "+" : ""}${v}</b>` : ""}</label>`;
   }).join("");
-  // 선언은 그 스킬의 판정 종류를 체크했을 때만. 코스트 없는 것은 종류를 체크하면 함께 체크(07 #148)
+  // 선언은 그 스킬의 판정 종류를 체크했을 때만. 코스트 없는 것은 종류를 체크하면 함께 체크(01 #148)
   const decl = skills(actor, "checkBonus").map((i) => {
     const e = effOf(i, "checkBonus");
     const ok = canPay(actor, i.system.cost);
@@ -31,8 +31,8 @@ export function checkModsHtml(actor, { kinds: preset = [] } = {}) {
     const free = !i.system.cost?.tp && !i.system.cost?.fp;
     return `<label class="choice"><input type="checkbox" name="declare" value="${i.id}" data-kinds="${esc((e.kinds ?? []).join(","))}" data-free="${free ? 1 : 0}" data-pay="${ok ? 1 : 0}" ${ok && on ? "" : "disabled"} ${ok && on && free ? "checked" : ""}/> 《${esc(i.name)}》 +${e.value}${e.ability ? `(${esc(game.i18n.localize(`NSSQ.Ability.${e.ability}`))})` : ""} <small>${esc((e.kinds ?? []).map((k) => L(`kind.${k}`)).join("·"))} ${esc(costText(i.system.cost))}</small></label>`;
   }).join("");
-  // [석화] 중인 캐릭터는 도울 수 없다(07 #164)
-  // 「전투 외 판정」: 판정하는 캐릭터가 진행 중인 전투에 있으면 도움 없음(07 #149)
+  // [석화] 중인 캐릭터는 도울 수 없다(01 #164)
+  // 「전투 외 판정」: 판정하는 캐릭터가 진행 중인 전투에 있으면 도움 없음(01 #149)
   const inBattle = !!game.combat?.started && game.combat.combatants.some((c) => c.actor?.uuid === actor.uuid);
   const helpers = inBattle ? [] : game.actors.filter((a) => a.type === "character" && a.id !== actor.id && !(a.system.conditions ?? []).some((c) => c.id === "petrify")).flatMap((a) => skills(a, "checkAssist").map((i) => ({ a, i })));
   const assist = helpers.map(({ a, i }) => {
@@ -86,7 +86,7 @@ export async function applyCheckMods(actor, { kinds = [], declares = [], assists
     modifier += v;
     notes.push(v ? `${L(`kind.${k}`)} ${v > 0 ? "+" : ""}${v}` : L(`kind.${k}`));
   }
-  // 어둠(밤, 필드 지도·랜덤 던전 진행 중): 시력 판정 −2, 《나이트 비전》이면 없음(07 #165)
+  // 어둠(밤, 필드 지도·랜덤 던전 진행 중): 시력 판정 −2, 《나이트 비전》이면 없음(01 #165)
   if (kinds.includes("sight") && darkField() && !actor.items.some((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && (i.system.effects ?? []).some((e) => e?.type === "flag" && e.flag === "nightVision"))) {
     modifier -= 2;
     notes.push(game.i18n.localize("NSSQ.Check.darkSight"));

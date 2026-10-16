@@ -215,7 +215,7 @@ export function equipmentMaterialCandidates(items, table, rank) {
   return items.filter((i) => i.type === "material" && !isStored(i) && types.includes(i.system.materialType) && i.system.rank >= rank && (i.system.quantity ?? 1) > 0);
 }
 
-/** 아이템(소모품) 구입에 필요한 소재 [{type, rank}] 각각에 맞는 후보: 같은 종류, R이 정확히 같을 것(07 #23) */
+/** 아이템(소모품) 구입에 필요한 소재 [{type, rank}] 각각에 맞는 후보: 같은 종류, R이 정확히 같을 것(01 #23) */
 export function itemMaterialCandidates(items, requirement) {
   return items.filter((i) => i.type === "material" && !isStored(i) && i.system.materialType === requirement.type && i.system.rank === requirement.rank && (i.system.quantity ?? 1) > 0);
 }
@@ -287,9 +287,9 @@ export function refinePrice(refinement, rank) {
  * - 무기 슬롯의 무기: 명중·공격·속도, 제련
  * - 갑옷 슬롯의 갑옷, 기타 슬롯의 방패: 방어·회피·속도, 제련
  * - 기타 슬롯의 장식: 효과
- * - 기타 슬롯의 서브웨펀: 교체용이라 성능·제련을 더하지 않는다(07 #21)
+ * - 기타 슬롯의 서브웨펀: 교체용이라 성능·제련을 더하지 않는다(01 #21)
  * - 소지만 해도 되는 기타 아이템(백팩 등)의 modifier (창고에 있으면 제외)
- * - 무기 슬롯이 비어 있으면 맨손(tables.unarmed, 07 #20)
+ * - 무기 슬롯이 비어 있으면 맨손(tables.unarmed, 01 #20)
  * @returns {{ weapon: object|null, armorDefense: number, mods: Record<string, number>, flags: Record<string, any>, sources: object[] }}
  */
 export function collectEquipment(items, tables, { level = 1, skillNames = [] } = {}) {

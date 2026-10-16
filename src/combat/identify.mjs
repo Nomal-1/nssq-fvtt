@@ -13,7 +13,7 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 export async function identifyEnemy(actor, value) {
   const s = actor.system;
   const r = identifyResult(value, { rarity: s.rarity ?? 0, isRare: !!s.isRare });
-  // 도감의 처치 수가 기준 이상이면 판정과 관계없이 식별(희소종 간파는 판정대로, 07 #48)
+  // 도감의 처치 수가 기준 이상이면 판정과 관계없이 식별(희소종 간파는 판정대로, 01 #48)
   if (meetsAutoIdentify(actor)) r.identified = true;
   const u = {};
   if (!!s.identified !== r.identified) u["system.identified"] = r.identified;

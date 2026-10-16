@@ -7,7 +7,7 @@ const SUB = { physHit: 5, elemHit: 4, evasion: 8, physAtk: 9, elemAtk: 3, defens
 const RES = { slash: 3, strike: 3, pierce: 3, fire: 3, ice: 3, volt: 3 };
 
 describe("상태 이상·봉인", () => {
-  it("같은 상태 이상은 심도가 높을 때만 갱신(07 #5)", () => {
+  it("같은 상태 이상은 심도가 높을 때만 갱신(01 #5)", () => {
     let { list } = addCondition([], { id: "poison", depth: 10 });
     expect(addCondition(list, { id: "poison", depth: 9 }).result).toBe("ignored");
     ({ list } = addCondition(list, { id: "poison", depth: 12 }));
@@ -15,7 +15,7 @@ describe("상태 이상·봉인", () => {
     expect(list[0].depth).toBe(12);
   });
 
-  it("서로 다른 상태 이상·봉인은 함께 걸린다(07 #35 사용자 결정)", () => {
+  it("서로 다른 상태 이상·봉인은 함께 걸린다(01 #35 사용자 결정)", () => {
     let list = addCondition([], { id: "poison", depth: 10 }).list;
     list = addCondition(list, { id: "bindArm", depth: 9 }).list;
     const r = addCondition(list, { id: "blind", depth: 8 });
@@ -73,7 +73,7 @@ describe("상태 이상·봉인", () => {
     expect(resistCheck({ dice: [4, 4], suppDef: 4, target: 12 })).toMatchObject({ resisted: true, depth: null });
   });
 
-  it("대결 판정 부여: 공격자가 이기면 심도 = 공격자 달성값(07 #6), 동점은 막는다", () => {
+  it("대결 판정 부여: 공격자가 이기면 심도 = 공격자 달성값(01 #6), 동점은 막는다", () => {
     expect(contestInflict({ atkDice: [5, 5], suppAtk: 3, defDice: [2, 3], suppDef: 4 })).toMatchObject({ resisted: false, depth: 13 });
     expect(contestInflict({ atkDice: [3, 3], suppAtk: 3, defDice: [2, 3], suppDef: 4 })).toMatchObject({ resisted: true });
   });
@@ -87,7 +87,7 @@ describe("강화·약화", () => {
     expect(b.list).toEqual([]);
   });
 
-  it("같은 종류는 가장 큰 효과만(같으면 남은 턴이 긴 쪽, 07 #36)", () => {
+  it("같은 종류는 가장 큰 효과만(같으면 남은 턴이 긴 쪽, 01 #36)", () => {
     let { list } = addBuff([], { id: "physAtkUp", value: 2, turns: 3 });
     expect(addBuff(list, { id: "physAtkUp", value: 1, turns: 5 }).result).toBe("ignored");
     ({ list } = addBuff(list, { id: "physAtkUp", value: 3, turns: 1 }));
@@ -96,7 +96,7 @@ describe("강화·약화", () => {
     expect(list[0].turns).toBe(2);
   });
 
-  it("강화 4종류째: 가장 먼저 걸린 것을 지우고 새 것을 건다(07 #7), 약화는 따로 센다", () => {
+  it("강화 4종류째: 가장 먼저 걸린 것을 지우고 새 것을 건다(01 #7), 약화는 따로 센다", () => {
     let list = [];
     for (const id of ["physAtkUp", "defenseUp", "speedUp"]) list = addBuff(list, { id, value: 1, turns: 2 }).list;
     const r = addBuff(list, { id: "evasionUp", value: 1, turns: 2 });
@@ -152,7 +152,7 @@ describe("강화·약화", () => {
     expect(m.critUp).toBe(true);
   });
 
-  it("『물리 방어 상승』은 『방어 상승』과 같은 종류(07 #39): 큰 쪽만, 『방어 저하』·『물리 방어 저하』와 대항", () => {
+  it("『물리 방어 상승』은 『방어 상승』과 같은 종류(01 #39): 큰 쪽만, 『방어 저하』·『물리 방어 저하』와 대항", () => {
     let { list } = addBuff([], { id: "defenseUp", value: 4, turns: 3 });
     const r = addBuff(list, { id: "physDefUp", value: 2, turns: 3 });
     expect(r.result).toBe("ignored");
@@ -162,7 +162,7 @@ describe("강화·약화", () => {
     expect(applyMods({ sub: SUB, resist: RES }, [buffMods(list)]).sub.defense).toBe(9);
   });
 
-  it("『내성 상승: 전체』·『염빙뇌』는 강화 1종류, 지정 속성마다 +1(07 #39)", () => {
+  it("『내성 상승: 전체』·『염빙뇌』는 강화 1종류, 지정 속성마다 +1(01 #39)", () => {
     let { list } = addBuff([], { id: "resistUp", param: "all", turns: 3 });
     ({ list } = addBuff(list, { id: "resistGrant", param: "fire,ice,volt", turns: 3 }));
     ({ list } = addBuff(list, { id: "physAtkUp", value: 1, turns: 3 }));

@@ -53,7 +53,7 @@ export function dualWieldOf(actor) {
   const hit = evaluate(e.hitMod ?? 0, vars);
   const atk = evaluate(e.atkMod ?? 0, vars);
   if (!tables.weapons[ot]) return null;
-  // 기타 슬롯 무기를 무기 슬롯에 낀 것으로 다시 계산(그 무기의 성능·제련, 무기 슬롯 무기의 제련은 빠짐, 무기 종류별 상시 스킬도, 07 #21·#124)
+  // 기타 슬롯 무기를 무기 슬롯에 낀 것으로 다시 계산(그 무기의 성능·제련, 무기 슬롯 무기의 제련은 빠짐, 무기 종류별 상시 스킬도, 01 #21·#124)
   const swapped = actor.items.contents.map((i) => {
     if (i.id !== other.id && i.id !== main.item.id) return i;
     const o = i.toObject();
@@ -83,7 +83,7 @@ export async function normalAttack(attacker, opts = {}) {
   if (!dual) return attackWith(attacker, opts);
   const first = await attackWith(attacker, { ...opts, weaponMod: { ...dual.main, by: dual.name } });
   if (!first) return first;
-  // 2회째 대상은 다시 고른다(기타 슬롯 무기의 사거리 안, 07 #124)
+  // 2회째 대상은 다시 고른다(기타 슬롯 무기의 사거리 안, 01 #124)
   const target = await secondTarget(attacker, opts, dual.other);
   if (!target) return first;
   return attackWith(attacker, { ...opts, target, weaponMod: { ...dual.other, by: dual.name }, turnChecked: true });
@@ -269,7 +269,7 @@ export function registerAttackHooks() {
     const card = message.getFlag("nssq", "attack");
     if (!card) return;
     const el = html[0];
-    // 플레이어가 모르는 에너미(식별·도감 기록 없음)의 수치는 ?로(07 #47)
+    // 플레이어가 모르는 에너미(식별·도감 기록 없음)의 수치는 ?로(01 #47)
     if (!game.user.isGM) {
       const attacker = card.attackerUuid ? fromUuidSync(card.attackerUuid) : null;
       if (attacker && !knowsEnemy(attacker)) el.querySelectorAll("[data-mask=atk]").forEach((x) => { x.textContent = "?"; });

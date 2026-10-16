@@ -284,7 +284,7 @@ export async function runFollowup(f, originKind = "normal") {
 }
 
 /**
- * 아군 일제 추격(《일제 사격》·《난룡의 진》): 사용자 이외의 행동할 수 있는 아군을 【속도】 순으로 최대 count명(07 #88)
+ * 아군 일제 추격(《일제 사격》·《난룡의 진》): 사용자 이외의 행동할 수 있는 아군을 【속도】 순으로 최대 count명(01 #88)
  * weapons가 있으면 그 무기 종류를 장비한 아군만. 각자 통상 공격의 물리 공격으로 추격(사거리는 무시하지 않음)
  */
 export async function rallyChase(user, rally) {
@@ -293,7 +293,7 @@ export async function rallyChase(user, rally) {
   if (!target) return;
   const allies = combat.turns.filter((x) => x.id !== user.id && alive(x) && !actionState(x).noAction && (sideOf(x.actor) === "enemy") === (sideOf(user.actor) === "enemy")
     && (!rally.weapons || rally.weapons.includes(x.actor.system.equipment?.weapon?.weaponType)));
-  // 「아군을 최대 n명 선택」(07 #88): 사용자가 고른다(에너미·소유자가 아닌 화면은 【속도】 순)
+  // 「아군을 최대 n명 선택」(01 #88): 사용자가 고른다(에너미·소유자가 아닌 화면은 【속도】 순)
   let chosen = allies.slice(0, rally.count);
   if (allies.length && user.actor.type === "character" && user.actor.isOwner) {
     const html = `<p>${esc(L("rallyHint", { n: rally.count }))}</p>${allies.map((a, k) => `<div class="form-group"><label><input type="checkbox" name="r${k}" ${k < rally.count ? "checked" : ""}/> ${esc(a.name)}</label></div>`).join("")}`;

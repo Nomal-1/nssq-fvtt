@@ -101,7 +101,7 @@ export function validateCreation(p) {
   add("subMax", !subBad.length, "error", subBad.join(", "));
   const foreign = skills.filter((s) => !s.common && ![p.mainClass, p.subClass].includes(s.classKey)).map((s) => s.name);
   add("foreignSkill", !foreign.length, "error", foreign.join(", "));
-  // 5 커먼 스킬: 선택(사용자 결정, 07 #162). 배운다면 1개 SL1까지(작성 시점)
+  // 5 커먼 스킬: 선택(사용자 결정, 01 #162). 배운다면 1개 SL1까지(작성 시점)
   const commons = skills.filter((s) => s.common);
   add("common", commons.length <= 1 && commons.every((c) => c.sl === 1), "error", commons.map((s) => `${s.name} ${s.sl}`).join(", "));
   // ★ 고유 스킬: 서브가 없으면 있어야, 있으면 없어야

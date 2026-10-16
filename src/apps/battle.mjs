@@ -196,7 +196,7 @@ async function resumeSounds(list) {
 }
 
 export async function startBattle({ presetId, members, surprise = "none", identifyValue = null, dark = null }) {
-  // 어둠 속 전투(07 #165): 정하지 않으면 시간대가 밤일 때. 시간이 흘러 시간대가 바뀌면 따라 바뀐다(darkAuto)
+  // 어둠 속 전투(01 #165): 정하지 않으면 시간대가 밤일 때. 시간이 흘러 시간대가 바뀌면 따라 바뀐다(darkAuto)
   const darkAuto = dark === null || dark === undefined;
   if (darkAuto) dark = timeOfDay() === "night";
   if (!game.user.isGM) return;
@@ -354,7 +354,7 @@ export async function endBattle(combat, result = "abort") {
   try {
     const info = combat.getFlag("nssq", "battle") ?? {};
     const copy = game.scenes.get(info.copy);
-    // 마지막 턴도 누적(07 #165)
+    // 마지막 턴도 누적(01 #165)
     if (combat.started) await (await import("./time-pass.mjs")).battleTurn(combat);
     await ChatMessage.create({
       speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
@@ -363,7 +363,7 @@ export async function endBattle(combat, result = "abort") {
     });
     // 승리: 드롭 판정·갈무리 카드(단계 9-A). 전투를 지우기 전에(쓰러진 에너미·참가 캐릭터를 본다)
     if (result === "victory") await (await import("./loot.mjs")).startLoot(combat);
-    // 전투가 끝나면 아군(연결된 캐릭터)의 [수면]·[스턴]·봉인과 강화·약화를 푼다. 다른 상태 이상은 남는다(07 #46 사용자 결정 2026-10-10)
+    // 전투가 끝나면 아군(연결된 캐릭터)의 [수면]·[스턴]·봉인과 강화·약화를 푼다. 다른 상태 이상은 남는다(01 #46 사용자 결정 2026-10-10)
     // 오버히트는 남아 탐색 시간으로 줄어든다(원문, apps/time-pass.mjs). 전투 고유 상태(무사의 자세 등)는 그 전투까지(07 #57)
     for (const c of combat.combatants) {
       const a = c.actor;

@@ -1,7 +1,7 @@
 /**
  * 드롭 판정(01 §3.12 전투 종료, 단계 9-A). Foundry 비의존.
  * 쓰러뜨린 에너미 1체마다 2D6 → 에너미 DROP 표({ min, max|null, item, rank }). 1이 나와도 FP 없음(FAQ 5).
- * 파티의 조작 스킬: 달성값 ±n(《스캐빈저》·《해부학》 1, 《사략의 규율》·《해체 마스터》 SL) → 가장 넓은 것 하나(07 #134),
+ * 파티의 조작 스킬: 달성값 ±n(《스캐빈저》·《해부학》 1, 《사략의 규율》·《해체 마스터》 SL) → 가장 넓은 것 하나(01 #134),
  * 같은 눈(더블)이면 입수 랭크 +1(《풍작 기원》), 드롭 뒤 식재 추가(《사냥꾼의 후각》)
  */
 import { evaluate } from "./expr.mjs";
@@ -82,7 +82,7 @@ export function parseGatherTable(text) {
 /**
  * 채집 판정 1회
  * @param {{ table: {max, item, rank?}[], dice: number[], adjust?: number, rank: number, ahh?: number, doubleUp?: boolean, doubleExtra?: boolean }} p
- *   ahh: 아앗! 값(추가분은 0). 굴린 눈(조작 전)이 그 이하면 기습(07 #138)
+ *   ahh: 아앗! 값(추가분은 0). 굴린 눈(조작 전)이 그 이하면 기습(01 #138)
  * @returns {{ total, item: string|null, rank: number, qty: number, doubled: boolean, ambush: boolean }}
  */
 export function judgeGather({ table, dice, adjust = 0, rank = 1, ahh = 0, doubleUp = false, doubleExtra = false }) {

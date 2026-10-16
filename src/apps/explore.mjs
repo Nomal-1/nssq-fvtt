@@ -30,7 +30,7 @@ export async function openCampDialog(defaults = {}) {
   if (!game.user.isGM) return;
   const members = await party();
   const foods = members.flatMap((a) => carried(a).filter((i) => i.system.foodstuff && (i.system.quantity ?? 1) > 0).map((i) => ({ id: `${a.id}.${i.id}`, label: `${a.name}: ${i.name} ×${i.system.quantity ?? 1}` })));
-  // [석화] 중인 캐릭터의 도구는 쓰지 않는다(07 #164)
+  // [석화] 중인 캐릭터의 도구는 쓰지 않는다(01 #164)
   const tent = Math.min(0, ...members.filter((a) => !isPetrified(a)).map((a) => Number(a.system.equipment?.mods?.["checks.campDanger"]) || 0));
   const content = `<form class="nssq-camp">
     <div class="form-group"><label>${esc(L("hours"))}</label><input type="number" name="hours" min="6" value="${Math.max(6, Number(defaults.hours) || 6)}" ${defaults.timePassed && !defaults.beforeCamp ? "readonly" : ""}/></div>
@@ -54,7 +54,7 @@ export async function openCampDialog(defaults = {}) {
  *   timePassed: 시각·오버히트는 이미 지남(필드 지도의 캠프 세그먼트). 상태 이상은 여기서 처리한다
  */
 export async function camp({ hours, danger, food, members, tent = 0, timePassed = false }) {
-  // 식료품 1개(캠프 1번에 1개, 07 #141)
+  // 식료품 1개(캠프 1번에 1개, 01 #141)
   const [aid, iid] = String(food).split(".");
   const fa = game.actors.get(aid);
   const fi = fa?.items.get(iid);
@@ -69,16 +69,16 @@ export async function camp({ hours, danger, food, members, tent = 0, timePassed 
     rolls.push(r);
     amb = campAmbush(r.dice[0].results.map((x) => x.result), eff);
   }
-  // 요리는 그 스킬을 가진 사람과 조리기구 세트가 파티에 있으면 모두에게, 《캠프 마스터》는 파티에서 가장 큰 것(07 #142)
-  // [석화] 중인 캐릭터의 탐색 스킬·도구는 쓰지 않는다(07 #164)
+  // 요리는 그 스킬을 가진 사람과 조리기구 세트가 파티에 있으면 모두에게, 《캠프 마스터》는 파티에서 가장 큰 것(01 #142)
+  // [석화] 중인 캐릭터의 탐색 스킬·도구는 쓰지 않는다(01 #164)
   const able = members.filter((a) => !isPetrified(a));
   const cookTool = able.some((a) => hasTool(a, COOK_TOOL));
   const cookHp = cookTool && able.some((a) => flagOf(a, "campCookHp"));
   const cookTp = cookTool && able.some((a) => flagOf(a, "campCookTp"));
   const cookCure = cookTool && able.some((a) => flagOf(a, "campCookCure"));
-  // 야영하면 누적 전투 턴을 비운다(07 #165)
+  // 야영하면 누적 전투 턴을 비운다(01 #165)
   await (await import("./time-pass.mjs")).resetBattleTurns();
-  // 캠프 시간만큼 탐색 시간이 지난다(07 #164). 《약효 요리》로 고치면(습격당하지 않았을 때) 상태 이상은 진행하지 않는다.
+  // 캠프 시간만큼 탐색 시간이 지난다(01 #164). 《약효 요리》로 고치면(습격당하지 않았을 때) 상태 이상은 진행하지 않는다.
   // 필드 지도의 캠프는 시각·오버히트가 이미 지났다(timePassed)
   await (await import("./time-pass.mjs")).timePasses(hours, { noAilments: cookCure && !amb.ambush, noOverheat: timePassed });
   const campHeal = Math.max(0, ...able.map((a) => Number(a.system.equipment?.mods?.campHeal) || 0));

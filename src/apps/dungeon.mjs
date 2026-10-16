@@ -16,7 +16,7 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 
 export const dungeonState = () => game.settings.get("nssq", "dungeon") ?? {};
 const setState = async (s) => {
-  // 던전에 들어가거나 나가면 누적 전투 턴을 비운다(07 #165)
+  // 던전에 들어가거나 나가면 누적 전투 턴을 비운다(01 #165)
   if (!!s.active !== !!dungeonState().active) await (await import("./time-pass.mjs")).resetBattleTurns();
   return game.settings.set("nssq", "dungeon", s);
 };
@@ -74,7 +74,7 @@ export async function openDungeonDialog() {
 export async function startDungeon({ name, level, depth, hour, stage = null }) {
   if (!(await (await import("./party-board.mjs")).checkBeforeEntry())) return null;
   await activateDungeonField(name, stage ?? game.settings.get("nssq", "dungeonStage") ?? {});
-  // 새 던전(진행 중인 것을 다시 시작해도): 누적 전투 턴을 비운다(07 #165)
+  // 새 던전(진행 중인 것을 다시 시작해도): 누적 전투 턴을 비운다(01 #165)
   await (await import("./time-pass.mjs")).resetBattleTurns();
   await setState({ active: true, name, level, depth, done: 0, hour });
   await (await import("./town.mjs")).enteredDungeon();
@@ -110,7 +110,7 @@ export async function nextEvent() {
   await setState({ ...st, hour, done });
   const tod = timeOfDayAt(hour);
   if (tod !== game.settings.get("nssq", "timeOfDay")) await game.settings.set("nssq", "timeOfDay", tod);
-  // 1턴 = 1시간: 독·자연 회복·심도·오버히트(07 #164)
+  // 1턴 = 1시간: 독·자연 회복·심도·오버히트(01 #164)
   await (await import("./time-pass.mjs")).timePasses(1);
   // 이벤트 2D6은 플레이어가 굴린다(사용자 결정): 접속한 플레이어 모두에게 팝업, 누구 하나가 굴리면 모든 팝업이 닫힌다.
   // 채팅 카드의 버튼은 팝업을 닫아 버린 경우의 예비. 접속한 플레이어가 없으면 GM이 바로
@@ -169,7 +169,7 @@ async function clear() {
   const st = dungeonState();
   await setState({ ...st, active: false });
   await note(`<h3><i class="fas fa-flag-checkered"></i> ${esc(L("cleared", { name: st.name }))}</h3>`);
-  // 클리어하면 마을로(07 #167)
+  // 클리어하면 마을로(01 #167)
   return (await import("./town.mjs")).returnToTown();
 }
 
@@ -189,7 +189,7 @@ export async function escapeDungeon(by = "") {
   if (battle) await (await import("./battle.mjs")).endBattle(battle, "escape");
   const st = dungeonState();
   await note(`<h3><i class="fas fa-route"></i> ${esc(L("escaped", { name: st.name ?? "", by }))}</h3>`);
-  // 《아리아드네의 실》의 도착지는 마을(07 #167). 필드 지도 진행 중이어도
+  // 《아리아드네의 실》의 도착지는 마을(01 #167). 필드 지도 진행 중이어도
   return (await import("./town.mjs")).returnToTown();
 }
 
@@ -276,7 +276,7 @@ async function randomBattle(e) {
 /**
  * 액터들로 임시 프리셋 씬(전투가 끝나면 지운다)을 만들고 개시 창.
  * actors: Actor 또는 { actor, row: "front"|"back" }(열마다 가운데 정렬)
- * flags: 프리셋에 더할 nssq 플래그(필드 지도 F.O.E. 등), stage: { bg, bgm }(배경 그림·"재생목록id.곡id", 07 #166)
+ * flags: 프리셋에 더할 nssq 플래그(필드 지도 F.O.E. 등), stage: { bg, bgm }(배경 그림·"재생목록id.곡id", 01 #166)
  */
 export async function presetBattle(name, actors, flags = {}, stage = {}) {
   const list = actors.map((x) => (x?.actor ? { actor: x.actor, row: x.row === "back" ? "back" : "front" } : { actor: x, row: "front" }));

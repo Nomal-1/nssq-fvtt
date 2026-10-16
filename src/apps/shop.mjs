@@ -108,7 +108,7 @@ export async function shopCatalog() {
   return docs;
 }
 
-/** 파티가 있는 마을(07 #167: 판매 품목·랭크 상한은 마을마다) */
+/** 파티가 있는 마을(01 #167: 판매 품목·랭크 상한은 마을마다) */
 function townHere() {
   const loc = game.settings.get("nssq", "location") ?? {};
   return loc.kind === "town" ? (game.settings.get("nssq", "towns") ?? {})[loc.townId] ?? null : null;

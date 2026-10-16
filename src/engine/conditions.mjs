@@ -25,18 +25,18 @@ export const CONDITIONS = {
 };
 export const CONDITION_IDS = Object.keys(CONDITIONS);
 
-/** 〈참〉〈괴〉〈돌〉: [수면]이면 −1로 취급(07 #3) */
+/** 〈참〉〈괴〉〈돌〉: [수면]이면 −1로 취급(01 #3) */
 const SLEEP_RESISTS = ["slash", "strike", "pierce"];
 
 export const hasCondition = (list, id) => (list ?? []).some((c) => c.id === id);
 
-/** [석화] 중이면 탐색 스킬을 쓸 수 없고 필드 판정은 실패(07 #164). system 데이터가 있는 아무 객체 */
+/** [석화] 중이면 탐색 스킬을 쓸 수 없고 필드 판정은 실패(01 #164). system 데이터가 있는 아무 객체 */
 export const isPetrified = (actor) => hasCondition(actor?.system?.conditions, "petrify");
 
 /**
  * 상태 이상·봉인 부여.
- * - 같은 것이 이미 있으면 심도가 더 높을 때만 갱신(07 #5)
- * - 서로 다른 상태 이상·봉인은 함께 걸린다(07 #35, 사용자 결정 2026-10-10)
+ * - 같은 것이 이미 있으면 심도가 더 높을 때만 갱신(01 #5)
+ * - 서로 다른 상태 이상·봉인은 함께 걸린다(01 #35, 사용자 결정 2026-10-10)
  * @returns {{list: object[], result: "added"|"updated"|"ignored"}}
  */
 export function addCondition(list, { id, depth = null, source = "", sourceSuppAtk = 0 }) {
@@ -88,7 +88,7 @@ export function resistCheck({ dice, suppDef = 0, target }) {
 }
 
 /**
- * 대결 판정 부여: 공격자 【억제 공격】 vs 대상 【억제 방어】. 공격자가 이기면 부여, 심도 = 공격자 달성값(07 #6)
+ * 대결 판정 부여: 공격자 【억제 공격】 vs 대상 【억제 방어】. 공격자가 이기면 부여, 심도 = 공격자 달성값(01 #6)
  */
 export function contestInflict({ atkDice, suppAtk = 0, defDice, suppDef = 0 }) {
   const atk = evaluateCheck({ dice: atkDice, modifier: suppAtk });
@@ -98,7 +98,7 @@ export function contestInflict({ atkDice, suppAtk = 0, defDice, suppDef = 0 }) {
 }
 
 /**
- * 반드시 거는 부여(저항 없음): 심도만 【억제 공격】 판정 달성값으로(07 #61, 《임팩트 애로》 자신 [마비])
+ * 반드시 거는 부여(저항 없음): 심도만 【억제 공격】 판정 달성값으로(01 #61, 《임팩트 애로》 자신 [마비])
  */
 export function forcedInflict({ atkDice, suppAtk = 0 }) {
   const atk = evaluateCheck({ dice: atkDice, modifier: suppAtk });

@@ -28,7 +28,7 @@ export function registerSettings() {
     choices: { none: "NSSQ.Settings.timeOfDay.none", day: "NSSQ.Settings.timeOfDay.day", night: "NSSQ.Settings.timeOfDay.night" },
     default: "none"
   });
-  // 어둠 속 전투에서 에너미도 불이익을 받는가(07 #165)
+  // 어둠 속 전투에서 에너미도 불이익을 받는가(01 #165)
   game.settings.register("nssq", "darkEnemies", {
     name: "NSSQ.Settings.darkEnemies.name",
     hint: "NSSQ.Settings.darkEnemies.hint",

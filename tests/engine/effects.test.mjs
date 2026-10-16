@@ -148,7 +148,7 @@ describe("사용 가능·발동·조건", () => {
 
 import { activeEvade, reactionEffect } from "../../src/engine/effects/reaction.mjs";
 
-describe("수동 반응(07 #51)", () => {
+describe("수동 반응(01 #51)", () => {
   it("능동 회피: 대상 2D6+능력치 보너스+(SL−1) ≥ 공격자 달성값이면 회피(동점 회피)", () => {
     expect(activeEvade({ dice: [4, 4], abilityBonus: 3, bonus: "SL-1", sl: 3, attack: { total: 13 } }).evaded).toBe(true);
     expect(activeEvade({ dice: [4, 4], abilityBonus: 3, bonus: "SL-1", sl: 3, attack: { total: 14 } }).evaded).toBe(false);
@@ -188,7 +188,7 @@ describe("다회 공격 중 [수면]", () => {
   });
 });
 
-describe("무기 칸의 방패(07 #56)", () => {
+describe("무기 칸의 방패(01 #56)", () => {
   it("방패 스킬은 방패를 장비했을 때만", () => {
     const skill = { timing: "주행동", weaponReq: ["방패"], cost: { tp: 1 }, effects: [{ type: "buff" }] };
     const base = { tp: 5, fp: 0, weaponType: "검", conditions: [] };
@@ -440,7 +440,7 @@ describe("부분 자동 전투 스킬 C1묶음", () => {
     expect(a.allyRecoil).toBe(2);
     const b = await resolveEffects({ effects: [{ type: "attack", kind: "physical" }, { type: "healFromDamage", toSelf: true }], user, targets: [foe], rollDice: dice(5, 5, 1, 1, 5, 5, 5, 5) });
     expect(b.allyHeal).toBe(4);
-    // 반감 후의 수(07 #118): 가드 중인 대상이면 4 → 2
+    // 반감 후의 수(01 #118): 가드 중인 대상이면 4 → 2
     const g = await resolveEffects({ effects: [{ type: "attack", kind: "physical" }, { type: "healFromDamage", toSelf: true }], user, targets: [{ ...foe, guarding: true }], rollDice: dice(5, 5, 1, 1, 5, 5, 5, 5) });
     expect(g.allyHeal).toBe(2);
     const c = await resolveEffects({ effects: [{ type: "attack", kind: "physical", addTurnElements: ["fire", "ice", "volt"] }], user, targets: [foe], ctx: { turnElements: ["ice"] }, rollDice: dice(5, 5, ...Array(6).fill(2)) });

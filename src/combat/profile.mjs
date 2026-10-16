@@ -76,7 +76,7 @@ function applyTurnEffects(p, actor, combatant) {
       for (const k of ["physHit", "elemHit", "suppAtk", "suppDef"]) mods[k] = (mods[k] ?? 0) + (Number(e.value) || 0);
     }
   }
-  // 어둠 속 전투(07 #165): 【물리 명중】【속성 명중】 −2. 《나이트 비전》·그 편의 《조명탄》이면 없음, 에너미는 설정 darkEnemies
+  // 어둠 속 전투(01 #165): 【물리 명중】【속성 명중】 −2. 《나이트 비전》·그 편의 《조명탄》이면 없음, 에너미는 설정 darkEnemies
   if (darkPenalty(actor, combat)) { mods.physHit = (mods.physHit ?? 0) - DARK_PENALTY; mods.elemHit = (mods.elemHit ?? 0) - DARK_PENALTY; p.dark = true; }
   for (const [k, v] of Object.entries(mods)) if (typeof p[k] === "number") p[k] += v;
   p.attackBonuses = [...(p.attackBonuses ?? []), ...bonuses];
@@ -126,7 +126,7 @@ function baseProfile(actor, combatant = null) {
     // [공포]·[마비] 판정 실패로 이번 턴 행동 불능이면 그 상태 이상 id(《명하노니》 when targetDisabled)
     disabledBy: combatant?.getFlag("nssq", "disabled") ?? null,
     // 이번 턴 「주행동 2회」를 얻었고 아직 첫 주행동 전(《인법: 분신》, 《다원 발도》 when selfExtraAction).
-    // 첫 주행동을 다른 것으로 쓰면 두 번째 주행동에는 거짓(07 #129)
+    // 첫 주행동을 다른 것으로 쓰면 두 번째 주행동에는 거짓(01 #129)
     extraActionTurn: !!combat?.started && combatant?.getFlag("nssq", "extraActionRound") === combat.round && Number(combatant?.getFlag("nssq", "extraAction") ?? 0) > 0,
     // F.O.E.·보스(《참수》 when targetNotBoss)
     boss: actor.type === "enemy" && (!!s.isFOE || !!s.isBoss),

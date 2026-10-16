@@ -1,5 +1,5 @@
 /**
- * 탐색 시간 경과(07 #164, 사용자 결정): 1시간(랜덤 던전 1턴 = 베이직 던전 1세그먼트)마다 파티의
+ * 탐색 시간 경과(01 #164, 사용자 결정): 1시간(랜덤 던전 1턴 = 베이직 던전 1세그먼트)마다 파티의
  *  - [독] 대미지 → 자연 회복(심도를 목표값으로 억제 방어 롤) → 심도 −1 (종료 페이즈와 같은 순서, engine/end-phase.mjs)
  *  - 오버히트 −1(원문 「랜덤 던전 1턴당·베이직 던전 1세그먼트당 1씩 회복」)
  * 상태 이상 결과는 종료 페이즈 카드와 같은 모양(flags.nssq.endPhase)이라 [적용]·[되돌리기]·「자동 적용」 설정을 그대로 따른다.
@@ -18,7 +18,7 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const exploring = () => !!game.settings.get("nssq", "fieldMapState")?.active || !!game.settings.get("nssq", "dungeon")?.active;
 
 /**
- * 전투 턴 누적(07 #165 사용자 결정, 원작 세계수의 미궁 「전투 1턴 = 2분, 30턴 = 1시간」): 던전 진행 중 전투 턴이 지날 때마다 1,
+ * 전투 턴 누적(01 #165 사용자 결정, 원작 세계수의 미궁 「전투 1턴 = 2분, 30턴 = 1시간」): 던전 진행 중 전투 턴이 지날 때마다 1,
  * 누적 30이면 시각 +1시간 하고 0으로. 던전을 나가거나(시작·종료) 야영하면 0(resetBattleTurns).
  * 상태 이상·오버히트는 전투의 종료 페이즈가 처리하므로 여기서는 시각(필드 지도·랜덤 던전)과 시간대, 어둠만 바꾼다
  */
@@ -86,7 +86,7 @@ export async function timePasses(hours = 1, { noAilments = false, noOverheat = f
     let conditions = s.conditions ?? [];
     const lines = [];
     for (let h = 1; h <= hours && ticking(conditions); h++) {
-      // 독을 건 자는 전투에 없으니 걸 때 기록한 【억제 공격】(07 #43)
+      // 독을 건 자는 전투에 없으니 걸 때 기록한 【억제 공격】(01 #43)
       const r = await endPhaseFor({ hp: { value: hp, max: s.hp?.max ?? hp }, tp: null, suppDef: p.suppDef, condResist: p.condResist, conditions, buffs: [] }, () => roll2d6(rolls));
       for (const e of r.log) lines.push(`${hours > 1 ? `${L("hour", { h })} ` : ""}${logLine(e)}`);
       hp = r.hp;

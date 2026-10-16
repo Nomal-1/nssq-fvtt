@@ -2,7 +2,7 @@
  * 스킬·아이템 사용 흐름 (03 §6, 단계 6-B)
  * 사용 가능 확인(engine/effects/usage) → 대상 결정(대상 문구) → 코스트 지불 → 발동 판정·효과 해석(engine/effects/resolve)
  * → 결과 카드 → 자동 적용 설정(autoApply)대로 적용(GM, 플레이어는 소켓으로 맡김)
- * 효과 데이터가 없는 스킬은 쓸 수 없다(07 #52).
+ * 효과 데이터가 없는 스킬은 쓸 수 없다(01 #52).
  */
 import { canUseSkill } from "../engine/effects/usage.mjs";
 import { hasVariants, resolveEffects, variantEffects } from "../engine/effects/resolve.mjs";
@@ -259,7 +259,7 @@ export function turnElementsOf(combat) {
 }
 
 /**
- * 「그 턴 이미 나온 〈염〉〈빙〉〈뇌〉를 부가」(attack addTurnElements, 《스피어 인볼브》): 둘 이상이면 하나를 고른다(07 #119)
+ * 「그 턴 이미 나온 〈염〉〈빙〉〈뇌〉를 부가」(attack addTurnElements, 《스피어 인볼브》): 둘 이상이면 하나를 고른다(01 #119)
  * 활성 GM 화면(후발 행동 실행)이면 소유자에게 채팅 카드, 아니면 그 화면의 창
  */
 async function pickTurnElement(combatant, item, effects, variant) {
@@ -306,7 +306,7 @@ export async function pickTarget(combat, combatant, kind, id, picked, spec) {
       targets = [picked, ...rest];
     }
   } else if (spec.scope === "pierce") {
-    // 「관통」: 고른 대상 + 다른 열에서 순서가 가장 가까운 1체. 가장 가까운 적이 여럿이면 그중에서 다시 고른다(07 #60)
+    // 「관통」: 고른 대상 + 다른 열에서 순서가 가장 가까운 1체. 가장 가까운 적이 여럿이면 그중에서 다시 고른다(01 #60)
     if (spec.first) {
       const first = combat.combatants.get(spec.first);
       targets = first ? [first, picked] : [picked];
@@ -396,13 +396,13 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
     userMods, weaponMod
   });
   const message = await post(targetCombatants.map((c) => ({ actor: c.actor, combatant: c })));
-  // 2회째: 기타 슬롯 무기로(성능·속성, 07 #125)
+  // 2회째: 기타 슬롯 무기로(성능·속성, 01 #125)
   if (twice) {
     await new Promise((r) => setTimeout(r, 300));
     const left = targetCombatants.filter(alive);
     if (left.length) await post(left.map((c) => ({ actor: c.actor, combatant: c })), twice.swap);
   }
-  // 「그 턴 주행동 2회를 모두 이 스킬로」(flag repeatExtraAction, 《다원 발도》): 두 번째 주행동을 묻지 않고 같은 스킬로(07 #129)
+  // 「그 턴 주행동 2회를 모두 이 스킬로」(flag repeatExtraAction, 《다원 발도》): 두 번째 주행동을 묻지 않고 같은 스킬로(01 #129)
   if (kind === "skill" && !free && !late && phase === "main" && effects.some((e) => e?.type === "flag" && e.flag === "repeatExtraAction")
     && Number(combatant.getFlag("nssq", "extraAction") ?? 0) > 0) await repeatExtraAction(combat, combatant, item, targetCombatants, post);
   if (kind === "skill" && actor.type === "enemy") await recordBestiary(actor, { skill: item.name });
@@ -645,7 +645,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const empty = (e) => !e.hits.length && !e.damage && !e.heal?.hp && !e.heal?.tp && !e.revive && !e.sleepBroken && !e.extra
     && ![e.inflicts, e.buffs, e.cures, e.resource, e.states, e.stances].some((l) => l?.length);
   for (let i = entries.length - 1; i >= 0; i--) if (empty(entries[i]) && entries.length > 1) entries.splice(i, 1);
-  // 「(SL)개까지 해제」(《리프레시》): 걸린 것이 더 많으면 사용자가 고른다(07 #164). 에너미는 걸린 순서대로
+  // 「(SL)개까지 해제」(《리프레시》): 걸린 것이 더 많으면 사용자가 고른다(01 #164). 에너미는 걸린 순서대로
   if (actor.type !== "enemy" && !r.failed) await pickCures(entries);
   // 아군 반동(《레기온 스러스트》 「자신 외 아군 전원」)·아군 회복(《블랙 사바스》 「아군 전체」)
   if (!r.failed && (r.allyRecoil || r.allyHeal) && combatant?.combat) {
@@ -683,7 +683,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   // 《딜레이 스탭》: 명중했으면 후발 추가 공격 예약(메인 페이즈 끝까지 대미지를 받으면 취소, combat/events.mjs)
   const lrep = r.results.get(user.id)?.lateRepeat;
   if (lrep && !r.failed && combatant?.combat) await combatant.setFlag("nssq", "lateRepeat", { ...lrep, name: item.name, img: item.img, sl: sys.sl ?? 1 });
-  // 《조명탄》: 사용자 편의 어둠 불이익을 그 전투 동안 없앤다(전투 플래그 lit, 07 #165)
+  // 《조명탄》: 사용자 편의 어둠 불이익을 그 전투 동안 없앤다(전투 플래그 lit, 01 #165)
   if (!r.failed && r.lightUp && combatant?.combat) {
     const side = actor.type === "enemy" ? "enemy" : "party";
     await combatant.combat.setFlag("nssq", "lit", { ...(combatant.combat.getFlag("nssq", "lit") ?? {}), [side]: true });
@@ -812,7 +812,7 @@ function entryLines(e, card) {
   // 타격마다 나눈 카드는 머리에 회차를 보이므로 줄마다 붙이지 않는다
   const multi = !card.group && (card.entries ?? []).reduce((n, x) => n + (x.hits?.length ?? 0), 0) > 1;
   // 부여·강화·확률 실패: 어느 명중에서 생겼는지(seq)가 있으면 그 공격 아래에
-  // 억제 판정: 대결이면 양쪽, 고정 목표값이면 방어 쪽 주사위·달성값(07 #47: 모르는 에너미의 값은 ?)
+  // 억제 판정: 대결이면 양쪽, 고정 목표값이면 방어 쪽 주사위·달성값(01 #47: 모르는 에너미의 값은 ?)
   //   (공격 카드처럼 주사위만 보이고 보정·달성값을 가린다. 보정이 보이면 달성값을 계산할 수 있다)
   const chk = (c, side = "user") => {
     const mask = side === "user" ? `data-mask="${esc(card.kind)}"` : "data-mask-def";
@@ -913,7 +913,7 @@ async function applyEntry(actor, e, sourceUuid, meta = {}) {
     if (x.resource === "hp") hp = x.set !== undefined ? x.set : hp + (x.delta ?? 0);
     if (x.resource === "tp" && tp !== null) tp = x.set !== undefined ? x.set : tp + (x.delta ?? 0);
   }
-  // 강제 이동(《떠올리기》): 판정에 실패했고 지금 그 열이 아니면. 파티는 빈 칸이 있을 때만(07 #130)
+  // 강제 이동(《떠올리기》): 판정에 실패했고 지금 그 열이 아니면. 파티는 빈 칸이 있을 때만(01 #130)
   let rowMove = null;
   for (const x of e.resource ?? []) {
     if (!x.forceRow || x.resisted || (s.row ?? "front") === x.forceRow) continue;
@@ -1049,7 +1049,7 @@ export function registerSkillUse() {
     const card = message.getFlag("nssq", "skillCard");
     if (!card) return;
     const el = html[0];
-    // 플레이어가 모르는 에너미가 쓴 스킬의 명중 달성값은 ?(07 #47)
+    // 플레이어가 모르는 에너미가 쓴 스킬의 명중 달성값은 ?(01 #47)
     if (!game.user.isGM) {
       const user = fromUuidSync(card.userUuid);
       if (user && !knowsEnemy(user)) el.querySelectorAll("[data-mask]").forEach((x) => { x.textContent = "?"; });

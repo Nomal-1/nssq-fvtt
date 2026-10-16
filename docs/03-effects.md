@@ -53,7 +53,7 @@
 | `element: [..]` | 처리 중인 공격의 속성 포함 |
 | `attackKind: "physical"/"elemental"` | 처리 중인 공격의 종류 |
 | `timeOfDay: "day"/"night"` | 탐색 시간대 |
-| `category: [..]` | 사용 중인 스킬의 분류(『백병』 등). 통상 공격은 분류 없음(07 #58) |
+| `category: [..]` | 사용 중인 스킬의 분류(『백병』 등). 통상 공격은 분류 없음(01 #58) |
 | `allyCountInRow: {name, gte}` | 같은 열에 특정 에너미 n체 이상(연계 공격) |
 
 ## 3. 효과 타입
@@ -62,7 +62,7 @@
 |---|---|---|
 | `attack` | `kind`(physical/elemental), `element`(생략 시 무기 기본 속성), `addElement`(무기 속성에 더함, 「〈염〉 속성을 부가한」), `failAtOrBelow`(명중 눈 합이 n 이하면 절대 실패), `randomFrom`(무작위 대상을 그 열에서만: front/back), `times`, `hitMod`, `diceMod`, `atkMod`, `atkMultiplier`, `random`, `uniqueTarget`, `onHit[]`, `bonuses[{when, hitMod?, diceMod?, atkMod?, element?}]`, `halfDamage` | 공격 롤 1회분(또는 times회) |
 | `heal` | `mode`(roll/fixed/full/percent), `bonus`/`amount`, `resource`(hp/tp), `revive` | 회복 롤 또는 고정 회복. \[전투 불능\] 대상은 `revive: true`인 효과만 회복(부활). 부활 효과가 있으면 쓰러진 아군도 대상으로 고를 수 있다. 『회복』 분류 스킬의 회복 롤에는 사용자의 `healDice` 보정이 더해진다 |
-| `inflict` | `condition`, `check: {type: fixed, target} | {type: contest, atkMod?} | {type: forced}` | 상태 이상·봉인 부여. forced: 저항 없이 반드시 걸고 심도만 사용자의 【억제 공격】 판정 달성값(07 #61). `condition`이 목록이면 `choose`(사용할 때 고르는 개수, 《스티그마》)·`randomPick`(무작위 1개, 《신기한 씨앗》), `selfSame: "atk"`(성공하면 자신도 같은 것을 자신의 달성값 심도로) |
+| `inflict` | `condition`, `check: {type: fixed, target} | {type: contest, atkMod?} | {type: forced}` | 상태 이상·봉인 부여. forced: 저항 없이 반드시 걸고 심도만 사용자의 【억제 공격】 판정 달성값(01 #61). `condition`이 목록이면 `choose`(사용할 때 고르는 개수, 《스티그마》)·`randomPick`(무작위 1개, 《신기한 씨앗》), `selfSame: "atk"`(성공하면 자신도 같은 것을 자신의 달성값 심도로) |
 | `drain` | `resource`(hp/tp), `mode`(half: 준 대미지 절반 / quarter: 1/4 / sixes: 대미지 다이스의 6 개수) | onHit 안에서: 그 명중으로 자신 회복(《음양검: 영흡명참》) |
 | `recoil` | `mode`(ones) | `toSelf`와 함께: 이 행동에서 굴린 대미지 다이스의 '1' 개수만큼 자신이 대미지(《싱글 스러스트》) |
 | `kill` | `check: {type: fixed, target, defMod?} | {type: contest, atkMod?}` | 즉사: 억제 방어 롤 실패면 【HP】 0(카드에 \[즉사\]) |
@@ -72,13 +72,13 @@
 | `immune` | `condition` | 타이밍 「상시」: 그 상태 이상·봉인에 걸리지 않음(「완전 내성: 독」). forced는 예외 |
 | `resource` | `resource`(hp/tp/fp), `delta` 또는 `set` | 직접 증감 |
 | `stance` | `effects[]`, `until`(endOfTurn/count), `count`, `holder`("target"이면 대상이 받음), `wait`(false면 대기 상태가 아닌 「그 턴 동안」 효과: 메인 행동을 한다, 《도발》·《캐슬링》). 안의 modifier·attackBonus(`resistMod`·`addElement` 포함)·flag·scopeChange는 그 턴 그 전투원에게 적용(combat/profile.mjs `applyTurnEffects`) | 대기 상태가 되며 대기 중 효과 부여. 사용자에게 한 번 저장(전투원 플래그 `stances`, `combat/` 쪽), 사용자는 메인 행동을 하지 않음(waiting). 턴 종료·횟수 소진·[스턴]·행동 불가 판정으로 해제. 『방어』 분류면 `guardCount` 만큼 횟수 + |
-| `trigger` | `on`, `effects[]`, `limit`(perAction/perTurn/perBattle), `optional`(「사용을 선언한다」: 버튼, 시트의 「자동」 토글이면 자동) | 반응형. 8-B에서 crit·selfHit 실행: crit은 크리티컬이 난 대상마다(`limit: perAction`이면 1번, 안의 `attack`은 추격 카드), 의무 selfHit은 공격 하나에 1번, 선언(optional) selfHit은 명중한 대상마다 버튼. 안의 `attackBonus.diceMod`는 그 명중에 다이스를 더 굴려 추가 대미지(07 #65). 자신에게 거는 효과는 `toSelf`. 판정 없는 확정 즉사는 `inflict` `condition: "death"`(《참수》). `bindInflicted`: 자신의 주행동 스킬로 적에게 봉인을 새로 걸었을 때(대상 = 그 적). when 키 `selfWeapon`(무기 종류 목록)·`singleTarget`·`skillKey`·`targetIn`. `useSkill`: 스킬을 고를 때 선언(when `category`, 안의 modifier를 그 사용에만, 《저주의 방울 소리》). attack 필드 `fixedDice`(대미지 다이스 수 직접). flag `openingCategory`(그 분류 주행동 스킬을 개막에, 《명군의 재능》)·`vanguard`(《돌격대장》). target 효과 `excludeSelf`(자신 이외 아군). 8-F: 그 밖의 on은 `combat/events.mjs`(enemyKO·damaged·hpLost·beforeKO는 카드 적용 뒤, conditionGained·buffGained는 적용 때, endPhase·openingPhase·battleWon은 페이즈, escapeCheck는 도주 창). `limit: perBattle`은 전투원 플래그 `usedTriggers`. `on`: crit / beforeKO / attacked / allyAttacked / rowAttacked / endPhase / openingPhase / battleStart / selfHit(자신의 공격이 명중했을 때 선언) / mainPhaseStart(메인 페이즈 개시 시 선언) / escapeCheck(도주 판정 때 선언) / hpLost(자신의 HP가 줄었을 때) / enemyKO(자신의 공격으로 적을 쓰러뜨렸을 때) / buffGained(강화 효과를 얻었을 때) / battleWon(전투에 승리했을 때) / damaged(적의 공격 롤로 대미지를 받았을 때) / conditionGained(자신에게 상태 이상·봉인이 걸리는 순간. when `condition`·`conditionKind`) / tokenGone(자신의 토큰이 사라졌을 때) |
+| `trigger` | `on`, `effects[]`, `limit`(perAction/perTurn/perBattle), `optional`(「사용을 선언한다」: 버튼, 시트의 「자동」 토글이면 자동) | 반응형. 8-B에서 crit·selfHit 실행: crit은 크리티컬이 난 대상마다(`limit: perAction`이면 1번, 안의 `attack`은 추격 카드), 의무 selfHit은 공격 하나에 1번, 선언(optional) selfHit은 명중한 대상마다 버튼. 안의 `attackBonus.diceMod`는 그 명중에 다이스를 더 굴려 추가 대미지(01 #65). 자신에게 거는 효과는 `toSelf`. 판정 없는 확정 즉사는 `inflict` `condition: "death"`(《참수》). `bindInflicted`: 자신의 주행동 스킬로 적에게 봉인을 새로 걸었을 때(대상 = 그 적). when 키 `selfWeapon`(무기 종류 목록)·`singleTarget`·`skillKey`·`targetIn`. `useSkill`: 스킬을 고를 때 선언(when `category`, 안의 modifier를 그 사용에만, 《저주의 방울 소리》). attack 필드 `fixedDice`(대미지 다이스 수 직접). flag `openingCategory`(그 분류 주행동 스킬을 개막에, 《명군의 재능》)·`vanguard`(《돌격대장》). target 효과 `excludeSelf`(자신 이외 아군). 8-F: 그 밖의 on은 `combat/events.mjs`(enemyKO·damaged·hpLost·beforeKO는 카드 적용 뒤, conditionGained·buffGained는 적용 때, endPhase·openingPhase·battleWon은 페이즈, escapeCheck는 도주 창). `limit: perBattle`은 전투원 플래그 `usedTriggers`. `on`: crit / beforeKO / attacked / allyAttacked / rowAttacked / endPhase / openingPhase / battleStart / selfHit(자신의 공격이 명중했을 때 선언) / mainPhaseStart(메인 페이즈 개시 시 선언) / escapeCheck(도주 판정 때 선언) / hpLost(자신의 HP가 줄었을 때) / enemyKO(자신의 공격으로 적을 쓰러뜨렸을 때) / buffGained(강화 효과를 얻었을 때) / battleWon(전투에 승리했을 때) / damaged(적의 공격 롤로 대미지를 받았을 때) / conditionGained(자신에게 상태 이상·봉인이 걸리는 순간. when `condition`·`conditionKind`) / tokenGone(자신의 토큰이 사라졌을 때) |
 | `counter` / `chase` | `when`, `attack{…}`, `count`, `on`, `onlyIfEvaded`(반격만), `optional` | 반격·추격(01 §3.11의 연쇄 금지 규칙은 엔진이 강제). `attack.copyElement`: 계기가 된 공격의 속성으로(`when.element`가 있으면 그중 공격에 든 것). 반격 `on`: attacked(자신) / rowAttacked(자신과 같은 열 아군) / frontRowAttacked(아군 전열). 추격 `on`: anyAttack(기본, 적에게 공격 롤) / allyAttack / rowAllyAttack / targetAttacked(대기 상태를 만든 스킬의 대상에게 공격, 《링크 오더》). 대기 상태 하나는 공격 하나에 추격·반격 각 1번. 상시 스킬에 직접 적으면 끝나지 않는 대기 상태처럼 본다(에너미 《바늘 지옥》). 실행: `combat/chase.mjs`(단계 8-B) |
-| `guard` | `mode`(half: 받는 대미지 반감 / cover: 대신 받기 / defense: 대상의 【방어】를 사용자 값으로 / redirect: 자신이 받는 공격을 대상에게 넘김 / reflect: 그 공격을 공격자에게 반사, 범위 공격은 1회분만 반사하고 나머지 무효 / nullify: 공격 완전 무효(턴당 1회)), `scope`(front/back/row: 자신이 있는 열/all/target/owner: 토큰의 배치자), `optional`(그때마다 할지 고름), `when` | 방어 스킬(대기 상태 안). 대기 상태의 `count`가 「누적 n회」, 《방패 마스터리》는 modifier `guardCount`로 그 횟수 +. 8-C 구현: `engine/guards.mjs`(`planGuards`) → `combat/guard.mjs`. scope target·row는 스킬을 쓸 때의 대상(`guardTargets`). 횟수는 07 #69·70 |
+| `guard` | `mode`(half: 받는 대미지 반감 / cover: 대신 받기 / defense: 대상의 【방어】를 사용자 값으로 / redirect: 자신이 받는 공격을 대상에게 넘김 / reflect: 그 공격을 공격자에게 반사, 범위 공격은 1회분만 반사하고 나머지 무효 / nullify: 공격 완전 무효(턴당 1회)), `scope`(front/back/row: 자신이 있는 열/all/target/owner: 토큰의 배치자), `optional`(그때마다 할지 고름), `when` | 방어 스킬(대기 상태 안). 대기 상태의 `count`가 「누적 n회」, 《방패 마스터리》는 modifier `guardCount`로 그 횟수 +. 8-C 구현: `engine/guards.mjs`(`planGuards`) → `combat/guard.mjs`. scope target·row는 스킬을 쓸 때의 대상(`guardTargets`). 횟수는 01 #69·70 |
 | `aura` | `path`, `value`, `scope` | 대기 상태 동안 아군에게 주는 보정(《삼색 가드》 내성 +SL 등) |
 | `provoke` | `count`, `to`("target"이면 스킬 대상 아군에게) | 그 턴 동안 단일 대상 공격을 누적 count회까지 자신으로(《도발》). 8-C부터 `stance`(`wait: false`, `until: count`) 안에 적는다 |
 | `delayed` | `at`(endPhase/nextTurnLate), `turns`, `effects[]` | 지연 공격. 스킬마다 발동 시점이 달라 `at`으로 지정. 8-D: 쓰면 코스트를 내고 전투원 플래그 `delayed`에 예약(턴을 넘어 남음), nextTurnLate는 turns턴 뒤 메인 페이즈 끝(후발 행동과 함께), endPhase는 종료 페이즈 처음. 예약 중엔 새 지연 공격 불가(`combat/late.mjs`) |
-| `token` | `tokenKey`, `turns`(지속 턴), `action{target, stats?, effects[]}`, `maxCount` | 토큰 배치. `action.target`은 대상 칸 문구, `action.stats`는 배치자의 어느 수치로 공격하는가(physical/elemental), `action.effects`는 매 턴 하는 행동 8-E: `combat/tokens.mjs`(배치자 전투원 플래그 `tokens`, 07 #77~81) |
+| `token` | `tokenKey`, `turns`(지속 턴), `action{target, stats?, effects[]}`, `maxCount` | 토큰 배치. `action.target`은 대상 칸 문구, `action.stats`는 배치자의 어느 수치로 공격하는가(physical/elemental), `action.effects`는 매 턴 하는 행동 8-E: `combat/tokens.mjs`(배치자 전투원 플래그 `tokens`, 01 #77~81) |
 | `overheat` | `turns` | 드라이브 계열(상시 modifier `overheatTurns`로 증감) |
 | `overheatReduce` | `turns` | 자신의 오버히트 단축(《샤프 에지》·《강제 배기》) |
 | `attackBonus` | `hitMod`, `diceMod`, `atkMod`, `critDice`(크리티컬 추가 다이스 +), `critUp`(『크리티컬 업』 취급), `when` | 타이밍 「상시」: 공격할 때마다 붙는 보정. `when`은 공격 시점(대상·공격 속성)으로 판정(《선봉의 공명》 「아직 행동하지 않은 적에 대한 공격」). 통상 공격·스킬 공격 모두 |
@@ -86,10 +86,10 @@
 | `target` | `side`(enemy/ally/self), `scope`(single/row/all/random), `count?` | 대상 칸 대신 쓸 대상 지정(대상이 「특수」인 스킬). `count`(n명)는 아직 한 명씩 |
 | `tokenRemove` | `category`(소환수/방진) | 사용자의 그 분류 토큰 1개(가장 오래된 것)를 없앤다(《비스트 귀환》·《야수의 우정》·《파진》). 토큰이 없으면 사용 불가 |
 | `repeat` | `scope`(same/row/back), `cost` | trigger on crit 안에서: 같은 공격을 다시(same 같은 대상·row 대상과 같은 열의 다른 적·back 후위 1체). cost면 그 스킬 코스트를 한 번 더. 반복·추격·반격에서는 안 남(《더블 액션》·《와이드 이펙트》·《페너트레이터》) |
-| `rallyChase` | `count`, `weapons`(무기 종류 목록) | 사용자 이외 아군 count명이 대상에게 통상 공격 추격(《일제 사격》·《난룡의 진》, 07 #88) |
-| `requireAllies` | `name`, `count`, `sameRow` | 연계 공격 조건(같은 열에 이름에 name이 든 동료 count마리 이상). 에너미 [랜덤 행동] 후보 판정, 참가자는 그 턴 행동 종료(07 #93) |
+| `rallyChase` | `count`, `weapons`(무기 종류 목록) | 사용자 이외 아군 count명이 대상에게 통상 공격 추격(《일제 사격》·《난룡의 진》, 01 #88) |
+| `requireAllies` | `name`, `count`, `sameRow` | 연계 공격 조건(같은 열에 이름에 name이 든 동료 count마리 이상). 에너미 [랜덤 행동] 후보 판정, 참가자는 그 턴 행동 종료(01 #93) |
 | `focus` | - | 그 턴 같은 편 단일 대상 스킬을 이 대상에게(《타기팅》, 전투 플래그 `focus`) |
-| `revenge` | - | 대기 상태 안에서: 받은 대미지를 세고 메인 페이즈 끝에 후발 공격(《리벤지 스마이트》, 07 #95) |
+| `revenge` | - | 대기 상태 안에서: 받은 대미지를 세고 메인 페이즈 끝에 후발 공격(《리벤지 스마이트》, 01 #95) |
 | `lateRepeat` | `diceMod` | onHit 안에서: 메인 페이즈 끝까지 대미지를 받지 않으면 같은 대상에 후발 공격(《딜레이 스탭》) |
 | `scopeChange` | `category`, `fromSide`, `fromScope`, `scope`, `side` | (「그 턴 동안」 stance 안) 그 분류 스킬의 대상 범위를 바꾼다(거너 폼·《아름다운 춤》·《스프레드 스로》·《승리의 맹세》·《일제 구호》) |
 | `hostileHitFail` | `value`, `when` | (stance 안) 상대 진영의 명중 판정 눈 value 이하 절대 실패(《인법: 아지랑이》) |
@@ -119,10 +119,10 @@ C2 보강: state `perAttack {selfDamage: "ones", tp}`(공격마다 대가, 《�
 C1 보강: `recoil.to: "allies"`(자신 외 아군 전원, 《레기온 스러스트》), attack `ignoreBuffs`(["defenseUp", "resistUp:pierce"], 《실버 애로》)·`addTurnElements`(그 턴 나온 속성 부가, 《스피어 인볼브》), attackBonus `resistLow`(【내성】 1·2를 하나 낮춤, 《특이점 정리》), target `count`(단일이면 n명을 한 번에, 열이면 그 열에서 n체), when `targetNotBoss`(에너미 `isFOE`·`isBoss`).
 | `flag` | `flag`, `value` | 규칙 스위치(타이밍 「상시」). `itemRevive`: 그 캐릭터가 쓰는 HP 회복 아이템에 부활 효과(《간이 소생》), `tokenMax`: 『소환수』 토큰 동시 유지 수(《백수의 왕기》), `campCookHp`·`campCookTp`·`campCookCure`: 캠프 때 HP·TP 회복 2배·상태 이상 회복(커먼 요리 스킬, 『조리기구 세트』 필요) |
 | `custom` | `handler` | 스키마 밖. `src/engine/custom/<handler>.mjs` |
-| `activeEvade` | `ability`(str/tec/vit/agi/luc), `bonus`, `vs`(physical/elemental, 생략 시 둘 다) | 타이밍 「수동」: 능동 회피. 대상 2D6+능력치 보너스+bonus vs 공격자 명중 달성값, 동점 회피(07 #51) |
+| `activeEvade` | `ability`(str/tec/vit/agi/luc), `bonus`, `vs`(physical/elemental, 생략 시 둘 다) | 타이밍 「수동」: 능동 회피. 대상 2D6+능력치 보너스+bonus vs 공격자 명중 달성값, 동점 회피(01 #51) |
 | `nullify` | — | 타이밍 「수동」: 그 공격의 대미지 0·추가 효과 무효(《완전 방어》), 반응한 캐릭터의 같은 편 대상 전부 |
 
-`attack.element`의 `"none"`은 무속성(내성 0). 대상 칸 「관통」은 고른 대상 + 다른 열에서 순서가 가장 가까운 1체, 가장 가까운 적이 여럿이면 그중에서 다시 고른다(07 #60). 데이터 검사: `node tools/effects-check.mjs` → `build/effects-report.md`(오류·todo/auto/partial/ok 집계·partial 목록·단계 8 대기 목록). `npm test`에도 들어 있다.
+`attack.element`의 `"none"`은 무속성(내성 0). 대상 칸 「관통」은 고른 대상 + 다른 열에서 순서가 가장 가까운 1체, 가장 가까운 적이 여럿이면 그중에서 다시 고른다(01 #60). 데이터 검사: `node tools/effects-check.mjs` → `build/effects-report.md`(오류·todo/auto/partial/ok 집계·partial 목록·단계 8 대기 목록). `npm test`에도 들어 있다.
 
 ## 4. 변환 예시 (현재 데이터 기준)
 
@@ -210,3 +210,14 @@ C1 보강: `recoil.to: "allies"`(자신 외 아군 전원, 《레기온 스러�
 - `once`: 한 번 실행하면 다시 안 나온다. `auto`: GM 확인 없이 바로 실행(아니면 GM에게 [실행]/[건너뛰기] 카드)
 - `text`: GM용 안내, `playerText`: 실행할 때 공개하는 문장
 - `actions[].type`: `message`{text} · `battle`{enemies: "가위풍뎅이*2, 숲쥐"} · `gather`{method, amount, rank}(표는 에어리어의 채집 표) · `trap`{kind, level} · `camp` · `check`(판정 요청 창) · `reveal`{area|passage} · `passage`{passage, state} · `foeRemove`{foe} · `move`{area}(시간 없음) · `choice`{text, options: [{label, actions}]}
+
+## 부록: 원문 해석에 맞춰 데이터를 고친 기록 (07에서 옮김)
+
+해설 문장이 애매하거나, 처음 넣은 효과 데이터가 해설과 어긋나 고친 것. 8-B분은 사용자 확인 완료(#62~68 확정).
+
+| 단계 | 스킬 | 전 | 후 | 이유 |
+|---|---|---|---|---|
+| 8-B | 프린스/프린세스 《링크 오더》 | 대상 아군 단일, 추격 on `allyAttacked` | 대상 **적** 단일 선언, 추격 on `targetAttacked`(그 적에게 〈염〉〈빙〉〈뇌〉 공격이 가해지면 그 속성으로) | 추격은 적을 공격하는 것. 「대상에게 공격이 가해지면」의 대상은 적으로 읽음(#62) |
+| 8-B | 시노비 《참수》 | 크리티컬 시 대상 【HP】를 0으로(resource set) | 크리티컬 시 판정 없는 확정 [즉사](`inflict` `death`) | 해설 「대상 즉사」. 카드에 [즉사]로 보이고 즉사 완전 내성도 본다. F.O.E.·보스 무효는 그대로 GM 확인(partial) |
+| 8-B | 에너미 고슴도치·맞서는 패왕수 《바늘 지옥》 | 반격만(partial: 쓰러져도 반격은 GM) | 반격에 `evenIfKO`(대미지를 받아 쓰러진 뒤에도 반격), ok | 해설 「이 반격은 자신이 쓰러진 경우에도 발동」. 통상 공격에는 반격 안 함(#66) |
+| 8-B | 모노노프 《무사의 마음가짐》·《사자분신》 | 명중 시 【TP】+1 / 【HP】+SL(받는 쪽 불명) | 자신에게(`toSelf`) | 해설 「자신의 TP 회복」. 그대로 두면 맞은 대상이 회복함 |

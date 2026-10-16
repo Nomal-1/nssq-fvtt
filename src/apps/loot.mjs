@@ -24,7 +24,7 @@ export async function startLoot(combat) {
   const foes = combat.combatants.filter((c) => c.actor?.type === "enemy" && (c.defeated || (c.actor.system.hp?.value ?? 0) <= 0));
   const party = combat.combatants.filter((c) => c.actor?.type === "character").map((c) => c.actor);
   const uniq = [...new Map(party.map((a) => [a.uuid, a])).values()];
-  // [석화] 중인 캐릭터의 탐색 스킬은 쓰지 않는다(07 #164)
+  // [석화] 중인 캐릭터의 탐색 스킬은 쓰지 않는다(01 #164)
   const skills = partyDropSkills(uniq.filter((a) => !isPetrified(a)).map((a) => ({
     uuid: a.uuid, name: a.name,
     skills: a.items.filter((i) => i.type === "skill").map((i) => ({ name: i.name, sl: i.system.sl ?? 0, effects: i.system.effects ?? [] }))
@@ -81,7 +81,7 @@ export async function openGatherDialog(defaults = {}) {
 export async function startGather({ method, amount, rank, table, party }) {
   const base = GATHER_AMOUNT[amount] ?? GATHER_AMOUNT.little;
   const mods = (a) => a.system.equipment?.mods ?? {};
-  // [석화] 중인 캐릭터의 탐색 스킬·도구는 쓰지 않는다(07 #164)
+  // [석화] 중인 캐릭터의 탐색 스킬·도구는 쓰지 않는다(01 #164)
   const able = party.filter((a) => !isPetrified(a));
   const extra = able.reduce((n, a) => n + (Number(mods(a)[METHOD_MOD[method]]) || 0) + (Number(mods(a)["gather.all"]) || 0), 0);
   const skills = partyDropSkills(able.map((a) => ({
@@ -177,7 +177,7 @@ function render(card) {
   }).join("");
   const adjNote = adj ? `<p class="notes">${esc(L(card.kind === "gather" ? "adjustHintGather" : "adjustHint", { n: card.range, by: card.rangeBy.join(", ") }))}</p><button type="button" data-loot="confirm"><i class="fas fa-check"></i> ${esc(L("confirm"))}</button>` : "";
   const extras = card.state === "adjust" ? "" : card.extras.map((x, j) => {
-    // 플레이어가 고르면 요청 → GM이 [주기]·[안 주기](07 #135). GM이 고르면 바로
+    // 플레이어가 고르면 요청 → GM이 [주기]·[안 주기](01 #135). GM이 고르면 바로
     const body = x.choice === "-" ? esc(L(x.requested ? "extraDenied" : "extraSkipped", { item: x.requested ?? "" })) : x.choice ? esc(L("extraTaken", { item: x.choice, n: x.count }))
       : x.requested ? `${esc(L("extraRequested", { item: x.requested, n: x.count }))} <button type="button" data-loot="grant" data-j="${j}" data-gm-only>${esc(L("grant"))}</button><button type="button" data-loot="deny" data-j="${j}" data-gm-only>${esc(L("deny"))}</button>`
       : x.choices.map((c) => `<button type="button" data-loot="extra" data-j="${j}" data-c="${esc(c)}">${esc(c)} ×${x.count}</button>`).join("")
