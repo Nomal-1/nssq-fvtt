@@ -1846,3 +1846,7 @@ body.nssq-mobile input, body.nssq-mobile select { min-height: 32px; font-size: 1
 body.nssq-chat-open #nssq-mobile-dock button[data-m="chat"] { background: #c9a74a; color: #102038; }
 /* 전투 화면: 여백 없이 */
 body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
+/* 떠 있는 버튼이 카드를 가리지 않게: 가로는 전투 화면 오른쪽에 버튼 줄 자리, 세로는 버튼을 위쪽(적 그림 쪽)으로 */
+#nssq-mobile-dock button { width: 40px; height: 40px; font-size: 1.05em; }
+@media (orientation: landscape) { body.nssq-mobile #nssq-battle { right: 50px !important; } }
+@media (orientation: portrait) { body.nssq-mobile #nssq-mobile-dock { top: 54px; bottom: auto; } }
