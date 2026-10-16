@@ -30,7 +30,7 @@ async function packIndex() {
   if (indexCache) return indexCache;
   const pack = game.packs.get("nssq.skills");
   if (!pack) return [];
-  const index = await pack.getIndex({ fields: ["sort", "system.classKey", "system.skillKey", "system.maxSL", "system.unique", "system.prereqs", "system.timing", "system.cost", "system.description"] });
+  const index = await pack.getIndex({ fields: ["sort", "system.classKey", "system.skillKey", "system.maxSL", "system.unique", "system.prereqs", "system.timing", "system.cost", "system.description", "system.part", "system.weaponReq"] });
   indexCache = [...index].filter((e) => e.type === "skill").sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
   return indexCache;
 }
