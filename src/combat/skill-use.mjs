@@ -635,13 +635,15 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     if (cur > 0) await actor.setFlag("nssq", "overheat", Math.max(0, cur - r.overheatReduce));
   }
 
+  // 행동 전체의 대미지로 정해지는 것(반동·《블랙 사바스》 회복)이 있으면 다시 굴리기를 두지 않는다(01 #26)
+  const noReroll = /"type":"(recoil|healFromDamage)"/.test(JSON.stringify(effectsAll));
   const entries = [...r.results.values()].map((x) => ({
     uuid: actorOf.get(x.id)?.uuid ?? null, name: x.name,
     damage: x.damage + (extra?.[actorOf.get(x.id)?.uuid]?.add ?? 0), extra: extra?.[actorOf.get(x.id)?.uuid] ?? null, heal: x.heal, inflicts: x.inflicts, buffs: x.buffs, cures: x.cures, resource: x.resource,
     states: x.states.map((st) => ({ ...st, name: st.name || item.name })),
     sleepBroken: x.sleepBroken, revive: !!x.revive, command: x.command ?? null,
     stances: (x.stances ?? []).map((st) => ({ ...st, name: item.name, key: sys.key ?? item.name })),
-    hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, rolled: h.hitCheck?.rolled, fpDice: h.hitCheck?.fpDice ?? 0, rerolled: false, params: h.params ?? null, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist, raw: h.rawDamage ?? 0, halves: Number(!!h.guarded) + Number(!!h.halved) + Number(!!h.guardHalf), elements: h.elements ?? [] })),
+    hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, rolled: h.hitCheck?.rolled, fpDice: h.hitCheck?.fpDice ?? 0, rerolled: false, params: noReroll ? null : h.params ?? null, onHit: h.onHit ?? null, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist, raw: h.rawDamage ?? 0, halves: Number(!!h.guarded) + Number(!!h.halved) + Number(!!h.guardHalf), elements: h.elements ?? [] })),
     applied: false, before: null,
     // 수동 반응(단계 6-C): 명중한 공격이 있고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
     reaction: pendingReaction(actorOf.get(x.id), x.hits.find((h) => h.hit)?.kind ?? "physical", x.hits.some((h) => h.hit))
@@ -766,8 +768,12 @@ function splitHits(card, random) {
   const roundOf = (e, seq) => (random ? seqs.indexOf(seq) : (e.hits ?? []).findIndex((h) => h.seq === seq)) + 1;
   const hasRest = (e) => !!(e.heal?.hp || e.heal?.tp || e.states?.length || e.cures?.length
     || [e.inflicts, e.buffs, e.resource].some((l) => (l ?? []).some((x) => !x.seq)));
-  const part = (e, h, last) => {
-    const pick = (list) => (list ?? []).filter((x) => (x.seq ? x.seq === h?.seq : last));
+  // 회차(seq) → 카드 번호: 명중 없는 줄(사용자 자신에게 오는 명중 시 효과 등)을 그 명중의 카드에 싣는다
+  const cardOfSeq = new Map();
+  for (const e of entries) (e.hits ?? []).forEach((h, i) => { if (h.seq) cardOfSeq.set(h.seq, random ? seqs.indexOf(h.seq) : i); });
+  const seqItemsAt = (e, k) => [e.inflicts, e.buffs, e.resource].some((l) => (l ?? []).some((x) => x.seq && cardOfSeq.get(x.seq) === k));
+  const part = (e, h, last, k) => {
+    const pick = (list) => (list ?? []).filter((x) => (x.seq ? (h ? x.seq === h.seq : cardOfSeq.get(x.seq) === k) : last));
     const firstHit = (e.hits ?? []).find((x) => x.hit);
     return {
       ...e, hits: h ? [h] : [], damage: h?.hit ? h.final ?? 0 : 0,
@@ -787,7 +793,7 @@ function splitHits(card, random) {
     const list = [];
     for (const e of entries) {
       const h = hitAt(e, k);
-      if (h || (last && hasRest(e))) list.push(part(e, h, last));
+      if (h || (last && hasRest(e)) || (!e.hits?.length && seqItemsAt(e, k))) list.push(part(e, h, last, k));
     }
     out.push({
       ...card, entries: list, applied: false, group: { id, index: k + 1, count, random: !!random },

@@ -1425,7 +1425,6 @@
       "gmNeeded": "GM 판단 필요: {what}",
       "gmScope": "대상 범위를 해석하지 못했다(단일로 처리)",
       "type": {
-        "rerollHit": "다시 굴려 새로 명중한 공격의 추가 효과(다시 계산하지 않음)",
         "stance": "대기 상태",
         "delayed": "지연 공격",
         "counter": "반격",

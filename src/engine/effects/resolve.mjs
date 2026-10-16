@@ -66,7 +66,7 @@ export const hasHitCheck = (effects) => (effects ?? []).some((e) => e.type === "
  * @param {string} [p.category] 스킬 분류(『회복』이면 회복 롤에 사용자의 healDice를 더한다)
  * @param {"skill"|"item"} [p.source] 아이템이면 사용자의 itemHeal(《이피션트》)·itemRevive(《간이 소생》)
  */
-export async function resolveEffects({ effects, sl = 1, user, targets = [], pool = [], mainAction = false, rollDice, rng = Math.random, ctx = {}, variant = null, category = "", source = "skill" }) {
+export async function resolveEffects({ effects, sl = 1, user, targets = [], pool = [], mainAction = false, rollDice, rng = Math.random, ctx = {}, variant = null, category = "", source = "skill", lastHit: givenHit = null }) {
   effects = variantEffects(effects, variant);
   const out = { activation: null, fpGain: 0, failed: false, results: new Map(), gm: [], deferred: [], overheat: 0, overheatReduce: 0 };
   const res = (t) => {
@@ -114,7 +114,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
   // 대기 상태는 사용자에게 한 번(대상이 여럿이어도). holder: "target"이면 대상마다(《노부시의 진형》)
   let stanceDone = false;
   // onHit 처리 중인 명중(흡수 drain이 대미지·주사위를 본다)
-  let lastHit = null;
+  // givenHit: 다시 굴려 새로 명중한 공격의 onHit만 계산할 때 그 명중(01 #26, combat/fp-dice.mjs)
+  let lastHit = givenHit;
   const fpTake = () => {
     const k = Math.min(Math.max(0, Number(user.fpDice) || 0), fpLeft);
     fpLeft -= k;
@@ -160,7 +161,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     const result = await resolveAttack({ ...params, fpDice: fpTake(), rollDice });
     hitChecks.push(result);
     // seq: 이 행동 안에서 몇 번째 공격인가(다회 공격을 카드에 순서대로 보인다)
-    const hitRow = { ...result, elements, kind, seq: ++seq, params };
+    const hitRow = { ...result, elements, kind, seq: ++seq, params, onHit: e.onHit?.length ? e.onHit : null };
     r.hits.push(hitRow);
     if (result.hit) {
       r.damage += result.finalDamage ?? 0;
@@ -171,13 +172,18 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       if (e.onHit?.length) {
         lastHit = result;
         // 이 명중으로 생긴 부여·강화에 회차를 붙인다
-        const n0 = r.inflicts.length;
-        const b0 = r.buffs.length;
-        const c0 = r.resource.length;
+        // 사용자 자신에게 오는 것(toSelf: 《무사의 마음가짐》 【TP】 +1 등)도 회차를 붙인다(다시 굴려 빗나가면 함께 없앤다, 01 #26)
+        // (사용자 줄은 없으면 만들지 않는다: 아무것도 오지 않으면 카드에 빈 줄이 생기지 않게)
+        const lens = (x) => (x ? [x.inflicts.length, x.buffs.length, x.resource.length] : [0, 0, 0]);
+        const before = new Map([[t.id, lens(r)], [user.id, lens(out.results.get(user.id))]]);
         await run(e.onHit, [t]);
-        for (const x of r.resource.slice(c0)) x.seq = hitRow.seq;
-        for (const x of r.inflicts.slice(n0)) x.seq = hitRow.seq;
-        for (const x of r.buffs.slice(b0)) x.seq = hitRow.seq;
+        for (const [id, [n0, b0, c0]] of before) {
+          const x = out.results.get(id);
+          if (!x) continue;
+          for (const y of x.resource.slice(c0)) y.seq = hitRow.seq;
+          for (const y of x.inflicts.slice(n0)) y.seq = hitRow.seq;
+          for (const y of x.buffs.slice(b0)) y.seq = hitRow.seq;
+        }
       }
     }
   };

@@ -4,6 +4,9 @@
  *   굴린 것 중 높은 2개를 쓰고, 늘린 판정은 【FP】를 얻지 않는다(엔진 resolveAttack fpDice)
  * - 다시 굴리기: 공격 카드의 명중 줄마다 [FP로 다시 굴리기](【FP】 1, 판정당 1번). 그 대상의 명중·대미지를 새로 굴린다.
  *   이미 적용했으면 되돌리고 다시 굴린 뒤, 자동 적용 「즉시」면 다시 적용한다. 활성 GM이 처리(소켓)
+ *   스킬 카드: 빗나감 → 명중이면 그 공격의 명중 시 효과(onHit: 부여·강화·흡수·자신 【TP】 등)를 이제 계산해 붙이고,
+ *   명중 → 빗나감이면 그 명중에서 생긴 것(같은 회차 seq, 대상·사용자 모두)을 뺀다.
+ *   행동 전체의 대미지로 정해지는 효과(반동·《블랙 사바스》 회복)가 있는 스킬은 버튼을 두지 않는다(skill-use.mjs noReroll)
  */
 import { resolveAttack } from "../engine/combat.mjs";
 import { REROLL_COST } from "../engine/check.mjs";
@@ -117,9 +120,10 @@ async function rerollSkill(message, index, seq) {
     rolled: r.hitCheck.rolled, fpDice: 0, rerolled: true
   });
   fe.damage = fe.hits.reduce((n, x) => n + (x.hit ? x.final ?? 0 : 0), 0) + (fe.extra?.add ?? 0);
-  // 빗나가게 되면 그 명중에서 생긴 추가 효과(seq)를 없앤다. 새로 명중하면 추가 효과는 다시 계산하지 않으므로 GM 판단
-  if (wasHit && !r.hit) for (const k of ["inflicts", "buffs", "resource"]) fe[k] = (fe[k] ?? []).filter((x) => x.seq !== seq);
-  if (!wasHit && r.hit) fresh.gm = [...new Set([...(fresh.gm ?? []), "rerollHit"])];
+  // 빗나가게 되면 그 명중에서 생긴 것(같은 회차, 대상·사용자 모두)을 없앤다
+  if (wasHit && !r.hit) for (const x of fresh.entries) for (const k of ["inflicts", "buffs", "resource"]) x[k] = (x[k] ?? []).filter((y) => y.seq !== seq);
+  // 새로 명중하면 그 공격의 명중 시 효과를 지금 계산한다
+  if (!wasHit && r.hit && fh.onHit?.length) await addOnHit(fresh, fe, fh, r, user, rolls);
   if (!r.hit) fe.reaction = null;
   else if (!fe.reaction) {
     const target = fe.uuid ? await fromUuid(fe.uuid) : null;
@@ -129,6 +133,40 @@ async function rerollSkill(message, index, seq) {
   await message.update({ content: renderSkillCard(fresh), "flags.nssq.skillCard": fresh });
   const { hasPendingReaction } = await import("./reaction.mjs");
   if (autoApplyMode() === "auto" && !hasPendingReaction(fresh.entries) && (!fresh.group || fresh.group.index === fresh.group.count)) await applySkillCard(message.id);
+}
+
+/** 다시 굴려 새로 명중한 공격의 onHit(부여·강화·흡수 등)를 계산해 카드에 붙인다(회차 seq를 달아 다음에 빼거나 적용할 수 있게) */
+async function addOnHit(card, fe, fh, r, user, rolls) {
+  const { unitProfile } = await import("./skill-use.mjs");
+  const { resolveEffects } = await import("../engine/effects/resolve.mjs");
+  const combat = game.combat;
+  const cOf = (a) => combat?.combatants.find((c) => c.actor?.uuid === a?.uuid) ?? null;
+  const target = fe.uuid ? await fromUuid(fe.uuid) : null;
+  if (!target || !user) return;
+  const u = unitProfile(user, cOf(user));
+  const t = unitProfile(target, cOf(target));
+  const out = await resolveEffects({
+    effects: fh.onHit, sl: card.sl ?? 1, user: u, targets: [t], mainAction: false, lastHit: r,
+    rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(), category: card.category ?? "", source: card.kind ?? "skill"
+  });
+  const tag = (list) => (list ?? []).map((x) => ({ ...x, seq: fh.seq }));
+  const merge = (entry, x) => {
+    if (!x) return;
+    entry.inflicts = [...(entry.inflicts ?? []), ...tag(x.inflicts)];
+    entry.buffs = [...(entry.buffs ?? []), ...tag(x.buffs)];
+    entry.resource = [...(entry.resource ?? []), ...tag(x.resource)];
+  };
+  merge(fe, out.results.get(t.id));
+  // 사용자 자신에게 오는 것(toSelf·흡수): 사용자 줄에(없으면 만든다)
+  const mine = out.results.get(u.id);
+  if (mine && u.id !== t.id && (mine.inflicts?.length || mine.buffs?.length || mine.resource?.length)) {
+    let ue = card.entries.find((x) => x.uuid === user.uuid);
+    if (!ue) {
+      ue = { uuid: user.uuid, name: card.userName ?? user.name, damage: 0, heal: { hp: 0, tp: 0 }, inflicts: [], buffs: [], cures: [], resource: [], states: [], stances: [], hits: [], applied: false, before: null, reaction: null };
+      card.entries.push(ue);
+    }
+    merge(ue, mine);
+  }
 }
 
 const queue = { p: Promise.resolve() };
