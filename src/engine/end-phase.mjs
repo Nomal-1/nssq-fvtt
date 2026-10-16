@@ -2,7 +2,7 @@
  * 종료 페이즈 (01 §3.12). Foundry 비의존 순수 함수. 순서 고정:
  *  1. 지연 공격(단계 8 전까지 없음)
  *  2. [독] 대미지: 독을 건 자의 【억제 공격】(전투에 없으면 걸 때 기록한 값, 01 #43). 방어·내성 무시(01 #8)
- *  3. "종료 페이즈에 ~" 효과: HP·TP 리젠
+ *  3. "종료 페이즈에 ~" 효과: HP·TP 리젠, 그리모어 유지비(【TP】 −SL, 0에서 멈춤, 07 #168)
  *  4. [석화]·[스턴]을 제외한 상태 이상·봉인 자연 회복: 2D6 + 【억제 방어】 ≥ 심도면 소멸
  *  5. 강화·약화 남은 턴 −1, 0이면 소멸
  *  6. [석화]·[스턴]을 제외한 남은 상태 이상·봉인의 심도 −1(0에서 멈춤, 01 #38). [스턴]은 그 턴에 끝나므로 소멸
@@ -11,7 +11,7 @@ import { CONDITIONS } from "./conditions.mjs";
 import { buffMods, tickBuffs } from "./buffs.mjs";
 import { evaluateCheck } from "./check.mjs";
 
-export const END_STEPS = ["delayed", "poison", "effects", "recovery", "buffs", "depth"];
+export const END_STEPS = ["delayed", "poison", "effects", "upkeep", "recovery", "buffs", "depth"];
 
 /** 자연 회복·심도 감소 대상: 심도를 기록하는 것([석화]·[스턴] 제외) */
 const hasDepth = (c) => !!CONDITIONS[c.id]?.depth;
@@ -24,6 +24,7 @@ const hasDepth = (c) => !!CONDITIONS[c.id]?.depth;
  * @param {number} u.suppDef
  * @param {object[]} u.conditions
  * @param {object[]} u.buffs
+ * @param {{tp: number, name: string}} [u.upkeep] 그리모어 유지비(종료 페이즈마다 【TP】 −tp)
  * @param {(c: object) => number} [u.poisonPower] [독]의 대미지(건 자의 【억제 공격】). 없으면 기록값
  * @param {() => number[]|Promise<number[]>} roll2d6 자연 회복 굴림
  * @returns {Promise<{hp: number, tp: number|null, conditions: object[], buffs: object[], log: object[]}>}
@@ -55,6 +56,12 @@ export async function endPhaseFor(u, roll2d6) {
     const before = tp;
     tp = Math.min(u.tp?.max ?? tp, tp + regen.tp);
     log.push({ step: "effects", resource: "tp", amount: tp - before, tp });
+  }
+  // 그리모어 유지비(쓰러져 있으면 내지 않는다)
+  if (hp > 0 && tp !== null && u.upkeep?.tp > 0) {
+    const before = tp;
+    tp = Math.max(0, tp - u.upkeep.tp);
+    log.push({ step: "upkeep", name: u.upkeep.name ?? "", amount: before - tp, tp });
   }
 
   // 4. 자연 회복

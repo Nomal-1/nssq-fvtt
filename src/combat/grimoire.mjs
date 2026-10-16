@@ -5,7 +5,7 @@
  * - 활성화 중, 기록한 스킬이 메인·서브 클래스(와 커먼)로 얻을 수 없는 스킬이고 같은 이름 스킬이 없으면,
  *   그 스킬의 복사본(플래그 nssq.grimoireOf = 그리모어 id)을 캐릭터에 넣는다 → 전투·판정은 습득한 스킬과 똑같이 처리
  * - 복사본은 SL 예산·스킬 트리 선행조건·길드 반환에 치지 않는다(isGrimoireSkill)
- * - 디버프는 미정(사용자 「더 고민」)
+ * - 대가: 전투 중 종료 페이즈마다 【TP】 −SL(사용자 결정 D, combat/turn-status.mjs grimoireUpkeep)
  */
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Grimoire.${k}`, d) : game.i18n.localize(`NSSQ.Grimoire.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);

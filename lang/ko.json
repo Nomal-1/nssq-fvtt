@@ -1256,6 +1256,7 @@
       "logPoison": "[독] 실대미지 {n}",
       "logRegenHp": "HP 리젠 +{n}",
       "logRegenTp": "TP 리젠 +{n}",
+      "logUpkeep": "그리모어 《{name}》 유지 TP −{n}",
       "logRecovered": "[{label}] 자연 회복: {dice}+억제 방어 = {total} ≥ 심도 {depth} → 회복",
       "logNotRecovered": "[{label}] 자연 회복 실패: {dice}+억제 방어 = {total} < 심도 {depth}",
       "logExpired": "{label} 효과가 끝났다",

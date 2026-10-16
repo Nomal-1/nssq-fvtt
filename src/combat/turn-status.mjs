@@ -164,11 +164,18 @@ export function logLine(entry) {
   switch (entry.step) {
     case "poison": return L("logPoison", { n: entry.damage });
     case "effects": return L(entry.resource === "hp" ? "logRegenHp" : "logRegenTp", { n: entry.amount });
+    case "upkeep": return L("logUpkeep", { name: entry.name, n: entry.amount });
     case "recovery": return L(entry.success ? "logRecovered" : "logNotRecovered", { label: conditionName(entry.id), dice: entry.dice.join("+"), total: entry.total, depth: entry.depth });
     case "buffs": return entry.expired ? L("logExpired", { label: buffLabel(entry.expired) }) : L("logTick", { label: buffLabel(entry.buff), from: entry.from, to: entry.to });
     case "depth": return entry.ended ? L("logStunEnd") : L("logDepth", { label: conditionName(entry.id), from: entry.from, to: entry.to });
     default: return "";
   }
+}
+
+/** 그리모어 유지비(07 #168, 사용자 결정 D): 기록 스킬이 들어가 있으면 종료 페이즈마다 【TP】 −SL */
+function grimoireUpkeep(actor) {
+  const sk = actor.type === "character" ? actor.items.find((i) => i.flags?.nssq?.grimoireOf) : null;
+  return sk ? { tp: sk.system.sl ?? 1, name: sk.name } : null;
 }
 
 /** 종료 페이즈 처리(활성 GM): 결과 카드. autoApply=auto면 바로 적용 */
@@ -185,7 +192,8 @@ export async function runEndPhase(combat, { delayed = 0 } = {}) {
     const r = await endPhaseFor({
       hp: s.hp, tp: a.type === "character" ? s.tp : null, suppDef: p.suppDef, condResist: p.condResist,
       conditions: s.conditions ?? [], buffs: s.buffs ?? [],
-      poisonPower: (cond) => poisonPower(combat, cond)
+      poisonPower: (cond) => poisonPower(combat, cond),
+      upkeep: grimoireUpkeep(a)
     }, () => roll2d6(rolls));
     if (!r.log.length) continue;
     updates.push({

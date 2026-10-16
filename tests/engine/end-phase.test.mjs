@@ -52,3 +52,15 @@ describe("종료 페이즈", () => {
     expect(r2.hp).toBe(9);
   });
 });
+
+describe("그리모어 유지비(07 #168)", () => {
+  it("종료 페이즈마다 【TP】 −SL, 0에서 멈춤", async () => {
+    const r = await endPhaseFor({ hp: { value: 10, max: 10 }, tp: { value: 2, max: 20 }, suppDef: 0, conditions: [], buffs: [], upkeep: { tp: 3, name: "더블 스트라이크" } }, () => [1, 1]);
+    expect(r.tp).toBe(0);
+    expect(r.log).toContainEqual({ step: "upkeep", name: "더블 스트라이크", amount: 2, tp: 0 });
+  });
+  it("쓰러져 있으면 내지 않는다", async () => {
+    const r = await endPhaseFor({ hp: { value: 0, max: 10 }, tp: { value: 5, max: 20 }, suppDef: 0, conditions: [], buffs: [], upkeep: { tp: 2 } }, () => [1, 1]);
+    expect(r.tp).toBe(5);
+  });
+});
