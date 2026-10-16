@@ -64,7 +64,7 @@ export async function runItemUse(actor, item, { combatant = null, targets = [] }
     case "analyze": {
       const t = targets[0];
       if (!t?.actor) return null;
-      requestGm({ action: "analyze", uuid: t.actor.uuid });
+      await requestGm({ action: "analyze", uuid: t.actor.uuid });
       return note(actor, esc(L("analyze", { name: actor.name, item: item.name, target: t.name })));
     }
     case "dissect": {
