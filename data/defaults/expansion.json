@@ -572,6 +572,286 @@
     "foodstuff": false,
     "rank": 0
    }
+  },
+  {
+   "name": "독향",
+   "type": "consumable",
+   "img": "icons/svg/poison.svg",
+   "system": {
+    "key": "ex.독향",
+    "price": 50,
+    "effects": [
+     {
+      "type": "target",
+      "side": "enemy",
+      "scope": "single"
+     },
+     {
+      "type": "craftRank",
+      "materials": [
+       "풀",
+       "이빨"
+      ]
+     },
+     {
+      "type": "inflict",
+      "condition": "poison",
+      "check": {
+       "type": "fixed",
+       "target": "13+R"
+      }
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>메인 페이즈에 사용. 거리와 관계없이 적 1체에게 목표값 13+R의 억제 방어 롤, 실패하면 [독](심도 = 목표값). 사용자 능력치와 관계없음, 봉인 제한 없음. 상점에서 풀·이빨 중 소재 1개를 골라 만들고, 그 소재의 R이 향의 R이 된다(가격 50G×R²).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "rank": 0
+   }
+  },
+  {
+   "name": "마비향",
+   "type": "consumable",
+   "img": "icons/svg/daze.svg",
+   "system": {
+    "key": "ex.마비향",
+    "price": 50,
+    "effects": [
+     {
+      "type": "target",
+      "side": "enemy",
+      "scope": "single"
+     },
+     {
+      "type": "craftRank",
+      "materials": [
+       "덩굴",
+       "실"
+      ]
+     },
+     {
+      "type": "inflict",
+      "condition": "paralyze",
+      "check": {
+       "type": "fixed",
+       "target": "13+R"
+      }
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>메인 페이즈에 사용. 거리와 관계없이 적 1체에게 목표값 13+R의 억제 방어 롤, 실패하면 [마비](심도 = 목표값). 사용자 능력치와 관계없음, 봉인 제한 없음. 상점에서 덩굴·실 중 소재 1개를 골라 만들고, 그 소재의 R이 향의 R이 된다(가격 50G×R²).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "rank": 0
+   }
+  },
+  {
+   "name": "수면향",
+   "type": "consumable",
+   "img": "icons/svg/daze.svg",
+   "system": {
+    "key": "ex.수면향",
+    "price": 50,
+    "effects": [
+     {
+      "type": "target",
+      "side": "enemy",
+      "scope": "single"
+     },
+     {
+      "type": "craftRank",
+      "materials": [
+       "꽃",
+       "모피"
+      ]
+     },
+     {
+      "type": "inflict",
+      "condition": "sleep",
+      "check": {
+       "type": "fixed",
+       "target": "13+R"
+      }
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>메인 페이즈에 사용. 거리와 관계없이 적 1체에게 목표값 13+R의 억제 방어 롤, 실패하면 [수면](심도 = 목표값). 사용자 능력치와 관계없음, 봉인 제한 없음. 상점에서 꽃·모피 중 소재 1개를 골라 만들고, 그 소재의 R이 향의 R이 된다(가격 50G×R²).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "rank": 0
+   }
+  },
+  {
+   "name": "혼란향",
+   "type": "consumable",
+   "img": "icons/svg/daze.svg",
+   "system": {
+    "key": "ex.혼란향",
+    "price": 50,
+    "effects": [
+     {
+      "type": "target",
+      "side": "enemy",
+      "scope": "single"
+     },
+     {
+      "type": "craftRank",
+      "materials": [
+       "열매",
+       "날개·깃털"
+      ]
+     },
+     {
+      "type": "inflict",
+      "condition": "confuse",
+      "check": {
+       "type": "fixed",
+       "target": "13+R"
+      }
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>메인 페이즈에 사용. 거리와 관계없이 적 1체에게 목표값 13+R의 억제 방어 롤, 실패하면 [혼란](심도 = 목표값). 사용자 능력치와 관계없음, 봉인 제한 없음. 상점에서 열매·날개·깃털 중 소재 1개를 골라 만들고, 그 소재의 R이 향의 R이 된다(가격 50G×R²).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "rank": 0
+   }
+  },
+  {
+   "name": "공포향",
+   "type": "consumable",
+   "img": "icons/svg/daze.svg",
+   "system": {
+    "key": "ex.공포향",
+    "price": 50,
+    "effects": [
+     {
+      "type": "target",
+      "side": "enemy",
+      "scope": "single"
+     },
+     {
+      "type": "craftRank",
+      "materials": [
+       "뼈",
+       "발톱"
+      ]
+     },
+     {
+      "type": "inflict",
+      "condition": "fear",
+      "check": {
+       "type": "fixed",
+       "target": "13+R"
+      }
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>메인 페이즈에 사용. 거리와 관계없이 적 1체에게 목표값 13+R의 억제 방어 롤, 실패하면 [공포](심도 = 목표값). 사용자 능력치와 관계없음, 봉인 제한 없음. 상점에서 뼈·발톱 중 소재 1개를 골라 만들고, 그 소재의 R이 향의 R이 된다(가격 50G×R²).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "rank": 0
+   }
+  },
+  {
+   "name": "맹목향",
+   "type": "consumable",
+   "img": "icons/svg/daze.svg",
+   "system": {
+    "key": "ex.맹목향",
+    "price": 50,
+    "effects": [
+     {
+      "type": "target",
+      "side": "enemy",
+      "scope": "single"
+     },
+     {
+      "type": "craftRank",
+      "materials": [
+       "결정",
+       "가지"
+      ]
+     },
+     {
+      "type": "inflict",
+      "condition": "blind",
+      "check": {
+       "type": "fixed",
+       "target": "13+R"
+      }
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>메인 페이즈에 사용. 거리와 관계없이 적 1체에게 목표값 13+R의 억제 방어 롤, 실패하면 [맹목](심도 = 목표값). 사용자 능력치와 관계없음, 봉인 제한 없음. 상점에서 결정·가지 중 소재 1개를 골라 만들고, 그 소재의 R이 향의 R이 된다(가격 50G×R²).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "rank": 0
+   }
+  },
+  {
+   "name": "저주향",
+   "type": "consumable",
+   "img": "icons/svg/daze.svg",
+   "system": {
+    "key": "ex.저주향",
+    "price": 50,
+    "effects": [
+     {
+      "type": "target",
+      "side": "enemy",
+      "scope": "single"
+     },
+     {
+      "type": "craftRank",
+      "materials": [
+       "보석",
+       "가죽"
+      ]
+     },
+     {
+      "type": "inflict",
+      "condition": "curse",
+      "check": {
+       "type": "fixed",
+       "target": "13+R"
+      }
+     }
+    ],
+    "quantity": 1,
+    "description": "<p>메인 페이즈에 사용. 거리와 관계없이 적 1체에게 목표값 13+R의 억제 방어 롤, 실패하면 [저주](심도 = 목표값). 사용자 능력치와 관계없음, 봉인 제한 없음. 상점에서 보석·가죽 중 소재 1개를 골라 만들고, 그 소재의 R이 향의 R이 된다(가격 50G×R²).</p>",
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "materials": [],
+    "foodstuff": false,
+    "rank": 0
+   }
   }
  ]
 }

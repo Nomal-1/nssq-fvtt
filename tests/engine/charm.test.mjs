@@ -22,3 +22,16 @@ describe("기동부적(07 #168): 소재 R로 고정 명중·대미지 다이스"
     expect(h.params.diceOverride).toBe(15);
   });
 });
+
+describe("향(07 #168): 소재 R로 고정 목표값 부여", () => {
+  const incense = [{ type: "target", side: "enemy", scope: "single" }, { type: "craftRank", materials: ["꽃"] }, { type: "inflict", condition: "sleep", check: { type: "fixed", target: "13+R" } }];
+  it("R3: 목표값 16, 실패하면 심도 16", async () => {
+    const out = await resolveEffects({ effects: incense, sl: 1, rank: 3, user, targets: [{ ...foe, suppDef: 2 }], rollDice: seq([3, 4]), rng: () => 0.5, source: "item" });
+    const x = out.results.get("e").inflicts[0];
+    expect(x).toMatchObject({ id: "sleep", resisted: false, depth: 16 });
+  });
+  it("억제 방어 롤이 목표값 이상이면 저항", async () => {
+    const out = await resolveEffects({ effects: incense, sl: 1, rank: 1, user, targets: [{ ...foe, suppDef: 5 }], rollDice: seq([5, 4]), rng: () => 0.5, source: "item" });
+    expect(out.results.get("e").inflicts[0].resisted).toBe(true);
+  });
+});
