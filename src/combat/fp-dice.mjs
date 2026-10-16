@@ -121,7 +121,12 @@ async function rerollSkill(message, index, seq) {
   });
   fe.damage = fe.hits.reduce((n, x) => n + (x.hit ? x.final ?? 0 : 0), 0) + (fe.extra?.add ?? 0);
   // 빗나가게 되면 그 명중에서 생긴 것(같은 회차, 대상·사용자 모두)을 없앤다
-  if (wasHit && !r.hit) for (const x of fresh.entries) for (const k of ["inflicts", "buffs", "resource"]) x[k] = (x[k] ?? []).filter((y) => y.seq !== seq);
+  if (wasHit && !r.hit) {
+    for (const x of fresh.entries) for (const k of ["inflicts", "buffs", "resource"]) x[k] = (x[k] ?? []).filter((y) => y.seq !== seq);
+    // 그래서 빈 줄이 된 사용자 줄은 뺀다
+    const empty = (x) => !x.hits?.length && !x.damage && !x.heal?.hp && !x.heal?.tp && ![x.inflicts, x.buffs, x.resource, x.cures, x.states, x.stances].some((l) => l?.length);
+    fresh.entries = fresh.entries.filter((x) => x === fe || !empty(x));
+  }
   // 새로 명중하면 그 공격의 명중 시 효과를 지금 계산한다
   if (!wasHit && r.hit && fh.onHit?.length) await addOnHit(fresh, fe, fh, r, user, rolls);
   if (!r.hit) fe.reaction = null;
