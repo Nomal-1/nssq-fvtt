@@ -9,14 +9,18 @@ import { expForLevel, levelFromExp } from "../engine/derive.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.EffectsSync.${k}`, d) : game.i18n.localize(`NSSQ.EffectsSync.${k}`));
 
+const ICONS = new Map();
+
 /** key → { effects, review } */
 async function packEffects() {
   const map = new Map();
   const put = (it) => {
     const key = it.system?.key;
+    // 아이콘(묶음G): 컴펜디움 쪽이 코어 아이콘이면 기록(월드 쪽이 기본 svg일 때만 바꾼다)
+    if (key && it.img && !it.img.startsWith("icons/svg/")) ICONS.set(`${it.type}:${key}`, it.img);
     if (key && Array.isArray(it.system.effects) && it.system.effects.length) map.set(key, { effects: it.system.effects, review: it.system.review ?? "", note: it.system.effectsNote ?? "" });
   };
-  for (const name of ["nssq.skills", "nssq.items"]) {
+  for (const name of ["nssq.skills", "nssq.items", "nssq.classes"]) {
     const pack = game.packs.get(name);
     if (!pack) continue;
     for (const doc of await pack.getDocuments()) put(doc);
@@ -37,7 +41,8 @@ export async function syncEffects({ quiet = false } = {}) {
   let n = 0;
   const fix = (it) => {
     // v0.10.9: 에너미 스킬 아이콘(v12에 없는 claw.svg) → pawprint.svg
-    const img = it.img === BROKEN_IMG ? { img: ENEMY_SKILL_IMG } : {};
+    const icon = it.img?.startsWith("icons/svg/") ? ICONS.get(`${it.type}:${it.system?.key}`) : null;
+    const img = icon ? { img: icon } : it.img === BROKEN_IMG ? { img: ENEMY_SKILL_IMG } : {};
     const src = map.get(it.system?.key);
     if (!src || it.system.review === "manual" || (same(it.system.effects, src.effects) && (it.system.effectsNote ?? "") === src.note)) {
       return img.img ? { _id: it.id, ...img } : null;

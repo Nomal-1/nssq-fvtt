@@ -1817,3 +1817,6 @@
 #nssq-battle [data-k] { transition: filter 0.35s ease; }
 #nssq-battle .cyc-off { filter: opacity(0) !important; }
 #nssq-battle .nb-member, #nssq-battle .art img { transition: border-color 0.35s, box-shadow 0.35s, filter 0.35s; }
+/* 에너미: 점멸로 한 번에 한 연출만(아군과 같음) + 주위 입자 수 제한(후열·작은 그림은 4개, 전열 5개) */
+#nssq-battle .art .nb-aura i:nth-child(n+6) { display: none; }
+#nssq-battle .nb-enemy.back .art .nb-aura i:nth-child(n+5) { display: none; }

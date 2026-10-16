@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { compilePack } from "@foundryvtt/foundryvtt-cli";
 import { makeId } from "./lib/util.mjs";
 import ENEMY_ART from "../src/generated/enemy-art.mjs";
+import { iconFor } from "./lib/icons.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = path.join(ROOT, "data");
@@ -25,7 +26,7 @@ function itemDoc(e, { folder = null, sort = 0 } = {}) {
   const _id = e._id ?? e.id;
   return {
     _id, _key: e._key ?? `!items!${_id}`,
-    name: e.name, type: e.type, img: e.img, system,
+    name: e.name, type: e.type, img: iconFor(e), system,
     effects: [], folder, sort, ownership: { default: 0 }, flags: {}, _stats: STATS
   };
 }

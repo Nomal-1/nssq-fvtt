@@ -307,7 +307,7 @@ export class TownApp extends Application {
       return `<div class="pc ${mine ? "mine" : ""} ${a.online === false ? "offline" : ""}" data-pc="${a.id}" title="${esc(a.name)}">
         <img src="${url(a.img)}" alt=""/>
         <div class="pc-info"><b>${esc(a.name)}</b><span>Lv${a.level} · ${esc(a.cls || "-")}</span>
-          <span class="pc-sub"><em>${(a.money ?? 0).toLocaleString()}G</em>${a.sp > 0 ? ` <i class="sp">${esc(L("spLeft", { n: a.sp }))}</i>` : ""}</span></div></div>`;
+          <span class="pc-sub"><em>${(a.money ?? 0).toLocaleString()}G</em></span></div></div>`;
     }).join("");
     return `<footer class="town-party ${hidden ? "folded" : ""}">
       <button type="button" class="pc-fold" data-town="foldParty" title="${esc(L(hidden ? "partyShow" : "partyHide"))}"><i class="fas fa-chevron-${hidden ? "up" : "down"}"></i> ${esc(L("party", { n: party.length }))}</button>
