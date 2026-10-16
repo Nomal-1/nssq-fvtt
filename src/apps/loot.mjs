@@ -31,10 +31,13 @@ export async function startLoot(combat) {
   })));
   const rolls = [];
   const rows = [];
+  // 「해부용 수용액」을 쓴 턴에 쓰러진 적(combat/item-use.mjs): 갈무리 뒤 모든 드롭 ×1
+  const { finishDissect } = await import("../combat/item-use.mjs");
+  const dissected = await finishDissect(combat, { now: true });
   for (const c of foes) {
     const roll = await new Roll("2d6").evaluate();
     rolls.push(roll);
-    rows.push({ name: c.name, img: c.actor.img, uuid: c.actor.uuid, drops: foundry.utils.deepClone(c.actor.system.drops ?? []), dice: roll.dice[0].results.map((x) => x.result), adjust: 0 });
+    rows.push({ name: c.name, img: c.actor.img, uuid: c.actor.uuid, drops: foundry.utils.deepClone(c.actor.system.drops ?? []), dice: roll.dice[0].results.map((x) => x.result), adjust: 0, ...(dissected.has(c.id) ? { dissect: true } : {}) });
   }
   const card = {
     state: "adjust", range: skills.range, rangeBy: skills.rangeBy, doubleUp: skills.doubleUp,
@@ -157,6 +160,15 @@ async function finalize(card) {
     const a = await fromUuid(r.uuid);
     if (a) await recordBestiary(a, { drop: `${j.drop.rank ? `R${j.drop.rank} ` : ""}${j.drop.item}` });
   }
+  // 해부용 수용액: 일반 갈무리 뒤 그 적의 모든 드롭 아이템을 1개씩
+  for (const r of card.rows.filter((x) => x.dissect)) {
+    const a = await fromUuid(r.uuid);
+    for (const d of r.drops ?? []) {
+      if (!d?.item) continue;
+      await addToPool(card, d.item, d.rank ?? null, 1, r.name);
+      if (a) await recordBestiary(a, { drop: `${d.rank ? `R${d.rank} ` : ""}${d.item}` });
+    }
+  }
   card.state = "open";
 }
 
@@ -170,7 +182,7 @@ function render(card) {
   const rows = card.rows.map((r, i) => {
     const dice = `${r.dice.join("+")}${r.adjust ? ` ${r.adjust > 0 ? "+" : "−"}${Math.abs(r.adjust)}` : ""} = <b>${r.dice[0] + r.dice[1] + r.adjust}</b>`;
     const res = adj ? "" : (r.item ? `→ <b>${esc(label({ name: r.item, rank: r.rank }))}</b>${r.qty > 1 ? ` ×${r.qty}` : ""}${r.doubled && card.doubleUp.length ? ` <em>${esc(L("doubleUp"))}</em>` : ""}${r.doubled && r.qty > 1 ? ` <em>${esc(L("doubleExtra"))}</em>` : ""}` : `→ ${esc(L("nothing"))}`)
-      + (r.ambush ? ` <b class="ambush">${esc(L("ahh"))}</b>` : "");
+      + (r.ambush ? ` <b class="ambush">${esc(L("ahh"))}</b>` : "") + (r.dissect ? ` <em>${esc(L("dissect"))}</em>` : "");
     const ahhMark = card.kind === "gather" && adj && r.dice[0] + r.dice[1] <= r.ahh ? ` <b class="ambush">${esc(L("ahh"))}</b>` : "";
     const btn = adj ? ` <button type="button" data-loot="adj" data-i="${i}" data-d="-1">−</button><button type="button" data-loot="adj" data-i="${i}" data-d="1">+</button>` : "";
     return `<li><img src="${esc(r.img)}" width="20" height="20"/> ${esc(r.name)}: ${dice} ${res}${ahhMark}${btn}</li>`;

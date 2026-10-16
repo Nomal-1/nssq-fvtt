@@ -246,7 +246,7 @@ export async function startBattle({ presetId, members, surprise = "none", identi
     const cy = t.y + (t.height * GRID) / 2;
     // 식별(단계 5에서 판정 연결): 식별 전에는 에너미 【HP】 변화를 플레이어에게 숨긴다
     // 식별은 전투가 만들어진 뒤 달성값으로 판정(아래). 처음엔 식별 전
-    await t.actor.update({ "system.row": cy < ENEMY_MID ? "back" : "front", "system.order": i, "system.identified": false, "system.rareKnown": false });
+    await t.actor.update({ "system.row": cy < ENEMY_MID ? "back" : "front", "system.order": i, "system.identified": false, "system.rareKnown": false, "flags.nssq.-=analyzed": null });
   }
   // 도감: 만난 종
   await recordSeen(enemyTokens.map((t) => t.actor));
@@ -324,7 +324,7 @@ export async function joinBattle(combat, uuid, { row = "front" } = {}) {
   const [token] = await copy.createEmbeddedDocuments("Token", [td.toObject()]);
   if (enemy) {
     const order = Math.max(-1, ...copy.tokens.filter((t) => t.actor?.type === "enemy" && t.id !== token.id).map((t) => t.actor.system.order ?? 0)) + 1;
-    await token.actor.update({ "system.row": row, "system.order": order, "system.identified": false, "system.rareKnown": false });
+    await token.actor.update({ "system.row": row, "system.order": order, "system.identified": false, "system.rareKnown": false, "flags.nssq.-=analyzed": null });
     // 이 전투에서 이미 식별 판정을 했다면 그 달성값으로
     if (info.identifyValue !== null && info.identifyValue !== undefined) await identifyEnemy(token.actor, info.identifyValue);
     else await applyAutoIdentify(combat);

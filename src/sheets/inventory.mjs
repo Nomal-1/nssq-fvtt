@@ -146,6 +146,19 @@ export function inventoryContext(actor, { skillFilter = "all" } = {}) {
 
 /** [사용]: 효과 데이터가 있으면 대상을 고르고 효과를 해석해 결과 카드(적용은 자동 적용 설정대로), 없으면 해설만 */
 async function useItem(actor, item) {
+  // 추가 컨텐츠 아이템(보전·비전의 서 등, combat/item-use.mjs): 그 캐릭터에게 바로. 전투 중에만 쓰는 것은 막는다
+  const { itemUseOf, itemUseReason, runItemUse } = await import("../combat/item-use.mjs");
+  const use = itemUseOf(item);
+  if (use) {
+    const inCombat = !!game.combat?.started && game.combat.combatants.some((c) => c.actor?.uuid === actor.uuid);
+    const why = itemUseReason(use, { inCombat });
+    if (why) return ui.notifications.warn(`${item.name}: ${game.i18n.localize(`NSSQ.SkillUse.reason.${why}`)}`);
+    if (!(await Dialog.confirm({ title: item.name, content: `<p>${game.i18n.format("NSSQ.ItemUse.ask", { name: actor.name, item: item.name })}</p>`, rejectClose: false }))) return;
+    const next = useOnce(item);
+    if (next.remove) await item.delete();
+    else await item.update({ "system.quantity": next.quantity, ...(next.usesValue !== null ? { "system.uses.value": next.usesValue } : {}) });
+    return runItemUse(actor, item);
+  }
   const hasEffects = !!item.system.effects?.length;
   let targets = null;
   if (hasEffects) {
@@ -184,7 +197,19 @@ async function pickItemTargets(actor, item) {
   if (spec.side === "self") return [actor];
   const party = partyActors().filter((a) => a.type === "character");
   if (!party.includes(actor)) party.unshift(actor);
-  if (spec.scope === "all" || spec.scope === "row") return party;
+  if (spec.scope === "all") return party;
+  // 「아군 1열」(마드라 등): 전열·후열 중 고른다
+  if (spec.scope === "row") {
+    const rows = ["front", "back"].filter((r) => party.some((a) => (a.system.row ?? "front") === r));
+    if (rows.length < 2) return party;
+    const row = await Dialog.wait({
+      title: game.i18n.format("NSSQ.Inventory.useTargetTitle", { name: item.name }),
+      content: `<p>${game.i18n.localize("NSSQ.Inventory.useRow")}</p>`,
+      buttons: Object.fromEntries(rows.map((r) => [r, { label: `${game.i18n.localize(`NSSQ.Row.${r}`)} (${party.filter((a) => (a.system.row ?? "front") === r).map((a) => a.name).join(", ")})`, callback: () => r }])),
+      close: () => null
+    }, { classes: ["nssq", "dialog"] });
+    return row ? party.filter((a) => (a.system.row ?? "front") === row) : null;
+  }
   const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const options = party.map((a) => `<option value="${a.id}" ${a === actor ? "selected" : ""}>${esc(a.name)} (HP ${a.system.hp?.value ?? 0}/${a.system.hp?.max ?? 0})</option>`).join("");
   return Dialog.prompt({

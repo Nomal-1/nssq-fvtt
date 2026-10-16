@@ -10,14 +10,19 @@
     "price": 30,
     "effects": [
      {
+      "type": "target",
+      "side": "ally",
+      "scope": "row"
+     },
+     {
       "type": "heal",
       "mode": "fixed",
       "amount": 5,
-      "resource": "tp"
+      "resource": "hp"
      }
     ],
     "quantity": 1,
-    "description": "<p>단일 대상의 【TP】를 5 회복한다.</p>",
+    "description": "<p>아군 1열의 【HP】를 5 회복한다.</p>",
     "uses": {
      "value": 0,
      "max": 0
@@ -35,14 +40,19 @@
     "price": 300,
     "effects": [
      {
+      "type": "target",
+      "side": "ally",
+      "scope": "row"
+     },
+     {
       "type": "heal",
       "mode": "fixed",
       "amount": 10,
-      "resource": "tp"
+      "resource": "hp"
      }
     ],
     "quantity": 1,
-    "description": "<p>단일 대상의 【TP】를 10 회복한다.</p>",
+    "description": "<p>아군 1열의 【HP】를 10 회복한다.</p>",
     "uses": {
      "value": 0,
      "max": 0
@@ -60,14 +70,19 @@
     "price": 1500,
     "effects": [
      {
+      "type": "target",
+      "side": "ally",
+      "scope": "row"
+     },
+     {
       "type": "heal",
       "mode": "fixed",
       "amount": 15,
-      "resource": "tp"
+      "resource": "hp"
      }
     ],
     "quantity": 1,
-    "description": "<p>단일 대상의 【TP】를 15 회복한다.</p>",
+    "description": "<p>아군 1열의 【HP】를 15 회복한다.</p>",
     "uses": {
      "value": 0,
      "max": 0
@@ -85,13 +100,18 @@
     "price": 4000,
     "effects": [
      {
+      "type": "target",
+      "side": "ally",
+      "scope": "row"
+     },
+     {
       "type": "heal",
       "mode": "full",
-      "resource": "tp"
+      "resource": "hp"
      }
     ],
     "quantity": 1,
-    "description": "<p>단일 대상의 【TP】를 전부 회복한다.</p>",
+    "description": "<p>아군 1열의 【HP】를 전부 회복한다.</p>",
     "uses": {
      "value": 0,
      "max": 0
@@ -107,7 +127,21 @@
    "system": {
     "key": "ex.해부용 수용액",
     "price": 500,
-    "effects": [],
+    "effects": [
+     {
+      "type": "target",
+      "side": "self",
+      "scope": "single"
+     },
+     {
+      "type": "itemUse",
+      "action": "dissect",
+      "phases": [
+       "opening",
+       "main"
+      ]
+     }
+    ],
     "quantity": 1,
     "description": "<p>개막·메인 페이즈에 사용. 사용한 턴에 적을 쓰러뜨리면 일반 갈무리 뒤에 그 적의 모든 드롭 아이템을 1개씩 얻는다(쓰러진 적이 여럿이면 전부).</p>",
     "uses": {
@@ -125,9 +159,23 @@
    "system": {
     "key": "ex.해석 글라스",
     "price": 300,
-    "effects": [],
+    "effects": [
+     {
+      "type": "target",
+      "side": "enemy",
+      "scope": "single"
+     },
+     {
+      "type": "itemUse",
+      "action": "analyze",
+      "phases": [
+       "opening",
+       "main"
+      ]
+     }
+    ],
     "quantity": 1,
-    "description": "<p>개막·메인 페이즈에 적 하나에게 사용. 그 적의 모든 정보(스킬 상세·전 드롭)를 이 전투 동안 본다. 식별한 적 없으면 식별한 것으로 취급한다(도감).</p>",
+    "description": "<p>개막·메인 페이즈에 적 하나에게 사용. 그 적의 모든 정보(능력치·스킬 상세·전 드롭, 희소종 여부)를 이 전투 동안 본다. 도감에 식별한 것으로 기록한다.</p>",
     "uses": {
      "value": 0,
      "max": 0
@@ -143,9 +191,15 @@
    "system": {
     "key": "ex.STR의 보전",
     "price": 5000,
-    "effects": [],
+    "effects": [
+     {
+      "type": "itemUse",
+      "action": "boon",
+      "ability": "str"
+     }
+    ],
     "quantity": 1,
-    "description": "<p>사용하면 그 캐릭터의 【STR】가 영구히 1 오른다(GM 보너스 칸).</p>",
+    "description": "<p>전투 밖에서 사용. 그 캐릭터의 【STR】가 영구히 1 오른다(능력치 편집 창의 「보전」 칸).</p>",
     "uses": {
      "value": 0,
      "max": 0
@@ -161,9 +215,15 @@
    "system": {
     "key": "ex.TEC의 보전",
     "price": 5000,
-    "effects": [],
+    "effects": [
+     {
+      "type": "itemUse",
+      "action": "boon",
+      "ability": "tec"
+     }
+    ],
     "quantity": 1,
-    "description": "<p>사용하면 그 캐릭터의 【TEC】가 영구히 1 오른다(GM 보너스 칸).</p>",
+    "description": "<p>전투 밖에서 사용. 그 캐릭터의 【TEC】가 영구히 1 오른다(능력치 편집 창의 「보전」 칸).</p>",
     "uses": {
      "value": 0,
      "max": 0
@@ -179,9 +239,15 @@
    "system": {
     "key": "ex.VIT의 보전",
     "price": 5000,
-    "effects": [],
+    "effects": [
+     {
+      "type": "itemUse",
+      "action": "boon",
+      "ability": "vit"
+     }
+    ],
     "quantity": 1,
-    "description": "<p>사용하면 그 캐릭터의 【VIT】가 영구히 1 오른다(GM 보너스 칸).</p>",
+    "description": "<p>전투 밖에서 사용. 그 캐릭터의 【VIT】가 영구히 1 오른다(능력치 편집 창의 「보전」 칸).</p>",
     "uses": {
      "value": 0,
      "max": 0
@@ -197,9 +263,15 @@
    "system": {
     "key": "ex.AGI의 보전",
     "price": 5000,
-    "effects": [],
+    "effects": [
+     {
+      "type": "itemUse",
+      "action": "boon",
+      "ability": "agi"
+     }
+    ],
     "quantity": 1,
-    "description": "<p>사용하면 그 캐릭터의 【AGI】가 영구히 1 오른다(GM 보너스 칸).</p>",
+    "description": "<p>전투 밖에서 사용. 그 캐릭터의 【AGI】가 영구히 1 오른다(능력치 편집 창의 「보전」 칸).</p>",
     "uses": {
      "value": 0,
      "max": 0
@@ -215,9 +287,15 @@
    "system": {
     "key": "ex.LUC의 보전",
     "price": 5000,
-    "effects": [],
+    "effects": [
+     {
+      "type": "itemUse",
+      "action": "boon",
+      "ability": "luc"
+     }
+    ],
     "quantity": 1,
-    "description": "<p>사용하면 그 캐릭터의 【LUC】가 영구히 1 오른다(GM 보너스 칸).</p>",
+    "description": "<p>전투 밖에서 사용. 그 캐릭터의 【LUC】가 영구히 1 오른다(능력치 편집 창의 「보전」 칸).</p>",
     "uses": {
      "value": 0,
      "max": 0
@@ -233,7 +311,12 @@
    "system": {
     "key": "ex.비전의 서",
     "price": 5000,
-    "effects": [],
+    "effects": [
+     {
+      "type": "itemUse",
+      "action": "skillBook"
+     }
+    ],
     "quantity": 1,
     "description": "<p>사용하면 여유 스킬 포인트(SL) 1을 얻는다. 사용하면 반드시 스킬을 습득해야 한다.</p>",
     "uses": {

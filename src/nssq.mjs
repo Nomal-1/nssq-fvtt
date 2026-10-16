@@ -50,6 +50,7 @@ import { registerMobile } from "./apps/mobile.mjs";
 import { registerDefaults, reseedDefaults } from "./apps/defaults.mjs";
 import { registerAssetLink } from "./apps/asset-link.mjs";
 import { registerFpDice } from "./combat/fp-dice.mjs";
+import { registerItemUse } from "./combat/item-use.mjs";
 import { FieldMapApp, registerFieldMap } from "./apps/fieldmap.mjs";
 import { ChargenWizard, newCharacter, registerChargen } from "./apps/chargen-wizard.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
@@ -112,6 +113,7 @@ Hooks.once("init", () => {
   registerOpening();
   registerAttackHooks();
   registerFpDice();
+  registerItemUse();
   registerTracker();
   registerBattle();
   registerFormation();

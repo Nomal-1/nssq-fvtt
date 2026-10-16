@@ -68,7 +68,7 @@ export async function reseedDefaults() {
 
 /**
  * 추가 컨텐츠 등록(사용자 요청 묶음H): data/defaults/expansion.json의 아이템을 월드 아이템 폴더 「추가 컨텐츠」에 넣는다.
- * 같은 이름이 이미 있으면 건너뛴다. 사양이 정해지지 않은 것(기동부적·향·책·그리모어)은 07 #168
+ * 같은 이름이 이미 있으면 건너뛴다. 등록하면 설정 expansion을 켠다(능력치 「보전」 칸). 사양이 정해지지 않은 것(기동부적·향·책·그리모어)은 07 #168
  */
 export async function registerExpansion() {
   if (!game.user.isGM) return null;
@@ -76,15 +76,23 @@ export async function registerExpansion() {
   const ok = await Dialog.confirm({ title: game.i18n.localize("NSSQ.Expansion.title"), content: `<p>${game.i18n.format("NSSQ.Expansion.ask", { n: data.items.length, folder: data.folder })}</p>`, rejectClose: false });
   if (!ok) return null;
   const folder = game.folders.find((f) => f.type === "Item" && f.name === data.folder) ?? await Folder.create({ name: data.folder, type: "Item" });
-  const have = new Set(game.items.filter((i) => i.folder?.id === folder.id).map((i) => i.name));
+  const have = new Map(game.items.filter((i) => i.folder?.id === folder.id).map((i) => [i.name, i]));
   const add = data.items.filter((i) => !have.has(i.name)).map((i) => ({ ...i, folder: folder.id }));
   if (add.length) await Item.createDocuments(add);
-  ui.notifications.info(game.i18n.format("NSSQ.Expansion.done", { n: add.length, skip: data.items.length - add.length }));
+  // 이미 있는 것은 효과·해설만 새 버전으로(가격 등 GM이 고친 값은 그대로)
+  const upd = data.items.filter((i) => have.has(i.name)).map((i) => ({ _id: have.get(i.name).id, "system.effects": i.system.effects, "system.description": i.system.description }))
+    .filter((u) => { const cur = game.items.get(u._id).system; return JSON.stringify(cur.effects) !== JSON.stringify(u["system.effects"]) || cur.description !== u["system.description"]; });
+  if (upd.length) await Item.updateDocuments(upd);
+  // 능력치 편집 창의 「보전」 칸을 연다(sheets/character.mjs editAbilities)
+  if (!game.settings.get("nssq", "expansion")) await game.settings.set("nssq", "expansion", true);
+  ui.notifications.info(game.i18n.format("NSSQ.Expansion.done", { n: add.length, skip: data.items.length - add.length, upd: upd.length }));
   return add.length;
 }
 
 export function registerDefaults() {
   game.settings.register("nssq", "defaultsSeeded", { scope: "world", config: false, type: Number, default: 0 });
+  // 추가 컨텐츠를 등록한 월드(07 #168)
+  game.settings.register("nssq", "expansion", { scope: "world", config: false, type: Boolean, default: false });
   // 처음 켠 월드(활성 GM 한 명)에 한 번
   Hooks.once("ready", async () => {
     if (game.users.activeGM?.id !== game.user.id) return;

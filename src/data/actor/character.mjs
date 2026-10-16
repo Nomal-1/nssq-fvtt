@@ -21,7 +21,7 @@ const crop = () => new SchemaField({
  * 능력치 하나의 저장값. 클래스·장비 보정은 저장하지 않고 계산한다.
  * temp: v0.6.0까지의 「일시」. 이제 쓰지 않고 GM 보너스에 합산해 보인다(편집 창에서 저장하면 bonus로 옮겨지고 0이 된다)
  */
-const ability = () => new SchemaField({ base: int(0), growth: int(0), bonus: int(0), temp: int(0) });
+const ability = () => new SchemaField({ base: int(0), growth: int(0), boon: int(0), bonus: int(0), temp: int(0) });
 
 export class CharacterData extends foundry.abstract.TypeDataModel {
   static defineSchema() {

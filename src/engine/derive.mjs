@@ -18,18 +18,18 @@ export const ABILITY_SOURCES = ["base", "class", "growth", "bonus", "equip"];
  * 능력치를 출처별로 나눠 합계를 낸다.
  * 클래스 보정은 작성 시 1회 + 레벨업마다 1회이므로 보정 × Lv(세션 결과와 성장).
  * @param {object} p
- * @param {{[k]: {base, growth, bonus, temp?}}} p.abilities 저장값(temp는 v0.6.0 이전 값, bonus에 합산)
+ * @param {{[k]: {base, growth, boon?, bonus, temp?}}} p.abilities 저장값(temp는 v0.6.0 이전 값, bonus에 합산. boon은 추가 컨텐츠 「보전」, 07 #168)
  * @param {{[k]: number}} [p.classBonus] 메인 클래스의 능력치 보정
  * @param {number} [p.level]
  * @param {{[k]: number}} [p.equip] 장비(장식·제련) 보정
- * @returns {{[k]: {base, class, growth, bonus, equip, total}}}
+ * @returns {{[k]: {base, class, growth, boon, bonus, equip, total}}}
  */
 export function abilityBreakdown({ abilities, classBonus = {}, level = 1, equip = {} }) {
   const n = (v) => Number(v) || 0;
   return Object.fromEntries(ABILITIES.map((k) => {
     const a = abilities?.[k] ?? {};
-    const parts = { base: n(a.base), class: n(classBonus[k]) * Math.max(1, n(level)), growth: n(a.growth), bonus: n(a.bonus) + n(a.temp), equip: n(equip[k]) };
-    parts.total = parts.base + parts.class + parts.growth + parts.bonus + parts.equip;
+    const parts = { base: n(a.base), class: n(classBonus[k]) * Math.max(1, n(level)), growth: n(a.growth), boon: n(a.boon), bonus: n(a.bonus) + n(a.temp), equip: n(equip[k]) };
+    parts.total = parts.base + parts.class + parts.growth + parts.boon + parts.bonus + parts.equip;
     return [k, parts];
   }));
 }

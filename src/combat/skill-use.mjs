@@ -23,6 +23,7 @@ import { knowsEnemy, recordBestiary } from "./bestiary.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { decorateReactions, hasPendingReaction, pendingReaction } from "./reaction.mjs";
 import { fpNote, rerollButton } from "./fp-dice.mjs";
+import { itemUseOf, itemUseReason, runItemUse } from "./item-use.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.SkillUse.${k}`, d) : game.i18n.localize(`NSSQ.SkillUse.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -146,9 +147,14 @@ export function actionList(combat, combatant, kind) {
   const myTurn = combat.combatant?.id === combatant.id;
   const user = unitProfile(actor, combatant);
   if (kind === "item") {
+    const openingDone = !!combatant.getFlag("nssq", "opening") || !!combatant.getFlag("nssq", "guarding");
     return actor.items.filter((i) => i.type === "consumable" && (i.system.quantity ?? 0) > 0 && !i.system.stored).map((i) => {
-      const ok = phase === "main" && myTurn && !!i.system.effects?.length && !user.noAction;
-      const reason = !i.system.effects?.length ? "noEffects" : phase !== "main" ? "notMain" : !myTurn ? "notTurn" : user.noAction ? "noAction" : null;
+      // 추가 컨텐츠 아이템(itemUse, combat/item-use.mjs): 쓸 수 있는 페이즈·전투 밖 전용
+      const use = itemUseOf(i);
+      const reason = !i.system.effects?.length ? "noEffects"
+        : use ? itemUseReason(use, { inCombat: true, phase, myTurn, openingDone }) ?? (user.noAction ? "noAction" : null)
+          : phase !== "main" ? "notMain" : !myTurn ? "notTurn" : user.noAction ? "noAction" : null;
+      const ok = !reason;
       return { id: i.id, name: i.name, cost: `×${i.system.quantity}`, target: i.system.target || L("allySingle"), ok, reason, desc: plain(i.system.description) };
     });
   }
@@ -369,6 +375,12 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
     if (Object.keys(upd).length) await actor.update(upd);
   } else if (kind !== "skill") {
     await item.update({ "system.quantity": Math.max(0, (sys.quantity ?? 1) - 1) });
+    // 추가 컨텐츠 아이템(해석 글라스·해부용 수용액): 판정 없이 바로(combat/item-use.mjs). 개막 페이즈면 그 전투원의 개막 행동
+    if (itemUseOf(item)) {
+      await runItemUse(actor, item, { combatant, targets: targetCombatants });
+      if (phase === "opening") await combatant.setFlag("nssq", "opening", "item");
+      return null;
+    }
   }
   // 《최종 결전의 군가》: 그 분류의 주행동 스킬 여러 개를 TP 없이 한 번에
   const multi = kind === "skill" ? effects.find((e) => e?.type === "multiUse") : null;

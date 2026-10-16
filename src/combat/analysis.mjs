@@ -25,7 +25,8 @@ export function enemyAnalysisHtml(actor, name, combatant = null) {
   const s = actor?.system ?? {};
   const gm = game.user.isGM;
   // 공개 단계(01 #47·#48): full = 도감 처치 수가 자동 식별 기준 이상(전부), known = 이번 전투 식별 성공
-  const full = meetsAutoIdentify(actor);
+  // 「해석 글라스」(combat/item-use.mjs)를 쓴 적도 전부
+  const full = meetsAutoIdentify(actor) || !!actor?.getFlag?.("nssq", "analyzed");
   const known = !!s.identified;
   const show = gm || full || known;
   const book = bestiaryEntry(actor);

@@ -41,6 +41,7 @@ export const TYPES = {
   checkExtraDie: {},
   rerollBonus: { value: true },
   sessionFp: { value: true },
+  itemUse: { action: true, ability: false, phases: false },
   forceRow: { row: false, check: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },

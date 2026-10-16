@@ -30,6 +30,7 @@ import { allyAnalysisHtml, enemyAnalysisHtml } from "./analysis.mjs";
 import { knowsEnemy, rareMask } from "./bestiary.mjs";
 import { actionState, confusedAction, endPhaseMessage, requestEndPhaseApply } from "./turn-status.mjs";
 import { openingLabel, requestPass, restoreOpening } from "./opening.mjs";
+import { hasOpeningItem } from "./item-use.mjs";
 import { actionList, beginAction, pickTarget, requestSkillApply } from "./skill-use.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
@@ -514,6 +515,7 @@ function commandBody(combat) {
         <button type="button" data-cmd="row" title="${L("row")}"><i class="fas fa-arrows-alt-v"></i> ${L("row")}</button>
         ${c.actor.type === "character" ? `<button type="button" data-cmd="swap" title="${L("swap")}"><i class="fas fa-exchange-alt"></i> ${L("swapShort")}</button>` : ""}
         <button type="button" data-cmd="skill" title="${L("skill")}"><i class="fas fa-magic"></i> ${L("skill")}</button>
+        ${hasOpeningItem(c.actor) ? `<button type="button" data-cmd="item" title="${L("item")}"><i class="fas fa-flask"></i> ${L("item")}</button>` : ""}
         <button type="button" data-cmd="pass" title="${esc(game.i18n.localize("NSSQ.Opening.passHint"))}"><i class="fas fa-ban"></i> ${esc(game.i18n.localize("NSSQ.Opening.pass"))}</button>
       </div>`;
     }).join("");

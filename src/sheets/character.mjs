@@ -12,7 +12,7 @@ import { slotOccupant } from "../engine/equipment.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Sheet.${k}`, d) : game.i18n.localize(`NSSQ.Sheet.${k}`));
 const SHORT = { str: "STR", tec: "TEC", vit: "VIT", agi: "AGI", luc: "LUC" };
-const SOURCE_KEYS = ["base", "class", "growth", "bonus", "equip"];
+const SOURCE_KEYS = ["base", "class", "growth", "boon", "bonus", "equip"];
 const sign = (n) => (n > 0 ? `+${n}` : `${n}`);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
@@ -124,13 +124,17 @@ export async function editAbilities(actor) {
   const cell = (k, src, editable) => (editable
     ? `<td><input type="number" name="${k}.${src}" value="${stored(k, src)}"/></td>`
     : `<td class="ro" data-src="${src}">${src === "base" ? s.abilityParts[k][src] : sign(s.abilityParts[k][src])}</td>`);
+  // 「보전」 칸(07 #168): 추가 컨텐츠를 등록한 월드이거나 이미 값이 있을 때만. GM만 고친다
+  const boon = !!game.settings.get("nssq", "expansion") || ABILITIES.some((k) => s.abilityParts[k].boon);
+  const cols = ["base", "class", "growth", ...(boon ? ["boon"] : []), "bonus", "equip"];
+  const editable = { base: baseOk, growth: gm, boon: gm, bonus: gm };
   const rows = ABILITIES.map((k) => `
       <tr data-ability="${k}" data-fixed="${s.abilityParts[k].class + s.abilityParts[k].equip}">
         <th>${game.i18n.localize(`NSSQ.Ability.${k}`)}</th>
-        ${cell(k, "base", baseOk)}${cell(k, "class", false)}${cell(k, "growth", gm)}${cell(k, "bonus", gm)}${cell(k, "equip", false)}
+        ${cols.map((src) => cell(k, src, !!editable[src])).join("")}
         <td class="total"><b>${s.abilityParts[k].total}</b></td><td class="b">${s.bonus[k]}</td>
       </tr>`).join("");
-  const head = ["base", "class", "growth", "bonus", "equip"].map((src) => `<th title="${game.i18n.localize(`NSSQ.Ability.sourceHint.${src}`)}">${label(src)}</th>`).join("");
+  const head = cols.map((src) => `<th title="${game.i18n.localize(`NSSQ.Ability.sourceHint.${src}`)}">${label(src)}</th>`).join("");
   const content = `
     <form class="nssq-ability-edit">
       <table class="nq-ability-table">
@@ -147,7 +151,7 @@ export async function editAbilities(actor) {
         const i = tr.querySelector(`input[name="${k}.${src}"]`);
         return i ? Number(i.value) || 0 : s.abilityParts[k][src];
       };
-      const total = Number(tr.dataset.fixed) + val("base") + val("growth") + val("bonus");
+      const total = Number(tr.dataset.fixed) + val("base") + val("growth") + val("boon") + val("bonus");
       tr.querySelector(".total b").textContent = total;
       tr.querySelector(".b").textContent = Math.floor(total / 5);
     }
@@ -178,8 +182,8 @@ export async function editAbilities(actor) {
   }
   if (!Object.keys(update).length) return;
   await actor.update(update);
-  // 굴림·보너스 변경은 작성 기록에 남긴다
-  for (const c of changes.filter((c) => c.field === "base" || c.field === "bonus")) await logCreation(actor, c);
+  // 굴림·보전·보너스 변경은 작성 기록에 남긴다
+  for (const c of changes.filter((c) => ["base", "boon", "bonus"].includes(c.field))) await logCreation(actor, c);
 }
 
 /** GM: 작성 기록 전체 */

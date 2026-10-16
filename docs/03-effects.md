@@ -113,6 +113,7 @@
 | `guardLateAttack` | | (상시) 『방어』 스킬 대기 중 후발 행동으로 통상 공격(《공방일체》) |
 | `timePenalty` | `time`(day/night), `value` | (상시) 월드 설정 「시간대」가 그때면 명중·억제 판정 보정(《야행성》) |
 | `forceRow` | `row`, `check`(fixed) | 판정에 실패하면 그 열로 강제 이동(《떠올리기》, onHit) |
+| `itemUse` | `action`(boon/skillBook/analyze/dissect), `ability`(boon), `phases`(전투 중 쓸 페이즈, 기본 ["main"]) | 판정 없이 문서를 바꾸는 아이템(추가 컨텐츠, 07 #168, `combat/item-use.mjs`). boon: 그 캐릭터 `abilities.<k>.boon` +1(전투 밖). skillBook: `skillBonus` +1·습득 창구(전투 밖). analyze: 대상 적의 모든 정보 공개(플래그 `analyzed`, 식별·희소종 간파). dissect: 사용한 라운드에 쓰러진 적은 갈무리 뒤 모든 드롭 ×1(전투원 플래그 `dissect` → 전투 플래그 `dissected`). 대상은 `target` 효과로 |
 
 C2 보강: state `perAttack {selfDamage: "ones", tp}`(공격마다 대가, 《나찰》), when `selfExtraAction`(그 턴 주행동 2회를 얻음, 《다원 발도》).
 
