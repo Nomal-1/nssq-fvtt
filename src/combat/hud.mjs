@@ -252,7 +252,7 @@ function enemyCard(c, combat, targetable) {
     </div>` : "";
   // 이름·【HP】·상태 표시·GM 도구를 한 덩어리(plate)로 그림에 붙인다. 그림 크기와 관계없이 전열은 그림 아래, 후열은 그림 위
   return `<div class="${cls}" data-combatant="${c.id}" data-key="e-${c.id}" data-flip title="${esc(c.name)}">
-    <div class="art"><img src="${esc(enemyImage(c))}"/>${persistOverlay(c)}</div>
+    <div class="art ${(c.actor?.system.conditions ?? []).map((x) => `ail-${x.id}`).join(" ")}"><img src="${esc(enemyImage(c))}"/>${persistOverlay(c)}</div>
     <div class="plate">
       <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
       <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
