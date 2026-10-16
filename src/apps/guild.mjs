@@ -46,9 +46,9 @@ async function clampVitals(actor) {
   if (Object.keys(up).length) await actor.update(up);
 }
 
-/** 클래스 스킬을 돌려받는다(★·커먼은 남김) */
+/** 스킬을 돌려받는다(★만 남김). Lv1에서 작성 때처럼 클래스 SL 5 + 커먼 1개(SL1)를 다시 찍는다(사용자 결정) */
 async function refundSkills(actor) {
-  const ids = actor.items.filter((i) => i.type === "skill" && !i.system.unique && i.system.classKey !== "common").map((i) => i.id);
+  const ids = actor.items.filter((i) => i.type === "skill" && !i.system.unique).map((i) => i.id);
   // 길드 재분배·직업 변경은 공식 경로라 「스킬 되돌리기 금지」에 걸리지 않는다
   if (ids.length) await actor.deleteEmbeddedDocuments("Item", ids, { nssqRespec: true });
   return ids.length;

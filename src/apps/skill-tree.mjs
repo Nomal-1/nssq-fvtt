@@ -129,6 +129,10 @@ export class SkillTree extends Application {
     const pickOpen = skillPickOpen(this.actor);
     const editable = this.actor.isOwner && pickOpen;
     this._pickClosed = this.actor.isOwner && !pickOpen;
+    // 지금 열린 창구 안내(재분배 Lv1 / 레벨업)
+    const pf = this.actor.getFlag("nssq", "skillPick");
+    this._pickNote = this.actor.system.creation?.locked && pf?.level === this.actor.system.level
+      ? (pf.level === 1 ? game.i18n.localize("NSSQ.Level.pickRespec") : game.i18n.format("NSSQ.Level.pickLevel", { level: pf.level })) : "";
 
     const nodeData = (orig) => {
       const { entry: e, shared } = effectiveEntry(orig, st, index);
@@ -240,6 +244,7 @@ export class SkillTree extends Application {
       noClass: !st.main,
       editable,
       pickClosed: this._pickClosed,
+      pickNote: this._pickNote,
       isGM: game.user.isGM
     };
   }
