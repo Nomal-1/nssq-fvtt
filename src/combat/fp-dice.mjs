@@ -174,11 +174,27 @@ async function addOnHit(card, fe, fh, r, user, rolls) {
   }
 }
 
+/** 판정 메시지인가(주사위를 굴렸거나 공격·스킬·판정·종료 페이즈·탐색·갈무리 카드) */
+const JUDGE_FLAGS = ["attack", "skillCard", "check", "endPhase", "explore", "loot", "dungeonEvent"];
+const isJudgment = (m) => !!m?.rolls?.length || JUDGE_FLAGS.some((k) => m?.getFlag("nssq", k));
+
+/**
+ * 다시 굴릴 수 있는가: 그 카드 뒤에 다른 판정이 나오지 않았을 때만(사용자 결정 01 #26).
+ * 같은 다회 공격의 다른 타격 카드는 「다른 판정」으로 치지 않는다. 반응(능동 회피)·추격·반격은 다른 판정이다
+ */
+export function canRerollNow(message) {
+  const list = game.messages.contents;
+  const i = list.findIndex((m) => m.id === message?.id);
+  if (i < 0) return false;
+  const group = message.getFlag("nssq", "skillCard")?.group?.id ?? null;
+  return !list.slice(i + 1).some((m) => isJudgment(m) && !(group && m.getFlag("nssq", "skillCard")?.group?.id === group));
+}
+
 const queue = { p: Promise.resolve() };
 function gmReroll({ messageId, type, index, seq }) {
   queue.p = queue.p.then(async () => {
     const message = game.messages.get(messageId);
-    if (!message) return;
+    if (!message || !canRerollNow(message)) return ui.notifications.warn(L("tooLate"));
     if (type === "attack") await rerollAttack(message, index);
     else await rerollSkill(message, index, seq);
   }).catch((err) => console.error("NSSQ | fp reroll", err));
@@ -191,6 +207,14 @@ export function requestReroll(payload) {
 
 export function registerFpDice() {
   onSocket("fpReroll", (p) => { if (isActiveGM()) gmReroll(p); });
+  // 새 판정이 나오면 앞 카드들의 다시 굴리기 버튼을 거둔다
+  Hooks.on("createChatMessage", (m) => {
+    if (!isJudgment(m)) return;
+    setTimeout(() => document.querySelectorAll(".chat-message .fp-reroll").forEach((b) => {
+      const msg = game.messages.get(b.closest("[data-message-id]")?.dataset.messageId);
+      if (!msg || !canRerollNow(msg)) b.remove();
+    }), 100);
+  });
   // 버튼: 공격자 소유자에게만, 남은 【FP】가 모자라면 끈다
   Hooks.on("renderChatMessage", (message, html) => {
     const el = html[0] ?? html;
@@ -198,7 +222,7 @@ export function registerFpDice() {
     const sk = message.getFlag("nssq", "skillCard");
     const owner = fromUuidSync((atk?.attackerUuid ?? sk?.userUuid) || "");
     el.querySelectorAll(".fp-reroll").forEach((b) => {
-      if (!owner?.isOwner || owner.type !== "character") { b.remove(); return; }
+      if (!owner?.isOwner || owner.type !== "character" || !canRerollNow(message)) { b.remove(); return; }
       if ((owner.system.fp?.value ?? 0) < REROLL_COST) b.disabled = true;
       b.addEventListener("click", (ev) => {
         ev.preventDefault();
