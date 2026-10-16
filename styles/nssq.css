@@ -1813,3 +1813,7 @@
 #nssq-battle .nb-cardfx .nb-ailfx ~ :is(.nb-specialfx, .nb-heatfx) { background: none; }
 #nssq-battle .nb-cardfx-front { z-index: 0; }
 #nssq-battle .nb-member .info { text-shadow: 0 0 3px #000, 0 0 2px #000; }
+/* 점멸(순서대로 하나씩): 꺼진 연출은 filter로 감춘다(입자 자체의 opacity 애니메이션과 겹치지 않게) */
+#nssq-battle [data-k] { transition: filter 0.35s ease; }
+#nssq-battle .cyc-off { filter: opacity(0) !important; }
+#nssq-battle .nb-member, #nssq-battle .art img { transition: border-color 0.35s, box-shadow 0.35s, filter 0.35s; }
