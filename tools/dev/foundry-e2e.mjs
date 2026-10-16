@@ -1,4 +1,4 @@
-/* global game, ui, document, Setup, foundry */
+/* global game, ui, document, Setup, foundry, Hooks, canvas */
 // Foundry 테스트 월드에 Playwright(Chromium)로 접속하는 개발 도구.
 // 환경 변수: NSSQ_FOUNDRY_URL, NSSQ_FOUNDRY_USER/PASSWORD(GM), NSSQ_FOUNDRY_PLAYER/PLAYER_PASSWORD(플레이어)
 // 비밀번호는 출력하지 않는다.
@@ -56,7 +56,7 @@ async function relaySocket(page, base) {
 }
 
 /** 로그인해서 game.ready까지 기다린 세션을 돌려준다. */
-export async function connect(role = "gm", { viewport = { width: 1600, height: 1000 }, browser, user: asUser, password } = {}) {
+export async function connect(role = "gm", { viewport = { width: 1600, height: 1000 }, browser, user: asUser, password, render = true } = {}) {
   const { chromium } = await loadPlaywright();
   // user를 주면 그 계정으로(관전 계정 등). 비밀번호가 없으면 빈 칸
   const cred = credentials(role);
@@ -96,6 +96,17 @@ export async function connect(role = "gm", { viewport = { width: 1600, height: 1
   await page.waitForFunction(() => globalThis.game?.ready === true, null, { timeout: 120_000 });
   // 하드웨어 가속 경고 등 알림 닫기
   await page.evaluate(() => ui.notifications?.clear?.()).catch(() => {});
+  // render: false — 이 컨테이너의 브라우저는 GPU가 없어 캔버스 렌더 한 프레임이 메인 스레드를 ~400ms 막는다
+  // (setTimeout 10ms가 400ms가 되어 모든 대기·시간 측정이 부풀려진다). 렌더 루프를 멈추고, 스크린숏 때만 잠깐 그린다
+  const setRender = (on) => page.evaluate((on) => {
+    globalThis.__nssqNoRender = !on;
+    if (!globalThis.__nssqNoRenderHook) {
+      globalThis.__nssqNoRenderHook = true;
+      Hooks.on("canvasReady", () => setTimeout(() => { if (globalThis.__nssqNoRender) canvas.app?.ticker?.stop(); }, 0));
+    }
+    if (on) canvas.app?.ticker?.start(); else canvas.app?.ticker?.stop();
+  }, on).catch(() => {});
+  if (!render) await setRender(false);
 
   return {
     page, errors, role, user,
@@ -104,7 +115,12 @@ export async function connect(role = "gm", { viewport = { width: 1600, height: 1
       if (typeof fn === "function") return page.evaluate(fn, arg);
       return page.evaluate(([code, a]) => new (Object.getPrototypeOf(async function () {}).constructor)("arg", code)(a), [fn, arg]);
     },
-    shot(path, opts = {}) { return page.screenshot({ path, ...opts }); },
+    async shot(path, opts = {}) {
+      if (render) return page.screenshot({ path, ...opts });
+      await setRender(true);
+      await new Promise((r) => setTimeout(r, 1500));
+      try { return await page.screenshot({ path, ...opts }); } finally { await setRender(false); }
+    },
     async close() {
       for (const s of sockets) s.close();
       await context.close().catch(() => {});
