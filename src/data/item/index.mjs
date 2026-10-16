@@ -127,7 +127,9 @@ export class ConsumableData extends NssqItemData {
       quantity: int(1, { min: 0 }),
       uses: uses(),
       stored: new BooleanField({ initial: false }),
-      foodstuff: new BooleanField({ initial: false })
+      foodstuff: new BooleanField({ initial: false }),
+      // 소재 R로 만든 아이템의 랭크(「기동부적」, effects craftRank. 0이면 랭크 없음)
+      rank: int(0, { min: 0 })
     };
   }
 }

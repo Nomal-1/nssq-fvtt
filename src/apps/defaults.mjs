@@ -85,6 +85,8 @@ export async function registerExpansion() {
   if (upd.length) await Item.updateDocuments(upd);
   // 능력치 편집 창의 「보전」 칸을 연다(sheets/character.mjs editAbilities)
   if (!game.settings.get("nssq", "expansion")) await game.settings.set("nssq", "expansion", true);
+  // 이 폴더의 아이템은 상점에도 나온다(apps/shop.mjs)
+  if (game.settings.get("nssq", "expansionFolder") !== folder.id) await game.settings.set("nssq", "expansionFolder", folder.id);
   ui.notifications.info(game.i18n.format("NSSQ.Expansion.done", { n: add.length, skip: data.items.length - add.length, upd: upd.length }));
   return add.length;
 }
@@ -93,6 +95,7 @@ export function registerDefaults() {
   game.settings.register("nssq", "defaultsSeeded", { scope: "world", config: false, type: Number, default: 0 });
   // 추가 컨텐츠를 등록한 월드(07 #168)
   game.settings.register("nssq", "expansion", { scope: "world", config: false, type: Boolean, default: false });
+  game.settings.register("nssq", "expansionFolder", { scope: "world", config: false, type: String, default: "" });
   // 처음 켠 월드(활성 GM 한 명)에 한 번
   Hooks.once("ready", async () => {
     if (game.users.activeGM?.id !== game.user.id) return;

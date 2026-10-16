@@ -10,7 +10,7 @@ import { ABILITIES, RESISTS } from "../derive.mjs";
 
 /** 엔진이 받는 type과 필드(필수: true) */
 export const TYPES = {
-  attack: { kind: false, element: false, addElement: false, failAtOrBelow: false, copyElement: false, randomFrom: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false, fixedDice: false, ignoreBuffs: false, addTurnElements: false },
+  attack: { kind: false, element: false, addElement: false, failAtOrBelow: false, copyElement: false, randomFrom: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false, fixedDice: false, fixedHit: false, ignoreBuffs: false, addTurnElements: false },
   heal: { mode: false, bonus: false, amount: false, resource: false, revive: false },
   inflict: { condition: true, check: false, depth: false, choose: false, randomPick: false, selfSame: false },
   command: { mode: true },
@@ -42,6 +42,7 @@ export const TYPES = {
   rerollBonus: { value: true },
   sessionFp: { value: true },
   itemUse: { action: true, ability: false, phases: false },
+  craftRank: { materials: true },
   forceRow: { row: false, check: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },

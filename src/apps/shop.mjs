@@ -91,6 +91,21 @@ export async function toggleShop(open = !shopOpen()) {
   await game.settings.set("nssq", "shopOpen", open);
 }
 
+/** 소재 R로 위력이 정해지는 아이템(「기동부적」, effects craftRank, 07 #168) */
+const craftOf = (d) => (d.system?.effects ?? []).find((e) => e?.type === "craftRank") ?? null;
+
+/** 고른 소재 R로 만든 아이템: 이름·키에 R, 랭크, 가격 = 기본 가격 × R² */
+function crafted(data, rank) {
+  return { ...data, name: `${data.name} R${rank}`, system: { ...data.system, rank, key: `${data.system.key || data.name}.R${rank}`, price: (Number(data.system.price) || 0) * rank * rank } };
+}
+
+/** 추가 컨텐츠를 등록한 월드: 그 폴더의 아이템도 상점에(apps/defaults.mjs registerExpansion) */
+function expansionItems() {
+  if (!game.settings.get("nssq", "expansion")) return [];
+  const folder = game.folders.get(game.settings.get("nssq", "expansionFolder"));
+  return folder ? game.items.filter((i) => i.folder?.id === folder.id) : [];
+}
+
 const isRanked = (d) => d.type === "armor" || (d.type === "weapon" && !!tables.weapons[d.system.weaponType]?.price);
 const tableOf = (d) => (d.type === "weapon" ? tables.weapons[d.system.weaponType] : d.type === "armor" ? tables.armors[d.system.armorType] : null);
 
@@ -105,6 +120,8 @@ export async function shopCatalog() {
     if (pack) docs.push(...(await pack.getDocuments()).filter((d) => d.type !== "material" && (d.type !== "weapon" || isRanked(d))));
   }
   for (const d of customItems()) if (d.type !== "material" && TABS.some(([t]) => t === d.type)) docs.push(Object.assign(d, { nssqCustom: true }));
+  const names = new Set(docs.map((d) => d.name));
+  for (const d of expansionItems()) if (!names.has(d.name) && TABS.some(([t]) => t === d.type)) docs.push(Object.assign(d, { nssqCustom: true }));
   return docs;
 }
 
@@ -206,7 +223,8 @@ class ShopApp extends Application {
       const rank = ranked ? Math.min(cap, this.ranks[d.id] ?? (d.nssqCustom ? d.system.rank : rankDefault)) : null;
       const probe = { type: d.type, system: { ...d.system, rank } };
       const table = tableOf(d);
-      const mats = table ? (table.materials ?? []).join("/") : (d.system.materials ?? []).map((m) => `${m.type} R${m.rank}`).join(", ");
+      const craft = craftOf(d);
+      const mats = craft ? L("craftMats", { mats: craft.materials.join("/") }) : table ? (table.materials ?? []).join("/") : (d.system.materials ?? []).map((m) => `${m.type} R${m.rank}`).join(", ");
       const qty = this.qty[d.id] ?? 1;
       const unit = buyPrice(probe, tables, { level });
       return {
@@ -340,6 +358,25 @@ class ShopApp extends Application {
     const cap = game.user.isGM ? MAX_RANK : shopMaxRank();
     if (ranked) data.system.rank = Math.min(cap, this.ranks[id] ?? (doc.nssqCustom ? doc.system.rank : Math.max(1, level)));
     if (ranked && doc.nssqCustom && (doc.system.rank ?? 1) > cap) return ui.notifications.warn(L("overRank", { n: cap }));
+    // 「기동부적」: 그 종류 소재 하나를 골라 그 R로 만든다(작성 모드는 소재 없이 R1)
+    const craft = craftOf(data);
+    let craftMat = null;
+    let made = data;
+    if (craft) {
+      if (!this.creation) {
+        const cands = actor.items.filter((i) => i.type === "material" && !isStored(i) && craft.materials.includes(i.system.materialType) && (i.system.quantity ?? 1) >= qty);
+        if (!cands.length) return ui.notifications.warn(L("noMaterial", { need: `${craft.materials.join("/")} ×${qty}` }));
+        craftMat = await pickMaterial(cands, L("craftPick", { name: data.name }));
+        if (!craftMat) return;
+      }
+      made = crafted(data, craftMat?.system.rank ?? 1);
+    }
+    return this.buyData(doc, made, { qty, level, craftMat });
+  }
+
+  async buyData(doc, data, { qty, level, craftMat }) {
+    const actor = this.actor;
+    const ranked = isRanked(doc);
     const unit = buyPrice(data, tables, { level });
     const total = unit * qty;
     if (actor.system.money < total) return ui.notifications.warn(L("noMoney", { price: total }));
@@ -374,6 +411,7 @@ class ShopApp extends Application {
         for (const x of a) used[x.item.id] = (used[x.item.id] ?? 0) + x.n;
         allocation.push(...a);
       }
+      if (craftMat) allocation.push({ item: craftMat, n: qty });
     }
 
     // 확인. 무기·방어구는 이름을 정할 수 있다(비워 두면 원래 이름)

@@ -481,6 +481,8 @@
       "overRank": "이 마을에서는 R{n}까지만 판다.",
       "ownLimit": "{name}은(는) 2개 이상 가질 수 없다.",
       "noMaterial": "필요한 소재가 없다: {need}",
+      "craftMats": "{mats} 1개(그 R로 제작, 가격 ×R²)",
+      "craftPick": "{name}: 쓸 소재(R이 위력)",
       "pickMaterial": "소모할 소재 ({need})",
       "usedMaterial": "소재",
       "chooseElement": "기본 속성 선택(입수할 때 〈참〉〈괴〉〈돌〉 중 하나)",

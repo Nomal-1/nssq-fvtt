@@ -113,9 +113,12 @@
 | `guardLateAttack` | | (상시) 『방어』 스킬 대기 중 후발 행동으로 통상 공격(《공방일체》) |
 | `timePenalty` | `time`(day/night), `value` | (상시) 월드 설정 「시간대」가 그때면 명중·억제 판정 보정(《야행성》) |
 | `forceRow` | `row`, `check`(fixed) | 판정에 실패하면 그 열로 강제 이동(《떠올리기》, onHit) |
+| `craftRank` | `materials`(소재 종류 목록) | (아이템) 상점에서 그 종류 소재 하나를 골라 만들고, 그 소재 R이 아이템 `rank`(이름·키에 R, 가격 × R²). 효과 식의 `R`이 그 랭크(없으면 1). 「기동부적」 |
 | `itemUse` | `action`(boon/skillBook/analyze/dissect), `ability`(boon), `phases`(전투 중 쓸 페이즈, 기본 ["main"]) | 판정 없이 문서를 바꾸는 아이템(추가 컨텐츠, 07 #168, `combat/item-use.mjs`). boon: 그 캐릭터 `abilities.<k>.boon` +1(전투 밖). skillBook: `skillBonus` +1·습득 창구(전투 밖). analyze: 대상 적의 모든 정보 공개(플래그 `analyzed`, 식별·희소종 간파). dissect: 사용한 라운드에 쓰러진 적은 갈무리 뒤 모든 드롭 ×1(전투원 플래그 `dissect` → 전투 플래그 `dissected`). 대상은 `target` 효과로 |
 
 C2 보강: state `perAttack {selfDamage: "ones", tp}`(공격마다 대가, 《나찰》), when `selfExtraAction`(그 턴 주행동 2회를 얻음, 《다원 발도》).
+
+attack `fixedHit`: 명중 판정 기준을 사용자 【명중】 대신 고정값(식, 「기동부적」 `6+R`). `fixedDice`와 함께 쓰면 사용자 능력치와 무관한 공격.
 
 C1 보강: `recoil.to: "allies"`(자신 외 아군 전원, 《레기온 스러스트》), attack `ignoreBuffs`(["defenseUp", "resistUp:pierce"], 《실버 애로》)·`addTurnElements`(그 턴 나온 속성 부가, 《스피어 인볼브》), attackBonus `resistLow`(【내성】 1·2를 하나 낮춤, 《특이점 정리》), target `count`(단일이면 n명을 한 번에, 열이면 그 열에서 n체), when `targetNotBoss`(에너미 `isFOE`·`isBoss`).
 | `flag` | `flag`, `value` | 규칙 스위치(타이밍 「상시」). `itemRevive`: 그 캐릭터가 쓰는 HP 회복 아이템에 부활 효과(《간이 소생》), `tokenMax`: 『소환수』 토큰 동시 유지 수(《백수의 왕기》), `campCookHp`·`campCookTp`·`campCookCure`: 캠프 때 HP·TP 회복 2배·상태 이상 회복(커먼 요리 스킬, 『조리기구 세트』 필요) |

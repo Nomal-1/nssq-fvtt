@@ -160,6 +160,8 @@ async function useItem(actor, item) {
     return runItemUse(actor, item);
   }
   const hasEffects = !!item.system.effects?.length;
+  // 공격 아이템(「기동부적」)은 전투 중 [아이템]으로만
+  if (item.system.effects?.some((e) => e?.type === "attack")) return ui.notifications.warn(`${item.name}: ${game.i18n.localize("NSSQ.SkillUse.reason.combatOnly")}`);
   let targets = null;
   if (hasEffects) {
     targets = await pickItemTargets(actor, item);

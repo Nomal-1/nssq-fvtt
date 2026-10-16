@@ -16,7 +16,7 @@ import { activationRoll } from "./usage.mjs";
 /** 단계 8(트리거계)에서 처리하는 타입: 지금은 기록만 하고 GM 판단 */
 export const DEFERRED_TYPES = ["delayed", "counter", "chase", "trigger", "token", "guard", "aura", "provoke"];
 /** 사용할 때 해석하지 않는 상시 타입(passives.mjs) */
-export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies", "multiUse", "redirectAlly", "anytime", "dualWield", "dualSkill", "wideEvade", "guardLateAttack", "timePenalty", "dropAdjust", "dropDoubleUp", "dropExtra", "gatherAdjust", "gatherDoubleUp", "gatherDoubleExtra", "gatherExtra", "preemptBlock", "escapeDungeon", "checkBonus", "checkAssist", "checkFlip", "checkExtraDie", "rerollBonus", "sessionFp", "itemUse"];
+export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf", "attackBonus", "useBonus", "target", "immune", "requireAllies", "multiUse", "redirectAlly", "anytime", "dualWield", "dualSkill", "wideEvade", "guardLateAttack", "timePenalty", "dropAdjust", "dropDoubleUp", "dropExtra", "gatherAdjust", "gatherDoubleUp", "gatherDoubleExtra", "gatherExtra", "preemptBlock", "escapeDungeon", "checkBonus", "checkAssist", "checkFlip", "checkExtraDie", "rerollBonus", "sessionFp", "itemUse", "craftRank"];
 
 /** 대상 프로필에서 그 강화의 몫을 뺀 사본. list: "defenseUp"(수치 강화) / "resistUp:pierce"(그 속성 내성 +1) */
 function ignoreBuffs(t, list) {
@@ -66,14 +66,15 @@ export const hasHitCheck = (effects) => (effects ?? []).some((e) => e.type === "
  * @param {string} [p.category] 스킬 분류(『회복』이면 회복 롤에 사용자의 healDice를 더한다)
  * @param {"skill"|"item"} [p.source] 아이템이면 사용자의 itemHeal(《이피션트》)·itemRevive(《간이 소생》)
  */
-export async function resolveEffects({ effects, sl = 1, user, targets = [], pool = [], mainAction = false, rollDice, rng = Math.random, ctx = {}, variant = null, category = "", source = "skill", lastHit: givenHit = null }) {
+export async function resolveEffects({ effects, sl = 1, user, targets = [], pool = [], mainAction = false, rollDice, rng = Math.random, ctx = {}, variant = null, category = "", source = "skill", lastHit: givenHit = null, rank = 0 }) {
   effects = variantEffects(effects, variant);
   const out = { activation: null, fpGain: 0, failed: false, results: new Map(), gm: [], deferred: [], overheat: 0, overheatReduce: 0 };
   const res = (t) => {
     if (!out.results.has(t.id)) out.results.set(t.id, blank(t));
     return out.results.get(t.id);
   };
-  const vars = (target, extra = {}) => ({ SL: sl, self: user, target, ...extra });
+  // R: 아이템의 랭크(소재 R로 만든 「기동부적」 등, 07 #168. 없으면 1)
+  const vars = (target, extra = {}) => ({ SL: sl, R: Math.max(1, Number(rank) || 0), self: user, target, ...extra });
   const d6 = async () => (await rollDice(1))[0];
 
   // 발동 판정: 명중 판정이 없는 「주행동」 스킬(회복 롤 포함, 01 §3.4·3.6)
@@ -152,7 +153,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     const resist = r.sleepBroken && tt.resistAwake ? tt.resistAwake : tt.resist;
     // 다시 굴리기(01 #26)에 쓰도록 판정 조건을 남긴다
     const params = {
-      attacker: { hit: kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
+      // fixedHit: 명중 판정 기준을 사용자 능력치 대신 고정값으로(「기동부적」)
+      attacker: { hit: e.fixedHit !== undefined ? evaluate(e.fixedHit, vars(t)) : kind === "physical" ? user.physHit : user.elemHit, physAtk: user.physAtk, elemAtk: user.elemAtk, elements, critUp: user.critUp },
       target: { evasion: t.evasion, defense: tt.defense, resist, guarding: t.guarding, guardHalf: t.guardHalf },
       kind, hitMod, diceMod,
       atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, failAtOrBelow: Math.max(Number(e.failAtOrBelow ?? 0) || 0, pb.failAtOrBelow), resistMod: pb.resistMod, resistLow: pb.resistLow, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,

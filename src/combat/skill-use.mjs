@@ -598,7 +598,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     effects: effectsAll, sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : spreadPool,
     mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(),
-    variant, category: sys.category ?? "", source: kind, ctx: { skillKey: sys.key ?? null, choices, turnElements: await pickTurnElement(combatant, item, effectsAll, variant) }
+    variant, category: sys.category ?? "", source: kind, rank: kind === "item" ? sys.rank ?? 0 : 0, ctx: { skillKey: sys.key ?? null, choices, turnElements: await pickTurnElement(combatant, item, effectsAll, variant) }
   });
   if (guard) await guard.commit(new Set([...r.results.values()].filter((x) => x.hits.some((h) => h.hit)).map((x) => x.id)));
   // 「최속/후발 행동」(개막 페이즈에 쓴 것): 이번 턴 행동 순서. 메인 페이즈로 넘어갈 때 이니셔티브에 반영
