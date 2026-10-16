@@ -367,12 +367,14 @@ export async function counterAfterEvade(message, reactorUuid, skill) {
 const send = (payload) => (isActiveGM() ? gmFollowup(payload) : emit("followup", payload));
 
 async function gmFollowup({ messageId, id, run }) {
+  if (running.has(id)) return;
   const message = game.messages.get(messageId);
   const list = foundry.utils.deepClone(message?.getFlag("nssq", "followups") ?? []);
   const f = list.find((x) => x.id === id);
   if (!f || f.state !== "pending") return;
+  running.add(id);
   f.state = run ? "done" : "declined";
-  await message.setFlag("nssq", "followups", list);
+  try { await message.setFlag("nssq", "followups", list); } finally { running.delete(id); }
   if (run && !(await runFollowup(f, f.originKind))) {
     f.state = "declined";
     await message.setFlag("nssq", "followups", list);
@@ -410,6 +412,10 @@ function decorate(message, el) {
 // 팝업을 닫으면 「안 함」. 조종하는 플레이어가 접속해 있지 않으면 GM에게
 
 const shownPopups = new Map(); // followup id → Dialog
+// 한 번 띄운 followup id: 답한 뒤 GM이 상태를 바꾸기 전에 카드가 다시 갱신돼도 또 띄우지 않는다(두 번 실행 방지)
+const seenPopups = new Set();
+// 활성 GM: 처리 중인 followup id(같은 요청이 겹쳐 와도 한 번만)
+const running = new Set();
 
 /** 이 캐릭터의 선택을 받을 사람: 접속 중인 소유 플레이어(그 캐릭터가 배정된 사람 먼저), 없으면 활성 GM */
 function deciderOf(actor) {
@@ -423,7 +429,7 @@ function scanFollowupPopups(message) {
   for (const f of list) {
     const open = shownPopups.get(f.id);
     if (f.state !== "pending") { if (open) { shownPopups.delete(f.id); open.close(); } continue; }
-    if (open || shownPopups.has(f.id)) continue;
+    if (open || shownPopups.has(f.id) || seenPopups.has(f.id)) continue;
     const c = game.combat?.combatants.get(f.unitId);
     if (deciderOf(c?.actor)?.id !== game.user.id) continue;
     const d = { actor: c?.name ?? "?", name: shown(f), type: typeLabel(f) };
@@ -441,6 +447,7 @@ function scanFollowupPopups(message) {
       close: () => { shownPopups.delete(f.id); if (!answered && game.messages.get(message.id)?.getFlag("nssq", "followups")?.find((x) => x.id === f.id)?.state === "pending") send({ messageId: message.id, id: f.id, run: false }); }
     }, { classes: ["dialog", "nssq-reaction-popup"] });
     shownPopups.set(f.id, dlg);
+    seenPopups.add(f.id);
     try { foundry.audio.AudioHelper.play({ src: CONFIG.sounds.notification, volume: 0.8, autoplay: true, loop: false }, false); } catch { /* 소리 없음 */ }
     dlg.render(true);
   }
