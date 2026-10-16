@@ -319,6 +319,9 @@ function persistState(c) {
 const VINE_SVG = (cls) => `<svg class="${cls}" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M-5,28 C15,8 30,36 50,18 S80,4 105,22"/><path d="M-5,12 C20,32 40,6 60,26 S90,34 105,10"/><circle cx="22" cy="20" r="3.5"/><circle cx="50" cy="18" r="3.5"/><circle cx="78" cy="14" r="3.5"/></svg>`;
 const SWIRL_SVG = `<svg class="nb-swirl" viewBox="0 0 40 40"><path d="M20 20 m0 -2 a2 2 0 1 1 -2 2 a4 4 0 1 1 4 4 a6 6 0 1 1 -6 -6 a8 8 0 1 1 8 8 a10 10 0 1 1 -10 -10 a12 12 0 1 1 12 12"/></svg>`;
 const ailParticles = (st) => AILMENT_FX.filter((k) => st.has(k)).map((k) => `<span class="nb-ailfx fx-${k}">${"<i></i>".repeat(AILMENT_FX_PARTS[k] ?? 0)}</span>`).join("");
+// 주위로 퍼지는 입자(독 거품처럼): 마비=튀는 불꽃, 공포=피어오르는 푸른 혼, 저주=검붉은 연기 덩어리. 카드·그림 밖으로 넘친다
+const AURA = ["paralyze", "fear", "curse"];
+const ailAura = (st) => AURA.filter((k) => st.has(k)).map((k) => `<span class="nb-aura aura-${k}">${Array.from({ length: 7 }, (_, i) => `<i style="--x:${[-4, 12, 30, 50, 68, 86, 102][i]}%;--d:${(i * 0.37) % 1.6}s"></i>`).join("")}</span>`).join("");
 const ailIcons = (st) => {
   const icons = st.conds.filter((x) => AILMENT_ICON[x.id]).map((x) => `<i class="fas ${AILMENT_ICON[x.id]} ail-${x.id}"></i>`).join("");
   return icons ? `<span class="nb-ail-icons">${icons}</span>` : "";
@@ -335,11 +338,13 @@ function cardFx(c) {
   const st = persistState(c);
   const back = ailParticles(st);
   // 봉인 덩굴: 머리=위 가장자리, 다리=아래 가장자리, 팔=양옆 세로(글자를 가리지 않게)
-  const vineV = (side) => `<svg class="nb-cardvine-v ${side}" viewBox="0 0 20 100" preserveAspectRatio="none"><path d="M10,-5 C2,15 18,30 10,50 S2,80 10,105"/><path d="M6,-5 C16,20 4,40 12,60 S16,90 6,105"/><circle cx="10" cy="30" r="3"/><circle cx="9" cy="72" r="3"/></svg>`;
-  const front = st.binds.map((k) => (k === "bindArm" ? vineV("l") + vineV("r") : VINE_SVG(`nb-cardvine part-${k}`))).join("")
+  // 봉인 덩굴: 카드를 셋으로 나눠 머리(왼쪽·얼굴)·팔(가운데)·다리(오른쪽)를 사선으로 감는다
+  const vineD = (k) => `<svg class="nb-cardbind part-${k}" viewBox="0 0 100 100" preserveAspectRatio="none"><path class="v1" d="M-8,112 C20,80 30,70 50,50 S80,18 108,-12"/><path class="v2" d="M-8,82 C14,66 22,48 40,36 S62,6 80,-12"/><path class="v2" d="M20,112 C38,94 52,82 64,66 S90,40 108,18"/><circle cx="30" cy="68" r="4"/><circle cx="50" cy="50" r="4"/><circle cx="72" cy="30" r="4"/></svg>`;
+  const front = st.binds.map(vineD).join("")
     + (st.guard ? `<i class="nb-card-shield fas fa-shield-alt"></i>` : "")
     + (st.waiting ? `<i class="nb-card-wait fas fa-hourglass-half"></i>` : "");
-  return `<div class="nb-cardfx">${back}</div>${front ? `<div class="nb-cardfx-front">${front}</div>` : ""}`;
+  const aura = ailAura(st);
+  return `<div class="nb-cardfx">${back}</div>${aura ? `<div class="nb-cardaura">${aura}</div>` : ""}${front ? `<div class="nb-cardfx-front">${front}</div>` : ""}`;
 }
 /** 아군 얼굴 칸: 아이콘·혼란 소용돌이·석화·강화/약화 배지만 */
 function portraitOverlay(c) {
@@ -363,10 +368,11 @@ function persistOverlay(c) {
   const icons = conds.filter((x) => AILMENT_ICON[x.id]).map((x) => `<i class="fas ${AILMENT_ICON[x.id]} ail-${x.id}"></i>`).join("");
   return `${guard ? `<span class="nb-guard-wall"></span><i class="nb-guard-fx fas fa-shield-alt"></i>` : ""}`
     + (waiting ? `<span class="nb-wait-fx"><i class="fas fa-hourglass-half"></i></span>` : "")
-    + binds.map((k) => `<svg class="nb-vine part-${k}" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M-5,28 C15,8 30,36 50,18 S80,4 105,22"/><path d="M-5,12 C20,32 40,6 60,26 S90,34 105,10"/><circle cx="22" cy="20" r="3.5"/><circle cx="50" cy="18" r="3.5"/><circle cx="78" cy="14" r="3.5"/></svg>`).join("")
+    + binds.map((k) => VINE_SVG(`nb-vine part-${k}`)).join("")
     + (nBuff || nDebuff ? `<span class="nb-bd-badges">${nBuff ? `<b class="up"><i class="fas fa-caret-up"></i>${nBuff}</b>` : ""}${nDebuff ? `<b class="down"><i class="fas fa-caret-down"></i>${nDebuff}</b>` : ""}</span>` : "")
     + (has("confuse") ? `<svg class="nb-swirl" viewBox="0 0 40 40"><path d="M20 20 m0 -2 a2 2 0 1 1 -2 2 a4 4 0 1 1 4 4 a6 6 0 1 1 -6 -6 a8 8 0 1 1 8 8 a10 10 0 1 1 -10 -10 a12 12 0 1 1 12 12"/></svg>` : "")
     + AILMENT_FX.filter((k) => has(k)).map((k) => `<span class="nb-ailfx fx-${k}">${"<i></i>".repeat(AILMENT_FX_PARTS[k] ?? 0)}</span>`).join("")
+    + ailAura({ has })
     + (icons ? `<span class="nb-ail-icons">${icons}</span>` : "")
     + (has("petrify") ? `<span class="nb-stone"></span>` : "");
 }

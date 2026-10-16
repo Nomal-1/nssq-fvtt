@@ -1712,3 +1712,45 @@
 #nssq-battle .nb-cardvine-v.l { left: -6px; } #nssq-battle .nb-cardvine-v.r { right: -6px; }
 #nssq-battle .nb-cardvine-v path { fill: none; stroke: #4caf50; stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 2px #1b5e20); vector-effect: non-scaling-stroke; }
 #nssq-battle .nb-cardvine-v circle { fill: #81c784; stroke: #2e7d32; stroke-width: 1; }
+
+/* ---------- v4: 마비·공포·저주 주위 입자 + 진하게 / 아군 봉인 삼등분 사선 덩굴 ---------- */
+#nssq-battle .nb-aura { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+#nssq-battle .nb-cardaura { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: visible; }
+#nssq-battle .nb-aura i { position: absolute; left: var(--x); bottom: 0; display: block; animation-delay: var(--d); animation-iteration-count: infinite; }
+/* 마비: 노란 지그재그 불꽃이 튄다 */
+#nssq-battle .aura-paralyze i { width: 10px; height: 16px; bottom: 30%; background: #ffe14a; clip-path: polygon(40% 0, 100% 0, 60% 45%, 95% 45%, 20% 100%, 40% 55%, 5% 55%); filter: drop-shadow(0 0 4px #ffd000); animation-name: aura-spark; animation-duration: 1.1s; animation-timing-function: steps(4); }
+#nssq-battle .art .aura-paralyze i { width: 16px; height: 26px; }
+@keyframes aura-spark { 0% { transform: translate(0, 0) scale(0.6) rotate(0); opacity: 0; } 25% { opacity: 1; } 50% { transform: translate(6px, -14px) scale(1.1) rotate(25deg); opacity: 1; } 75% { opacity: 0.2; } 100% { transform: translate(-6px, -30px) scale(0.7) rotate(-20deg); opacity: 0; } }
+/* 공포: 푸른 혼(물방울 모양)이 피어오른다 */
+#nssq-battle .aura-fear i { width: 9px; height: 14px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: radial-gradient(circle at 50% 70%, #e8f0ff, #7d98ff 55%, rgba(80, 100, 255, 0)); filter: drop-shadow(0 0 5px #5a78ff); animation-name: aura-rise; animation-duration: 2.2s; animation-timing-function: ease-out; }
+#nssq-battle .art .aura-fear i { width: 14px; height: 22px; }
+/* 저주: 검붉은 연기 덩어리가 피어오른다 */
+#nssq-battle .aura-curse i { width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle, rgba(170, 20, 70, 0.95), rgba(60, 0, 30, 0.6) 55%, transparent 72%); filter: blur(1px) drop-shadow(0 0 4px #ff2060); animation-name: aura-rise; animation-duration: 2.6s; animation-timing-function: ease-out; }
+#nssq-battle .art .aura-curse i { width: 30px; height: 30px; }
+@keyframes aura-rise { 0% { transform: translateY(6px) scale(0.5); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-70px) scale(1.3); opacity: 0; } }
+#nssq-battle .art .nb-aura i { animation-name: aura-rise-big; }
+#nssq-battle .art .aura-paralyze i { animation-name: aura-spark; }
+@keyframes aura-rise-big { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-160px) scale(1.4); opacity: 0; } }
+/* 진하게: 아군 카드 */
+#nssq-battle .nb-cardfx .fx-paralyze { background: linear-gradient(90deg, rgba(255, 220, 60, 0.32), rgba(255, 220, 60, 0.12)); }
+#nssq-battle .nb-cardfx .fx-paralyze i { background: linear-gradient(100deg, transparent 29%, #fffbd0 30%, #ffe14a 31%, transparent 33%, transparent 60%, #fffbd0 61%, #ffe14a 62%, transparent 64%); filter: drop-shadow(0 0 6px #ffd000); }
+#nssq-battle .nb-member.ail-paralyze { border-color: #ffe14a; box-shadow: 0 0 10px rgba(255, 220, 60, 0.6); }
+#nssq-battle .nb-cardfx .fx-fear { background: linear-gradient(180deg, rgba(60, 90, 255, 0.7), rgba(60, 90, 255, 0.25)); }
+#nssq-battle .nb-member.ail-fear { border-color: #7d98ff; box-shadow: 0 0 10px rgba(80, 110, 255, 0.7); }
+#nssq-battle .nb-cardfx .fx-curse { background: linear-gradient(0deg, rgba(150, 10, 55, 0.75), rgba(150, 10, 55, 0.25) 90%); }
+#nssq-battle .nb-member.ail-curse { border-color: #e0205a; box-shadow: 0 0 12px rgba(200, 20, 70, 0.7); }
+/* 진하게: 에너미 실루엣 */
+#nssq-battle .art.ail-paralyze img { filter: drop-shadow(0 0 10px #ffe14a) drop-shadow(0 0 3px #fff3a0) saturate(0.85); }
+#nssq-battle .art.ail-fear img { filter: drop-shadow(0 0 14px #4a6aff) drop-shadow(0 0 4px #9fb2ff) brightness(0.9) hue-rotate(-15deg); }
+#nssq-battle .art.ail-curse img { filter: drop-shadow(0 0 16px #d01050) drop-shadow(0 0 5px #400015) brightness(0.9); }
+/* 아군 봉인: 카드 삼등분(머리=왼쪽, 팔=가운데, 다리=오른쪽)을 사선으로 감는 덩굴 */
+#nssq-battle .nb-cardvine, #nssq-battle .nb-cardvine-v { display: none; }
+#nssq-battle .nb-cardbind { position: absolute; top: -6%; height: 112%; width: 35%; overflow: visible; }
+#nssq-battle .nb-cardbind.part-bindHead { left: -1%; }
+#nssq-battle .nb-cardbind.part-bindArm { left: 32.5%; }
+#nssq-battle .nb-cardbind.part-bindLeg { left: 66%; }
+#nssq-battle .nb-cardbind path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; filter: drop-shadow(0 0 2px #0f3d12); }
+#nssq-battle .nb-cardbind .v1 { stroke: #4caf50; stroke-width: 5; }
+#nssq-battle .nb-cardbind .v2 { stroke: #66bb6a; stroke-width: 3; opacity: 0.9; }
+#nssq-battle .nb-cardbind circle { fill: #a5d6a7; stroke: #2e7d32; stroke-width: 1; vector-effect: non-scaling-stroke; }
+@media (prefers-reduced-motion: reduce) { #nssq-battle .nb-aura i { animation: none; } }
