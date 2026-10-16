@@ -91,7 +91,7 @@ export async function toggleShop(open = !shopOpen()) {
   await game.settings.set("nssq", "shopOpen", open);
 }
 
-/** 소재 R로 위력이 정해지는 아이템(「기동부적」, effects craftRank, 07 #168) */
+/** 소재 R로 위력이 정해지는 아이템(「기동부적」, effects craftRank, 01 #168) */
 const craftOf = (d) => (d.system?.effects ?? []).find((e) => e?.type === "craftRank") ?? null;
 
 /** 고른 소재 R로 만든 아이템: 이름·키에 R, 랭크, 가격 = 기본 가격 × R² */

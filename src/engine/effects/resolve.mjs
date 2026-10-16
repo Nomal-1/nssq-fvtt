@@ -73,7 +73,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     if (!out.results.has(t.id)) out.results.set(t.id, blank(t));
     return out.results.get(t.id);
   };
-  // R: 아이템의 랭크(소재 R로 만든 「기동부적」 등, 07 #168. 없으면 1)
+  // R: 아이템의 랭크(소재 R로 만든 「기동부적」 등, 01 #168. 없으면 1)
   const vars = (target, extra = {}) => ({ SL: sl, R: Math.max(1, Number(rank) || 0), self: user, target, ...extra });
   const d6 = async () => (await rollDice(1))[0];
 
@@ -255,7 +255,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
           row = { depth: c.depth, resisted: c.resisted, fixed: { target, check: c.check } };
         }
         // 판정 줄은 첫 번째에만
-        // power: [독] 대미지를 건 자의 【억제 공격】 대신 고정값으로(「독향」 5+R, 07 #168)
+        // power: [독] 대미지를 건 자의 【억제 공격】 대신 고정값으로(「독향」 5+R, 01 #168)
         const power = e.power !== undefined ? { power: evaluate(e.power, vars(t)) } : {};
         ids.forEach((id, i) => r.inflicts.push(i === 0 ? { id, ...row, ...power } : { id, depth: row.depth, resisted: row.resisted, ...power }));
         // 《스티그마》: 성공하면 자신도 같은 부위를, 심도는 자신의 달성값(selfSame: "atk")

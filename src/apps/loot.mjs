@@ -32,8 +32,8 @@ export async function startLoot(combat) {
   const rolls = [];
   const rows = [];
   // 「해부용 수용액」을 쓴 턴에 쓰러진 적(combat/item-use.mjs): 갈무리 뒤 모든 드롭 ×1
-  const { finishDissect } = await import("../combat/item-use.mjs");
-  const dissected = await finishDissect(combat, { now: true });
+  const { collectDissected } = await import("../combat/item-use.mjs");
+  const dissected = collectDissected(combat);
   for (const c of foes) {
     const roll = await new Roll("2d6").evaluate();
     rolls.push(roll);

@@ -131,7 +131,8 @@ async function gmApply({ messageId, index, undo = false }) {
     // [수면]: 명중한 공격의 처리 직후 풀린다(01 #37)
     const sleep = t.hit ? (actor.system.conditions ?? []).find((c) => c.id === "sleep") : null;
     if (sleep) upd["system.conditions"] = removeCondition(actor.system.conditions, "sleep");
-    await actor.update(upd);
+    // nssqMsg: 쓰러진 시각을 이 카드의 시각으로(해부용 수용액, combat/item-use.mjs)
+    await actor.update(upd, { nssqMsg: messageId });
     const entry = { ...t, applied: true, before, after, sleepEntry: sleep ?? null, curse: null };
     // [저주]: 실대미지의 절반(버림)이 공격자에게(방어·내성 무시, 쓰러질 수 있다 01 #44)
     const back = card.curse && attacker ? halve(t.finalDamage ?? 0) : 0;

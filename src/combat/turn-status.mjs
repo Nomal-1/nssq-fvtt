@@ -172,7 +172,7 @@ export function logLine(entry) {
   }
 }
 
-/** 그리모어 유지비(07 #168, 사용자 결정 D): 기록 스킬이 들어가 있으면 종료 페이즈마다 【TP】 −SL */
+/** 그리모어 유지비(01 #168, 사용자 결정 D): 기록 스킬이 들어가 있으면 종료 페이즈마다 【TP】 −SL */
 function grimoireUpkeep(actor) {
   const sk = actor.type === "character" ? actor.items.find((i) => i.flags?.nssq?.grimoireOf) : null;
   return sk ? { tp: sk.system.sl ?? 1, name: sk.name } : null;
@@ -275,7 +275,7 @@ export async function applyEndPhase(messageId, undo = false) {
     }
     const upd = { "system.conditions": v.conditions, "system.buffs": v.buffs, "system.hp.value": v.hp };
     if (v.tp !== null && v.tp !== undefined) upd["system.tp.value"] = v.tp;
-    await actor.update(upd, { nssqUndo: undo });
+    await actor.update(upd, { nssqUndo: undo, nssqMsg: messageId });
   }
   await message.setFlag("nssq", "endPhase.applied", !undo);
 }

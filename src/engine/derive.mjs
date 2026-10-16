@@ -18,7 +18,7 @@ export const ABILITY_SOURCES = ["base", "class", "growth", "bonus", "equip"];
  * 능력치를 출처별로 나눠 합계를 낸다.
  * 클래스 보정은 작성 시 1회 + 레벨업마다 1회이므로 보정 × Lv(세션 결과와 성장).
  * @param {object} p
- * @param {{[k]: {base, growth, boon?, bonus, temp?}}} p.abilities 저장값(temp는 v0.6.0 이전 값, bonus에 합산. boon은 추가 컨텐츠 「보전」, 07 #168)
+ * @param {{[k]: {base, growth, boon?, bonus, temp?}}} p.abilities 저장값(temp는 v0.6.0 이전 값, bonus에 합산. boon은 추가 컨텐츠 「보전」, 01 #168)
  * @param {{[k]: number}} [p.classBonus] 메인 클래스의 능력치 보정
  * @param {number} [p.level]
  * @param {{[k]: number}} [p.equip] 장비(장식·제련) 보정

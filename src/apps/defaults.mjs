@@ -68,7 +68,7 @@ export async function reseedDefaults() {
 
 /**
  * 추가 컨텐츠 등록(사용자 요청 묶음H): data/defaults/expansion.json의 아이템을 월드 아이템 폴더 「추가 컨텐츠」에 넣는다.
- * 같은 이름이 이미 있으면 건너뛴다. 등록하면 설정 expansion을 켠다(능력치 「보전」 칸). 사양이 정해지지 않은 것(기동부적·향·책·그리모어)은 07 #168
+ * 같은 이름이 이미 있으면 건너뛴다. 등록하면 설정 expansion을 켠다(능력치 「보전」 칸). 사양이 정해지지 않은 것(기동부적·향·책·그리모어)은 01 #168
  */
 export async function registerExpansion() {
   if (!game.user.isGM) return null;
@@ -97,7 +97,7 @@ export async function registerExpansion() {
 
 export function registerDefaults() {
   game.settings.register("nssq", "defaultsSeeded", { scope: "world", config: false, type: Number, default: 0 });
-  // 추가 컨텐츠를 등록한 월드(07 #168)
+  // 추가 컨텐츠를 등록한 월드(01 #168)
   game.settings.register("nssq", "expansion", { scope: "world", config: false, type: Boolean, default: false });
   game.settings.register("nssq", "expansionFolder", { scope: "world", config: false, type: String, default: "" });
   // 처음 켠 월드(활성 GM 한 명)에 한 번

@@ -1,9 +1,10 @@
 /**
- * 추가 컨텐츠 아이템의 「사용」 효과(effects `itemUse`, 03·07 #168). 피해·회복 판정 없이 문서를 바꾸는 것들
+ * 추가 컨텐츠 아이템의 「사용」 효과(effects `itemUse`, 03·01 #168). 피해·회복 판정 없이 문서를 바꾸는 것들
  * - boon(「~의 보전」): 그 캐릭터의 능력치 보전 칸 +1(영구). 전투 밖에서만
  * - skillBook(「비전의 서」): 스킬 포인트(skillBonus) +1, 습득 창구를 열고 스킬 트리를 띄운다. 전투 밖에서만
  * - analyze(「해석 글라스」): 적 하나의 모든 정보를 이 전투 동안 공개(식별·희소종 간파 포함, 도감에 식별 기록). 전투 중에만
- * - dissect(「해부용 수용액」): 사용한 턴에 쓰러진 적은 갈무리 뒤 모든 드롭을 1개씩(apps/loot.mjs). 전투 중에만
+ * - dissect(「해부용 수용액」): 사용한 뒤 그 턴의 종료 페이즈가 끝날 때까지 쓰러진 적은 갈무리 뒤 모든 드롭을 1개씩(apps/loot.mjs). 전투 중에만.
+ *   「쓰러진 때」는 쓰러뜨린 결과 카드가 나온 시각(적용을 늦게 눌러도 그 카드의 턴으로 센다)
  * 전투 중 쓸 수 있는 페이즈는 `phases`(기본 메인 페이즈만)
  */
 import { emit, onSocket } from "../socket.mjs";
@@ -70,9 +71,8 @@ export async function runItemUse(actor, item, { combatant = null, targets = [] }
     case "dissect": {
       const combat = combatant?.combat;
       if (!combat) return null;
-      // 쓰기 전에 이미 쓰러진 적은 빼고, 이 턴이 끝날 때 쓰러져 있는 적을 기록한다(finishDissect)
-      const before = combat.combatants.filter((c) => c.actor?.type === "enemy" && down(c)).map((c) => c.id);
-      await combatant.setFlag("nssq", "dissect", { round: combat.round, before });
+      // 쓴 턴·시각(같은 전투원이 여러 번 쓰면 모두, collectDissected)
+      await combatant.setFlag("nssq", "dissect", [...[].concat(combatant.getFlag("nssq", "dissect") ?? []).filter((d) => d?.at), { round: combat.round, at: Date.now() }]);
       return note(actor, esc(L("dissect", { name: actor.name, item: item.name })));
     }
   }
@@ -97,29 +97,36 @@ async function gmItemUse({ action, uuid }) {
 }
 
 /**
- * 수용액을 쓴 턴에 쓰러진 적 → 전투 플래그 dissected(전투원 id). 그 턴이 지나면(라운드가 바뀔 때) 확정, 갈무리 때는 진행 중인 턴도
- * @param {boolean} [now] 갈무리: 이번 턴 것도 확정
- * @returns {Promise<Set<string>>}
+ * 수용액의 대상이 되는 적(전투원 id): 지금 쓰러져 있고, 쓰러진 시각(koAt)이 수용액을 쓴 뒤 ~ 그 턴이 끝나기(roundEnds) 전
+ * @returns {Set<string>}
  */
-export async function finishDissect(combat, { now = false } = {}) {
-  const got = new Set(combat.getFlag("nssq", "dissected") ?? []);
-  let changed = false;
-  for (const c of combat.combatants) {
-    const d = c.getFlag("nssq", "dissect");
-    if (!d) continue;
-    if (!now && d.round >= combat.round) continue;
-    for (const e of combat.combatants) if (e.actor?.type === "enemy" && down(e) && !d.before.includes(e.id)) got.add(e.id);
-    if (!now) { await c.unsetFlag("nssq", "dissect"); changed = true; }
+export function collectDissected(combat) {
+  const uses = combat.combatants.contents.flatMap((c) => [].concat(c.getFlag("nssq", "dissect") ?? []).filter((d) => d?.at));
+  const ends = combat.getFlag("nssq", "roundEnds") ?? {};
+  const got = new Set();
+  for (const e of combat.combatants) {
+    const at = e.getFlag("nssq", "koAt");
+    if (e.actor?.type !== "enemy" || !down(e) || !at) continue;
+    if (uses.some((u) => at >= u.at && at < (ends[u.round] ?? Infinity))) got.add(e.id);
   }
-  if (changed) await combat.setFlag("nssq", "dissected", [...got]);
   return got;
 }
 
 export function registerItemUse() {
   onSocket("itemUse", (p) => { if (game.users.activeGM?.id === game.user.id) gmItemUse(p); });
-  // 라운드가 넘어가면 지난 턴의 수용액을 확정
+  // 턴이 끝난 시각(종료 페이즈 뒤 라운드가 넘어갈 때)
   Hooks.on("updateCombat", (combat, changes) => {
-    if (!("round" in changes) || game.users.activeGM?.id !== game.user.id) return;
-    finishDissect(combat).catch((err) => console.error("NSSQ | dissect", err));
+    if (!("round" in changes) || game.users.activeGM?.id !== game.user.id || !(changes.round > 1)) return;
+    const prev = changes.round - 1;
+    if (!combat.getFlag("nssq", `roundEnds.${prev}`)) combat.setFlag("nssq", `roundEnds.${prev}`, Date.now());
+  });
+  // 에너미가 쓰러진 시각: 쓰러뜨린 결과 카드의 시각(옵션 nssqMsg), 없으면 지금. 바꾼 사용자가 기록
+  Hooks.on("updateActor", (actor, changes, options, userId) => {
+    if (userId !== game.user.id || actor.type !== "enemy" || !game.combat) return;
+    const hp = foundry.utils.getProperty(changes, "system.hp.value");
+    if (hp === undefined || hp > 0) return;
+    const c = game.combat.combatants.find((x) => x.actor === actor || x.actor?.uuid === actor.uuid);
+    const at = (options?.nssqMsg && game.messages.get(options.nssqMsg)?.timestamp) || Date.now();
+    if (c) c.setFlag("nssq", "koAt", at).catch(() => {});
   });
 }

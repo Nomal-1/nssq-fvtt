@@ -124,7 +124,7 @@ export async function editAbilities(actor) {
   const cell = (k, src, editable) => (editable
     ? `<td><input type="number" name="${k}.${src}" value="${stored(k, src)}"/></td>`
     : `<td class="ro" data-src="${src}">${src === "base" ? s.abilityParts[k][src] : sign(s.abilityParts[k][src])}</td>`);
-  // 「보전」 칸(07 #168): 추가 컨텐츠를 등록한 월드이거나 이미 값이 있을 때만. GM만 고친다
+  // 「보전」 칸(01 #168): 추가 컨텐츠를 등록한 월드이거나 이미 값이 있을 때만. GM만 고친다
   const boon = !!game.settings.get("nssq", "expansion") || ABILITIES.some((k) => s.abilityParts[k].boon);
   const cols = ["base", "class", "growth", ...(boon ? ["boon"] : []), "bonus", "equip"];
   const editable = { base: baseOk, growth: gm, boon: gm, bonus: gm };

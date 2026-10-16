@@ -993,7 +993,8 @@ async function applyEntry(actor, e, sourceUuid, meta = {}) {
     for (const st of e.states) states = addState(states, st).list;
     upd["flags.nssq.states"] = states;
   }
-  await actor.update(upd);
+  // nssqMsg: 쓰러진 시각을 이 카드의 시각으로(해부용 수용액)
+  await actor.update(upd, { nssqMsg: meta.messageId ?? null });
   for (const id of newly) await onInflicted(actor, id);
   // 《명하노니》: 적용 큐가 끝난 뒤 공격(공격 카드의 적용도 이 큐를 쓴다)
   if (e.command) setTimeout(() => runCommand(actor, e.command), 0);
@@ -1043,7 +1044,7 @@ async function applyOne(message, undo) {
   for (const e of entries) {
     const actor = e.uuid ? await fromUuid(e.uuid) : null;
     if (!actor) continue;
-    if (!undo) e.before = await applyEntry(actor, e, card.userUuid, { main: !!card.main && !card.followup });
+    if (!undo) e.before = await applyEntry(actor, e, card.userUuid, { main: !!card.main && !card.followup, messageId: message.id });
     else if (e.before) {
       const upd = { "system.hp.value": e.before.hp, "system.conditions": e.before.conditions, "system.buffs": e.before.buffs };
       if (e.before.states) upd["flags.nssq.states"] = e.before.states;
