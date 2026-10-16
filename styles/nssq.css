@@ -1808,3 +1808,8 @@
 .an-summary li b { flex: 0 0 5.5em; }
 .an-summary li.ailment { border-color: #e05555; } .an-summary li.bind { border-color: #e09030; } .an-summary li.buff { border-color: #ff5a3c; }
 .an-summary li.debuff { border-color: #a05aeb; } .an-summary li.special { border-color: #46e1cd; } .an-summary li.stance { border-color: #ffd862; }
+/* 여러 개가 섞일 때 읽기 쉽게: 카드 바탕색은 첫 상태 이상 하나만(나머지는 입자만), 덩굴·방패·모래시계는 글자 뒤로, 글자에 그림자 */
+#nssq-battle .nb-cardfx .nb-ailfx ~ .nb-ailfx { background: none; }
+#nssq-battle .nb-cardfx .nb-ailfx ~ :is(.nb-specialfx, .nb-heatfx) { background: none; }
+#nssq-battle .nb-cardfx-front { z-index: 0; }
+#nssq-battle .nb-member .info { text-shadow: 0 0 3px #000, 0 0 2px #000; }
