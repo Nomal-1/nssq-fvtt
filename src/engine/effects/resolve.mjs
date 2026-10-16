@@ -255,7 +255,9 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
           row = { depth: c.depth, resisted: c.resisted, fixed: { target, check: c.check } };
         }
         // 판정 줄은 첫 번째에만
-        ids.forEach((id, i) => r.inflicts.push(i === 0 ? { id, ...row } : { id, depth: row.depth, resisted: row.resisted }));
+        // power: [독] 대미지를 건 자의 【억제 공격】 대신 고정값으로(「독향」 5+R, 07 #168)
+        const power = e.power !== undefined ? { power: evaluate(e.power, vars(t)) } : {};
+        ids.forEach((id, i) => r.inflicts.push(i === 0 ? { id, ...row, ...power } : { id, depth: row.depth, resisted: row.resisted, ...power }));
         // 《스티그마》: 성공하면 자신도 같은 부위를, 심도는 자신의 달성값(selfSame: "atk")
         if (e.selfSame === "atk" && !row.resisted && row.contest) {
           for (const id of ids) res(user).inflicts.push({ id, depth: row.contest.atk.total, resisted: false, self: true });

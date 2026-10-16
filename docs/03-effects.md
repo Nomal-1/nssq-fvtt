@@ -62,7 +62,7 @@
 |---|---|---|
 | `attack` | `kind`(physical/elemental), `element`(생략 시 무기 기본 속성), `addElement`(무기 속성에 더함, 「〈염〉 속성을 부가한」), `failAtOrBelow`(명중 눈 합이 n 이하면 절대 실패), `randomFrom`(무작위 대상을 그 열에서만: front/back), `times`, `hitMod`, `diceMod`, `atkMod`, `atkMultiplier`, `random`, `uniqueTarget`, `onHit[]`, `bonuses[{when, hitMod?, diceMod?, atkMod?, element?}]`, `halfDamage` | 공격 롤 1회분(또는 times회) |
 | `heal` | `mode`(roll/fixed/full/percent), `bonus`/`amount`, `resource`(hp/tp), `revive` | 회복 롤 또는 고정 회복. \[전투 불능\] 대상은 `revive: true`인 효과만 회복(부활). 부활 효과가 있으면 쓰러진 아군도 대상으로 고를 수 있다. 『회복』 분류 스킬의 회복 롤에는 사용자의 `healDice` 보정이 더해진다 |
-| `inflict` | `condition`, `check: {type: fixed, target} | {type: contest, atkMod?} | {type: forced}` | 상태 이상·봉인 부여. forced: 저항 없이 반드시 걸고 심도만 사용자의 【억제 공격】 판정 달성값(01 #61). `condition`이 목록이면 `choose`(사용할 때 고르는 개수, 《스티그마》)·`randomPick`(무작위 1개, 《신기한 씨앗》), `selfSame: "atk"`(성공하면 자신도 같은 것을 자신의 달성값 심도로) |
+| `inflict` | `power`([독] 대미지 고정값 식, 「독향」 `5+R`), `condition`, `check: {type: fixed, target} | {type: contest, atkMod?} | {type: forced}` | 상태 이상·봉인 부여. forced: 저항 없이 반드시 걸고 심도만 사용자의 【억제 공격】 판정 달성값(01 #61). `condition`이 목록이면 `choose`(사용할 때 고르는 개수, 《스티그마》)·`randomPick`(무작위 1개, 《신기한 씨앗》), `selfSame: "atk"`(성공하면 자신도 같은 것을 자신의 달성값 심도로) |
 | `drain` | `resource`(hp/tp), `mode`(half: 준 대미지 절반 / quarter: 1/4 / sixes: 대미지 다이스의 6 개수) | onHit 안에서: 그 명중으로 자신 회복(《음양검: 영흡명참》) |
 | `recoil` | `mode`(ones) | `toSelf`와 함께: 이 행동에서 굴린 대미지 다이스의 '1' 개수만큼 자신이 대미지(《싱글 스러스트》) |
 | `kill` | `check: {type: fixed, target, defMod?} | {type: contest, atkMod?}` | 즉사: 억제 방어 롤 실패면 【HP】 0(카드에 \[즉사\]) |

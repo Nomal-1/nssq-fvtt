@@ -35,3 +35,11 @@ describe("향(07 #168): 소재 R로 고정 목표값 부여", () => {
     expect(out.results.get("e").inflicts[0].resisted).toBe(true);
   });
 });
+
+describe("독향: [독] 대미지 5+R", () => {
+  it("R3이면 부여 결과에 power 8", async () => {
+    const eff = [{ type: "inflict", condition: "poison", check: { type: "fixed", target: "13+R" }, power: "5+R" }];
+    const out = await resolveEffects({ effects: eff, sl: 1, rank: 3, user, targets: [{ ...foe, suppDef: 0 }], rollDice: seq([1, 2]), rng: () => 0.5, source: "item" });
+    expect(out.results.get("e").inflicts[0]).toMatchObject({ id: "poison", resisted: false, power: 8 });
+  });
+});

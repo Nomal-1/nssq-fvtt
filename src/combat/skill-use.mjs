@@ -971,7 +971,9 @@ async function applyEntry(actor, e, sourceUuid, meta = {}) {
     if (i.resisted || i.broken) continue;
     // 즉사
     if (i.id === "death") { hp = Math.min(hp, 0); continue; }
-    const r = addCondition(conds, { id: i.id, depth: i.depth, source: sourceUuid ?? "", sourceSuppAtk: source ? combatProfile(source).suppAtk : 0 });
+    // 고정 대미지(「독향」): 건 자를 남기지 않고 기록값으로만(turn-status poisonPower가 기록값을 쓴다)
+    const fixed = i.power !== undefined && i.power !== null;
+    const r = addCondition(conds, { id: i.id, depth: i.depth, source: fixed ? "" : sourceUuid ?? "", sourceSuppAtk: fixed ? i.power : source ? combatProfile(source).suppAtk : 0 });
     conds = r.list;
     if (!["ignored", "blocked"].includes(r.result)) newly.push(i.id);
   }

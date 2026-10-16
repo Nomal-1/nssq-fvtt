@@ -12,7 +12,7 @@ import { ABILITIES, RESISTS } from "../derive.mjs";
 export const TYPES = {
   attack: { kind: false, element: false, addElement: false, failAtOrBelow: false, copyElement: false, randomFrom: false, times: false, hitMod: false, diceMod: false, atkMod: false, atkMultiplier: false, random: false, uniqueTarget: false, onHit: false, bonuses: false, halfDamage: false, fixedDice: false, fixedHit: false, ignoreBuffs: false, addTurnElements: false },
   heal: { mode: false, bonus: false, amount: false, resource: false, revive: false },
-  inflict: { condition: true, check: false, depth: false, choose: false, randomPick: false, selfSame: false },
+  inflict: { condition: true, check: false, depth: false, choose: false, randomPick: false, selfSame: false, power: false },
   command: { mode: true },
   spreadAilment: { from: false, count: false, check: false },
   emitImbue: { kind: false },
