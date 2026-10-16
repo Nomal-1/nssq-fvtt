@@ -391,12 +391,13 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
   // 《이도일인》·《추영의 잔상》: 쌍수 중 그 분류 공격 스킬을 2회(TP 2회분, 2회째는 고를 수 있음)
   const twice = kind === "skill" && !free ? await askDualSkill(actor, item, effects) : null;
   if (twice) userMods.physHit = (userMods.physHit ?? 0) + twice.hitMod;
-  const post = (units, weaponMod = null) => resolveAndPost({
+  const post = (units, weaponMod = null, keepFpDecl = false) => resolveAndPost({
     actor, combatant, item, kind, units,
     mainAction: kind === "skill" && sys.timing === "주행동", variant, choices, stripTiming: late, skipDelayed: !!delayed, skipToken: tokenEffectOf(effects).length > 0,
-    userMods, weaponMod
+    userMods, weaponMod, keepFpDecl
   });
-  const message = await post(targetCombatants.map((c) => ({ actor: c.actor, combatant: c })));
+  // 2회 쓰면(《이도일인》 등) 【FP】 주사위 선언은 두 번 모두에(01 #26)
+  const message = await post(targetCombatants.map((c) => ({ actor: c.actor, combatant: c })), null, !!twice);
   // 2회째: 기타 슬롯 무기로(성능·속성, 01 #125)
   if (twice) {
     await new Promise((r) => setTimeout(r, 300));
@@ -530,7 +531,7 @@ export async function useItemOutside(actor, item, targets) {
  * @param {{ type: "chase"|"counter"|"trigger" }} [followup] 이 카드가 추격·반격 등이면(연쇄 금지 판단용)
  * @param {Object<string, object>} [extra] 대상 uuid → 더한 대미지 다이스(《풀 게인》 등, engine extendDamage 결과 + count)
  */
-export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, choices = [], weaponMod = null, followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false, skipToken = false, userMods = {} }) {
+export async function resolveAndPost({ actor, combatant, item, kind, units, mainAction, variant = null, choices = [], weaponMod = null, followup = null, extra = null, extraRolls = [], stripTiming = false, skipDelayed = false, skipToken = false, userMods = {}, keepFpDecl = false }) {
   const sys = item.system;
   // 후발 행동으로 실행할 때는 행동 순서 효과를 빼고, 예약한 지연 공격은 다시 해석하지 않는다
   let effectsAll = sys.effects ?? [];
@@ -579,7 +580,8 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   if (!actorOf.has(user.id)) actorOf.set(user.id, actor);
   // 【FP】 주사위 선언(01 #26, combat/fp-dice.mjs): 명중 판정마다
   const { declaredFpDice, spendFpDice } = await import("./fp-dice.mjs");
-  if (actor.type === "character") Object.assign(user, { fpDice: declaredFpDice(actor), fpAvail: actor.system.fp?.value ?? 0 });
+  // 추격·반격·발동(followup)은 그 행동이 아니므로 선언을 쓰지 않는다
+  if (actor.type === "character" && !followup) Object.assign(user, { fpDice: declaredFpDice(actor), fpAvail: actor.system.fp?.value ?? 0 });
   const r = await resolveEffects({
     effects: effectsAll, sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : spreadPool,
@@ -613,7 +615,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const tr = r.results.get(user.id)?.tokenRemove;
   if (tr !== undefined && !r.failed && combatant) await removeToken(combatant, tr || null);
   // FP(캐릭터만), 오버히트
-  if (actor.type === "character" && (r.fpSpent || actor.getFlag("nssq", "fpDice")) && r.results.size && [...r.results.values()].some((x) => x.hits?.length)) await spendFpDice(actor, r.fpSpent ?? 0);
+  if (actor.type === "character" && !followup && (r.fpSpent || actor.getFlag("nssq", "fpDice")) && r.results.size && [...r.results.values()].some((x) => x.hits?.length)) await spendFpDice(actor, r.fpSpent ?? 0, { keep: keepFpDecl });
   if (r.fpGain && actor.type === "character") await actor.update({ "system.fp.value": (actor.system.fp?.value ?? 0) + r.fpGain });
   if (r.overheat) {
     await actor.setFlag("nssq", "overheat", r.overheat);
@@ -636,7 +638,8 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   }
 
   // 행동 전체의 대미지로 정해지는 것(반동·《블랙 사바스》 회복)이 있으면 다시 굴리기를 두지 않는다(01 #26)
-  const noReroll = /"type":"(recoil|healFromDamage)"/.test(JSON.stringify(effectsAll));
+  // 흡수(drain)도: 회복이 사용자 줄의 합계에 섞여 한 명중만 빼거나 더하기 어렵다
+  const noReroll = /"type":"(recoil|healFromDamage|drain)"/.test(JSON.stringify(effectsAll));
   const entries = [...r.results.values()].map((x) => ({
     uuid: actorOf.get(x.id)?.uuid ?? null, name: x.name,
     damage: x.damage + (extra?.[actorOf.get(x.id)?.uuid]?.add ?? 0), extra: extra?.[actorOf.get(x.id)?.uuid] ?? null, heal: x.heal, inflicts: x.inflicts, buffs: x.buffs, cures: x.cures, resource: x.resource,

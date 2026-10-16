@@ -161,21 +161,26 @@ export async function openAssetLink() {
   const files = await scan(opts.root);
   if (!files) return ui.notifications.warn(L("noFolder", { root: opts.root }));
   await game.settings.set("nssq", "assetFolder", opts.root);
-  const prevLinks = game.settings.get("nssq", "assetLinks") ?? {};
-  const state = {
-    enemies: { ...(prevLinks.enemies ?? {}) },
-    icons: { ...(prevLinks.icons ?? {}) },
-    maps: foundry.utils.deepClone(game.settings.get("nssq", "fieldMaps") ?? {}),
-    encounters: foundry.utils.deepClone(game.settings.get("nssq", "encounters") ?? {}),
-    towns: foundry.utils.deepClone(game.settings.get("nssq", "towns") ?? {})
+  // 지금 설정으로 대상·계획을 만든다(미리보기 창을 연 동안 다른 창에서 고친 것을 덮지 않도록 적용 직전에 한 번 더)
+  const build = async () => {
+    const prevLinks = game.settings.get("nssq", "assetLinks") ?? {};
+    const state = {
+      enemies: { ...(prevLinks.enemies ?? {}) },
+      icons: { ...(prevLinks.icons ?? {}) },
+      maps: foundry.utils.deepClone(game.settings.get("nssq", "fieldMaps") ?? {}),
+      encounters: foundry.utils.deepClone(game.settings.get("nssq", "encounters") ?? {}),
+      towns: foundry.utils.deepClone(game.settings.get("nssq", "towns") ?? {})
+    };
+    const t = await targets(state);
+    // BGM 대상의 지금 값은 "재생목록.곡" 참조라 파일 경로와 비교하려면 곡 경로로 바꿔 본다
+    const refPath = (ref) => { const [pl, so] = String(ref ?? "").split("."); return game.playlists.get(pl)?.sounds.get(so)?.path ?? ref; };
+    for (const x of t.bgm) { const g = x.get; x.get = () => refPath(g()); }
+    return { prevLinks, state, p: plan(files, t, opts.overwrite) };
   };
-  const t = await targets(state);
-  // BGM 대상의 지금 값은 "재생목록.곡" 참조라 파일 경로와 비교하려면 곡 경로로 바꿔 본다
-  const refPath = (ref) => { const [pl, so] = String(ref ?? "").split("."); return game.playlists.get(pl)?.sounds.get(so)?.path ?? ref; };
-  for (const x of t.bgm) { const g = x.get; x.get = () => refPath(g()); }
-  const p = plan(files, t, opts.overwrite);
-  const ok = await Dialog.confirm({ title: L("title"), content: previewHtml(opts.root, p), rejectClose: false, options: { width: 640, classes: ["nssq", "dialog"] } });
+  const first = await build();
+  const ok = await Dialog.confirm({ title: L("title"), content: previewHtml(opts.root, first.p), rejectClose: false, options: { width: 640, classes: ["nssq", "dialog"] } });
   if (!ok) return null;
+  const { prevLinks, state, p } = await build();
   const todo = p.rows.filter((r) => !r.skip && r.from !== r.file.path);
   const refs = await bgmRefs(todo.filter((r) => r.kind === "bgm").map((r) => r.file.path));
   for (const r of todo) r.target.set(r.kind === "bgm" ? refs[r.file.path] ?? "" : r.file.path);

@@ -57,7 +57,8 @@ async function afterHpChange(actor) {
   const combatant = combat?.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor.uuid);
   const dead = CONFIG.specialStatusEffects.DEFEATED;
   const setOverlay = async (on) => { if (actor.statuses?.has(dead) !== on) await actor.toggleStatusEffect(dead, { active: on, overlay: true }); };
-  if (ko && combat?.started) await dropCombatStates(actor, combatant);
+  // [석화]도 전투 불능(석화를 거는 스킬 카드는 【HP】와 상태 이상을 함께 고친다)
+  if ((ko || isPetrified(actor)) && combat?.started) await dropCombatStates(actor, combatant);
   if (combatant) {
     const auto = !!combatant.getFlag("nssq", "autoDefeated");
     if (ko && !combatant.defeated) {
@@ -178,7 +179,7 @@ export function registerApply() {
   Hooks.on("updateActor", (actor, changes) => {
     if (!isActiveGM()) return;
     if (foundry.utils.getProperty(changes, "system.hp.value") !== undefined) afterHpChange(actor);
-    // [석화]도 전투 불능: 자세·대기 상태가 풀린다(01 #57)
+    // [석화]도 전투 불능: 자세·대기 상태가 풀린다(01 #57). 【HP】를 함께 바꿨으면 위에서 처리
     else if (foundry.utils.getProperty(changes, "system.conditions") !== undefined && isPetrified(actor) && game.combat?.started) {
       const c = game.combat.combatants.find((x) => x.actor === actor || x.actor?.uuid === actor.uuid);
       if (c) dropCombatStates(actor, c);

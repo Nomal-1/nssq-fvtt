@@ -20,11 +20,12 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 export const declaredFpDice = (actor) => (actor?.type === "character" ? Math.max(0, Number(actor.getFlag("nssq", "fpDice")) || 0) : 0);
 
 /** 공격 뒤: 쓴 【FP】를 빼고 선언을 지운다 */
-export async function spendFpDice(actor, spent) {
+export async function spendFpDice(actor, spent, { keep = false } = {}) {
   if (actor?.type !== "character") return;
   const upd = {};
   if (spent > 0) upd["system.fp.value"] = Math.max(0, (actor.system.fp?.value ?? 0) - spent);
-  if (actor.getFlag("nssq", "fpDice")) upd["flags.nssq.-=fpDice"] = null;
+  // keep: 같은 행동의 다음 공격(쌍수 2회째)도 선언을 쓴다
+  if (!keep && actor.getFlag("nssq", "fpDice")) upd["flags.nssq.-=fpDice"] = null;
   if (Object.keys(upd).length) await actor.update(upd);
 }
 
@@ -77,12 +78,13 @@ async function showRolls(rolls) {
 }
 
 /** 활성 GM: 통상 공격 카드의 대상 index를 다시 굴린다 */
-async function rerollAttack(message, index) {
+async function rerollAttack(message, index, by) {
   const card = foundry.utils.deepClone(message.getFlag("nssq", "attack"));
   const t = card?.targets?.[index];
-  if (!t || t.rerolled || !t.params) return;
+  // 수동 반응(능동 회피·《완전 방어》)이 이미 쓰였으면 그 판정은 끝났다
+  if (!t || t.rerolled || !t.params || t.reaction?.state === "used") return;
   const attacker = await fromUuid(card.attackerUuid);
-  if ((attacker?.system.fp?.value ?? 0) < REROLL_COST) return;
+  if (!mayReroll(attacker, by) || (attacker?.system.fp?.value ?? 0) < REROLL_COST) return;
   if (t.applied) await requestApply(message.id, index, true);
   const fresh = foundry.utils.deepClone(game.messages.get(message.id).getFlag("nssq", "attack"));
   const rolls = [];
@@ -91,20 +93,23 @@ async function rerollAttack(message, index) {
   const target = await fromUuid(t.actorUuid);
   const { pendingReaction } = await import("./reaction.mjs");
   fresh.targets[index] = { ...fresh.targets[index], ...attackFields(r), applied: false, before: null, after: null, reaction: pendingReaction(target, "physical", r.hit) };
-  await attacker.update({ "system.fp.value": Math.max(0, attacker.system.fp.value - REROLL_COST) });
+  // 처음 판정의 1로 얻은 【FP】는 다시 굴리면 얻지 못한 것이 된다(원문 「다시 굴리기 전에 1이 나왔더라도 얻을 수 없다」)
+  const lost = fresh.fpGain ?? 0;
+  fresh.fpGain = 0;
+  await attacker.update({ "system.fp.value": Math.max(0, attacker.system.fp.value - REROLL_COST - lost) });
   const { renderAttackCard } = await import("./attack.mjs");
   await message.update({ content: await renderAttackCard(fresh), "flags.nssq.attack": fresh });
   if (autoApplyMode() === "auto" && r.hit && !fresh.targets[index].reaction) await requestApply(message.id, index, false);
 }
 
 /** 활성 GM: 스킬 카드의 대상 index·명중 seq를 다시 굴린다 */
-async function rerollSkill(message, index, seq) {
+async function rerollSkill(message, index, seq, by) {
   const card = foundry.utils.deepClone(message.getFlag("nssq", "skillCard"));
   const e = card?.entries?.[index];
   const h = e?.hits?.find((x) => x.seq === seq);
-  if (!h || h.rerolled || !h.params) return;
+  if (!h || h.rerolled || !h.params || e.reaction?.state === "used") return;
   const user = card.userUuid ? await fromUuid(card.userUuid) : null;
-  if ((user?.system.fp?.value ?? 0) < REROLL_COST) return;
+  if (!mayReroll(user, by) || (user?.system.fp?.value ?? 0) < REROLL_COST) return;
   const { applySkillCard, renderSkillCard } = await import("./skill-use.mjs");
   if (card.applied) await applySkillCard(message.id, true);
   const fresh = foundry.utils.deepClone(game.messages.get(message.id).getFlag("nssq", "skillCard"));
@@ -129,15 +134,39 @@ async function rerollSkill(message, index, seq) {
   }
   // 새로 명중하면 그 공격의 명중 시 효과를 지금 계산한다
   if (!wasHit && r.hit && fh.onHit?.length) await addOnHit(fresh, fe, fh, r, user, rolls);
+  // [수면]: 명중하면 깨고, 빗나가면 이 명중으로 깬 것을 거둔다(01 #37)
+  const target = fe.uuid ? await fromUuid(fe.uuid) : null;
+  if (r.hit && !fe.sleepBroken && (target?.system.conditions ?? []).some((c) => c.id === "sleep")) { fh.woke = true; fe.sleepBroken = true; }
+  if (!r.hit && fh.woke) {
+    fh.woke = false;
+    fe.sleepBroken = fe.hits.some((x) => x.woke);
+    for (const i of fe.inflicts ?? []) if (i.broken === seq) delete i.broken;
+  }
+  const { groupMessages, groupPendingReaction } = await import("./skill-use.mjs");
+  const { hasPendingReaction, pendingReaction } = await import("./reaction.mjs");
   if (!r.hit) fe.reaction = null;
   else if (!fe.reaction) {
-    const target = fe.uuid ? await fromUuid(fe.uuid) : null;
-    fe.reaction = (await import("./reaction.mjs")).pendingReaction(target, fh.kind ?? "physical", true);
+    // 같은 대상을 여러 번 치는 공격은 그 대상에게 반응 1번(01 #54): 다른 타격 카드에 이미 반응이 있으면 새로 두지 않는다
+    const others = fresh.group && !fresh.group.random ? groupMessages(fresh).filter((m) => m.id !== message.id) : [];
+    const already = others.some((m) => (m.getFlag("nssq", "skillCard").entries ?? []).some((x) => x.uuid === fe.uuid && x.reaction));
+    if (!already) fe.reaction = pendingReaction(target, fh.kind ?? "physical", true);
   }
-  await user.update({ "system.fp.value": Math.max(0, user.system.fp.value - REROLL_COST) });
+  // 처음 판정의 1로 얻은 【FP】(행동의 첫 명중 판정)는 다시 굴리면 얻지 못한 것이 된다
+  const lost = fh.seq === 1 ? fresh.fpGain ?? 0 : 0;
+  if (lost) fresh.fpGain = 0;
+  await user.update({ "system.fp.value": Math.max(0, user.system.fp.value - REROLL_COST - lost) });
   await message.update({ content: renderSkillCard(fresh), "flags.nssq.skillCard": fresh });
-  const { hasPendingReaction } = await import("./reaction.mjs");
-  if (autoApplyMode() === "auto" && !hasPendingReaction(fresh.entries) && (!fresh.group || fresh.group.index === fresh.group.count)) await applySkillCard(message.id);
+  if (autoApplyMode() !== "auto") return;
+  if (!fresh.group) { if (!hasPendingReaction(fresh.entries)) await applySkillCard(message.id); return; }
+  // 다회 공격: 되돌린 뒤 카드가 모두 있고 기다리는 반응이 없으면 마지막 카드까지 다시 적용
+  const list = groupMessages(fresh);
+  if (list.length === fresh.group.count && !groupPendingReaction(fresh)) await applySkillCard(list.at(-1).id);
+}
+
+/** 그 카드의 공격자를 소유한 사용자(또는 GM)만 다시 굴릴 수 있다 */
+function mayReroll(actor, userId) {
+  const u = game.users.get(userId);
+  return !!actor && !!u && (u.isGM || actor.testUserPermission(u, "OWNER"));
 }
 
 /** 다시 굴려 새로 명중한 공격의 onHit(부여·강화·흡수 등)를 계산해 카드에 붙인다(회차 seq를 달아 다음에 빼거나 적용할 수 있게) */
@@ -191,12 +220,12 @@ export function canRerollNow(message) {
 }
 
 const queue = { p: Promise.resolve() };
-function gmReroll({ messageId, type, index, seq }) {
+function gmReroll({ messageId, type, index, seq, by }) {
   queue.p = queue.p.then(async () => {
     const message = game.messages.get(messageId);
     if (!message || !canRerollNow(message)) return ui.notifications.warn(L("tooLate"));
-    if (type === "attack") await rerollAttack(message, index);
-    else await rerollSkill(message, index, seq);
+    if (type === "attack") await rerollAttack(message, index, by);
+    else await rerollSkill(message, index, seq, by);
   }).catch((err) => console.error("NSSQ | fp reroll", err));
   return queue.p;
 }
@@ -204,6 +233,7 @@ function gmReroll({ messageId, type, index, seq }) {
 export function requestReroll(payload) {
   // 누른 사람 쪽에서도 먼저 본다(버튼이 사라지기 전에 누른 경우 등)
   if (!canRerollNow(game.messages.get(payload.messageId))) return ui.notifications.warn(L("tooLate"));
+  payload = { ...payload, by: game.user.id };
   return isActiveGM() ? gmReroll(payload) : emit("fpReroll", payload);
 }
 
@@ -224,7 +254,9 @@ export function registerFpDice() {
     const sk = message.getFlag("nssq", "skillCard");
     const owner = fromUuidSync((atk?.attackerUuid ?? sk?.userUuid) || "");
     el.querySelectorAll(".fp-reroll").forEach((b) => {
-      if (!owner?.isOwner || owner.type !== "character" || !canRerollNow(message)) { b.remove(); return; }
+      const i = Number(b.closest("[data-index]")?.dataset.index ?? 0);
+      const reacted = (atk ? atk.targets?.[i] : sk?.entries?.[i])?.reaction?.state === "used";
+      if (!owner?.isOwner || owner.type !== "character" || !canRerollNow(message) || reacted) { b.remove(); return; }
       if ((owner.system.fp?.value ?? 0) < REROLL_COST) b.disabled = true;
       b.addEventListener("click", (ev) => {
         ev.preventDefault();

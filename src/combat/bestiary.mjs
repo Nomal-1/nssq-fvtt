@@ -25,13 +25,16 @@ export function bestiaryEntry(actor) {
  * GM·간파 성공(rareKnown)·원래 값 기록이 없으면 null(실제 값 그대로)
  * @returns {null | { hp: {value, max}, stat: (k, v) => number, resist: (k, v) => number }}
  */
-export function rareMask(actor) {
+export function rareMask(actor, { forAll = false } = {}) {
   const s = actor?.system;
   const o = actor?.getFlag?.("nssq", "rareOriginal");
-  if (!s?.isRare || s.rareKnown || game.user.isGM || !o?.hp) return null;
+  // forAll: 모두가 보는 글(종료 페이즈 카드 본문 등)을 쓸 때는 GM이 써도 가린 값으로
+  if (!s?.isRare || s.rareKnown || (game.user.isGM && !forAll) || !o?.hp) return null;
   const lost = Math.max(0, (s.hp?.max ?? 0) - (s.hp?.value ?? 0));
   return {
     hp: { max: o.hp.max, value: Math.max(0, o.hp.max - lost) },
+    // 임의의 실제 【HP】 값 → 보이는 값(카드의 「HP a → b」)
+    hpOf: (v) => Math.max(0, o.hp.max - Math.max(0, (s.hp?.max ?? 0) - (Number(v) || 0))),
     stat: (k, v) => v - ((s.stats?.[k] ?? 0) - (o.stats?.[k] ?? s.stats?.[k] ?? 0)),
     resist: (k, v) => v - ((s.resist?.[k] ?? 0) - (o.resist?.[k] ?? s.resist?.[k] ?? 0))
   };

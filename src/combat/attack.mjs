@@ -6,7 +6,7 @@ import { inRange, resolveAttack } from "../engine/combat.mjs";
 import { sumAttackBonuses } from "../engine/effects/passives.mjs";
 import { autoApplyMode, requestApply } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
-import { knowsEnemy } from "./bestiary.mjs";
+import { knowsEnemy, rareMask } from "./bestiary.mjs";
 import { decorateReactions, pendingReaction } from "./reaction.mjs";
 import { guardAttack } from "./guard.mjs";
 import { slotOccupant } from "../engine/equipment.mjs";
@@ -83,12 +83,14 @@ export function dualWieldOf(actor) {
 export async function normalAttack(attacker, opts = {}) {
   const dual = !opts.followup && !opts.weaponMod ? dualWieldOf(attacker) : null;
   if (!dual) return attackWith(attacker, opts);
-  const first = await attackWith(attacker, { ...opts, weaponMod: { ...dual.main, by: dual.name } });
+  // 【FP】 주사위 선언은 두 번의 명중 판정 모두에(판정마다 n점, 01 #26)
+  const fpDice = declaredFpDice(attacker);
+  const first = await attackWith(attacker, { ...opts, weaponMod: { ...dual.main, by: dual.name }, fpDice, keepFpDecl: true });
   if (!first) return first;
   // 2회째 대상은 다시 고른다(기타 슬롯 무기의 사거리 안, 01 #124)
   const target = await secondTarget(attacker, opts, dual.other);
-  if (!target) return first;
-  return attackWith(attacker, { ...opts, target, weaponMod: { ...dual.other, by: dual.name }, turnChecked: true });
+  if (!target) { await spendFpDice(attacker, 0); return first; }
+  return attackWith(attacker, { ...opts, target, weaponMod: { ...dual.other, by: dual.name }, turnChecked: true, fpDice });
 }
 
 /** 쌍수 2회째 대상: 살아 있는 적 중 사거리 안. 하나면 그것, 여럿이면 고르는 창(처음 대상이 기본) */
@@ -117,7 +119,7 @@ async function secondTarget(attacker, opts, weapon) {
  * @param {{ ignoreRange?: boolean, target?: TokenDocument }} [opts] GM은 Shift로 사거리 무시.
  *   target: 전투 화면에서 고른 대상(없으면 캔버스에서 지정한 타깃 1개)
  */
-async function attackWith(attacker, { ignoreRange = false, target: picked = null, followup = null, weaponMod = null, turnChecked = false } = {}) {
+async function attackWith(attacker, { ignoreRange = false, target: picked = null, followup = null, weaponMod = null, turnChecked = false, fpDice: fpGiven = null, keepFpDecl = false } = {}) {
   if (!attacker) return;
   const targets = picked ? [picked] : [...game.user.targets];
   if (targets.length !== 1) return ui.notifications.warn(L("pickOneTarget"));
@@ -196,9 +198,10 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
     kind: "physical", hitMod: pb.hitMod, diceMod: pb.diceMod, atkMod: pb.atkMod, critUp: pb.critUp, critDiceMod: pb.critDice
   };
   // 【FP】 주사위 선언(01 #26, combat/fp-dice.mjs)
-  const fpDice = Math.min(declaredFpDice(attacker), attacker.system.fp?.value ?? 0);
+  // 추격·반격(followup)은 그 행동이 아니므로 선언을 쓰지 않는다. 쌍수는 normalAttack이 두 번 모두에 같은 수를 준다
+  const fpDice = followup ? 0 : Math.min(fpGiven ?? declaredFpDice(attacker), attacker.system.fp?.value ?? 0);
   const r = await resolveAttack({ ...params, fpDice, rollDice });
-  if (attacker.type === "character" && (fpDice || attacker.getFlag("nssq", "fpDice"))) await spendFpDice(attacker, fpDice);
+  if (!followup && attacker.type === "character" && (fpDice || attacker.getFlag("nssq", "fpDice"))) await spendFpDice(attacker, fpDice, { keep: keepFpDecl });
 
   // PC의 명중 판정에서 1이 나오면 【FP】(일반 행위 판정)
   if (r.fpGain && attacker.type === "character" && attacker.isOwner) {
@@ -298,7 +301,9 @@ export function registerAttackHooks() {
       const target = fromUuidSync(t.actorUuid);
       const reveal = game.user.isGM || knowsEnemy(target);
       if (status) {
-        status.textContent = t.applied ? (reveal ? L("appliedHp", { before: t.before, after: t.after }) : L("appliedHidden"))
+        // 간파하지 못한 희소종은 통상종 【HP】로(bestiary.mjs rareMask)
+        const mask = rareMask(target);
+        status.textContent = t.applied ? (reveal ? L("appliedHp", { before: mask ? mask.hpOf(t.before) : t.before, after: mask ? mask.hpOf(t.after) : t.after }) : L("appliedHidden"))
           : autoApplyMode() === "off" ? L("manualApply") : "";
       }
       if (!buttons) return;

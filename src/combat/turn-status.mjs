@@ -13,7 +13,10 @@ import { normalAttack } from "./attack.mjs";
 import { combatProfile, friendly, sideOf } from "./profile.mjs";
 import { buffLabel, conditionName } from "./status.mjs";
 import { emit, onSocket } from "../socket.mjs";
-import { knowsEnemy } from "./bestiary.mjs";
+import { knowsEnemy, rareMask } from "./bestiary.mjs";
+
+/** 종료 페이즈 카드의 【HP】 줄: 간파하지 못한 희소종은 모두에게 통상종 값으로(본문은 모두가 본다) */
+const hpShown = (a, before, after) => { const m = rareMask(a, { forAll: true }); return m ? { before: m.hpOf(before), after: m.hpOf(after) } : { before, after }; };
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Turn.${k}`, d) : game.i18n.localize(`NSSQ.Turn.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -190,7 +193,7 @@ export async function runEndPhase(combat, { delayed = 0 } = {}) {
       after: { hp: r.hp, tp: r.tp, conditions: r.conditions, buffs: r.buffs },
       before: { hp: s.hp.value, tp: a.type === "character" ? s.tp.value : null, conditions: s.conditions ?? [], buffs: s.buffs ?? [] }
     });
-    blocks.push(`<li><b>${esc(c.name)}</b><ul>${r.log.map((e) => `<li class="${e.step}">${esc(logLine(e))}</li>`).join("")}</ul>${isHidden(a) ? "" : `<span class="hp-line">${L("hpLine", { before: s.hp.value, after: r.hp })}</span>`}</li>`);
+    blocks.push(`<li><b>${esc(c.name)}</b><ul>${r.log.map((e) => `<li class="${e.step}">${esc(logLine(e))}</li>`).join("")}</ul>${isHidden(a) ? "" : `<span class="hp-line">${L("hpLine", hpShown(a, s.hp.value, r.hp))}</span>`}</li>`);
   }
   // 본문은 전투 화면 커맨드 창에도 그대로 보인다(플래그 body)
   const body = `<p class="notes">${delayed ? L("delayedDone", { n: delayed }) : L("delayedNone")}</p>

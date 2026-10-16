@@ -42,6 +42,9 @@ export async function removeRare(actor) {
   if (!game.user.isGM || actor.type !== "enemy" || !actor.system.isRare) return;
   const o = actor.getFlag("nssq", "rareOriginal");
   const update = { "system.isRare": false, "flags.nssq.-=rareOriginal": null };
-  if (o) Object.assign(update, { "system.hp": o.hp, "system.stats": o.stats, "system.resist": o.resist });
+  // 받은 대미지는 남긴다(희소종으로 바꾼 뒤 깎인 만큼)
+  const s = actor.system;
+  const lost = Math.max(0, (s.hp?.max ?? 0) - (s.hp?.value ?? 0));
+  if (o) Object.assign(update, { "system.hp": { max: o.hp.max, value: Math.max(0, o.hp.max - lost) }, "system.stats": o.stats, "system.resist": o.resist });
   await actor.update(update);
 }

@@ -42,7 +42,9 @@ export function enemyAnalysisHtml(actor, name, combatant = null) {
   };
   const resist = (k) => {
     const v = mask ? mask.resist(k, s.resistTotal?.[k]) : s.resistTotal?.[k];
-    const changed = v !== s.resist?.[k] && known;
+    // 바뀐 것 표시도 원래 값과 비교(희소종 강화를 「바뀜」으로 보이지 않게)
+    const base = mask ? mask.resist(k, s.resist?.[k]) : s.resist?.[k];
+    const changed = v !== base && known;
     return `<div class="an-res ${k}"><span>${esc(loc(`NSSQ.Resist.${k}`))}</span><b class="${show && changed ? "changed" : ""}">${show ? esc(v) : Q}</b></div>`;
   };
   const left = `
