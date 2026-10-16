@@ -46,6 +46,7 @@ import { EncounterApp, registerEncounters } from "./apps/encounters.mjs";
 import { TownApp, registerTown, returnToTown, requestReturnToTown } from "./apps/town.mjs";
 import { GuildApp, registerGuild } from "./apps/guild.mjs";
 import { levelUp, registerLevelUp } from "./apps/levelup.mjs";
+import { registerMobile } from "./apps/mobile.mjs";
 import { registerDefaults, reseedDefaults } from "./apps/defaults.mjs";
 import { FieldMapApp, registerFieldMap } from "./apps/fieldmap.mjs";
 import { ChargenWizard, newCharacter, registerChargen } from "./apps/chargen-wizard.mjs";
@@ -125,6 +126,7 @@ Hooks.once("init", () => {
   registerRoster();
   registerGuild();
   registerLevelUp();
+  registerMobile();
   registerDefaults();
   registerFieldMap();
   registerChargen();

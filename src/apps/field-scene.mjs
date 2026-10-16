@@ -6,6 +6,7 @@
  * - 이벤트 잠금: GM이 처리하지 않은 트리거·F.O.E. 카드가 있으면(fieldMapState.events) 플레이어 메뉴를 가린다
  * - 지도 창은 플레이어에게 보기 전용(지도로 조작하는 것은 GM)
  */
+import { viewArea } from "./mobile.mjs";
 import * as FM from "../engine/fieldmap.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
@@ -59,12 +60,8 @@ let fitting = false;
 function fitView() {
   if (!overlay || !canvas.ready) return;
   const r = canvas.dimensions.sceneRect;
-  const side = ui.sidebar?._collapsed ? 40 : (ui.sidebar?.element?.[0]?.offsetWidth ?? 300) + 16;
-  const box = (id) => document.getElementById(id)?.getBoundingClientRect();
-  const area = {
-    l: Math.max(70, (box("controls")?.right ?? 60) + 8), t: Math.max(46, (box("navigation")?.bottom ?? 40) + 6),
-    r: window.innerWidth - side, b: Math.min(window.innerHeight - 66, (box("hotbar")?.top ?? window.innerHeight - 66) - 6)
-  };
+  // 씬 컨트롤·내비게이션·핫바·사이드바에 가리지 않게(모바일이면 화면 전체, apps/mobile.mjs)
+  const area = viewArea();
   const scale = Math.min((area.r - area.l) / r.width, (area.b - area.t) / r.height);
   fitting = true;
   canvas.pan({

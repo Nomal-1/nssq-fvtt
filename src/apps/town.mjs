@@ -8,6 +8,7 @@
  * - 던전에 들어가면(필드 지도 진행 시작·랜덤 던전 시작) location = dungeon, 상점 닫기
  * - 상점 판매 품목은 마을마다(shopHidden, 없으면 기본 설정)
  */
+import { viewArea } from "./mobile.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Town.${k}`, d) : game.i18n.localize(`NSSQ.Town.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
@@ -160,13 +161,8 @@ let fitting = false;
 function fitTownView() {
   if (!canvas.ready || !canvas.scene?.getFlag("nssq", "town")) return;
   const r = canvas.dimensions.sceneRect;
-  const side = ui.sidebar?._collapsed ? 40 : (ui.sidebar?.element?.[0]?.offsetWidth ?? 300) + 16;
-  // 씬 컨트롤·씬 내비게이션·핫바에 가리지 않게 실제 위치로 여백을 잰다
-  const box = (id) => document.getElementById(id)?.getBoundingClientRect();
-  const area = {
-    l: Math.max(70, (box("controls")?.right ?? 60) + 8), t: Math.max(46, (box("navigation")?.bottom ?? 40) + 6),
-    r: window.innerWidth - side, b: Math.min(window.innerHeight - 66, (box("hotbar")?.top ?? window.innerHeight - 66) - 6)
-  };
+  // 씬 컨트롤·내비게이션·핫바·사이드바에 가리지 않게(모바일이면 화면 전체, apps/mobile.mjs)
+  const area = viewArea();
   const scale = Math.min((area.r - area.l) / r.width, (area.b - area.t) / r.height);
   const x = r.x + r.width / 2 - ((area.l + area.r) / 2 - window.innerWidth / 2) / scale;
   const y = r.y + r.height / 2 - ((area.t + area.b) / 2 - window.innerHeight / 2) / scale;

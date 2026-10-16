@@ -1820,3 +1820,29 @@
 /* 에너미: 점멸로 한 번에 한 연출만(아군과 같음) + 주위 입자 수 제한(후열·작은 그림은 4개, 전열 5개) */
 #nssq-battle .art .nb-aura i:nth-child(n+6) { display: none; }
 #nssq-battle .nb-enemy.back .art .nb-aura i:nth-child(n+5) { display: none; }
+
+/* ======================= 모바일 모드(body.nssq-mobile, apps/mobile.mjs) ======================= */
+/* Foundry 기본 UI 숨김: 씬 컨트롤·씬 내비게이션·핫바·플레이어 목록·카메라·사이드바(채팅은 서랍으로) */
+body.nssq-mobile :is(#controls, #navigation, #hotbar, #players, #camera-views, #logo, #pause) { display: none !important; }
+body.nssq-mobile #sidebar { display: none; }
+body.nssq-mobile.nssq-chat-open #sidebar { display: flex; position: fixed; top: 0; right: 0; bottom: 0; height: 100% !important; width: min(420px, 92vw) !important; z-index: 1000; box-shadow: -6px 0 24px rgba(0, 0, 0, 0.6); }
+body.nssq-mobile #ui-left, body.nssq-mobile #ui-bottom { pointer-events: none; }
+/* 창: 화면에 꽉 차게(시트·큰 창), 대화창은 가로 꽉 + 가운데 */
+body.nssq-mobile .window-app:not(.dialog), body.nssq-mobile .application:not(.dialog) {
+  left: 0 !important; top: 0 !important; width: 100vw !important; height: 100% !important; max-height: 100% !important; border-radius: 0;
+}
+body.nssq-mobile .window-app.dialog, body.nssq-mobile .application.dialog {
+  left: 2vw !important; width: 96vw !important; max-width: 96vw !important; max-height: 92% !important;
+}
+body.nssq-mobile .window-app .window-header { min-height: 40px; font-size: 1.1em; }
+body.nssq-mobile .window-app .window-header .header-button { padding: 0 8px; }
+body.nssq-mobile .window-app .window-resizable-handle { display: none; }
+/* 누르기 쉽게 */
+body.nssq-mobile button, body.nssq-mobile .dialog-button { min-height: 38px; }
+body.nssq-mobile input, body.nssq-mobile select { min-height: 32px; font-size: 16px; }
+/* 떠 있는 버튼: 채팅·내 시트·전체 화면 */
+#nssq-mobile-dock { position: fixed; right: 8px; bottom: 8px; z-index: 1100; display: flex; flex-direction: column; gap: 8px; }
+#nssq-mobile-dock button { width: 46px; height: 46px; border-radius: 50%; font-size: 1.2em; color: #f2e6c0; background: rgba(16, 30, 52, 0.92); border: 1px solid #c9a74a; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); }
+body.nssq-chat-open #nssq-mobile-dock button[data-m="chat"] { background: #c9a74a; color: #102038; }
+/* 전투 화면: 여백 없이 */
+body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }

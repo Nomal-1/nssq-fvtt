@@ -8,6 +8,7 @@
  * 다시 그릴 때는 바뀐 곳만 고치고(morph.mjs), 자리를 옮긴 카드는 미끄러지게, 페이즈·차례가 바뀌면 배너,
  * 공격·【HP】 변화에는 피격 이펙트를 띄운다.
  */
+import { isMobile } from "../apps/mobile.mjs";
 import { inRange } from "../engine/combat.mjs";
 import { BUFFS } from "../engine/buffs.mjs";
 import { normalAttack } from "./attack.mjs";
@@ -178,6 +179,8 @@ export function clearHud() {
 
 /** 사이드바를 가리지 않게 오른쪽 끝을 맞춘다 */
 function fitToViewport(el) {
+  // 모바일 모드는 사이드바를 숨기므로 화면 전체(apps/mobile.mjs)
+  if (isMobile()) { el.style.right = "0px"; el.classList.add("compact"); return; }
   const sidebar = document.getElementById("sidebar");
   const w = sidebar && !ui.sidebar?._collapsed ? sidebar.offsetWidth : (sidebar?.offsetWidth ?? 0);
   el.style.right = `${w + 4}px`;
