@@ -201,12 +201,20 @@ function playingSounds() {
   return game.playlists.contents.flatMap((p) => p.sounds.filter((s) => s.playing).map((s) => ({ playlist: p.id, sound: s.id })));
 }
 
+/**
+ * 소리 바꾸기는 실패해도 전투 진행을 막지 않는다. 이 브라우저가 아직 오디오 잠금 상태면(페이지를 연 뒤 클릭 전)
+ * 문서는 바뀌었는데 이 화면에서 재생만 못 해 예외가 나므로 경고만 남긴다(다른 사용자 화면에서는 재생된다)
+ */
+async function soundSafe(fn) {
+  try { await fn(); } catch (err) { console.warn("NSSQ | sound", err); }
+}
+
 async function stopSounds(list) {
-  for (const { playlist, sound } of list) await game.playlists.get(playlist)?.sounds.get(sound)?.update({ playing: false });
+  for (const { playlist, sound } of list) await soundSafe(() => game.playlists.get(playlist)?.sounds.get(sound)?.update({ playing: false }));
 }
 
 async function resumeSounds(list) {
-  for (const { playlist, sound } of list) await game.playlists.get(playlist)?.sounds.get(sound)?.update({ playing: true });
+  for (const { playlist, sound } of list) await soundSafe(() => game.playlists.get(playlist)?.sounds.get(sound)?.update({ playing: true }));
 }
 
 export async function startBattle({ presetId, members, surprise = "none", identifyValue = null, dark = null }) {
@@ -267,8 +275,8 @@ export async function startBattle({ presetId, members, surprise = "none", identi
   // 4) 음악 전환: 씬은 바꾸지 않으므로 프리셋 씬에 연결된 BGM을 직접 튼다
   await stopSounds(previousSounds);
   if (copy.playlist) {
-    if (copy.playlistSound) await copy.playlist.playSound(copy.playlistSound);
-    else await copy.playlist.playAll();
+    if (copy.playlistSound) await soundSafe(() => copy.playlist.playSound(copy.playlistSound));
+    else await soundSafe(() => copy.playlist.playAll());
   }
 
   // 5) 전투: 어느 씬을 보든 보이도록 씬에 묶지 않는다(전투원은 사본 씬의 토큰)
@@ -389,7 +397,7 @@ export async function endBattle(combat, result = "abort") {
       if ((a.getFlag("nssq", "states") ?? []).length) await a.unsetFlag("nssq", "states");
     }
     // 전투 BGM 정지 → 원래 씬·음악
-    if (copy?.playlist) await copy.playlist.stopAll();
+    if (copy?.playlist) await soundSafe(() => copy.playlist.stopAll());
     if (game.combats.has(combat.id)) await combat.delete();
     // 예전 방식(사본 씬으로 이동한 전투)이면 원래 씬으로 되돌린다
     const origin = game.scenes.get(info.origin);
