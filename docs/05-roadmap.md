@@ -71,21 +71,25 @@
 - [x] 0  - [x] 1  - [x] 2  - [x] 3  - [x] 4  - [x] 5  - [x] 6  - [x] 7  - [x] 8  - [x] 9  - [x] 9.5  - [x] 10
 
 ## 인계 메모 (세션이 바뀌면 먼저 읽는다)
-- **현재**: main = v0.36.0. 에셋 폴더 연결(GM 스크린 「준비」, `src/apps/asset-link.mjs`): 저작물(공식 그림·BGM)은 시스템·저장소에 넣지 않고 사용자 서버 Data 폴더(기본 `nssq-assets`)에만 둔다. 하위 폴더 에너미·전투BGM·전투배경·에어리어·마을·NPC, 파일 이름 = 대상 이름. 버전별 변경은 `docs/08-changelog.md`(새 릴리스는 그 맨 위에 한 줄). 미궁 진입 측정(2번): 실제로는 약 1초(설정 저장 5번 × 약 0.19초). 16~20초는 GPU 없는 테스트 브라우저의 렌더 프레임(한 프레임 약 0.4초)이 메인 스레드를 막아 생긴 착시 → `connect(role, { render: false })` 추가(렌더 루프 정지, 스크린숏 때만 그림). 시간 측정·긴 통째 점검은 이것으로.
-- **단계 9에 연결할 효과 데이터**: modifier `checks.<판정>`(커먼 《괴물 지식》 식별 +2 등, 장식 「지식의 서」)·`gather.*`·`campHeal`, flag `campCook*`는 데이터만 있고 아직 읽는 곳이 없다(판정 대화창·식별·채집·캠프 도구에서 읽게 할 것).
-- **자동 실행 훅 규칙**: 모든 클라이언트에서 도는 훅(deleteCombat·createCombatant 등)에서 문서를 고칠 때는 `game.user.isGM`이 아니라 `game.users.activeGM?.id === game.user.id`(또는 `isActiveGM()`)로 거른다. 단계 6 완료 후 사용자 테스트 피드백을 반영하는 중. 다음은 단계 7(클래스별 효과 데이터, 클래스 하나에 커밋 하나).
-- **사용자 확인 끝**: 체크리스트 0~24번은 v0.10.7까지 사용자가 확인함(22번의 「다회 공격 회차 표시」는 28번으로 바뀜). 25번은 Claude가 테스트 월드에서 확인(v0.10.8) → 버그 4건을 v0.10.9에서 고침. 26·27번은 서버를 v0.10.10으로 올린 뒤 Claude가 테스트 월드에서 확인함(모두 통과).
-- **미결 결정**
-  - 없음. (다회 공격 표시는 (가)로 결정·구현, 01 #56·#57은 확정)
+- **현재**: main = v0.36.0. 단계 0~10 완료, 이후는 사용자 요청 묶음·점검·버그 수정. 버전별 변경은 `docs/08-changelog.md`(새 릴리스는 그 맨 위에 한 줄).
+- **남은 것**
+  - 사용자 결정 대기: 07의 미결 항목(사용자가 「나중에」로 둠), 추가 컨텐츠(07 #168, 보류), 모바일 지원(보류, 설정 기본 끔·기능은 남김).
+  - 사용자 PC 확인 대기: 카드 지속 이펙트 점멸·특수 상태 이펙트·컷인 위치, 실제 파일로 [에셋 폴더 연결].
+  - 마지막에: 큰 파일(`combat/hud.mjs` 등) 쪼개기·중복 정리·CSS 경량화(기능이 다 정해진 뒤).
+- **설계 메모**
+  - 자동 실행 훅 규칙: 모든 클라이언트에서 도는 훅(deleteCombat·createCombatant 등)에서 문서를 고칠 때는 `game.user.isGM`이 아니라 `isActiveGM()`(`game.users.activeGM?.id === game.user.id`)로 거른다.
+  - 저작물(공식 그림·BGM)은 시스템·저장소에 넣지 않는다. 사용자 서버 Data 폴더(기본 `nssq-assets`)에 두고 GM 스크린 「준비」 [에셋 폴더 연결](`src/apps/asset-link.mjs`)로 이름 규칙에 따라 연결한다.
+  - 스킬 습득은 작성·레벨업 직후·길드 재분배 직후만(`apps/levelup.mjs`의 `skillPick` 플래그와 preCreate/preUpdate 가드). GM은 막지 않는다. Lv1은 한 스킬 SL 2·커먼 하나 SL1, Lv2 이상은 레벨업 한 번에 한 스킬 +1(01 #30).
+- **점검 기록(2026-10-16)**: 서버에서 플레이어 2 + GM 1로 통째 진행(마을→편성→미궁→전투→갈무리→레벨업→귀환), 스킬·반응(자세·호령·주언·추격·반격·패링 팝업·회복·해제·종료 페이즈), 랜덤 던전 2D6 팝업, 탐색(지도 작성·채집·트랩·캠프·조사·이동), 최근 변경 코드 리뷰까지 통과(찾은 버그는 v0.35.5~v0.35.9에서 고침).
 - **작업 방식(사용자 선호)**
   - 사용자는 오라클 클라우드 Foundry에서 GitHub Releases로 업데이트해 테스트하고, 「v0.x.y로 버그 리포트」처럼 버전을 밝혀 보고한다. 그 버전 기준으로 판단한다.
-  - 릴리스는 태그 push가 막혀 있으므로 버전 커밋을 main에 push한 뒤 매번 https://github.com/Nomal-1/nssq-fvtt/actions/workflows/release.yml 의 [Run workflow] 링크를 준다.
-  - 고칠 때마다 `tests/manual-checklist.md`의 「지금 확인할 것」에 번호 붙은 절을 추가하고 머리말 버전을 올린다.
+  - 릴리스는 태그 push가 막혀 있으므로 버전 커밋을 main에 push한 뒤 release.yml을 실행한다(GitHub 도구로 Claude가 직접 실행할 수 있으면 그렇게, 아니면 https://github.com/Nomal-1/nssq-fvtt/actions/workflows/release.yml 의 [Run workflow] 링크를 준다). 릴리스가 나오면 `foundry-e2e.mjs update`로 서버까지 올린다.
+  - 사용자는 토큰을 아끼길 원하고, PC를 못 볼 때가 많다. 확인은 Claude가 서버에서 직접 돌려 결과를 한국어 표로 보고한다(사람이 화면으로 봐야 하는 것만 따로 모아 둔다).
   - 룰이 원문에 없으면 임시 처리 + 07에 「사용자 확인 필요」로 적고 보고한다.
   - 스킬 판단을 물을 때는 **스킬명과 직업(클래스)을 함께** 적는다(예: 무사 《일의전심》). 07에 적을 때도 같다.
 - **Foundry 실제 확인**: 클라우드 환경 변수 `NSSQ_FOUNDRY_URL`·`NSSQ_FOUNDRY_USER`·`NSSQ_FOUNDRY_PASSWORD`·`NSSQ_FOUNDRY_PLAYER`·`NSSQ_FOUNDRY_PLAYER_PASSWORD`로 오라클 서버의 테스트 전용 월드(`nssq-test`)에 Playwright(Chromium, `/opt/pw-browsers`)로 접속할 수 있다. 비밀번호는 출력·커밋 금지. 실제 플레이 월드는 건드리지 않는다. 서버에 깔린 시스템 버전을 먼저 확인한다.
-  - 도구: `node tools/dev/foundry-e2e.mjs info|eval|shot [gm|player]`, 스크립트에서는 `connect(role, { user })`. 클라우드 Chromium은 ws://가 막혀 socket.io를 Node WebSocket으로 중계한다(도구 안에 들어 있음). 월드 id는 `nssqtest`.
-  - 테스트용 액터는 `[e2e]` 접두사로 만들고 끝나면 지운다. 사용자가 관전하는 계정: `GM관전`(보조 GM)·`PL관전`(플레이어), 비밀번호 없음. 관전 계정으로는 접속하지 않는다(겹치면 사용자가 못 들어온다). GM관전이 접속해 있으면 GM 클라이언트가 둘이라는 점을 감안한다.
+  - 도구: `node tools/dev/foundry-e2e.mjs info|eval|shot [gm|player]`, 스크립트에서는 `connect(role, { user, password, render })`. **`render: false`를 쓴다**: 이 컨테이너 브라우저는 GPU가 없어 캔버스 한 프레임이 메인 스레드를 약 0.4초 막아 모든 대기·시간 측정이 몇 배로 부푼다(스크린숏 때만 잠깐 그린다). 클라우드 Chromium은 ws://가 막혀 socket.io를 Node WebSocket으로 중계한다(도구 안에 들어 있음). 월드 id는 `nssqtest`.
+  - 테스트용 액터는 `[e2e]` 접두사로 만들고 끝나면 지운다. 임시 플레이어는 `[e2e]플레이어2`(무작위 비밀번호, 출력 금지)로 만들고 지운다. 바꾼 월드 설정·대기(benched) 플래그·활성 씬은 시작 때 **node 쪽 변수에** 저장해 두고 끝나면 되돌린다(페이지를 새로고침하면 window에 둔 저장값은 사라진다). 서버에 파일을 올리지 않는다(Foundry에서 지울 수 없다). 사용자가 관전하는 계정: `GM관전`(보조 GM)·`PL관전`(플레이어), 비밀번호 없음. 관전 계정으로는 접속하지 않는다(겹치면 사용자가 못 들어온다). GM관전이 접속해 있으면 GM 클라이언트가 둘이라는 점을 감안한다.
   - **서버의 시스템 업데이트도 Claude가 한다**: `node tools/dev/foundry-e2e.mjs update [월드id=nssqtest] [--backup]` (환경 변수 `NSSQ_FOUNDRY_ADMIN_PASSWORD`, 출력·커밋 금지). 릴리스할 때마다 이걸로 올리고 체크리스트를 이어서 확인한다.
     - 흐름: `/api/status`로 켜진 월드 확인 → 접속 화면 「셋업으로 돌아가기」(관리자 비밀번호)로 종료(접속자가 있으면 「연결이 끊긴다」 확인 창 → [예]) → 셋업 화면에서 `Setup.checkPackage`·`Setup.installPackage`로 nssq 업데이트(이미 최신이면 건너뜀) → 월드 [실행] → 「월드 데이터 마이그레이션」 확인 창(시스템 버전이 바뀌면 뜸)을 [마이그레이션 시작]으로(백업은 `--backup`일 때만) → GM 접속으로 `game.system.version` 확인.
     - 켜진 월드가 `nssqtest`가 아니면(실제 플레이 월드 등) **끄지 않고 멈춘다** → 사용자에게 알린다. 업데이트 중에는 접속자가 모두 튕긴다(관전 계정 포함). 시스템은 서버 전체 공용이라 같은 서버의 다른 월드도 같은 버전이 된다.
