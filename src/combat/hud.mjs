@@ -23,12 +23,12 @@ import { bustStyle, faceStyle } from "../apps/art-config.mjs";
 import { flip, morph, snapshot } from "./morph.mjs";
 import { identifyDialog } from "./identify.mjs";
 import { randomEnemyAction } from "./enemy-ai.mjs";
-import { StatusApp, statusChips, statusMarks } from "./status.mjs";
+import { StatusApp } from "./status.mjs";
 import { allyAnalysisHtml, enemyAnalysisHtml } from "./analysis.mjs";
 import { knowsEnemy } from "./bestiary.mjs";
 import { actionState, confusedAction, endPhaseMessage, requestEndPhaseApply } from "./turn-status.mjs";
 import { openingLabel, requestPass, restoreOpening } from "./opening.mjs";
-import { actionList, beginAction, pickTarget, requestSkillApply, stateModText } from "./skill-use.mjs";
+import { actionList, beginAction, pickTarget, requestSkillApply } from "./skill-use.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -153,7 +153,7 @@ function fillPop(c) {
   const enemy = c.actor?.type === "enemy";
   popEl.classList.add("analysis");
   popEl.classList.toggle("ally", !enemy);
-  popEl.innerHTML = enemy ? enemyAnalysisHtml(c.actor, c.name) : allyAnalysisHtml(c.actor, c.name);
+  popEl.innerHTML = enemy ? enemyAnalysisHtml(c.actor, c.name, c) : allyAnalysisHtml(c.actor, c.name, c);
 }
 
 /** 다시 그릴 때 열려 있는 창의 내용도 맞춘다 */
@@ -256,35 +256,10 @@ function enemyCard(c, combat, targetable) {
     <div class="plate">
       <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
       <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
-      ${statusMarks(a)}${stanceChips(c) ? `<div class="stances">${stanceChips(c)}</div>` : ""}
+      
       ${tools}
     </div>
   </div>`;
-}
-
-/** 대기 상태(단계 8): 「대기: 《트래핑》 2」 */
-function stanceChips(c) {
-  const S = (k, d) => game.i18n.format(`NSSQ.SkillUse.${k}`, d ?? {});
-  const late = c.getFlag("nssq", "late");
-  const delayed = c.getFlag("nssq", "delayed");
-  return (c.getFlag("nssq", "stances") ?? []).map((st) => `<em class="stance" title="${esc(S("stanceHint", { name: st.name }))}"><i class="fas fa-hourglass-half"></i> ${esc(st.name)}${st.left ? ` ${st.left}` : ""}</em>`).join("")
-    // 후발 행동·지연 공격 예약(단계 8-D)
-    + (late ? `<em class="stance" title="${esc(S("lateHint"))}"><i class="fas fa-hourglass-end"></i> ${esc(S("lateChip", { name: late.name }))}</em>` : "")
-    + (delayed ? `<em class="stance" title="${esc(S("delayedHint", { round: delayed.round, at: S(delayed.at === "endPhase" ? "atEnd" : "atLate") }))}"><i class="fas fa-stopwatch"></i> ${esc(S("delayedChip", { name: delayed.name }))}</em>` : "")
-    // 토큰(소환수·방진, 단계 8-E)
-    + (c.getFlag("nssq", "tokens") ?? []).map((t) => `<em class="stance token" title="${esc(game.i18n.localize("NSSQ.Token.chipHint"))}"><i class="fas fa-paw"></i> ${esc(game.i18n.format("NSSQ.Token.chip", { token: t.name, n: t.left }))}</em>`).join("");
-}
-
-/** 오버히트(드라이브 스킬 사용 뒤 남은 턴)·전투 고유 상태(무사의 자세 등) 표시 */
-function overheatChip(a) {
-  const n = Number(a.getFlag("nssq", "overheat") ?? 0);
-  const S = (k, d) => game.i18n.format(`NSSQ.SkillUse.${k}`, d ?? { n });
-  const states = (a.getFlag("nssq", "states") ?? []).map((st) => {
-    const stacks = st.max ? ` ×${st.stacks ?? 1}` : "";
-    const tip = [stateModText(st.mods), st.note].filter(Boolean).join("\n");
-    return `<em class="bstate" title="${esc(S("stateHint", { name: st.name, text: tip }))}"><i class="fas fa-yin-yang"></i> ${esc(st.name)}${stacks}</em>`;
-  }).join("");
-  return (n > 0 ? `<em class="overheat" title="${esc(S("overheatHint"))}"><i class="fas fa-fire-alt"></i> ${esc(S("overheatChip"))}</em>` : "") + states;
 }
 
 /**
@@ -315,6 +290,8 @@ function persistState(c) {
     binds: ["bindHead", "bindArm", "bindLeg"].filter((k) => has(k)),
     // 전투 고유 상태(무사의 자세 등, 플래그 states)·오버히트
     special: (a?.getFlag("nssq", "states") ?? []).length > 0,
+    // 특수 상태별 모양(사용자 요청: 자세마다 다르게). 여럿이면 처음 것
+    specialKey: STATE_THEME[(a?.getFlag("nssq", "states") ?? [])[0]?.id] ? (a.getFlag("nssq", "states")[0].id) : null,
     overheat: Number(a?.getFlag("nssq", "overheat") ?? 0) > 0,
     nBuff, nDebuff: buffs.length - nBuff
   };
@@ -331,15 +308,25 @@ const ailIcons = (st) => {
 };
 const bdBadges = (st) => (st.nBuff || st.nDebuff ? `<span class="nb-bd-badges">${st.nBuff ? `<b class="up"><i class="fas fa-caret-up"></i>${st.nBuff}</b>` : ""}${st.nDebuff ? `<b class="down"><i class="fas fa-caret-down"></i>${st.nDebuff}</b>` : ""}</span>` : "");
 
+/** 특수 상태별 색·문양: 상단=불꽃(진홍), 청안=눈(청록), 발도=칼바람(은백), 나찰=해골(검붉음), 피에 물든 창=핏방울. 그 밖은 청록 태극 */
+const STATE_THEME = {
+  "bushido.jodan": { cls: "jodan", icon: "fa-fire-alt" },
+  "bushido.seigan": { cls: "seigan", icon: "fa-eye" },
+  "bushido.iai": { cls: "iai", icon: "fa-wind" },
+  "mononofu.rakshasa": { cls: "rakshasa", icon: "fa-skull" },
+  "shogun.bloodspear": { cls: "bloodspear", icon: "fa-tint" }
+};
+const themeOf = (st) => STATE_THEME[st.specialKey] ?? { cls: "generic", icon: "fa-yin-yang" };
+
 /** 아군 카드 전체 연출(카드 classes): 상태 이상·방어·대기 */
 function cardStateClasses(c) {
   const st = persistState(c);
-  return [...st.conds.map((x) => `ail-${x.id}`), st.guard ? "st-guard" : "", st.waiting ? "st-wait" : "", st.special ? "st-special" : "", st.overheat ? "st-overheat" : ""].join(" ");
+  return [...st.conds.map((x) => `ail-${x.id}`), st.guard ? "st-guard" : "", st.waiting ? "st-wait" : "", st.special ? `st-special sp-${themeOf(st).cls}` : "", st.overheat ? "st-overheat" : ""].join(" ");
 }
 /** 아군 카드 뒤 레이어(글자 뒤): 색·입자 / 앞 레이어: 덩굴·방패·모래시계 */
 function cardFx(c) {
   const st = persistState(c);
-  const back = ailParticles(st) + (st.special ? `<span class="nb-specialfx"><i class="fas fa-yin-yang"></i></span>` : "") + (st.overheat ? `<span class="nb-heatfx"></span>` : "");
+  const back = ailParticles(st) + (st.special ? `<span class="nb-specialfx"><i class="fas ${themeOf(st).icon}"></i></span>` : "") + (st.overheat ? `<span class="nb-heatfx"></span>` : "");
   // 봉인 덩굴: 머리=위 가장자리, 다리=아래 가장자리, 팔=양옆 세로(글자를 가리지 않게)
   // 봉인 덩굴: 카드를 셋으로 나눠 머리(왼쪽·얼굴)·팔(가운데)·다리(오른쪽)를 사선으로 감는다
   const vineD = (k) => `<svg class="nb-cardbind part-${k}" viewBox="0 0 100 100" preserveAspectRatio="none"><path class="v1" d="M-8,112 C20,80 30,70 50,50 S80,18 108,-12"/><path class="v2" d="M-8,82 C14,66 22,48 40,36 S62,6 80,-12"/><path class="v2" d="M20,112 C38,94 52,82 64,66 S90,40 108,18"/><circle cx="30" cy="68" r="4"/><circle cx="50" cy="50" r="4"/><circle cx="72" cy="30" r="4"/></svg>`;
@@ -385,14 +372,13 @@ function partyCard(c, combat, targetable) {
   const a = c.actor;
   const s = a.system;
   const cls = a.type === "character" ? s.classItems?.main?.name ?? "" : "";
-  const guard = c.getFlag("nssq", "guarding");
   const bar = (k, r) => `<div class="nb-bar ${k}"><b>${k.toUpperCase()}</b><i style="width:${pct(r)}%"></i><span>${r?.value ?? 0}/${r?.max ?? 0}</span></div>`;
   const classes = ["nb-member", persistClasses(c), cardStateClasses(c), isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", a.isOwner && !game.user.isGM ? "mine" : "", targetable ? "targetable" : ""].join(" ");
   return `<div class="${classes}" data-combatant="${c.id}" data-key="p-${c.id}" data-flip>
     ${cardFx(c)}
     <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}">${portraitOverlay(c)}</div>
     <div class="info">
-      <div class="line"><span class="name">${esc(nameOf(c))}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${overheatChip(a)}${stanceChips(c)}${statusChips(a)}
+      <div class="line"><span class="name">${esc(nameOf(c))}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
       <div class="bars">${bar("hp", s.hp)}${a.type === "character" ? bar("tp", s.tp) + `<div class="nb-fp" title="FP"><b>FP</b><span>${s.fp?.value ?? 0}</span></div>` : ""}</div>
     </div>

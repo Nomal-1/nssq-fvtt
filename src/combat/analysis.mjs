@@ -21,7 +21,7 @@ const Q = "???";
 /** DROP 한 줄: 「5~9 R2 깃털」 */
 const dropText = (d) => `${d.max === null || d.max === undefined ? `${d.min}~` : d.min === d.max ? `${d.min}` : `${d.min}~${d.max}`} ${d.rank ? `R${d.rank} ` : ""}${d.item}`;
 
-export function enemyAnalysisHtml(actor, name) {
+export function enemyAnalysisHtml(actor, name, combatant = null) {
   const s = actor?.system ?? {};
   const gm = game.user.isGM;
   // 공개 단계(07 #47·#48): full = 도감 처치 수가 자동 식별 기준 이상(전부), known = 이번 전투 식별 성공
@@ -76,7 +76,7 @@ export function enemyAnalysisHtml(actor, name) {
     <h4>DROP</h4><ul class="an-list">${dropRows.join("") || `<li class="empty">${esc(A("none"))}</li>`}</ul>`;
 
   // 오른쪽: 강화 3칸·약화 3칸·상태 이상·봉인(눈에 보이므로 식별과 관계없이)
-  const right = effectsColumnHtml(actor);
+  const right = effectsColumnHtml(actor, combatant);
 
   return `<header>
       <span class="name">${rare ? `<span class="rare">★</span>` : ""}${esc(name)}</span>
@@ -94,7 +94,34 @@ function gmEditButton() {
 }
 
 /** 강화 3칸·약화 3칸·상태 이상·봉인 열(에너미·아군 공통) */
-export function effectsColumnHtml(actor) {
+/**
+ * 지속 효과 한눈에(사용자 요청: 카드의 칩 대신 이 창에 종류별 한 줄씩).
+ * 상태 이상 / 봉인 / 강화 / 약화 / 특수 상태(자세 등·오버히트) / 방어·대기
+ */
+function summaryLines(actor, c) {
+  const s = actor?.system ?? {};
+  const conds = (s.conditions ?? []).filter((x) => CONDITIONS[x.id]);
+  const depth = (x) => (x.depth === null || x.depth === undefined ? "" : ` ${x.depth}`);
+  const buffs = (s.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]);
+  const kindOf = (b) => BUFFS[canonicalBuff(b.id)].kind;
+  const states = actor?.getFlag?.("nssq", "states") ?? [];
+  const oh = Number(actor?.getFlag?.("nssq", "overheat") ?? 0);
+  const stances = c?.getFlag?.("nssq", "stances") ?? [];
+  const late = c?.getFlag?.("nssq", "late");
+  const delayed = c?.getFlag?.("nssq", "delayed");
+  const rows = [
+    ["ailment", A("lineAilment"), conds.filter((x) => CONDITIONS[x.id].kind === "ailment").map((x) => `[${conditionName(x.id)}]${depth(x)}`)],
+    ["bind", A("lineBind"), conds.filter((x) => CONDITIONS[x.id].kind === "bind").map((x) => `${conditionName(x.id)}${depth(x)}`)],
+    ["buff", A("lineBuff"), buffs.filter((b) => kindOf(b) === "buff").map((b) => `${buffLabel(b)} (${A("turns", { n: b.turns })})`)],
+    ["debuff", A("lineDebuff"), buffs.filter((b) => kindOf(b) === "debuff").map((b) => `${buffLabel(b)} (${A("turns", { n: b.turns })})`)],
+    ["special", A("lineSpecial"), [...states.map((x) => `${x.name}${x.max ? ` ×${x.stacks ?? 1}` : ""}`), ...(oh > 0 ? [A("overheat", { n: oh })] : [])]],
+    ["stance", A("lineStance"), [...(c?.getFlag?.("nssq", "guarding") ? [A("guarding")] : []), ...stances.map((x) => `《${x.name}》${x.left ? ` ${x.left}` : ""}`), ...(late ? [`${A("late")}《${late.name}》`] : []), ...(delayed ? [`${A("delayed")}《${delayed.name ?? ""}》`] : [])]]
+  ].filter((r) => r[2].length);
+  if (!rows.length) return "";
+  return `<h4>${esc(A("summary"))}</h4><ul class="an-summary">${rows.map(([k, label, list]) => `<li class="${k}"><b>${esc(label)}</b><span>${esc(list.join(" · "))}</span></li>`).join("")}</ul>`;
+}
+
+export function effectsColumnHtml(actor, combatant = null) {
   const s = actor?.system ?? {};
   const buffs = (s.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]);
   const slots = (kind) => {
@@ -110,14 +137,14 @@ export function effectsColumnHtml(actor) {
     const depth = c.depth === null || c.depth === undefined ? "" : `<small>${esc(game.i18n.format("NSSQ.StatusHint.depth", { n: c.depth }))}</small>`;
     return `<li class="${CONDITIONS[c.id].kind}" title="${esc(loc(`NSSQ.StatusHint.${c.id}`))}"><span>${esc(label)}</span>${depth}<div class="eff">${esc(loc(`NSSQ.StatusHint.${c.id}`))}</div></li>`;
   });
-  return `
+  return `${summaryLines(actor, combatant)}
     <h4 class="buff">${esc(loc("NSSQ.StatusPanel.buffs"))}</h4><ul class="an-slots">${slots("buff")}</ul>
     <h4 class="debuff">${esc(loc("NSSQ.StatusPanel.debuffs"))}</h4><ul class="an-slots">${slots("debuff")}</ul>
     <h4 class="ailment">${esc(A("conditions"))}</h4><ul class="an-slots">${condRows.join("") || `<li class="slot">${esc(A("none"))}</li>`}</ul>`;
 }
 
 /** 아군(캐릭터·동료 NPC) 자세히 보기: HP·TP·부능력치·내성 / 강화·약화·상태 이상 */
-export function allyAnalysisHtml(actor, name) {
+export function allyAnalysisHtml(actor, name, combatant = null) {
   const s = actor?.system ?? {};
   const cls = actor?.type === "character" ? s.classItems?.main?.name ?? "" : "";
   const sub = s.sub ?? {};
@@ -134,5 +161,5 @@ export function allyAnalysisHtml(actor, name) {
       ${bar("HP", s.hp)}${actor?.type === "character" ? bar("TP", s.tp) : ""}
       <h4>${esc(A("stats"))}</h4><div class="an-stats">${SUB_STATS.map(stat).join("")}</div>
       <h4>${esc(A("resist"))}</h4><div class="an-resists">${RESISTS.map(res).join("")}</div>
-    </div><div class="an-col right">${effectsColumnHtml(actor)}</div></div>`;
+    </div><div class="an-col right">${effectsColumnHtml(actor, combatant)}</div></div>`;
 }
