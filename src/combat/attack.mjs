@@ -81,6 +81,13 @@ export function dualWieldOf(actor) {
  * 통상 공격. 쌍수(dualWieldOf)면 무기마다 1회씩(추격·반격 등 followup은 1회)
  */
 export async function normalAttack(attacker, opts = {}) {
+  // 「○○의 책」을 활성화했으면 적에게 하는 통상 공격은 책 공격(combat/book.mjs). 추격·반격·[혼란]으로 아군을 치는 공격은 그대로
+  if (!opts.followup && !opts.weaponMod) {
+    const { activeBook, bookAttack } = await import("./book.mjs");
+    const book = activeBook(attacker);
+    const t = opts.target ?? [...game.user.targets][0];
+    if (book && t?.actor && !friendly(attacker, t.actor)) return bookAttack(attacker, book, t);
+  }
   const dual = !opts.followup && !opts.weaponMod ? dualWieldOf(attacker) : null;
   if (!dual) return attackWith(attacker, opts);
   // 【FP】 주사위 선언은 두 번의 명중 판정 모두에(판정마다 n점, 01 #26)

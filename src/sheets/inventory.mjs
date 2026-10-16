@@ -8,6 +8,7 @@ import { refinementBadges } from "./badges.mjs";
 import { skillBadgeHtml } from "../apps/skill-badge.mjs";
 import { retrieveItem, storageActive, storeItem } from "../apps/acquire.mjs";
 import { skillUsage } from "../engine/skills.mjs";
+import { bookOf, toggleBook } from "../combat/book.mjs";
 import { autoKey, hasOptional } from "../engine/triggers.mjs";
 
 const GROUPS = [
@@ -46,6 +47,7 @@ function summary(item) {
 function rankLabel(item) {
   // 가격 식이 없는 무기(주먹)는 R이 아니라 Lv 기준
   if (item.type === "weapon" && !tables.weapons[item.system.weaponType]?.price) return "";
+  if (["consumable", "tool"].includes(item.type)) return item.system.rank ? `R${item.system.rank}` : "";
   return ["weapon", "armor", "material"].includes(item.type) ? `R${item.system.rank}` : "";
 }
 
@@ -106,6 +108,8 @@ export function inventoryContext(actor, { skillFilter = "all" } = {}) {
     canSub: i.type === "weapon",
     refine: refinementBadges(i),
     canStore: storage && !i.system.equipped,
+    // 「○○의 책」(combat/book.mjs): [활성화]
+    book: !!bookOf(i), bookOn: bookOf(i) && actor.getFlag("nssq", "activeBook") === i.id
   });
   const slots = ["weapon", "armor", "other"].map((slot) => {
     const it = slotOccupant(items, slot);
@@ -276,6 +280,11 @@ export function activateInventoryListeners(sheet, html) {
   html.on("click", "[data-action=unequip]", (ev) => {
     ev.preventDefault();
     itemOf(ev)?.update({ "system.equipped": false });
+  });
+  html.on("click", "[data-action=book]", (ev) => {
+    ev.preventDefault();
+    const item = itemOf(ev);
+    if (item) toggleBook(actor, item);
   });
   html.on("click", "[data-action=use]", (ev) => {
     ev.preventDefault();

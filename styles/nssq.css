@@ -99,6 +99,7 @@
 .nssq .nq-tag.locked { color: var(--nq-gold-l); border-color: var(--nq-gold); }
 .nssq .nq-ctl { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: 4px; color: var(--nq-mu); }
 .nssq .nq-ctl:hover { background: var(--nq-panel2); color: var(--nq-cy); }
+.nssq .nq-ctl.nq-book.on { color: var(--nq-cy); background: var(--nq-panel2); }
 .nssq .nq-rank { color: var(--nq-gold-l); font-size: 0.85em; }
 
 /* 제련 배지 */

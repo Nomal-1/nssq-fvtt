@@ -31,6 +31,7 @@ import { knowsEnemy, rareMask } from "./bestiary.mjs";
 import { actionState, confusedAction, endPhaseMessage, requestEndPhaseApply } from "./turn-status.mjs";
 import { openingLabel, requestPass, restoreOpening } from "./opening.mjs";
 import { hasOpeningItem } from "./item-use.mjs";
+import { activeBook } from "./book.mjs";
 import { actionList, beginAction, pickTarget, requestSkillApply } from "./skill-use.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
@@ -231,8 +232,10 @@ function gmControls(combat) {
 /** 지금 공격할 수 있는 대상(사거리 안, 적 편, 쓰러지지 않음) */
 function attackTargets(combat, attacker) {
   const a = combatProfile(attacker, combat.combatants.find((x) => x.actor === attacker));
+  // 책 공격은 거리와 관계없이(combat/book.mjs)
+  const book = !!activeBook(attacker);
   return combat.combatants.filter((c) => c.actor && !friendly(attacker, c.actor) && !isKO(c))
-    .filter((c) => inRange(a.range, a.row, c.actor.system.row ?? "front"));
+    .filter((c) => book || inRange(a.range, a.row, c.actor.system.row ?? "front"));
 }
 
 const DEFAULT_ICONS = new Set(["icons/svg/mystery-man.svg", "icons/svg/mystery-man-black.svg", ""]);
@@ -489,7 +492,7 @@ function commandBody(combat) {
     return `<div class="who">${L("whoseAction", { name: esc(c.name) })}</div>
       <div class="cmds" data-combatant="${c.id}">
         ${game.user.isGM && sideOf(c.actor) === "enemy" ? cmd("random", "fa-dice", L("randomAction"), { title: L("randomActionHint") }) : ""}
-        ${cmd("attack", "fa-fist-raised", L("attack"), { active: pending === "attack" })}
+        ${activeBook(c.actor) ? cmd("attack", "fa-book", game.i18n.format("NSSQ.Book.attack", { name: activeBook(c.actor).name }), { active: pending === "attack" }) : cmd("attack", "fa-fist-raised", L("attack"), { active: pending === "attack" })}
         ${cmd("skill", "fa-magic", L("skill"))}
         ${cmd("item", "fa-flask", L("item"))}
         ${cmd("end", "fa-forward", L("endTurn"))}

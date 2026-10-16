@@ -853,6 +853,236 @@
     "foodstuff": false,
     "rank": 0
    }
+  },
+  {
+   "name": "독의 책",
+   "type": "tool",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.독의 책",
+    "effects": [
+     {
+      "type": "book",
+      "condition": "poison"
+     }
+    ],
+    "price": 0,
+    "quantity": 1,
+    "consumable": false,
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "rank": 1,
+    "description": "<p>퀘스트·탐색 보상용 유니크 아이템(상점에서 팔지 않음). 소지품에서 [활성화]하면(동시에 한 권만, 전투 중에는 바꿀 수 없음) [통상 공격]이 책 공격으로 바뀐다: 대미지 없이 거리와 관계없이 적 1체에게 목표값 【억제 공격】+4+R의 억제 방어 롤, 실패하면 [독](심도 = 목표값). 추격·반격은 그대로 무기 공격. R은 GM이 보상으로 줄 때 정한다.</p>"
+   }
+  },
+  {
+   "name": "마비의 책",
+   "type": "tool",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.마비의 책",
+    "effects": [
+     {
+      "type": "book",
+      "condition": "paralyze"
+     }
+    ],
+    "price": 0,
+    "quantity": 1,
+    "consumable": false,
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "rank": 1,
+    "description": "<p>퀘스트·탐색 보상용 유니크 아이템(상점에서 팔지 않음). 소지품에서 [활성화]하면(동시에 한 권만, 전투 중에는 바꿀 수 없음) [통상 공격]이 책 공격으로 바뀐다: 대미지 없이 거리와 관계없이 적 1체에게 목표값 【억제 공격】+4+R의 억제 방어 롤, 실패하면 [마비](심도 = 목표값). 추격·반격은 그대로 무기 공격. R은 GM이 보상으로 줄 때 정한다.</p>"
+   }
+  },
+  {
+   "name": "수면의 책",
+   "type": "tool",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.수면의 책",
+    "effects": [
+     {
+      "type": "book",
+      "condition": "sleep"
+     }
+    ],
+    "price": 0,
+    "quantity": 1,
+    "consumable": false,
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "rank": 1,
+    "description": "<p>퀘스트·탐색 보상용 유니크 아이템(상점에서 팔지 않음). 소지품에서 [활성화]하면(동시에 한 권만, 전투 중에는 바꿀 수 없음) [통상 공격]이 책 공격으로 바뀐다: 대미지 없이 거리와 관계없이 적 1체에게 목표값 【억제 공격】+4+R의 억제 방어 롤, 실패하면 [수면](심도 = 목표값). 추격·반격은 그대로 무기 공격. R은 GM이 보상으로 줄 때 정한다.</p>"
+   }
+  },
+  {
+   "name": "혼란의 책",
+   "type": "tool",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.혼란의 책",
+    "effects": [
+     {
+      "type": "book",
+      "condition": "confuse"
+     }
+    ],
+    "price": 0,
+    "quantity": 1,
+    "consumable": false,
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "rank": 1,
+    "description": "<p>퀘스트·탐색 보상용 유니크 아이템(상점에서 팔지 않음). 소지품에서 [활성화]하면(동시에 한 권만, 전투 중에는 바꿀 수 없음) [통상 공격]이 책 공격으로 바뀐다: 대미지 없이 거리와 관계없이 적 1체에게 목표값 【억제 공격】+4+R의 억제 방어 롤, 실패하면 [혼란](심도 = 목표값). 추격·반격은 그대로 무기 공격. R은 GM이 보상으로 줄 때 정한다.</p>"
+   }
+  },
+  {
+   "name": "공포의 책",
+   "type": "tool",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.공포의 책",
+    "effects": [
+     {
+      "type": "book",
+      "condition": "fear"
+     }
+    ],
+    "price": 0,
+    "quantity": 1,
+    "consumable": false,
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "rank": 1,
+    "description": "<p>퀘스트·탐색 보상용 유니크 아이템(상점에서 팔지 않음). 소지품에서 [활성화]하면(동시에 한 권만, 전투 중에는 바꿀 수 없음) [통상 공격]이 책 공격으로 바뀐다: 대미지 없이 거리와 관계없이 적 1체에게 목표값 【억제 공격】+4+R의 억제 방어 롤, 실패하면 [공포](심도 = 목표값). 추격·반격은 그대로 무기 공격. R은 GM이 보상으로 줄 때 정한다.</p>"
+   }
+  },
+  {
+   "name": "맹목의 책",
+   "type": "tool",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.맹목의 책",
+    "effects": [
+     {
+      "type": "book",
+      "condition": "blind"
+     }
+    ],
+    "price": 0,
+    "quantity": 1,
+    "consumable": false,
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "rank": 1,
+    "description": "<p>퀘스트·탐색 보상용 유니크 아이템(상점에서 팔지 않음). 소지품에서 [활성화]하면(동시에 한 권만, 전투 중에는 바꿀 수 없음) [통상 공격]이 책 공격으로 바뀐다: 대미지 없이 거리와 관계없이 적 1체에게 목표값 【억제 공격】+4+R의 억제 방어 롤, 실패하면 [맹목](심도 = 목표값). 추격·반격은 그대로 무기 공격. R은 GM이 보상으로 줄 때 정한다.</p>"
+   }
+  },
+  {
+   "name": "저주의 책",
+   "type": "tool",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.저주의 책",
+    "effects": [
+     {
+      "type": "book",
+      "condition": "curse"
+     }
+    ],
+    "price": 0,
+    "quantity": 1,
+    "consumable": false,
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "rank": 1,
+    "description": "<p>퀘스트·탐색 보상용 유니크 아이템(상점에서 팔지 않음). 소지품에서 [활성화]하면(동시에 한 권만, 전투 중에는 바꿀 수 없음) [통상 공격]이 책 공격으로 바뀐다: 대미지 없이 거리와 관계없이 적 1체에게 목표값 【억제 공격】+4+R의 억제 방어 롤, 실패하면 [저주](심도 = 목표값). 추격·반격은 그대로 무기 공격. R은 GM이 보상으로 줄 때 정한다.</p>"
+   }
+  },
+  {
+   "name": "머리 봉인의 책",
+   "type": "tool",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.머리 봉인의 책",
+    "effects": [
+     {
+      "type": "book",
+      "condition": "bindHead"
+     }
+    ],
+    "price": 0,
+    "quantity": 1,
+    "consumable": false,
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "rank": 1,
+    "description": "<p>퀘스트·탐색 보상용 유니크 아이템(상점에서 팔지 않음). 소지품에서 [활성화]하면(동시에 한 권만, 전투 중에는 바꿀 수 없음) [통상 공격]이 책 공격으로 바뀐다: 대미지 없이 거리와 관계없이 적 1체에게 목표값 【억제 공격】+4+R의 억제 방어 롤, 실패하면 머리 봉인(심도 = 목표값). 추격·반격은 그대로 무기 공격. R은 GM이 보상으로 줄 때 정한다.</p>"
+   }
+  },
+  {
+   "name": "팔 봉인의 책",
+   "type": "tool",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.팔 봉인의 책",
+    "effects": [
+     {
+      "type": "book",
+      "condition": "bindArm"
+     }
+    ],
+    "price": 0,
+    "quantity": 1,
+    "consumable": false,
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "rank": 1,
+    "description": "<p>퀘스트·탐색 보상용 유니크 아이템(상점에서 팔지 않음). 소지품에서 [활성화]하면(동시에 한 권만, 전투 중에는 바꿀 수 없음) [통상 공격]이 책 공격으로 바뀐다: 대미지 없이 거리와 관계없이 적 1체에게 목표값 【억제 공격】+4+R의 억제 방어 롤, 실패하면 팔 봉인(심도 = 목표값). 추격·반격은 그대로 무기 공격. R은 GM이 보상으로 줄 때 정한다.</p>"
+   }
+  },
+  {
+   "name": "다리 봉인의 책",
+   "type": "tool",
+   "img": "icons/svg/book.svg",
+   "system": {
+    "key": "ex.다리 봉인의 책",
+    "effects": [
+     {
+      "type": "book",
+      "condition": "bindLeg"
+     }
+    ],
+    "price": 0,
+    "quantity": 1,
+    "consumable": false,
+    "uses": {
+     "value": 0,
+     "max": 0
+    },
+    "rank": 1,
+    "description": "<p>퀘스트·탐색 보상용 유니크 아이템(상점에서 팔지 않음). 소지품에서 [활성화]하면(동시에 한 권만, 전투 중에는 바꿀 수 없음) [통상 공격]이 책 공격으로 바뀐다: 대미지 없이 거리와 관계없이 적 1체에게 목표값 【억제 공격】+4+R의 억제 방어 롤, 실패하면 다리 봉인(심도 = 목표값). 추격·반격은 그대로 무기 공격. R은 GM이 보상으로 줄 때 정한다.</p>"
+   }
   }
  ]
 }

@@ -43,3 +43,11 @@ describe("독향: [독] 대미지 5+R", () => {
     expect(out.results.get("e").inflicts[0]).toMatchObject({ id: "poison", resisted: false, power: 8 });
   });
 });
+
+describe("책(07 #168): 목표값 【억제 공격】+4+R", () => {
+  it("억제 공격 7, R2 → 목표값 13", async () => {
+    const eff = [{ type: "target", side: "enemy", scope: "single" }, { type: "inflict", condition: "bindArm", check: { type: "fixed", target: "@self.suppAtk + 4 + R" } }];
+    const out = await resolveEffects({ effects: eff, sl: 1, rank: 2, user: { ...user, suppAtk: 7 }, targets: [{ ...foe, suppDef: 0 }], rollDice: seq([2, 3]), rng: () => 0.5, source: "item" });
+    expect(out.results.get("e").inflicts[0]).toMatchObject({ id: "bindArm", resisted: false, depth: 13 });
+  });
+});

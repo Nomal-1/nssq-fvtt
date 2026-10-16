@@ -43,6 +43,7 @@ export const TYPES = {
   sessionFp: { value: true },
   itemUse: { action: true, ability: false, phases: false },
   craftRank: { materials: true },
+  book: { condition: true },
   forceRow: { row: false, check: false },
   cure: { conditions: false, kind: false, count: false, buffs: false },
   buff: { id: true, value: false, turns: false, param: false },

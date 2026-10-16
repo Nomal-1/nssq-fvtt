@@ -138,7 +138,9 @@ export class ToolData extends NssqItemData {
   static defineSchema() {
     return {
       ...super.defineSchema(), effects: effects(), price: int(0), quantity: int(1, { min: 0 }),
-      consumable: new BooleanField({ initial: false }), uses: uses(), stored: new BooleanField({ initial: false })
+      consumable: new BooleanField({ initial: false }), uses: uses(), stored: new BooleanField({ initial: false }),
+      // 「○○의 책」 등 랭크가 있는 도구(0이면 없음, combat/book.mjs)
+      rank: int(0, { min: 0 })
     };
   }
 }
