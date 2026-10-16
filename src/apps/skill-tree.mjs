@@ -6,6 +6,7 @@
  * 보기는 시트를 볼 수 있는 누구나, 조작은 소유자.
  */
 import { brokenByLowering, canRaise, levelCap, prereqList, skillBudget, treeLayout } from "../engine/skills.mjs";
+import { skillBadgeHtml } from "./skill-badge.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Skill.${k}`, d) : game.i18n.localize(`NSSQ.Skill.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -17,7 +18,7 @@ const plain = (html, n = 160) => {
 const GAP = 64;
 const LANE = 12;
 const ROW_H = 42;
-const NODE_W = 164;
+const NODE_W = 200; // [부위][무기] 아이콘 쌍(skill-badge.mjs) 자리 포함
 const NODE_H = 30;
 const OR_W = 46;
 const OR_H = 22;
@@ -156,7 +157,7 @@ export class SkillTree extends Application {
         !check.ok && check.reason !== "maxed" ? `✖ ${L(`reason.${check.reason}`)}` : ""
       ].filter(Boolean).join("\n");
       return {
-        id: e._id, name: e.name, unique: !!e.system.unique, current, shared,
+        id: e._id, name: e.name, unique: !!e.system.unique, current, shared, badge: skillBadgeHtml(e.system, this.actor),
         maxText: role === "common" || shared ? `${ms.main ?? 1}` : `${ms.main ?? 1}/${ms.sub ?? "-"}`,
         max: check.max,
         state: current >= (check.max ?? 0) && current > 0 ? "maxed" : current > 0 ? "owned" : check.ok ? "open" : "locked",

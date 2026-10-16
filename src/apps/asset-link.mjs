@@ -8,11 +8,12 @@
  *   에어리어/  필드 지도 에어리어 그림
  *   마을/      마을·시설 그림
  *   NPC/       시설 NPC 스프라이트(시설 이름 또는 NPC 이름)
+ *   스킬아이콘/ 스킬의 [의존 부위][의존 무기] 아이콘(머리·팔·다리·무기 종류 이름, apps/skill-badge.mjs. 설정 assetLinks.icons)
  * 이미 정해 둔 것은 건너뛴다([덮어쓰기]를 켜면 바꾼다). 맞지 않는 파일은 목록으로 보여 준다(그런 것은 각 편집 창에서 직접 고른다)
  */
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Assets.${k}`, d) : game.i18n.localize(`NSSQ.Assets.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const KINDS = ["enemy", "bgm", "bg", "area", "town", "npc"];
+const KINDS = ["enemy", "bgm", "bg", "area", "town", "npc", "icon"];
 
 /** 이름 비교용: 확장자·공백·괄호류를 뺀다 */
 export const nameKey = (s) => String(s ?? "").normalize("NFC").replace(/\.[^./]+$/, "").replace(/[\s「」『』()（）[\]'"·.,_-]/g, "").toLowerCase();
@@ -52,6 +53,8 @@ async function targets(state) {
   // 에너미: 컴펜디움 + 월드 에너미 이름
   const names = new Set([...((await game.packs.get("nssq.enemies")?.getIndex()) ?? []).map((i) => i.name), ...game.actors.filter((a) => a.type === "enemy").map((a) => a.name)]);
   const enemies = state.enemies;
+  const { BADGE_NAMES } = await import("./skill-badge.mjs");
+  for (const n of BADGE_NAMES) t.icon.push({ key: nameKey(n), label: L("t.icon", { name: n }), get: () => state.icons[nameKey(n)] ?? "", set: (v) => { state.icons[nameKey(n)] = v; } });
   for (const n of names) t.enemy.push({ key: nameKey(n), label: n, get: () => enemies[nameKey(n)] ?? "", set: (v) => { enemies[nameKey(n)] = v; } });
   for (const m of Object.values(state.maps)) {
     add("bgm", m.name, L("t.map", { name: m.name }), m, "battleBgm");
@@ -161,6 +164,7 @@ export async function openAssetLink() {
   const prevLinks = game.settings.get("nssq", "assetLinks") ?? {};
   const state = {
     enemies: { ...(prevLinks.enemies ?? {}) },
+    icons: { ...(prevLinks.icons ?? {}) },
     maps: foundry.utils.deepClone(game.settings.get("nssq", "fieldMaps") ?? {}),
     encounters: foundry.utils.deepClone(game.settings.get("nssq", "encounters") ?? {}),
     towns: foundry.utils.deepClone(game.settings.get("nssq", "towns") ?? {})
@@ -176,7 +180,7 @@ export async function openAssetLink() {
   const refs = await bgmRefs(todo.filter((r) => r.kind === "bgm").map((r) => r.file.path));
   for (const r of todo) r.target.set(r.kind === "bgm" ? refs[r.file.path] ?? "" : r.file.path);
   const touched = new Set(todo.map((r) => r.kind));
-  if (touched.has("enemy")) await game.settings.set("nssq", "assetLinks", { ...prevLinks, enemies: state.enemies });
+  if (touched.has("enemy") || touched.has("icon")) await game.settings.set("nssq", "assetLinks", { ...prevLinks, enemies: state.enemies, icons: state.icons });
   if (["bgm", "bg", "area"].some((k) => touched.has(k))) await game.settings.set("nssq", "fieldMaps", state.maps);
   if (["bgm", "bg"].some((k) => touched.has(k))) await game.settings.set("nssq", "encounters", state.encounters);
   if (["town", "npc"].some((k) => touched.has(k))) await game.settings.set("nssq", "towns", state.towns);

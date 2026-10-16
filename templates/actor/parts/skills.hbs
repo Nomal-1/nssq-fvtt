@@ -26,7 +26,7 @@
     <ol class="nq-skill-list">
       {{#each g.skills as |s|}}
       <li class="nq-skill" data-item-id="{{s.id}}" data-skill-key="{{s.skillKey}}">
-        <img src="{{s.img}}"/>
+        {{{s.badge}}}
         <a class="nq-skill-name" data-action="item-edit">{{#if s.unique}}<span class="nq-unique" title="{{localize 'NSSQ.Skill.unique'}}">★</span>{{/if}}{{s.name}}</a>
         {{#if (nssqEq s.usage "explore")}}<span class="nq-usage explore" title="{{localize 'NSSQ.Skill.filterExplore'}}"><i class="fas fa-compass"></i></span>{{/if}}
         <span class="nq-timing {{s.timingCls}}">{{s.timing}}</span>

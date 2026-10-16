@@ -600,18 +600,21 @@
       "done": "기본 마을 {towns}·지도 {maps}·전투 구성 {encounters}을(를) 넣었다.",
       "seeded": "기본 마을 {towns}·미궁 {maps}을(를) 넣었다(GM 스크린 「준비」에서 다시 넣을 수 있다)."
     },
+    "SkillBadge": {
+      "part": "의존 부위: {part}", "noPart": "의존 부위 없음", "weapon": "필요 무기: {list}", "noWeapon": "필요 무기 없음", "bound": "그 부위가 봉인되어 쓸 수 없다"
+    },
     "Assets": {
       "title": "에셋 폴더 연결", "hint": "서버 Data 폴더에 이름 규칙대로 넣은 에너미 그림·전투 BGM·배경·에어리어·마을·NPC 그림을 한 번에 연결한다",
       "folder": "폴더(Data 기준)", "scan": "읽기", "overwrite": "이미 정해 둔 것도 덮어쓰기",
-      "rule": "하위 폴더: 에너미 / 전투BGM / 전투배경 / 에어리어 / 마을 / NPC. 파일 이름 = 에너미·F.O.E.·지도·에어리어·전투 구성·마을·시설(또는 NPC) 이름(확장자·공백·괄호 무시). 예: 에너미/숲쥐.webp, 전투BGM/광란의 뿔사슴.m4a",
+      "rule": "하위 폴더: 에너미 / 전투BGM / 전투배경 / 에어리어 / 마을 / NPC / 스킬아이콘(머리·팔·다리·무기 종류 이름). 파일 이름 = 에너미·F.O.E.·지도·에어리어·전투 구성·마을·시설(또는 NPC) 이름(확장자·공백·괄호 무시). 예: 에너미/숲쥐.webp, 전투BGM/광란의 뿔사슴.m4a",
       "noFolder": "폴더 {root}을(를) 읽을 수 없다.", "noMatch": "연결할 것이 없다.",
       "previewHead": "{root}: 새로 연결·바꿀 것 {n}개. 아래를 확인하고 [예]를 누르면 적용한다.",
       "unmatched": "맞는 대상이 없는 파일 {n}개(각 편집 창에서 직접 고른다)",
       "done": "{n}개를 연결했다(에너미 액터·토큰 {actors}개 갱신).", "playlist": "NSSQ 에셋 BGM",
       "col": { "dir": "폴더", "file": "파일", "target": "대상", "state": "상태" },
       "st": { "new": "새로", "replace": "바꿈", "skip": "이미 정함(건너뜀)", "same": "같음" },
-      "dir": { "enemy": "에너미", "bgm": "전투BGM", "bg": "전투배경", "area": "에어리어", "town": "마을", "npc": "NPC" },
-      "t": { "map": "지도 {name}", "area": "{map} · 에어리어 {name}", "foe": "{map} · F.O.E. {name}", "enc": "전투 구성 {name}", "town": "마을 {name}", "fac": "{town} · {name}" }
+      "dir": { "enemy": "에너미", "bgm": "전투BGM", "bg": "전투배경", "area": "에어리어", "town": "마을", "npc": "NPC", "icon": "스킬아이콘" },
+      "t": { "icon": "스킬 아이콘 {name}", "map": "지도 {name}", "area": "{map} · 에어리어 {name}", "foe": "{map} · F.O.E. {name}", "enc": "전투 구성 {name}", "town": "마을 {name}", "fac": "{town} · {name}" }
     },
     "Expansion": {
       "title": "추가 컨텐츠 등록", "hint": "추가 컨텐츠 아이템(마드라·보전·비전의 서·해부용 수용액·해석 글라스)을 월드 아이템 폴더에 넣는다",

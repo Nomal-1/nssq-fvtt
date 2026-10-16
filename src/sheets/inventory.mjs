@@ -5,6 +5,7 @@ import { canEquip, equippedSlot, isUsable, slotOccupant, slotsFor, useOnce } fro
 import tables from "../generated/tables.mjs";
 import { openShop, shopOpen } from "../apps/shop.mjs";
 import { refinementBadges } from "./badges.mjs";
+import { skillBadgeHtml } from "../apps/skill-badge.mjs";
 import { retrieveItem, storageActive, storeItem } from "../apps/acquire.mjs";
 import { skillUsage } from "../engine/skills.mjs";
 import { autoKey, hasOptional } from "../engine/triggers.mjs";
@@ -59,7 +60,7 @@ function skillGroups(actor, items, filter = "all") {
   // 선택형(「사용을 선언한다」) 스킬: 조건이 맞으면 자동 사용하는 토글(단계 8)
   const auto = actor.getFlag("nssq", "autoTrigger") ?? {};
   const row = (s) => ({
-    id: s.id, name: s.name, img: s.img, sl: s.system.sl,
+    id: s.id, name: s.name, img: s.img, badge: skillBadgeHtml(s.system, actor), sl: s.system.sl,
     max: s.system.classKey === sub?.system.key && s.system.classKey !== main?.system.key ? s.system.maxSL.sub : s.system.maxSL.main,
     timing: s.system.timing, timingCls: timingCls[s.system.timing] ?? "other",
     cost: s.system.cost?.tp ? `TP ${s.system.cost.tp}` : s.system.cost?.fp ? `FP ${s.system.cost.fp}` : "",

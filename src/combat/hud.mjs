@@ -20,6 +20,7 @@ import { anytimeSkills, useAnytime } from "./special.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { autoApplyMode, isActiveGM, requestApply } from "./apply.mjs";
 import { enemyArtFor } from "../apps/enemy-art.mjs";
+import { skillBadgeHtml } from "../apps/skill-badge.mjs";
 import { bustStyle, faceStyle } from "../apps/art-config.mjs";
 import { flip, morph, snapshot } from "./morph.mjs";
 import { identifyDialog } from "./identify.mjs";
@@ -411,8 +412,9 @@ function actionMenu(combat, c) {
   const S = (k, d) => (d ? game.i18n.format(`NSSQ.SkillUse.${k}`, d) : game.i18n.localize(`NSSQ.SkillUse.${k}`));
   const list = actionList(combat, c, menu.kind);
   // 세계수의 미궁처럼 이름 + 코스트만. 해설·대상·못 쓰는 이유는 위쪽 해설 창(skillInfo)
+  const badge = (x) => { const it = menu.kind === "skill" ? c.actor.items.get(x.id) : null; return it ? skillBadgeHtml(it.system, c.actor) : ""; };
   const rows = list.map((x) => `<button type="button" class="act ${x.ok ? "" : "disabled"} ${x.id === (menuHover ?? list[0]?.id) ? "hover" : ""}" data-action-id="${x.id}">
-      <span class="nm">${esc(x.name)}</span><span class="cost">${esc(x.cost)}</span></button>`).join("");
+      ${badge(x)}<span class="nm">${esc(x.name)}</span><span class="cost">${esc(x.cost)}</span></button>`).join("");
   return `<div class="who">${esc(S(menu.kind === "item" ? "itemTitle" : "skillTitle", { name: c.name }))}</div>
     <div class="action-list" data-combatant="${c.id}">
       <button type="button" class="act back" data-act="back"><i class="fas fa-arrow-left"></i> ${esc(S("back"))}</button>
