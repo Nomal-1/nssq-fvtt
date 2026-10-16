@@ -1594,7 +1594,7 @@
 
 /* 에너미 그림: 상자 모양 색칠 대신 실루엣 빛·밝기로(입자는 그대로) */
 #nssq-battle .art .nb-ailfx { background: none; }
-#nssq-battle .art .nb-swirl { right: auto; left: calc(50% - 28px); top: -10px; }
+#nssq-battle .art .nb-swirl { right: auto; left: calc(50% - 28px); top: -36px; }
 #nssq-battle .art img { transition: filter 0.3s; }
 #nssq-battle .art.ail-poison img { filter: drop-shadow(0 0 10px #6bd64a) drop-shadow(0 0 3px #2a8a10); }
 #nssq-battle .art.ail-paralyze img { filter: drop-shadow(0 0 8px #ffe14a) saturate(0.8); }
@@ -1610,30 +1610,94 @@
 /* ---------- 지속 효과 초안 2: 방어·대기·강화/약화 ---------- */
 /* 방어: 푸른 막(안쪽 빛) + 반투명 방패 */
 #nssq-battle .nb-guard-wall { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 0 0 2px rgba(140, 210, 255, 0.85), inset 0 0 18px rgba(110, 190, 255, 0.75); background: linear-gradient(135deg, rgba(150, 210, 255, 0.18), transparent 50%, rgba(150, 210, 255, 0.18)); animation: nb-guardpulse 2s ease-in-out infinite; }
-#nssq-battle .art .nb-guard-wall { inset: 8% 10%; border-radius: 50%; box-shadow: 0 0 0 2px rgba(140, 210, 255, 0.6), inset 0 0 30px rgba(110, 190, 255, 0.55); }
+#nssq-battle .art .nb-guard-wall { inset: -6%; border-radius: 50%; box-shadow: 0 0 0 2px rgba(140, 210, 255, 0.6), inset 0 0 30px rgba(110, 190, 255, 0.55); }
 /* 대기 상태: 금빛 점선 고리가 돌고 모래시계 */
 #nssq-battle .nb-wait-fx { position: absolute; inset: 6%; pointer-events: none; border-radius: 50%; border: 2px dashed rgba(255, 216, 98, 0.9); box-shadow: 0 0 8px rgba(255, 200, 60, 0.6); animation: nb-spin 6s linear infinite; }
 #nssq-battle .nb-wait-fx i { position: absolute; right: -2px; top: -2px; color: #ffd862; font-size: 0.9em; text-shadow: 0 0 4px #000; animation: nb-spin 6s linear infinite reverse; }
-#nssq-battle .art .nb-wait-fx { inset: 4% 12%; border-width: 3px; }
+#nssq-battle .art .nb-wait-fx { inset: -4%; border-width: 3px; }
 #nssq-battle .art .nb-wait-fx i { font-size: 1.6em; }
 /* 강화·약화 개수 배지(▲ 붉게·▼ 보라) */
 #nssq-battle .nb-bd-badges { position: absolute; right: 2px; bottom: 2px; display: flex; gap: 2px; pointer-events: none; }
 #nssq-battle .nb-bd-badges b { padding: 0 3px; border-radius: 3px; font-size: 0.72em; line-height: 1.3; color: #fff; text-shadow: 0 0 2px #000; }
 #nssq-battle .nb-bd-badges .up { background: rgba(220, 50, 40, 0.85); }
 #nssq-battle .nb-bd-badges .down { background: rgba(120, 60, 200, 0.85); }
-#nssq-battle .art .nb-bd-badges { right: 14%; bottom: 6%; font-size: 1.3em; }
+#nssq-battle .art .nb-bd-badges { right: -6%; bottom: 0; font-size: 1.3em; }
 /* 에너미 강화·약화: 상자 테두리 대신 발밑의 빛 */
 #nssq-battle .nb-enemy.fx-buffed, #nssq-battle .nb-enemy.fx-debuffed { box-shadow: none; animation: none; }
-#nssq-battle .nb-enemy.fx-buffed .art::before, #nssq-battle .nb-enemy.fx-debuffed .art::before { content: ""; position: absolute; left: 12%; right: 12%; bottom: -2%; height: 16%; border-radius: 50%; pointer-events: none; filter: blur(4px); animation: nb-footglow 1.6s ease-in-out infinite alternate; }
+#nssq-battle .nb-enemy.fx-buffed .nb-fxbox::before, #nssq-battle .nb-enemy.fx-debuffed .nb-fxbox::before { content: ""; position: absolute; left: 0; right: 0; bottom: -7%; height: 14%; border-radius: 50%; pointer-events: none; filter: blur(4px); animation: nb-footglow 1.6s ease-in-out infinite alternate; }
 @keyframes nb-footglow { from { opacity: 0.55; } to { opacity: 1; } }
-#nssq-battle .nb-enemy.fx-buffed .art::before { background: radial-gradient(ellipse, rgba(255, 70, 40, 0.85), transparent 70%); }
-#nssq-battle .nb-enemy.fx-debuffed .art::before { background: radial-gradient(ellipse, rgba(150, 80, 230, 0.85), transparent 70%); }
-#nssq-battle .nb-enemy.fx-buffed.fx-debuffed .art::before { background: linear-gradient(90deg, rgba(255, 70, 40, 0.8), rgba(150, 80, 230, 0.8)); }
+#nssq-battle .nb-enemy.fx-buffed .nb-fxbox::before { background: radial-gradient(ellipse, rgba(255, 70, 40, 0.85), transparent 70%); }
+#nssq-battle .nb-enemy.fx-debuffed .nb-fxbox::before { background: radial-gradient(ellipse, rgba(150, 80, 230, 0.85), transparent 70%); }
+#nssq-battle .nb-enemy.fx-buffed.fx-debuffed .nb-fxbox::before { background: linear-gradient(90deg, rgba(255, 70, 40, 0.8), rgba(150, 80, 230, 0.8)); }
 /* 파티 카드: 강화와 약화가 같이면 붉은 테두리 + 보라 안쪽 */
 #nssq-battle .nb-member.fx-buffed.fx-debuffed { box-shadow: 0 0 0 2px rgba(255, 70, 50, 0.85), inset 0 0 0 2px rgba(150, 80, 220, 0.9), 0 0 12px rgba(255, 60, 40, 0.6); }
 @media (prefers-reduced-motion: reduce) { #nssq-battle :is(.nb-wait-fx, .nb-wait-fx i, .nb-guard-wall) { animation: none; } }
-/* 에너미 그림은 위쪽이 비어 있는 일이 많다: 봉인 덩굴을 몸 쪽으로 내린다 */
-#nssq-battle .art .nb-vine { height: 22%; }
-#nssq-battle .art .nb-vine.part-bindHead { top: 38%; }
-#nssq-battle .art .nb-vine.part-bindArm { top: 58%; }
-#nssq-battle .art .nb-vine.part-bindLeg { top: auto; bottom: 4%; }
+
+/* ---------- 지속 효과 v3: 에너미는 그림이 그려진 곳(.nb-fxbox) 기준, 아군은 카드 전체 ---------- */
+#nssq-battle .nb-fxbox { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+#nssq-battle .art .nb-vine { left: -6%; width: 112%; height: 26%; opacity: 0.85; }
+#nssq-battle .art .nb-vine.part-bindHead { top: 6%; }
+#nssq-battle .art .nb-vine.part-bindArm { top: 40%; }
+#nssq-battle .art .nb-vine.part-bindLeg { top: auto; bottom: 2%; }
+#nssq-battle .art .fx-stun i { top: -4%; }
+#nssq-battle .art .nb-ail-icons { left: -4%; bottom: 0; font-size: 1.2em; }
+
+/* 아군 카드: 뒤 레이어(글자 뒤 색·입자) / 앞 레이어(덩굴·방패·모래시계) */
+#nssq-battle .nb-member { position: relative; }
+#nssq-battle .nb-member > :is(.portrait, .info, .nb-member-tools) { position: relative; z-index: 1; }
+#nssq-battle .nb-cardfx, #nssq-battle .nb-cardfx-front { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+#nssq-battle .nb-cardfx { z-index: 0; }
+#nssq-battle .nb-cardfx-front { z-index: 2; }
+#nssq-battle .nb-cardfx .nb-ailfx { inset: 0; border-radius: 0; }
+/* 독: 왼쪽부터 초록 기운, 카드 아래에서 거품 */
+#nssq-battle .nb-member.ail-poison { border-color: #5fcf3f; }
+#nssq-battle .nb-cardfx .fx-poison { background: linear-gradient(90deg, rgba(80, 200, 50, 0.38), rgba(80, 200, 50, 0.08) 70%); }
+#nssq-battle .nb-cardfx .fx-poison i { width: 12px; bottom: -14px; }
+#nssq-battle .nb-cardfx .fx-poison i:nth-child(1) { left: 20%; } #nssq-battle .nb-cardfx .fx-poison i:nth-child(2) { left: 42%; width: 9px; } #nssq-battle .nb-cardfx .fx-poison i:nth-child(3) { left: 66%; } #nssq-battle .nb-cardfx .fx-poison i:nth-child(4) { left: 86%; width: 8px; }
+/* 마비: 카드 전체에 노란 전기가 번쩍 */
+#nssq-battle .nb-member.ail-paralyze { border-color: #e8c83a; }
+#nssq-battle .nb-cardfx .fx-paralyze { background: rgba(255, 225, 74, 0.1); }
+#nssq-battle .nb-cardfx .fx-paralyze i { inset: 0; background: linear-gradient(100deg, transparent 30%, #fff7a0 31%, #ffe14a 31.6%, transparent 32.5%, transparent 61%, #ffe14a 62%, transparent 63%); }
+/* 수면: 카드가 어둑한 남색 + 오른쪽 위로 Z */
+#nssq-battle .nb-member.ail-sleep { border-color: #6a80d8; }
+#nssq-battle .nb-cardfx .fx-sleep { background: linear-gradient(90deg, rgba(30, 40, 110, 0.55), rgba(30, 40, 110, 0.3)); }
+#nssq-battle .nb-cardfx .fx-sleep i { right: 4%; left: auto; top: 46%; font-size: 1.1em; }
+#nssq-battle .nb-cardfx .fx-sleep i:nth-child(2) { right: 9%; font-size: 1.4em; } #nssq-battle .nb-cardfx .fx-sleep i:nth-child(3) { right: 14%; font-size: 1.8em; }
+/* 공포: 푸른 기운 + 얼굴이 떨림 */
+#nssq-battle .nb-member.ail-fear { border-color: #5a78ff; }
+#nssq-battle .nb-cardfx .fx-fear { background: linear-gradient(180deg, rgba(60, 90, 235, 0.5), rgba(60, 90, 235, 0.12)); animation: none; }
+#nssq-battle .nb-cardfx .fx-fear i { width: 6px; height: 10px; top: 8%; }
+#nssq-battle .nb-cardfx .fx-fear i:nth-child(1) { left: 10%; } #nssq-battle .nb-cardfx .fx-fear i:nth-child(2) { left: 14%; right: auto; }
+#nssq-battle .nb-member.ail-fear .portrait { animation: ail-tremble 0.25s linear infinite; }
+/* 맹목: 카드 양끝부터 어둠, 얼굴 어둡게 */
+#nssq-battle .nb-cardfx .fx-blind { background: linear-gradient(90deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0.2) 70%, rgba(0, 0, 0, 0.75)); }
+#nssq-battle .nb-member.ail-blind .portrait { filter: brightness(0.45); }
+/* 저주: 카드 아래에서 검붉은 연기 */
+#nssq-battle .nb-member.ail-curse { border-color: #b0103e; }
+#nssq-battle .nb-cardfx .fx-curse { background: linear-gradient(0deg, rgba(130, 10, 45, 0.55), transparent 80%); }
+#nssq-battle .nb-cardfx .fx-curse i { width: 30%; bottom: -60%; }
+/* 스턴: 얼굴 위를 도는 별 */
+#nssq-battle .nb-cardfx .fx-stun i { left: 38px; top: 10px; }
+#nssq-battle .nb-member.ail-stun .nb-cardfx { overflow: visible; }
+/* 석화: 카드 전체 회색 */
+#nssq-battle .nb-member.ail-petrify { filter: grayscale(0.95) brightness(0.85); }
+/* 봉인: 카드에 덩굴이 감긴다(머리=위 가장자리·팔=가운데·다리=아래 가장자리) */
+#nssq-battle .nb-cardvine { position: absolute; left: -2%; width: 104%; height: 38%; opacity: 0.85; }
+#nssq-battle .nb-cardvine path { fill: none; stroke: #4caf50; stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 2px #1b5e20); vector-effect: non-scaling-stroke; }
+#nssq-battle .nb-cardvine circle { fill: #81c784; stroke: #2e7d32; stroke-width: 1; }
+#nssq-battle .nb-cardvine.part-bindHead { top: -8%; }
+#nssq-battle .nb-cardvine.part-bindArm { top: 31%; opacity: 0.7; }
+#nssq-battle .nb-cardvine.part-bindLeg { bottom: -8%; }
+#nssq-battle .nb-member:is(.ail-bindHead, .ail-bindArm, .ail-bindLeg) { border-color: #4caf50; }
+/* 방어: 푸른 안쪽 빛 + 오른쪽에 반투명 큰 방패 */
+#nssq-battle .nb-member.st-guard { box-shadow: inset 0 0 0 2px rgba(140, 210, 255, 0.9), inset 0 0 22px rgba(110, 190, 255, 0.55); }
+#nssq-battle .nb-card-shield { position: absolute; right: 18%; top: 50%; transform: translateY(-50%); font-size: 3.6em; color: rgba(140, 200, 255, 0.28); text-shadow: 0 0 10px rgba(120, 190, 255, 0.7); animation: nb-guardpulse 2s ease-in-out infinite; }
+/* 대기 상태: 금빛 점선 테두리가 흐르고 모래시계 */
+#nssq-battle .nb-member.st-wait::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; z-index: 2;
+  background: linear-gradient(90deg, #ffd862 50%, transparent 0) repeat-x top / 12px 2px, linear-gradient(90deg, #ffd862 50%, transparent 0) repeat-x bottom / 12px 2px, linear-gradient(0deg, #ffd862 50%, transparent 0) repeat-y left / 2px 12px, linear-gradient(0deg, #ffd862 50%, transparent 0) repeat-y right / 2px 12px;
+  animation: nb-ants 0.8s linear infinite; }
+@keyframes nb-ants { to { background-position: 12px 0, -12px 100%, 0 -12px, 100% 12px; } }
+#nssq-battle .nb-card-wait { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); color: rgba(255, 216, 98, 0.35); font-size: 2.4em; }
+/* 강화·약화: 카드 테두리(기존 fx-buffed·fx-debuffed) + 얼굴 칸 배지 */
+#nssq-battle .nb-member .portrait .nb-bd-badges { right: 1px; bottom: 1px; }
+@media (prefers-reduced-motion: reduce) { #nssq-battle .nb-member.st-wait::after, #nssq-battle .nb-member.ail-fear .portrait, #nssq-battle .nb-card-shield { animation: none; } }

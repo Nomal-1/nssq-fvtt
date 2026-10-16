@@ -252,7 +252,7 @@ function enemyCard(c, combat, targetable) {
     </div>` : "";
   // 이름·【HP】·상태 표시·GM 도구를 한 덩어리(plate)로 그림에 붙인다. 그림 크기와 관계없이 전열은 그림 아래, 후열은 그림 위
   return `<div class="${cls}" data-combatant="${c.id}" data-key="e-${c.id}" data-flip title="${esc(c.name)}">
-    <div class="art ${(c.actor?.system.conditions ?? []).map((x) => `ail-${x.id}`).join(" ")}"><img src="${esc(enemyImage(c))}"/>${persistOverlay(c)}</div>
+    <div class="art ${(c.actor?.system.conditions ?? []).map((x) => `ail-${x.id}`).join(" ")}"><img src="${esc(enemyImage(c))}"/><div class="nb-fxbox">${persistOverlay(c)}</div></div>
     <div class="plate">
       <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
       <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
@@ -301,6 +301,51 @@ function persistClasses(c) {
 // 상태 이상별 지속 연출(CSS): 독=거품, 마비=전기, 수면=Z, 공포=푸른 떨림, 맹목=어둠, 저주=검붉은 연기, 스턴=도는 별
 const AILMENT_FX = ["poison", "paralyze", "sleep", "fear", "blind", "curse", "stun"];
 const AILMENT_FX_PARTS = { poison: 4, paralyze: 2, sleep: 3, fear: 2, blind: 0, curse: 3, stun: 3 };
+/** 지속 효과 정보(그리기 공통) */
+function persistState(c) {
+  const a = c.actor;
+  const conds = a?.system.conditions ?? [];
+  const has = (id) => conds.some((x) => x.id === id);
+  const buffs = a?.system.buffs ?? [];
+  const nBuff = buffs.filter((b) => BUFFS[b.id]?.kind !== "debuff").length;
+  return {
+    conds, has,
+    guard: !!c.getFlag("nssq", "guarding"),
+    waiting: (c.getFlag("nssq", "stances") ?? []).length > 0 || !!c.getFlag("nssq", "late") || !!c.getFlag("nssq", "delayed"),
+    binds: ["bindHead", "bindArm", "bindLeg"].filter((k) => has(k)),
+    nBuff, nDebuff: buffs.length - nBuff
+  };
+}
+const VINE_SVG = (cls) => `<svg class="${cls}" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M-5,28 C15,8 30,36 50,18 S80,4 105,22"/><path d="M-5,12 C20,32 40,6 60,26 S90,34 105,10"/><circle cx="22" cy="20" r="3.5"/><circle cx="50" cy="18" r="3.5"/><circle cx="78" cy="14" r="3.5"/></svg>`;
+const SWIRL_SVG = `<svg class="nb-swirl" viewBox="0 0 40 40"><path d="M20 20 m0 -2 a2 2 0 1 1 -2 2 a4 4 0 1 1 4 4 a6 6 0 1 1 -6 -6 a8 8 0 1 1 8 8 a10 10 0 1 1 -10 -10 a12 12 0 1 1 12 12"/></svg>`;
+const ailParticles = (st) => AILMENT_FX.filter((k) => st.has(k)).map((k) => `<span class="nb-ailfx fx-${k}">${"<i></i>".repeat(AILMENT_FX_PARTS[k] ?? 0)}</span>`).join("");
+const ailIcons = (st) => {
+  const icons = st.conds.filter((x) => AILMENT_ICON[x.id]).map((x) => `<i class="fas ${AILMENT_ICON[x.id]} ail-${x.id}"></i>`).join("");
+  return icons ? `<span class="nb-ail-icons">${icons}</span>` : "";
+};
+const bdBadges = (st) => (st.nBuff || st.nDebuff ? `<span class="nb-bd-badges">${st.nBuff ? `<b class="up"><i class="fas fa-caret-up"></i>${st.nBuff}</b>` : ""}${st.nDebuff ? `<b class="down"><i class="fas fa-caret-down"></i>${st.nDebuff}</b>` : ""}</span>` : "");
+
+/** 아군 카드 전체 연출(카드 classes): 상태 이상·방어·대기 */
+function cardStateClasses(c) {
+  const st = persistState(c);
+  return [...st.conds.map((x) => `ail-${x.id}`), st.guard ? "st-guard" : "", st.waiting ? "st-wait" : ""].join(" ");
+}
+/** 아군 카드 뒤 레이어(글자 뒤): 색·입자 / 앞 레이어: 덩굴·방패·모래시계 */
+function cardFx(c) {
+  const st = persistState(c);
+  const back = ailParticles(st);
+  const front = st.binds.map((k) => VINE_SVG(`nb-cardvine part-${k}`)).join("")
+    + (st.guard ? `<i class="nb-card-shield fas fa-shield-alt"></i>` : "")
+    + (st.waiting ? `<i class="nb-card-wait fas fa-hourglass-half"></i>` : "");
+  return `<div class="nb-cardfx">${back}</div>${front ? `<div class="nb-cardfx-front">${front}</div>` : ""}`;
+}
+/** 아군 얼굴 칸: 아이콘·혼란 소용돌이·석화·강화/약화 배지만 */
+function portraitOverlay(c) {
+  const st = persistState(c);
+  return (st.has("confuse") ? SWIRL_SVG : "") + ailIcons(st) + bdBadges(st) + (st.has("petrify") ? `<span class="nb-stone"></span>` : "");
+}
+
+/** 에너미 그림 위(그림이 실제로 그려진 곳에 맞춘 상자 .nb-fxbox, fitFxBoxes) */
 function persistOverlay(c) {
   const a = c.actor;
   const conds = a?.system.conditions ?? [];
@@ -330,9 +375,10 @@ function partyCard(c, combat, targetable) {
   const cls = a.type === "character" ? s.classItems?.main?.name ?? "" : "";
   const guard = c.getFlag("nssq", "guarding");
   const bar = (k, r) => `<div class="nb-bar ${k}"><b>${k.toUpperCase()}</b><i style="width:${pct(r)}%"></i><span>${r?.value ?? 0}/${r?.max ?? 0}</span></div>`;
-  const classes = ["nb-member", persistClasses(c), isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", a.isOwner && !game.user.isGM ? "mine" : "", targetable ? "targetable" : ""].join(" ");
+  const classes = ["nb-member", persistClasses(c), cardStateClasses(c), isKO(c) ? "ko" : "", isCurrent(c, combat) ? "current" : "", a.isOwner && !game.user.isGM ? "mine" : "", targetable ? "targetable" : ""].join(" ");
   return `<div class="${classes}" data-combatant="${c.id}" data-key="p-${c.id}" data-flip>
-    <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}">${persistOverlay(c)}</div>
+    ${cardFx(c)}
+    <div class="portrait" style="${a.type === "character" ? faceStyle(a) : `background-image: url('${esc(a.img)}'); background-size: cover; background-position: center top;`}">${portraitOverlay(c)}</div>
     <div class="info">
       <div class="line"><span class="name">${esc(nameOf(c))}</span>${sideOf(a) === "ally" ? `<em class="npc">NPC</em>` : ""}${guard ? `<em class="guard"><i class="fas fa-shield-alt"></i> ${L("guard")}</em>` : ""}${overheatChip(a)}${stanceChips(c)}${statusChips(a)}
         <span class="cls">${cls ? `${esc(cls)} Lv${s.level}` : ""}${isKO(c) ? ` · ${L("ko")}` : ""}</span></div>
@@ -493,9 +539,24 @@ export function renderHud() {
   const hpChanges = diffHp(combat);
   const before = snapshot(el);
   morph(el, battleHtml(combat));
+  fitFxBoxes(el);
   flip(el, before);
   refreshPop(combat);
   for (const h of hpChanges) hpEffect(h.id, h.delta);
+}
+
+/** 에너미 지속 효과 상자를 그림이 실제로 그려진 곳(.art 안의 img)에 맞춘다. offset 값이라 화면 배율과 무관 */
+function fitFxBoxes(root) {
+  for (const art of root.querySelectorAll(".nb-enemy .art")) {
+    const img = art.querySelector(":scope > img");
+    const box = art.querySelector(":scope > .nb-fxbox");
+    if (!img || !box) continue;
+    const place = () => {
+      if (!img.offsetWidth) return;
+      box.style.cssText = `left:${img.offsetLeft}px;top:${img.offsetTop}px;width:${img.offsetWidth}px;height:${img.offsetHeight}px`;
+    };
+    if (img.complete) place(); else img.addEventListener("load", place, { once: true });
+  }
 }
 
 /** 페이즈·차례가 바뀌면 화면 가운데에 배너(처음 그릴 때는 없음) */
