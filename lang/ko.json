@@ -655,7 +655,8 @@
       "off": "활성화 끄기",
       "noCombat": "전투 중에는 책을 바꿀 수 없다.",
       "notTurn": "책 공격은 메인 페이즈 자기 차례에 한다.",
-      "attack": "책 공격({name})"
+      "attack": "책 공격({name})",
+      "cardDesc": "책 공격: 대미지 없이 목표값 【억제 공격】+4+R(R{rank})의 억제 방어 롤, 실패하면 [{condition}]"
     },
     "ItemUse": {
       "ask": "{name}이(가) 「{item}」을(를) 쓴다. 되돌릴 수 없다.",

@@ -51,9 +51,12 @@ export async function bookAttack(attacker, book, targetToken) {
     }
   }
   const { resolveAndPost } = await import("./skill-use.mjs");
+  const { conditionName } = await import("./status.mjs");
+  // 카드 해설은 책 해설 전체 대신 한 줄
+  const desc = L("cardDesc", { condition: conditionName(bookOf(book).condition), rank: book.system.rank ?? 0 });
   return resolveAndPost({
     actor: attacker, combatant: me, kind: "item", mainAction: false,
-    item: { name: book.name, img: book.img, system: { effects: bookEffects(book), sl: 1, rank: book.system.rank ?? 0, category: "", target: "적 단일", description: book.system.description ?? "" } },
+    item: { name: book.name, img: book.img, system: { effects: bookEffects(book), sl: 1, rank: book.system.rank ?? 0, category: "", target: "적 단일", description: `<p>${desc}</p>` } },
     units: [{ actor: targetToken.actor, combatant: tc }]
   });
 }
