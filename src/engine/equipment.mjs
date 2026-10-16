@@ -342,7 +342,7 @@ export function collectEquipment(items, tables, { level = 1, skillNames = [] } =
     add("elemHit", s.elemHit);
     add("speed", s.speed);
   }
-  // 제련 속성 부여: 기본 속성과의 관계(교체/복합)는 전투 단계에서 정한다(07 #24)
+  // 제련 속성 부여: 기본 속성과의 관계(교체/복합)는 전투 단계에서 정한다(01 #24)
   if (weapon && flags.weaponElement) weapon.imbue = flags.weaponElement;
   return { weapon, shield, armorDefense, mods, flags };
 }

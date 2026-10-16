@@ -169,7 +169,7 @@ describe("장비 보정 합산", () => {
     expect(collectEquipment([], tables, { level: 3, skillNames: ["주먹 마스터리"] }).weapon.physAtk).toBe(13);
   });
 
-  it("속성 부여 제련은 imbue로 표시(07 #24)", () => {
+  it("속성 부여 제련은 imbue로 표시(01 #24)", () => {
     const r = collectEquipment([weapon("검", 1, { equipped: true, refinements: [ref("〈염〉 속성 부여").key] })], tables);
     expect(r.weapon.element).toBe("slash");
     expect(r.weapon.imbue).toBe("fire");

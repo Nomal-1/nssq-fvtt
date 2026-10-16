@@ -151,7 +151,7 @@ function parseMaxSL(s, where) {
   checkEnum("maxSL", s, where);
   if (s === "★") return { maxSL: { main: 1, sub: null }, unique: true };
   const [main, sub] = s.split("/");
-  // 07 #10: 1/0과 1/- 모두 "서브로는 습득 불가"
+  // 01 #10: 1/0과 1/- 모두 "서브로는 습득 불가"
   return { maxSL: { main: Number(main) || 1, sub: sub === "-" || sub === "0" ? null : Number(sub) }, unique: false };
 }
 

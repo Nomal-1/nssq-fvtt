@@ -145,7 +145,7 @@ function baseProfile(actor, combatant = null) {
   };
   // [마비]·[공포] 판정에 실패한 턴은 【회피】 0(전투원 플래그, combat/turn-status.mjs)
   const disabled = !!combatant?.getFlag("nssq", "disabled");
-  // 속성 부여: 공격의 기본 속성에 더한다(복합 속성 → 내성은 최저, 07 #24)
+  // 속성 부여: 공격의 기본 속성에 더한다(복합 속성 → 내성은 최저, 01 #24)
   const withImbue = (els) => [...new Set([...els.filter((e) => e !== "none"), ...(s.statusMods?.buffs?.elements ?? [])])];
   if (actor.type === "character") {
     const w = s.equipment?.weapon;
