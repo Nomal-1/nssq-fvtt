@@ -1754,3 +1754,12 @@
 #nssq-battle .nb-cardbind .v2 { stroke: #66bb6a; stroke-width: 3; opacity: 0.9; }
 #nssq-battle .nb-cardbind circle { fill: #a5d6a7; stroke: #2e7d32; stroke-width: 1; vector-effect: non-scaling-stroke; }
 @media (prefers-reduced-motion: reduce) { #nssq-battle .nb-aura i { animation: none; } }
+/* v4 보정: 에너미 마비의 큰 줄은 그림을 가려서 끄고(빛·불꽃 입자로), 아군 주위 입자는 앞 레이어로 크게 */
+#nssq-battle .art .fx-paralyze { display: none; }
+#nssq-battle .nb-cardaura { z-index: 3; }
+#nssq-battle .nb-cardaura .aura-paralyze i { width: 13px; height: 21px; bottom: 10%; }
+#nssq-battle .nb-cardaura .aura-fear i { width: 12px; height: 18px; }
+#nssq-battle .nb-cardaura .aura-curse i { width: 24px; height: 24px; }
+#nssq-battle .nb-cardaura .nb-aura i { animation-name: aura-rise-card; }
+#nssq-battle .nb-cardaura .aura-paralyze i { animation-name: aura-spark; }
+@keyframes aura-rise-card { 0% { transform: translateY(10px) scale(0.6); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-95px) scale(1.25); opacity: 0; } }
