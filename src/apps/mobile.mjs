@@ -39,13 +39,15 @@ function ensureDock() {
   dock = document.createElement("div");
   dock.id = "nssq-mobile-dock";
   dock.innerHTML = `<button type="button" data-m="chat" title="${L("chat")}"><i class="fas fa-comments"></i></button>
-    <button type="button" data-m="sheet" title="${L("sheet")}"><i class="fas fa-id-card"></i></button>
+    ${game.user.isGM ? `<button type="button" data-m="gm" title="${L("gm")}"><i class="fas fa-book-open"></i></button>` : `<button type="button" data-m="sheet" title="${L("sheet")}"><i class="fas fa-id-card"></i></button>`}
     <button type="button" data-m="full" title="${L("fullscreen")}"><i class="fas fa-expand"></i></button>`;
   dock.addEventListener("click", (ev) => {
     const b = ev.target.closest("[data-m]");
     if (!b) return;
     if (b.dataset.m === "chat") toggleChat();
     else if (b.dataset.m === "sheet") game.user.character?.sheet.render(true);
+    // GM은 휴대폰으로 진행 상황을 확인하는 정도(사용자 결정): GM 스크린을 연다. 액터·씬 등은 채팅 서랍의 사이드바 탭으로
+    else if (b.dataset.m === "gm") import("./gm-screen.mjs").then((m) => m.GMScreen.open());
     else if (b.dataset.m === "full") {
       if (document.fullscreenElement) document.exitFullscreen?.();
       else document.documentElement.requestFullscreen?.().catch(() => ui.notifications.warn(L("noFullscreen")));
