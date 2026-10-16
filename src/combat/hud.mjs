@@ -252,7 +252,7 @@ function enemyCard(c, combat, targetable) {
     </div>` : "";
   // 이름·【HP】·상태 표시·GM 도구를 한 덩어리(plate)로 그림에 붙인다. 그림 크기와 관계없이 전열은 그림 아래, 후열은 그림 위
   return `<div class="${cls}" data-combatant="${c.id}" data-key="e-${c.id}" data-flip title="${esc(c.name)}">
-    <div class="art ${(c.actor?.system.conditions ?? []).map((x) => `ail-${x.id}`).join(" ")}"><img src="${esc(enemyImage(c))}"/><div class="nb-fxbox">${persistOverlay(c)}</div></div>
+    <div class="art ${cardStateClasses(c)}"><img src="${esc(enemyImage(c))}"/><div class="nb-fxbox">${persistOverlay(c)}</div></div>
     <div class="plate">
       <div class="name">${s.isRare && (game.user.isGM || s.rareKnown) ? `<span class="rare" title="${esc(game.i18n.localize("NSSQ.Rare.gmOnly"))}">★</span>` : ""}${esc(c.name)}${s.row === "back" ? ` <em>${L("back")}</em>` : ""}</div>
       <div class="nb-bar hp ${showHp ? "" : "unknown"}"><i style="width:${showHp ? pct(s.hp) : 100}%"></i>${showHp ? `<span>${s.hp?.value ?? 0}/${s.hp?.max ?? 0}</span>` : ""}</div>
@@ -313,6 +313,9 @@ function persistState(c) {
     guard: !!c.getFlag("nssq", "guarding"),
     waiting: (c.getFlag("nssq", "stances") ?? []).length > 0 || !!c.getFlag("nssq", "late") || !!c.getFlag("nssq", "delayed"),
     binds: ["bindHead", "bindArm", "bindLeg"].filter((k) => has(k)),
+    // 전투 고유 상태(무사의 자세 등, 플래그 states)·오버히트
+    special: (a?.getFlag("nssq", "states") ?? []).length > 0,
+    overheat: Number(a?.getFlag("nssq", "overheat") ?? 0) > 0,
     nBuff, nDebuff: buffs.length - nBuff
   };
 }
@@ -321,7 +324,7 @@ const SWIRL_SVG = `<svg class="nb-swirl" viewBox="0 0 40 40"><path d="M20 20 m0 
 const ailParticles = (st) => AILMENT_FX.filter((k) => st.has(k)).map((k) => `<span class="nb-ailfx fx-${k}">${"<i></i>".repeat(AILMENT_FX_PARTS[k] ?? 0)}</span>`).join("");
 // 주위로 퍼지는 입자(독 거품처럼): 마비=튀는 불꽃, 공포=피어오르는 푸른 혼, 저주=검붉은 연기 덩어리. 카드·그림 밖으로 넘친다
 const AURA = ["paralyze", "fear", "curse"];
-const ailAura = (st) => AURA.filter((k) => st.has(k)).map((k) => `<span class="nb-aura aura-${k}">${Array.from({ length: 7 }, (_, i) => `<i style="--x:${[-4, 12, 30, 50, 68, 86, 102][i]}%;--d:${(i * 0.37) % 1.6}s"></i>`).join("")}</span>`).join("");
+const ailAura = (st) => [...AURA.filter((k) => st.has(k)), ...(st.special ? ["special"] : []), ...(st.overheat ? ["overheat"] : [])].map((k) => `<span class="nb-aura aura-${k}">${Array.from({ length: 7 }, (_, i) => `<i style="--x:${[-4, 12, 30, 50, 68, 86, 102][i]}%;--d:${(i * 0.37) % 1.6}s"></i>`).join("")}</span>`).join("");
 const ailIcons = (st) => {
   const icons = st.conds.filter((x) => AILMENT_ICON[x.id]).map((x) => `<i class="fas ${AILMENT_ICON[x.id]} ail-${x.id}"></i>`).join("");
   return icons ? `<span class="nb-ail-icons">${icons}</span>` : "";
@@ -331,12 +334,12 @@ const bdBadges = (st) => (st.nBuff || st.nDebuff ? `<span class="nb-bd-badges">$
 /** 아군 카드 전체 연출(카드 classes): 상태 이상·방어·대기 */
 function cardStateClasses(c) {
   const st = persistState(c);
-  return [...st.conds.map((x) => `ail-${x.id}`), st.guard ? "st-guard" : "", st.waiting ? "st-wait" : ""].join(" ");
+  return [...st.conds.map((x) => `ail-${x.id}`), st.guard ? "st-guard" : "", st.waiting ? "st-wait" : "", st.special ? "st-special" : "", st.overheat ? "st-overheat" : ""].join(" ");
 }
 /** 아군 카드 뒤 레이어(글자 뒤): 색·입자 / 앞 레이어: 덩굴·방패·모래시계 */
 function cardFx(c) {
   const st = persistState(c);
-  const back = ailParticles(st);
+  const back = ailParticles(st) + (st.special ? `<span class="nb-specialfx"><i class="fas fa-yin-yang"></i></span>` : "") + (st.overheat ? `<span class="nb-heatfx"></span>` : "");
   // 봉인 덩굴: 머리=위 가장자리, 다리=아래 가장자리, 팔=양옆 세로(글자를 가리지 않게)
   // 봉인 덩굴: 카드를 셋으로 나눠 머리(왼쪽·얼굴)·팔(가운데)·다리(오른쪽)를 사선으로 감는다
   const vineD = (k) => `<svg class="nb-cardbind part-${k}" viewBox="0 0 100 100" preserveAspectRatio="none"><path class="v1" d="M-8,112 C20,80 30,70 50,50 S80,18 108,-12"/><path class="v2" d="M-8,82 C14,66 22,48 40,36 S62,6 80,-12"/><path class="v2" d="M20,112 C38,94 52,82 64,66 S90,40 108,18"/><circle cx="30" cy="68" r="4"/><circle cx="50" cy="50" r="4"/><circle cx="72" cy="30" r="4"/></svg>`;
@@ -372,7 +375,8 @@ function persistOverlay(c) {
     + (nBuff || nDebuff ? `<span class="nb-bd-badges">${nBuff ? `<b class="up"><i class="fas fa-caret-up"></i>${nBuff}</b>` : ""}${nDebuff ? `<b class="down"><i class="fas fa-caret-down"></i>${nDebuff}</b>` : ""}</span>` : "")
     + (has("confuse") ? `<svg class="nb-swirl" viewBox="0 0 40 40"><path d="M20 20 m0 -2 a2 2 0 1 1 -2 2 a4 4 0 1 1 4 4 a6 6 0 1 1 -6 -6 a8 8 0 1 1 8 8 a10 10 0 1 1 -10 -10 a12 12 0 1 1 12 12"/></svg>` : "")
     + AILMENT_FX.filter((k) => has(k)).map((k) => `<span class="nb-ailfx fx-${k}">${"<i></i>".repeat(AILMENT_FX_PARTS[k] ?? 0)}</span>`).join("")
-    + ailAura({ has })
+    + ailAura(persistState(c))
+    + (persistState(c).special ? `<span class="nb-special-ring"></span>` : "")
     + (icons ? `<span class="nb-ail-icons">${icons}</span>` : "")
     + (has("petrify") ? `<span class="nb-stone"></span>` : "");
 }

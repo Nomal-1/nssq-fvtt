@@ -1763,3 +1763,22 @@
 #nssq-battle .nb-cardaura .nb-aura i { animation-name: aura-rise-card; }
 #nssq-battle .nb-cardaura .aura-paralyze i { animation-name: aura-spark; }
 @keyframes aura-rise-card { 0% { transform: translateY(10px) scale(0.6); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-95px) scale(1.25); opacity: 0; } }
+
+/* ---------- 특수 상태(자세 등)·오버히트 ---------- */
+/* 특수 상태: 청록 빛 마름모가 피어오르고, 카드는 청록 기운 + 태극 문양, 에너미는 발밑 청록 고리 */
+#nssq-battle .aura-special i { width: 9px; height: 13px; background: linear-gradient(#ffffff, #6ff0e0); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); filter: drop-shadow(0 0 5px #3fe0d0); animation-name: aura-rise; animation-duration: 2s; animation-timing-function: ease-out; }
+#nssq-battle .art .aura-special i { width: 14px; height: 20px; }
+#nssq-battle .nb-cardaura .aura-special i { animation-name: aura-rise-card; }
+#nssq-battle .nb-specialfx { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(60, 220, 200, 0.22), rgba(60, 220, 200, 0.05) 70%); }
+#nssq-battle .nb-specialfx i { position: absolute; right: 30%; top: 50%; transform: translateY(-50%); font-size: 3.4em; color: rgba(120, 255, 235, 0.18); animation: nb-spin 8s linear infinite; }
+#nssq-battle .nb-member.st-special { border-color: #4fe3d0; }
+#nssq-battle .nb-special-ring { position: absolute; left: 4%; right: 4%; bottom: -5%; height: 12%; border-radius: 50%; border: 2px solid rgba(110, 250, 230, 0.85); box-shadow: 0 0 12px rgba(60, 230, 210, 0.8), inset 0 0 8px rgba(60, 230, 210, 0.6); pointer-events: none; animation: nb-guardpulse 2s ease-in-out infinite; }
+/* 오버히트: 주황 불꽃이 피어오르고 카드 아래가 달아오른다 */
+#nssq-battle .aura-overheat i { width: 10px; height: 18px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: radial-gradient(ellipse at 50% 70%, #fff3b0, #ff9a2a 45%, rgba(255, 60, 20, 0) 75%); filter: drop-shadow(0 0 4px #ff7a00); animation-name: aura-rise; animation-duration: 1.4s; animation-timing-function: ease-out; }
+#nssq-battle .art .aura-overheat i { width: 16px; height: 28px; }
+#nssq-battle .nb-cardaura .aura-overheat i { animation-name: aura-rise-card; }
+#nssq-battle .nb-heatfx { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(255, 110, 20, 0.45), transparent 70%); animation: nb-heat 1.2s ease-in-out infinite alternate; }
+@keyframes nb-heat { from { opacity: 0.6; } to { opacity: 1; } }
+#nssq-battle .nb-member.st-overheat { border-color: #ff8a2a; }
+#nssq-battle .art.st-overheat img { filter: drop-shadow(0 0 10px #ff7a00) saturate(1.1); }
+@media (prefers-reduced-motion: reduce) { #nssq-battle :is(.nb-specialfx i, .nb-special-ring, .nb-heatfx) { animation: none; } }
