@@ -163,11 +163,20 @@ export async function openStartDialog(presetId = null) {
       };
     }
   });
-  // 개시 창을 닫으면(취소) 그 전투용으로 만든 임시 프리셋 씬은 지운다(남으면 씬 목록에 쌓인다)
-  const dropTemp = async () => { const p = presetId ? game.scenes.get(presetId) : null; if (p?.getFlag("nssq", "randomPreset")) await p.delete(); };
+  // 개시 창을 닫으면(취소) 그 전투용으로 만든 임시 프리셋 씬은 지운다(남으면 씬 목록에 쌓인다). 다른 프리셋을 골라 시작해도
+  const dropTemp = () => deleteTempPreset(presetId ? game.scenes.get(presetId) : null);
   if (!choice) return dropTemp();
   if (!choice.members.length) { await dropTemp(); return ui.notifications.warn(L("noMembers")); }
+  if (choice.presetId !== presetId) await dropTemp();
   return startBattle(choice);
+}
+
+/** 랜덤 던전·F.O.E.용 임시 프리셋 씬과 그 희소종 액터(randomRare)를 지운다. 임시 프리셋이 아니면 아무것도 안 함 */
+async function deleteTempPreset(scene) {
+  if (!scene?.getFlag("nssq", "randomPreset")) return;
+  const rares = scene.tokens.map((t) => game.actors.get(t.actorId)).filter((a) => a?.getFlag("nssq", "randomRare"));
+  await scene.delete();
+  for (const a of rares) await a.delete();
 }
 
 /** 활성 GM, 접속 때: 진행 중인 전투가 쓰지 않는 임시 프리셋·전투 사본 씬을 지운다(창을 닫지 않고 나간 경우 등) */
@@ -177,8 +186,13 @@ async function cleanupBattleScenes() {
     const info = c.getFlag("nssq", "battle") ?? {};
     for (const id of [info.copy, info.presetId, c.scene?.id]) if (id) used.add(id);
   }
-  const orphans = game.scenes.filter((s) => !used.has(s.id) && !s.active && (s.getFlag("nssq", "randomPreset") || s.getFlag("nssq", "battleCopy")));
-  if (orphans.length) await Scene.deleteDocuments(orphans.map((s) => s.id));
+  // 막 만든 것(30분 이내)은 다른 GM이 개시 창을 열어 둔 것일 수 있어 남긴다
+  const fresh = (s) => Date.now() - (s._stats?.createdTime ?? 0) < 30 * 60 * 1000;
+  const orphans = game.scenes.filter((s) => !used.has(s.id) && !s.active && !fresh(s) && (s.getFlag("nssq", "randomPreset") || s.getFlag("nssq", "battleCopy")));
+  for (const s of orphans) {
+    if (s.getFlag("nssq", "randomPreset")) await deleteTempPreset(s);
+    else await s.delete();
+  }
   return orphans.length;
 }
 
@@ -386,11 +400,7 @@ export async function endBattle(combat, result = "abort") {
     const preset = game.scenes.get(info.presetId);
     // 필드 지도 등이 결과를 본다(임시 프리셋을 지우기 전에)
     Hooks.callAll("nssqBattleEnded", { result, preset });
-    if (preset?.getFlag("nssq", "randomPreset")) {
-      const rares = preset.tokens.map((t) => game.actors.get(t.actorId)).filter((a) => a?.getFlag("nssq", "randomRare"));
-      await preset.delete();
-      for (const a of rares) await a.delete();
-    }
+    await deleteTempPreset(preset);
   } finally {
     ending = false;
   }

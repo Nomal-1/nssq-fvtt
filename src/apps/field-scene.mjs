@@ -192,7 +192,7 @@ export class FieldOverlay extends Application {
 
   /** 렌더 중에 다시 그리기를 부르면 Foundry는 그냥 버린다 → 끝난 뒤 한 번 더(버튼을 눌렀는데 반응 없는 것 방지) */
   render(force = false, options = {}) {
-    if (!force && this._state === Application.RENDER_STATES.RENDERING) { this.dirty = true; return this; }
+    if (this._state === Application.RENDER_STATES.RENDERING) { this.dirty = true; return this; }
     return super.render(force, options);
   }
 
