@@ -78,7 +78,8 @@ async function autoAssignCharacter() {
   if (game.user.isGM || game.user.character) return;
   const mine = game.actors.filter((a) => a.type === "character" && a.testUserPermission(game.user, "OWNER"));
   const pick = mine.find((a) => !a.getFlag("nssq", "benched")) ?? mine[0];
-  if (!pick) return;
+  // 자기 캐릭터가 아직 없으면: 모바일에서는 창만 닫는다(고를 것이 없고 화면을 가린다)
+  if (!pick) { if (active) await game.user.sheet?.close?.(); return; }
   await game.user.update({ character: pick.id });
   await game.user.sheet?.close?.();
 }
