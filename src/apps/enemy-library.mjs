@@ -34,6 +34,9 @@ export async function enemyActorFor(uuid) {
   data.folder = folder.id;
   foundry.utils.setProperty(data, "_stats.compendiumSource", uuid);
   foundry.utils.setProperty(data, "flags.nssq.library", uuid);
+  // 에셋 폴더 연결로 정한 그림(apps/asset-link.mjs)
+  const art = (await import("./asset-link.mjs")).customEnemyArt(doc.name);
+  if (art) { data.img = art; foundry.utils.setProperty(data, "prototypeToken.texture.src", art); }
   return Actor.implementation.create(data);
 }
 

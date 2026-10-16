@@ -5,11 +5,15 @@
  *   새 버전에서 그림 표가 바뀌면 GM이 접속할 때 한 번 돈다
  */
 import ART from "../generated/enemy-art.mjs";
+import { customEnemyArt } from "./asset-link.mjs";
 
 const DEFAULT_IMGS = new Set(["icons/svg/mystery-man-black.svg", "icons/svg/mystery-man.svg", ""]);
 const isDefault = (src) => DEFAULT_IMGS.has(src ?? "");
 
 const PATHS = new Set(Object.values(ART));
+
+/** 에셋 폴더 연결이 바꿔도 되는 그림: 기본 아이콘·시스템 내장 일러스트 */
+export const isReplaceableArt = (src) => isDefault(src) || PATHS.has(src) || String(src ?? "").startsWith("systems/nssq/assets/enemies/");
 
 /** 이 이름의 에너미 일러스트(없으면 null) */
 export function enemyArt(name) {
@@ -23,6 +27,8 @@ export function enemyArt(name) {
 export function enemyArtFor(actor) {
   if (!actor) return null;
   const base = actor.isToken ? game.actors.get(actor.token?.actorId) ?? actor : actor;
+  // 에셋 폴더 연결(apps/asset-link.mjs)로 정한 그림이 먼저
+  for (const a of [actor, base]) { const c = customEnemyArt(a.name); if (c) return c; }
   for (const a of [actor, base]) {
     if (ART[a.name]) return ART[a.name];
     const src = a._stats?.compendiumSource ?? a.flags?.core?.sourceId ?? a.flags?.nssq?.library ?? "";

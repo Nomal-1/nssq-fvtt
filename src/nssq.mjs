@@ -48,6 +48,7 @@ import { GuildApp, registerGuild } from "./apps/guild.mjs";
 import { levelUp, registerLevelUp } from "./apps/levelup.mjs";
 import { registerMobile } from "./apps/mobile.mjs";
 import { registerDefaults, reseedDefaults } from "./apps/defaults.mjs";
+import { registerAssetLink } from "./apps/asset-link.mjs";
 import { FieldMapApp, registerFieldMap } from "./apps/fieldmap.mjs";
 import { ChargenWizard, newCharacter, registerChargen } from "./apps/chargen-wizard.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
@@ -128,6 +129,7 @@ Hooks.once("init", () => {
   registerLevelUp();
   registerMobile();
   registerDefaults();
+  registerAssetLink();
   registerFieldMap();
   registerChargen();
   registerEnemyLibrary();

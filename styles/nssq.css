@@ -1850,3 +1850,11 @@ body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
 #nssq-mobile-dock button { width: 40px; height: 40px; font-size: 1.05em; }
 @media (orientation: landscape) { body.nssq-mobile #nssq-battle { right: 50px !important; } }
 @media (orientation: portrait) { body.nssq-mobile #nssq-mobile-dock { top: 54px; bottom: auto; } }
+
+/* 에셋 폴더 연결 미리보기 */
+.nssq-asset-link table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.nssq-asset-link th, .nssq-asset-link td { padding: 2px 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.15); text-align: left; }
+.nssq-asset-link tbody { display: block; max-height: 360px; overflow-y: auto; }
+.nssq-asset-link thead, .nssq-asset-link tbody tr { display: table; width: 100%; table-layout: fixed; }
+.nssq-asset-link tr.skip { opacity: 0.55; }
+.nssq-asset-link details { margin-top: 6px; font-size: 12px; }
