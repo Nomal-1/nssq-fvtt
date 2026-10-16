@@ -8,6 +8,7 @@
     {{#if isGM}}<label class="nq-tree-bonus" title="{{localize 'NSSQ.Skill.bonusHint'}}">{{localize "NSSQ.Skill.bonus"}} <input type="number" name="skillBonus" value="{{skillBonus}}"/></label>{{/if}}
     <span class="nq-spacer"></span>
     {{#if editable}}<span class="nq-note">{{localize "NSSQ.Skill.help"}}</span>{{/if}}
+    {{#if pickClosed}}<span class="nq-note nq-pick-closed"><i class="fas fa-lock"></i> {{localize "NSSQ.Level.pickClosed"}}</span>{{/if}}
   </div>
 
   <div class="nq-tree-body">

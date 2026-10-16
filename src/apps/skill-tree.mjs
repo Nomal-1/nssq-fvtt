@@ -124,7 +124,11 @@ export class SkillTree extends Application {
     const list = index.filter((e) => e.system?.classKey === st.tab.classKey);
     const mainNames = st.main ? new Set(index.filter((e) => e.system?.classKey === st.main.system.key).map((e) => e.name)) : new Set();
     const ownedOf = (e) => st.owned.find((o) => o.system.classKey === e.system.classKey && o.system.skillKey === e.system.skillKey);
-    const editable = this.actor.isOwner;
+    // 스킬 습득 창구(작성·레벨업·재분배 때만, apps/levelup.mjs)
+    const { skillPickOpen } = await import("./levelup.mjs");
+    const pickOpen = skillPickOpen(this.actor);
+    const editable = this.actor.isOwner && pickOpen;
+    this._pickClosed = this.actor.isOwner && !pickOpen;
 
     const nodeData = (orig) => {
       const { entry: e, shared } = effectiveEntry(orig, st, index);
@@ -235,6 +239,7 @@ export class SkillTree extends Application {
       noPack: !game.packs.get("nssq.skills"),
       noClass: !st.main,
       editable,
+      pickClosed: this._pickClosed,
       isGM: game.user.isGM
     };
   }
@@ -294,6 +299,7 @@ export class SkillTree extends Application {
     const st = this.state();
     const found = index.find((x) => x._id === id);
     if (!found) return;
+    if (!force && !(await import("./levelup.mjs")).skillPickOpen(this.actor)) return ui.notifications.warn(game.i18n.localize("NSSQ.Level.pickClosed"));
     const e = effectiveEntry(found, st, index).entry;
     id = e._id;
     const role = roleOf(e, st);
