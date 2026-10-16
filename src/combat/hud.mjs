@@ -320,14 +320,13 @@ const themeOf = (st) => STATE_THEME[st.specialKey] ?? { cls: "generic", icon: "f
 
 /**
  * 카드(그림)에 거는 연출을 순서대로 하나씩 점멸(사용자 요청). 항목 = { key, cls }
- * 상태 이상 하나씩 → 봉인(묶어서) → 방어 → 대기 → 특수 상태 → 오버히트. 석화·강화/약화 테두리·아이콘은 늘 보인다
+ * 상태 이상 하나씩 → 방어 → 대기 → 특수 상태 → 오버히트. 봉인 덩굴(카드를 덮음, 사용자 결정)·석화·강화/약화 테두리·아이콘은 늘 보인다
  * 카드엔 늘 보이는 classes + data-cyc="key:cls|key:cls", 각 연출 요소엔 data-k. 바꾸는 것은 runCycle
  */
 const CYCLE_AILMENTS = ["poison", "paralyze", "sleep", "fear", "blind", "curse", "stun", "confuse"];
 function cycleEntries(st) {
   return [
     ...CYCLE_AILMENTS.filter((k) => st.has(k)).map((k) => ({ key: k, cls: `ail-${k}` })),
-    ...(st.binds.length ? [{ key: "bind", cls: st.binds.map((k) => `ail-${k}`).join(" ") }] : []),
     ...(st.guard ? [{ key: "guard", cls: "st-guard" }] : []),
     ...(st.waiting ? [{ key: "wait", cls: "st-wait" }] : []),
     ...(st.special ? [{ key: "special", cls: `st-special sp-${themeOf(st).cls}` }] : []),
@@ -338,7 +337,7 @@ function cycleEntries(st) {
 function cycleAttrs(c) {
   const st = persistState(c);
   const list = cycleEntries(st);
-  return { cls: st.has("petrify") ? "ail-petrify" : "", attr: list.length ? `data-cyc="${list.map((e) => `${e.key}:${e.cls}`).join("|")}"` : "" };
+  return { cls: [st.has("petrify") ? "ail-petrify" : "", ...st.binds.map((k) => `ail-${k}`)].join(" "), attr: list.length ? `data-cyc="${list.map((e) => `${e.key}:${e.cls}`).join("|")}"` : "" };
 }
 /** 아군 카드 뒤 레이어(글자 뒤): 색·입자 / 앞 레이어: 덩굴·방패·모래시계 */
 function cardFx(c) {
@@ -346,7 +345,7 @@ function cardFx(c) {
   const back = ailParticles(st) + (st.special ? `<span class="nb-specialfx" data-k="special"><i class="fas ${themeOf(st).icon}"></i></span>` : "") + (st.overheat ? `<span class="nb-heatfx" data-k="overheat"></span>` : "");
   // 봉인 덩굴: 머리=위 가장자리, 다리=아래 가장자리, 팔=양옆 세로(글자를 가리지 않게)
   // 봉인 덩굴: 카드를 셋으로 나눠 머리(왼쪽·얼굴)·팔(가운데)·다리(오른쪽)를 사선으로 감는다
-  const vineD = (k) => `<svg class="nb-cardbind part-${k}" data-k="bind" viewBox="0 0 100 100" preserveAspectRatio="none"><path class="v1" d="M-8,112 C20,80 30,70 50,50 S80,18 108,-12"/><path class="v2" d="M-8,82 C14,66 22,48 40,36 S62,6 80,-12"/><path class="v2" d="M20,112 C38,94 52,82 64,66 S90,40 108,18"/><circle cx="30" cy="68" r="4"/><circle cx="50" cy="50" r="4"/><circle cx="72" cy="30" r="4"/></svg>`;
+  const vineD = (k) => `<svg class="nb-cardbind part-${k}" viewBox="0 0 100 100" preserveAspectRatio="none"><path class="v1" d="M-8,112 C20,80 30,70 50,50 S80,18 108,-12"/><path class="v2" d="M-8,82 C14,66 22,48 40,36 S62,6 80,-12"/><path class="v2" d="M20,112 C38,94 52,82 64,66 S90,40 108,18"/><circle cx="30" cy="68" r="4"/><circle cx="50" cy="50" r="4"/><circle cx="72" cy="30" r="4"/></svg>`;
   const front = st.binds.map(vineD).join("")
     + (st.guard ? `<i class="nb-card-shield fas fa-shield-alt" data-k="guard"></i>` : "")
     + (st.waiting ? `<i class="nb-card-wait fas fa-hourglass-half" data-k="wait"></i>` : "");
@@ -375,7 +374,7 @@ function persistOverlay(c) {
   const icons = conds.filter((x) => AILMENT_ICON[x.id]).map((x) => `<i class="fas ${AILMENT_ICON[x.id]} ail-${x.id}"></i>`).join("");
   return `${guard ? `<span class="nb-guard-wall" data-k="guard"></span><i class="nb-guard-fx fas fa-shield-alt" data-k="guard"></i>` : ""}`
     + (waiting ? `<span class="nb-wait-fx" data-k="wait"><i class="fas fa-hourglass-half"></i></span>` : "")
-    + binds.map((k) => VINE_SVG(`nb-vine part-${k}`).replace("<svg ", '<svg data-k="bind" ')).join("")
+    + binds.map((k) => VINE_SVG(`nb-vine part-${k}`)).join("")
     + (nBuff || nDebuff ? `<span class="nb-bd-badges">${nBuff ? `<b class="up"><i class="fas fa-caret-up"></i>${nBuff}</b>` : ""}${nDebuff ? `<b class="down"><i class="fas fa-caret-down"></i>${nDebuff}</b>` : ""}</span>` : "")
     + (has("confuse") ? `<svg class="nb-swirl" data-k="confuse" viewBox="0 0 40 40"><path d="M20 20 m0 -2 a2 2 0 1 1 -2 2 a4 4 0 1 1 4 4 a6 6 0 1 1 -6 -6 a8 8 0 1 1 8 8 a10 10 0 1 1 -10 -10 a12 12 0 1 1 12 12"/></svg>` : "")
     + ailParticles(persistState(c))
