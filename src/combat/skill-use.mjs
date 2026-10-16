@@ -748,7 +748,8 @@ async function runCommand(actor, mode) {
  * 결과 카드를 타격(회차)별 카드로 나눈다. 다회 공격이 아니면 null
  * - 무작위 대상: 공격 하나(seq)가 한 장. 그 밖(단일·열·전체): n번째 타격끼리 한 장(대상마다 한 줄)
  * - 명중으로 생긴 부여·강화·자원 변화(seq가 붙은 것)는 그 타격 카드에, 나머지(회복·상태·해제 등)는 마지막 카드에
- * - 수동 반응은 그 대상이 처음 명중한 카드에(공격 롤 1회에 1번)
+ * - 수동 반응(01 #54 사용자 결정): 같은 대상을 여러 번 치는 공격은 그 대상이 처음 명중한 카드에만(회피하면 그 대상에게 남은 타격도 빗나감).
+ *   대상을 매번 무작위로 고르는 공격은 명중할 때마다 반응한다
  */
 function splitHits(card, random) {
   if (card.failed) return null;
@@ -770,7 +771,7 @@ function splitHits(card, random) {
       buffs: pick(e.buffs), resource: pick(e.resource),
       sleepBroken: !!h?.woke,
       // 다른 타격에 명중이 없으면 이 카드로 반응하면 대상의 추가 효과까지 없어진다(reaction.mjs)
-      reaction: h && h === firstHit ? e.reaction : null,
+      reaction: h && (random ? h.hit : h === firstHit) ? e.reaction : null,
       applied: false, before: null
     };
   };
@@ -784,7 +785,7 @@ function splitHits(card, random) {
       if (h || (last && hasRest(e))) list.push(part(e, h, last));
     }
     out.push({
-      ...card, entries: list, applied: false, group: { id, index: k + 1, count },
+      ...card, entries: list, applied: false, group: { id, index: k + 1, count, random: !!random },
       ...(k ? { activation: null, fpGain: 0, gm: [], partial: "", description: "", unknownScope: false } : {})
     });
   }

@@ -281,11 +281,20 @@ async function updateReaction({ message, messageId, type, index, result }) {
       if (h) { h.hit = false; h.final = 0; }
       e.damage = e.hits.reduce((n, x) => n + (x.hit ? x.final ?? 0 : 0), 0);
       if (card.group) {
-        // 타격 카드: 그 타격의 추가 효과는 없어지고, 다른 타격에도 명중이 없으면 그 대상의 나머지 효과(마지막 카드)도
+        // 타격 카드: 그 타격의 추가 효과는 없어진다(01 #54).
+        // 같은 대상을 여러 번 치는 공격이면 그 대상에게 남은 타격도 모두 빗나감. 무작위 대상 공격이면 이 타격만(나머지 타격은 따로 반응),
+        // 다른 타격에도 명중이 없으면 그 대상의 나머지 효과(마지막 카드)도 없어진다
         voidEntry(e);
         const rest = others.flatMap((c) => c.card.entries.filter((x) => x.uuid === e.uuid).map((x) => ({ c, x })));
-        if (!rest.some(({ x }) => x.hits?.some((y) => y.hit))) for (const { c, x } of rest) { voidEntry(x); c.changed = true; }
-      } else if (!e.hits.some((x) => x.hit)) voidEntry(e);
+        if (!card.group.random || !rest.some(({ x }) => x.hits?.some((y) => y.hit))) {
+          for (const { c, x } of rest) { voidEntry(x); if (x.reaction?.state === "pending") x.reaction = { ...x.reaction, state: "declined" }; c.changed = true; }
+        }
+      } else {
+        // 한 카드 안의 여러 타격(같은 대상): 회피하면 모두 빗나감
+        for (const x of e.hits) if (x.hit) { x.hit = false; x.final = 0; }
+        e.damage = 0;
+        voidEntry(e);
+      }
     }
   }
   await message.update({ content: renderSkillCard(card), "flags.nssq.skillCard": card });

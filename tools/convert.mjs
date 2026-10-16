@@ -249,7 +249,7 @@ function convertClasses() {
       weapons.push(m[1].trim());
       if (m[2]) {
         weapons.push(m[2].trim());
-        report.add("참고: 클래스 무기 괄호 주석(07 #15, 둘 다 허용)", `${where}: \`${w.trim()}\` → ${m[1].trim()}, ${m[2].trim()}`);
+        report.add("참고: 클래스 무기 괄호 주석(01 #15, 둘 다 허용)", `${where}: \`${w.trim()}\` → ${m[1].trim()}, ${m[2].trim()}`);
       }
     }
     weapons.forEach((w) => checkEnum("weapon", w, where));
