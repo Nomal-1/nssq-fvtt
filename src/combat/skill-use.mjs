@@ -594,12 +594,24 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   const { declaredFpDice, spendFpDice } = await import("./fp-dice.mjs");
   // 추격·반격·발동(followup)은 그 행동이 아니므로 선언을 쓰지 않는다
   if (actor.type === "character" && !followup) Object.assign(user, { fpDice: declaredFpDice(actor), fpAvail: actor.system.fp?.value ?? 0 });
-  const r = await resolveEffects({
+  const turnElements = await pickTurnElement(combatant, item, effectsAll, variant);
+  const resolveWith = (rollDice, rng) => resolveEffects({
     effects: effectsAll, sl: kind === "skill" ? sys.sl ?? 1 : 1, user,
     targets: spec.scope === "random" ? [] : targets, pool: spec.scope === "random" ? targets : spreadPool,
-    mainAction, rollDice: (n) => rollWith(rolls, n), rng: () => CONFIG.Dice.randomUniform(),
-    variant, category: sys.category ?? "", source: kind, rank: kind === "item" ? sys.rank ?? 0 : 0, ctx: { skillKey: sys.key ?? null, choices, turnElements: await pickTurnElement(combatant, item, effectsAll, variant) }
+    mainAction, rollDice, rng,
+    variant, category: sys.category ?? "", source: kind, rank: kind === "item" ? sys.rank ?? 0 : 0, ctx: { skillKey: sys.key ?? null, choices, turnElements }
   });
+  let r;
+  // 플레이어 공격: 명중·대미지 굴리기 팝업(combat/dice-flow.mjs). 그 밖에는 바로 굴린다
+  const { usePopup, resolveWithPopups } = await import("./dice-flow.mjs");
+  if (combatant && usePopup(actor, { followup }) && effectsAll.some((e) => e?.type === "attack")) {
+    const hidden = (id) => { const a = actorOf.get(id); return a?.type === "enemy" && (!knowsEnemy(a) || (a.system.isRare && !a.system.rareKnown)); };
+    const nameOf = (id) => [...targets, ...spreadPool].find((t) => t.id === id)?.name ?? "";
+    const fp0 = user.fpDice ?? 0;
+    const out = await resolveWithPopups((roll, rng, fp) => { user.fpDice = fp; return resolveWith(roll, rng); },
+      { title: item.name, fpDeclared: fp0, fpAvail: user.fpAvail ?? 0, nameOf, known: (id) => !hidden(id), rolls });
+    r = out.result;
+  } else r = await resolveWith((n) => rollWith(rolls, n), () => CONFIG.Dice.randomUniform());
   if (guard) await guard.commit(new Set([...r.results.values()].filter((x) => x.hits.some((h) => h.hit)).map((x) => x.id)));
   // 「최속/후발 행동」(개막 페이즈에 쓴 것): 이번 턴 행동 순서. 메인 페이즈로 넘어갈 때 이니셔티브에 반영
   if (!r.failed) {

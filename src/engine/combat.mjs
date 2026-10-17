@@ -92,7 +92,8 @@ export const halve = (n) => Math.floor(n / 2);
  * @param {number} [a.atkMod] 【물리 공격】(속성이면 【속성 공격】) 보정
  * @param {number} [a.atkMultiplier] 보정 뒤 배율
  * @param {boolean} [a.halfDamage] 실대미지 절반
- * @param {(n: number) => number[]|Promise<number[]>} [a.rollDice] n개의 D6. Foundry에서는 Roll, 테스트에서는 고정값
+ * @param {(n: number, meta?: object) => number[]|Promise<number[]>} [a.rollDice] n개의 D6. Foundry에서는 Roll, 테스트에서는 고정값.
+ *   meta: 무슨 굴림인가(전투 화면의 굴리기 팝업용, combat/dice-flow.mjs) — { kind: "hit", mod, target, fp } / { kind: "damage", count, resist } / { kind: "crit", count, resist }
  * @param {() => number} [a.rng] rollDice 대신 1개씩 굴리는 함수
  * @returns {Promise<object>}
  */
@@ -103,7 +104,7 @@ export async function resolveAttack({ attacker, target, kind = "physical", hitMo
   if (atkMod || atkMultiplier !== 1) attacker = { ...attacker, physAtk: kind === "physical" ? boost(attacker.physAtk) : attacker.physAtk, elemAtk: kind === "physical" ? attacker.elemAtk : boost(attacker.elemAtk) };
   // 명중 판정도 일반 행위 판정(01 #26): 【FP】로 주사위를 늘리면 높은 2개를 쓰고, 늘리거나 다시 굴린 판정은 【FP】를 얻지 않는다
   const fpExtra = Math.max(0, Math.floor(Number(fpDice) || 0));
-  const hd = await roll(2 + fpExtra);
+  const hd = await roll(2 + fpExtra, { kind: "hit", mod: attacker.hit + hitMod, target: target.evasion, fp: fpExtra });
   const hit = { ...evaluateCheck({ dice: hd, modifier: attacker.hit + hitMod, target: target.evasion, added: fpExtra, rerolled }), rolled: hd, fpDice: fpExtra, rerolled: !!rerolled };
   // 「명중 판정 눈 n 이하는 절대 실패」(《스콜 샷》)
   if (failAtOrBelow && hit.sum <= failAtOrBelow && !hit.absSuccess) { hit.success = false; hit.absFailure = true; }
@@ -117,10 +118,10 @@ export async function resolveAttack({ attacker, target, kind = "physical", hitMo
   // diceOverride: 대미지 다이스 수를 직접(《리벤지 스마이트》 「받은 대미지 + SL×2개」)
   const count = diceOverride !== null && diceOverride !== undefined ? Math.max(0, diceOverride) : damageDiceCount({ kind, physAtk: attacker.physAtk, elemAtk: attacker.elemAtk, defense: target.defense, diceMod });
   // critUp: 『크리티컬 업』 상태(또는 《일의전심》 같은 상시 효과)
-  const first = judgeDamage(count ? await roll(count) : [], resist, { critUp: attacker.critUp || critUp });
+  const first = judgeDamage(count ? await roll(count, { kind: "damage", count, resist }) : [], resist, { critUp: attacker.critUp || critUp });
   // 크리티컬: 4다이스 추가(+ 《일도필살》 등 critDiceMod). 추가분으로 크리티컬을 다시 판정하지 않는다(01 #2)
   const extraN = CRIT_EXTRA_DICE + Math.max(0, critDiceMod);
-  const extra = first.crit ? { ...judgeDamage(await roll(extraN), resist), crit: false } : null;
+  const extra = first.crit ? { ...judgeDamage(await roll(extraN, { kind: "crit", count: extraN, resist }), resist), crit: false } : null;
   const raw = first.hits + (extra?.hits ?? 0);
   return {
     ...result,

@@ -1886,3 +1886,8 @@ body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
 .journal-entry-page table.nssq-table { border-collapse: collapse; margin: 6px 0; }
 .journal-entry-page table.nssq-table th, .journal-entry-page table.nssq-table td { border: 1px solid rgba(0, 0, 0, 0.25); padding: 3px 6px; vertical-align: top; }
 .journal-entry-page table.nssq-table th { background: rgba(0, 0, 0, 0.08); }
+
+/* 공격 굴리기 팝업(combat/dice-flow.mjs) */
+.nssq-dice-flow .head { font-weight: bold; margin: 0 0 6px; }
+.nssq-dice-flow .lines { margin: 0 0 8px; padding-left: 18px; font-size: 15px; line-height: 1.6; }
+.nssq-dice-flow .fp input { width: 70px; flex: 0 0 70px; }

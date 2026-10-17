@@ -207,8 +207,18 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
   // 【FP】 주사위 선언(01 #26, combat/fp-dice.mjs)
   // 추격·반격(followup)은 그 행동이 아니므로 선언을 쓰지 않는다. 쌍수는 normalAttack이 두 번 모두에 같은 수를 준다
   const fpDice = followup ? 0 : Math.min(fpGiven ?? declaredFpDice(attacker), attacker.system.fp?.value ?? 0);
-  const r = await resolveAttack({ ...params, fpDice, rollDice });
-  if (!followup && attacker.type === "character" && (fpDice || attacker.getFlag("nssq", "fpDice"))) await spendFpDice(attacker, fpDice, { keep: keepFpDecl });
+  // 플레이어 공격: 명중·대미지 굴리기 팝업(combat/dice-flow.mjs)
+  const { usePopup, resolveWithPopups } = await import("./dice-flow.mjs");
+  let r;
+  let fpUsed = fpDice;
+  if (combat?.started && usePopup(attacker, { followup })) {
+    const hidden = target.type === "enemy" && (!knowsEnemy(target) || (target.system.isRare && !target.system.rareKnown));
+    const out = await resolveWithPopups((roll, _rng, fp) => resolveAttack({ ...params, fpDice: Math.min(fp, attacker.system.fp?.value ?? 0), rollDice: (n, m) => roll(n, m && { ...m, targetId: "t" }) }),
+      { title: weaponMod?.label ? `${L("normalAttack")} (${weaponMod.label})` : L("normalAttack"), fpDeclared: fpDice, fpAvail: attacker.system.fp?.value ?? 0, nameOf: () => targetToken.name, known: () => !hidden, rolls });
+    r = out.result;
+    fpUsed = Math.min(out.fp, attacker.system.fp?.value ?? 0);
+  } else r = await resolveAttack({ ...params, fpDice, rollDice });
+  if (!followup && attacker.type === "character" && (fpUsed || attacker.getFlag("nssq", "fpDice"))) await spendFpDice(attacker, fpUsed, { keep: keepFpDecl });
 
   // PC의 명중 판정에서 1이 나오면 【FP】(일반 행위 판정)
   if (r.fpGain && attacker.type === "character" && attacker.isOwner) {

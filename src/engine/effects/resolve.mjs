@@ -160,7 +160,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
       atkMod: evaluate(e.atkMod ?? 0, vars(t)) + pb.atkMod + atkPlus, failAtOrBelow: Math.max(Number(e.failAtOrBelow ?? 0) || 0, pb.failAtOrBelow), resistMod: pb.resistMod, resistLow: pb.resistLow, critUp: pb.critUp, critDiceMod: pb.critDice, atkMultiplier: Number(e.atkMultiplier ?? 1) || 1, halfDamage: !!e.halfDamage,
       diceOverride: e.fixedDice !== undefined ? evaluate(e.fixedDice, vars(t)) : null,
     };
-    const result = await resolveAttack({ ...params, fpDice: fpTake(), rollDice });
+    // 굴림 정보에 대상을 붙인다(굴리기 팝업이 대상별 줄을 만든다)
+    const result = await resolveAttack({ ...params, fpDice: fpTake(), rollDice: (n, m) => rollDice(n, m ? { ...m, targetId: t.id } : undefined) });
     hitChecks.push(result);
     // seq: 이 행동 안에서 몇 번째 공격인가(다회 공격을 카드에 순서대로 보인다)
     const hitRow = { ...result, elements, kind, seq: ++seq, params, onHit: e.onHit?.length ? e.onHit : null };
