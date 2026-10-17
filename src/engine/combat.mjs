@@ -104,7 +104,7 @@ export async function resolveAttack({ attacker, target, kind = "physical", hitMo
   if (atkMod || atkMultiplier !== 1) attacker = { ...attacker, physAtk: kind === "physical" ? boost(attacker.physAtk) : attacker.physAtk, elemAtk: kind === "physical" ? attacker.elemAtk : boost(attacker.elemAtk) };
   // 명중 판정도 일반 행위 판정(01 #26): 【FP】로 주사위를 늘리면 높은 2개를 쓰고, 늘리거나 다시 굴린 판정은 【FP】를 얻지 않는다
   const fpExtra = Math.max(0, Math.floor(Number(fpDice) || 0));
-  const hd = await roll(2 + fpExtra, { kind: "hit", mod: attacker.hit + hitMod, target: target.evasion, fp: fpExtra });
+  const hd = await roll(2 + fpExtra, { kind: "hit", mod: attacker.hit + hitMod, target: target.evasion, fp: fpExtra, failAt: failAtOrBelow });
   const hit = { ...evaluateCheck({ dice: hd, modifier: attacker.hit + hitMod, target: target.evasion, added: fpExtra, rerolled }), rolled: hd, fpDice: fpExtra, rerolled: !!rerolled };
   // 「명중 판정 눈 n 이하는 절대 실패」(《스콜 샷》)
   if (failAtOrBelow && hit.sum <= failAtOrBelow && !hit.absSuccess) { hit.success = false; hit.absFailure = true; }

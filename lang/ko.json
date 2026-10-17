@@ -669,7 +669,11 @@
       "dmgHead": "대미지: 굴린 눈 중 대상의 【내성】보다 큰 눈의 개수가 대미지",
       "dmgLine": "{name}: {count}D6 → {need} 이상인 눈의 개수(【내성】 {resist})",
       "dmgLineHidden": "{name}: {count}D6 → 【내성】 ???보다 큰 눈의 개수",
-      "rerollTitle": "{name}: 【FP】로 다시 굴리기"
+      "rerollTitle": "{name}: 【FP】로 다시 굴리기",
+      "hitCardTitle": "명중 판정 — {name}",
+      "vsTarget": "목표값 {target}",
+      "hit": "명중!",
+      "miss": "빗나감"
     },
     "ItemUse": {
       "ask": "{name}이(가) 「{item}」을(를) 쓴다. 되돌릴 수 없다.",
@@ -1090,6 +1094,7 @@
       "openSheet": "시트 열기",
       "turnOf": "{name}의 차례",
       "miss": "MISS",
+      "hit": "HIT",
       "critical": "CRITICAL!",
       "randomAction": "랜덤 행동",
       "randomActionHint": "통상 공격과 「주행동」 스킬 중 하나, 대상도 사거리 안에서 무작위로 고른다"

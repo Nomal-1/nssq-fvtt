@@ -605,7 +605,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     const nameOf = (id) => [...targets, ...spreadPool].find((t) => t.id === id)?.name ?? "";
     const fp0 = user.fpDice ?? 0;
     const out = await resolveWithPopups((roll, rng, fp) => { user.fpDice = fp; return resolveWith(roll, rng); },
-      { title: item.name, fpDeclared: fp0, fpAvail: user.fpAvail ?? 0, nameOf, known: (id) => !hidden(id), rolls, actor });
+      { title: item.name, fpDeclared: fp0, fpAvail: user.fpAvail ?? 0, nameOf, known: (id) => !hidden(id), rolls, actor, uuidOf: (id) => actorOf.get(id)?.uuid ?? null });
     r = out.result;
   } else r = await resolveWith((n) => rollWith(rolls, n), () => CONFIG.Dice.randomUniform());
   if (guard) await guard.commit(new Set([...r.results.values()].filter((x) => x.hits.some((h) => h.hit)).map((x) => x.id)));

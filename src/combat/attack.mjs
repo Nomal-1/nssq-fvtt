@@ -212,11 +212,13 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
   const { usePopup, resolveWithPopups } = await import("./dice-flow.mjs");
   let r;
   let fpUsed = fpDice;
+  let hitShown = false;
   if (combat?.started && usePopup(attacker, { followup })) {
     const hidden = target.type === "enemy" && (!knowsEnemy(target) || (target.system.isRare && !target.system.rareKnown));
     const out = await resolveWithPopups((roll, _rng, fp) => resolveAttack({ ...params, fpDice: Math.min(fp, attacker.system.fp?.value ?? 0), rollDice: (n, m) => roll(n, m && { ...m, targetId: "t" }) }),
-      { title: weaponMod?.label ? `${L("normalAttack")} (${weaponMod.label})` : L("normalAttack"), fpDeclared: fpDice, fpAvail: attacker.system.fp?.value ?? 0, nameOf: () => targetToken.name, known: () => !hidden, rolls, actor: attacker });
+      { title: weaponMod?.label ? `${L("normalAttack")} (${weaponMod.label})` : L("normalAttack"), fpDeclared: fpDice, fpAvail: attacker.system.fp?.value ?? 0, nameOf: () => targetToken.name, known: () => !hidden, rolls, actor: attacker, uuidOf: () => target.uuid });
     r = out.result;
+    hitShown = !!out.hitShown;
     fpUsed = Math.min(out.fp, attacker.system.fp?.value ?? 0);
   } else r = await resolveAttack({ ...params, fpDice, rollDice });
   if (!followup && attacker.type === "character" && (fpUsed || attacker.getFlag("nssq", "fpDice"))) await spendFpDice(attacker, fpUsed, { keep: keepFpDecl });
@@ -244,7 +246,7 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
       attack: {
         attackerUuid: attacker.uuid, kind: "physical", label: followup?.by ? `${L("normalAttack")} (${followup.by})` : weaponMod?.by ? `${L("normalAttack")} (《${weaponMod.by}》: ${weaponMod.label ?? ""})` : L("normalAttack"), ...(followup ? { followup } : {}),
         weapon: a.weaponName, elements: atkElements, physAtk: a.physAtk, defense: d.defense,
-        hitStat: a.physHit, fpGain: r.fpGain, targets: [targetEntry],
+        hitStat: a.physHit, fpGain: r.fpGain, targets: [targetEntry], ...(hitShown ? { hitShown: true } : {}),
         // [저주]: 공격자가 공격 시점에 [저주]면 실대미지 절반을 되돌려 받는다(적용할 때)
         curse: a.conditions.some((c) => c.id === "curse")
       }

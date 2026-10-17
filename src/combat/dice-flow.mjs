@@ -64,6 +64,27 @@ function popup({ title, head, lines, fp = null }) {
   });
 }
 
+/**
+ * 명중 판정 결과 카드(결과 카드보다 먼저): 대상마다 굴린 눈·달성값 → 명중/빗나감. 메시지 플래그 nssq.hitCheck로 전투 화면이 MISS·HIT 연출
+ * 목표값은 식별하지 못한 대상이면 ???
+ */
+async function postHitCard({ actor, title, checks, nameOf, known, uuidOf, roll }) {
+  const { evaluateCheck } = await import("../engine/check.mjs");
+  const rows = checks.map(({ m, dice }) => {
+    const c = evaluateCheck({ dice, modifier: m.mod, target: m.target, added: m.fp ?? 0 });
+    // 「명중 판정 눈 n 이하는 절대 실패」(engine resolveAttack과 같게)
+    if (m.failAt && c.sum <= m.failAt && !c.absSuccess) { c.success = false; c.absFailure = true; }
+    return { uuid: uuidOf(m.targetId), name: nameOf(m.targetId), hit: !!c.success, total: c.total, used: c.used, abs: c.absSuccess ? "absSuccess" : c.absFailure ? "absFailure" : null, target: known(m.targetId) ? m.target : null };
+  });
+  const li = rows.map((r) => `<li class="${r.hit ? "hit" : "miss"}"><b>${esc(r.name)}</b> ${esc(r.used.join("+"))} → <b>${r.total}</b> <span class="vs">(${esc(L("vsTarget", { target: r.target ?? "???" }))})</span> <b class="res">${esc(L(r.hit ? "hit" : "miss"))}</b>${r.abs ? ` <em>${esc(game.i18n.localize(`NSSQ.Check.${r.abs}`))}</em>` : ""}</li>`).join("");
+  return ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="nssq-hit-card"><header class="check-header"><span class="check-label"><i class="fas fa-bullseye"></i> ${esc(L("hitCardTitle", { name: title }))}</span></header><ul>${li}</ul></div>`,
+    ...(roll ? { rolls: [roll], sound: CONFIG.sounds.dice } : {}),
+    flags: { nssq: { hitCheck: { targets: rows.map((r) => ({ uuid: r.uuid, hit: r.hit })) } } }
+  });
+}
+
 /** 판정마다 fp개, 남은 【FP】까지(engine resolve.mjs fpTake와 같은 배분) */
 const takesFor = (checks, fp, avail) => { let left = avail; return Array.from({ length: checks }, () => { const t = Math.min(fp, Math.max(0, left)); left -= t; return t; }); };
 
@@ -83,6 +104,7 @@ async function askHere(q) {
 const waiting = new Map();
 /** 팝업 한 단계: 내 화면 또는(GM이 실행 중이면) 그 플레이어 화면. 답이 없으면(2분) 여기서 굴린다 */
 async function ask(actor, q, rolls) {
+  // rolls가 null이면 굴린 Roll을 돌려준다(명중 카드에 따로 붙인다)
   const u = game.user.isGM ? ownerUser(actor) : null;
   let a;
   if (!u) a = await askHere(q);
@@ -95,7 +117,7 @@ async function ask(actor, q, rolls) {
     });
     if (!a) a = await askHere(q);
   }
-  if (a.roll) { try { rolls.push(Roll.fromData(a.roll)); } catch { /* 표시만 빠진다 */ } }
+  if (a.roll) { try { const r = Roll.fromData(a.roll); if (rolls) rolls.push(r); else a.rollObj = r; } catch { /* 표시만 빠진다 */ } }
   return a;
 }
 
@@ -130,9 +152,10 @@ export function registerDiceFlow() {
  * @param {(id: string) => boolean} o.known 대상의 회피·내성을 보여도 되는가
  * @param {object[]} o.rolls 결과 카드에 붙일 Roll(주사위 표시)
  * @param {Actor} o.actor 공격하는 캐릭터(팝업을 보낼 플레이어를 찾는다)
+ * @param {(id: string) => string|null} [o.uuidOf] 대상 액터 uuid(명중 카드의 전투 화면 연출)
  * @returns {Promise<{ result: object, fp: number }>}
  */
-export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 0, nameOf = () => "", known = () => true, rolls = [], actor = null }) {
+export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 0, nameOf = () => "", known = () => true, rolls = [], actor = null, uuidOf = () => null }) {
   const rand = replayer(() => CONFIG.Dice.randomUniform());
   const d6 = () => Math.ceil((1 - CONFIG.Dice.randomUniform()) * 6) || 1;
 
@@ -150,7 +173,8 @@ export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 
   // 명중 팝업
   const hitLines = hits.map((m) => esc(L("hitLine", { name: nameOf(m.targetId), mod: sign(m.mod), target: known(m.targetId) ? m.target : "???" })));
   const fpMax = Math.max(0, fpAvail);
-  const h = await ask(actor, { title, head: esc(L("hitHead")), lines: hitLines, fp: fpMax > 0 ? { value: Math.min(fpDeclared, fpMax), max: fpMax } : null, checks: hits.length, fpAvail }, rolls);
+  // 명중 주사위는 결과 카드가 아니라 먼저 올리는 명중 카드에 붙인다
+  const h = await ask(actor, { title, head: esc(L("hitHead")), lines: hitLines, fp: fpMax > 0 ? { value: Math.min(fpDeclared, fpMax), max: fpMax } : null, checks: hits.length, fpAvail }, null);
   const fp = h.fp;
   const takes = takesFor(hits.length, fp, fpAvail);
   const all = h.dice;
@@ -166,12 +190,15 @@ export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 
     const hq = [...hitQ.map((x) => [...x])];
     const serve = (n) => { const q = hq.shift(); return q && q.length === n ? q : Array.from({ length: n }, (_, i) => q?.[i] ?? d6()); };
     const o = other.start();
+    const checks = [];
     await run(async (n, m) => {
-      if (m?.kind === "hit") return serve(n);
+      if (m?.kind === "hit") { const d = serve(n); checks.push({ m, dice: d }); return d; }
       if (m?.kind === "damage") { dmg.push(m); return Array.from({ length: n }, () => 1); }
       if (m?.kind === "crit") return Array.from({ length: n }, () => 1);
       return Array.from({ length: n }, () => o());
     }, rand.start(), fp);
+    // 명중 결과를 먼저 채팅 카드로(주사위·전투 화면 연출). 대미지 팝업은 그다음
+    await postHitCard({ actor, title, checks, nameOf, known, uuidOf, roll: h.rollObj });
   }
 
   // 대미지 팝업
@@ -193,5 +220,5 @@ export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 
     if (m?.kind === "crit") return rollDice(n, rolls);
     return Array.from({ length: n }, () => o());
   }, rand.start(), fp);
-  return { result, fp };
+  return { result, fp, hitShown: true };
 }

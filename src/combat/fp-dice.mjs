@@ -82,7 +82,7 @@ async function rerollWith(attacker, target, name, params, rolls) {
   const { usePopup, resolveWithPopups, hiddenStats } = await import("./dice-flow.mjs");
   if (!usePopup(attacker)) return resolveAttack({ ...params, rerolled: true, rollDice: (n) => rollWith(rolls, n) });
   const out = await resolveWithPopups((roll) => resolveAttack({ ...params, rerolled: true, rollDice: (n, m) => roll(n, m && { ...m, targetId: "t" }) }),
-    { title: game.i18n.format("NSSQ.DiceFlow.rerollTitle", { name }), nameOf: () => name, known: () => !hiddenStats(target), rolls, actor: attacker });
+    { title: game.i18n.format("NSSQ.DiceFlow.rerollTitle", { name }), nameOf: () => name, known: () => !hiddenStats(target), rolls, actor: attacker, uuidOf: () => target?.uuid ?? null });
   return out.result;
 }
 

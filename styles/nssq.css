@@ -716,6 +716,7 @@
 #nssq-battle-fx .nb-pop.dmg { font-size: 2.4em; color: #ff3a2a; }
 #nssq-battle-fx .nb-pop.heal { font-size: 2.1em; color: #3dff73; }
 #nssq-battle-fx .nb-pop.miss { font-size: 1.6em; color: #d8e4f0; letter-spacing: 0.1em; }
+#nssq-battle-fx .nb-pop.hit { font-size: 1.5em; color: #ffd36a; letter-spacing: 0.08em; text-shadow: 0 0 8px rgba(255, 170, 40, 0.9); }
 #nssq-battle-fx .nb-pop.crit { font-size: 1.4em; color: var(--nq-gold-l); margin-top: -34px; }
 @keyframes nb-pop { 0% { opacity: 0; transform: translate(-50%, -20%) scale(0.6); } 15% { opacity: 1; transform: translate(-50%, -60%) scale(1.15); } 30% { transform: translate(-50%, -60%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -160%); } }
 
@@ -1891,3 +1892,10 @@ body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
 .nssq-dice-flow .head { font-weight: bold; margin: 0 0 6px; }
 .nssq-dice-flow .lines { margin: 0 0 8px; padding-left: 18px; font-size: 15px; line-height: 1.6; }
 .nssq-dice-flow .fp input { width: 70px; flex: 0 0 70px; }
+
+/* 명중 카드(굴리기 팝업 뒤, combat/dice-flow.mjs) */
+.nssq-hit-card ul { margin: 4px 0 0; padding-left: 16px; }
+.nssq-hit-card li { margin: 2px 0; }
+.nssq-hit-card li.hit .res { color: #2e7d32; }
+.nssq-hit-card li.miss .res { color: #8a8a8a; }
+.nssq-hit-card .vs { color: #777; font-size: 0.92em; }

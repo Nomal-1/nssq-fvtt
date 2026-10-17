@@ -766,6 +766,20 @@ async function skillEffect(message) {
   }
 }
 
+/** 명중 카드(플레이어 공격의 굴리기 팝업 뒤, combat/dice-flow.mjs): 맞으면 HIT, 빗나가면 MISS */
+async function hitCheckEffect(message) {
+  const hc = message.getFlag("nssq", "hitCheck");
+  const combat = battleCombat();
+  if (!hc || !combat || collapsed) return;
+  if (game.dice3d) await game.dice3d.waitFor3DAnimationByMessageID?.(message.id);
+  for (const t of hc.targets ?? []) {
+    const c = combat.combatants.find((x) => x.actor?.uuid === t.uuid);
+    const el = c && cardEl(c.id);
+    if (!el) continue;
+    if (t.hit) { hitFlash(el); popText(el, L("hit"), "hit"); } else popText(el, L("miss"), "miss");
+  }
+}
+
 /** 공격 카드가 올라오면: 맞았으면 번쩍임(크리티컬은 글자도), 빗나갔으면 MISS. 흔들림은 【HP】가 깎일 때 */
 async function attackEffect(message) {
   const card = message.getFlag("nssq", "attack");
@@ -776,8 +790,8 @@ async function attackEffect(message) {
     const c = combat.combatants.find((x) => x.actor?.uuid === t.actorUuid);
     const el = c && cardEl(c.id);
     if (!el) continue;
-    if (!t.hit) popText(el, L("miss"), "miss");
-    else {
+    // 명중 카드(combat/dice-flow.mjs)로 MISS를 이미 보였으면 다시 보이지 않는다
+    if (!t.hit) { if (!card.hitShown) popText(el, L("miss"), "miss"); } else {
       hitFlash(el);
       elementFx(el, card.elements ?? [], { crit: t.crit });
       if (t.crit) popText(el, L("critical"), "crit");
@@ -1007,5 +1021,6 @@ export function registerHud() {
   // 종료 페이즈 카드가 생기거나 적용되면 커맨드 창도
   for (const hook of ["createChatMessage", "updateChatMessage"]) Hooks.on(hook, (m) => { if (m.getFlag("nssq", "endPhase")) rerender(); });
   Hooks.on("createChatMessage", (message) => attackEffect(message));
+  Hooks.on("createChatMessage", (message) => hitCheckEffect(message));
   Hooks.on("createChatMessage", (message) => skillEffect(message));
 }
