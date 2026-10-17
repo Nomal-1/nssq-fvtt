@@ -212,3 +212,15 @@ describe("areaActs(에어리어에서 할 수 있는 행동)", () => {
     expect(areaActs({ gather: "숲 채집", acts: { gather: false, camp: true, search: false } })).toEqual({ search: false, gather: false, camp: true, mapping: false });
   });
 });
+
+describe("비밀 에어리어로 가는 숨은 통로", () => {
+  const m = { start: "a", areas: [{ id: "a" }, { id: "b", secret: true }], passages: [{ id: "p", a: "a", b: "b", state: "hidden" }], foes: [] };
+  it("통로를 공개하면 끝의 비밀 에어리어도 공개되어 갈 수 있다", () => {
+    const s = reveal(m, startState(m, { hour: 8 }), { passage: "p" });
+    expect(playerView(m, s).reachable).toEqual(["b"]);
+  });
+  it("통로 상태를 열어도 같다", () => {
+    const s = setPassage(startState(m, { hour: 8 }), "p", "open", m);
+    expect(playerView(m, s).reachable).toEqual(["b"]);
+  });
+});

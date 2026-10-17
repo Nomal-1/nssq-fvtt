@@ -366,7 +366,7 @@ export async function revealThing({ area, passage }) {
 export async function setPassageState(passage, state, { quiet = false } = {}) {
   const map = activeMap();
   if (!map) return;
-  await setMapState(FM.setPassage(cur(), passage, state));
+  await setMapState(FM.setPassage(cur(), passage, state, map));
   if (!quiet) return post(`<p><i class="fas fa-${state === "locked" ? "lock" : "lock-open"}"></i> ${esc(L(`passageNow.${state}`, { name: passageLabel(map, map.passages.find((p) => p.id === passage) ?? {}) }))}</p>`);
 }
 

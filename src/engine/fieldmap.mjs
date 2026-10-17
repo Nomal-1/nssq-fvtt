@@ -287,12 +287,24 @@ export function reveal(map, state, { area, passage } = {}) {
     if (!s.revealed.passages.includes(passage)) s.revealed.passages.push(passage);
     const p = (map.passages ?? []).find((x) => x.id === passage);
     if (p && passageState(s, p) === "hidden") s.passageState = { ...s.passageState, [passage]: "open" };
+    revealEnds(map, s, p);
   }
   return s;
 }
 
-/** 통로 상태 바꾸기(잠김 해제 등) */
-export const setPassage = (state, passage, st) => ({ ...clone(state), passageState: { ...(state.passageState ?? {}), [passage]: st } });
+/** 통로를 공개·열면 그 끝의 비밀 에어리어도 공개(그렇지 않으면 통로가 보이지 않아 갈 수 없다) */
+function revealEnds(map, s, p) {
+  if (!p) return;
+  s.revealed = { areas: [...(s.revealed?.areas ?? [])], passages: [...(s.revealed?.passages ?? [])] };
+  for (const id of [p.a, p.b]) if (areaOf(map, id)?.secret && !s.revealed.areas.includes(id)) s.revealed.areas.push(id);
+}
+
+/** 통로 상태 바꾸기(잠김 해제 등). 숨김이 아니게 되면 끝의 비밀 에어리어도 공개(map을 주면) */
+export const setPassage = (state, passage, st, map = null) => {
+  const s = { ...clone(state), passageState: { ...(state.passageState ?? {}), [passage]: st } };
+  if (map && st !== "hidden") revealEnds(map, s, (map.passages ?? []).find((x) => x.id === passage));
+  return s;
+};
 
 /** F.O.E. 제거(쓰러뜨림·떠남) */
 export const removeFoe = (state, foeId) => ({ ...clone(state), foeGone: [...new Set([...(state.foeGone ?? []), foeId])] });
