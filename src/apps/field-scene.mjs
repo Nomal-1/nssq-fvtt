@@ -96,6 +96,16 @@ const refresh = () => {
   else overlay.render();
 };
 const openEvents = () => game.settings.get("nssq", "fieldEvents") ?? [];
+/** 이 에어리어의 나레이션 글: 다시 왔을 때 글이 있으면 그것, 없으면 첫 방문 글 */
+const narrationOf = (area, st) => String(((st.visited?.[area?.id] ?? 0) > 1 && area?.narrationAgain?.trim()) || area?.narration || "").trim();
+async function postNarration() {
+  const map = activeMap();
+  const st = mapState();
+  const here = areaOf(map, st.current);
+  const text = narrationOf(here, st);
+  if (!text) return null;
+  return ChatMessage.create({ speaker: { alias: here?.name ?? map?.name ?? "" }, content: `<div class="nssq-fieldmap-card fs-narration-card"><p>${esc(text).replace(/\n/g, "<br>")}</p></div>` });
+}
 
 export class FieldOverlay extends Application {
   static get defaultOptions() {
@@ -128,10 +138,17 @@ export class FieldOverlay extends Application {
       : locked ? `<div class="fs-locked"><i class="fas fa-hourglass-half"></i> ${esc(L("eventWait"))}</div>`
         : narrating ? `<div class="fs-locked"><i class="fas fa-feather-alt"></i> ${esc(L("narrationWait"))}</div>` : this.menuHtml(map, st, v);
     const stage = `<div class="town-stage facility" ${areaImg(here) || map.battleBg ? `style="background-image:url('${url(areaImg(here) || map.battleBg)}')"` : ""}>
-      ${top}${warn}<nav class="town-menu">${menu}</nav>${gm && locked ? `<div class="fs-gmnote"><i class="fas fa-bolt"></i> ${esc(L("eventGm", { n: openEvents().length }))}</div>` : gm && narrating ? `<div class="fs-gmnote"><i class="fas fa-feather-alt"></i> ${esc(L("narrationGm"))}</div>` : ""}
+      ${top}${warn}<nav class="town-menu">${menu}</nav>${gm && locked ? `<div class="fs-gmnote"><i class="fas fa-bolt"></i> ${esc(L("eventGm", { n: openEvents().length }))}</div>` : gm && narrating ? this.narrationHtml(here, st) : ""}
       ${await this.partyHtml()}</div>`;
     frame.append(stage);
     return root.append(frame);
+  }
+
+  /** GM 나레이션 칸: 에어리어에 미리 써 둔 글(첫 방문 / 다시 왔을 때)을 GM만 보고, [채팅으로 읽기]로 모두에게 보낸다 */
+  narrationHtml(here, st) {
+    const text = narrationOf(here, st);
+    return `<div class="fs-gmnote fs-narration"><p><i class="fas fa-feather-alt"></i> ${esc(L("narrationGm"))}</p>
+      ${text ? `<blockquote>${esc(text).replace(/\n/g, "<br>")}</blockquote><button type="button" data-fs="narrate"><i class="fas fa-comment-dots"></i> ${esc(L("narrate"))}</button>` : `<p class="notes">${esc(L("narrationNone"))}</p>`}</div>`;
   }
 
   menuHtml(map, st, v) {
@@ -229,6 +246,7 @@ export class FieldOverlay extends Application {
       case "move": this.picking = true; return this.render();
       case "back": this.picking = false; return this.render();
       case "release": return endNarration();
+      case "narrate": return postNarration();
       case "yes": return answerProposal(true);
       case "no": return answerProposal(false);
       case "cancel": return answerProposal(false, { cancel: true });

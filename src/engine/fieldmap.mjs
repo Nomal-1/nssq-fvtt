@@ -1,7 +1,7 @@
 /**
  * 필드 지도(베이직 던전, 단계 9.5). Foundry 비의존. data/raw/rules/베이직-던전.md
  * - 지도 정의 map: { id, name, start, startHour, areas[], passages[], foes[], triggers[] }
- *   area: { id, name, x, y, terrain, gmNote, secret, gather, tags[], triggers[] }
+ *   area: { id, name, x, y, terrain, gmNote, narration, narrationAgain, secret, gather, tags[], triggers[] }
  *   passage: { id, a, b, oneWay(a→b만), state: open|locked|hidden, label }
  *   foe: { id, actorUuid, name, route[], mode: stay|loop|pingpong, every, nightOnly, active }
  *   trigger: { id, on, n, once, text, playerText, actions[] }

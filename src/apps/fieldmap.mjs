@@ -935,6 +935,8 @@ export class FieldMapApp extends Application {
           ${areaImg(a) ? `<div class="fm-edit-img" style="background-image:url('${esc(areaImg(a))}')"></div>` : ""}
           ${this.field(`${p}.terrain`, a.terrain, L("f.terrain"), "text", L("f.terrainHint"))}
           ${this.field(`${p}.gmNote`, a.gmNote, L("f.gmNote"), "textarea")}
+          ${this.field(`${p}.narration`, a.narration, L("f.narration"), "textarea", L("f.narrationHint"))}
+          ${this.field(`${p}.narrationAgain`, a.narrationAgain, L("f.narrationAgain"), "textarea", L("f.narrationAgainHint"))}
           ${this.field(`${p}.gather`, a.gather, L("f.gather"), "text", game.i18n.localize("NSSQ.Loot.tablePlaceholder"))}
           ${this.field(`${p}.tags`, a.tags, L("f.tags"), "text", L("f.tagsHint"))}
           <div class="form-group"><label>${esc(L("f.areaBattleBg"))}</label><input type="text" data-path="${p}.battleBg" value="${esc(a.battleBg ?? "")}" placeholder="${esc(L("f.mapDefault"))}"/></div>
@@ -1030,7 +1032,7 @@ export class FieldMapApp extends Application {
     const v = value ?? "";
     let input;
     if (kind === "bool") input = `<input type="checkbox" data-path="${path}" data-type="bool" ${v ? "checked" : ""}/>`;
-    else if (kind === "textarea") input = `<textarea data-path="${path}" rows="2">${esc(v)}</textarea>`;
+    else if (kind === "textarea") input = `<textarea data-path="${path}" rows="${hint ? 4 : 2}" placeholder="${esc(hint)}">${esc(v)}</textarea>`;
     else if (kind === "num") input = `<input type="number" data-path="${path}" data-type="num" value="${esc(v)}"/>`;
     else if (kind === "enemy") input = `<input type="text" data-path="${path}" data-type="enemy" list="fm-enemies" value="${esc(v)}" placeholder="${esc(L("f.actorHint"))}"/>`;
     else input = `<input type="text" data-path="${path}" value="${esc(v)}" placeholder="${esc(hint)}"/>`;
