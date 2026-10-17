@@ -290,9 +290,10 @@ export async function openArtConfig(actor) {
   if (token) update["system.art"].token = token;
   else ui.notifications.warn(L("tokenUploadFailed"));
   // 새로 올리거나 서버에서 고른 전신 그림은 캐릭터 그림(액터 이미지)으로도 쓴다
-  if (st.full && (st.fullUploaded || st.full !== (actor.system.art?.full ?? ""))) update.img = st.full;
+  if (st.full && actor.img !== st.full) update.img = st.full;
   await actor.update(update);
   if (token) await applyRowToken(actor);
+  ui.notifications.info(game.i18n.format("NSSQ.Art.saved", { name: actor.name }));
 }
 
 export function registerArt() {
