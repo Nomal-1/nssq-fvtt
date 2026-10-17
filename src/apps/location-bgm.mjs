@@ -53,7 +53,7 @@ export async function playLocationBgm(ref, { enter = false } = {}) {
 
 /* ---------------- 시설 BGM(이 화면만) ---------------- */
 
-const fac = { ref: "", sound: null, ducked: [], token: 0 };
+const fac = { ref: "", sound: null, ducked: [], token: 0, timer: null };
 const inBattle = () => game.combats.some((c) => c.getFlag("nssq", "battle"));
 const fadeTo = (ps, v) => { try { ps.sound?.fade(v, { duration: 800 }); } catch { /* 오디오 잠금 */ } };
 
@@ -69,6 +69,7 @@ export async function setFacilityMusic(ref) {
   const order = pl ? (sound ? [pl.sounds.get(sound)] : (pl.playbackOrder ?? pl.sounds.contents.map((s) => s.id)).map((id) => pl.sounds.get(id))).filter((s) => s?.path) : [];
   if (!order.length) {
     // 원래 곡을 되돌린다
+    clearInterval(fac.timer); fac.timer = null;
     for (const ps of fac.ducked) if (ps.playing) fadeTo(ps, ps.volume);
     fac.ducked = [];
     if (ref) fac.ref = "";
@@ -79,6 +80,9 @@ export async function setFacilityMusic(ref) {
     if (p.getFlag("nssq", "theme")) continue;
     for (const ps of p.sounds.contents) if (ps.playing && !fac.ducked.includes(ps)) { fac.ducked.push(ps); fadeTo(ps, 0); }
   }
+  // 곡을 아직 불러오는 중이었거나 문서 갱신으로 볼륨이 되돌아가면 다시 줄인다(시설에 있는 동안 1초마다)
+  clearInterval(fac.timer);
+  fac.timer = setInterval(() => { for (const ps of fac.ducked) if (ps.sound?.playing && ps.sound.volume > 0.01) fadeTo(ps, 0); }, 1000);
   const playAt = async (i) => {
     if (token !== fac.token) return;
     const t = order[i % order.length];
@@ -94,8 +98,6 @@ export async function setFacilityMusic(ref) {
 
 export function registerLocationBgm() {
   game.settings.register("nssq", "locationBgm", { scope: "world", config: false, type: String, default: "" });
-  // 줄여 둔 곡이 다른 사람의 조작으로 다시 커지면(문서 갱신 때 Foundry가 볼륨을 되돌림) 다시 줄인다
-  Hooks.on("updatePlaylistSound", (ps) => { if (fac.ref && ps.playing && fac.ducked.includes(ps)) setTimeout(() => { if (fac.ref) fadeTo(ps, 0); }, 600); });
   // 전투가 시작되면 시설 곡을 끄고 원래대로
   Hooks.on("createCombat", () => setFacilityMusic(""));
 }
