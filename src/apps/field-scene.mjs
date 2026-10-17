@@ -141,16 +141,13 @@ export class FieldOverlay extends Application {
       <span class="say" data-say-default="${esc(here?.terrain ?? "")}">${esc(here?.terrain ?? "")}</span></div>
       <div class="money"><small>${esc(map.name)}</small></div></header>`;
     const warn = foeHere ? `<div class="fs-warn danger"><i class="fas fa-skull"></i> ${esc(LF("foeHere"))}</div>` : foeNear ? `<div class="fs-warn"><i class="fas fa-exclamation-triangle"></i> ${esc(L("foeNear"))}</div>` : "";
-    // F.O.E. 토큰: 같은 에어리어면 가운데에 크게, 이웃이면 경고 아래에 작게(그 에어리어 이름과 함께)
-    const foeToken = async (f, here) => {
+    // F.O.E. 토큰: 같은 에어리어에 있을 때만 가운데에 크게(이웃은 경고 문구만)
+    const foeToken = async (f) => {
       const img = await foeImg(f.actorUuid);
-      const known = (st.visited?.[f.area] ?? 0) > 0;
-      const where = here ? "" : `<small>${esc(known ? areaOf(map, f.area)?.name ?? "" : LF("unknownArea"))}</small>`;
-      return `<div class="fs-foe ${here ? "here" : "near"}" title="${esc(f.name)}">${img ? `<img src="${url(img)}" alt=""/>` : `<i class="fas fa-skull"></i>`}<span><b>${esc(f.name)}</b>${where}</span></div>`;
+      return `<div class="fs-foe here" title="${esc(f.name)}">${img ? `<img src="${url(img)}" alt=""/>` : `<i class="fas fa-skull"></i>`}<span><b>${esc(f.name)}</b></span></div>`;
     };
-    const foesHere = (await Promise.all(v.foes.filter((f) => f.area === v.current).map((f) => foeToken(f, true)))).join("");
-    const foesNear = (await Promise.all(v.foes.filter((f) => f.area !== v.current).map((f) => foeToken(f, false)))).join("");
-    const foeLayer = `${foesHere ? `<div class="fs-foes-here">${foesHere}</div>` : ""}${foesNear ? `<div class="fs-foes-near">${foesNear}</div>` : ""}`;
+    const foesHere = (await Promise.all(v.foes.filter((f) => f.area === v.current).map(foeToken))).join("");
+    const foeLayer = foesHere ? `<div class="fs-foes-here">${foesHere}</div>` : "";
     const menu = gm ? `${narrating ? `<button type="button" class="town-choice fs-release" data-fs="release" data-say="${esc(L("say.release"))}"><i class="fas fa-play"></i><span>${esc(L("release"))}</span></button>` : ""}${this.menuHtml(map, st, v)}`
       : locked ? `<div class="fs-locked"><i class="fas fa-hourglass-half"></i> ${esc(L("eventWait"))}</div>`
         : narrating ? `<div class="fs-locked"><i class="fas fa-feather-alt"></i> ${esc(L("narrationWait"))}</div>` : this.menuHtml(map, st, v);
