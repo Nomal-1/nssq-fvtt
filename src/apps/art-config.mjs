@@ -288,9 +288,9 @@ export async function openArtConfig(actor) {
     console.warn("NSSQ | token upload", e);
   }
   if (token) update["system.art"].token = token;
-  // 새로 올린 전신 그림은 캐릭터 그림(액터 이미지)으로도 쓴다
-  if (st.fullUploaded && st.full) update.img = st.full;
   else ui.notifications.warn(L("tokenUploadFailed"));
+  // 새로 올리거나 서버에서 고른 전신 그림은 캐릭터 그림(액터 이미지)으로도 쓴다
+  if (st.full && (st.fullUploaded || st.full !== (actor.system.art?.full ?? ""))) update.img = st.full;
   await actor.update(update);
   if (token) await applyRowToken(actor);
 }
