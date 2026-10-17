@@ -225,7 +225,7 @@
       "finalHint": "기본 + 장비(제련 등)"
     },
     "Field": {
-      "key": "키",
+      "key": "키", "stored": "창고에 있음", "reveal": "식별하면 공개", "effectsNote": "GM 판단 메모",
       "skillKey": "스킬 키",
       "classKey": "클래스 키",
       "position": "위치",
