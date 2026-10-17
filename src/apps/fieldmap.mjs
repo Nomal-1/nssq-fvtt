@@ -186,7 +186,7 @@ export async function startProgress(mapId, hour, { resume = true } = {}) {
  * 다른 지도(던전)로(사용자 요청): 지금 진행을 그 지도로 바꾼다. 시각은 이어지고, 도착 에어리어(없으면 그 지도의 시작)에서 시작한다.
  * 같은 지도를 전에 밟았으면 밟은 기록·공개·통로 상태·발동한 트리거를 잇는다(startProgress와 같음)
  */
-export async function goToMap(mapId, areaId = null) {
+export async function goToMap(mapId, areaId = null, { tick = false } = {}) {
   if (!game.user.isGM) return null;
   const map = allMaps()[mapId];
   if (!map) return ui.notifications.warn(L("noMap"));
@@ -195,12 +195,14 @@ export async function goToMap(mapId, areaId = null) {
   const at = areaId && areaOf(map, areaId) ? areaId : s.current;
   const prev = now.visitedBy?.[map.id] ?? null;
   s.current = at;
-  s.segment = now.segment ?? 0;
+  s.segment = (now.segment ?? 0) + (tick ? 1 : 0);
+  if (tick) s.hour = ((now.hour ?? 0) + 1) % 24;
   s.visited = { ...(prev?.visited ?? {}), [at]: (prev?.visited?.[at] ?? 0) + 1 };
   for (const k of ["revealed", "passageState", "fired", "foeGone"]) if (prev?.[k]) s[k] = prev[k];
   // 떠나는 지도의 기록은 따로 둔다(돌아오면 잇는다)
   s.visitedBy = { ...(now.visitedBy ?? {}), [now.mapId]: { visited: now.visited, revealed: now.revealed, passageState: now.passageState, fired: now.fired, foeGone: now.foeGone } };
   await setMapState(s, { undo: false });
+  if (tick) await passTime(s.hour, 1);
   await (await import("./field-scene.mjs")).activateFieldScene(map);
   await areaMusic(map, at, true);
   await post(`<h3><i class="fas fa-route"></i> ${esc(L("mapGone", { name: map.name }))}</h3>${arrivalHtml(map, s)}`);
@@ -276,6 +278,8 @@ async function step(opts, tick = {}) {
 /** 이동(GM). 플레이어는 제안 */
 export async function moveTo(to) {
   if (!game.user.isGM) return requestMove(to);
+  const ex = exitOf(activeMap(), cur().current, to);
+  if (ex) return goToMap(ex.map, ex.area || null, { tick: true });
   const r = await step({ to });
   if (!r) return;
   await activateLinked(r.map, to);
@@ -290,6 +294,23 @@ export async function moveTo(to) {
 async function areaMusic(map, areaId, enter = false) {
   const ref = areaOf(map, areaId)?.fieldBgm || map?.fieldBgm || "";
   return (await import("./location-bgm.mjs")).playLocationBgm(ref, { enter });
+}
+
+/**
+ * 다른 지도로 가는 길(사용자 요청): 에어리어의 exits[{ map, area }]. 이동 목록에 「이동」 목적지로 나오고(id "exit:n"),
+ * 고르면 이동처럼 제안·투표를 거쳐 1세그먼트 뒤 그 지도로(goToMap)
+ */
+export function areaExits(map, areaId) {
+  const maps = allMaps();
+  // 편집 창이 경로로 쓰면 배열 대신 {0: …}이 될 수 있다
+  return Object.values(areaOf(map, areaId)?.exits ?? {}).map((x, i) => ({ id: `exit:${i}`, ...x, target: maps[x.map] ?? null })).filter((x) => x.target);
+}
+const exitOf = (map, areaId, to) => (String(to).startsWith("exit:") ? areaExits(map, areaId).find((x) => x.id === to) ?? null : null);
+/** 목적지 표시 이름: 에어리어(밟은 곳만 이름) 또는 다른 지도 */
+export function destLabel(map, st, to) {
+  const x = exitOf(map, st.current, to);
+  if (x) return L("exitTo", { name: x.target.name });
+  return (st.visited?.[to] ?? 0) > 0 ? areaName(map, to) : L("unknownArea");
 }
 
 /** 나레이션 잠금: 이동해 도착하면 GM이 풀 때까지 플레이어 메뉴를 가린다(설정 fieldNarrate) */
@@ -549,7 +570,7 @@ export function requestMove(to) {
   if (mapState().proposal) return ui.notifications.warn(L("proposalPending"));
   if (isActiveGM()) serial(() => onPropose({ to, by: game.user.id }));
   else emit("fieldPropose", { to, by: game.user.id });
-  ui.notifications.info(L("proposed", { name: (mapState().visited?.[to] ?? 0) > 0 ? areaName(map, to) : L("unknownArea") }));
+  ui.notifications.info(L("proposed", { name: destLabel(map, mapState(), to) }));
 }
 
 /** 이번 탐색에 참여하는 플레이어: 접속 중이고 파티 캐릭터를 소유한 사람 */
@@ -563,7 +584,7 @@ async function onPropose({ to, by }) {
   if (!isActiveGM()) return;
   const map = activeMap();
   const st = cur();
-  if (!map || st.proposal || !FM.playerView(map, st).reachable.includes(to)) return;
+  if (!map || st.proposal || !(FM.playerView(map, st).reachable.includes(to) || exitOf(map, st.current, to))) return;
   const mode = game.settings.get("nssq", "fieldMapMove");
   if (mode === "free") return moveTo(to);
   const voters = mode === "gm" ? ["gm"] : [...new Set([...(await partyVoters()), by]), "gm"];
@@ -590,7 +611,7 @@ async function onAnswer({ id, user, gm, accept, cancel }) {
   const p = st.proposal;
   if (!p || p.id !== id) return;
   const map = activeMap();
-  const dest = (st.visited?.[p.to] ?? 0) > 0 ? areaName(map, p.to) : L("unknownArea");
+  const dest = destLabel(map, st, p.to);
   const who = game.users.get(user)?.name ?? "";
   if (cancel) {
     if (user !== p.by && !gm) return;
@@ -629,13 +650,14 @@ function promptVote(st) {
   if (game.user.isGM && game.users.activeGM?.id !== game.user.id) return;
   const map = activeMap();
   if (!map) return;
-  const a = areaOf(map, p.to);
-  const known = game.user.isGM || (st.visited?.[p.to] ?? 0) > 0;
+  const ex = exitOf(map, st.current, p.to);
+  const a = ex ? areaOf(ex.target, ex.area || ex.target.start) : areaOf(map, p.to);
+  const known = game.user.isGM || !!ex || (st.visited?.[p.to] ?? 0) > 0;
   const img = areaImg(a);
   const dialog = new Dialog({
     title: L("proposalTitle"),
     content: `<div class="nssq-fm-vote">${img ? `<div class="thumb ${known ? "" : "fog"}" style="background-image:url('${esc(img)}')"></div>` : ""}
-      <p>${esc(L("proposalAsk", { by: game.users.get(p.by)?.name ?? "", name: known ? a?.name ?? "" : L("unknownArea") }))}</p>${a?.terrain ? `<p class="notes">${esc(a.terrain)}</p>` : ""}</div>`,
+      <p>${esc(L("proposalAsk", { by: game.users.get(p.by)?.name ?? "", name: ex ? destLabel(map, st, p.to) : known ? a?.name ?? "" : L("unknownArea") }))}</p>${a?.terrain ? `<p class="notes">${esc(a.terrain)}</p>` : ""}</div>`,
     buttons: {
       yes: { icon: '<i class="fas fa-check"></i>', label: L("accept"), callback: () => answerProposal(true) },
       no: { icon: '<i class="fas fa-times"></i>', label: L("decline"), callback: () => answerProposal(false) }
@@ -887,7 +909,7 @@ export class FieldMapApp extends Application {
         return `<li class="${a === true ? "yes" : a === false ? "no" : "wait"}"><i class="fas ${a === true ? "fa-check" : a === false ? "fa-times" : "fa-hourglass-half"}"></i> ${esc(name)}</li>`;
       }).join("");
       const mine = (p.voters ?? []).includes(me) && p.answers?.[me] === undefined;
-      move = `<div class="fm-proposal"><p><b>${esc(game.users.get(p.by)?.name ?? "")}</b>: ${esc(L("proposalTo", { name: (st.visited?.[p.to] ?? 0) > 0 ? areaName(map, p.to) : L("unknownArea") }))}</p><ul>${rows}</ul>
+      move = `<div class="fm-proposal"><p><b>${esc(game.users.get(p.by)?.name ?? "")}</b>: ${esc(L("proposalTo", { name: destLabel(map, st, p.to) }))}</p><ul>${rows}</ul>
         ${mine ? `<div class="fm-row"><button type="button" data-fm-vote="yes"><i class="fas fa-check"></i> ${esc(L("accept"))}</button><button type="button" data-fm-vote="no"><i class="fas fa-times"></i> ${esc(L("decline"))}</button></div>` : ""}
         ${p.by === me ? `<button type="button" data-fm-vote="cancel">${esc(L("cancelProposal"))}</button>` : ""}</div>`;
     } else if (this.proposing) {
@@ -944,7 +966,7 @@ export class FieldMapApp extends Application {
         ${gone ? `<a data-fm-act="foeRestore" data-id="${f.id}">${esc(L("restore"))}</a>` : `<a data-fm-act="foeRemove" data-id="${f.id}" title="${esc(L("remove"))}"><i class="fas fa-times"></i></a>`}</li>`;
     }).join("");
     const pr = st.proposal;
-    const prop = pr ? `<section class="fm-proposal"><p><b>${esc(game.users.get(pr.by)?.name ?? "")}</b>: ${esc(L("proposalTo", { name: areaName(map, pr.to) }))}</p>
+    const prop = pr ? `<section class="fm-proposal"><p><b>${esc(game.users.get(pr.by)?.name ?? "")}</b>: ${esc(L("proposalTo", { name: String(pr.to).startsWith("exit:") ? destLabel(map, st, pr.to) : areaName(map, pr.to) }))}</p>
       <ul>${pr.voters.map((u) => { const x = pr.answers?.[u]; return `<li class="${x === true ? "yes" : x === false ? "no" : "wait"}"><i class="fas ${x === true ? "fa-check" : x === false ? "fa-times" : "fa-hourglass-half"}"></i> ${esc(u === "gm" ? L("gmVoter") : game.users.get(u)?.name ?? "?")}</li>`; }).join("")}</ul>
       <div class="fm-actions">${pr.voters.includes("gm") && pr.answers?.gm === undefined ? `${b("gmYes", "fa-check", L("accept"))}${b("gmNo", "fa-times", L("decline"))}` : ""}${b("forceMove", "fa-forward", L("forceMove"))}${b("cancelProposal", "fa-ban", L("cancelProposal"))}</div></section>` : "";
     return `<h3>${esc(map.name)}</h3><p class="fm-clockline">${esc(clock(st))} · ${esc(areaName(map, st.current))}</p>${prop}
@@ -976,6 +998,9 @@ export class FieldMapApp extends Application {
           ${this.field(`${p}.narration`, a.narration, L("f.narration"), "textarea", L("f.narrationHint"))}
           ${this.field(`${p}.narrationAgain`, a.narrationAgain, L("f.narrationAgain"), "textarea", L("f.narrationAgainHint"))}
           ${this.field(`${p}.gather`, a.gather, L("f.gather"), "text", game.i18n.localize("NSSQ.Loot.tablePlaceholder"))}
+          <div class="form-group"><label>${esc(L("f.exitMap"))}</label><select data-path="${p}.exits.0.map" data-struct>${opt("", a.exits?.[0]?.map ?? "", L("none"))}${Object.values(allMaps()).filter((x) => x.id !== map.id).map((x) => opt(x.id, a.exits?.[0]?.map ?? "", x.name)).join("")}</select></div>
+          ${a.exits?.[0]?.map ? `<div class="form-group"><label>${esc(L("f.exitArea"))}</label><select data-path="${p}.exits.0.area">${opt("", a.exits[0].area ?? "", L("af.mapStart"))}${(allMaps()[a.exits[0].map]?.areas ?? []).map((x) => opt(x.id, a.exits[0].area ?? "", x.name)).join("")}</select></div>` : ""}
+          <p class="notes">${esc(L("f.exitHint"))}</p>
           <div class="form-group fm-acts"><label>${esc(L("f.acts"))}</label><span>${Object.entries(FM.areaActs(a)).map(([k, on]) => `<label class="fm-act"><input type="checkbox" data-path="${p}.acts.${k}" data-type="bool" ${on ? "checked" : ""}/> ${esc(game.i18n.localize(`NSSQ.FieldScene.act.${k}`))}</label>`).join("")}</span></div>
           <p class="notes">${esc(L("f.actsHint"))}</p>
           ${this.field(`${p}.tags`, a.tags, L("f.tags"), "text", L("f.tagsHint"))}

@@ -11,7 +11,7 @@ import { viewArea } from "./mobile.mjs";
 import * as FM from "../engine/fieldmap.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
-import { activeMap, answerProposal, campHere, endNarration, gatherHere, mapState, moveTo, requestMove, search } from "./fieldmap.mjs";
+import { activeMap, answerProposal, areaExits, campHere, destLabel, endNarration, gatherHere, mapState, moveTo, requestMove, search } from "./fieldmap.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.FieldScene.${k}`, d) : game.i18n.localize(`NSSQ.FieldScene.${k}`));
 const LF = (k, d) => (d ? game.i18n.format(`NSSQ.FieldMap.${k}`, d) : game.i18n.localize(`NSSQ.FieldMap.${k}`));
@@ -172,7 +172,7 @@ export class FieldOverlay extends Application {
     const p = st.proposal;
     if (p) {
       const me = game.user.id;
-      const dest = (st.visited?.[p.to] ?? 0) > 0 ? areaOf(map, p.to)?.name : LF("unknownArea");
+      const dest = destLabel(map, st, p.to);
       const rows = (p.voters ?? []).map((u) => {
         const a = p.answers?.[u];
         const name = u === "gm" ? LF("gmVoter") : game.users.get(u)?.name ?? "?";
@@ -191,9 +191,11 @@ export class FieldOverlay extends Application {
         const foe = v.foes.some((f) => f.area === id);
         return btn(`data-fs-dest="${id}"`, foe ? "fa-skull" : "fa-shoe-prints", known ? a.name : LF("unknownArea"), `${a?.terrain ?? ""}${foe ? ` · ${LF("foeSign")}` : ""}`);
       }).join("");
-      return (dests || `<p class="notes">${esc(LF("noDest"))}</p>`) + btn('data-fs="back"', "fa-arrow-left", LF("back"));
+      // 다른 지도로 가는 길(에어리어 exits)
+      const exits = areaExits(map, v.current).map((x) => btn(`data-fs-dest="${x.id}"`, "fa-route", destLabel(map, st, x.id), x.target.name)).join("");
+      return (dests || exits ? dests + exits : `<p class="notes">${esc(LF("noDest"))}</p>`) + btn('data-fs="back"', "fa-arrow-left", LF("back"));
     }
-    const out = [btn(`data-fs="move" ${v.reachable.length ? "" : "disabled"}`, "fa-shoe-prints", L("move"), L("say.move"))];
+    const out = [btn(`data-fs="move" ${v.reachable.length || areaExits(map, v.current).length ? "" : "disabled"}`, "fa-shoe-prints", L("move"), L("say.move"))];
     // 이 에어리어에서 할 수 있는 행동만(지도 편집 「할 수 있는 행동」, GM은 GM 스크린에서 언제나)
     const can = FM.areaActs(areaOf(map, v.current));
     for (const [act, icon] of Object.entries(ACTS).filter(([k]) => can[k])) out.push(btn(`data-fs-act="${act}"`, icon, L(`act.${act}`), L(gm ? `say.${act}` : "say.propose", { act: L(`act.${act}`) })));

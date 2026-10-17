@@ -363,7 +363,7 @@
      "y": 100,
      "img": "자료/일러/284843472b386ef42660d3b1e0cd4980.jpg",
      "terrain": "짙은 안개가 흐르는 좁은 길",
-     "gmNote": "뿔사슴을 쓰러뜨리면 열리는 길. 여기 들어오면 「안개의 수해」로 들어갈지 고르는 선택지가 나온다(수해에서 막 돌아왔을 때는 나오지 않는다).",
+     "gmNote": "뿔사슴을 쓰러뜨리면 열리는 길. 「이동한다」 목록에 「안개의 수해」가 나온다(다른 지도로 가는 길).",
      "secret": true,
      "gather": "",
      "tags": "",
@@ -372,36 +372,25 @@
        "id": "wT7",
        "on": "enter",
        "n": 1,
-       "once": false,
-       "auto": true,
+       "once": true,
        "text": "",
        "playerText": "",
        "actions": [
         {
-         "type": "choice",
-         "text": "안개 너머로 길이 이어진다. 낮은 울음소리가 안개 속에서 들려온다.",
-         "options": [
-          {
-           "label": "안개 속으로 들어간다",
-           "actions": [
-            {
-             "type": "mapGo",
-             "map": "nssqDefMapFog",
-             "toArea": "mA1"
-            }
-           ]
-          },
-          {
-           "label": "돌아선다",
-           "actions": []
-          }
-         ]
+         "type": "message",
+         "text": "짙은 안개 너머로 길이 이어진다. 「이동한다」에서 안개의 수해로 들어갈 수 있다."
         }
        ]
       }
      ],
      "encounters": [],
-     "narration": "발밑조차 보이지 않는 안개. 멀리서 낮은 울음소리가 들린다."
+     "narration": "발밑조차 보이지 않는 안개. 멀리서 낮은 울음소리가 들린다.",
+     "exits": [
+      {
+       "map": "nssqDefMapFog",
+       "area": "mA1"
+      }
+     ]
     }
    ],
    "passages": [
@@ -523,45 +512,19 @@
      "y": 350,
      "img": "자료/일러/284843472b386ef42660d3b1e0cd4980.jpg",
      "terrain": "짙은 안개가 숲과 수해를 가르는 곳",
-     "gmNote": "「속삭이는 숲」 안개 오솔길과 이어지는 경계. 여기 들어오면 숲으로 돌아갈지 고르는 선택지가 나온다(숲에서 막 건너왔을 때는 나오지 않는다).",
+     "gmNote": "「속삭이는 숲」 안개 오솔길과 이어지는 경계. 「이동한다」 목록에 「속삭이는 숲」이 나온다.",
      "secret": false,
      "gather": "",
      "tags": "",
-     "triggers": [
-      {
-       "id": "mT1",
-       "on": "enter",
-       "n": 1,
-       "once": false,
-       "auto": true,
-       "text": "",
-       "playerText": "",
-       "actions": [
-        {
-         "type": "choice",
-         "text": "안개 너머로 「속삭이는 숲」의 짐승길이 희미하게 보인다.",
-         "options": [
-          {
-           "label": "숲으로 돌아간다",
-           "actions": [
-            {
-             "type": "mapGo",
-             "map": "nssqDefMapWood",
-             "toArea": "wA9"
-            }
-           ]
-          },
-          {
-           "label": "안개 속에 머문다",
-           "actions": []
-          }
-         ]
-        }
-       ]
-      }
-     ],
+     "triggers": [],
      "encounters": [],
-     "narration": "한 걸음 들어서자 공기가 무겁게 젖는다. 뒤돌아보면 방금 지나온 숲길이 안개에 지워져 간다."
+     "narration": "한 걸음 들어서자 공기가 무겁게 젖는다. 뒤돌아보면 방금 지나온 숲길이 안개에 지워져 간다.",
+     "exits": [
+      {
+       "map": "nssqDefMapWood",
+       "area": "wA9"
+      }
+     ]
     },
     {
      "id": "mA2",
