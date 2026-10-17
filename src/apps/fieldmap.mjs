@@ -182,6 +182,31 @@ export async function startProgress(mapId, hour, { resume = true } = {}) {
   return processTriggers(map, FM.arrivalTriggers(map, s, s.current));
 }
 
+/**
+ * 다른 지도(던전)로(사용자 요청): 지금 진행을 그 지도로 바꾼다. 시각은 이어지고, 도착 에어리어(없으면 그 지도의 시작)에서 시작한다.
+ * 같은 지도를 전에 밟았으면 밟은 기록·공개·통로 상태·발동한 트리거를 잇는다(startProgress와 같음)
+ */
+export async function goToMap(mapId, areaId = null) {
+  if (!game.user.isGM) return null;
+  const map = allMaps()[mapId];
+  if (!map) return ui.notifications.warn(L("noMap"));
+  const now = cur();
+  const s = FM.startState(map, { hour: now.hour ?? map.startHour ?? 8 });
+  const at = areaId && areaOf(map, areaId) ? areaId : s.current;
+  const prev = now.visitedBy?.[map.id] ?? null;
+  s.current = at;
+  s.segment = now.segment ?? 0;
+  s.visited = { ...(prev?.visited ?? {}), [at]: (prev?.visited?.[at] ?? 0) + 1 };
+  for (const k of ["revealed", "passageState", "fired", "foeGone"]) if (prev?.[k]) s[k] = prev[k];
+  // 떠나는 지도의 기록은 따로 둔다(돌아오면 잇는다)
+  s.visitedBy = { ...(now.visitedBy ?? {}), [now.mapId]: { visited: now.visited, revealed: now.revealed, passageState: now.passageState, fired: now.fired, foeGone: now.foeGone } };
+  await setMapState(s, { undo: false });
+  await (await import("./field-scene.mjs")).activateFieldScene(map);
+  await areaMusic(map, at, true);
+  await post(`<h3><i class="fas fa-route"></i> ${esc(L("mapGone", { name: map.name }))}</h3>${arrivalHtml(map, s)}`);
+  return processTriggers(map, FM.arrivalTriggers(map, s, at));
+}
+
 export async function endProgress() {
   if (!game.user.isGM) return;
   await setMapState({ ...cur(), active: false }, { undo: false });
@@ -438,6 +463,7 @@ export async function runAction(map, a, { areaId = null, depth = 0 } = {}) {
     case "passage": return a.passage ? setPassageState(a.passage, a.state || "open") : null;
     case "foeRemove": return a.foe ? removeFoe(a.foe) : null;
     case "move": return a.area ? teleport(a.area, depth) : null;
+    case "mapGo": return a.map ? goToMap(a.map, a.toArea || null) : null;
     case "choice": return postChoice({ text: a.text, options: a.options ?? [] });
   }
 }
@@ -666,6 +692,7 @@ const ACTIONS = {
   passage: [["passage", "passage"], ["state", "select", FM.PASSAGE_STATES]],
   foeRemove: [["foe", "foe"]],
   move: [["area", "area"]],
+  mapGo: [["map", "map"], ["toArea", "mapArea"]],
   choice: [["text", "textarea"], ["options", "options"]]
 };
 
@@ -1080,6 +1107,8 @@ export class FieldMapApp extends Application {
           case "passage": return `<div class="form-group"><label>${esc(lab)}</label><select data-path="${fp}">${opt("", a[k], L("none"))}${map.passages.map((x) => opt(x.id, a[k], passageLabel(map, x))).join("")}</select></div>`;
           case "foe": return `<div class="form-group"><label>${esc(lab)}</label><select data-path="${fp}">${opt("", a[k], L("none"))}${map.foes.map((x) => opt(x.id, a[k], x.name)).join("")}</select></div>`;
           case "num": return this.field(fp, a[k], lab, "num");
+          case "map": return `<div class="form-group"><label>${esc(lab)}</label><select data-path="${fp}" data-struct>${opt("", a[k], L("none"))}${Object.values(allMaps()).filter((x) => x.id !== map.id).map((x) => opt(x.id, a[k], x.name)).join("")}</select></div>`;
+          case "mapArea": { const m2 = allMaps()[a.map]; return `<div class="form-group"><label>${esc(lab)}</label><select data-path="${fp}">${opt("", a[k], L("af.mapStart"))}${(m2?.areas ?? []).map((x) => opt(x.id, a[k], x.name)).join("")}</select></div>`; }
           case "ability": return `<div class="form-group"><label>${esc(lab)}</label><select data-path="${fp}">${ABILITIES.map((c) => opt(c, a[k] ?? "tec", game.i18n.localize(`NSSQ.Ability.${c}`))).join("")}</select></div>`;
           case "checkKind": return `<div class="form-group"><label>${esc(lab)}</label><select data-path="${fp}">${opt("", a[k], L("none"))}${CHECK_KINDS.map((c) => opt(c, a[k], game.i18n.localize(`NSSQ.Check.kind.${c}`))).join("")}</select></div>`;
           case "textarea": return this.field(fp, a[k], lab, "textarea");
