@@ -1924,3 +1924,5 @@ body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
 .nssq-heal-dice .die-s { display: inline-block; width: 20px; height: 20px; line-height: 18px; font-size: 0.85em; text-align: center; font-weight: 700; border: 1px solid var(--nq-line2); border-radius: 5px; background: var(--nq-bg2); color: var(--nq-tx); opacity: 0.45; }
 .nssq-heal-dice .die-s.over { opacity: 1; color: var(--nq-green); border-color: rgba(116, 208, 142, 0.6); }
 .nssq-heal-dice small { margin-left: 4px; opacity: 0.7; }
+.nssq-loot-window .window-content { padding: 8px 10px; }
+.nssq-loot-window .nssq-loot-pop { font-size: 1.05em; }

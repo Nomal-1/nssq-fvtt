@@ -342,8 +342,57 @@ function requestPopups(message) {
   });
 }
 
+/* ---------------- 팝업 창(사용자 요청): 채팅 카드와 같은 내용·버튼, 카드가 바뀌면 따라 바뀜 ---------------- */
+
+const windows = new Map();
+class LootWindow extends Application {
+  constructor(messageId) {
+    super({ id: `nssq-loot-${messageId}` });
+    this.messageId = messageId;
+  }
+
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, { classes: ["nssq", "nq-window", "nssq-loot-window"], width: 460, height: "auto", resizable: true });
+  }
+
+  get title() {
+    const card = game.messages.get(this.messageId)?.getFlag("nssq", "loot");
+    return card?.kind === "gather" ? L("gatherTitle") : card?.title ?? L("title");
+  }
+
+  async _renderInner() {
+    return $(`<div class="nssq-loot-pop">${game.messages.get(this.messageId)?.content ?? ""}</div>`);
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    const message = game.messages.get(this.messageId);
+    if (message) decorate(message, html);
+  }
+
+  async close(options) {
+    windows.delete(this.messageId);
+    return super.close(options);
+  }
+}
+
+/** 갈무리 카드가 생기면 창을 연다. 바뀌면 다시 그리고(닫아 둔 사람에게는 다시 열지 않는다), 끝나면 닫는다 */
+function syncWindow(message, { open = false } = {}) {
+  const card = message.getFlag("nssq", "loot");
+  if (!card) return;
+  const w = windows.get(message.id);
+  if (card.state === "closed") return w?.close();
+  if (w) return w.render();
+  if (!open) return;
+  const nw = new LootWindow(message.id);
+  windows.set(message.id, nw);
+  nw.render(true);
+}
+
 export function registerLoot() {
   onSocket("loot", (p) => { if (isActiveGM()) handle(p); });
-  Hooks.on("updateChatMessage", (message) => requestPopups(message));
+  Hooks.on("updateChatMessage", (message) => { requestPopups(message); syncWindow(message); });
+  Hooks.on("createChatMessage", (message) => syncWindow(message, { open: true }));
+  Hooks.on("deleteChatMessage", (message) => windows.get(message.id)?.close());
   Hooks.on("renderChatMessage", (message, html) => decorate(message, html));
 }
