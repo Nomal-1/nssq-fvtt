@@ -237,6 +237,8 @@ async function step(opts, tick = {}) {
   const s0 = cur();
   delete s0.proposal;
   const r = FM.advance(map, s0, opts);
+  // GM이 다음 행동을 하면 나레이션은 끝난 것
+  if (!r.error) await endNarration();
   if (r.error) { ui.notifications.warn(L(r.error)); return null; }
   await setMapState(r.state);
   await passTime(r.state.hour, r.state.segment - s0.segment, tick);
@@ -249,9 +251,18 @@ export async function moveTo(to) {
   const r = await step({ to });
   if (!r) return;
   await activateLinked(r.map, to);
+  await beginNarration();
   await post(`<h3>${esc(clock(r.state))}</h3>${arrivalHtml(r.map, r.state)}`);
   await handleEncounters(r.map, r.encounters);
   return processTriggers(r.map, r.triggers);
+}
+
+/** 나레이션 잠금: 이동해 도착하면 GM이 풀 때까지 플레이어 메뉴를 가린다(설정 fieldNarrate) */
+export async function beginNarration() {
+  if (game.settings.get("nssq", "fieldNarrate") && !game.settings.get("nssq", "fieldNarration")) await game.settings.set("nssq", "fieldNarration", true);
+}
+export async function endNarration() {
+  if (game.settings.get("nssq", "fieldNarration")) await game.settings.set("nssq", "fieldNarration", false);
 }
 
 /** 지도 옵션 「도착하면 연결된 씬으로」 */
@@ -305,6 +316,7 @@ export async function teleport(to, depth = 0) {
   const r = FM.teleport(map, cur(), to);
   await setMapState(r.state);
   await activateLinked(map, to);
+  await beginNarration();
   await post(`<h3>${esc(L("moved"))}</h3>${arrivalHtml(map, r.state)}`);
   return processTriggers(map, r.triggers, depth + 1);
 }
@@ -1401,6 +1413,10 @@ export function registerFieldMap() {
     name: "NSSQ.FieldMap.settingMove", hint: "NSSQ.FieldMap.settingMoveHint", scope: "world", config: true, type: String, default: "all",
     choices: { all: "NSSQ.FieldMap.moveAll", gm: "NSSQ.FieldMap.moveGm", free: "NSSQ.FieldMap.moveFree" }
   });
+  game.settings.register("nssq", "fieldNarrate", {
+    name: "NSSQ.FieldMap.settingNarrate", hint: "NSSQ.FieldMap.settingNarrateHint", scope: "world", config: true, type: Boolean, default: true
+  });
+  game.settings.register("nssq", "fieldNarration", { scope: "world", config: false, type: Boolean, default: false });
   game.keybindings.register("nssq", "openFieldMap", {
     name: "NSSQ.FieldMap.keybinding", editable: [{ key: "KeyM" }], restricted: false,
     onDown: () => { FieldMapApp.toggle(); return true; }

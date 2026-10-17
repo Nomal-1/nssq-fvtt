@@ -4,13 +4,14 @@
  * - 메뉴: 이동(투표 제안)·조사·채집·캠프·지도 작성 판정·지도 보기·(입구에서) 마을로 돌아간다
  *   플레이어가 누르면 GM에게 제안(GM이 확인하면 실행), GM이 누르면 바로 실행
  * - 이벤트 잠금: GM이 처리하지 않은 트리거·F.O.E. 카드가 있으면(fieldMapState.events) 플레이어 메뉴를 가린다
+ * - 나레이션 잠금: 이동해 도착하면 GM이 [플레이어 메뉴 열기]를 누를 때까지(또는 GM이 다음 행동을 할 때까지) 플레이어 메뉴를 가린다(설정 fieldNarrate)
  * - 지도 창은 플레이어에게 보기 전용(지도로 조작하는 것은 GM)
  */
 import { viewArea } from "./mobile.mjs";
 import * as FM from "../engine/fieldmap.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
-import { activeMap, answerProposal, campHere, gatherHere, mapState, moveTo, requestMove, search } from "./fieldmap.mjs";
+import { activeMap, answerProposal, campHere, endNarration, gatherHere, mapState, moveTo, requestMove, search } from "./fieldmap.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.FieldScene.${k}`, d) : game.i18n.localize(`NSSQ.FieldScene.${k}`));
 const LF = (k, d) => (d ? game.i18n.format(`NSSQ.FieldMap.${k}`, d) : game.i18n.localize(`NSSQ.FieldMap.${k}`));
@@ -42,6 +43,7 @@ export async function ensureFieldScene(map) {
 /** 진행 시작·재개 때(startProgress): 미궁 씬을 만들어 활성화 */
 export async function activateFieldScene(map) {
   if (openEvents().length) await game.settings.set("nssq", "fieldEvents", []);
+  await endNarration();
   const sc = await ensureFieldScene(map);
   if (sc && !sc.active) await sc.activate();
   return sc;
@@ -113,6 +115,7 @@ export class FieldOverlay extends Application {
     const here = areaOf(map, v.current);
     const gm = game.user.isGM;
     const locked = openEvents().length > 0;
+    const narrating = !!game.settings.get("nssq", "fieldNarration");
     const foeHere = v.foes.some((f) => f.area === v.current);
     const foeNear = v.foes.some((f) => f.area !== v.current && v.reachable.includes(f.area));
     const hour = Number.isFinite(st.hour) ? st.hour : null;
@@ -121,9 +124,11 @@ export class FieldOverlay extends Application {
       <span class="say" data-say-default="${esc(here?.terrain ?? "")}">${esc(here?.terrain ?? "")}</span></div>
       <div class="money"><small>${esc(map.name)}</small></div></header>`;
     const warn = foeHere ? `<div class="fs-warn danger"><i class="fas fa-skull"></i> ${esc(LF("foeHere"))}</div>` : foeNear ? `<div class="fs-warn"><i class="fas fa-exclamation-triangle"></i> ${esc(L("foeNear"))}</div>` : "";
-    const menu = locked && !gm ? `<div class="fs-locked"><i class="fas fa-hourglass-half"></i> ${esc(L("eventWait"))}</div>` : this.menuHtml(map, st, v);
+    const menu = gm ? `${narrating ? `<button type="button" class="town-choice fs-release" data-fs="release" data-say="${esc(L("say.release"))}"><i class="fas fa-play"></i><span>${esc(L("release"))}</span></button>` : ""}${this.menuHtml(map, st, v)}`
+      : locked ? `<div class="fs-locked"><i class="fas fa-hourglass-half"></i> ${esc(L("eventWait"))}</div>`
+        : narrating ? `<div class="fs-locked"><i class="fas fa-feather-alt"></i> ${esc(L("narrationWait"))}</div>` : this.menuHtml(map, st, v);
     const stage = `<div class="town-stage facility" ${areaImg(here) || map.battleBg ? `style="background-image:url('${url(areaImg(here) || map.battleBg)}')"` : ""}>
-      ${top}${warn}<nav class="town-menu">${menu}</nav>${gm && locked ? `<div class="fs-gmnote"><i class="fas fa-bolt"></i> ${esc(L("eventGm", { n: openEvents().length }))}</div>` : ""}
+      ${top}${warn}<nav class="town-menu">${menu}</nav>${gm && locked ? `<div class="fs-gmnote"><i class="fas fa-bolt"></i> ${esc(L("eventGm", { n: openEvents().length }))}</div>` : gm && narrating ? `<div class="fs-gmnote"><i class="fas fa-feather-alt"></i> ${esc(L("narrationGm"))}</div>` : ""}
       ${await this.partyHtml()}</div>`;
     frame.append(stage);
     return root.append(frame);
@@ -223,6 +228,7 @@ export class FieldOverlay extends Application {
     switch (act) {
       case "move": this.picking = true; return this.render();
       case "back": this.picking = false; return this.render();
+      case "release": return endNarration();
       case "yes": return answerProposal(true);
       case "no": return answerProposal(false);
       case "cancel": return answerProposal(false, { cancel: true });
@@ -295,7 +301,7 @@ export function registerFieldScene() {
   Hooks.on("collapseSidebar", () => setTimeout(fitView, 300));
   window.addEventListener("resize", () => { clearTimeout(registerFieldScene.r); registerFieldScene.r = setTimeout(fitView, 200); });
   for (const h of ["createSetting", "updateSetting"]) Hooks.on(h, (s) => {
-    if (["nssq.fieldMapState", "nssq.fieldMaps", "nssq.fieldEvents"].includes(s.key)) { if (shownMap()) refresh(); else if (overlay) sync(); }
+    if (["nssq.fieldMapState", "nssq.fieldMaps", "nssq.fieldEvents", "nssq.fieldNarration"].includes(s.key)) { if (shownMap()) refresh(); else if (overlay) sync(); }
   });
   Hooks.on("updateActor", (a) => { if (overlay?.rendered && a.type === "character") { clearTimeout(registerFieldScene.u); registerFieldScene.u = setTimeout(refresh, 200); } });
   Hooks.on("createChatMessage", (m) => trackEvent(m));

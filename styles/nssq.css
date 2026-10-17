@@ -1444,6 +1444,7 @@
 .nssq-town.field-overlay .fs-warn.danger { background: rgba(130, 20, 20, 0.9); border-color: #f55; }
 .nssq-town.field-overlay .fs-locked { padding: 16px 18px; font-size: 1.1em; line-height: 1.5; }
 .nssq-town.field-overlay .fs-gmnote { left: 312px; top: 100px; padding: 4px 10px; border-radius: 6px; background: rgba(8, 24, 24, 0.85); border: 1px solid var(--tw-teal-l); font-size: 0.9em; }
+.nssq-town.field-overlay .town-choice.fs-release { border-color: var(--tw-teal-l); box-shadow: 0 0 12px rgba(80, 220, 200, 0.6); }
 .nssq-town.field-overlay .fs-vote { padding: 8px 16px; }
 .nssq-town.field-overlay .fs-vote ul { margin: 4px 0; padding-left: 4px; list-style: none; }
 .nssq-town.field-overlay .fs-vote li.yes { color: var(--nq-green); }
