@@ -1880,3 +1880,9 @@ body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
 #nssq-battle .nb-fp em { font-style: normal; margin-left: 2px; color: #ffd34d; font-size: 0.85em; }
 .nssq .fp-note { font-style: normal; font-size: 0.85em; color: #b58a1d; }
 .nssq button.fp-reroll { display: inline-flex; width: auto; padding: 0 6px; margin-left: 4px; line-height: 1.5em; font-size: 0.8em; }
+
+/* 룰북·가이드 저널(tools/lib/md.mjs가 만든 HTML) */
+.journal-entry-page .nssq-callout { border-left: 3px solid #8a7a5a; background: rgba(138, 122, 90, 0.12); padding: 6px 10px; margin: 8px 0; }
+.journal-entry-page table.nssq-table { border-collapse: collapse; margin: 6px 0; }
+.journal-entry-page table.nssq-table th, .journal-entry-page table.nssq-table td { border: 1px solid rgba(0, 0, 0, 0.25); padding: 3px 6px; vertical-align: top; }
+.journal-entry-page table.nssq-table th { background: rgba(0, 0, 0, 0.08); }

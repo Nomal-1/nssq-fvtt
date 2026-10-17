@@ -2,7 +2,7 @@
   "id": "nssq",
   "title": "SRS가 아닌 세계수의 미궁 TRPG",
   "description": "팬메이드 TRPG 「SRSじゃない世界樹の迷宮TRPG」(NSSQ) 한국어판 게임 시스템",
-  "version": "0.42.6",
+  "version": "0.43.0",
   "authors": [
     {
       "name": "Nomal-1"
@@ -157,6 +157,43 @@
         "ASSISTANT": "OWNER"
       },
       "flags": {}
+    },
+    {
+      "name": "player-guide",
+      "label": "플레이어 룰북(간결)",
+      "path": "packs/player-guide",
+      "type": "JournalEntry",
+      "system": "nssq",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rulebook",
+      "label": "룰북(전문)",
+      "path": "packs/rulebook",
+      "type": "JournalEntry",
+      "system": "nssq",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "gm-guide",
+      "label": "GM 기능 가이드",
+      "path": "packs/gm-guide",
+      "type": "JournalEntry",
+      "system": "nssq",
+      "ownership": {
+        "PLAYER": "NONE",
+        "TRUSTED": "NONE",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
     }
   ],
   "packFolders": [
@@ -170,6 +207,16 @@
         "equipment",
         "items",
         "enemies"
+      ]
+    },
+    {
+      "name": "NSSQ 룰북·가이드",
+      "sorting": "m",
+      "color": "#5e4a2e",
+      "packs": [
+        "player-guide",
+        "rulebook",
+        "gm-guide"
       ]
     }
   ]

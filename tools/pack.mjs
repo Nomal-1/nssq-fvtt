@@ -7,6 +7,7 @@ import { compilePack } from "@foundryvtt/foundryvtt-cli";
 import { makeId } from "./lib/util.mjs";
 import ENEMY_ART from "../src/generated/enemy-art.mjs";
 import { iconFor } from "./lib/icons.mjs";
+import { mdToHtml, splitPages } from "./lib/md.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = path.join(ROOT, "data");
@@ -55,6 +56,68 @@ function folderDoc(type, pack, name, sort) {
   const _id = makeId("Folder", pack, name);
   return { _id, _key: `!folders!${_id}`, name, type, folder: null, sorting: "m", sort, color: null, description: "", flags: {}, _stats: STATS };
 }
+
+/* ---------------- 저널(룰북·가이드) ---------------- */
+
+const RAW = path.join(DATA, "raw");
+const readText = (p) => fs.readFileSync(p, "utf8");
+/** 원문 파일 이름의 첫 「# 제목」 */
+const titleOf = (md, fallback) => md.match(/^#\s+(.+)$/m)?.[1].trim() ?? fallback;
+
+/**
+ * @param {string} pack
+ * @param {string} name
+ * @param {{name: string, html: string}[]} pages
+ * @param {{ folder?: string|null, sort?: number, observer?: boolean }} [opts] observer: 월드로 가져왔을 때 모든 플레이어가 볼 수 있게
+ */
+function journalDoc(pack, name, pages, { folder = null, sort = 0, observer = true } = {}) {
+  const _id = makeId("JournalEntry", pack, name);
+  return {
+    _id, _key: `!journal!${_id}`, name, folder, sort,
+    ownership: { default: observer ? 2 : 0 }, flags: {}, _stats: STATS,
+    pages: pages.map((pg, i) => {
+      const pid = makeId("JournalEntryPage", `${pack}/${name}`, `${i}:${pg.name}`);
+      return {
+        _id: pid, _key: `!journal.pages!${_id}.${pid}`, name: pg.name || name, type: "text",
+        title: { show: true, level: 1 }, text: { format: 1, content: pg.html },
+        sort: (i + 1) * 100, ownership: { default: -1 }, flags: {}, _stats: STATS
+      };
+    })
+  };
+}
+
+/** 원문 폴더의 파일들 → 페이지(파일 하나 = 한 페이지, 이름은 첫 제목) */
+function rawPages(files) {
+  return files.map((f) => {
+    const md = readText(path.join(RAW, f));
+    return { name: titleOf(md, path.basename(f, ".md")), html: mdToHtml(md, { dropTitle: true }) };
+  });
+}
+const rawDir = (dir, filter = () => true) => fs.readdirSync(path.join(RAW, dir)).filter((f) => f.endsWith(".md") && filter(f)).sort((a, b) => a.localeCompare(b, "ko")).map((f) => `${dir}/${f}`);
+
+/** docs/manual.md → 「## 장」마다 한 페이지(목차는 뺀다) */
+function manualPages() {
+  const md = readText(path.join(ROOT, "docs", "manual.md"));
+  const body = md.split(/\n## /).slice(1).map((s) => `## ${s}`).filter((s) => !s.startsWith("## 목차"));
+  const intro = md.split(/\n## /)[0].replace(/^#\s+.*$/m, "").replace(/\n---\s*$/, "");
+  const pages = [{ name: "이 가이드에 대해", html: mdToHtml(intro) }];
+  for (const s of body) {
+    const name = s.match(/^## (.+)$/m)[1].replace(/^\d+\.\s*/, "").trim();
+    // 장 안의 ###은 페이지 안 제목(##)으로
+    pages.push({ name, html: mdToHtml(s.replace(/^## .+$/m, "").replace(/\n---\s*$/, "").replace(/^### /gm, "## ")) });
+  }
+  return pages;
+}
+
+/** 룰북(전문): 원문을 묶음별 저널로. GM 섹션·샘플 시나리오·에너미는 「GM 기능 가이드」 쪽 */
+const RULEBOOK = [
+  ["시작하며", () => ["misc/SRS가-아닌-세계수의-미궁-TRPG.md", "misc/들어가며-(At-First).md"]],
+  ["플레이 룰", () => ["rules/플레이-룰-(Playing-Rules).md", "rules/일반-행위-판정.md", "rules/전투-룰.md", "rules/던전-탐색-룰.md", "rules/베이직-던전.md", "rules/랜덤-던전.md", "rules/세션-진행.md", "rules/세션-결과와-성장.md", "rules/쇼핑과-생활.md"]],
+  ["캐릭터 작성", () => ["character/캐릭터-작성-(Character-Generation).md", "character/샘플-캐릭터-(Sample-Characters).md", ...rawDir("character", (f) => /^\d/.test(f))]],
+  ["클래스", () => rawDir("classes")],
+  ["데이터 레퍼런스", () => ["data/데이터-레퍼런스-(Data-Reference).md", "data/무기·방어구.md", "data/아이템.md", "data/소재.md", "data/커먼-스킬.md"]],
+  ["부록", () => ["misc/FAQ.md", "misc/갱신-이력-(History-of-Revision).md", "misc/유용한-도구-(Useful-Tools).md", "misc/제작자-연락-(Contact-to-Designer).md"]]
+];
 
 /** 팩 정의: 각 팩의 문서 목록을 만든다 */
 const PACK_DEFS = [
@@ -117,6 +180,24 @@ const PACK_DEFS = [
       });
       return docs;
     }
+  },
+  {
+    // 플레이어용 간결한 룰북(data/journals/player-guide.md, 「# 제목」마다 한 페이지)
+    name: "player-guide", label: "플레이어 룰북(간결)", type: "JournalEntry",
+    build: () => [journalDoc("player-guide", "NSSQ 플레이어 룰북(간결)", splitPages(readText(path.join(DATA, "journals", "player-guide.md"))))]
+  },
+  {
+    // 모든 플레이어가 볼 수 있는 룰북 전문(data/raw 원문)
+    name: "rulebook", label: "룰북(전문)", type: "JournalEntry",
+    build: () => RULEBOOK.map(([name, files], i) => journalDoc("rulebook", `${i + 1}. ${name}`, rawPages(files()), { sort: (i + 1) * 100 }))
+  },
+  {
+    // GM 전용: 기능 가이드(docs/manual.md) + 원문 GM 섹션·샘플 시나리오. 팩 자체를 플레이어에게 감춘다
+    name: "gm-guide", label: "GM 기능 가이드", type: "JournalEntry", gmOnly: true,
+    build: () => [
+      journalDoc("gm-guide", "NSSQ GM 기능 가이드", manualPages(), { sort: 100, observer: false }),
+      journalDoc("gm-guide", "GM 섹션·샘플 시나리오(원문)", rawPages(rawDir("gm")), { sort: 200, observer: false })
+    ]
   }
 ];
 
@@ -142,8 +223,13 @@ for (const def of PACK_DEFS) {
 // system.json 갱신
 manifest.packs = PACK_DEFS.map((d) => ({
   name: d.name, label: d.label, path: `packs/${d.name}`, type: d.type, system: "nssq",
-  ownership: { PLAYER: "OBSERVER", ASSISTANT: "OWNER" }, flags: {}
+  ownership: d.gmOnly ? { PLAYER: "NONE", TRUSTED: "NONE", ASSISTANT: "OWNER" } : { PLAYER: "OBSERVER", ASSISTANT: "OWNER" }, flags: {}
 }));
-manifest.packFolders = [{ name: "NSSQ", sorting: "m", color: "#2e5e3a", packs: PACK_DEFS.map((d) => d.name) }];
+// 데이터 팩과 룰북·가이드(저널) 팩을 다른 폴더에
+const journals = PACK_DEFS.filter((d) => d.type === "JournalEntry").map((d) => d.name);
+manifest.packFolders = [
+  { name: "NSSQ", sorting: "m", color: "#2e5e3a", packs: PACK_DEFS.filter((d) => d.type !== "JournalEntry").map((d) => d.name) },
+  { name: "NSSQ 룰북·가이드", sorting: "m", color: "#5e4a2e", packs: journals }
+];
 fs.writeFileSync(path.join(ROOT, "system.json"), JSON.stringify(manifest, null, 2) + "\n");
 console.log(`컴펜디움 빌드 완료\n- ${summary.join("\n- ")}`);
