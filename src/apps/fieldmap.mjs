@@ -176,6 +176,7 @@ export async function startProgress(mapId, hour, { resume = true } = {}) {
   await (await import("./town.mjs")).enteredDungeon();
   // 모두 미궁 씬으로(씬 위 메뉴로 탐색, field-scene.mjs)
   await (await import("./field-scene.mjs")).activateFieldScene(map);
+  await areaMusic(map, s.current, true);
   await passTime(s.hour, 0);
   await post(`<h3><i class="fas fa-map"></i> ${esc(L("started", { name: map.name }))}</h3>${arrivalHtml(map, s)}`);
   return processTriggers(map, FM.arrivalTriggers(map, s, s.current));
@@ -251,10 +252,17 @@ export async function moveTo(to) {
   const r = await step({ to });
   if (!r) return;
   await activateLinked(r.map, to);
+  await areaMusic(r.map, to);
   await beginNarration();
   await post(`<h3>${esc(clock(r.state))}</h3>${arrivalHtml(r.map, r.state)}`);
   await handleEncounters(r.map, r.encounters);
   return processTriggers(r.map, r.triggers);
+}
+
+/** 그 에어리어의 탐색 BGM(에어리어 → 지도). enter: 미궁에 새로 들어옴(이전 곡을 끈다) */
+async function areaMusic(map, areaId, enter = false) {
+  const ref = areaOf(map, areaId)?.fieldBgm || map?.fieldBgm || "";
+  return (await import("./location-bgm.mjs")).playLocationBgm(ref, { enter });
 }
 
 /** 나레이션 잠금: 이동해 도착하면 GM이 풀 때까지 플레이어 메뉴를 가린다(설정 fieldNarrate) */
@@ -316,6 +324,7 @@ export async function teleport(to, depth = 0) {
   const r = FM.teleport(map, cur(), to);
   await setMapState(r.state);
   await activateLinked(map, to);
+  await areaMusic(map, to);
   await beginNarration();
   await post(`<h3>${esc(L("moved"))}</h3>${arrivalHtml(map, r.state)}`);
   return processTriggers(map, r.triggers, depth + 1);
@@ -940,6 +949,7 @@ export class FieldMapApp extends Application {
           ${this.field(`${p}.gather`, a.gather, L("f.gather"), "text", game.i18n.localize("NSSQ.Loot.tablePlaceholder"))}
           ${this.field(`${p}.tags`, a.tags, L("f.tags"), "text", L("f.tagsHint"))}
           <div class="form-group"><label>${esc(L("f.areaBattleBg"))}</label><input type="text" data-path="${p}.battleBg" value="${esc(a.battleBg ?? "")}" placeholder="${esc(L("f.mapDefault"))}"/></div>
+          <div class="form-group"><label>${esc(L("f.areaFieldBgm"))}</label><select data-path="${p}.fieldBgm">${encBgmOptions(a.fieldBgm ?? "", L("f.mapDefault"))}</select></div>
           <div class="form-group"><label>${esc(L("f.areaBattleBgm"))}</label><select data-path="${p}.battleBgm">${encBgmOptions(a.battleBgm ?? "", L("f.mapDefault"))}</select></div>
           ${this.encounterTableEdit(a, p)}
           ${this.field(`${p}.secret`, a.secret, L("f.secret"), "bool")}
@@ -987,6 +997,8 @@ export class FieldMapApp extends Application {
       <div class="form-group"><label>${esc(L("f.battleBg"))}</label><input type="text" data-path="battleBg" value="${esc(map.battleBg ?? "")}"/><button type="button" data-fm-act="pickBattleBg" class="fm-icon"><i class="fas fa-file-import"></i></button></div>
       <div class="form-group"><label>${esc(L("f.battleBgm"))}</label><select data-path="battleBgm">${encBgmOptions(map.battleBgm ?? "", L("f.noBgm"))}</select></div>
       <p class="notes">${esc(L("battleStageHint"))}</p>
+      <div class="form-group"><label>${esc(L("f.fieldBgm"))}</label><select data-path="fieldBgm">${encBgmOptions(map.fieldBgm ?? "", L("f.noBgm"))}</select></div>
+      <p class="notes">${esc(L("f.fieldBgmHint"))}</p>
       <p class="notes">${esc(L("editHint"))}</p>${check}
       <h3>F.O.E. <a data-fm-add="foes" data-kind="foe"><i class="fas fa-plus"></i></a></h3>${foes}
       <datalist id="fm-enemies">${this.enemyChoices().map((x) => `<option value="${esc(x.label)}"></option>`).join("")}</datalist>

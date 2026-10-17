@@ -1,6 +1,6 @@
 /**
  * 마을(01 #167, 사용자 결정): 지도에 그리지 않는 완전한 안전지대. 필드 지도는 던전 안(언제든 위험해질 수 있는 곳)만.
- * - 월드 설정 towns { id: { id, name, img, desc, facilities: [{ id, type, name, img, desc, sceneId }], shopHidden? } }
+ * - 월드 설정 towns { id: { id, name, img, desc, bgm(마을 BGM "재생목록id[.곡id]"), facilities: [{ id, type, name, img, desc, sceneId }], shopHidden? } }
  * - 월드 설정 location { kind: "town"|"dungeon"|"", townId }: 파티가 지금 있는 곳
  * - 귀환(returnToTown): 《아리아드네의 실》·던전 입구의 「마을로 돌아간다」·랜덤 던전 클리어·GM [던전 나가기]
  *   → 던전 진행을 끝내고, 파티 전원 【HP】【TP】 최대·상태 이상·강화·약화·오버히트 없음, 상점 열기, 누적 전투 턴 0
@@ -90,6 +90,7 @@ export async function returnToTown(townId = null, { reason = "" } = {}) {
   const scene = towns[id] ? await ensureTownScene(towns[id]) : null;
   await game.settings.set("nssq", "location", { kind: "town", townId: id });
   if (scene && !scene.active) await scene.activate();
+  await (await import("./location-bgm.mjs")).playLocationBgm(towns[id]?.bgm ?? "", { enter: true });
   if (!game.settings.get("nssq", "shopOpen")) await game.settings.set("nssq", "shopOpen", true);
   const name = towns[id]?.name ?? L("noTownName");
   await ChatMessage.create({ content: `<div class="nssq-town-card"><h3><i class="fas fa-home"></i> ${esc(L("returned", { name }))}</h3>${reason ? `<p>${esc(reason)}</p>` : ""}<p class="notes">${esc(L("restored", { names: party.map((a) => a.name).join(", ") }))}</p></div>` });
@@ -352,11 +353,24 @@ export class TownApp extends Application {
       <div class="form-group"><label>${esc(L("f.townName"))}</label><input type="text" data-tf="name" value="${esc(d.name)}"/></div>
       <div class="form-group"><label>${esc(L("f.img"))}</label><input type="text" data-tf="img" value="${esc(d.img)}"/><button type="button" data-pick="town" class="icon"><i class="fas fa-file-import"></i></button></div>
       <div class="form-group"><label>${esc(L("f.desc"))}</label><input type="text" data-tf="desc" value="${esc(d.desc)}"/></div>
+      <div class="form-group"><label>${esc(L("f.bgm"))}</label><select data-tf="bgm">${this.bgmOptions(d.bgm ?? "")}</select></div>
       <div class="form-group"><label>${esc(L("f.maxRank"))}</label><input type="number" min="0" max="15" data-tf="maxRank" value="${esc(d.maxRank ?? "")}" placeholder="${esc(L("f.maxRankHint"))}"/></div>
       <p class="notes">${esc(L("shopHint"))}</p>
       <h3>${esc(L("facilities"))} <a data-town="addFac" title="${esc(L("addFac"))}"><i class="fas fa-plus"></i></a></h3>
       <div class="town-fac-list">${rows}</div>
       <p class="notes">${esc(L("editHint"))}</p></div>`;
+  }
+
+  /** 재생목록·곡 선택지(전투 BGM과 같은 값) */
+  bgmOptions(cur) {
+    const opt = (v, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
+    const out = [opt("", L("f.noBgm"))];
+    for (const p of game.playlists.contents) {
+      if (p.getFlag("nssq", "theme")) continue;
+      out.push(opt(p.id, `♫ ${p.name}`));
+      for (const s of p.sounds.contents) out.push(opt(`${p.id}.${s.id}`, `  └ ${s.name}`));
+    }
+    return out.join("");
   }
 
   activateListeners(html) {
