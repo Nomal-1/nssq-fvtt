@@ -15,6 +15,7 @@
 | `docs/06-terminology.md` | 한국어 표기 규칙(괄호 기호, 조사, UI 문구)과 `docs/glossary.json` 사용법 |
 | `docs/07-open-questions.md` | 원문에 명시가 없어 임시로 정한 처리(미결). 확정되면 01 §9 표로 번호 그대로 옮기고 여기서 지운다(코드의 `07 #n` → `01 #n`) |
 | `docs/08-changelog.md` | 버전별 변경 기록(최신이 위). 릴리스마다 맨 위에 한 줄 |
+| `docs/manual.md` | 사용자(GM·플레이어) 사용 설명서. 화면·버튼이 바뀌면 같이 고친다 |
 | `docs/glossary.json` | 번역 대조표 1,047항목. **용어의 절대 기준** |
 | `data/raw/` | Notion 한국어판 전체 내보내기(74페이지). 룰 원문의 근거 |
 
