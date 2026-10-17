@@ -287,7 +287,7 @@ async function openDropItem(actor, i) {
   delete data._id;
   if (d.name) data.name = d.name;
   if (data.type === "material" && d.rank) data.system.rank = d.rank;
-  const from = `<p><i class="fas fa-skull"></i> ${foundry.utils.escapeHTML(game.i18n.format("NSSQ.Sheet.dropFrom", { name: actor.name, kind: `${d.item}${d.rank ? ` R${d.rank}` : ""}` }))}</p>`;
+  const from = `<p><i class="fas fa-skull"></i> ${game.i18n.format("NSSQ.Sheet.dropFrom", { name: actor.name, kind: `${d.item}${d.rank ? ` R${d.rank}` : ""}` }).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])}</p>`;
   data.system.description = `${from}${data.system.description ?? ""}`;
   const item = new CONFIG.Item.documentClass(data);
   return item.sheet.render(true, { editable: false });
