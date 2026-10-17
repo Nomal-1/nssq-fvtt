@@ -598,7 +598,7 @@
       "noCharacter": "쓸 캐릭터가 없다.", "pickActor": "누구로 열까", "ok": "확인",
       "back": "목록", "save": "저장", "delete": "마을 지우기", "deleteConfirm": "「{name}」을(를) 지운다.", "noName": "이름을 정한다.",
       "facilities": "시설", "addFac": "시설 추가", "up": "위로", "del": "지우기",
-      "f": { "type": "종류", "name": "이름", "img": "그림", "scene": "씬", "desc": "설명", "townName": "마을 이름", "npc": "NPC 그림", "npcName": "NPC 이름", "maxRank": "상점 랭크 상한", "maxRankHint": "비우면 제한 없음(R15)", "bgm": "마을 BGM", "noBgm": "(없음: 이전 곡만 끈다)" },
+      "f": { "type": "종류", "name": "이름", "img": "그림", "scene": "씬", "desc": "설명", "townName": "마을 이름", "npc": "NPC 그림", "npcName": "NPC 이름", "maxRank": "상점 랭크 상한", "maxRankHint": "비우면 제한 없음(R15)", "bgm": "마을 BGM", "noBgm": "(없음: 이전 곡만 끈다)", "facBgm": "시설 BGM", "facNoBgm": "(없음: 마을 BGM 그대로)" },
       "noScene": "(연결 안 함)", "makeScene": "이 이름으로 씬을 만들어 연결(모두 시야)", "sceneFolder": "마을", "sceneMade": "씬 「{name}」을(를) 만들었다. [저장]을 눌러 남긴다.",
       "editHint": "마을은 지도에 그리지 않는 완전한 안전지대다. 《아리아드네의 실》·던전 입구의 「마을로 돌아간다」·랜덤 던전 클리어·GM의 [마을로 돌아가기]로 떠나온 마을에 도착한다."
     },

@@ -3,6 +3,8 @@
  * - 마을·미궁에 들어갈 때: 그 전에 나오던 곡(테마곡·지금 씬에 연결된 재생목록 제외)을 끄고 그곳의 곡. 곡이 없으면 끄기만
  * - 미궁 안에서 에어리어를 옮길 때: 에어리어 곡(없으면 지도 곡)이 지금 곡과 다를 때만 바꾼다. 둘 다 없으면 그대로
  * - 반복(사용자 요청): 시스템이 트는 BGM(마을·미궁·전투·랜덤 던전 필드)은 Foundry 설정과 관계없이 반복한다(ensureLoop)
+ * - 시설 BGM(사용자 요청): 시설 화면은 사람마다 따로 보므로, 시설에 들어간 사람의 화면에서만 지금 곡을 줄이고 시설 곡을 튼다
+ *   (문서를 바꾸지 않는 이 화면만의 소리). 시설에서 나오거나 마을 화면이 닫히거나 전투가 시작되면 원래 곡으로
  * - 값은 전투 BGM과 같은 "재생목록id" 또는 "재생목록id.곡id". 마지막으로 튼 값은 설정 locationBgm에 둔다
  */
 import { parseBgm } from "../engine/encounters.mjs";
@@ -49,6 +51,54 @@ export async function playLocationBgm(ref, { enter = false } = {}) {
   await game.settings.set("nssq", "locationBgm", pl ? ref : "");
 }
 
+/* ---------------- 시설 BGM(이 화면만) ---------------- */
+
+const fac = { ref: "", sound: null, ducked: [], token: 0 };
+const inBattle = () => game.combats.some((c) => c.getFlag("nssq", "battle"));
+const fadeTo = (ps, v) => { try { ps.sound?.fade(v, { duration: 800 }); } catch { /* 오디오 잠금 */ } };
+
+/** 시설 화면에 들어가면 그 시설의 곡(ref), 나오면 "" */
+export async function setFacilityMusic(ref) {
+  ref = (inBattle() ? "" : ref) || "";
+  if (ref === fac.ref) return;
+  const token = ++fac.token;
+  fac.ref = ref;
+  if (fac.sound) { const s = fac.sound; fac.sound = null; try { s.stop({ fade: 800 }); } catch { /* 이미 멈춤 */ } }
+  const { playlist, sound } = parseBgm(ref);
+  const pl = playlist ? game.playlists.get(playlist) : null;
+  const order = pl ? (sound ? [pl.sounds.get(sound)] : (pl.playbackOrder ?? pl.sounds.contents.map((s) => s.id)).map((id) => pl.sounds.get(id))).filter((s) => s?.path) : [];
+  if (!order.length) {
+    // 원래 곡을 되돌린다
+    for (const ps of fac.ducked) if (ps.playing) fadeTo(ps, ps.volume);
+    fac.ducked = [];
+    if (ref) fac.ref = "";
+    return;
+  }
+  // 지금 나오는 곡(테마곡 제외)을 이 화면에서만 줄인다
+  for (const p of game.playlists.contents) {
+    if (p.getFlag("nssq", "theme")) continue;
+    for (const ps of p.sounds.contents) if (ps.playing && !fac.ducked.includes(ps)) { fac.ducked.push(ps); fadeTo(ps, 0); }
+  }
+  const playAt = async (i) => {
+    if (token !== fac.token) return;
+    const t = order[i % order.length];
+    let snd = null;
+    try { snd = await game.audio.play(t.path, { context: game.audio.music, loop: order.length === 1, volume: t.volume ?? 0.5, fade: 800 }); } catch (err) { console.warn("NSSQ | facility bgm", err); return; }
+    if (token !== fac.token) { try { snd.stop(); } catch { /* */ } return; }
+    fac.sound = snd;
+    // 재생목록 전체면 다음 곡으로(끝나면 처음으로)
+    if (order.length > 1) snd.addEventListener("end", () => playAt(i + 1), { once: true });
+  };
+  return playAt(0);
+}
+
 export function registerLocationBgm() {
   game.settings.register("nssq", "locationBgm", { scope: "world", config: false, type: String, default: "" });
+  // 줄여 둔 곡이 다른 사람의 조작으로 다시 커지면(문서 갱신 때 Foundry가 볼륨을 되돌림) 다시 줄인다
+  Hooks.on("updatePlaylistSound", (ps) => { if (fac.ref && ps.playing && fac.ducked.includes(ps)) setTimeout(() => { if (fac.ref) fadeTo(ps, 0); }, 600); });
+  // 전투가 시작되면 시설 곡을 끄고 원래대로
+  Hooks.on("createCombat", () => setFacilityMusic(""));
 }
+
+/** 확인용: 이 화면의 시설 BGM 상태 */
+export const facilityMusicState = () => ({ ref: fac.ref, playing: !!fac.sound?.playing, ducked: fac.ducked.map((ps) => ({ name: ps.name, volume: ps.sound?.volume ?? null })) });

@@ -1,6 +1,6 @@
 /**
  * 마을(01 #167, 사용자 결정): 지도에 그리지 않는 완전한 안전지대. 필드 지도는 던전 안(언제든 위험해질 수 있는 곳)만.
- * - 월드 설정 towns { id: { id, name, img, desc, bgm(마을 BGM "재생목록id[.곡id]"), facilities: [{ id, type, name, img, desc, sceneId }], shopHidden? } }
+ * - 월드 설정 towns { id: { id, name, img, desc, bgm(마을 BGM "재생목록id[.곡id]"), facilities: [{ id, type, name, img, desc, sceneId, bgm(시설 BGM, 들어간 사람에게만) }], shopHidden? } }
  * - 월드 설정 location { kind: "town"|"dungeon"|"", townId }: 파티가 지금 있는 곳
  * - 귀환(returnToTown): 《아리아드네의 실》·던전 입구의 「마을로 돌아간다」·랜덤 던전 클리어·GM [던전 나가기]
  *   → 던전 진행을 끝내고, 파티 전원 【HP】【TP】 최대·상태 이상·강화·약화·오버히트 없음, 상점 열기, 누적 전투 턴 0
@@ -177,6 +177,7 @@ let gen = 0;
 /** 지금 보는 씬이 마을 씬이면 마을 UI를 덮고, 아니면 걷는다(늦게 끝난 옛 렌더가 붙지 않게 세대 번호) */
 function syncOverlay() {
   gen += 1;
+  import("./location-bgm.mjs").then((m) => m.setFacilityMusic(""));
   document.querySelectorAll(".town-overlay:not(.field-overlay)").forEach((e) => e.remove());
   overlay = null;
   const tid = canvas.ready ? canvas.scene?.getFlag("nssq", "town") : null;
@@ -204,6 +205,11 @@ export class TownApp extends Application {
     app ??= new TownApp();
     if (townId && townId !== app.townId) { app.townId = townId; app.facId = null; }
     return app.render(true, { focus: true });
+  }
+
+  async close(options) {
+    if (this.facId) (await import("./location-bgm.mjs")).setFacilityMusic("");
+    return super.close(options);
   }
 
   static refresh() {
@@ -244,6 +250,8 @@ export class TownApp extends Application {
     if (this.constructor === TownApp && gm) return $(this.managerHtml(t, bar, here));
     const f = (t.facilities ?? []).find((x) => x.id === this.facId) ?? null;
     if (!f) this.facId = null;
+    // 시설 BGM: 이 화면에서만(apps/location-bgm.mjs)
+    import("./location-bgm.mjs").then((m) => m.setFacilityMusic(f?.bgm ?? ""));
     const bg = (src) => (src ? `style="background-image:url('${url(src)}')"` : "");
     const top = (place, say) => `<header class="town-top">${this.clockHtml()}
       <div class="headline"><b class="place">${esc(place)}</b><span class="say" data-say-default="${esc(say)}">${esc(say)}</span></div>
@@ -345,7 +353,8 @@ export class TownApp extends Application {
       <div class="form-group"><label>${esc(L("f.npc"))}</label><input type="text" data-ff="${i}.npc" value="${esc(f.npc ?? "")}"/><button type="button" data-pick="${i}.npc" class="icon"><i class="fas fa-file-import"></i></button></div>
       <div class="form-group"><label>${esc(L("f.npcName"))}</label><input type="text" data-ff="${i}.npcName" value="${esc(f.npcName ?? "")}"/></div>
       <div class="form-group"><label>${esc(L("f.scene"))}</label><select data-ff="${i}.sceneId">${opt("", f.sceneId, L("noScene"))}${scenes.map((s) => opt(s.id, f.sceneId, s.name)).join("")}</select><button type="button" data-mkscene="${i}" class="icon" title="${esc(L("makeScene"))}"><i class="fas fa-plus"></i></button></div>
-      <div class="form-group"><label>${esc(L("f.desc"))}</label><input type="text" data-ff="${i}.desc" value="${esc(f.desc)}"/></div></fieldset>`).join("");
+      <div class="form-group"><label>${esc(L("f.desc"))}</label><input type="text" data-ff="${i}.desc" value="${esc(f.desc)}"/></div>
+      <div class="form-group"><label>${esc(L("f.facBgm"))}</label><select data-ff="${i}.bgm">${this.bgmOptions(f.bgm ?? "", L("f.facNoBgm"))}</select></div></fieldset>`).join("");
     return `<div class="town-wrap town-edit">
       <div class="town-bar"><button type="button" data-town="back"><i class="fas fa-arrow-left"></i> ${esc(L("back"))}</button><span class="spacer"></span>
         <button type="button" data-town="delete" class="danger"><i class="fas fa-trash"></i> ${esc(L("delete"))}</button>
@@ -362,9 +371,9 @@ export class TownApp extends Application {
   }
 
   /** 재생목록·곡 선택지(전투 BGM과 같은 값) */
-  bgmOptions(cur) {
+  bgmOptions(cur, emptyLabel = L("f.noBgm")) {
     const opt = (v, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
-    const out = [opt("", L("f.noBgm"))];
+    const out = [opt("", emptyLabel)];
     for (const p of game.playlists.contents) {
       if (p.getFlag("nssq", "theme")) continue;
       out.push(opt(p.id, `♫ ${p.name}`));
@@ -543,6 +552,8 @@ export class TownOverlay extends TownApp {
 export function registerTown() {
   Hooks.on("canvasReady", () => syncOverlay());
   Hooks.on("nssqRoster", () => TownApp.refresh());
+  // 전투가 끝나 시설 화면으로 돌아오면 시설 BGM을 다시
+  Hooks.on("deleteCombat", () => setTimeout(() => TownApp.refresh(), 500));
   // 접속 직후에는 캔버스를 그린 뒤 #hud를 다시 그려 덮은 UI가 지워진다 → ready·HUD 렌더 때 다시 붙인다
   Hooks.once("ready", () => setTimeout(syncOverlay, 0));
   Hooks.on("renderHeadsUpDisplay", () => { if (overlay && !document.body.contains(overlay.element?.[0])) setTimeout(syncOverlay, 0); });
