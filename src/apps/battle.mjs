@@ -274,10 +274,8 @@ export async function startBattle({ presetId, members, surprise = "none", identi
 
   // 4) 음악 전환: 씬은 바꾸지 않으므로 프리셋 씬에 연결된 BGM을 직접 튼다
   await stopSounds(previousSounds);
-  if (copy.playlist) {
-    if (copy.playlistSound) await soundSafe(() => copy.playlist.playSound(copy.playlistSound));
-    else await soundSafe(() => copy.playlist.playAll());
-  }
+  // Foundry 설정과 관계없이 반복(apps/location-bgm.mjs)
+  if (copy.playlist) await soundSafe(async () => (await import("./location-bgm.mjs")).playLooped(copy.playlist, copy.playlistSound ?? null));
 
   // 5) 전투: 어느 씬을 보든 보이도록 씬에 묶지 않는다(전투원은 사본 씬의 토큰)
   const combat = await Combat.create({
