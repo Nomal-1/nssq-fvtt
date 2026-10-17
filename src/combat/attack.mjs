@@ -214,7 +214,7 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
   if (combat?.started && usePopup(attacker, { followup })) {
     const hidden = target.type === "enemy" && (!knowsEnemy(target) || (target.system.isRare && !target.system.rareKnown));
     const out = await resolveWithPopups((roll, _rng, fp) => resolveAttack({ ...params, fpDice: Math.min(fp, attacker.system.fp?.value ?? 0), rollDice: (n, m) => roll(n, m && { ...m, targetId: "t" }) }),
-      { title: weaponMod?.label ? `${L("normalAttack")} (${weaponMod.label})` : L("normalAttack"), fpDeclared: fpDice, fpAvail: attacker.system.fp?.value ?? 0, nameOf: () => targetToken.name, known: () => !hidden, rolls });
+      { title: weaponMod?.label ? `${L("normalAttack")} (${weaponMod.label})` : L("normalAttack"), fpDeclared: fpDice, fpAvail: attacker.system.fp?.value ?? 0, nameOf: () => targetToken.name, known: () => !hidden, rolls, actor: attacker });
     r = out.result;
     fpUsed = Math.min(out.fp, attacker.system.fp?.value ?? 0);
   } else r = await resolveAttack({ ...params, fpDice, rollDice });

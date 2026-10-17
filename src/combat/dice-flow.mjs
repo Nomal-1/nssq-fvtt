@@ -6,16 +6,31 @@
  * - 엔진(resolveEffects·resolveAttack)은 부작용이 없으므로 같은 주사위로 여러 번 돌려 굴릴 것을 미리 알아낸다:
  *   1차(명중 목록) → 명중 팝업·굴림 → 2차(대미지 목록) → 대미지 팝업·굴림 → 마지막(실제 결과).
  *   그 밖의 굴림(부여 저항 등)과 무작위(rng)는 2차에서 굴린 값을 마지막에 그대로 쓴다. 크리티컬 추가 다이스는 마지막에 바로 굴린다
- * 클라이언트 설정 rollPopup(기본 켬)으로 끈다
+ * - GM 화면에서 실행되는 플레이어의 행동(후발 행동·지연 공격·메인 페이즈 개시 선언 등)은 그 캐릭터의 접속한 플레이어에게
+ *   팝업을 보내(소켓 diceAsk) 그 화면에서 굴린 주사위를 받아 쓴다(diceAnswer). 접속한 플레이어가 없으면 바로 굴린다
+ * 클라이언트 설정 rollPopup(기본 켬, 굴리는 사람의 설정)으로 끈다
  */
+import { emit, onSocket } from "../socket.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.DiceFlow.${k}`, d) : game.i18n.localize(`NSSQ.DiceFlow.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const sign = (n) => (n >= 0 ? `+${n}` : `${n}`);
 
-/** 이 공격에 팝업을 쓰는가: 플레이어가 가진 캐릭터의 공격(추격·반격 제외), 그 화면에서 */
+const popupOn = () => { try { return game.settings.get("nssq", "rollPopup") !== false; } catch { return true; } };
+
+/** 그 캐릭터를 가진 접속 중인 플레이어(담당 캐릭터인 사람 먼저) */
+export function ownerUser(actor) {
+  const list = game.users.filter((u) => !u.isGM && u.active && actor?.testUserPermission?.(u, "OWNER"));
+  return list.find((u) => u.character?.id === actor.id) ?? list[0] ?? null;
+}
+
+/**
+ * 이 공격에 팝업을 쓰는가: 플레이어가 가진 캐릭터의 공격. 추격·반격·발동은 제외(지연 공격은 그 사람의 행동이라 포함)
+ * 플레이어 화면이면 그 화면에서, GM 화면이면 접속한 그 플레이어에게 보낸다
+ */
 export function usePopup(actor, { followup = null } = {}) {
-  if (followup || actor?.type !== "character" || !actor.hasPlayerOwner || !actor.isOwner) return false;
-  try { return game.settings.get("nssq", "rollPopup") !== false; } catch { return true; }
+  if ((followup && followup.type !== "delayed") || actor?.type !== "character" || !actor.hasPlayerOwner) return false;
+  if (!game.user.isGM) return actor.isOwner && popupOn();
+  return !!ownerUser(actor);
 }
 
 async function rollDice(n, rolls) {
@@ -54,6 +69,50 @@ function popup({ title, head, lines, fp = null }) {
   });
 }
 
+/** 판정마다 fp개, 남은 【FP】까지(engine resolve.mjs fpTake와 같은 배분) */
+const takesFor = (checks, fp, avail) => { let left = avail; return Array.from({ length: checks }, () => { const t = Math.min(fp, Math.max(0, left)); left -= t; return t; }); };
+
+/**
+ * 팝업 한 단계를 이 화면에서: 팝업(설정이 꺼져 있으면 건너뜀) → 굴림
+ * @param {{ title, head, lines, fp?: {value,max}|null, checks?: number, fpAvail?: number, count?: number }} q checks가 있으면 명중 단계
+ * @returns {Promise<{ fp: number, dice: number[], roll: object|null }>}
+ */
+async function askHere(q) {
+  const fp = popupOn() ? await popup(q) : (q.fp?.value ?? 0);
+  const n = q.checks ? takesFor(q.checks, fp, q.fpAvail ?? 0).reduce((s, t) => s + 2 + t, 0) : q.count;
+  const rolls = [];
+  const dice = await rollDice(n, rolls);
+  return { fp, dice, roll: rolls[0]?.toJSON() ?? null };
+}
+
+const waiting = new Map();
+/** 팝업 한 단계: 내 화면 또는(GM이 실행 중이면) 그 플레이어 화면. 답이 없으면(2분) 여기서 굴린다 */
+async function ask(actor, q, rolls) {
+  const u = game.user.isGM ? ownerUser(actor) : null;
+  let a;
+  if (!u) a = await askHere(q);
+  else {
+    const reqId = foundry.utils.randomID();
+    a = await new Promise((resolve) => {
+      const timer = setTimeout(() => { waiting.delete(reqId); resolve(null); }, 120000);
+      waiting.set(reqId, (ans) => { clearTimeout(timer); waiting.delete(reqId); resolve(ans); });
+      emit("diceAsk", { reqId, userId: u.id, q });
+    });
+    if (!a) a = await askHere(q);
+  }
+  if (a.roll) { try { rolls.push(Roll.fromData(a.roll)); } catch { /* 표시만 빠진다 */ } }
+  return a;
+}
+
+export function registerDiceFlow() {
+  onSocket("diceAsk", async ({ reqId, userId, q }) => {
+    if (userId !== game.user.id) return;
+    const a = await askHere(q);
+    emit("diceAnswer", { reqId, ...a });
+  });
+  onSocket("diceAnswer", ({ reqId, ...a }) => waiting.get(reqId)?.(a));
+}
+
 /**
  * @param {(roll: Function, rng: Function, fp: number) => Promise<object>} run 엔진 호출(부작용 없음). fp = 판정마다 더할 【FP】 주사위
  * @param {object} o
@@ -63,9 +122,10 @@ function popup({ title, head, lines, fp = null }) {
  * @param {(id: string) => string} o.nameOf 대상 이름
  * @param {(id: string) => boolean} o.known 대상의 회피·내성을 보여도 되는가
  * @param {object[]} o.rolls 결과 카드에 붙일 Roll(주사위 표시)
+ * @param {Actor} o.actor 공격하는 캐릭터(팝업을 보낼 플레이어를 찾는다)
  * @returns {Promise<{ result: object, fp: number }>}
  */
-export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 0, nameOf = () => "", known = () => true, rolls = [] }) {
+export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 0, nameOf = () => "", known = () => true, rolls = [], actor = null }) {
   const rand = replayer(() => CONFIG.Dice.randomUniform());
   const d6 = () => Math.ceil((1 - CONFIG.Dice.randomUniform()) * 6) || 1;
 
@@ -83,11 +143,10 @@ export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 
   // 명중 팝업
   const hitLines = hits.map((m) => esc(L("hitLine", { name: nameOf(m.targetId), mod: sign(m.mod), target: known(m.targetId) ? m.target : "???" })));
   const fpMax = Math.max(0, fpAvail);
-  const fp = await popup({ title, head: esc(L("hitHead")), lines: hitLines, fp: fpMax > 0 ? { value: Math.min(fpDeclared, fpMax), max: fpMax } : null });
-  // 판정마다 fp개, 남은 【FP】까지(engine resolve.mjs fpTake와 같은 배분)
-  let left = fpAvail;
-  const takes = hits.map(() => { const t = Math.min(fp, Math.max(0, left)); left -= t; return t; });
-  const all = await rollDice(takes.reduce((s, t) => s + 2 + t, 0), rolls);
+  const h = await ask(actor, { title, head: esc(L("hitHead")), lines: hitLines, fp: fpMax > 0 ? { value: Math.min(fpDeclared, fpMax), max: fpMax } : null, checks: hits.length, fpAvail }, rolls);
+  const fp = h.fp;
+  const takes = takesFor(hits.length, fp, fpAvail);
+  const all = h.dice;
   const hitQ = [];
   let at = 0;
   for (const t of takes) { hitQ.push(all.slice(at, at + 2 + t)); at += 2 + t; }
@@ -114,8 +173,7 @@ export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 
     const lines = dmg.map((m) => esc(known(m.targetId)
       ? L("dmgLine", { name: nameOf(m.targetId), count: m.count, resist: m.resist, need: m.resist + 1 })
       : L("dmgLineHidden", { name: nameOf(m.targetId), count: m.count })));
-    await popup({ title, head: esc(L("dmgHead")), lines });
-    const dd = await rollDice(dmg.reduce((s, m) => s + m.count, 0), rolls);
+    const dd = (await ask(actor, { title, head: esc(L("dmgHead")), lines, count: dmg.reduce((s, m) => s + m.count, 0) }, rolls)).dice;
     let p = 0;
     dmgQ = dmg.map((m) => { const x = dd.slice(p, p + m.count); p += m.count; return x; });
   }

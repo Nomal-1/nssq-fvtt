@@ -52,6 +52,7 @@ import { registerAssetLink } from "./apps/asset-link.mjs";
 import { registerFpDice } from "./combat/fp-dice.mjs";
 import { registerItemUse } from "./combat/item-use.mjs";
 import { registerGrimoire } from "./combat/grimoire.mjs";
+import { registerDiceFlow } from "./combat/dice-flow.mjs";
 import { FieldMapApp, registerFieldMap } from "./apps/fieldmap.mjs";
 import { ChargenWizard, newCharacter, registerChargen } from "./apps/chargen-wizard.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
@@ -116,6 +117,7 @@ Hooks.once("init", () => {
   registerFpDice();
   registerItemUse();
   registerGrimoire();
+  registerDiceFlow();
   registerTracker();
   registerBattle();
   registerFormation();
