@@ -68,7 +68,7 @@
           </div>
           <h3 class="nq-title">DROP</h3>
           <ul class="nq-drops">
-            {{#each drops as |d|}}<li><b>{{d.range}}</b> {{d.item}}</li>{{else}}<li class="nq-empty">-</li>{{/each}}
+            {{#each drops as |d|}}<li class="nq-drop-link" data-drop="{{@index}}" title="{{localize "NSSQ.Sheet.dropOpen"}}"><b>{{d.range}}</b> {{d.item}} <i class="fas fa-search"></i></li>{{else}}<li class="nq-empty">-</li>{{/each}}
           </ul>
         </div>
       </div>

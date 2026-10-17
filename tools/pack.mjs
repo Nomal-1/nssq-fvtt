@@ -133,11 +133,15 @@ function manualPages() {
 }
 
 /** 드롭 아이템 일람(사용자 요청): 에너미 레벨별로 「눈 범위 · 받을 이름 · 종류 R」 표. 이름은 data/drop-names.json */
+const MATERIAL_IDS = new Map(load("materials.json").map((m) => [m.name, m.id ?? m._id]));
 function dropListPages() {
   return [["Lv1", "lv1"], ["Lv2", "lv2"], ["Lv3~4", "lv3-4"], ["F.O.E.", "foe"]].map(([label, file]) => {
     const rows = load(`enemies/${file}.json`).flatMap((e) => (e.system.drops ?? []).map((d, i) => {
       const range = d.max === null ? `${d.min}~` : d.min === d.max ? `${d.min}` : `${d.min}~${d.max}`;
-      return `| ${i ? "" : `**${e.name}**`} | ${range} | ${d.name || d.item} | ${d.item}${d.rank ? ` R${d.rank}` : ""} |`;
+      // 종류 칸은 컴펜디움 「아이템」의 그 소재로 링크
+      const mat = MATERIAL_IDS.get(d.item);
+      const kind = `${d.item}${d.rank ? ` R${d.rank}` : ""}`;
+      return `| ${i ? "" : `**${e.name}**`} | ${range} | ${d.name || d.item} | ${mat ? `@UUID[Compendium.nssq.items.Item.${mat}]{${kind}}` : kind} |`;
     }));
     return { name: label, html: mdToHtml(["| 에너미 | 드롭 눈 | 받을 이름 | 종류 |", "|---|---|---|---|", ...rows].join("\n")) };
   });

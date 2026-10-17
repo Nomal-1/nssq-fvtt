@@ -168,6 +168,8 @@ export class NssqActorSheet extends ActorSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+    // 에너미 드롭: 누르면 그 소재(받을 이름·R로 바꾼 미리 보기)를 연다(사용자 요청)
+    html.on("click", "[data-drop]", (ev) => { ev.preventDefault(); openDropItem(this.actor, Number(ev.currentTarget.dataset.drop)); });
     html.on("click", "[data-action=level-up]", async (ev) => {
       ev.preventDefault();
       const { levelUp } = await import("../apps/levelup.mjs");
@@ -271,4 +273,22 @@ export class NssqActorSheet extends ActorSheet {
       this.actor.items.get(id)?.deleteDialog();
     });
   }
+}
+
+/** 드롭 소재 미리 보기: 컴펜디움 「아이템」의 그 종류 소재를 받을 이름·R로 바꿔 읽기 전용으로 연다(저장하지 않음) */
+async function openDropItem(actor, i) {
+  const d = actor.system.drops?.[i];
+  if (!d?.item) return;
+  const pack = game.packs.get("nssq.items");
+  const idx = (await pack?.getIndex({ fields: ["type"] })) ?? [];
+  const hit = idx.find((x) => x.name === d.item && x.type === "material") ?? idx.find((x) => x.name === d.item);
+  if (!hit) return ui.notifications.warn(game.i18n.format("NSSQ.Sheet.dropMissing", { name: d.item }));
+  const data = (await pack.getDocument(hit._id)).toObject();
+  delete data._id;
+  if (d.name) data.name = d.name;
+  if (data.type === "material" && d.rank) data.system.rank = d.rank;
+  const from = `<p><i class="fas fa-skull"></i> ${foundry.utils.escapeHTML(game.i18n.format("NSSQ.Sheet.dropFrom", { name: actor.name, kind: `${d.item}${d.rank ? ` R${d.rank}` : ""}` }))}</p>`;
+  data.system.description = `${from}${data.system.description ?? ""}`;
+  const item = new CONFIG.Item.documentClass(data);
+  return item.sheet.render(true, { editable: false });
 }

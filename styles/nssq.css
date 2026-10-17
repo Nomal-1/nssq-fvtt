@@ -1926,3 +1926,6 @@ body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
 .nssq-heal-dice small { margin-left: 4px; opacity: 0.7; }
 .nssq-loot-window .window-content { padding: 8px 10px; }
 .nssq-loot-window .nssq-loot-pop { font-size: 1.05em; }
+.nssq .nq-drops .nq-drop-link { cursor: pointer; }
+.nssq .nq-drops .nq-drop-link:hover { text-decoration: underline; }
+.nssq .nq-drops .nq-drop-link i { font-size: 0.8em; opacity: 0.5; }

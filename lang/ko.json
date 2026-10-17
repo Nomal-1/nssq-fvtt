@@ -111,6 +111,7 @@
     },
     "Identified": "식별",
     "Sheet": {
+      "dropOpen": "눌러서 이 드롭 소재 보기", "dropMissing": "컴펜디움에 「{name}」 아이템이 없다", "dropFrom": "{name}의 드롭({kind})",
       "actor": "NSSQ 액터 시트",
       "item": "NSSQ 아이템 시트",
       "money": "소지금",
