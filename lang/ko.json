@@ -1458,7 +1458,7 @@
       "damageLine": "대미지 {n}({count}D6)",
       "crit": "크리티컬",
       "damageTotal": "합계 대미지 {n}",
-      "healHp": "【HP】 {n} 회복",
+      "healHp": "【HP】 {n} 회복", "healDiceMin": "{min} 이상",
       "healTp": "【TP】 {n} 회복",
       "inflictLine": "{label} (심도 {depth})",
       "inflictResisted": "{label} — 막았다",

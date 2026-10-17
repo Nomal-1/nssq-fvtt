@@ -223,7 +223,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
         // 아이템의 회복 효과 +(《이피션트》)
         if (source === "item" && amount > 0) amount += user.itemHeal ?? 0;
         r.heal[res0] += Math.max(0, amount);
-        r.resource.push({ heal: res0, amount: Math.max(0, amount), dice });
+        r.resource.push({ heal: res0, amount: Math.max(0, amount), dice, ...(dice.length ? { min: user.healThreshold ?? 4 } : {}) });
         return;
       }
       case "inflict": {

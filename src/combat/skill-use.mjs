@@ -890,8 +890,10 @@ function entryLines(e, card) {
     if (x.set !== undefined) out.push(`<li class="state">${esc(L("resourceSet", { res, n: x.set }))}</li>`);
     else if (x.delta) out.push(`<li class="${x.delta > 0 ? "heal" : "hit"}">${esc(L("resourceDelta", { res, n: `${x.delta > 0 ? "+" : ""}${x.delta}` }))}</li>`);
   }
-  if (e.heal?.hp) out.push(`<li class="heal">${esc(L("healHp", { n: e.heal.hp }))}</li>`);
-  if (e.heal?.tp) out.push(`<li class="heal">${esc(L("healTp", { n: e.heal.tp }))}</li>`);
+  // 회복 롤의 주사위(기준 이상이 회복량, 사용자 요청)
+  const healDice = (res) => (e.resource ?? []).filter((x) => x.heal === res && x.dice?.length).map((x) => `<span class="nssq-heal-dice">${x.dice.map((v) => `<span class="die-s ${v >= (x.min ?? 4) ? "over" : ""}">${v}</span>`).join("")}<small>${esc(L("healDiceMin", { min: x.min ?? 4 }))}</small></span>`).join("");
+  if (e.heal?.hp) out.push(`<li class="heal">${esc(L("healHp", { n: e.heal.hp }))}${healDice("hp")}</li>`);
+  if (e.heal?.tp) out.push(`<li class="heal">${esc(L("healTp", { n: e.heal.tp }))}${healDice("tp")}</li>`);
   for (const i of e.inflicts ?? []) if (!i.seq) out.push(inflictLi(i));
   for (const b of e.buffs ?? []) if (!b.seq) out.push(buffLi(b));
   for (const st of e.states ?? []) out.push(`<li class="state">${esc(L("stateLine", { name: st.name, mods: stateModText(st.mods) }))}</li>`);
