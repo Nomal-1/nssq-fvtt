@@ -88,7 +88,7 @@ export class NssqActorSheet extends ActorSheet {
       context.attackElementText = (system.attackElements ?? []).map(el).join("·") || "-";
       context.drops = (system.drops ?? []).map((d) => ({
         range: d.max === null ? `${d.min}~` : d.min === d.max ? `${d.min}` : `${d.min}~${d.max}`,
-        item: `${d.rank ? `R${d.rank} ` : ""}${d.item}`
+        item: d.name && d.name !== d.item ? `${d.name} (${d.rank ? `R${d.rank} ` : ""}${d.item})` : `${d.rank ? `R${d.rank} ` : ""}${d.item}`
       }));
     }
     if (this.actor.type === "character") {

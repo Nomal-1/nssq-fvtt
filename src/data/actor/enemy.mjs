@@ -29,6 +29,8 @@ export class EnemyData extends foundry.abstract.TypeDataModel {
         min: int(2),
         max: new NumberField({ required: true, nullable: true, integer: true, initial: null }),
         item: str(""),
+        // 받을 아이템의 이름(예: 사슴의 뿔). 비우면 종류 이름(item). 종류·R은 소재의 materialType·rank로 남는다
+        name: str(""),
         rank: new NumberField({ required: true, nullable: true, integer: true, initial: null })
       })),
       row: row(),

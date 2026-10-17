@@ -2284,7 +2284,7 @@
       "attackElements": "통상 공격 속성",
       "dropMin": "눈 이상",
       "dropMax": "눈 이하",
-      "dropItem": "아이템",
+      "dropItem": "종류(아이템)", "dropName": "받을 이름", "dropNameHint": "비우면 종류 이름(예: 사슴의 뿔)",
       "skills": "스킬",
       "noSkills": "스킬 없음",
       "edit": "편집",

@@ -223,6 +223,8 @@ describe("창고·소지 수 초과", () => {
   it("쌓기 키: 소재는 종류+R, 소모품·기타는 key, 장비는 쌓지 않는다", () => {
     expect(stackKey(material("풀", 2))).toBe("material:풀:2");
     expect(stackKey({ type: "consumable", system: { key: "メディカ" } })).toBe("consumable:メディカ");
+    expect(stackKey({ type: "material", name: "사슴의 뿔", system: { materialType: "뿔", rank: 3 } })).toBe("material:뿔:3:사슴의 뿔");
+    expect(stackKey({ type: "material", name: "뿔", system: { materialType: "뿔", rank: 3 } })).toBe("material:뿔:3");
     expect(stackKey(weapon("검"))).toBeNull();
   });
 });

@@ -373,7 +373,7 @@ export class EnemyMaker extends Application {
     const d = this.draft;
     const items = [...new Set([...tables.materials, ...(game.packs.get("nssq.items")?.index?.map((i) => i.name) ?? [])])];
     const drops = d.drops.map((r, i) => `<tr><td><input type="number" name="drop.${i}.min" value="${r.min}"/></td><td><input type="number" name="drop.${i}.max" value="${r.max ?? ""}" placeholder="~"/></td>
-      <td><input type="text" name="drop.${i}.item" value="${esc(r.item)}" list="mk-items"/></td><td><input type="number" name="drop.${i}.rank" value="${r.rank ?? ""}"/></td><td><a data-mk="dropDel" data-i="${i}"><i class="fas fa-trash"></i></a></td></tr>`).join("");
+      <td><input type="text" name="drop.${i}.item" value="${esc(r.item)}" list="mk-items"/></td><td><input type="text" name="drop.${i}.name" value="${esc(r.name ?? "")}" placeholder="${esc(L("dropNameHint"))}"/></td><td><input type="number" name="drop.${i}.rank" value="${r.rank ?? ""}"/></td><td><a data-mk="dropDel" data-i="${i}"><i class="fas fa-trash"></i></a></td></tr>`).join("");
     const n = this.skills.length;
     const skills = this.skills.map((s, i) => `<li><span class="mk-skill-name">${esc(s.name)} <small>${esc(s.system.timing)} ${esc(s.system.target)}</small></span>
       <a data-mk="skillUp" data-i="${i}" title="${esc(L("up"))}" ${i ? "" : "class=\"disabled\""}><i class="fas fa-arrow-up"></i></a>
@@ -400,7 +400,7 @@ export class EnemyMaker extends Application {
       <h3>${esc(L("attackElements"))}</h3>
       <div class="mk-grid">${ELEMENTS.map((k) => `<label><span>${esc(loc(`NSSQ.Resist.${k}`))}</span><input type="checkbox" name="el.${k}" ${d.attackElements.includes(k) ? "checked" : ""}/></label>`).join("")}</div>
       <h3>DROP <a data-mk="dropAdd"><i class="fas fa-plus"></i></a></h3>
-      <table class="mk-drops"><thead><tr><th>${esc(L("dropMin"))}</th><th>${esc(L("dropMax"))}</th><th>${esc(L("dropItem"))}</th><th>R</th><th></th></tr></thead><tbody>${drops}</tbody></table>
+      <table class="mk-drops"><thead><tr><th>${esc(L("dropMin"))}</th><th>${esc(L("dropMax"))}</th><th>${esc(L("dropItem"))}</th><th>${esc(L("dropName"))}</th><th>R</th><th></th></tr></thead><tbody>${drops}</tbody></table>
       <datalist id="mk-items">${items.map((x) => `<option value="${esc(x)}"></option>`).join("")}</datalist>
       <h3>${esc(L("skills"))} <a data-mk="skillNew"><i class="fas fa-plus"></i> ${esc(L("newSkill"))}</a></h3>
       <ul class="mk-skills">${skills}</ul>
@@ -425,6 +425,7 @@ export class EnemyMaker extends Application {
       r.min = Number(el(`drop.${i}.min`).value) || 0;
       r.max = el(`drop.${i}.max`).value === "" ? null : Number(el(`drop.${i}.max`).value);
       r.item = el(`drop.${i}.item`).value.trim();
+      r.name = el(`drop.${i}.name`).value.trim();
       r.rank = el(`drop.${i}.rank`).value === "" ? null : Number(el(`drop.${i}.rank`).value);
     });
   }

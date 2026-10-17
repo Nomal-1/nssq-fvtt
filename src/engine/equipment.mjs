@@ -117,9 +117,9 @@ export function exceedsOwnLimit(items, candidate) {
   return owned + (candidate.system?.quantity ?? 1) > limit;
 }
 
-/** 쌓을 수 있는 같은 아이템인지: 소모품·기타 아이템은 key, 소재는 종류+R */
+/** 쌓을 수 있는 같은 아이템인지: 소모품·기타 아이템은 key, 소재는 종류+R(이름이 다르면 따로, 예: 사슴의 뿔 R3과 뿔 R3) */
 export function stackKey(item) {
-  if (item.type === "material") return `material:${item.system.materialType}:${item.system.rank}`;
+  if (item.type === "material") return `material:${item.system.materialType}:${item.system.rank}${item.name && item.name !== item.system.materialType ? `:${item.name}` : ""}`;
   if ((item.type === "consumable" || item.type === "tool") && item.system?.key) return `${item.type}:${item.system.key}`;
   return null;
 }

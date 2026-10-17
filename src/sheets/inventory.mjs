@@ -49,7 +49,9 @@ function rankLabel(item) {
   // 가격 식이 없는 무기(주먹)는 R이 아니라 Lv 기준
   if (item.type === "weapon" && !tables.weapons[item.system.weaponType]?.price) return "";
   if (["consumable", "tool"].includes(item.type)) return item.system.rank ? `R${item.system.rank}` : "";
-  return ["weapon", "armor", "material"].includes(item.type) ? `R${item.system.rank}` : "";
+  // 소재는 이름이 종류와 다르면(사슴의 뿔 등) 종류도 태그로
+  if (item.type === "material") return `R${item.system.rank}${item.system.materialType && item.name !== item.system.materialType ? ` · ${item.system.materialType}` : ""}`;
+  return ["weapon", "armor"].includes(item.type) ? `R${item.system.rank}` : "";
 }
 
 /**

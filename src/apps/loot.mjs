@@ -16,7 +16,8 @@ import { emit, onSocket } from "../socket.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Loot.${k}`, d) : game.i18n.localize(`NSSQ.Loot.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const label = (e) => `${e.name}${e.rank ? ` R${e.rank}` : ""}`;
+/** 풀·결과의 표시: 「사슴의 뿔(뿔 R3)」, 이름이 종류와 같으면 「뿔 R3」 */
+const label = (e) => (e.display && e.display !== e.name ? `${e.display}(${e.name}${e.rank ? ` R${e.rank}` : ""})` : `${e.name}${e.rank ? ` R${e.rank}` : ""}`);
 
 /** 활성 GM: 전투가 승리로 끝날 때(전투를 지우기 전에) */
 export async function startLoot(combat) {
@@ -133,11 +134,14 @@ async function itemData(name, rank) {
   return o;
 }
 
-async function addToPool(card, name, rank, qty, from) {
-  const key = `${name}|${rank ?? ""}`;
+/** display: 받을 아이템 이름(에너미 드롭의 「아이템 이름」, 예: 사슴의 뿔). 종류(name)·R은 소재의 materialType·rank */
+async function addToPool(card, name, rank, qty, from, display = "") {
+  const key = `${name}|${rank ?? ""}|${display}`;
   const cur = card.pool.find((p) => p.key === key);
   if (cur) { cur.qty += qty; cur.from = [...new Set([...cur.from, from])]; return; }
-  card.pool.push({ id: foundry.utils.randomID(), key, name, rank: rank ?? null, qty, from: [from], data: await itemData(name, rank) });
+  const data = await itemData(name, rank);
+  if (data && display) data.name = display;
+  card.pool.push({ id: foundry.utils.randomID(), key, name, rank: rank ?? null, ...(display ? { display } : {}), qty, from: [from], data });
 }
 
 /** 조작을 확정: 에너미마다 드롭 → 풀, 도감 기록 */
@@ -154,9 +158,9 @@ async function finalize(card) {
   }
   for (const r of card.rows) {
     const j = judgeDrop({ drops: r.drops, dice: r.dice, adjust: r.adjust, doubleUp: card.doubleUp.length > 0 });
-    Object.assign(r, { total: j.total, item: j.drop?.item ?? null, rank: j.rank, doubled: j.doubled });
+    Object.assign(r, { total: j.total, item: j.drop?.item ?? null, display: j.drop?.name || "", rank: j.rank, doubled: j.doubled });
     if (!j.drop) continue;
-    await addToPool(card, j.drop.item, j.rank, 1, r.name);
+    await addToPool(card, j.drop.item, j.rank, 1, r.name, j.drop.name || "");
     const a = await fromUuid(r.uuid);
     if (a) await recordBestiary(a, { drop: `${j.drop.rank ? `R${j.drop.rank} ` : ""}${j.drop.item}` });
   }
@@ -165,7 +169,7 @@ async function finalize(card) {
     const a = await fromUuid(r.uuid);
     for (const d of r.drops ?? []) {
       if (!d?.item) continue;
-      await addToPool(card, d.item, d.rank ?? null, 1, r.name);
+      await addToPool(card, d.item, d.rank ?? null, 1, r.name, d.name || "");
       if (a) await recordBestiary(a, { drop: `${d.rank ? `R${d.rank} ` : ""}${d.item}` });
     }
   }
@@ -181,7 +185,7 @@ function render(card) {
   const adj = card.state === "adjust";
   const rows = card.rows.map((r, i) => {
     const dice = `${r.dice.join("+")}${r.adjust ? ` ${r.adjust > 0 ? "+" : "−"}${Math.abs(r.adjust)}` : ""} = <b>${r.dice[0] + r.dice[1] + r.adjust}</b>`;
-    const res = adj ? "" : (r.item ? `→ <b>${esc(label({ name: r.item, rank: r.rank }))}</b>${r.qty > 1 ? ` ×${r.qty}` : ""}${r.doubled && card.doubleUp.length ? ` <em>${esc(L("doubleUp"))}</em>` : ""}${r.doubled && r.qty > 1 ? ` <em>${esc(L("doubleExtra"))}</em>` : ""}` : `→ ${esc(L("nothing"))}`)
+    const res = adj ? "" : (r.item ? `→ <b>${esc(label({ name: r.item, rank: r.rank, display: r.display }))}</b>${r.qty > 1 ? ` ×${r.qty}` : ""}${r.doubled && card.doubleUp.length ? ` <em>${esc(L("doubleUp"))}</em>` : ""}${r.doubled && r.qty > 1 ? ` <em>${esc(L("doubleExtra"))}</em>` : ""}` : `→ ${esc(L("nothing"))}`)
       + (r.ambush ? ` <b class="ambush">${esc(L("ahh"))}</b>` : "") + (r.dissect ? ` <em>${esc(L("dissect"))}</em>` : "");
     const ahhMark = card.kind === "gather" && adj && r.dice[0] + r.dice[1] <= r.ahh ? ` <b class="ambush">${esc(L("ahh"))}</b>` : "";
     const btn = adj ? ` <button type="button" data-loot="adj" data-i="${i}" data-d="-1">−</button><button type="button" data-loot="adj" data-i="${i}" data-d="1">+</button>` : "";
