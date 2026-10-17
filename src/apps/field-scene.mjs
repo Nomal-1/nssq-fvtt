@@ -96,6 +96,13 @@ const refresh = () => {
   else overlay.render();
 };
 const openEvents = () => game.settings.get("nssq", "fieldEvents") ?? [];
+/** F.O.E. 그림(토큰 → 액터 그림). 컴펜디움 문서를 매번 읽지 않게 기억 */
+const foeArt = new Map();
+async function foeImg(uuid) {
+  if (!uuid) return "";
+  if (!foeArt.has(uuid)) foeArt.set(uuid, fromUuid(uuid).then((a) => a?.prototypeToken?.texture?.src || a?.img || "").catch(() => ""));
+  return foeArt.get(uuid);
+}
 /** 이 에어리어의 나레이션 글: 다시 왔을 때 글이 있으면 그것, 없으면 첫 방문 글 */
 const narrationOf = (area, st) => String(((st.visited?.[area?.id] ?? 0) > 1 && area?.narrationAgain?.trim()) || area?.narration || "").trim();
 async function postNarration() {
@@ -134,11 +141,21 @@ export class FieldOverlay extends Application {
       <span class="say" data-say-default="${esc(here?.terrain ?? "")}">${esc(here?.terrain ?? "")}</span></div>
       <div class="money"><small>${esc(map.name)}</small></div></header>`;
     const warn = foeHere ? `<div class="fs-warn danger"><i class="fas fa-skull"></i> ${esc(LF("foeHere"))}</div>` : foeNear ? `<div class="fs-warn"><i class="fas fa-exclamation-triangle"></i> ${esc(L("foeNear"))}</div>` : "";
+    // F.O.E. 토큰: 같은 에어리어면 가운데에 크게, 이웃이면 경고 아래에 작게(그 에어리어 이름과 함께)
+    const foeToken = async (f, here) => {
+      const img = await foeImg(f.actorUuid);
+      const known = (st.visited?.[f.area] ?? 0) > 0;
+      const where = here ? "" : `<small>${esc(known ? areaOf(map, f.area)?.name ?? "" : LF("unknownArea"))}</small>`;
+      return `<div class="fs-foe ${here ? "here" : "near"}" title="${esc(f.name)}">${img ? `<img src="${url(img)}" alt=""/>` : `<i class="fas fa-skull"></i>`}<span><b>${esc(f.name)}</b>${where}</span></div>`;
+    };
+    const foesHere = (await Promise.all(v.foes.filter((f) => f.area === v.current).map((f) => foeToken(f, true)))).join("");
+    const foesNear = (await Promise.all(v.foes.filter((f) => f.area !== v.current).map((f) => foeToken(f, false)))).join("");
+    const foeLayer = `${foesHere ? `<div class="fs-foes-here">${foesHere}</div>` : ""}${foesNear ? `<div class="fs-foes-near">${foesNear}</div>` : ""}`;
     const menu = gm ? `${narrating ? `<button type="button" class="town-choice fs-release" data-fs="release" data-say="${esc(L("say.release"))}"><i class="fas fa-play"></i><span>${esc(L("release"))}</span></button>` : ""}${this.menuHtml(map, st, v)}`
       : locked ? `<div class="fs-locked"><i class="fas fa-hourglass-half"></i> ${esc(L("eventWait"))}</div>`
         : narrating ? `<div class="fs-locked"><i class="fas fa-feather-alt"></i> ${esc(L("narrationWait"))}</div>` : this.menuHtml(map, st, v);
     const stage = `<div class="town-stage facility" ${areaImg(here) || map.battleBg ? `style="background-image:url('${url(areaImg(here) || map.battleBg)}')"` : ""}>
-      ${top}${warn}<nav class="town-menu">${menu}</nav>${gm && locked ? `<div class="fs-gmnote"><i class="fas fa-bolt"></i> ${esc(L("eventGm", { n: openEvents().length }))}</div>` : gm && narrating ? this.narrationHtml(here, st) : ""}
+      ${top}${warn}${foeLayer}<nav class="town-menu">${menu}</nav>${gm && locked ? `<div class="fs-gmnote"><i class="fas fa-bolt"></i> ${esc(L("eventGm", { n: openEvents().length }))}</div>` : gm && narrating ? this.narrationHtml(here, st) : ""}
       ${await this.partyHtml()}</div>`;
     frame.append(stage);
     return root.append(frame);

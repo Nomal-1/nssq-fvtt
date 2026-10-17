@@ -1911,3 +1911,17 @@ body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
 .nssq-hit-card .vs { color: #777; font-size: 0.92em; }
 .nssq-fieldmap .fm-acts > span { display: flex; flex-wrap: wrap; gap: 4px 12px; }
 .nssq-fieldmap .fm-acts .fm-act { display: inline-flex; align-items: center; gap: 3px; flex: none; }
+/* 미궁 화면의 F.O.E. 토큰(같은 에어리어: 가운데 크게, 이웃: 경고 아래 작게) */
+.nssq-town.field-overlay .fs-foes-here { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); display: flex; gap: 24px; pointer-events: none; z-index: 2; }
+.nssq-town.field-overlay .fs-foes-near { position: absolute; right: 12px; top: 112px; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; pointer-events: none; z-index: 2; }
+.nssq-town.field-overlay .fs-foe { display: flex; flex-direction: column; align-items: center; color: #fff; text-shadow: 0 0 4px #000, 0 2px 2px #000; }
+.nssq-town.field-overlay .fs-foe img, .nssq-town.field-overlay .fs-foe > i { border-radius: 50%; object-fit: cover; background: rgba(20, 10, 10, 0.75); border: 3px solid #e0402f; }
+.nssq-town.field-overlay .fs-foe.here img, .nssq-town.field-overlay .fs-foe.here > i { width: 220px; height: 220px; box-shadow: 0 0 28px rgba(255, 60, 40, 0.85); animation: fs-foe-pulse 1.6s ease-in-out infinite; }
+.nssq-town.field-overlay .fs-foe.here > i { display: grid; place-items: center; font-size: 90px; }
+.nssq-town.field-overlay .fs-foe.here b { display: block; text-align: center; font-size: 1.5em; margin-top: 6px; }
+.nssq-town.field-overlay .fs-foe.near { flex-direction: row; gap: 8px; padding: 4px 10px 4px 4px; border-radius: 40px; background: rgba(40, 10, 10, 0.7); border: 1px solid rgba(224, 64, 47, 0.7); }
+.nssq-town.field-overlay .fs-foe.near img, .nssq-town.field-overlay .fs-foe.near > i { width: 56px; height: 56px; border-width: 2px; opacity: 0.9; animation: fs-foe-bob 2.4s ease-in-out infinite; }
+.nssq-town.field-overlay .fs-foe.near > i { display: grid; place-items: center; font-size: 24px; }
+.nssq-town.field-overlay .fs-foe.near small { display: block; font-size: 0.8em; opacity: 0.85; }
+@keyframes fs-foe-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); box-shadow: 0 0 42px rgba(255, 60, 40, 1); } }
+@keyframes fs-foe-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
