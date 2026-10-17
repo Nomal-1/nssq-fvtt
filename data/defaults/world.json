@@ -363,7 +363,7 @@
      "y": 100,
      "img": "자료/일러/284843472b386ef42660d3b1e0cd4980.jpg",
      "terrain": "짙은 안개가 흐르는 좁은 길",
-     "gmNote": "뿔사슴을 쓰러뜨리면 열리는 길. 깊은 숲(다음 미궁)이 생기면 이 에어리어의 도착 트리거 동작을 「다른 지도로」로 바꾼다.",
+     "gmNote": "뿔사슴을 쓰러뜨리면 열리는 길. 여기 들어오면 「안개의 수해」로 들어갈지 고르는 선택지가 나온다(수해에서 막 돌아왔을 때는 나오지 않는다).",
      "secret": true,
      "gather": "",
      "tags": "",
@@ -373,12 +373,29 @@
        "on": "enter",
        "n": 1,
        "once": false,
+       "auto": true,
        "text": "",
        "playerText": "",
        "actions": [
         {
-         "type": "message",
-         "text": "안개 너머로 길이 이어지는 것 같지만, 아직은 그 끝이 보이지 않는다."
+         "type": "choice",
+         "text": "안개 너머로 길이 이어진다. 낮은 울음소리가 안개 속에서 들려온다.",
+         "options": [
+          {
+           "label": "안개 속으로 들어간다",
+           "actions": [
+            {
+             "type": "mapGo",
+             "map": "nssqDefMapFog",
+             "toArea": "mA1"
+            }
+           ]
+          },
+          {
+           "label": "돌아선다",
+           "actions": []
+          }
+         ]
         }
        ]
       }
@@ -467,6 +484,305 @@
      "state": "hidden",
      "oneWay": false,
      "label": "안개 속 길"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefMapFog",
+   "name": "「안개의 수해」(속삭이는 숲 심층)",
+   "bg": {
+    "style": "parchment",
+    "src": ""
+   },
+   "start": "mA1",
+   "startHour": 8,
+   "hidden": true,
+   "battleBg": "6d91cb014b8c24243b5fb25e2833e08a.jpg",
+   "battleBgm": "",
+   "foes": [
+    {
+     "id": "mF1",
+     "actorUuid": "Compendium.nssq.enemies.Actor.Gu0koM4qX8QXJnpM",
+     "name": "탐욕스러운 독도마뱀",
+     "route": [
+      "mA3",
+      "mA5"
+     ],
+     "mode": "pingpong",
+     "every": 1,
+     "nightOnly": false,
+     "active": true
+    }
+   ],
+   "triggers": [],
+   "areas": [
+    {
+     "id": "mA1",
+     "name": "안개의 경계",
+     "x": 100,
+     "y": 350,
+     "img": "자료/일러/284843472b386ef42660d3b1e0cd4980.jpg",
+     "terrain": "짙은 안개가 숲과 수해를 가르는 곳",
+     "gmNote": "「속삭이는 숲」 안개 오솔길과 이어지는 경계. 여기 들어오면 숲으로 돌아갈지 고르는 선택지가 나온다(숲에서 막 건너왔을 때는 나오지 않는다).",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "mT1",
+       "on": "enter",
+       "n": 1,
+       "once": false,
+       "auto": true,
+       "text": "",
+       "playerText": "",
+       "actions": [
+        {
+         "type": "choice",
+         "text": "안개 너머로 「속삭이는 숲」의 짐승길이 희미하게 보인다.",
+         "options": [
+          {
+           "label": "숲으로 돌아간다",
+           "actions": [
+            {
+             "type": "mapGo",
+             "map": "nssqDefMapWood",
+             "toArea": "wA9"
+            }
+           ]
+          },
+          {
+           "label": "안개 속에 머문다",
+           "actions": []
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "encounters": [],
+     "narration": "한 걸음 들어서자 공기가 무겁게 젖는다. 뒤돌아보면 방금 지나온 숲길이 안개에 지워져 간다."
+    },
+    {
+     "id": "mA2",
+     "name": "이슬 맺힌 덤불",
+     "x": 280,
+     "y": 350,
+     "img": "자료/일러/a60aac4f5e2a47571e92a91de28b3209.jpg",
+     "terrain": "안개에 젖은 덤불이 겹겹이 이어진다",
+     "gmNote": "날짐승과 나무 위 짐승. 시야가 나빠 습격당하기 쉽다.",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [],
+     "encounters": [
+      {
+       "id": "nssqDefEncM1",
+       "weight": 2
+      },
+      {
+       "id": "nssqDefEncM2",
+       "weight": 1
+      }
+     ],
+     "narration": "잎마다 굵은 이슬이 맺혀 있다. 머리 위 어딘가에서 무언가가 가지를 흔든다."
+    },
+    {
+     "id": "mA3",
+     "name": "검은 늪가",
+     "x": 280,
+     "y": 560,
+     "img": "edde2c4b8c8fce7aafbd451ea7bbbfbd.jpg",
+     "terrain": "검게 고인 물이 소리 없이 번진 늪",
+     "gmNote": "늪의 큰 짐승. 독도마뱀이 늪가와 거미 둥지를 오간다.",
+     "secret": false,
+     "gather": "~6: R2 풀 / 7~10: R2 덩굴 / 11~: R2 꽃",
+     "tags": "",
+     "triggers": [],
+     "encounters": [
+      {
+       "id": "nssqDefEncM3",
+       "weight": 1
+      }
+     ],
+     "narration": "발밑이 질척하게 꺼진다. 검은 수면 위로 거품이 하나, 둘 떠오른다."
+    },
+    {
+     "id": "mA4",
+     "name": "썩은 꽃밭",
+     "x": 500,
+     "y": 350,
+     "img": "자료/일러/e92bc974d6de6f9920b60d04d986005a.jpg",
+     "terrain": "달큰한 썩은 내가 진동하는 꽃밭",
+     "gmNote": "썩은 내의 거대 꽃과 육식 식물. 독·상태 이상에 대비가 필요하다.",
+     "secret": false,
+     "gather": "~6: R2 꽃 / 7~10: R2 열매 / 11~: R2 덩굴",
+     "tags": "",
+     "triggers": [],
+     "encounters": [
+      {
+       "id": "nssqDefEncM4",
+       "weight": 1
+      }
+     ],
+     "narration": "빛바랜 거대한 꽃이 무리 지어 피어 있다. 꽃가루가 안개에 섞여 숨이 막힌다."
+    },
+    {
+     "id": "mA5",
+     "name": "거미 둥지",
+     "x": 500,
+     "y": 560,
+     "img": "자료/일러/a60aac4f5e2a47571e92a91de28b3209.jpg",
+     "terrain": "나무 사이에 하얀 실이 촘촘히 걸린 곳",
+     "gmNote": "사냥하는 거미와 지네. 실에 걸린 오래된 짐(조사 시 GM이 보상)을 둬도 좋다.",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "mT2",
+       "on": "search",
+       "n": 1,
+       "once": true,
+       "text": "실타래 속 짐: 【LUC】 판정(목표값 11)으로 찾아낸다. 성공하면 GM이 보상을 준다(예: 200G 또는 넥타르 1개).",
+       "playerText": "하얀 실타래 속에 낡은 배낭 같은 것이 엉겨 있다.",
+       "actions": [
+        {
+         "type": "check",
+         "ability": "luc",
+         "checkKind": "",
+         "target": 11,
+         "note": "실타래 속 짐"
+        }
+       ]
+      }
+     ],
+     "encounters": [
+      {
+       "id": "nssqDefEncM5",
+       "weight": 2
+      },
+      {
+       "id": "nssqDefEncM6",
+       "weight": 1
+      }
+     ],
+     "narration": "나무와 나무 사이에 하얀 실이 커튼처럼 드리워져 있다. 실 끝이 미세하게 떨린다."
+    },
+    {
+     "id": "mA6",
+     "name": "안개 웅덩이",
+     "x": 720,
+     "y": 560,
+     "img": "edde2c4b8c8fce7aafbd451ea7bbbfbd.jpg",
+     "terrain": "안개가 고여 조용한 옴폭한 땅",
+     "gmNote": "수해에서 캠프할 수 있는 곳. 습격 판정 값은 4 정도.",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [],
+     "encounters": [],
+     "narration": "땅이 옴폭 꺼진 자리에 안개가 고여 있다. 짐승의 기척이 닿지 않는 고요한 곳이다.",
+     "acts": {
+      "camp": true
+     }
+    },
+    {
+     "id": "mA7",
+     "name": "수해의 심장",
+     "x": 860,
+     "y": 350,
+     "img": "자료/일러/284843472b386ef42660d3b1e0cd4980.jpg",
+     "terrain": "안개가 소용돌이치는 수해의 가장 깊은 곳",
+     "gmNote": "",
+     "secret": false,
+     "gather": "",
+     "tags": "",
+     "triggers": [
+      {
+       "id": "mT3",
+       "on": "visit",
+       "n": 1,
+       "once": true,
+       "auto": false,
+       "text": "수해의 끝. 다음 미궁으로 이어 갈 이벤트를 GM이 둔다.",
+       "playerText": "",
+       "actions": [
+        {
+         "type": "message",
+         "text": "안개가 소용돌이치는 한가운데에 섰다. 수해의 심장부다."
+        }
+       ]
+      }
+     ],
+     "encounters": [],
+     "narration": "안개가 천천히 소용돌이친다. 그 중심에서 무언가가 이쪽을 보고 있는 것 같다."
+    }
+   ],
+   "passages": [
+    {
+     "id": "mP1",
+     "a": "mA1",
+     "b": "mA2",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "mP2",
+     "a": "mA2",
+     "b": "mA3",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "mP3",
+     "a": "mA2",
+     "b": "mA4",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "mP4",
+     "a": "mA3",
+     "b": "mA5",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "mP5",
+     "a": "mA4",
+     "b": "mA5",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "mP6",
+     "a": "mA4",
+     "b": "mA7",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "mP7",
+     "a": "mA5",
+     "b": "mA6",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
+    },
+    {
+     "id": "mP8",
+     "a": "mA6",
+     "b": "mA7",
+     "state": "open",
+     "oneWay": false,
+     "label": ""
     }
    ]
   },
@@ -1541,6 +1857,136 @@
     {
      "uuid": "Compendium.nssq.enemies.Actor.SdlChAP93JWuod7z",
      "name": "숲달팽이",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncM1",
+   "name": "안개 속의 날개",
+   "group": "map:nssqDefMapFog",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.M7wRu4qy1dB5FrKl",
+     "name": "최면올빼미",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.KJE3JPG8ftpdo9iz",
+     "name": "독 뿜는 호랑나비",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncM2",
+   "name": "나무 위의 그림자",
+   "group": "map:nssqDefMapFog",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.L2SncexdkAK2w9gS",
+     "name": "마하 다람쥐",
+     "img": "",
+     "count": 2,
+     "row": "front"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncM3",
+   "name": "늪의 주인",
+   "group": "map:nssqDefMapFog",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.Csxl0xTz3Nwnq7ke",
+     "name": "참개구리",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.ZNXG1cNnQMtsfng0",
+     "name": "거대아나콘다",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncM4",
+   "name": "썩은 꽃",
+   "group": "map:nssqDefMapFog",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.XeufLfUtJuVOzE7F",
+     "name": "타이탄 아룸",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.RZS8T8rYgwxaJmc3",
+     "name": "무는 풀",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncM5",
+   "name": "거미의 사냥",
+   "group": "map:nssqDefMapFog",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.BIRzTll5WgT7FSxr",
+     "name": "베놈 스파이더",
+     "img": "",
+     "count": 2,
+     "row": "front"
+    }
+   ]
+  },
+  {
+   "id": "nssqDefEncM6",
+   "name": "땅을 기는 것",
+   "group": "map:nssqDefMapFog",
+   "bg": "",
+   "bgm": "",
+   "fav": false,
+   "enemies": [
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.VthEA1zVPAROc3xs",
+     "name": "거대지네",
+     "img": "",
+     "count": 1,
+     "row": "front"
+    },
+    {
+     "uuid": "Compendium.nssq.enemies.Actor.BIRzTll5WgT7FSxr",
+     "name": "베놈 스파이더",
      "img": "",
      "count": 1,
      "row": "front"

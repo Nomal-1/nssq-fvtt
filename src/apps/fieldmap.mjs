@@ -204,7 +204,9 @@ export async function goToMap(mapId, areaId = null) {
   await (await import("./field-scene.mjs")).activateFieldScene(map);
   await areaMusic(map, at, true);
   await post(`<h3><i class="fas fa-route"></i> ${esc(L("mapGone", { name: map.name }))}</h3>${arrivalHtml(map, s)}`);
-  return processTriggers(map, FM.arrivalTriggers(map, s, at));
+  // 막 떠나온 지도로 되돌아가는 트리거(경계 에어리어의 「돌아간다」 선택지 등)는 이번 도착에서는 건너뛴다(양쪽을 끝없이 오가지 않게)
+  const back = (t) => JSON.stringify(t.actions ?? []).includes(`"map":"${now.mapId}"`);
+  return processTriggers(map, FM.arrivalTriggers(map, s, at).filter((x) => !back(x.trigger)));
 }
 
 export async function endProgress() {
