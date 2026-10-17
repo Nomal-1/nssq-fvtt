@@ -76,7 +76,7 @@ async function postHitCard({ actor, title, checks, nameOf, known, uuidOf, roll }
     if (m.failAt && c.sum <= m.failAt && !c.absSuccess) { c.success = false; c.absFailure = true; }
     return { uuid: uuidOf(m.targetId), name: nameOf(m.targetId), hit: !!c.success, total: c.total, used: c.used, abs: c.absSuccess ? "absSuccess" : c.absFailure ? "absFailure" : null, target: known(m.targetId) ? m.target : null };
   });
-  const li = rows.map((r) => `<li class="${r.hit ? "hit" : "miss"}"><b>${esc(r.name)}</b> ${esc(r.used.join("+"))} → <b>${r.total}</b> <span class="vs">(${esc(L("vsTarget", { target: r.target ?? "???" }))})</span> <b class="res">${esc(L(r.hit ? "hit" : "miss"))}</b>${r.abs ? ` <em>${esc(game.i18n.localize(`NSSQ.Check.${r.abs}`))}</em>` : ""}</li>`).join("");
+  const li = rows.map((r) => `<li class="${r.hit ? "hit" : "miss"}"><b>${esc(r.name)}</b> ${esc(r.used.join("+"))} → <b>${r.total}</b> <span class="vs">(${esc(L("vsTarget", { target: r.target ?? "???" }))})</span>${r.abs ? ` <em>${esc(game.i18n.localize(`NSSQ.Check.${r.abs}`))}</em>` : ""}<div class="hit-result ${r.hit ? "success" : "failure"}">${esc(L(r.hit ? "hit" : "miss"))}</div></li>`).join("");
   return ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content: `<div class="nssq-hit-card"><header class="check-header"><span class="check-label"><i class="fas fa-bullseye"></i> ${esc(L("hitCardTitle", { name: title }))}</span></header><ul>${li}</ul></div>`,

@@ -87,11 +87,34 @@ function journalDoc(pack, name, pages, { folder = null, sort = 0, observer = tru
 }
 
 /** 원문 폴더의 파일들 → 페이지(파일 하나 = 한 페이지, 이름은 첫 제목) */
+/** 클래스 페이지 머리의 데이터 블록(```json)을 읽는다 */
+const ABIL = ["STR", "TEC", "VIT", "AGI", "LUC"];
+function classData(md) {
+  const m = md.match(/```json\s*\n([\s\S]*?)\n```/);
+  try { return m ? JSON.parse(m[1]) : null; } catch { return null; }
+}
+const roles = (d) => (Array.isArray(d["역할"]) ? d["역할"].join("·") : d["역할"] ?? "");
+
+/** 원문 페이지. 클래스의 데이터 블록은 표로 바꾼다(Notion 데이터베이스 속성) */
 function rawPages(files) {
   return files.map((f) => {
-    const md = readText(path.join(RAW, f));
+    let md = readText(path.join(RAW, f));
+    const d = classData(md);
+    if (d) {
+      const table = [`| 위치 | 역할 | ${ABIL.join(" | ")} | 무기 | 방어구 |`, `|${"---|".repeat(9)}`,
+        `| ${d["위치"] ?? ""} | ${roles(d)} | ${ABIL.map((k) => d[k] ?? "").join(" | ")} | ${d["무기"] ?? ""} | ${d["방어구"] ?? ""} |`].join("\n");
+      md = md.replace(/```json\s*\n[\s\S]*?\n```/, `${table}\n\n원문: ${d["원문"] ?? ""}`);
+    }
     return { name: titleOf(md, path.basename(f, ".md")), html: mdToHtml(md, { dropTitle: true }) };
   });
+}
+
+/** 「클래스 일람」(원문은 Notion 데이터베이스라 내보내기에 없다): 클래스 페이지의 데이터로 표를 만든다 */
+function classListPage(files) {
+  const rows = files.map((f) => classData(readText(path.join(RAW, f)))).filter(Boolean).sort((a, b) => (a["번호"] ?? 0) - (b["번호"] ?? 0));
+  const md = [`| 클래스 | 위치 | 역할 | ${ABIL.join(" | ")} | 무기 | 방어구 |`, `|${"---|".repeat(10)}`,
+    ...rows.map((d) => `| ${d["클래스"]} | ${d["위치"] ?? ""} | ${roles(d)} | ${ABIL.map((k) => d[k] ?? "").join(" | ")} | ${d["무기"] ?? ""} | ${d["방어구"] ?? ""} |`)].join("\n");
+  return { name: "클래스 일람", html: `<p>31개 클래스의 능력치 보정, 장비 가능 무기·방어구. 스킬은 각 클래스 페이지.</p>\n${mdToHtml(md)}` };
 }
 const rawDir = (dir, filter = () => true) => fs.readdirSync(path.join(RAW, dir)).filter((f) => f.endsWith(".md") && filter(f)).sort((a, b) => a.localeCompare(b, "ko")).map((f) => `${dir}/${f}`);
 
@@ -189,7 +212,7 @@ const PACK_DEFS = [
   {
     // 모든 플레이어가 볼 수 있는 룰북 전문(data/raw 원문)
     name: "rulebook", label: "룰북(전문)", type: "JournalEntry",
-    build: () => RULEBOOK.map(([name, files], i) => journalDoc("rulebook", `${i + 1}. ${name}`, rawPages(files()), { sort: (i + 1) * 100 }))
+    build: () => RULEBOOK.map(([name, files], i) => journalDoc("rulebook", `${i + 1}. ${name}`, [...(name === "클래스" ? [classListPage(files())] : []), ...rawPages(files())], { sort: (i + 1) * 100 }))
   },
   {
     // GM 전용: 기능 가이드(docs/manual.md) + 원문 GM 섹션·샘플 시나리오. 팩 자체를 플레이어에게 감춘다

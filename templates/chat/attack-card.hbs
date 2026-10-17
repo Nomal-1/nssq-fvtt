@@ -12,9 +12,9 @@
       <span>+ <span data-mask="atk">{{@root.hitStat}}</span> = <b data-mask="atk">{{t.hitTotal}}</b> / {{localize "NSSQ.Combat.evasion"}} <span data-mask="def">{{t.evasion}}</span></span>
       {{#if t.absSuccess}}<span class="tag success">{{localize "NSSQ.Check.absSuccess"}}</span>{{/if}}
       {{#if t.absFailure}}<span class="tag failure">{{localize "NSSQ.Check.absFailure"}}</span>{{/if}}
-      <span class="result {{#if t.hit}}success{{else}}failure{{/if}}">{{#if t.hit}}{{localize "NSSQ.Combat.hit"}}{{else}}{{localize "NSSQ.Combat.miss"}}{{/if}}</span>
       {{{t.fpHtml}}}
     </div>
+    <div class="hit-result {{#if t.hit}}success{{else}}failure{{/if}}">{{#if t.hit}}{{localize "NSSQ.Combat.hit"}}{{else}}{{localize "NSSQ.Combat.miss"}}{{/if}}</div>
     {{#if t.hit}}
     <div class="dmg-line">
       <span class="label">{{localize "NSSQ.Combat.damageDice"}} {{t.diceCount}}D6</span>
