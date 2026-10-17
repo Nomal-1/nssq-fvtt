@@ -24,6 +24,7 @@ import { emit, onSocket } from "../socket.mjs";
 import { decorateReactions, hasPendingReaction, pendingReaction } from "./reaction.mjs";
 import { fpNote, rerollButton } from "./fp-dice.mjs";
 import { itemUseOf, itemUseReason, runItemUse } from "./item-use.mjs";
+import { askOwner } from "./ask-owner.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.SkillUse.${k}`, d) : game.i18n.localize(`NSSQ.SkillUse.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -426,7 +427,7 @@ export async function executeAction(combat, combatant, kind, id, targetCombatant
 }
 
 /** 해제 수가 정해진 해제 효과: 대상에게 걸린 것이 더 많으면 무엇을 풀지 고른다 → cure.pick(id 목록) */
-async function pickCures(entries) {
+async function pickCures(entries, actor) {
   for (const e of entries) {
     const target = e.uuid ? fromUuidSync(e.uuid) : null;
     if (!target) continue;
@@ -435,20 +436,14 @@ async function pickCures(entries) {
       const match = (target.system.conditions ?? []).filter((x) => (c.conditions === "all" || c.conditions?.includes(x.id)) && (!c.kind || CONDITIONS[x.id]?.kind === c.kind));
       if (match.length <= c.count) continue;
       const boxes = match.map((x, i) => `<label class="choice"><input type="checkbox" name="c" value="${esc(x.id)}" ${i < c.count ? "checked" : ""}/> ${esc(conditionLabel(x))}</label>`).join("");
-      const got = await Dialog.prompt({
+      // 스킬을 쓴 캐릭터의 주인이 고른다(GM 화면에서 실행 중이면 그 플레이어에게, combat/ask-owner.mjs)
+      const a = await askOwner(actor, {
         title: L("curePickTitle", { name: e.name }),
         content: `<form><p>${esc(L("curePick", { n: c.count }))}</p><div>${boxes}</div></form>`,
-        label: L("curePickGo"), rejectClose: false,
-        render: (html) => {
-          // 정한 수까지만 고를 수 있게
-          const list = [...html[0].querySelectorAll("[name=c]")];
-          const sync = () => { const n = list.filter((x) => x.checked).length; list.forEach((x) => { x.disabled = !x.checked && n >= c.count; }); };
-          list.forEach((x) => x.addEventListener("change", sync));
-          sync();
-        },
-        callback: (html) => [...html[0].querySelectorAll("[name=c]:checked")].map((x) => x.value)
-      }, { classes: ["nssq", "dialog"] });
-      c.pick = (got ?? match.map((x) => x.id)).slice(0, c.count);
+        buttons: { go: L("curePickGo") }, close: "go", limit: { name: "c", max: c.count }
+      });
+      const got = a.values.c ?? [];
+      c.pick = (got.length ? got : match.map((x) => x.id)).slice(0, c.count);
     }
   }
 }
@@ -491,7 +486,7 @@ async function askDualSkill(actor, item, effects) {
   if (!dualWieldOf(actor)) return null;
   const cost = item.system.cost ?? {};
   if ((cost.tp ?? 0) > (actor.system.tp?.value ?? 0) || (cost.fp ?? 0) > (actor.system.fp?.value ?? 0)) return null;
-  const ok = await Dialog.confirm({ title: `《${sk.name}》`, content: `<p>${esc(L("dualAsk", { skill: item.name, name: sk.name }))}</p>`, rejectClose: false });
+  const ok = (await askOwner(actor, { title: `《${sk.name}》`, content: `<p>${esc(L("dualAsk", { skill: item.name, name: sk.name }))}</p>`, buttons: { yes: game.i18n.localize("Yes"), no: game.i18n.localize("No") }, default: "yes", close: "no" })).button === "yes";
   if (!ok) return null;
   const upd = {};
   if (cost.tp) upd["system.tp.value"] = actor.system.tp.value - cost.tp;
@@ -510,10 +505,11 @@ async function useMulti(combat, combatant, item, { category, count = 3 }, late) 
   if (!list.length) return ui.notifications.warn(L("multiNone")) && null;
   const n = Math.max(1, Number(count) || 3);
   const boxes = list.map((i, k) => `<label class="choice"><input type="checkbox" name="c" value="${i.id}" ${k < n ? "checked" : ""}/> 《${esc(i.name)}》</label>`).join("");
-  const ids = await Dialog.prompt({
-    title: L("chooseTitle", { name: item.name }), content: `<p>${esc(L("multiHint", { n }))}</p><form class="nssq-choices">${boxes}</form>`, label: L("chooseGo"), rejectClose: false,
-    callback: (html) => [...(html[0] ?? html).querySelectorAll("input[name=c]:checked")].map((x) => x.value).slice(0, n)
-  }, { classes: ["nssq", "dialog"] });
+  const a = await askOwner(actor, {
+    title: L("chooseTitle", { name: item.name }), content: `<p>${esc(L("multiHint", { n }))}</p><form class="nssq-choices">${boxes}</form>`,
+    buttons: { go: L("chooseGo") }, close: null, limit: { name: "c", max: n }
+  });
+  const ids = a.button === "go" ? (a.values.c ?? []).slice(0, n) : null;
   if (!ids?.length) return null;
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-combat-note"><i class="fas fa-music"></i> ${esc(L("multiUsed", { name: combatant.name, skill: item.name, list: ids.map((x) => `《${actor.items.get(x)?.name}》`).join("") }))}</div>` });
   let first = null;
@@ -680,7 +676,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     && ![e.inflicts, e.buffs, e.cures, e.resource, e.states, e.stances].some((l) => l?.length);
   for (let i = entries.length - 1; i >= 0; i--) if (empty(entries[i]) && entries.length > 1) entries.splice(i, 1);
   // 「(SL)개까지 해제」(《리프레시》): 걸린 것이 더 많으면 사용자가 고른다(01 #164). 에너미는 걸린 순서대로
-  if (actor.type !== "enemy" && !r.failed) await pickCures(entries);
+  if (actor.type !== "enemy" && !r.failed) await pickCures(entries, actor);
   // 아군 반동(《레기온 스러스트》 「자신 외 아군 전원」)·아군 회복(《블랙 사바스》 「아군 전체」)
   if (!r.failed && (r.allyRecoil || r.allyHeal) && combatant?.combat) {
     const mates = combatant.combat.combatants.filter((c) => alive(c) && friendly(c.actor, actor) && c.actor.type !== "token");

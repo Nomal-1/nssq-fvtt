@@ -77,6 +77,15 @@ async function showRolls(rolls) {
   for (const r of rolls) await game.dice3d.showForRoll(r, game.user, true).catch(() => {});
 }
 
+/** 다시 굴리기: 플레이어 캐릭터면 그 플레이어 화면에 명중·대미지 팝업(combat/dice-flow.mjs), 아니면 바로 */
+async function rerollWith(attacker, target, name, params, rolls) {
+  const { usePopup, resolveWithPopups, hiddenStats } = await import("./dice-flow.mjs");
+  if (!usePopup(attacker)) return resolveAttack({ ...params, rerolled: true, rollDice: (n) => rollWith(rolls, n) });
+  const out = await resolveWithPopups((roll) => resolveAttack({ ...params, rerolled: true, rollDice: (n, m) => roll(n, m && { ...m, targetId: "t" }) }),
+    { title: game.i18n.format("NSSQ.DiceFlow.rerollTitle", { name }), nameOf: () => name, known: () => !hiddenStats(target), rolls, actor: attacker });
+  return out.result;
+}
+
 /** 활성 GM: 통상 공격 카드의 대상 index를 다시 굴린다 */
 async function rerollAttack(message, index, by) {
   const card = foundry.utils.deepClone(message.getFlag("nssq", "attack"));
@@ -88,9 +97,9 @@ async function rerollAttack(message, index, by) {
   if (t.applied) await requestApply(message.id, index, true);
   const fresh = foundry.utils.deepClone(game.messages.get(message.id).getFlag("nssq", "attack"));
   const rolls = [];
-  const r = await resolveAttack({ ...t.params, rerolled: true, rollDice: (n) => rollWith(rolls, n) });
-  await showRolls(rolls);
   const target = await fromUuid(t.actorUuid);
+  const r = await rerollWith(attacker, target, t.name, t.params, rolls);
+  await showRolls(rolls);
   const { pendingReaction } = await import("./reaction.mjs");
   fresh.targets[index] = { ...fresh.targets[index], ...attackFields(r), applied: false, before: null, after: null, reaction: pendingReaction(target, "physical", r.hit) };
   // 처음 판정의 1로 얻은 【FP】는 다시 굴리면 얻지 못한 것이 된다(원문 「다시 굴리기 전에 1이 나왔더라도 얻을 수 없다」)
@@ -117,7 +126,7 @@ async function rerollSkill(message, index, seq, by) {
   const fh = fe.hits.find((x) => x.seq === seq);
   const wasHit = !!fh.hit;
   const rolls = [];
-  const r = await resolveAttack({ ...fh.params, rerolled: true, rollDice: (n) => rollWith(rolls, n) });
+  const r = await rerollWith(user, e.uuid ? await fromUuid(e.uuid) : null, e.name, fh.params, rolls);
   await showRolls(rolls);
   Object.assign(fh, {
     hit: r.hit, total: r.hitCheck.total, absSuccess: r.hitCheck.absSuccess, absFailure: r.hitCheck.absFailure, dice: r.hitCheck.used,

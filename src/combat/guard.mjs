@@ -115,15 +115,14 @@ async function redirectAlly(combat, attackerC, targets) {
   if (!notYet || (cost.tp ?? 0) > (actor.system.tp?.value ?? 0) || (cost.fp ?? 0) > (actor.system.fp?.value ?? 0) || !actor.isOwner) return targets;
   const allies = combat.combatants.filter((c) => c !== t && alive(c) && unitSide(c.actor) === unitSide(actor) && c.actor.type !== "token");
   if (!allies.length) return targets;
-  const pick = await Dialog.wait({
+  // 맞는 캐릭터의 주인이 고른다(에너미 공격은 GM 화면에서 굴리므로 그 플레이어에게, combat/ask-owner.mjs)
+  const { askOwner } = await import("./ask-owner.mjs");
+  const ans = await askOwner(actor, {
     title: `${t.name} — 《${sk.name}》`,
     content: `<p>${esc(L("redirectAsk", { target: t.name, attacker: attackerC.name, skill: `《${sk.name}》` }))}</p><form><select name="who">${allies.map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select></form>`,
-    buttons: {
-      use: { label: L("redirectUse"), callback: (html) => html[0].querySelector("[name=who]").value },
-      no: { label: L("redirectNo"), callback: () => null }
-    },
-    default: "no", close: () => null
-  }, { classes: ["nssq", "dialog"] });
+    buttons: { use: L("redirectUse"), no: L("redirectNo") }, default: "no", close: "no"
+  });
+  const pick = ans.button === "use" ? ans.values.who : null;
   const to = pick && combat.combatants.get(pick);
   if (!to) return targets;
   const upd = {};

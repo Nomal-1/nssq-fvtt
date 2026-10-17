@@ -242,7 +242,14 @@ export async function runFollowup(f, originKind = "normal") {
     const rolls = [];
     let extra = null;
     if (plus && f.hitData) {
+      // 더하는 대미지 다이스: 플레이어 캐릭터면 그 플레이어 화면에 대미지 팝업(combat/dice-flow.mjs), 크리티컬 추가는 바로
+      const { usePopup, damageDicePopup, hiddenStats } = await import("./dice-flow.mjs");
+      let first = usePopup(actor);
       const rollDice = async (n) => {
+        if (first) {
+          first = false;
+          return damageDicePopup(actor, { title: item.name, name: target.name, count: n, resist: f.hitData.resist ?? 0, known: !hiddenStats(target.actor) }, rolls);
+        }
         const r = await new Roll(`${n}d6`).evaluate();
         rolls.push(r);
         return r.dice[0].results.map((x) => x.result);

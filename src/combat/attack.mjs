@@ -115,8 +115,9 @@ async function secondTarget(attacker, opts, weapon) {
   if (!list.length) return null;
   if (list.length === 1) return list[0].token;
   const firstId = list.find((c) => c.token?.id === first.id)?.id ?? list[0].id;
-  const buttons = Object.fromEntries(list.map((c) => [c.id, { label: esc(c.name), callback: () => c.id }]));
-  const id = await Dialog.wait({ title: L("dualSecondTitle", { name: me.name }), content: `<p>${esc(L("dualSecondHint", { weapon: weapon.label ?? "" }))}</p>`, buttons, default: firstId, close: () => null }, { classes: ["nssq", "dialog"] });
+  // 공격하는 캐릭터의 주인이 고른다(GM 화면에서 실행 중이면 그 플레이어에게, combat/ask-owner.mjs)
+  const { askOwner } = await import("./ask-owner.mjs");
+  const { button: id } = await askOwner(attacker, { title: L("dualSecondTitle", { name: me.name }), content: `<p>${esc(L("dualSecondHint", { weapon: weapon.label ?? "" }))}</p>`, buttons: Object.fromEntries(list.map((c) => [c.id, esc(c.name)])), default: firstId, close: null });
   return id ? combat.combatants.get(id)?.token ?? null : null;
 }
 

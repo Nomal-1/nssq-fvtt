@@ -71,7 +71,7 @@
 - [x] 0  - [x] 1  - [x] 2  - [x] 3  - [x] 4  - [x] 5  - [x] 6  - [x] 7  - [x] 8  - [x] 9  - [x] 9.5  - [x] 10
 
 ## 인계 메모 (세션이 바뀌면 먼저 읽는다)
-- **현재**: main = v0.44.1. 단계 0~10 완료, 이후는 사용자 요청 묶음·점검·버그 수정. 버전별 변경은 `docs/08-changelog.md`(새 릴리스는 그 맨 위에 한 줄).
+- **현재**: main = v0.44.2. 단계 0~10 완료, 이후는 사용자 요청 묶음·점검·버그 수정. 버전별 변경은 `docs/08-changelog.md`(새 릴리스는 그 맨 위에 한 줄).
 - **남은 것**
   - 사용자 결정 대기: 07은 비어 있음(추가 컨텐츠 #168은 01로 확정). 모바일 지원(보류, 설정 기본 끔·기능은 남김).
   - 사용자 PC 확인 대기: 카드 지속 이펙트 점멸·특수 상태 이펙트·컷인 위치, 실제 파일로 [에셋 폴더 연결].
@@ -80,6 +80,7 @@
   - 아이콘 다듬기(2026-10-16 보류): 스킬 [부위][무기] 아이콘(`apps/skill-badge.mjs`)이 작아 알아보기 어렵다는 점. 이 환경의 PIL·ImageMagick으로 크기·테두리·배경을 통일해 다듬을 수 있다. Foundry 내장 아이콘을 고친 파일은 공개 저장소에 넣지 않고 사용자 서버 `nssq-assets/스킬아이콘/`([에셋 폴더 연결])에 둔다. Claude가 SVG로 새로 그린 단순 기호 아이콘은 시스템에 넣어도 된다. 손그림 일러스트는 못 만든다(PhotoCraft 등 편집기는 생성 AI가 아니라 필요 없음).
 - **설계 메모**
   - 룰북·가이드 저널은 빌드 때 만든다(`tools/pack.mjs` → `player-guide`·`rulebook`·`gm-guide`). 원고는 `data/journals/player-guide.md`·`data/raw`·`docs/manual.md`를 고치면 다음 릴리스에 반영된다.
+  - 플레이어가 고르거나 굴려야 하는 것은 실행하는 화면이 GM일 수 있다(후발 행동·지연 공격·에너미 공격 중 반응 등). 창은 `askOwner(actor, …)`, 굴림은 `combat/dice-flow.mjs`로 그 캐릭터의 접속한 플레이어에게 보낸다. 새 창을 만들 때 `Dialog.*`를 바로 쓰지 말고 이것을 쓴다.
   - 자동 실행 훅 규칙: 모든 클라이언트에서 도는 훅(deleteCombat·createCombatant 등)에서 문서를 고칠 때는 `game.user.isGM`이 아니라 `isActiveGM()`(`game.users.activeGM?.id === game.user.id`)로 거른다.
   - 저작물(공식 그림·BGM)은 시스템·저장소에 넣지 않는다. 사용자 서버 Data 폴더(기본 `nssq-assets`)에 두고 GM 스크린 「준비」 [에셋 폴더 연결](`src/apps/asset-link.mjs`)로 이름 규칙에 따라 연결한다.
   - 스킬 습득은 작성·레벨업 직후·길드 재분배 직후만(`apps/levelup.mjs`의 `skillPick` 플래그와 preCreate/preUpdate 가드). GM은 막지 않는다. Lv1은 한 스킬 SL 2·커먼 하나 SL1, Lv2 이상은 레벨업 한 번에 한 스킬 +1(01 #30).

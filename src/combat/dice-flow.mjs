@@ -11,17 +11,12 @@
  * 클라이언트 설정 rollPopup(기본 켬, 굴리는 사람의 설정)으로 끈다
  */
 import { emit, onSocket } from "../socket.mjs";
+import { ownerUser } from "./ask-owner.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.DiceFlow.${k}`, d) : game.i18n.localize(`NSSQ.DiceFlow.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const sign = (n) => (n >= 0 ? `+${n}` : `${n}`);
 
 const popupOn = () => { try { return game.settings.get("nssq", "rollPopup") !== false; } catch { return true; } };
-
-/** 그 캐릭터를 가진 접속 중인 플레이어(담당 캐릭터인 사람 먼저) */
-export function ownerUser(actor) {
-  const list = game.users.filter((u) => !u.isGM && u.active && actor?.testUserPermission?.(u, "OWNER"));
-  return list.find((u) => u.character?.id === actor.id) ?? list[0] ?? null;
-}
 
 /**
  * 이 공격에 팝업을 쓰는가: 플레이어가 가진 캐릭터의 공격. 추격·반격·발동은 제외(지연 공격은 그 사람의 행동이라 포함)
@@ -102,6 +97,18 @@ async function ask(actor, q, rolls) {
   }
   if (a.roll) { try { rolls.push(Roll.fromData(a.roll)); } catch { /* 표시만 빠진다 */ } }
   return a;
+}
+
+/** 대상이 식별되지 않았는가(회피·내성을 ???로): 에너미이고 식별 전이거나 간파 전 희소종 */
+export const hiddenStats = (a) => a?.type === "enemy" && (!a.system.identified || (a.system.isRare && !a.system.rareKnown));
+
+/**
+ * 대미지 다이스만 더 굴릴 때(《풀 게인》 등 「명중했을 때 선언, 대미지 다이스 +n」): 대미지 팝업 하나 → 굴림
+ * @returns {Promise<number[]>}
+ */
+export async function damageDicePopup(actor, { title, name, count, resist, known = true }, rolls) {
+  const line = esc(known ? L("dmgLine", { name, count, resist, need: resist + 1 }) : L("dmgLineHidden", { name, count }));
+  return (await ask(actor, { title, head: esc(L("dmgHead")), lines: [line], count }, rolls)).dice;
 }
 
 export function registerDiceFlow() {
