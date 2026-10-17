@@ -42,13 +42,15 @@
      "min": 5,
      "max": 8,
      "item": "껍질",
-     "rank": 2
+     "rank": 2,
+     "name": "풍뎅이 갑각"
     },
     {
      "min": 9,
      "max": null,
      "item": "칼날",
-     "rank": 2
+     "rank": 2,
+     "name": "가위 집게"
     }
    ],
    "row": "front",
@@ -190,7 +192,8 @@
      "min": 5,
      "max": null,
      "item": "날개·깃털",
-     "rank": 2
+     "rank": 2,
+     "name": "독 인분 날개"
     }
    ],
    "row": "front",
@@ -330,7 +333,8 @@
      "min": 5,
      "max": null,
      "item": "발톱",
-     "rank": 2
+     "rank": 2,
+     "name": "스라소니 발톱"
     }
    ],
    "row": "front",
@@ -429,7 +433,8 @@
      "min": 5,
      "max": null,
      "item": "이빨",
-     "rank": 2
+     "rank": 2,
+     "name": "지네 독니"
     }
    ],
    "row": "front",
@@ -627,13 +632,15 @@
      "min": 4,
      "max": 10,
      "item": "날개·깃털",
-     "rank": 2
+     "rank": 2,
+     "name": "괴조 깃털"
     },
     {
      "min": 11,
      "max": null,
      "item": "뼈",
-     "rank": 2
+     "rank": 2,
+     "name": "비크 빌의 부리뼈"
     }
    ],
    "row": "front",
@@ -936,13 +943,15 @@
      "min": 6,
      "max": 9,
      "item": "뼈",
-     "rank": 2
+     "rank": 2,
+     "name": "비비 뼈"
     },
     {
      "min": 10,
      "max": null,
      "item": "모피",
-     "rank": 2
+     "rank": 2,
+     "name": "비비 털가죽"
     }
    ],
    "row": "front",
@@ -1121,13 +1130,15 @@
      "min": 5,
      "max": 9,
      "item": "가시",
-     "rank": 2
+     "rank": 2,
+     "name": "마비독 꼬리 가시"
     },
     {
      "min": 10,
      "max": null,
      "item": "껍질",
-     "rank": 2
+     "rank": 2,
+     "name": "전갈 갑각"
     }
    ],
    "row": "front",
@@ -1316,13 +1327,15 @@
      "min": 5,
      "max": 9,
      "item": "날개·깃털",
-     "rank": 2
+     "rank": 2,
+     "name": "최면 무늬 깃털"
     },
     {
      "min": 10,
      "max": null,
      "item": "뼈",
-     "rank": 2
+     "rank": 2,
+     "name": "올빼미 뼈"
     }
    ],
    "row": "front",
@@ -1503,13 +1516,15 @@
      "min": 4,
      "max": 8,
      "item": "비늘",
-     "rank": 2
+     "rank": 2,
+     "name": "보라 비늘"
     },
     {
      "min": 9,
      "max": null,
      "item": "이빨",
-     "rank": 2
+     "rank": 2,
+     "name": "이블 피시 이빨"
     }
    ],
    "row": "front",
@@ -1701,13 +1716,15 @@
      "min": 5,
      "max": 6,
      "item": "가죽",
-     "rank": 2
+     "rank": 2,
+     "name": "무지개도마뱀 가죽"
     },
     {
      "min": 7,
      "max": null,
      "item": "비늘",
-     "rank": 2
+     "rank": 2,
+     "name": "변색 비늘"
     }
    ],
    "row": "front",
@@ -1850,13 +1867,15 @@
      "min": 4,
      "max": 7,
      "item": "풀",
-     "rank": 2
+     "rank": 2,
+     "name": "식충 잎"
     },
     {
      "min": 8,
      "max": null,
      "item": "덩굴",
-     "rank": 2
+     "rank": 2,
+     "name": "휘감는 덩굴"
     }
    ],
    "row": "front",
@@ -2090,13 +2109,15 @@
      "min": 4,
      "max": 7,
      "item": "비늘",
-     "rank": 2
+     "rank": 2,
+     "name": "아나콘다 비늘"
     },
     {
      "min": 8,
      "max": null,
      "item": "이빨",
-     "rank": 2
+     "rank": 2,
+     "name": "아나콘다 이빨"
     }
    ],
    "row": "front",
@@ -2203,19 +2224,22 @@
      "min": 4,
      "max": 7,
      "item": "가죽",
-     "rank": 2
+     "rank": 2,
+     "name": "산고래 가죽"
     },
     {
      "min": 8,
      "max": 8,
      "item": "고기",
-     "rank": null
+     "rank": null,
+     "name": "질긴 산고래 고기"
     },
     {
      "min": 9,
      "max": null,
      "item": "이빨",
-     "rank": 2
+     "rank": 2,
+     "name": "산고래 큰 이빨"
     }
    ],
    "row": "front",
@@ -2453,13 +2477,15 @@
      "min": 5,
      "max": 8,
      "item": "발톱",
-     "rank": 2
+     "rank": 2,
+     "name": "다람쥐원숭이 발톱"
     },
     {
      "min": 9,
      "max": null,
      "item": "모피",
-     "rank": 2
+     "rank": 2,
+     "name": "다람쥐원숭이 털"
     }
    ],
    "row": "front",
@@ -2691,13 +2717,15 @@
      "min": 5,
      "max": 8,
      "item": "날개·깃털",
-     "rank": 2
+     "rank": 2,
+     "name": "익룡 날개깃"
     },
     {
      "min": 9,
      "max": null,
      "item": "뼈",
-     "rank": 2
+     "rank": 2,
+     "name": "익룡 부리뼈"
     }
    ],
    "row": "front",
@@ -2841,7 +2869,8 @@
      "min": 5,
      "max": null,
      "item": "금속",
-     "rank": 2
+     "rank": 2,
+     "name": "워보어의 녹슨 칼"
     }
    ],
    "row": "front",
@@ -3037,7 +3066,8 @@
      "min": 5,
      "max": null,
      "item": "가죽",
-     "rank": 2
+     "rank": 2,
+     "name": "우두머리 개구리 가죽"
     }
    ],
    "row": "front",
@@ -3184,13 +3214,15 @@
      "min": 5,
      "max": 7,
      "item": "발톱",
-     "rank": 2
+     "rank": 2,
+     "name": "화염도마뱀 발톱"
     },
     {
      "min": 8,
      "max": null,
      "item": "비늘",
-     "rank": 2
+     "rank": 2,
+     "name": "불꽃 비늘"
     }
    ],
    "row": "front",
@@ -3332,13 +3364,15 @@
      "min": 4,
      "max": 8,
      "item": "껍질",
-     "rank": 2
+     "rank": 2,
+     "name": "대왕 껍질"
     },
     {
      "min": 9,
      "max": null,
      "item": "금속",
-     "rank": 2
+     "rank": 2,
+     "name": "금속질 껍질 조각"
     }
    ],
    "row": "front",
@@ -3541,7 +3575,8 @@
      "min": 5,
      "max": null,
      "item": "실",
-     "rank": 2
+     "rank": 2,
+     "name": "독거미 실"
     }
    ],
    "row": "front",
@@ -3691,13 +3726,15 @@
      "min": 4,
      "max": 8,
      "item": "금속",
-     "rank": 2
+     "rank": 2,
+     "name": "워처 외피"
     },
     {
      "min": 9,
      "max": null,
      "item": "결정",
-     "rank": 2
+     "rank": 2,
+     "name": "워처의 눈 결정"
     }
    ],
    "row": "front",
@@ -3851,7 +3888,8 @@
      "min": 5,
      "max": null,
      "item": "금속",
-     "rank": 2
+     "rank": 2,
+     "name": "가드봇 장갑판"
     }
    ],
    "row": "front",
@@ -4007,13 +4045,15 @@
      "min": 5,
      "max": 7,
      "item": "껍질",
-     "rank": 2
+     "rank": 2,
+     "name": "기라파 갑각"
     },
     {
      "min": 8,
      "max": null,
      "item": "칼날",
-     "rank": 2
+     "rank": 2,
+     "name": "기라파 큰 집게"
     }
    ],
    "row": "front",
@@ -4112,7 +4152,8 @@
      "min": 6,
      "max": null,
      "item": "덩굴",
-     "rank": 2
+     "rank": 2,
+     "name": "썩은내 덩굴"
     }
    ],
    "row": "front",

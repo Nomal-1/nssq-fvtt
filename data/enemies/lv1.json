@@ -42,13 +42,15 @@
      "min": 4,
      "max": 7,
      "item": "이빨",
-     "rank": 1
+     "rank": 1,
+     "name": "숲쥐의 앞니"
     },
     {
      "min": 8,
      "max": null,
      "item": "가죽",
-     "rank": 1
+     "rank": 1,
+     "name": "숲쥐 가죽"
     }
    ],
    "row": "front",
@@ -149,7 +151,8 @@
      "min": 5,
      "max": null,
      "item": "날개·깃털",
-     "rank": 1
+     "rank": 1,
+     "name": "삼림나비 날개"
     }
    ],
    "row": "front",
@@ -292,13 +295,15 @@
      "min": 4,
      "max": 6,
      "item": "뼈",
-     "rank": 1
+     "rank": 1,
+     "name": "두더지 뼈"
     },
     {
      "min": 7,
      "max": null,
      "item": "발톱",
-     "rank": 1
+     "rank": 1,
+     "name": "두더지 발톱"
     }
    ],
    "row": "front",
@@ -478,7 +483,8 @@
      "min": 5,
      "max": null,
      "item": "가시",
-     "rank": 1
+     "rank": 1,
+     "name": "고슴도치 가시"
     }
    ],
    "row": "front",
@@ -589,7 +595,8 @@
      "min": 5,
      "max": null,
      "item": "껍질",
-     "rank": 1
+     "rank": 1,
+     "name": "달팽이 껍질"
     }
    ],
    "row": "front",
@@ -688,13 +695,15 @@
      "min": 4,
      "max": 7,
      "item": "발톱",
-     "rank": 1
+     "rank": 1,
+     "name": "크롤러의 갈고리발"
     },
     {
      "min": 8,
      "max": null,
      "item": "실",
-     "rank": 1
+     "rank": 1,
+     "name": "크롤러의 명주실"
     }
    ],
    "row": "front",
@@ -835,13 +844,15 @@
      "min": 4,
      "max": 8,
      "item": "비늘",
-     "rank": 1
+     "rank": 1,
+     "name": "물어뜯치 비늘"
     },
     {
      "min": 9,
      "max": null,
      "item": "이빨",
-     "rank": 1
+     "rank": 1,
+     "name": "물어뜯치 이빨"
     }
    ],
    "row": "front",
@@ -1022,7 +1033,8 @@
      "min": 6,
      "max": null,
      "item": "열매",
-     "rank": 1
+     "rank": 1,
+     "name": "악취 나는 두리안"
     }
    ],
    "row": "front",
@@ -1170,7 +1182,8 @@
      "min": 5,
      "max": null,
      "item": "가죽",
-     "rank": 1
+     "rank": 1,
+     "name": "삼림개구리 가죽"
     }
    ],
    "row": "front",
@@ -1317,13 +1330,15 @@
      "min": 4,
      "max": 7,
      "item": "뿔",
-     "rank": 1
+     "rank": 1,
+     "name": "환각 사슴뿔"
     },
     {
      "min": 8,
      "max": null,
      "item": "모피",
-     "rank": 1
+     "rank": 1,
+     "name": "고운 사슴 털"
     }
    ],
    "row": "front",
@@ -1464,7 +1479,8 @@
      "min": 5,
      "max": null,
      "item": "비늘",
-     "rank": 1
+     "rank": 1,
+     "name": "볼 애니멀의 비늘판"
     }
    ],
    "row": "front",
@@ -1606,7 +1622,8 @@
      "min": 5,
      "max": null,
      "item": "모피",
-     "rank": 1
+     "rank": 1,
+     "name": "눈토끼 털"
     }
    ],
    "row": "front",
@@ -1748,19 +1765,22 @@
      "min": 4,
      "max": 6,
      "item": "날개·깃털",
-     "rank": 1
+     "rank": 1,
+     "name": "무당벌레 속날개"
     },
     {
      "min": 7,
      "max": 8,
      "item": "껍질",
-     "rank": 1
+     "rank": 1,
+     "name": "점박이 딱지날개"
     },
     {
      "min": 9,
      "max": null,
      "item": "발톱",
-     "rank": 1
+     "rank": 1,
+     "name": "무당벌레 다리 갈고리"
     }
    ],
    "row": "front",
@@ -1858,13 +1878,15 @@
      "min": 4,
      "max": 9,
      "item": "날개·깃털",
-     "rank": 1
+     "rank": 1,
+     "name": "반딧불이 날개"
     },
     {
      "min": 10,
      "max": null,
      "item": "결정",
-     "rank": 1
+     "rank": 1,
+     "name": "축전 발광석"
     }
    ],
    "row": "front",
@@ -2092,13 +2114,15 @@
      "min": 4,
      "max": 6,
      "item": "풀",
-     "rank": 1
+     "rank": 1,
+     "name": "니치린소 잎"
     },
     {
      "min": 7,
      "max": null,
      "item": "꽃",
-     "rank": 1
+     "rank": 1,
+     "name": "니치린소 꽃잎"
     }
    ],
    "row": "front",
@@ -2199,7 +2223,8 @@
      "min": 5,
      "max": null,
      "item": "가죽",
-     "rank": 1
+     "rank": 1,
+     "name": "기름 밴 벌레 가죽"
     }
    ],
    "row": "front",
@@ -2339,7 +2364,8 @@
      "min": 6,
      "max": null,
      "item": "결정",
-     "rank": 1
+     "rank": 1,
+     "name": "젤라틴 핵"
     }
    ],
    "row": "front",
@@ -2448,13 +2474,15 @@
      "min": 5,
      "max": 7,
      "item": "껍질",
-     "rank": 1
+     "rank": 1,
+     "name": "꽃게 등껍질"
     },
     {
      "min": 8,
      "max": null,
      "item": "칼날",
-     "rank": 1
+     "rank": 1,
+     "name": "톱날 집게"
     }
    ],
    "row": "front",
@@ -2594,7 +2622,8 @@
      "min": 6,
      "max": null,
      "item": "결정",
-     "rank": 1
+     "rank": 1,
+     "name": "별하늘 우박 결정"
     }
    ],
    "row": "front",
@@ -2695,13 +2724,15 @@
      "min": 5,
      "max": 8,
      "item": "가지",
-     "rank": 1
+     "rank": 1,
+     "name": "맨드레이크 잎줄기"
     },
     {
      "min": 9,
      "max": null,
      "item": "목재",
-     "rank": 1
+     "rank": 1,
+     "name": "맨드레이크 뿌리"
     }
    ],
    "row": "front",
@@ -2849,13 +2880,15 @@
      "min": 5,
      "max": 6,
      "item": "모피",
-     "rank": 1
+     "rank": 1,
+     "name": "재커로프 털"
     },
     {
      "min": 7,
      "max": null,
      "item": "뿔",
-     "rank": 1
+     "rank": 1,
+     "name": "재커로프 뿔"
     }
    ],
    "row": "front",

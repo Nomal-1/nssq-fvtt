@@ -534,6 +534,13 @@ const SKILL_PARAM = {
   ...RESIST_LABEL
 };
 
+/** 드롭의 「받을 이름」(data/drop-names.json: 에너미 → { 종류: 이름 }) */
+let DROP_NAMES = null;
+const dropNameOf = (enemy, item) => {
+  DROP_NAMES ??= JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "data", "drop-names.json"), "utf8"));
+  return DROP_NAMES[enemy]?.[item] ?? "";
+};
+
 function convertEnemyBlock(block, file) {
   const lines = block.split("\n");
   const hm = lines[0].match(/^###\s+(★?)(.+?)\s*\(([^)]+)\)\s*$/);
@@ -639,7 +646,8 @@ function convertEnemyBlock(block, file) {
         if (rank && !ENUM.material.includes(material)) report.add("열거형 위반", `${where}: DROP 소재 \`${item}\``);
         system.drops.push({
           min: Number(min), max: isRange ? (max ? Number(max) : null) : Number(min),
-          item: rank ? material : item, rank: rank ? Number(rank) : null
+          item: rank ? material : item, rank: rank ? Number(rank) : null,
+          name: dropNameOf(name, rank ? material : item)
         });
       }
     } else if (line.startsWith(">")) notes.push(unescape(line.replace(/^>\s?/, "")));

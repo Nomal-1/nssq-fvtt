@@ -42,13 +42,15 @@
      "min": 4,
      "max": 7,
      "item": "뿔",
-     "rank": 3
+     "rank": 3,
+     "name": "광란의 사슴뿔"
     },
     {
      "min": 8,
      "max": null,
      "item": "모피",
-     "rank": 3
+     "rank": 3,
+     "name": "뿔사슴 모피"
     }
    ],
    "row": "front",
@@ -320,13 +322,15 @@
      "min": 4,
      "max": 8,
      "item": "비늘",
-     "rank": 3
+     "rank": 3,
+     "name": "독도마뱀 비늘"
     },
     {
      "min": 9,
      "max": null,
      "item": "이빨",
-     "rank": 3
+     "rank": 3,
+     "name": "독도마뱀 독니"
     }
    ],
    "row": "front",
@@ -524,7 +528,8 @@
      "min": 4,
      "max": null,
      "item": "비늘",
-     "rank": 3
+     "rank": 3,
+     "name": "발칸어 비늘"
     }
    ],
    "row": "front",
@@ -708,19 +713,22 @@
      "min": 4,
      "max": 7,
      "item": "날개·깃털",
-     "rank": 3
+     "rank": 3,
+     "name": "금빛 깃털"
     },
     {
      "min": 8,
      "max": 11,
      "item": "발톱",
-     "rank": 3
+     "rank": 3,
+     "name": "신조의 발톱"
     },
     {
      "min": 12,
      "max": null,
      "item": "목재",
-     "rank": 4
+     "rank": 4,
+     "name": "신조의 둥지 나무"
     }
    ],
    "row": "front",
@@ -921,13 +929,15 @@
      "min": 4,
      "max": 7,
      "item": "모피",
-     "rank": 4
+     "rank": 4,
+     "name": "도약수 털가죽"
     },
     {
      "min": 8,
      "max": null,
      "item": "뼈",
-     "rank": 4
+     "rank": 4,
+     "name": "도약수 다리뼈"
     }
    ],
    "row": "front",
@@ -1116,13 +1126,15 @@
      "min": 4,
      "max": 7,
      "item": "모피",
-     "rank": 4
+     "rank": 4,
+     "name": "파괴자의 곰 모피"
     },
     {
      "min": 8,
      "max": null,
      "item": "발톱",
-     "rank": 4
+     "rank": 4,
+     "name": "파괴자의 긴 발톱"
     }
    ],
    "row": "front",
@@ -1305,13 +1317,15 @@
      "min": 4,
      "max": 6,
      "item": "모피",
-     "rank": 4
+     "rank": 4,
+     "name": "빙설 마랑 모피"
     },
     {
      "min": 7,
      "max": null,
      "item": "이빨",
-     "rank": 4
+     "rank": 4,
+     "name": "냉기 어린 이빨"
     }
    ],
    "row": "front",
@@ -1456,7 +1470,8 @@
      "min": 5,
      "max": null,
      "item": "가시",
-     "rank": 4
+     "rank": 4,
+     "name": "패왕 선인장 가시"
     }
    ],
    "row": "front",
@@ -1653,7 +1668,8 @@
      "min": 5,
      "max": null,
      "item": "칼날",
-     "rank": 5
+     "rank": 5,
+     "name": "사신의 낫"
     }
    ],
    "row": "front",

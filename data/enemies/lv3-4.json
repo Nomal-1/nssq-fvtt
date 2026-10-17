@@ -42,13 +42,15 @@
      "min": 4,
      "max": 6,
      "item": "꽃",
-     "rank": 3
+     "rank": 3,
+     "name": "라플레시아 꽃잎"
     },
     {
      "min": 7,
      "max": null,
      "item": "덩굴",
-     "rank": 3
+     "rank": 3,
+     "name": "촉수 덩굴"
     }
    ],
    "row": "front",
@@ -317,13 +319,15 @@
      "min": 5,
      "max": 8,
      "item": "비늘",
-     "rank": 3
+     "rank": 3,
+     "name": "히드라 비늘"
     },
     {
      "min": 9,
      "max": null,
      "item": "뼈",
-     "rank": 3
+     "rank": 3,
+     "name": "히드라 목뼈"
     }
    ],
    "row": "front",
@@ -468,13 +472,15 @@
      "min": 4,
      "max": 7,
      "item": "모피",
-     "rank": 3
+     "rank": 3,
+     "name": "흰 늑대 모피"
     },
     {
      "min": 8,
      "max": null,
      "item": "이빨",
-     "rank": 3
+     "rank": 3,
+     "name": "늑대 이빨"
     }
    ],
    "row": "front",
@@ -744,13 +750,15 @@
      "min": 4,
      "max": 9,
      "item": "날개·깃털",
-     "rank": 3
+     "rank": 3,
+     "name": "화식조 깃털"
     },
     {
      "min": 10,
      "max": null,
      "item": "보석",
-     "rank": 3
+     "rank": 3,
+     "name": "화식조의 붉은 보석"
     }
    ],
    "row": "front",
@@ -851,13 +859,15 @@
      "min": 5,
      "max": 10,
      "item": "꽃",
-     "rank": 3
+     "rank": 3,
+     "name": "잠의 꽃잎"
     },
     {
      "min": 11,
      "max": null,
      "item": "열매",
-     "rank": 3
+     "rank": 3,
+     "name": "단내 나는 열매"
     }
    ],
    "row": "front",
@@ -1081,13 +1091,15 @@
      "min": 5,
      "max": 8,
      "item": "가지",
-     "rank": 3
+     "rank": 3,
+     "name": "산호 가지"
     },
     {
      "min": 9,
      "max": null,
      "item": "보석",
-     "rank": 3
+     "rank": 3,
+     "name": "산호 보석"
     }
    ],
    "row": "front",
@@ -1227,13 +1239,15 @@
      "min": 4,
      "max": 8,
      "item": "목재",
-     "rank": 3
+     "rank": 3,
+     "name": "칡 줄기"
     },
     {
      "min": 9,
      "max": 12,
      "item": "열매",
-     "rank": 3
+     "rank": 3,
+     "name": "폭탄 열매"
     }
    ],
    "row": "front",
@@ -1387,19 +1401,22 @@
      "min": 4,
      "max": 6,
      "item": "가죽",
-     "rank": 3
+     "rank": 3,
+     "name": "들소 가죽"
     },
     {
      "min": 7,
      "max": 7,
      "item": "금속",
-     "rank": 3
+     "rank": 3,
+     "name": "금속질 뿔 조각"
     },
     {
      "min": 8,
      "max": 9,
      "item": "뿔",
-     "rank": 3
+     "rank": 3,
+     "name": "들소 뿔"
     }
    ],
    "row": "front",
@@ -1626,13 +1643,15 @@
      "min": 4,
      "max": 6,
      "item": "뼈",
-     "rank": 3
+     "rank": 3,
+     "name": "모아 다리뼈"
     },
     {
      "min": 7,
      "max": null,
      "item": "날개·깃털",
-     "rank": 3
+     "rank": 3,
+     "name": "모아 깃털"
     }
    ],
    "row": "front",
@@ -1824,7 +1843,8 @@
      "min": 6,
      "max": null,
      "item": "등딱지",
-     "rank": 3
+     "rank": 3,
+     "name": "곡룡 등딱지"
     }
    ],
    "row": "front",
@@ -1922,13 +1942,15 @@
      "min": 4,
      "max": 6,
      "item": "비늘",
-     "rank": 4
+     "rank": 4,
+     "name": "거대룡 비늘"
     },
     {
      "min": 7,
      "max": null,
      "item": "뼈",
-     "rank": 4
+     "rank": 4,
+     "name": "거대룡 뼈"
     }
    ],
    "row": "front",
