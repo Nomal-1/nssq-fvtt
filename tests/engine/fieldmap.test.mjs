@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { advance, playerView, reveal, searchTriggers, setPassage, startState, stepFoes, teleport, markFired, removeFoe, validateMap } from "../../src/engine/fieldmap.mjs";
+import { areaActs, advance, playerView, reveal, searchTriggers, setPassage, startState, stepFoes, teleport, markFired, removeFoe, validateMap } from "../../src/engine/fieldmap.mjs";
 
 // 입구 - 숲 - 늪 - 바위 - 숲(고리), 숲 → 꽃밭(한 방향), 늪 - 야영지(잠김), 바위 - 비석(비밀 통로), 동굴(비밀 에어리어, 꽃밭과 연결)
 const map = () => ({
@@ -200,5 +200,15 @@ describe("필드 지도: 리뷰 수정", () => {
     let s = { ...startState(m), current: "gate", visited: { gate: 1 }, foePos: { f: "swamp" }, foeStep: { f: { i: 0, dir: 1 } } };
     s = advance(m, s, {}).state;
     expect(s.foePos.f).toBe("rock");
+  });
+});
+
+describe("areaActs(에어리어에서 할 수 있는 행동)", () => {
+  it("기본: 조사만, 채집 표가 있으면 채집", () => {
+    expect(areaActs({})).toEqual({ search: true, gather: false, camp: false, mapping: false });
+    expect(areaActs({ gather: "숲 채집" }).gather).toBe(true);
+  });
+  it("정한 값이 우선", () => {
+    expect(areaActs({ gather: "숲 채집", acts: { gather: false, camp: true, search: false } })).toEqual({ search: false, gather: false, camp: true, mapping: false });
   });
 });

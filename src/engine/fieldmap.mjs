@@ -17,6 +17,16 @@ export const PASSAGE_STATES = ["open", "locked", "hidden"];
 export const FOE_MODES = ["stay", "loop", "pingpong", "chase"];
 export const AREA_TRIGGERS = ["enter", "visit", "search", "leave"];
 export const MAP_TRIGGERS = ["move", "segment"];
+/**
+ * 에어리어에서 할 수 있는 탐색 행동(사용자 요청, 01 베이직 던전): 채집은 「채집 이벤트가 있는 지점에서」,
+ * 캠프는 「GM이 허락하는 상황에 한해」, 지도 작성 판정은 에어리어 이벤트. 정하지 않은 것은 원문 기본값
+ * (조사 ○, 채집 = 채집 표가 있으면, 캠프 ×, 지도 작성 ×). area.acts에 true/false로 정하면 그 값
+ */
+export const AREA_ACTS = ["search", "gather", "camp", "mapping"];
+export function areaActs(area) {
+  const def = { search: true, gather: !!String(area?.gather ?? "").trim(), camp: false, mapping: false };
+  return Object.fromEntries(AREA_ACTS.map((k) => [k, typeof area?.acts?.[k] === "boolean" ? area.acts[k] : def[k]]));
+}
 
 const clone = (o) => JSON.parse(JSON.stringify(o ?? {}));
 const otherEnd = (p, id) => (p.a === id ? p.b : p.b === id ? p.a : null);

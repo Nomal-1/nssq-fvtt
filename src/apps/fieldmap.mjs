@@ -947,6 +947,8 @@ export class FieldMapApp extends Application {
           ${this.field(`${p}.narration`, a.narration, L("f.narration"), "textarea", L("f.narrationHint"))}
           ${this.field(`${p}.narrationAgain`, a.narrationAgain, L("f.narrationAgain"), "textarea", L("f.narrationAgainHint"))}
           ${this.field(`${p}.gather`, a.gather, L("f.gather"), "text", game.i18n.localize("NSSQ.Loot.tablePlaceholder"))}
+          <div class="form-group fm-acts"><label>${esc(L("f.acts"))}</label><span>${Object.entries(FM.areaActs(a)).map(([k, on]) => `<label class="fm-act"><input type="checkbox" data-path="${p}.acts.${k}" data-type="bool" ${on ? "checked" : ""}/> ${esc(game.i18n.localize(`NSSQ.FieldScene.act.${k}`))}</label>`).join("")}</span></div>
+          <p class="notes">${esc(L("f.actsHint"))}</p>
           ${this.field(`${p}.tags`, a.tags, L("f.tags"), "text", L("f.tagsHint"))}
           <div class="form-group"><label>${esc(L("f.areaBattleBg"))}</label><input type="text" data-path="${p}.battleBg" value="${esc(a.battleBg ?? "")}" placeholder="${esc(L("f.mapDefault"))}"/></div>
           <div class="form-group"><label>${esc(L("f.areaFieldBgm"))}</label><select data-path="${p}.fieldBgm">${encBgmOptions(a.fieldBgm ?? "", L("f.mapDefault"))}</select></div>
@@ -991,6 +993,7 @@ export class FieldMapApp extends Application {
       ${this.field("name", map.name, L("f.mapName"), "textarea")}
       ${this.field("startHour", map.startHour ?? 8, L("startHour"), "num")}
       ${this.field("activateScene", map.activateScene, L("f.activateScene"), "bool")}
+      ${this.field("hidden", map.hidden, L("f.hidden"), "bool")}
       <div class="form-group"><label>${esc(L("f.bg"))}</label><select data-path="bg.style">${opt("parchment", map.bg?.style, L("bg.parchment"))}${opt("image", map.bg?.style, L("bg.image"))}</select></div>
       ${map.bg?.style === "image" ? `<div class="form-group"><input type="text" data-path="bg.src" value="${esc(map.bg.src)}"/><button type="button" data-fm-act="pickBg"><i class="fas fa-file-import"></i></button></div>` : ""}
       <h3>${esc(L("battleStage"))}</h3>

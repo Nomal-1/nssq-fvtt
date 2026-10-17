@@ -330,7 +330,8 @@ export class TownApp extends Application {
       case "inn": out.push(b("sheet", "fa-box", L("btn.storage"))); if (gm) out.push(b("living", "fa-coins", L("btn.living"))); break;
       case "office": out.push(b("bestiary", "fa-book-dead", L("btn.bestiary"))); break;
       case "gate": {
-        const maps = Object.values((await import("./fieldmap.mjs")).allMaps());
+        // 감춘 지도(지도 편집 「마을 입구에서 감춤」)는 입구 목록에 없다
+        const maps = Object.values((await import("./fieldmap.mjs")).allMaps()).filter((m) => !m.hidden);
         for (const m of maps) out.push(`<button type="button" class="town-choice" data-fac="enterMap" data-map="${m.id}" data-say="${esc(L(gm ? "say.enterMap" : "say.enterMapPL", { name: m.name }))}"><i class="fas fa-map"></i><span>${esc(m.name)}</span></button>`);
         if (gm) out.push(b("random", "fa-dice", L("btn.random")));
         if (!maps.length && !gm) out.push(`<p class="notes">${esc(L("noMaps"))}</p>`);

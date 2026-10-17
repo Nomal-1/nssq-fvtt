@@ -180,7 +180,9 @@ export class FieldOverlay extends Application {
       return (dests || `<p class="notes">${esc(LF("noDest"))}</p>`) + btn('data-fs="back"', "fa-arrow-left", LF("back"));
     }
     const out = [btn(`data-fs="move" ${v.reachable.length ? "" : "disabled"}`, "fa-shoe-prints", L("move"), L("say.move"))];
-    for (const [act, icon] of Object.entries(ACTS)) out.push(btn(`data-fs-act="${act}"`, icon, L(`act.${act}`), L(gm ? `say.${act}` : "say.propose", { act: L(`act.${act}`) })));
+    // 이 에어리어에서 할 수 있는 행동만(지도 편집 「할 수 있는 행동」, GM은 GM 스크린에서 언제나)
+    const can = FM.areaActs(areaOf(map, v.current));
+    for (const [act, icon] of Object.entries(ACTS).filter(([k]) => can[k])) out.push(btn(`data-fs-act="${act}"`, icon, L(`act.${act}`), L(gm ? `say.${act}` : "say.propose", { act: L(`act.${act}`) })));
     out.push(btn('data-fs="party"', "fa-users", L("party"), L("say.party")));
     out.push(btn('data-fs="map"', "fa-map", L("map"), L(gm ? "say.mapGM" : "say.map")));
     if (v.current === map.start) out.push(btn('data-fs="town"', "fa-home", LF(gm ? "toTown" : "toTownPropose"), L("say.town")));
@@ -286,6 +288,7 @@ function doAct(act) {
 
 async function onActProposal({ userId, act }) {
   if (!isActiveGM() || !ACTS[act] || !activeMap()) return;
+  if (!FM.areaActs(areaOf(activeMap(), mapState().current))[act]) return;
   const who = game.users.get(userId)?.name ?? "?";
   const ok = await Dialog.confirm({ title: L("actTitle"), content: `<p>${esc(L("actAsk", { who, act: L(`act.${act}`) }))}</p>`, rejectClose: false });
   if (ok) await runAct(act);
