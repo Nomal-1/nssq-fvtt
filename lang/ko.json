@@ -1505,7 +1505,7 @@
       "declareTitle": "사용 때 선언",
       "declareAsk": "《{skill}》에 《{name}》을(를) 선언하는가?",
       "linkAttack": "연계 공격: {name}의 《{skill}》(참가: {partners}, 참가자는 이번 턴 행동 종료)",
-      "extraDice": "대미지 다이스 +{count}개: {dice} → 대미지 +{n}",
+      "extraDice": "대미지 다이스 +{count}개: {dice} → 대미지 +{n}", "extraDiceHead": "대미지 다이스 +{count}개(내성 {resist}보다 큰 눈)", "extraBig": "추가 대미지 +{n}",
       "resourceDelta": "【{res}】 {n}",
       "resourceSet": "【{res}】 {n}이 됨",
       "followup": {

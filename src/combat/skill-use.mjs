@@ -884,7 +884,13 @@ function entryLines(e, card) {
     out.push(`<li class="${h.hit ? "hit" : "miss"}">${line}${h.hit ? dice : ""}${big}${inner ? `<ul class="per-hit">${inner}</ul>` : ""}</li>`);
   }
   if (e.extra) {
-    out.push(`<li class="hit">${esc(L("extraDice", { count: e.extra.count, dice: [...e.extra.dice, ...e.extra.critExtra].join(",") || "-", n: e.extra.add }))}${e.extra.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}</li>`);
+    // 더한 대미지 다이스(《금단의 술식》 등): 공격 카드와 같은 주사위 줄 + 더한 대미지를 큰 칸으로
+    const x = e.extra;
+    const r = x.resist ?? null;
+    const die = (v, cls = "") => `<span class="die-s ${cls} ${r !== null && v > r ? "over" : ""}">${v}</span>`;
+    const head = esc(L("extraDiceHead", { count: x.count, resist: "\u0000" })).replace("\u0000", `<span data-mask-def>${r ?? "?"}</span>`);
+    out.push(`<li class="hit"><div class="sk-dmg-dice"><small>${head}</small> ${(x.dice ?? []).map((v) => die(v)).join("")}${(x.critExtra ?? []).length ? ` + ${x.critExtra.map((v) => die(v, "crit")).join("")}` : ""}</div>
+      <div class="hit-result success">${esc(L("extraBig", { n: x.add }))}${x.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}</div></li>`);
   }
   if (e.damage && hits.length > 1) out.push(`<li class="total"><div class="hit-result success">${esc(L("damageTotal", { n: e.damage }))}</div></li>`);
   for (const x of e.resource ?? []) if (x.recoil) out.push(`<li class="hit">${esc(L("recoil", { n: x.recoil }))}</li>`);

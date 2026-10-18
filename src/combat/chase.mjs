@@ -255,7 +255,7 @@ export async function runFollowup(f, originKind = "normal") {
         return r.dice[0].results.map((x) => x.result);
       };
       const x = await extendDamage({ ...f.hitData, critUp: combatProfile(actor, c).critUp }, plus, rollDice);
-      extra = { [target.actor.uuid]: { ...x, count: plus } };
+      extra = { [target.actor.uuid]: { ...x, count: plus, resist: f.hitData.resist ?? null } };
     }
     // 크리티컬 시 「스스로 물리 공격으로 추격」(《아류 살법》)은 추격 카드
     const chase = f.effects.some((e) => e.type === "attack");
