@@ -174,8 +174,9 @@ function baseProfile(actor, combatant = null) {
       physHit: st.physHit, elemHit: st.elemHit, evasion: disabled ? 0 : st.evasion,
       physAtk: st.physAtk, elemAtk: st.elemAtk, defense: st.defense,
       suppAtk: st.suppAtk, suppDef: st.suppDef,
-      // 식별 실패한 에너미의 내성 최소 3(01 §3.1)은 enemy.mjs에서 반영
+      // 식별 실패한 에너미의 내성 최소 3(01 §3.1)은 enemy.mjs에서 반영. resistTrue: 식별과 관계없는 실제 내성(《정량 분석》)
       resist: s.resistTotal ?? s.resist,
+      resistTrue: s.resistTrueTotal ?? s.resistTotal ?? s.resist,
       elements: (() => { const e = withImbue(s.attackElements ?? []); return e.length ? e : ["none"]; })(),
       weaponName: "",
       // 에너미 통상 공격의 사거리는 데이터에 없다(01 #25)

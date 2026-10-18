@@ -201,7 +201,8 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
   // 다시 굴리기(01 #26)에 쓰도록 판정 조건을 카드에 남긴다
   const params = {
     attacker: { hit: a.physHit, physAtk: a.physAtk, elemAtk: a.elemAtk, elements: atkElements, critUp: a.critUp },
-    target: { evasion: d.evasion, defense: d.defense, resist: d.resist, guarding: d.guarding, guardHalf: d.guardHalf },
+    // 《정량 분석》(resistMod)은 식별과 관계없이 실제 내성에서(01 #170)
+    target: { evasion: d.evasion, defense: d.defense, resist: pb.resistMod && d.resistTrue ? d.resistTrue : d.resist, guarding: d.guarding, guardHalf: d.guardHalf },
     resistMod: pb.resistMod, resistLow: pb.resistLow, failAtOrBelow: pb.failAtOrBelow,
     kind: "physical", hitMod: pb.hitMod, diceMod: pb.diceMod, atkMod: pb.atkMod, critUp: pb.critUp, critDiceMod: pb.critDice
   };

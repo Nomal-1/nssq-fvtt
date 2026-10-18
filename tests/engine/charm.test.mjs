@@ -51,3 +51,20 @@ describe("책(07 #168): 목표값 【억제 공격】+4+R", () => {
     expect(out.results.get("e").inflicts[0]).toMatchObject({ id: "bindArm", resisted: false, depth: 13 });
   });
 });
+
+describe("《정량 분석》 내성 −1은 식별과 관계없이 실제 내성에서(01 #170)", () => {
+  const bolt = [{ type: "target", side: "enemy", scope: "single" }, { type: "attack", kind: "elemental", element: ["volt"], fixedDice: 6, fixedHit: 99 }];
+  const caster = { ...user, attackBonuses: [{ name: "정량 분석", when: null, resistMod: -1 }] };
+  // 식별 실패: 보이는 내성 3(최소 3), 실제 2
+  const deer = { id: "e", name: "e", evasion: 0, defense: 0, resist: { volt: 3 }, resistTrue: { volt: 2 }, hp: 50, hpMax: 50 };
+  it("정량 분석이 있으면 실제 2 − 1 = 1", async () => {
+    const out = await resolveEffects({ effects: bolt, sl: 1, user: caster, targets: [deer], rollDice: seq([1, 2, 2, 2, 2, 2]), rng: () => 0.5 });
+    const h = out.results.get("e").hits[0];
+    expect(h.resist).toBe(1);
+    expect(h.finalDamage).toBe(5);
+  });
+  it("정량 분석이 없으면 식별 전 최소 3", async () => {
+    const out = await resolveEffects({ effects: bolt, sl: 1, user, targets: [deer], rollDice: seq([1, 2, 2, 2, 2, 2]), rng: () => 0.5 });
+    expect(out.results.get("e").hits[0].resist).toBe(3);
+  });
+});

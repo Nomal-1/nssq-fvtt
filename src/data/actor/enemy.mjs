@@ -54,6 +54,8 @@ export class EnemyData extends foundry.abstract.TypeDataModel {
     this.hpMaxBase = this.hp.max;
     this.combatStats = m.sub;
     this.resistTotal = m.resist;
+    // 식별과 관계없는 실제 내성(《정량 분석》 「적의 【내성】을 −1로 취급」은 식별 여부와 관계없이 이 값에서, 사용자 결정 01 #170)
+    this.resistTrueTotal = this.identified ? m.resist : applyMods({ sub: {}, resist: base, hpMax: 0 }, [this.statusMods.conditions, this.statusMods.buffs]).resist;
     this.hp.max = m.hpMax;
   }
 }

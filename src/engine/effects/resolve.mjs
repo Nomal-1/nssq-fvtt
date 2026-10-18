@@ -21,7 +21,7 @@ export const PASSIVE_TYPES = ["modifier", "flag", "requireState", "requireSelf",
 /** 대상 프로필에서 그 강화의 몫을 뺀 사본. list: "defenseUp"(수치 강화) / "resistUp:pierce"(그 속성 내성 +1) */
 function ignoreBuffs(t, list) {
   if (!list?.length || !t?.buffs?.length) return t;
-  const out = { ...t, resist: { ...(t.resist ?? {}) }, ...(t.resistAwake ? { resistAwake: { ...t.resistAwake } } : {}) };
+  const out = { ...t, resist: { ...(t.resist ?? {}) }, ...(t.resistAwake ? { resistAwake: { ...t.resistAwake } } : {}), ...(t.resistTrue ? { resistTrue: { ...t.resistTrue } } : {}) };
   for (const b of t.buffs) {
     const id = canonicalBuff(b.id);
     for (const ig of list) {
@@ -31,6 +31,7 @@ function ignoreBuffs(t, list) {
         if (!paramElements(b.param).includes(el)) continue;
         out.resist[el] = (out.resist[el] ?? 0) - 1;
         if (out.resistAwake) out.resistAwake[el] = (out.resistAwake[el] ?? 0) - 1;
+        if (out.resistTrue) out.resistTrue[el] = (out.resistTrue[el] ?? 0) - 1;
       } else for (const k of BUFFS[id]?.stats ?? []) if (typeof out[k] === "number") out[k] -= Number(b.value) || 0;
     }
   }
@@ -150,7 +151,8 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
     // 대상의 강화 무시(《실버 애로》 「『물리 방어 상승』·『내성 상승: 돌』 무시」): "defenseUp" / "resistUp:pierce"
     const tt = ignoreBuffs(t, e.ignoreBuffs);
     // [수면]은 명중한 공격의 처리 뒤 풀린다: 같은 행동의 다음 회차는 깬 상태의 내성(01 #37)
-    const resist = r.sleepBroken && tt.resistAwake ? tt.resistAwake : tt.resist;
+    // 《정량 분석》(resistMod): 식별 전 「최소 3」과 관계없이 실제 내성에서 −1(사용자 결정 01 #170). resistTrue가 없으면 보이는 내성
+    const resist = r.sleepBroken && tt.resistAwake ? tt.resistAwake : pb.resistMod && tt.resistTrue ? tt.resistTrue : tt.resist;
     // 다시 굴리기(01 #26)에 쓰도록 판정 조건을 남긴다
     const params = {
       // fixedHit: 명중 판정 기준을 사용자 능력치 대신 고정값으로(「기동부적」)
