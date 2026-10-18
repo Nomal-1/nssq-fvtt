@@ -337,9 +337,9 @@
 .nssq-attack .dmg-dice .die-s, .nssq-attack .crit-line .die-s { opacity: 0.5; }
 .nssq-attack .die-s.over { opacity: 1 !important; border-color: var(--nq-red); background: rgba(224, 112, 95, 0.18); }
 /* 명중·빗나감: 한 줄로 크게(사용자 요청) */
-:is(.nssq-attack, .nssq-hit-card) .hit-result { display: block; text-align: center; font-weight: 800; font-size: 1.35em; letter-spacing: 0.12em; padding: 2px; margin: 4px 0; border-radius: 4px; }
-:is(.nssq-attack, .nssq-hit-card) .hit-result.success { background: rgba(116, 208, 142, 0.15); color: var(--nq-green); border: 1px solid rgba(116, 208, 142, 0.4); }
-:is(.nssq-attack, .nssq-hit-card) .hit-result.failure { background: rgba(224, 112, 95, 0.12); color: var(--nq-red); border: 1px solid rgba(224, 112, 95, 0.4); }
+:is(.nssq-attack, .nssq-hit-card, .nssq-skill-card) .hit-result { display: block; text-align: center; font-weight: 800; font-size: 1.35em; letter-spacing: 0.12em; padding: 2px; margin: 4px 0; border-radius: 4px; }
+:is(.nssq-attack, .nssq-hit-card, .nssq-skill-card) .hit-result.success { background: rgba(116, 208, 142, 0.15); color: var(--nq-green); border: 1px solid rgba(116, 208, 142, 0.4); }
+:is(.nssq-attack, .nssq-hit-card, .nssq-skill-card) .hit-result.failure { background: rgba(224, 112, 95, 0.12); color: var(--nq-red); border: 1px solid rgba(224, 112, 95, 0.4); }
 .nssq-attack :is(.result, .tag) { font-size: 0.8em; padding: 0 6px; border-radius: 4px; font-weight: 700; }
 .nssq-attack :is(.result, .tag).success { background: rgba(116, 208, 142, 0.15); color: var(--nq-green); }
 .nssq-attack :is(.result, .tag).failure { background: rgba(224, 112, 95, 0.15); color: var(--nq-red); }
@@ -1929,3 +1929,9 @@ body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
 .nssq .nq-drops .nq-drop-link { cursor: pointer; }
 .nssq .nq-drops .nq-drop-link:hover { text-decoration: underline; }
 .nssq .nq-drops .nq-drop-link i { font-size: 0.8em; opacity: 0.5; }
+/* 스킬 카드의 대미지 주사위(내성보다 큰 눈이 밝게, 크리티컬 추가분은 금색 테) */
+.nssq-skill-card .sk-dmg-dice { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin: 3px 0 0; }
+.nssq-skill-card .sk-dmg-dice small { width: 100%; opacity: 0.75; }
+.nssq-skill-card .sk-dmg-dice .die-s { display: inline-block; width: 20px; height: 20px; line-height: 18px; font-size: 0.85em; text-align: center; font-weight: 700; border: 1px solid var(--nq-line2); border-radius: 5px; background: var(--nq-bg2); color: var(--nq-tx); opacity: 0.45; }
+.nssq-skill-card .sk-dmg-dice .die-s.over { opacity: 1; color: #ff8a6a; border-color: rgba(255, 120, 90, 0.6); }
+.nssq-skill-card .sk-dmg-dice .die-s.crit { border-color: var(--nq-gold-l); }

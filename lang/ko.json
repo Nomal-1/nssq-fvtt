@@ -1458,7 +1458,7 @@
       "skipped": "같은 대상이 다시 뽑혀 그 공격은 없던 것으로",
       "damageLine": "대미지 {n}({count}D6)",
       "crit": "크리티컬",
-      "damageTotal": "합계 대미지 {n}",
+      "damageTotal": "합계 대미지 {n}", "damageBig": "대미지 {n}", "missBig": "빗나감", "damageDiceHead": "{count}D6(내성 {resist}보다 큰 눈)",
       "healHp": "【HP】 {n} 회복", "healDiceMin": "{min} 이상",
       "healTp": "【TP】 {n} 회복",
       "inflictLine": "{label} (심도 {depth})",

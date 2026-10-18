@@ -666,7 +666,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     states: x.states.map((st) => ({ ...st, name: st.name || item.name })),
     sleepBroken: x.sleepBroken, revive: !!x.revive, command: x.command ?? null,
     stances: (x.stances ?? []).map((st) => ({ ...st, name: item.name, key: sys.key ?? item.name })),
-    hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, rolled: h.hitCheck?.rolled, fpDice: h.hitCheck?.fpDice ?? 0, rerolled: false, params: noReroll ? null : h.params ?? null, onHit: h.onHit ?? null, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist, raw: h.rawDamage ?? 0, halves: Number(!!h.guarded) + Number(!!h.halved) + Number(!!h.guardHalf), elements: h.elements ?? [] })),
+    hits: x.hits.map((h) => (h.skipped ? { skipped: true, seq: h.seq } : { seq: h.seq, woke: !!h.woke, hit: h.hit, kind: h.kind, total: h.hitCheck?.total, absSuccess: !!h.hitCheck?.absSuccess, absFailure: !!h.hitCheck?.absFailure, dice: h.hitCheck?.used, rolled: h.hitCheck?.rolled, fpDice: h.hitCheck?.fpDice ?? 0, rerolled: false, params: noReroll ? null : h.params ?? null, onHit: h.onHit ?? null, diceCount: h.diceCount ?? 0, dmg: h.damage?.dice ?? [], critDmg: h.critExtra?.dice ?? [], crit: !!h.crit, final: h.finalDamage ?? 0, resist: h.resist, raw: h.rawDamage ?? 0, halves: Number(!!h.guarded) + Number(!!h.halved) + Number(!!h.guardHalf), elements: h.elements ?? [] })),
     applied: false, before: null,
     // 수동 반응(단계 6-C): 명중한 공격이 있고 대상이 쓸 수 있는 수동 스킬이 있으면 기다린다
     reaction: pendingReaction(actorOf.get(x.id), x.hits.find((h) => h.hit)?.kind ?? "physical", x.hits.some((h) => h.hit))
@@ -871,17 +871,22 @@ function entryLines(e, card) {
     // 달성값은 모르는 에너미면 ?로 바꾸므로 span에 넣고, 나머지 글자만 이스케이프한다
     const [pre, post] = L(h.hit ? "hitLine" : "missLine", { total: "\u0000", dice: h.dice?.join("+") ?? "" }).split("\u0000");
     let line = `${no}${esc(pre)}<span data-mask="${esc(card.kind)}">${h.total ?? "-"}</span>${esc(post ?? "")}`;
-    if (h.hit) line += ` — ${esc(L("damageLine", { n: h.final, count: h.diceCount }))}${h.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}`;
+    if (h.hit && multi) line += ` — ${esc(L("damageLine", { n: h.final, count: h.diceCount }))}${h.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}`;
     line += fpNote(h);
     if (h.woke) line += ` <em class="woke">${esc(L("woke"))}</em>`;
     if (h.params && !h.rerolled) line += ` ${rerollButton(`data-seq="${h.seq}"`)}`;
+    // 대미지 주사위(내성보다 큰 눈이 밝게, 크리티컬 추가분은 + 뒤에) — 사용자 요청
+    const dice = (h.dmg ?? []).length || (h.critDmg ?? []).length
+      ? `<div class="sk-dmg-dice"><small>${esc(L("damageDiceHead", { count: h.diceCount ?? (h.dmg ?? []).length, resist: "\u0000" })).replace("\u0000", `<span data-mask-def>${h.resist ?? "?"}</span>`)}</small> ${(h.dmg ?? []).map((v) => `<span class="die-s ${v > (h.resist ?? 99) ? "over" : ""}">${v}</span>`).join("")}${(h.critDmg ?? []).length ? ` + ${h.critDmg.map((v) => `<span class="die-s crit ${v > (h.resist ?? 99) ? "over" : ""}">${v}</span>`).join("")}` : ""}</div>` : "";
+    // 한 번 공격이면 대미지를 「명중」처럼 큰 칸으로(여러 번이면 아래 합계를 크게)
+    const big = !multi ? `<div class="hit-result ${h.hit ? "success" : "failure"}">${esc(h.hit ? L("damageBig", { n: h.final }) : L("missBig"))}${h.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}</div>` : "";
     const inner = h.seq ? sub(h.seq) : "";
-    out.push(`<li class="${h.hit ? "hit" : "miss"}">${line}${inner ? `<ul class="per-hit">${inner}</ul>` : ""}</li>`);
+    out.push(`<li class="${h.hit ? "hit" : "miss"}">${line}${h.hit ? dice : ""}${big}${inner ? `<ul class="per-hit">${inner}</ul>` : ""}</li>`);
   }
   if (e.extra) {
     out.push(`<li class="hit">${esc(L("extraDice", { count: e.extra.count, dice: [...e.extra.dice, ...e.extra.critExtra].join(",") || "-", n: e.extra.add }))}${e.extra.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}</li>`);
   }
-  if (e.damage && hits.length > 1) out.push(`<li class="total">${esc(L("damageTotal", { n: e.damage }))}</li>`);
+  if (e.damage && hits.length > 1) out.push(`<li class="total"><div class="hit-result success">${esc(L("damageTotal", { n: e.damage }))}</div></li>`);
   for (const x of e.resource ?? []) if (x.recoil) out.push(`<li class="hit">${esc(L("recoil", { n: x.recoil }))}</li>`);
   // 자원 변화(《무사의 마음가짐》 【TP】 +1 등). 회복(heal)·반동·확률 실패는 따로
   for (const x of e.resource ?? []) {
