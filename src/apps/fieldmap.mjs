@@ -936,12 +936,18 @@ export class FieldMapApp extends Application {
     const sel = (key, cur, label, empty) => `<div class="form-group"><label>${esc(label)}</label><select data-fm-bgm="${key}">${encBgmOptions(cur ?? "", empty)}</select></div>`;
     return `<details class="fm-bgm" ${this.bgmOpen ? "open" : ""}><summary><i class="fas fa-music"></i> ${esc(L("bgmHead"))}</summary>
       ${sel("fieldBgm", map.fieldBgm, L("f.fieldBgm"), L("f.noBgm"))}
-      ${sel("battleBgm", map.battleBgm, L("f.battleBgm"), L("f.noBgm"))}
+      ${sel("battleBgm", map.battleBgm, L("bgmBattle"), L("f.noBgm"))}
       ${(map.foes ?? []).map((f) => sel(`foe:${f.id}`, f.bgm, L("bgmFoe", { name: f.name || "F.O.E." }), L("f.mapDefault"))).join("")}
       <p class="notes">${esc(L("bgmHint"))}</p></details>`;
   }
 
-  async onBgm(key, value) {
+  onBgm(key, value) {
+    // 여러 칸을 연달아 바꿔도 앞 저장이 끝난 지도에 이어서 쓴다(덮어쓰지 않게)
+    this.bgmQueue = (this.bgmQueue ?? Promise.resolve()).then(() => this.saveBgm(key, value)).catch((err) => console.error(err));
+    return this.bgmQueue;
+  }
+
+  async saveBgm(key, value) {
     const m = foundry.utils.deepClone(allMaps()[this.mapId]);
     if (!m) return;
     if (key === "fieldBgm" || key === "battleBgm") m[key] = value;

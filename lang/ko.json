@@ -2016,7 +2016,7 @@
       "otherLive": "지금 《{name}》 진행 중. 시작하면 그 진행은 끝난다",
       "playHint": "진행을 시작하면 플레이어도 토큰 도구 「지도」나 M 키로 지도를 열 수 있다",
       "started": "《{name}》 탐색 시작",
-      "bgmHead": "BGM", "bgmFoe": "F.O.E. {name} 전투 BGM", "bgmHint": "고르면 바로 저장된다. 탐색 BGM은 진행 중이면 곡도 바로 바뀐다(에어리어별 곡은 편집의 에어리어 칸). F.O.E. 칸을 비우면 전투 BGM을 쓴다. 곡은 Foundry 설정과 관계없이 반복된다.",
+      "bgmHead": "BGM", "bgmBattle": "전투 BGM(이 지도 기본)", "bgmFoe": "F.O.E. {name} 전투 BGM", "bgmHint": "고르면 바로 저장된다. 탐색 BGM은 진행 중이면 곡도 바로 바뀐다(에어리어별 곡은 편집의 에어리어 칸). F.O.E. 칸을 비우면 전투 BGM을 쓴다. 곡은 Foundry 설정과 관계없이 반복된다.",
       "mapGone": "《{name}》(으)로 들어섰다", "noMap": "그 지도가 없다", "exitTo": "{name}(으)로",
       "ended": "필드 지도 진행 끝",
       "restart": "처음부터",
