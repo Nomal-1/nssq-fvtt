@@ -931,11 +931,31 @@ export class FieldMapApp extends Application {
 
   /* ---------- GM 패널: 진행 ---------- */
 
+  /** GM: 이 지도의 BGM(탐색·전투·F.O.E.별)을 진행 화면에서 바로(사용자 요청). 고르면 바로 저장, 진행 중인 지도의 탐색 BGM이면 곡도 바꾼다 */
+  bgmSection(map) {
+    const sel = (key, cur, label, empty) => `<div class="form-group"><label>${esc(label)}</label><select data-fm-bgm="${key}">${encBgmOptions(cur ?? "", empty)}</select></div>`;
+    return `<details class="fm-bgm" ${this.bgmOpen ? "open" : ""}><summary><i class="fas fa-music"></i> ${esc(L("bgmHead"))}</summary>
+      ${sel("fieldBgm", map.fieldBgm, L("f.fieldBgm"), L("f.noBgm"))}
+      ${sel("battleBgm", map.battleBgm, L("f.battleBgm"), L("f.noBgm"))}
+      ${(map.foes ?? []).map((f) => sel(`foe:${f.id}`, f.bgm, L("bgmFoe", { name: f.name || "F.O.E." }), L("f.mapDefault"))).join("")}
+      <p class="notes">${esc(L("bgmHint"))}</p></details>`;
+  }
+
+  async onBgm(key, value) {
+    const m = foundry.utils.deepClone(allMaps()[this.mapId]);
+    if (!m) return;
+    if (key === "fieldBgm" || key === "battleBgm") m[key] = value;
+    else if (key.startsWith("foe:")) { const f = m.foes.find((x) => x.id === key.slice(4)); if (f) f.bgm = value; }
+    await saveMap(m);
+    const st = mapState();
+    if (key === "fieldBgm" && st.active && st.mapId === m.id) await areaMusic(m, st.current);
+  }
+
   playPanel(map, st, live) {
     const { errors, warnings } = FM.validateMap(map);
     const issues = [...errors.map((e) => `<li class="err">${esc(L(`v.${e.code}`, { name: e.name ?? "" }))}</li>`), ...warnings.map((e) => `<li>${esc(L(`v.${e.code}`, { name: e.name ?? "" }))}</li>`)].join("");
     if (!live) {
-      return `<h3>${esc(map.name)}</h3>${st.active ? `<p class="notes">${esc(L("otherLive", { name: allMaps()[st.mapId]?.name ?? "" }))}</p>` : ""}
+      return `<h3>${esc(map.name)}</h3>${st.active ? `<p class="notes">${esc(L("otherLive", { name: allMaps()[st.mapId]?.name ?? "" }))}</p>` : ""}${this.bgmSection(map)}
         <div class="form-group"><label>${esc(L("startHour"))}</label><input type="number" data-fm-hour min="0" max="23" value="${map.startHour ?? 8}"/></div>
         <button type="button" data-fm-act="start" ${errors.length ? "disabled" : ""}><i class="fas fa-play"></i> ${esc(L("start"))}</button>
         ${issues ? `<ul class="fm-issues">${issues}</ul>` : ""}<p class="notes">${esc(L("playHint"))}</p>`;
@@ -969,7 +989,7 @@ export class FieldMapApp extends Application {
     const prop = pr ? `<section class="fm-proposal"><p><b>${esc(game.users.get(pr.by)?.name ?? "")}</b>: ${esc(L("proposalTo", { name: String(pr.to).startsWith("exit:") ? destLabel(map, st, pr.to) : areaName(map, pr.to) }))}</p>
       <ul>${pr.voters.map((u) => { const x = pr.answers?.[u]; return `<li class="${x === true ? "yes" : x === false ? "no" : "wait"}"><i class="fas ${x === true ? "fa-check" : x === false ? "fa-times" : "fa-hourglass-half"}"></i> ${esc(u === "gm" ? L("gmVoter") : game.users.get(u)?.name ?? "?")}</li>`; }).join("")}</ul>
       <div class="fm-actions">${pr.voters.includes("gm") && pr.answers?.gm === undefined ? `${b("gmYes", "fa-check", L("accept"))}${b("gmNo", "fa-times", L("decline"))}` : ""}${b("forceMove", "fa-forward", L("forceMove"))}${b("cancelProposal", "fa-ban", L("cancelProposal"))}</div></section>` : "";
-    return `<h3>${esc(map.name)}</h3><p class="fm-clockline">${esc(clock(st))} · ${esc(areaName(map, st.current))}</p>${prop}
+    return `<h3>${esc(map.name)}</h3><p class="fm-clockline">${esc(clock(st))} · ${esc(areaName(map, st.current))}</p>${prop}${this.bgmSection(map)}
       <div class="fm-actions">${b("search", "fa-search", L("search"))}${b("gather", "fa-leaf", L("gather"))}${b("camp", "fa-campground", L("camp"))}${b("mapping", "fa-map-marked-alt", L("mapping"))}
         ${b("wait", "fa-hourglass-half", L("wait"))}${b("choice", "fa-question-circle", L("choice"))}${b("undo", "fa-undo", L("undo"))}</div>
       ${st.current === map.start ? `<div class="fm-actions">${b("toTown", "fa-home", L("toTown"))}</div>` : ""}
@@ -1182,6 +1202,9 @@ export class FieldMapApp extends Application {
       this.render();
     });
     html.on("change", "[data-fm-pstate]", (ev) => setPassageState(this.sel.id, ev.currentTarget.value));
+    html.on("change", "[data-fm-bgm]", (ev) => this.onBgm(ev.currentTarget.dataset.fmBgm, ev.currentTarget.value));
+    // toggle은 거품이 일지 않아 위임 대신 직접
+    html.find("details.fm-bgm").on("toggle", (ev) => { this.bgmOpen = ev.currentTarget.open; });
     html.on("change", "[data-fm-foepos]", (ev) => setFoePos(ev.currentTarget.dataset.fmFoepos, ev.currentTarget.value));
     html.on("click", "[data-fm-tool]", (ev) => { this.tool = ev.currentTarget.dataset.fmTool; this.linkFrom = null; this.routeFoe = null; this.render(); });
     html.on("click", "[data-fm-add]", (ev) => this.addItem(ev.currentTarget.dataset));

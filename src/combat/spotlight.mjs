@@ -1,8 +1,8 @@
 /**
  * 캐릭터 테마곡·컷인(사용자 요청 묶음F).
- * - 테마곡: 캐릭터 플래그 nssq.theme = { src, volume, seconds, on: { crit, absSuccess, ailment } }.
+ * - 테마곡: 캐릭터 플래그 nssq.theme = { src, volume, on: { crit, absSuccess, ailment } }(재생 길이 제한 없음, 사용자 요청. 예전 seconds는 무시).
  *   그 순간이 오면 활성 GM이 지금 재생 중인 곡을 일시정지(pausedTime)하고 재생목록 「NSSQ 테마곡」으로 한 번 틀었다가
- *   seconds가 지나거나 곡이 끝나면 멈추고 원래 곡을 이어서 튼다(재생목록 상태라 모든 클라이언트가 같이 듣는다)
+ *   곡이 끝나면 원래 곡을 이어서 튼다(재생목록 상태라 모든 클라이언트가 같이 듣는다)
  * - 컷인: 추격·반격 카드, 능동 회피 성공 메시지(플래그 nssq.evaded)가 생기면 각 클라이언트가 페르소나식 띠를 잠깐 띄운다.
  *   클라이언트 설정 battleFx를 끄면 안 보인다
  */
@@ -62,6 +62,9 @@ async function resumePaused(list, paused) {
 }
 
 /** 활성 GM: 그 캐릭터의 테마곡을 한 번 튼다(이미 테마곡 중이면 무시) */
+/** 지금 흐르는 테마곡(전투가 끝나면 멈추고, 멈춰 둔 전투 곡은 되돌리지 않는다) */
+let current = null;
+
 export async function playTheme(actor, kind) {
   const th = actor?.getFlag("nssq", "theme");
   if (!isActiveGM() || busy || !th?.src || !th.on?.[kind]) return;
@@ -83,12 +86,11 @@ export async function playTheme(actor, kind) {
     }
     if (paused.length) await list.setFlag("nssq", "paused", paused);
     await sound.update({ playing: true });
-    const seconds = Math.max(3, Number(th.seconds) || 20);
+    current = { list, sound, cancelResume: false };
     await new Promise((resolve) => {
       // 곡이 끝나면 v12는 재생목록(부모)을 갱신한다(updatePlaylist). 소리 문서를 직접 멈춰도(updatePlaylistSound) 끝
       const check = () => { if (!list.sounds.get(sound.id)?.playing) stop(); };
-      const stop = () => { clearTimeout(timer); Hooks.off("updatePlaylistSound", h1); Hooks.off("updatePlaylist", h2); resolve(); };
-      const timer = setTimeout(stop, seconds * 1000);
+      const stop = () => { Hooks.off("updatePlaylistSound", h1); Hooks.off("updatePlaylist", h2); resolve(); };
       const h1 = Hooks.on("updatePlaylistSound", (s) => { if (s.id === sound.id) check(); });
       const h2 = Hooks.on("updatePlaylist", (p) => { if (p.id === list.id) check(); });
     });
@@ -97,7 +99,9 @@ export async function playTheme(actor, kind) {
   } catch (err) {
     console.warn("NSSQ | theme", err);
   } finally {
-    try { await resumePaused(list, paused); } catch (err) { console.warn("NSSQ | theme resume", err); }
+    const skip = current?.cancelResume;
+    current = null;
+    if (!skip) try { await resumePaused(list, paused); } catch (err) { console.warn("NSSQ | theme resume", err); }
     busy = false;
   }
 }
@@ -143,7 +147,6 @@ export async function openThemeConfig(actor) {
   const content = `<form class="nssq-theme-config">
     <p class="notes">${esc(L("hint"))}</p>
     <div class="form-group"><label>${esc(L("src"))}</label><input type="text" name="src" value="${esc(th.src ?? "")}" placeholder="${esc(L("srcPlaceholder"))}"/>${browse ? `<button type="button" data-pick style="flex:0 0 32px"><i class="fas fa-file-audio"></i></button>` : ""}</div>
-    <div class="form-group"><label>${esc(L("seconds"))}</label><input type="number" name="seconds" min="3" max="300" value="${esc(th.seconds ?? 20)}"/></div>
     <div class="form-group"><label>${esc(L("volume"))}</label><input type="range" name="volume" min="0" max="1" step="0.05" value="${esc(th.volume ?? 0.8)}"/></div>
     <fieldset><legend>${esc(L("when"))}</legend>${TRIGGERS.map((k) => `<label class="checkbox"><input type="checkbox" name="on.${k}" ${th.on?.[k] ?? k !== "ailment" ? "checked" : ""}/> ${esc(L(`on.${k}`))}</label>`).join("")}</fieldset>
     ${browse ? "" : `<p class="notes">${esc(L("noBrowse"))}</p>`}
@@ -158,7 +161,7 @@ export async function openThemeConfig(actor) {
     callback: (html) => {
       const f = html[0].querySelector("form");
       return {
-        src: f.src.value.trim(), seconds: Math.clamp(Number(f.seconds.value) || 20, 3, 300), volume: volumeOf(f.volume.value),
+        src: f.src.value.trim(), volume: volumeOf(f.volume.value),
         on: Object.fromEntries(TRIGGERS.map((k) => [k, f.querySelector(`[name="on.${k}"]`).checked]))
       };
     }
@@ -168,6 +171,13 @@ export async function openThemeConfig(actor) {
 }
 
 export function registerSpotlight() {
+  // 테마곡은 길이 제한이 없어 전투가 끝난 뒤에도 흐를 수 있다: 전투가 끝나면 멈추고 전투 곡은 되돌리지 않는다(전투 종료가 원래 곡을 튼다)
+  Hooks.on("deleteCombat", async () => {
+    if (!current || !isActiveGM()) return;
+    current.cancelResume = true;
+    const s = current.list.sounds.get(current.sound.id);
+    if (s?.playing) await s.update({ playing: false, pausedTime: 0 });
+  });
   // GM이 테마곡 중에 새로고침했으면: 멈춰 둔 원래 곡을 되살린다
   Hooks.once("ready", () => {
     if (!isActiveGM()) return;
