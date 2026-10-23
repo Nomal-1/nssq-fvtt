@@ -133,13 +133,85 @@ async function setMapState(s, { undo = true } = {}) {
   await game.settings.set("nssq", "fieldMapState", { ...s, prev });
 }
 
-/** 세그먼트 없이 시각만 h시간(전투 중 흐른 시간, apps/time-pass.mjs advanceClock). 진행 중이 아니면 null */
-export async function shiftHour(h) {
+/**
+ * 전투 중 흐른 시간(apps/time-pass.mjs advanceClock). 진행 중이 아니면 null.
+ * 전투(combat)가 있으면 F.O.E.도 그만큼 움직인다(사용자 요청). 파티 에어리어로 들어온 F.O.E.는 전투 플래그 foeArrived에 적고,
+ * 다음 개막 페이즈부터 GM에게 난입 여부를 묻는다(foeOpening)
+ */
+export async function shiftHour(h, combat = null) {
   const s = mapState();
   if (!s.active) return null;
-  const hour = ((s.hour ?? 0) + h) % 24;
-  await game.settings.set("nssq", "fieldMapState", { ...s, hour });
-  return hour;
+  const map = activeMap();
+  const info = combat?.getFlag("nssq", "battle");
+  if (!map || !info || !game.combats.has(combat.id)) {
+    const hour = ((s.hour ?? 0) + h) % 24;
+    await game.settings.set("nssq", "fieldMapState", { ...s, hour });
+    return hour;
+  }
+  const r = FM.battleHours(map, s, h, heldFoes(info));
+  await game.settings.set("nssq", "fieldMapState", { ...s, ...r.state });
+  if (r.arrived.length) {
+    await combat.setFlag("nssq", "battle", { ...info, foeArrived: [...new Set([...(info.foeArrived ?? []), ...r.arrived])] });
+    for (const id of r.arrived) await post(`<p><i class="fas fa-skull"></i> ${esc(L("foeArrived", { name: map.foes.find((f) => f.id === id)?.name ?? "F.O.E." }))}</p>`, { gm: true });
+  }
+  return r.state.hour;
+}
+
+/* ---------------- 전투 중 F.O.E. 난입(사용자 요청) ---------------- */
+
+/** 이 전투에 이미 들어와 있는 F.O.E.: F.O.E. 조우 전투의 상대 + 난입한 것 */
+function heldFoes(info) {
+  const preset = game.scenes.get(info?.presetId);
+  return [preset?.getFlag("nssq", "fieldFoe"), ...(info?.foeJoined ?? [])].filter(Boolean);
+}
+
+/**
+ * 개막 페이즈(GM 팝업): 다음 시간 경과(전투 30턴 = 1세그먼트)까지 3·2·1턴 남았고 그때 파티 에어리어로 들어올 F.O.E.가 있으면 예고,
+ * 전투 중에 들어온 F.O.E.가 아직 같은 에어리어에 있으면 매 개막 페이즈에 난입시킬지 묻는다
+ */
+export async function foeOpening(combat) {
+  if (!isActiveGM()) return;
+  const info = combat.getFlag("nssq", "battle");
+  const map = activeMap();
+  const s = mapState();
+  if (!info || !map || !s.active) return;
+  const hold = heldFoes(info);
+  const name = (id) => map.foes.find((f) => f.id === id)?.name || "F.O.E.";
+  const left = (await import("./time-pass.mjs")).turnsToNextHour();
+  if (left >= 1 && left <= 3) {
+    const coming = FM.foeForecast(map, s, hold);
+    if (coming.length) {
+      new Dialog({
+        title: L("foeComingTitle"),
+        content: coming.map((id) => `<p><i class="fas fa-skull"></i> ${esc(L("foeComing", { name: name(id), n: left }))}</p>`).join(""),
+        buttons: { ok: { icon: '<i class="fas fa-check"></i>', label: L("foeComingOk") } }, default: "ok"
+      }).render(true);
+    }
+  }
+  const here = (info.foeArrived ?? []).filter((id) => !hold.includes(id) && s.foePos?.[id] === s.current && !(s.foeGone ?? []).includes(id));
+  for (const id of here) {
+    new Dialog({
+      title: L("foeIntrudeTitle"),
+      content: `<p><i class="fas fa-skull"></i> ${esc(L("foeIntrudeAsk", { name: name(id) }))}</p>`,
+      buttons: {
+        yes: { icon: '<i class="fas fa-bolt"></i>', label: L("foeIntrudeYes"), callback: () => foeIntrude(combat, id) },
+        no: { label: L("foeIntrudeNo") }
+      },
+      default: "yes"
+    }).render(true);
+  }
+}
+
+/** F.O.E.를 진행 중인 전투에 난입시킨다(전열). 곡은 battle.mjs joinBattle이 그 F.O.E.의 BGM으로 바꾼다 */
+async function foeIntrude(combat, foeId) {
+  if (!game.combats.has(combat.id)) return;
+  const foe = activeMap()?.foes.find((f) => f.id === foeId);
+  const doc = foe?.actorUuid ? await fromUuid(foe.actorUuid) : null;
+  if (!doc) return ui.notifications.warn(L("noEnemy", { name: foe?.name ?? "" }));
+  const info = combat.getFlag("nssq", "battle") ?? {};
+  if ((info.foeJoined ?? []).includes(foeId)) return;
+  await combat.setFlag("nssq", "battle", { ...info, foeJoined: [...(info.foeJoined ?? []), foeId] });
+  await (await import("./battle.mjs")).joinBattle(combat, foe.actorUuid, { row: "front" });
 }
 
 export function newMap(name) {
@@ -1543,11 +1615,21 @@ export function registerFieldMap() {
     }));
   });
   // F.O.E. 전투에서 이기면 지도에서 지울지 묻는다
-  Hooks.on("nssqBattleEnded", async ({ result, preset }) => {
-    const foeId = preset?.getFlag("nssq", "fieldFoe");
-    if (!foeId || result !== "victory" || !game.user.isGM) return;
-    const foe = activeMap()?.foes.find((f) => f.id === foeId);
-    if (foe && (await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("foeDefeatedAsk", { name: foe.name }))}</p>`, rejectClose: false }))) await removeFoe(foeId);
+  // 난입한 F.O.E.도 같이. 전투 중에 들어왔지만 난입하지 않은 F.O.E.는 끝난 뒤 조우 카드
+  Hooks.on("nssqBattleEnded", async ({ result, preset, info }) => {
+    if (!isActiveGM()) return;
+    const map = activeMap();
+    if (!map) return;
+    const fought = [preset?.getFlag("nssq", "fieldFoe"), ...(info?.foeJoined ?? [])].filter(Boolean);
+    if (result === "victory") {
+      for (const foeId of fought) {
+        const foe = map.foes.find((f) => f.id === foeId);
+        if (foe && (await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("foeDefeatedAsk", { name: foe.name }))}</p>`, rejectClose: false }))) await removeFoe(foeId);
+      }
+    }
+    const s = mapState();
+    const waiting = (info?.foeArrived ?? []).filter((id) => !fought.includes(id) && s.foePos?.[id] === s.current && !(s.foeGone ?? []).includes(id));
+    await handleEncounters(map, waiting.map((id) => ({ foeId: id, name: map.foes.find((f) => f.id === id)?.name ?? "F.O.E.", how: "same" })));
   });
 }
 

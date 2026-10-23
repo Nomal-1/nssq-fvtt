@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { areaActs, advance, playerView, reveal, searchTriggers, setPassage, startState, stepFoes, teleport, markFired, removeFoe, validateMap } from "../../src/engine/fieldmap.mjs";
+import { areaActs, advance, battleHours, foeForecast, playerView, reveal, searchTriggers, setPassage, startState, stepFoes, teleport, markFired, removeFoe, validateMap } from "../../src/engine/fieldmap.mjs";
 
 // 입구 - 숲 - 늪 - 바위 - 숲(고리), 숲 → 꽃밭(한 방향), 늪 - 야영지(잠김), 바위 - 비석(비밀 통로), 동굴(비밀 에어리어, 꽃밭과 연결)
 const map = () => ({
@@ -222,5 +222,26 @@ describe("비밀 에어리어로 가는 숨은 통로", () => {
   it("통로 상태를 열어도 같다", () => {
     const s = setPassage(startState(m, { hour: 8 }), "p", "open", m);
     expect(playerView(m, s).reachable).toEqual(["b"]);
+  });
+});
+
+describe("전투 중 F.O.E. 이동(난입)", () => {
+  const m = { ...map(), foes: [{ id: "f", name: "F", mode: "loop", every: 1, route: ["swamp", "forest"] }, { id: "g", name: "G", mode: "loop", every: 1, route: ["rock", "forest"] }] };
+  const s = { ...startState(m), current: "forest", visited: { forest: 1 } };
+  it("파티는 그대로, 들어온 F.O.E.만 arrived", () => {
+    const r = battleHours(m, s, 1);
+    expect(r.state.current).toBe("forest");
+    expect(r.state.segment).toBe(s.segment + 1);
+    expect(r.arrived.sort()).toEqual(["f", "g"]);
+  });
+  it("전투 중인 F.O.E.는 움직이지 않고 예고에서도 빠진다", () => {
+    const r = battleHours(m, s, 1, ["g"]);
+    expect(r.state.foePos.g).toBe("rock");
+    expect(r.arrived).toEqual(["f"]);
+    expect(foeForecast(m, s, ["g"])).toEqual(["f"]);
+  });
+  it("이미 같은 에어리어에 있던 F.O.E.는 arrived 아님", () => {
+    const here = { ...s, foePos: { ...s.foePos, f: "forest" } };
+    expect(foeForecast(m, here)).not.toContain("f");
   });
 });

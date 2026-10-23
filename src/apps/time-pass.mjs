@@ -30,6 +30,9 @@ export async function battleTurn(combat) {
 }
 const BATTLE_TURNS_PER_HOUR = 30;
 
+/** 다음 1시간(F.O.E. 이동)까지 남은 전투 턴. 이번 턴이 끝나고 다음 턴으로 넘어갈 때 시간이 흐르면 1 */
+export const turnsToNextHour = () => BATTLE_TURNS_PER_HOUR - Number(game.settings.get("nssq", "battleTurns") ?? 0);
+
 /** 누적 전투 턴을 비운다(던전 시작·종료, 야영) */
 export async function resetBattleTurns() {
   if (game.user.isGM && Number(game.settings.get("nssq", "battleTurns") ?? 0) !== 0) await game.settings.set("nssq", "battleTurns", 0);
@@ -38,7 +41,7 @@ export async function resetBattleTurns() {
 /** 시각만 h시간(필드 지도·랜덤 던전의 시각과 시간대). 진행 중인 전투의 어둠(자동)도 따라 바뀐다 */
 export async function advanceClock(hours, combat = null) {
   const { timeOfDayAt } = await import("../engine/dungeon.mjs");
-  let hour = await (await import("./fieldmap.mjs")).shiftHour(hours);
+  let hour = await (await import("./fieldmap.mjs")).shiftHour(hours, combat);
   const dg = game.settings.get("nssq", "dungeon") ?? {};
   if (dg.active) {
     hour = ((dg.hour ?? 0) + hours) % 24;

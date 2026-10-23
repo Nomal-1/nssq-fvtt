@@ -438,7 +438,7 @@ export async function endBattle(combat, result = "abort") {
     // 랜덤 던전의 임시 프리셋·희소종 액터는 전투가 끝나면 지운다
     const preset = game.scenes.get(info.presetId);
     // 필드 지도 등이 결과를 본다(임시 프리셋을 지우기 전에)
-    Hooks.callAll("nssqBattleEnded", { result, preset });
+    Hooks.callAll("nssqBattleEnded", { result, preset, info: combat.getFlag("nssq", "battle") ?? info });
     await deleteTempPreset(preset);
   } finally {
     ending = false;

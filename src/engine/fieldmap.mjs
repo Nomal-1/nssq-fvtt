@@ -249,6 +249,24 @@ export function advance(map, state, { to = null, segments = 1, hours = null } = 
   return { state: s, encounters: found, triggers: trig, passage };
 }
 
+/**
+ * 전투 중 흐른 시간(사용자 요청, 전투 30턴 = 1세그먼트): 파티는 그 자리, F.O.E.만 hours 세그먼트 이동. 세그먼트 트리거는 돌리지 않는다.
+ * hold: 이미 전투에 들어와 있는 F.O.E.(움직이지 않는다).
+ * @returns {{ state, arrived: string[] }} arrived: 파티 에어리어로 새로 들어온 F.O.E. id
+ */
+export function battleHours(map, state, hours = 1, hold = []) {
+  const s = advance(map, state, { segments: Math.max(1, hours) }).state;
+  for (const id of hold) {
+    if (state.foePos?.[id]) s.foePos = { ...s.foePos, [id]: state.foePos[id] };
+    if (state.foeStep?.[id]) s.foeStep = { ...s.foeStep, [id]: state.foeStep[id] };
+  }
+  const arrived = activeFoes(map, s).filter((f) => !hold.includes(f.id) && s.foePos[f.id] === s.current && state.foePos?.[f.id] !== s.current).map((f) => f.id);
+  return { state: s, arrived };
+}
+
+/** 다음 세그먼트에 파티 에어리어로 들어올 F.O.E.(난입 예고) */
+export const foeForecast = (map, state, hold = []) => battleHours(map, state, 1, hold).arrived;
+
 /** 도착 트리거(enter·visit n). 강제 이동(세그먼트 없음)에도 쓴다 */
 export function arrivalTriggers(map, state, areaId) {
   const a = areaOf(map, areaId);

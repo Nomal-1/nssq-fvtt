@@ -96,6 +96,8 @@ export class NssqCombat extends Combat {
       await snapshotOpening(this);
       // 개막 페이즈 선언(《가디언》·《성인의 가호》)
       await onOpeningPhase(this);
+      // 전투 중 F.O.E. 이동: 난입 예고·난입 여부(GM 팝업, apps/fieldmap.mjs)
+      if (this.getFlag("nssq", "battle")) (await import("../apps/fieldmap.mjs")).foeOpening(this).catch((e) => console.warn("NSSQ | foe", e));
     }
     // 종료 페이즈: 들어선 순간의 상태로 트리거(《로열 벨》·《진 회복》, 01 #86) → 지연 공격(at endPhase) → 독·자연 회복 등 → 토큰 지속 턴
     if (phase === "end") {
