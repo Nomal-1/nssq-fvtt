@@ -30,6 +30,16 @@ export function registerSettings() {
     choices: { none: "NSSQ.Settings.timeOfDay.none", day: "NSSQ.Settings.timeOfDay.day", night: "NSSQ.Settings.timeOfDay.night" },
     default: "none"
   });
+  // 낮·밤이 시작하는 시각(사용자 요청). 바꾸면 진행 중인 던전의 시간대도 다시 계산
+  for (const [key, def] of [["dayStart", 6], ["nightStart", 18]]) {
+    game.settings.register("nssq", key, {
+      name: `NSSQ.Settings.${key}.name`, hint: `NSSQ.Settings.${key}.hint`,
+      scope: "world", config: true, type: Number, range: { min: 0, max: 23, step: 1 }, default: def,
+      onChange: () => import("./apps/time-pass.mjs").then((m) => m.refreshTimeOfDay())
+    });
+  }
+  // 탐색 시간 경과(세그먼트·랜덤 던전 1시간·캠프)마다 독·자연 회복·심도·오버히트를 처리하는가(사용자 요청으로 기본 끔, 01 #164)
+  game.settings.register("nssq", "timeTicks", { name: "NSSQ.Settings.timeTicks.name", hint: "NSSQ.Settings.timeTicks.hint", scope: "world", config: true, type: Boolean, default: false });
   // 어둠 속 전투에서 에너미도 불이익을 받는가(01 #165)
   game.settings.register("nssq", "darkEnemies", {
     name: "NSSQ.Settings.darkEnemies.name",

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { eventFor, timeOfDayAt } from "../../src/engine/dungeon.mjs";
+import { eventFor, setDayHours, timeOfDayAt } from "../../src/engine/dungeon.mjs";
 
 describe("랜덤 던전(9-D)", () => {
   it("이벤트표", () => {
@@ -9,5 +9,16 @@ describe("랜덤 던전(9-D)", () => {
   });
   it("낮·밤", () => {
     expect([timeOfDayAt(6), timeOfDayAt(17), timeOfDayAt(18), timeOfDayAt(5), timeOfDayAt(24)]).toEqual(["day", "day", "night", "night", "night"]);
+  });
+});
+
+describe("낮·밤 시작 시각 설정", () => {
+  it("7시~19시, 밤이 자정을 넘는 경우, 되돌리기", () => {
+    setDayHours(7, 19);
+    expect([timeOfDayAt(6), timeOfDayAt(7), timeOfDayAt(18), timeOfDayAt(19)]).toEqual(["night", "day", "day", "night"]);
+    setDayHours(20, 4);
+    expect([timeOfDayAt(21), timeOfDayAt(2), timeOfDayAt(4), timeOfDayAt(12)]).toEqual(["day", "day", "night", "night"]);
+    setDayHours();
+    expect(timeOfDayAt(6)).toBe("day");
   });
 });

@@ -20,4 +20,13 @@ export const DUNGEON_EVENTS = {
 export const eventFor = (total) => ({ ...(DUNGEON_EVENTS[total] ?? { kind: "none" }), roll: total });
 
 /** 6:00~17:59 낮, 18:00~5:59 밤 */
-export const timeOfDayAt = (hour) => ((hour % 24) >= 6 && (hour % 24) < 18 ? "day" : "night");
+/** 낮이 시작하는 시각·밤이 시작하는 시각(설정 dayStart·nightStart, 사용자 요청). 기본 6시·18시 */
+let dayHours = { start: 6, end: 18 };
+const h24 = (h) => (((Math.floor(Number(h) || 0)) % 24) + 24) % 24;
+export function setDayHours(start = 6, end = 18) { dayHours = { start: h24(start), end: h24(end) }; }
+export const timeOfDayAt = (hour) => {
+  const h = h24(hour);
+  const { start, end } = dayHours;
+  if (start === end) return "day";
+  return (start < end ? h >= start && h < end : h >= start || h < end) ? "day" : "night";
+};

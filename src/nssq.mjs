@@ -176,6 +176,9 @@ Hooks.once("init", () => {
   };
 });
 
+// 낮·밤 시작 시각(설정)을 엔진에 반영하고 진행 중인 던전의 시간대를 맞춘다
+Hooks.once("ready", () => import("./apps/time-pass.mjs").then((m) => m.refreshTimeOfDay()).catch((e) => console.warn("NSSQ | dayHours", e)));
+
 Hooks.once("ready", () => {
   registerSocket();
   registerUniqueSkillHooks();

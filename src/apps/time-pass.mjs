@@ -33,6 +33,19 @@ const BATTLE_TURNS_PER_HOUR = 30;
 /** 다음 1시간(F.O.E. 이동)까지 남은 전투 턴. 이번 턴이 끝나고 다음 턴으로 넘어갈 때 시간이 흐르면 1 */
 export const turnsToNextHour = () => BATTLE_TURNS_PER_HOUR - Number(game.settings.get("nssq", "battleTurns") ?? 0);
 
+/** 낮·밤 시작 시각 설정을 엔진에 반영하고, 진행 중인 던전(필드 지도·랜덤 던전)의 시간대를 다시 정한다 */
+export async function refreshTimeOfDay() {
+  const { setDayHours, timeOfDayAt } = await import("../engine/dungeon.mjs");
+  setDayHours(game.settings.get("nssq", "dayStart"), game.settings.get("nssq", "nightStart"));
+  if (!game.user.isGM || game.users.activeGM?.id !== game.user.id) return;
+  const fm = game.settings.get("nssq", "fieldMapState") ?? {};
+  const dg = game.settings.get("nssq", "dungeon") ?? {};
+  const hour = fm.active ? fm.hour : dg.active ? dg.hour : null;
+  if (hour === null || hour === undefined) return;
+  const tod = timeOfDayAt(hour);
+  if (tod !== game.settings.get("nssq", "timeOfDay")) await game.settings.set("nssq", "timeOfDay", tod);
+}
+
 /** 누적 전투 턴을 비운다(던전 시작·종료, 야영) */
 export async function resetBattleTurns() {
   if (game.user.isGM && Number(game.settings.get("nssq", "battleTurns") ?? 0) !== 0) await game.settings.set("nssq", "battleTurns", 0);
@@ -72,6 +85,8 @@ const ticking = (list) => (list ?? []).some((c) => CONDITIONS[c.id]?.depth || c.
  */
 export async function timePasses(hours = 1, { noAilments = false, noOverheat = false } = {}) {
   if (!game.user.isGM || !(hours > 0)) return null;
+  // 사용자 요청: 기본은 시각·시간대(어둠)만 바뀌고 독·자연 회복·오버히트는 처리하지 않는다(설정 timeTicks)
+  if (!game.settings.get("nssq", "timeTicks")) return null;
   const members = (await import("./gm-screen.mjs")).partyActors();
   for (const a of noOverheat ? [] : members) {
     const v = Number(a.getFlag("nssq", "overheat") ?? 0);
