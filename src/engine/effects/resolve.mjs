@@ -216,7 +216,7 @@ export async function resolveEffects({ effects, sl = 1, user, targets = [], pool
           // 『회복』 분류 스킬이면 회복 마스터리 등의 회복량 다이스 보정(healDice)
           const mastery = category === "회복" ? user.healDice ?? 0 : 0;
           const n = Math.max(0, (user.elemAtk ?? 0) + evaluate(e.bonus ?? 0, vars(t)) + mastery);
-          dice = n ? await rollDice(n) : [];
+          dice = n ? await rollDice(n, { kind: "heal", targetId: t.id, count: n, min: user.healThreshold ?? 4, resource: res0 }) : [];
           // 《집중 치료》: 그 턴 회복 롤은 3 이상을 센다(user.healThreshold)
           amount = dice.filter((v) => v >= (user.healThreshold ?? 4)).length;
         } else if (e.mode === "fixed") amount = evaluate(e.amount ?? 0, vars(t));

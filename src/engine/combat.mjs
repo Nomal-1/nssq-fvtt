@@ -93,7 +93,7 @@ export const halve = (n) => Math.floor(n / 2);
  * @param {number} [a.atkMultiplier] 보정 뒤 배율
  * @param {boolean} [a.halfDamage] 실대미지 절반
  * @param {(n: number, meta?: object) => number[]|Promise<number[]>} [a.rollDice] n개의 D6. Foundry에서는 Roll, 테스트에서는 고정값.
- *   meta: 무슨 굴림인가(전투 화면의 굴리기 팝업용, combat/dice-flow.mjs) — { kind: "hit", mod, target, fp } / { kind: "damage", count, resist } / { kind: "crit", count, resist }
+ *   meta: 무슨 굴림인가(전투 화면의 굴리기 팝업용, combat/dice-flow.mjs) — { kind: "hit", mod, target, fp } / { kind: "damage", count, resist } / { kind: "crit", count, resist } / { kind: "heal", count, min, resource }(회복 롤, effects/resolve.mjs)
  * @param {() => number} [a.rng] rollDice 대신 1개씩 굴리는 함수
  * @returns {Promise<object>}
  */

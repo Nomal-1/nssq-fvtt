@@ -153,9 +153,11 @@ export function registerDiceFlow() {
  * @param {object[]} o.rolls 결과 카드에 붙일 Roll(주사위 표시)
  * @param {Actor} o.actor 공격하는 캐릭터(팝업을 보낼 플레이어를 찾는다)
  * @param {(id: string) => string|null} [o.uuidOf] 대상 액터 uuid(명중 카드의 전투 화면 연출)
+ * @param {string} [o.scope] 스킬의 대상 문구(회복 팝업의 「아군 전체를 …」)
  * @returns {Promise<{ result: object, fp: number }>}
  */
-export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 0, nameOf = () => "", known = () => true, rolls = [], actor = null, uuidOf = () => null }) {
+export async function resolveWithPopups(run, opts) {
+  const { title, fpDeclared = 0, fpAvail = 0, nameOf = () => "", known = () => true, rolls = [], actor = null, uuidOf = () => null } = opts;
   const rand = replayer(() => CONFIG.Dice.randomUniform());
   const d6 = () => Math.ceil((1 - CONFIG.Dice.randomUniform()) * 6) || 1;
 
@@ -166,8 +168,35 @@ export async function resolveWithPopups(run, { title, fpDeclared = 0, fpAvail = 
     return Array.from({ length: n }, () => 3);
   }, rand.start(), fpDeclared);
   if (!hits.length) {
-    // 명중 판정이 없는 행동(회복 등)은 지금처럼 바로
-    return { result: await run((n) => rollDice(n, rolls), rand.start(), fpDeclared), fp: fpDeclared };
+    // 회복 롤(사용자 요청): 「(범위)를 nD6(4 이상)+k만큼 【HP】 회복」 팝업 → 굴림. 그 밖의 굴림(발동 판정 등)은 미리 굴린 값을 그대로
+    const heals = [];
+    const other = replayer(d6);
+    const o0 = other.start();
+    const dry = await run(async (n, m) => {
+      if (m?.kind === "heal") { heals.push(m); return Array.from({ length: n }, () => 1); }
+      return Array.from({ length: n }, () => o0());
+    }, rand.start(), fpDeclared);
+    // 명중 판정도 회복 롤도 없는 행동은 지금처럼 바로
+    if (!heals.length) return { result: await run((n) => rollDice(n, rolls), rand.start(), fpDeclared), fp: fpDeclared };
+    const { josa } = await import("./skill-use.mjs");
+    const resLabel = (r) => (r === "tp" ? "【TP】" : "【HP】");
+    // 굴림 없이 더하는 회복(《리인포스》 등): 1차 결과에서 그 대상의 고정 회복 합
+    const plus = (m) => (dry.results?.get(m.targetId)?.resource ?? []).filter((x) => x.heal === (m.resource ?? "hp") && !x.dice?.length && !x.drain).reduce((n, x) => n + (x.amount ?? 0), 0);
+    const formula = (m) => `${m.count}D6(${L("healMin", { min: m.min ?? 4 })})${plus(m) ? `+${plus(m)}` : ""}`;
+    const scope = String(opts.scope ?? "").trim();
+    const first = heals[0];
+    const target = scope && scope !== "-" ? scope : nameOf(first.targetId);
+    const head = L("healHead", { target: `${target}${josa(target, "을", "를")}`, formula: formula(first), res: resLabel(first.resource) });
+    const lines = heals.map((m) => esc(L("healLine", { name: nameOf(m.targetId), formula: formula(m), res: resLabel(m.resource) })));
+    const dd = (await ask(actor, { title, head: `${esc(head)}<br><small>${esc(L("healRule", { min: first.min ?? 4 }))}</small>`, lines, count: heals.reduce((n, m) => n + m.count, 0) }, rolls)).dice;
+    let p = 0;
+    const healQ = heals.map((m) => { const x = dd.slice(p, p + m.count); p += m.count; return x; });
+    const o1 = other.start();
+    const result = await run(async (n, m) => {
+      if (m?.kind === "heal") { const q = healQ.shift(); return q && q.length === n ? q : rollDice(n, rolls); }
+      return Array.from({ length: n }, () => o1());
+    }, rand.start(), fpDeclared);
+    return { result, fp: fpDeclared };
   }
 
   // 명중 팝업

@@ -600,12 +600,12 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
   let r;
   // 플레이어 공격: 명중·대미지 굴리기 팝업(combat/dice-flow.mjs). 그 밖에는 바로 굴린다
   const { usePopup, resolveWithPopups } = await import("./dice-flow.mjs");
-  if (combatant && usePopup(actor, { followup }) && effectsAll.some((e) => e?.type === "attack")) {
+  if (combatant && usePopup(actor, { followup }) && effectsAll.some((e) => e?.type === "attack" || (e?.type === "heal" && (e.mode ?? "roll") === "roll"))) {
     const hidden = (id) => { const a = actorOf.get(id); return a?.type === "enemy" && (!knowsEnemy(a) || (a.system.isRare && !a.system.rareKnown)); };
     const nameOf = (id) => [...targets, ...spreadPool].find((t) => t.id === id)?.name ?? "";
     const fp0 = user.fpDice ?? 0;
     const out = await resolveWithPopups((roll, rng, fp) => { user.fpDice = fp; return resolveWith(roll, rng); },
-      { title: item.name, fpDeclared: fp0, fpAvail: user.fpAvail ?? 0, nameOf, known: (id) => !hidden(id), rolls, actor, uuidOf: (id) => actorOf.get(id)?.uuid ?? null });
+      { title: item.name, scope: sys.target ?? "", fpDeclared: fp0, fpAvail: user.fpAvail ?? 0, nameOf, known: (id) => !hidden(id), rolls, actor, uuidOf: (id) => actorOf.get(id)?.uuid ?? null });
     r = out.result;
   } else r = await resolveWith((n) => rollWith(rolls, n), () => CONFIG.Dice.randomUniform());
   if (guard) await guard.commit(new Set([...r.results.values()].filter((x) => x.hits.some((h) => h.hit)).map((x) => x.id)));
@@ -933,7 +933,7 @@ export const stateModText = (mods) => Object.entries(mods ?? {}).filter(([, v]) 
 export const renderSkillCard = (card) => renderCard(card);
 
 /** 받침이 있으면 a, 없으면 b(한글·숫자 끝 글자 기준) */
-function josa(word, a, b) {
+export function josa(word, a, b) {
   const c = String(word ?? "").trim().slice(-1);
   const code = c.charCodeAt(0) - 0xac00;
   if (code >= 0 && code <= 11171) return (code % 28 ? a : b);
