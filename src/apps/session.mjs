@@ -4,9 +4,9 @@
  */
 import { sessionExp } from "../engine/explore.mjs";
 import { growthAvailable } from "../engine/derive.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Session.${k}`, d) : game.i18n.localize(`NSSQ.Session.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 세션 시작 【FP】 보너스(효과 sessionFp: 《핫 스타트》 +1, 《대자연의 은혜》 +2) */
 export function sessionFpBonus(actor) {

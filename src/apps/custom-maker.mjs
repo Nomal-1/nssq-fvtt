@@ -16,9 +16,9 @@ import { ABILITIES, RESISTS, SUB_STATS } from "../engine/derive.mjs";
 import { renamePrereqs, treeLayout, validateClassDef } from "../engine/skills.mjs";
 import { CHECK_KINDS } from "../chat/check-mods.mjs";
 import tables from "../generated/tables.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Maker.${k}`, d) : game.i18n.localize(`NSSQ.Maker.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const loc = (k) => game.i18n.localize(k);
 const ELEMENTS = ["slash", "strike", "pierce", "fire", "ice", "volt"];
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${String(v) === String(cur ?? "") ? "selected" : ""}>${esc(label)}</option>`;

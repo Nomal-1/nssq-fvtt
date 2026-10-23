@@ -9,12 +9,12 @@ import { statusListOf } from "../combat/status.mjs";
 import { initialMoney } from "../engine/chargen.mjs";
 import { refinementBadges } from "./badges.mjs";
 import { slotOccupant } from "../engine/equipment.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Sheet.${k}`, d) : game.i18n.localize(`NSSQ.Sheet.${k}`));
 const SHORT = { str: "STR", tec: "TEC", vit: "VIT", agi: "AGI", luc: "LUC" };
 const SOURCE_KEYS = ["base", "class", "growth", "boon", "bonus", "equip"];
 const sign = (n) => (n > 0 ? `+${n}` : `${n}`);
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 기록 한 줄 추가(최근 30개 유지) */
 export async function logCreation(actor, entry) {

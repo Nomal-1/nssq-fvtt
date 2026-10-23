@@ -13,9 +13,9 @@ import { applyIdentify, identifyEnemy } from "../combat/identify.mjs";
 import { CONDITIONS } from "../engine/conditions.mjs";
 import { applyAutoIdentify, recordBestiary, recordSeen } from "../combat/bestiary.mjs";
 import { isDarkNow } from "./darkness.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 전투가 끝나면 풀리는 것: [수면]·[스턴]·봉인 */
 const BATTLE_END_CLEAR = (id) => id === "sleep" || id === "stun" || CONDITIONS[id]?.kind === "bind";
@@ -205,9 +205,7 @@ function playingSounds() {
  * 소리 바꾸기는 실패해도 전투 진행을 막지 않는다. 이 브라우저가 아직 오디오 잠금 상태면(페이지를 연 뒤 클릭 전)
  * 문서는 바뀌었는데 이 화면에서 재생만 못 해 예외가 나므로 경고만 남긴다(다른 사용자 화면에서는 재생된다)
  */
-async function soundSafe(fn) {
-  try { await fn(); } catch (err) { console.warn("NSSQ | sound", err); }
-}
+const soundSafe = (fn) => import("./location-bgm.mjs").then((m) => m.soundSafe(fn));
 
 async function stopSounds(list) {
   for (const { playlist, sound } of list) await soundSafe(() => game.playlists.get(playlist)?.sounds.get(sound)?.update({ playing: false }));

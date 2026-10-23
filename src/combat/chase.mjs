@@ -11,9 +11,9 @@ import { autoApplyMode, isActiveGM } from "./apply.mjs";
 import { combatProfile, sideOf } from "./profile.mjs";
 import { actionState } from "./turn-status.mjs";
 import { emit, onSocket } from "../socket.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Chase.${k}`, d) : game.i18n.localize(`NSSQ.Chase.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const alive = (c) => !!c?.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
 const typeLabel = (f) => L(`type.${(f.type === "trigger" && f.optional) || f.type === "event" ? "declare" : f.type}`);
 /** 표시 이름: 스킬은 《이름》, 『추격』 강화는 그대로 */

@@ -9,9 +9,9 @@
  */
 import { carryUnits, checkOverflowPlan, exceedsOwnLimit, isPhysical, splitIncoming, stackKey } from "../engine/equipment.mjs";
 import { emit, onSocket } from "../socket.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Storage.${k}`, d) : game.i18n.localize(`NSSQ.Storage.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /**
  * 출처별 규칙

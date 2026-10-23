@@ -10,9 +10,9 @@ import { CONDITIONS } from "../engine/conditions.mjs";
 import { combatProfile } from "../combat/profile.mjs";
 import { autoApplyMode } from "../combat/apply.mjs";
 import { applyEndPhase, logLine, roll2d6 } from "../combat/turn-status.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.TimePass.${k}`, d) : game.i18n.localize(`NSSQ.TimePass.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 던전(필드 지도·랜덤 던전)을 진행 중인가 */
 const exploring = () => !!game.settings.get("nssq", "fieldMapState")?.active || !!game.settings.get("nssq", "dungeon")?.active;

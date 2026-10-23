@@ -11,8 +11,8 @@
  *   스킬아이콘/ 스킬의 [의존 부위][의존 무기] 아이콘(머리·팔·다리·무기 종류 이름, apps/skill-badge.mjs. 설정 assetLinks.icons)
  * 이미 정해 둔 것은 건너뛴다([덮어쓰기]를 켜면 바꾼다). 맞지 않는 파일은 목록으로 보여 준다(그런 것은 각 편집 창에서 직접 고른다)
  */
+import { esc } from "../util.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Assets.${k}`, d) : game.i18n.localize(`NSSQ.Assets.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const KINDS = ["enemy", "bgm", "bg", "area", "town", "npc", "icon"];
 
 /** 이름 비교용: 확장자·공백·괄호류를 뺀다 */

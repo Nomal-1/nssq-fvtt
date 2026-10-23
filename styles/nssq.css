@@ -279,7 +279,6 @@
 .nssq .nq-stat-grid .nq-sub-stat span { flex: 1 0 auto; overflow: visible; font-size: 0.85em; }
 .nssq .nq-stat-grid .nq-sub-stat .nq-eff { flex: 0 0 auto; margin-left: 0; font-size: 0.9em; }
 .nssq .nq-stat-grid .nq-sub-stat input { width: 2.8em; flex: 0 0 auto; height: 22px; text-align: right; }
-.nssq .nq-enemy-flags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .nssq .nq-rare { color: var(--nq-fp); font-weight: 700; }
 .nssq .nq-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 10px; }
 .nssq .nq-field { display: flex; align-items: center; gap: 6px; }
@@ -384,7 +383,6 @@
 .nssq-request-form .request-actor { display: flex; align-items: center; gap: 6px; }
 .nssq-request-form .request-actor .owner { margin-left: auto; font-size: 0.85em; color: var(--nq-mu); }
 .nssq-request-popup .request-what { font-size: 1.2em; text-align: center; margin: 6px 0; color: var(--nq-gold-l); }
-.nssq-request-popup .request-formula { text-align: center; color: var(--nq-mu); }
 .nssq-request-popup .request-note { font-style: italic; text-align: center; }
 .nssq-slot-picker .slot-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
 .nssq-slot-picker .row-name { flex: 0 0 3em; font-weight: 700; color: var(--nq-gold-l); }
@@ -456,7 +454,6 @@
 .nssq-gm-screen .gm-actions button.on { border-color: var(--nq-green); color: var(--nq-green); }
 .nssq-gm-screen .gm-actions button.battle { font-weight: 700; color: var(--nq-fp); }
 .nssq-gm-screen .gm-actions button.battle.on { border-color: var(--nq-red); color: var(--nq-red); }
-.nssq-gm-screen .gm-tabs { flex: 0 0 auto; margin-top: 6px; }
 .nssq-gm-screen .gm-body { flex: 1; overflow-y: auto; padding-top: 6px; }
 .nssq-gm-screen table { width: 100%; border-collapse: separate; border-spacing: 0 3px; }
 .nssq-gm-screen th { color: var(--nq-mu); font-weight: 400; font-size: 0.85em; text-align: center; }
@@ -1361,12 +1358,6 @@
 .nssq-town .town-edit .form-group > :is(input, select) { flex: 1; }
 .nssq-town .town-edit button.icon { flex: 0 0 auto; width: auto; }
 .nssq-town .town-fac-edit { margin: 4px 0; }
-.nssq-guild .guild-chars { width: 100%; }
-.nssq-guild .guild-chars img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; vertical-align: middle; border: none; }
-.nssq-guild .guild-chars tr.sel { background: rgba(231, 207, 138, 0.12); }
-.nssq-guild .guild-chars tr.benched { opacity: 0.6; }
-.nssq-guild .guild-chars button { width: auto; padding: 0 8px; }
-.nssq-guild .guild-chars button.on { border-color: var(--nq-green); color: var(--nq-green); }
 .nssq-guild .tag { font-size: 0.75em; padding: 0 5px; border-radius: 8px; border: 1px solid var(--nq-gold); color: var(--nq-gold-l); }
 .nssq-guild .guild-box { border: 1px solid var(--nq-line); border-radius: 8px; padding: 6px 10px; margin: 6px 0; }
 .nssq-guild .guild-box button { width: auto; padding: 0 10px; margin-right: 6px; }
@@ -1703,12 +1694,6 @@
 /* 석화: 카드 전체 회색 */
 #nssq-battle .nb-member.ail-petrify { filter: grayscale(0.95) brightness(0.85); }
 /* 봉인: 카드에 덩굴이 감긴다(머리=위 가장자리·팔=가운데·다리=아래 가장자리) */
-#nssq-battle .nb-cardvine { position: absolute; left: -2%; width: 104%; height: 38%; opacity: 0.85; }
-#nssq-battle .nb-cardvine path { fill: none; stroke: #4caf50; stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 2px #1b5e20); vector-effect: non-scaling-stroke; }
-#nssq-battle .nb-cardvine circle { fill: #81c784; stroke: #2e7d32; stroke-width: 1; }
-#nssq-battle .nb-cardvine.part-bindHead { top: -8%; }
-#nssq-battle .nb-cardvine.part-bindArm { top: 31%; opacity: 0.7; }
-#nssq-battle .nb-cardvine.part-bindLeg { bottom: -8%; }
 #nssq-battle .nb-member:is(.ail-bindHead, .ail-bindArm, .ail-bindLeg) { border-color: #4caf50; }
 /* 방어: 푸른 안쪽 빛 + 오른쪽에 반투명 큰 방패 */
 #nssq-battle .nb-member.st-guard { box-shadow: inset 0 0 0 2px rgba(140, 210, 255, 0.9), inset 0 0 22px rgba(110, 190, 255, 0.55); }
@@ -1722,10 +1707,6 @@
 /* 강화·약화: 카드 테두리(기존 fx-buffed·fx-debuffed) + 얼굴 칸 배지 */
 #nssq-battle .nb-member .portrait .nb-bd-badges { right: 1px; bottom: 1px; }
 @media (prefers-reduced-motion: reduce) { #nssq-battle .nb-member.st-wait::after, #nssq-battle .nb-member.ail-fear .portrait, #nssq-battle .nb-card-shield { animation: none; } }
-#nssq-battle .nb-cardvine-v { position: absolute; top: -4%; height: 108%; width: 22px; opacity: 0.9; }
-#nssq-battle .nb-cardvine-v.l { left: -6px; } #nssq-battle .nb-cardvine-v.r { right: -6px; }
-#nssq-battle .nb-cardvine-v path { fill: none; stroke: #4caf50; stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 2px #1b5e20); vector-effect: non-scaling-stroke; }
-#nssq-battle .nb-cardvine-v circle { fill: #81c784; stroke: #2e7d32; stroke-width: 1; }
 
 /* ---------- v4: 마비·공포·저주 주위 입자 + 진하게 / 아군 봉인 삼등분 사선 덩굴 ---------- */
 #nssq-battle .nb-aura { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
@@ -1758,7 +1739,6 @@
 #nssq-battle .art.ail-fear img { filter: drop-shadow(0 0 14px #4a6aff) drop-shadow(0 0 4px #9fb2ff) brightness(0.9) hue-rotate(-15deg); }
 #nssq-battle .art.ail-curse img { filter: drop-shadow(0 0 16px #d01050) drop-shadow(0 0 5px #400015) brightness(0.9); }
 /* 아군 봉인: 카드 삼등분(머리=왼쪽, 팔=가운데, 다리=오른쪽)을 사선으로 감는 덩굴 */
-#nssq-battle .nb-cardvine, #nssq-battle .nb-cardvine-v { display: none; }
 #nssq-battle .nb-cardbind { position: absolute; top: -6%; height: 112%; width: 35%; overflow: visible; }
 #nssq-battle .nb-cardbind.part-bindHead { left: -1%; }
 #nssq-battle .nb-cardbind.part-bindArm { left: 32.5%; }

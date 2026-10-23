@@ -8,9 +8,9 @@
  * 전투 중 쓸 수 있는 페이즈는 `phases`(기본 메인 페이즈만)
  */
 import { emit, onSocket } from "../socket.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.ItemUse.${k}`, d) : game.i18n.localize(`NSSQ.ItemUse.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const FIELD_ONLY = ["boon", "skillBook"];
 const SHORT = { str: "STR", tec: "TEC", vit: "VIT", agi: "AGI", luc: "LUC" };
 

@@ -10,9 +10,9 @@ import { emit, onSocket } from "../socket.mjs";
 import { LAYOUT, enemySlotX } from "../engine/formation.mjs";
 import { rareTransform } from "../engine/rare.mjs";
 import { DUNGEON_EVENTS, eventFor, timeOfDayAt } from "../engine/dungeon.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Dungeon.${k}`, d) : game.i18n.localize(`NSSQ.Dungeon.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 export const dungeonState = () => game.settings.get("nssq", "dungeon") ?? {};
 const setState = async (s) => {

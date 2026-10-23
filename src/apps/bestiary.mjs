@@ -8,10 +8,10 @@
  */
 import { SUB_STATS, RESISTS } from "../engine/derive.mjs";
 import { autoIdentifyKills, bestiaryEntry, bestiaryKey, bestiaryTier, forgetBestiary, setBestiaryEntry } from "../combat/bestiary.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Bestiary.${k}`, d) : game.i18n.localize(`NSSQ.Bestiary.${k}`));
 const A = (k) => game.i18n.localize(`NSSQ.Analysis.${k}`);
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const dropName = (d) => `${d.rank ? `R${d.rank} ` : ""}${d.item}`;
 const dropRange = (d) => (d.max === null || d.max === undefined ? `${d.min}~` : d.min === d.max ? `${d.min}` : `${d.min}~${d.max}`);
 const inBattle = () => game.combats.some((c) => c.started && c.getFlag("nssq", "battle"));

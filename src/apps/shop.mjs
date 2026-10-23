@@ -12,6 +12,7 @@ import {
 import tables from "../generated/tables.mjs";
 import { refinementBadges } from "../sheets/badges.mjs";
 import { acquireItems } from "./acquire.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Shop.${k}`, d) : game.i18n.localize(`NSSQ.Shop.${k}`));
 const PACKS = ["nssq.equipment", "nssq.items"];
@@ -22,7 +23,6 @@ const TABS = [
   ["consumable", "TYPES.Item.consumable"],
   ["tool", "TYPES.Item.tool"]
 ];
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const materialLabel = (m) => `${m.name} R${m.system.rank}${(m.system.quantity ?? 1) > 1 ? ` ×${m.system.quantity}` : ""}`;
 
 async function log(actor, text) {
@@ -200,7 +200,6 @@ class ShopApp extends Application {
     const classes = { main: main?.system ?? null, sub: sub?.system ?? null };
     const hasClass = !!classes.main;
     const usable = (d) => !hasClass || !["weapon", "armor"].includes(d.type) || canEquip(d, classes).ok;
-    const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
     const sub2 = (k) => game.i18n.localize(`NSSQ.Sub.${k}`);
     // 마우스를 올리면 보이는 설명: 그 랭크의 성능 + 해설
     const tipFor = (d, rank) => {

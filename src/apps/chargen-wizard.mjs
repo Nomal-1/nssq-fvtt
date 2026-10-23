@@ -12,9 +12,9 @@ import { canEquip, equippedSlot, isPhysical } from "../engine/equipment.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import tables from "../generated/tables.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Chargen.${k}`, d) : game.i18n.localize(`NSSQ.Chargen.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const ab = (k) => game.i18n.localize(`NSSQ.Ability.${k}`);
 const STEPS = ["basic", "abilities", "class", "skills", "equipment", "history", "confirm"];
 

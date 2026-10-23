@@ -11,8 +11,8 @@ import { CONDITIONS } from "../engine/conditions.mjs";
 import { BUFFS, MAX_KINDS, canonicalBuff } from "../engine/buffs.mjs";
 import { buffEffectText, buffLabel, conditionName } from "./status.mjs";
 import { bestiaryEntry, meetsAutoIdentify, rareMask } from "./bestiary.mjs";
+import { esc } from "../util.mjs";
 
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const loc = (k) => game.i18n.localize(k);
 const A = (k, d) => (d ? game.i18n.format(`NSSQ.Analysis.${k}`, d) : game.i18n.localize(`NSSQ.Analysis.${k}`));
 const plain = (html) => String(html ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();

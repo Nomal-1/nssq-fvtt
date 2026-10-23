@@ -9,7 +9,8 @@
  */
 import { parseBgm } from "../engine/encounters.mjs";
 
-async function soundSafe(fn) {
+/** 소리 문서 조작(오디오 잠금 등으로 실패해도 흐름을 멈추지 않는다) */
+export async function soundSafe(fn) {
   try { await fn(); } catch (err) { console.warn("NSSQ | sound", err); }
 }
 
@@ -102,5 +103,3 @@ export function registerLocationBgm() {
   Hooks.on("createCombat", () => setFacilityMusic(""));
 }
 
-/** 확인용: 이 화면의 시설 BGM 상태 */
-export const facilityMusicState = () => ({ ref: fac.ref, playing: !!fac.sound?.playing, ducked: fac.ducked.map((ps) => ({ name: ps.name, volume: ps.sound?.volume ?? null })) });

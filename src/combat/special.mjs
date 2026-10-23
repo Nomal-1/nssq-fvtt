@@ -8,9 +8,9 @@ import { changePosition } from "./formation.mjs";
 import { friendly } from "./profile.mjs";
 import { isActiveGM } from "./apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Special.${k}`, d) : game.i18n.localize(`NSSQ.Special.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const alive = (c) => !!c?.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
 const anytimeOf = (item) => (item.system.effects ?? []).find((e) => e?.type === "anytime");
 

@@ -12,8 +12,8 @@
  */
 import { emit, onSocket } from "../socket.mjs";
 import { ownerUser } from "./ask-owner.mjs";
+import { esc } from "../util.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.DiceFlow.${k}`, d) : game.i18n.localize(`NSSQ.DiceFlow.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const sign = (n) => (n >= 0 ? `+${n}` : `${n}`);
 
 const popupOn = () => { try { return game.settings.get("nssq", "rollPopup") !== false; } catch { return true; } };

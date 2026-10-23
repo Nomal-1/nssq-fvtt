@@ -9,9 +9,9 @@ import { normalAttack } from "./attack.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 import { recordBestiary } from "./bestiary.mjs";
 import { enemyUseSkill } from "./skill-use.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.EnemyAI.${k}`, d) : game.i18n.localize(`NSSQ.EnemyAI.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const rng = () => CONFIG.Dice.randomUniform();
 const alive = (c) => !c.defeated && (c.actor?.system.hp?.value ?? 0) > 0;
 

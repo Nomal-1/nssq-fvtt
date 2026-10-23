@@ -7,8 +7,8 @@
  * - 복사본은 SL 예산·스킬 트리 선행조건·길드 반환에 치지 않는다(isGrimoireSkill)
  * - 대가: 전투 중 종료 페이즈마다 【TP】 −SL(사용자 결정 D, combat/turn-status.mjs grimoireUpkeep)
  */
+import { esc } from "../util.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Grimoire.${k}`, d) : game.i18n.localize(`NSSQ.Grimoire.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 그리모어 아이템인가 */
 export const isGrimoire = (item) => item?.type === "tool" && (item.system.effects ?? []).some((e) => e?.type === "grimoire");

@@ -12,9 +12,9 @@ import { resolveAttack } from "../engine/combat.mjs";
 import { REROLL_COST } from "../engine/check.mjs";
 import { autoApplyMode, isActiveGM, requestApply } from "./apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.FpDice.${k}`, d) : game.i18n.localize(`NSSQ.FpDice.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 선언한 주사위 수(캐릭터만) */
 export const declaredFpDice = (actor) => (actor?.type === "character" ? Math.max(0, Number(actor.getFlag("nssq", "fpDice")) || 0) : 0);

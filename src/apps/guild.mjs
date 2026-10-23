@@ -5,9 +5,9 @@
  * - 직업 변경: 경험점 −n으로 메인·서브 클래스를 바꾸고 클래스 스킬을 돌려받는다(★는 새 클래스 것으로 자동)
  * 경험점이 줄어 레벨이 내려가면 확인 창에 미리 보인다
  */
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Guild.${k}`, d) : game.i18n.localize(`NSSQ.Guild.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
 
 export const guildCost = () => Math.max(0, Number(game.settings.get("nssq", "guildCost")) || 0);

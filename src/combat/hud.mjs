@@ -33,9 +33,9 @@ import { openingLabel, requestPass, restoreOpening } from "./opening.mjs";
 import { hasOpeningItem } from "./item-use.mjs";
 import { activeBook } from "./book.mjs";
 import { actionList, beginAction, pickTarget, requestSkillApply } from "./skill-use.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const pct = (r) => (r?.max > 0 ? Math.clamp(Math.round((r.value / r.max) * 100), 0, 100) : 0);
 
 let root = null;

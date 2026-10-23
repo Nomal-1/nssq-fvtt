@@ -9,9 +9,9 @@ import { voteResult } from "../engine/fieldmap.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { roster } from "./roster.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.PartyBoard.${k}`, d) : game.i18n.localize(`NSSQ.PartyBoard.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const rid = () => foundry.utils.randomID();
 
 export const partySize = () => Math.min(6, Math.max(1, Number(game.settings.get("nssq", "partySize")) || 5));

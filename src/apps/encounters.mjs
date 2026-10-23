@@ -7,9 +7,9 @@
  */
 import { expandEnemies, enemiesFromTokens, pickWeighted, resolveStage, validateEncounter } from "../engine/encounters.mjs";
 import { LAYOUT } from "../engine/formation.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Encounter.${k}`, d) : game.i18n.localize(`NSSQ.Encounter.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
 const rid = () => foundry.utils.randomID();
 

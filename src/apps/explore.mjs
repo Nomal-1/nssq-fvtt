@@ -5,9 +5,9 @@
 import { campAmbush, campRecovery, trapDamage } from "../engine/explore.mjs";
 import { CONDITIONS, isPetrified } from "../engine/conditions.mjs";
 import { autoApplyMode, isActiveGM } from "../combat/apply.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Explore.${k}`, d) : game.i18n.localize(`NSSQ.Explore.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const carried = (a) => a.items.filter((i) => !i.system.stored);
 const flagOf = (a, f) => !!a.system.passives?.flags?.[f];
 const hasTool = (a, key) => carried(a).some((i) => i.type === "tool" && i.system.key === key);
@@ -19,12 +19,6 @@ async function party() {
 }
 
 /* ---------------- 캠프 ---------------- */
-
-/** 이번 캠프에서 《약효 요리》를 할 수 있나(그 스킬을 가진 사람과 『조리기구 세트』) */
-export async function canCookCure(members = null) {
-  const list = (members ?? (await party())).filter((a) => !isPetrified(a));
-  return list.some((a) => hasTool(a, COOK_TOOL)) && list.some((a) => flagOf(a, "campCookCure"));
-}
 
 export async function openCampDialog(defaults = {}) {
   if (!game.user.isGM) return;

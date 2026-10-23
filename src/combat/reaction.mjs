@@ -13,9 +13,9 @@ import { autoApplyMode, isActiveGM } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { autoKey } from "../engine/triggers.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Reaction.${k}`, d) : game.i18n.localize(`NSSQ.Reaction.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 이 캐릭터가 이 공격(kind)에 쓸 수 있는 수동 스킬 */
 export function reactionChoices(actor, kind) {

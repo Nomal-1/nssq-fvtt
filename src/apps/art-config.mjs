@@ -7,9 +7,9 @@
  * 프레임 계산은 engine/art.mjs(미리보기를 끌면 위치, 휠이면 확대·축소).
  */
 import { DEFAULT_CROP, cropCss, dragCrop, zoomCrop } from "../engine/art.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Art.${k}`, d) : game.i18n.localize(`NSSQ.Art.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 전열·후열 토큰 테두리 색 */
 export const ROW_COLOR = { front: "#e0b84a", back: "#6fd3e6" };

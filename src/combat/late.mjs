@@ -14,9 +14,9 @@ import { isActiveGM } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
 import { actionState } from "./turn-status.mjs";
 import { emit, onSocket } from "../socket.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Late.${k}`, d) : game.i18n.localize(`NSSQ.Late.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const alive = (c) => !!c?.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
 const note = (content, actor = null) => ChatMessage.create({
   speaker: actor ? ChatMessage.getSpeaker({ actor }) : { alias: game.i18n.localize("NSSQ.Combat.tracker") },

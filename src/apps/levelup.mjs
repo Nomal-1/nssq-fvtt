@@ -7,6 +7,7 @@
  */
 import tables from "../generated/tables.mjs";
 import { levelFromExp } from "../engine/derive.mjs";
+import { esc } from "../util.mjs";
 
 /**
  * 스킬 습득 창구(사용자 결정): 플레이어는 캐릭터 작성 중, 레벨업한 그 레벨, 길드 재분배·직업 변경(Lv1로 돌아감) 직후에만 스킬을 찍는다.
@@ -26,7 +27,6 @@ export async function skillLeft(actor) {
 }
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Level.${k}`, d) : game.i18n.localize(`NSSQ.Level.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 const leveling = new Set(); // 진행 중인 액터 id(빠른 두 번 클릭으로 HP·TP 증가가 두 번 들어가지 않게)
 

@@ -5,9 +5,9 @@
  * - 그림: 아래 기본(Foundry 내장 아이콘). [에셋 폴더 연결]의 「스킬아이콘/」에 「머리.png」「도.png」처럼 넣으면 그 그림(설정 assetLinks.icons)
  */
 import { nameKey } from "./asset-link.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.SkillBadge.${k}`, d) : game.i18n.localize(`NSSQ.SkillBadge.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 export const PART_ICONS = {
   머리: "icons/equipment/head/helm-barbute-engraved-steel.webp",

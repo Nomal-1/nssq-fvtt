@@ -7,9 +7,9 @@
  */
 import { placeToken, removeOldest, tickTokens, tokenTargets } from "../engine/tokens.mjs";
 import { friendly } from "./profile.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Token.${k}`, d) : game.i18n.localize(`NSSQ.Token.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const alive = (c) => !!c?.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
 const note = (actor, text) => ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="nssq-combat-note"><i class="fas fa-paw"></i> ${esc(text)}</div>` });
 

@@ -6,9 +6,9 @@
  *   어느 씬에서도 쓰지 않는 시스템 에너미 액터는 확인 후 지운다
  */
 import { sameEnemyData } from "../engine/rare.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 컴펜디움 원본 uuid(v12 _stats.compendiumSource, 예전 flags.core.sourceId) */
 export const sourceOf = (doc) => doc?._stats?.compendiumSource ?? doc?.flags?.core?.sourceId ?? null;

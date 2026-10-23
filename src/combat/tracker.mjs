@@ -11,6 +11,7 @@ import { combatProfile } from "./profile.mjs";
 import { actionState } from "./turn-status.mjs";
 import { recordBestiary } from "./bestiary.mjs";
 import { autoKey } from "../engine/triggers.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 
@@ -75,7 +76,6 @@ export async function setIdentified(actors, on) {
 /* ---------------- 도주 ---------------- */
 
 /** 도주 판정(GM): 살아 있는 참가자 전원 【회피】로 일반 행위 판정 */
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 《전력 도주》 선언 → Map(전투원 id → 달성값 보정). 취소면 null */
 async function escapeDeclarations(combat) {

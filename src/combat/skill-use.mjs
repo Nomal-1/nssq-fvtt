@@ -25,9 +25,9 @@ import { decorateReactions, hasPendingReaction, pendingReaction } from "./reacti
 import { fpNote, rerollButton } from "./fp-dice.mjs";
 import { itemUseOf, itemUseReason, runItemUse } from "./item-use.mjs";
 import { askOwner } from "./ask-owner.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.SkillUse.${k}`, d) : game.i18n.localize(`NSSQ.SkillUse.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 // 상태 이상은 [독], 봉인은 이름 그대로([팔] 봉인)
 const condLabel = (id) => (CONDITIONS[id]?.kind === "bind" ? conditionName(id) : `[${conditionName(id)}]`);
 const alive = (c) => !!c.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;

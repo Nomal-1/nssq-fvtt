@@ -12,10 +12,10 @@ import * as FM from "../engine/fieldmap.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { activeMap, answerProposal, areaExits, campHere, destLabel, endNarration, gatherHere, mapState, moveTo, requestMove, search } from "./fieldmap.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.FieldScene.${k}`, d) : game.i18n.localize(`NSSQ.FieldScene.${k}`));
 const LF = (k, d) => (d ? game.i18n.format(`NSSQ.FieldMap.${k}`, d) : game.i18n.localize(`NSSQ.FieldMap.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const url = (p) => (/%[0-9A-F]{2}/i.test(p ?? "") ? p : encodeURI(p ?? ""));
 const DESIGN_W = 1280;
 const ACTS = { search: "fa-search", gather: "fa-leaf", camp: "fa-campground", mapping: "fa-map-marked-alt" };

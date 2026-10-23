@@ -7,9 +7,9 @@
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { isPhysical, isStored } from "../engine/equipment.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Transfer.${k}`, d) : game.i18n.localize(`NSSQ.Transfer.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const inBattle = () => !!game.combat?.started;
 const givable = (i) => isPhysical(i) && !isStored(i) && !i.system.equipped;
 

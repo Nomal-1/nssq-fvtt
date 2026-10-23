@@ -15,11 +15,6 @@ const PATHS = new Set(Object.values(ART));
 /** 에셋 폴더 연결이 바꿔도 되는 그림: 기본 아이콘·시스템 내장 일러스트 */
 export const isReplaceableArt = (src) => isDefault(src) || PATHS.has(src) || String(src ?? "").startsWith("systems/nssq/assets/enemies/");
 
-/** 이 이름의 에너미 일러스트(없으면 null) */
-export function enemyArt(name) {
-  return ART[name] ?? null;
-}
-
 /**
  * 액터의 일러스트: 이름 → (이름을 바꿨으면) 컴펜디움 원본 id.
  * 일러스트 파일 이름이 원본 에너미 id라서 원본만 알면 찾을 수 있다

@@ -5,9 +5,9 @@
  */
 import { identifyResult } from "../engine/combat.mjs";
 import { meetsAutoIdentify, recordBestiary } from "./bestiary.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Identify.${k}`, d) : game.i18n.localize(`NSSQ.Identify.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** 한 에너미(토큰 액터)에 달성값을 적용 → 결과 */
 export async function identifyEnemy(actor, value) {

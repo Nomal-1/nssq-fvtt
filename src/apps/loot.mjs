@@ -13,9 +13,9 @@ import { recordBestiary } from "../combat/bestiary.mjs";
 import { isPetrified } from "../engine/conditions.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Loot.${k}`, d) : game.i18n.localize(`NSSQ.Loot.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 /** 풀·결과의 표시: 「사슴의 뿔(뿔 R3)」, 이름이 종류와 같으면 「뿔 R3」 */
 const label = (e) => (e.display && e.display !== e.name ? `${e.display}(${e.name}${e.rank ? ` R${e.rank}` : ""})` : `${e.name}${e.rank ? ` R${e.rank}` : ""}`);
 

@@ -13,9 +13,9 @@ import { BUFFS } from "../engine/buffs.mjs";
 import { CONDITIONS } from "../engine/conditions.mjs";
 import { isActiveGM } from "./apply.mjs";
 import { combatProfile, friendly } from "./profile.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Event.${k}`, d) : game.i18n.localize(`NSSQ.Event.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const alive = (c) => !!c?.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
 const combatantOf = (actor) => (game.combat?.started ? game.combat.combatants.find((c) => c.actor === actor || c.actor?.uuid === actor?.uuid) ?? null : null);
 

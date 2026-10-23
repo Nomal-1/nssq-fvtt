@@ -9,9 +9,9 @@ import { RESISTS } from "../engine/derive.mjs";
 import { removeState } from "../engine/states.mjs";
 import { combatProfile } from "./profile.mjs";
 import { onInflicted } from "./turn-status.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Conditions.${k}`, d) : game.i18n.localize(`NSSQ.Conditions.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const loc = (k) => game.i18n.localize(k);
 
 /* ---------------- 이름 ---------------- */
@@ -68,27 +68,6 @@ export function buffEffectText(raw) {
   return "";
 }
 
-/** 전투원 상태 자세히(전투 화면에서 카드를 누르면 뜨는 창의 내용) */
-export function statusDetailHtml(actor, name) {
-  const s = actor?.system ?? {};
-  const T = (k, d) => (d ? game.i18n.format(`NSSQ.StatusPanel.${k}`, d) : game.i18n.localize(`NSSQ.StatusPanel.${k}`));
-  const conds = (s.conditions ?? []).filter((c) => CONDITIONS[c.id]);
-  const buffs = (s.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]);
-  const section = (title, cls, rows) => (rows.length ? `<h4 class="${cls}">${esc(title)}</h4><ul>${rows.join("")}</ul>` : "");
-  const condRows = (kind) => conds.filter((c) => CONDITIONS[c.id].kind === kind).map((c) =>
-    `<li class="${kind}"><b>${esc(kind === "bind" ? conditionName(c.id) : `[${conditionName(c.id)}]`)}</b>${c.depth === null || c.depth === undefined ? "" : ` <span class="meta">${esc(game.i18n.format("NSSQ.StatusHint.depth", { n: c.depth }))}</span>`}<div class="eff">${esc(loc(`NSSQ.StatusHint.${c.id}`))}</div></li>`);
-  const buffRows = (kind) => buffs.filter((b) => BUFFS[canonicalBuff(b.id)].kind === kind).map((b) =>
-    `<li class="${kind}"><b>『${esc(buffLabel(b))}』</b> <span class="meta">${esc(T("turnsLeft", { n: b.turns }))}</span><div class="eff">${esc(buffEffectText(b))}</div></li>`);
-  const body = [
-    section(T("ailments"), "ailment", condRows("ailment")),
-    section(T("binds"), "bind", condRows("bind")),
-    section(T("buffs"), "buff", buffRows("buff")),
-    section(T("debuffs"), "debuff", buffRows("debuff"))
-  ].join("");
-  return `<header><span class="name">${esc(name)}</span><a data-pop-close title="${esc(T("close"))}"><i class="fas fa-times"></i></a></header>
-    ${body || `<p class="none">${esc(T("none"))}</p>`}`;
-}
-
 /** 시트용 목록: { cls, label, hint } */
 export function statusListOf(actor) {
   const s = actor?.system ?? {};
@@ -100,50 +79,6 @@ export function statusListOf(actor) {
       hint: buffEffectText(b)
     }))
   ];
-}
-
-/* ---------------- 칩(전투 화면·시트) ---------------- */
-
-/** 상태 칩 HTML. 상태 이상(빨강)·봉인(주황)·강화(파랑)·약화(보라) */
-export function statusChips(actor) {
-  const s = actor?.system;
-  if (!s) return "";
-  const chips = [];
-  for (const c of s.conditions ?? []) {
-    const def = CONDITIONS[c.id];
-    if (!def) continue;
-    const depth = c.depth === null || c.depth === undefined ? "" : `<b>${c.depth}</b>`;
-    chips.push(`<span class="nb-chip ${def.kind}" title="${esc(`${conditionLabel(c)} — ${loc(`NSSQ.StatusHint.${c.id}`)}`)}">${esc(conditionName(c.id))}${depth}</span>`);
-  }
-  for (const b of s.buffs ?? []) {
-    const def = BUFFS[b.id];
-    if (!def) continue;
-    const turns = game.i18n.format("NSSQ.Buff.turns", { n: b.turns });
-    chips.push(`<span class="nb-chip ${def.kind}" title="${esc(`${loc(`NSSQ.Buff.${def.kind}`)}: ${buffLabel(b)} (${turns}) — ${buffEffectText(b)}`)}">${esc(buffLabel(b))}<b>${esc(turns)}</b></span>`);
-  }
-  return chips.length ? `<div class="nb-chips">${chips.join("")}</div>` : "";
-}
-
-/**
- * 에너미 카드용 짧은 표시: 상태 이상 이름, 봉인 수, 강화·약화 수(▲n ▼n). 자세한 것은 카드를 눌러 자세히 보기
- * 그림 크기와 관계없이 이름·【HP】 막대와 한 줄에 들어가도록 칩 대신 쓴다
- */
-export function statusMarks(actor) {
-  const s = actor?.system;
-  if (!s) return "";
-  const conds = (s.conditions ?? []).filter((c) => CONDITIONS[c.id]);
-  const buffs = (s.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]);
-  const ail = conds.filter((c) => CONDITIONS[c.id].kind === "ailment");
-  const binds = conds.filter((c) => CONDITIONS[c.id].kind === "bind");
-  const up = buffs.filter((b) => BUFFS[canonicalBuff(b.id)].kind === "buff");
-  const down = buffs.filter((b) => BUFFS[canonicalBuff(b.id)].kind === "debuff");
-  const marks = [
-    ...ail.map((c) => `<span class="mk ailment" title="${esc(conditionLabel(c))}">${esc(conditionName(c.id))}</span>`),
-    binds.length ? `<span class="mk bind" title="${esc(binds.map(conditionLabel).join(", "))}"><i class="fas fa-link"></i>${binds.length}</span>` : "",
-    up.length ? `<span class="mk buff" title="${esc(up.map(buffLabel).join(", "))}">▲${up.length}</span>` : "",
-    down.length ? `<span class="mk debuff" title="${esc(down.map(buffLabel).join(", "))}">▼${down.length}</span>` : ""
-  ].filter(Boolean);
-  return marks.length ? `<div class="nb-marks">${marks.join("")}</div>` : "";
 }
 
 /* ---------------- 적용 ---------------- */

@@ -7,9 +7,9 @@ import { applySpends, planGuards } from "../engine/guards.mjs";
 import { combatProfile, sideOf } from "./profile.mjs";
 import { actionState } from "./turn-status.mjs";
 import { spendTokenStance, tokenStances } from "./tokens.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Guard.${k}`, d) : game.i18n.localize(`NSSQ.Guard.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const alive = (c) => !!c?.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
 const unitSide = (actor) => (sideOf(actor) === "enemy" ? "enemy" : "party");
 

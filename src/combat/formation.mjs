@@ -6,6 +6,7 @@ import { LAYOUT, PARTY_SLOTS, assignPartySlots, formationPositions, partyRowSlot
 import { isActiveGM } from "./apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { sideOf } from "./profile.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 
@@ -84,8 +85,7 @@ export async function changePosition(combatant) {
   const actor = combatant.actor;
   const scene = combatant.parent?.scene ?? game.scenes.get(combatant.sceneId);
   if (!actor) return false;
-  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-
+  
   if (actor.type === "enemy") {
     const choice = await Dialog.prompt({
       title: L("changeRow"),

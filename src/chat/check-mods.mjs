@@ -7,11 +7,11 @@
  */
 import { emit, onSocket } from "../socket.mjs";
 import { isDarkNow } from "../apps/darkness.mjs";
+import { esc } from "../util.mjs";
 
 export const CHECK_KINDS = ["identify", "knowledge", "lore", "danger", "sight", "senses", "stealth", "tracking", "mapping", "athletic", "riding", "piloting", "machinery", "escape", "negotiation", "rope", "foeEvade"];
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Check.${k}`, d) : game.i18n.localize(`NSSQ.Check.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const effOf = (i, type) => (i.system.effects ?? []).find((e) => e?.type === type);
 const skills = (a, type) => (a?.items ?? []).filter((i) => i.type === "skill" && (i.system.sl ?? 0) > 0 && effOf(i, type));
 const canPay = (a, cost = {}) => (cost.tp ?? 0) <= (a.system.tp?.value ?? 0) && (cost.fp ?? 0) <= (a.system.fp?.value ?? 0);

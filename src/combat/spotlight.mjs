@@ -9,9 +9,9 @@
 import { evaluateCheck } from "../engine/check.mjs";
 import { isActiveGM } from "./apply.mjs";
 import { cutinStyle } from "../apps/art-config.mjs";
+import { esc } from "../util.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Spotlight.${k}`, d) : game.i18n.localize(`NSSQ.Spotlight.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const TRIGGERS = ["crit", "absSuccess", "ailment"];
 
 /* ---------------- 컷인 ---------------- */

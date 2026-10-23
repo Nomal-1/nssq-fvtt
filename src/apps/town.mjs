@@ -9,8 +9,8 @@
  * - 상점 판매 품목은 마을마다(shopHidden, 없으면 기본 설정)
  */
 import { viewArea } from "./mobile.mjs";
+import { esc } from "../util.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Town.${k}`, d) : game.i18n.localize(`NSSQ.Town.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
 const rid = () => foundry.utils.randomID();
 /** 그림 경로 → URL. 이미 %인코딩된 경로(업로드한 그림 등)는 그대로 */
@@ -33,12 +33,6 @@ export function newTown(name) {
     id: rid(), name: name || L("newName"), img: "", desc: "",
     facilities: ["guild", "shop", "inn", "apothecary", "pub", "office"].map((type) => ({ id: rid(), type, name: L(`type.${type}`), img: "", desc: "", sceneId: "" }))
   };
-}
-
-/** 이 마을에서 숨긴 상점 품목(마을에 따로 정하지 않았으면 null → 기본 설정) */
-export function townShopHidden(townId) {
-  const t = allTowns()[townId];
-  return Array.isArray(t?.shopHidden) ? t.shopHidden : null;
 }
 
 /** GM: 마을의 판매 품목 숨김·판매 전환(처음 고치면 기본 설정을 복사해서 시작) */

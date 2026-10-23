@@ -14,12 +14,12 @@ import { combatProfile, friendly, sideOf } from "./profile.mjs";
 import { buffLabel, conditionName } from "./status.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { knowsEnemy, rareMask } from "./bestiary.mjs";
+import { esc } from "../util.mjs";
 
 /** 종료 페이즈 카드의 【HP】 줄: 간파하지 못한 희소종은 모두에게 통상종 값으로(본문은 모두가 본다) */
 const hpShown = (a, before, after) => { const m = rareMask(a, { forAll: true }); return m ? { before: m.hpOf(before), after: m.hpOf(after) } : { before, after }; };
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Turn.${k}`, d) : game.i18n.localize(`NSSQ.Turn.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const alive = (c) => !!c.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
 const note = (content) => ChatMessage.create({
   speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },

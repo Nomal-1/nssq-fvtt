@@ -11,6 +11,7 @@ import { skillUsage } from "../engine/skills.mjs";
 import { bookOf, toggleBook } from "../combat/book.mjs";
 import { clearGrimoire, isGrimoire, recordOf, toggleGrimoire } from "../combat/grimoire.mjs";
 import { autoKey, hasOptional } from "../engine/triggers.mjs";
+import { esc } from "../util.mjs";
 
 const GROUPS = [
   ["weapon", "TYPES.Item.weapon"],
@@ -221,7 +222,6 @@ async function pickItemTargets(actor, item) {
     }, { classes: ["nssq", "dialog"] });
     return row ? party.filter((a) => (a.system.row ?? "front") === row) : null;
   }
-  const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const options = party.map((a) => `<option value="${a.id}" ${a === actor ? "selected" : ""}>${esc(a.name)} (HP ${a.system.hp?.value ?? 0}/${a.system.hp?.max ?? 0})</option>`).join("");
   return Dialog.prompt({
     title: game.i18n.format("NSSQ.Inventory.useTargetTitle", { name: item.name }),

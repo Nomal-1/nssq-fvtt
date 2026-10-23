@@ -14,10 +14,10 @@ import { evaluate } from "../engine/expr.mjs";
 import tables from "../generated/tables.mjs";
 
 import { declaredFpDice, fpNote, rerollButton, spendFpDice } from "./fp-dice.mjs";
+import { esc } from "../util.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/attack-card.hbs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const elementLabel = (e) => (e === "none" ? game.i18n.localize("NSSQ.Combat.noElement") : game.i18n.localize(`NSSQ.Resist.${e}`));
 
 function combatantOf(actor) {
