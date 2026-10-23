@@ -14,7 +14,7 @@
       {{#if t.absFailure}}<span class="tag failure">{{localize "NSSQ.Check.absFailure"}}</span>{{/if}}
       {{{t.fpHtml}}}
     </div>
-    <div class="hit-result {{#if t.hit}}success{{else}}failure{{/if}}">{{#if t.hit}}{{localize "NSSQ.Combat.hit"}}{{else}}{{localize "NSSQ.Combat.miss"}}{{/if}}</div>
+    <div class="hit-result {{#if t.hit}}success{{else}}failure{{/if}}">{{#if t.hit}}{{localize "NSSQ.Combat.hit"}}{{else if t.nullified}}{{localize "NSSQ.Combat.nullified"}}{{else}}{{localize "NSSQ.Combat.miss"}}{{/if}}</div>
     {{#if t.hit}}
     <div class="dmg-line">
       <span class="label">{{localize "NSSQ.Combat.damageDice"}} {{t.diceCount}}D6</span>

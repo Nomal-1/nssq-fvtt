@@ -238,7 +238,8 @@ async function updateReaction({ message, messageId, type, index, result }) {
     else if (passAlly(t, result) || wideFailed(t, result)) { /* 대상 자신의 능동 회피를 기다린다 */ }
     else {
       t.reaction = { ...t.reaction, state: "used", text: result.text };
-      if (result.evaded || result.nullify) Object.assign(t, { hit: false, finalDamage: 0, rawDamage: 0 });
+      // 《완전 방어》는 명중을 「무효」로 표시(빗나감과 구별)
+      if (result.evaded || result.nullify) Object.assign(t, { hit: false, finalDamage: 0, rawDamage: 0, ...(result.nullify ? { nullified: true } : {}) });
     }
     await message.update({ content: await renderAttackCard(card), "flags.nssq.attack": card });
     if (autoApplyMode() === "auto" && !hasPendingReaction(targets)) {
@@ -254,8 +255,8 @@ async function updateReaction({ message, messageId, type, index, result }) {
   // 다회 공격을 타격마다 나눈 카드: 같은 공격의 다른 카드도 함께 고친다(적용하지 않은 것만)
   const others = card.group ? groupMessages(card).filter((m) => m.id !== message.id && !m.getFlag("nssq", "skillCard").applied)
     .map((m) => ({ m, card: foundry.utils.deepClone(m.getFlag("nssq", "skillCard")), changed: false })) : [];
-  const voidEntry = (x) => {
-    x.hits = (x.hits ?? []).map((h) => (h.hit ? { ...h, hit: false, final: 0 } : h));
+  const voidEntry = (x, nullified = false) => {
+    x.hits = (x.hits ?? []).map((h) => (h.hit ? { ...h, hit: false, final: 0, ...(nullified ? { nullified: true } : {}) } : h));
     x.damage = 0;
     x.inflicts = [];
     x.buffs = (x.buffs ?? []).filter((b) => BUFFS[canonicalBuff(b.id)]?.kind !== "debuff");
@@ -272,7 +273,7 @@ async function updateReaction({ message, messageId, type, index, result }) {
           const a = x.uuid ? await fromUuid(x.uuid) : null;
           // scope self(《야수의 우정》 「자신이 받는 공격 하나」)면 자신만
           const hitMe = result.selfOnly ? x.uuid === result.reactorUuid : a && reactor && friendly(a, reactor);
-          if (hitMe) { voidEntry(x); c.changed = true; }
+          if (hitMe) { voidEntry(x, true); c.changed = true; }
         }
       }
     } else if (result.evaded) {

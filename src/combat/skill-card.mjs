@@ -48,7 +48,7 @@ function entryLines(e, card) {
     const no = multi && h.seq ? `<b class="seq">${esc(L("hitNo", { n: h.seq }))}</b> ` : "";
     if (h.skipped) { out.push(`<li class="miss">${no}${esc(L("skipped"))}</li>`); continue; }
     // 달성값은 모르는 에너미면 ?로 바꾸므로 span에 넣고, 나머지 글자만 이스케이프한다
-    const [pre, post] = L(h.hit ? "hitLine" : "missLine", { total: "\u0000", dice: h.dice?.join("+") ?? "" }).split("\u0000");
+    const [pre, post] = L(h.hit ? "hitLine" : h.nullified ? "nullLine" : "missLine", { total: "\u0000", dice: h.dice?.join("+") ?? "" }).split("\u0000");
     let line = `${no}${esc(pre)}<span data-mask="${esc(card.kind)}">${h.total ?? "-"}</span>${esc(post ?? "")}`;
     if (h.hit && multi) line += ` — ${esc(L("damageLine", { n: h.final, count: h.diceCount }))}${h.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}`;
     line += fpNote(h);
@@ -58,7 +58,7 @@ function entryLines(e, card) {
     const dice = (h.dmg ?? []).length || (h.critDmg ?? []).length
       ? `<div class="sk-dmg-dice"><small>${esc(L("damageDiceHead", { count: h.diceCount ?? (h.dmg ?? []).length, resist: "\u0000" })).replace("\u0000", `<span data-mask-def>${h.resist ?? "?"}</span>`)}</small> ${(h.dmg ?? []).map((v) => `<span class="die-s ${v > (h.resist ?? 99) ? "over" : ""}">${v}</span>`).join("")}${(h.critDmg ?? []).length ? ` + ${h.critDmg.map((v) => `<span class="die-s crit ${v > (h.resist ?? 99) ? "over" : ""}">${v}</span>`).join("")}` : ""}</div>` : "";
     // 한 번 공격이면 대미지를 「명중」처럼 큰 칸으로(여러 번이면 아래 합계를 크게)
-    const big = !multi ? `<div class="hit-result ${h.hit ? "success" : "failure"}">${esc(h.hit ? L("damageBig", { n: h.final }) : L("missBig"))}${h.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}</div>` : "";
+    const big = !multi ? `<div class="hit-result ${h.hit ? "success" : "failure"}">${esc(h.hit ? L("damageBig", { n: h.final }) : L(h.nullified ? "nullBig" : "missBig"))}${h.crit ? ` <b class="crit">${esc(L("crit"))}</b>` : ""}</div>` : "";
     const inner = h.seq ? sub(h.seq) : "";
     out.push(`<li class="${h.hit ? "hit" : "miss"}">${line}${h.hit ? dice : ""}${big}${inner ? `<ul class="per-hit">${inner}</ul>` : ""}</li>`);
   }
