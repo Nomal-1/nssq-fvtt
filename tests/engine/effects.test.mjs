@@ -455,3 +455,13 @@ describe("부분 자동 전투 스킬 C1묶음", () => {
     expect(b.results.get("e").inflicts[0].id).toBe("death");
   });
 });
+
+describe("상시 공격 보정: 모든 필드가 공격까지 전달(숫자 반영 점검)", () => {
+  it("resistMod·addElement도 모은다", () => {
+    const p = collectPassives([{ name: "x", sl: 1, timing: "상시", effects: [{ type: "attackBonus", resistMod: -1, addElement: ["fire"], diceMod: 2 }] }]);
+    const sum = sumAttackBonuses(p.attackBonuses, {});
+    expect(sum.resistMod).toBe(-1);
+    expect(sum.addElement).toEqual(["fire"]);
+    expect(sum.diceMod).toBe(2);
+  });
+});

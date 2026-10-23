@@ -24,7 +24,7 @@ export function collectPassives(skills, ctx = {}) {
     for (const e of (s.effects ?? []).filter((x) => s.timing === "상시" || x?.always)) {
       if (e.type === "attackBonus") {
         const v = (x) => evaluate(x ?? 0, { SL: s.sl, self: ctx.self });
-        attackBonuses.push({ name: s.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod), critDice: v(e.critDice), critUp: !!e.critUp, resistLow: !!e.resistLow });
+        attackBonuses.push({ name: s.name, when: e.when ?? null, hitMod: v(e.hitMod), diceMod: v(e.diceMod), atkMod: v(e.atkMod), critDice: v(e.critDice), critUp: !!e.critUp, resistLow: !!e.resistLow, resistMod: v(e.resistMod), addElement: [].concat(e.addElement ?? []) });
         continue;
       }
       if (e.type === "useBonus") {
