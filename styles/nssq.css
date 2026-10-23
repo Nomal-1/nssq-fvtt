@@ -1920,6 +1920,7 @@ body.nssq-mobile #nssq-battle { left: 0 !important; top: 0 !important; }
 .nssq-town.field-overlay .fs-foe.here b { display: block; text-align: center; font-size: 1.5em; margin-top: 6px; }
 @keyframes fs-foe-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); box-shadow: 0 0 42px rgba(255, 60, 40, 1); } }
 /* 회복 롤 주사위(기준 이상이 밝게) */
+.nssq-skill-card .sk-heal-summary { margin: 4px 0; padding: 3px 6px; font-weight: 700; color: var(--nq-green); border-left: 3px solid rgba(116, 208, 142, 0.6); background: rgba(116, 208, 142, 0.08); }
 .nssq-heal-dice { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin: 2px 0 0; }
 .nssq-heal-dice .die-s { display: inline-block; width: 20px; height: 20px; line-height: 18px; font-size: 0.85em; text-align: center; font-weight: 700; border: 1px solid var(--nq-line2); border-radius: 5px; background: var(--nq-bg2); color: var(--nq-tx); opacity: 0.45; }
 .nssq-heal-dice .die-s.over { opacity: 1; color: var(--nq-green); border-color: rgba(116, 208, 142, 0.6); }

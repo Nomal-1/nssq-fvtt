@@ -701,7 +701,7 @@ export async function resolveAndPost({ actor, combatant, item, kind, units, main
     category: sys.category ?? "", ...(followup ? { followup } : {}),
     // 같은 공격 반복·《크로스 차지》용(combat/chase.mjs)
     itemId: item.id ?? null, variant, skillKey: sys.key ?? null, main: !!mainAction,
-    description: sys.description ?? "",
+    description: sys.description ?? "", target: sys.target ?? "",
     unknownScope: !!spec.unknown, entries, applied: false
   };
   const speaker = ChatMessage.getSpeaker({ actor, token: actor.token });
@@ -902,9 +902,11 @@ function entryLines(e, card) {
     else if (x.delta) out.push(`<li class="${x.delta > 0 ? "heal" : "hit"}">${esc(L("resourceDelta", { res, n: `${x.delta > 0 ? "+" : ""}${x.delta}` }))}</li>`);
   }
   // 회복 롤의 주사위(기준 이상이 회복량, 사용자 요청)
-  const healDice = (res) => (e.resource ?? []).filter((x) => x.heal === res && x.dice?.length).map((x) => `<span class="nssq-heal-dice">${x.dice.map((v) => `<span class="die-s ${v >= (x.min ?? 4) ? "over" : ""}">${v}</span>`).join("")}<small>${esc(L("healDiceMin", { min: x.min ?? 4 }))}</small></span>`).join("");
-  if (e.heal?.hp) out.push(`<li class="heal">${esc(L("healHp", { n: e.heal.hp }))}${healDice("hp")}</li>`);
-  if (e.heal?.tp) out.push(`<li class="heal">${esc(L("healTp", { n: e.heal.tp }))}${healDice("tp")}</li>`);
+  // 회복: 굴린 주사위(4 이상이 밝게) + 회복량을 대미지처럼 큰 글씨로(사용자 요청)
+  const healDice = (res) => (e.resource ?? []).filter((x) => x.heal === res && x.dice?.length).map((x) => `<div class="nssq-heal-dice"><small>${esc(L("healDiceHead", { count: x.dice.length, min: x.min ?? 4 }))}</small> ${x.dice.map((v) => `<span class="die-s ${v >= (x.min ?? 4) ? "over" : ""}">${v}</span>`).join("")}</div>`).join("");
+  for (const res of ["hp", "tp"]) {
+    if (e.heal?.[res]) out.push(`<li class="heal">${healDice(res)}<div class="hit-result success">${esc(L(res === "hp" ? "healHp" : "healTp", { n: e.heal[res] }))}</div></li>`);
+  }
   for (const i of e.inflicts ?? []) if (!i.seq) out.push(inflictLi(i));
   for (const b of e.buffs ?? []) if (!b.seq) out.push(buffLi(b));
   for (const st of e.states ?? []) out.push(`<li class="state">${esc(L("stateLine", { name: st.name, mods: stateModText(st.mods) }))}</li>`);
@@ -930,6 +932,34 @@ export const stateModText = (mods) => Object.entries(mods ?? {}).filter(([, v]) 
 
 export const renderSkillCard = (card) => renderCard(card);
 
+/** 받침이 있으면 a, 없으면 b(한글·숫자 끝 글자 기준) */
+function josa(word, a, b) {
+  const c = String(word ?? "").trim().slice(-1);
+  const code = c.charCodeAt(0) - 0xac00;
+  if (code >= 0 && code <= 11171) return (code % 28 ? a : b);
+  return "013678".includes(c) ? a : b;
+}
+
+/**
+ * 회복 요약(사용자 요청): 「(대상)을 nD6(4 이상)+k만큼 【HP】 회복」. n = 굴린 주사위 수, k = 굴림 없이 더한 회복(《리인포스》 등).
+ * 흡수(drain)는 대미지에서 오는 것이라 뺀다
+ */
+function healSummary(card) {
+  const lines = [];
+  for (const res of ["hp", "tp"]) {
+    const e = (card.entries ?? []).find((x) => (x.resource ?? []).some((r) => r.heal === res && !r.drain && (r.dice?.length || r.amount)));
+    if (!e) continue;
+    const list = e.resource.filter((r) => r.heal === res && !r.drain);
+    const roll = list.find((r) => r.dice?.length);
+    const k = list.filter((r) => !r.dice?.length).reduce((n, r) => n + (r.amount ?? 0), 0);
+    const formula = roll ? `${roll.dice.length}D6(${L("healDiceMin", { min: roll.min ?? 4 })})${k ? `+${k}` : ""}` : `${k}`;
+    const raw = String(card.target ?? "").trim();
+    const target = raw && raw !== "-" ? raw : L("healTargetDefault");
+    lines.push(L("healSummary", { target: `${target}${josa(target, "을", "를")}`, formula, res: res === "hp" ? "【HP】" : "【TP】" }));
+  }
+  return lines.map((t) => `<p class="sk-heal-summary"><i class="fas fa-heart"></i> ${esc(t)}</p>`).join("");
+}
+
 function renderCard(card) {
   const head = `<header class="check-header"><span class="check-label"><img src="${esc(card.img)}" width="20" height="20"/> ${esc(card.name)}${card.sl ? ` <small>SL${card.sl}</small>` : ""}${card.group ? ` <b class="seq">${esc(L("hitOf", { n: card.group.index, count: card.group.count }))}</b>` : ""}${["chase", "counter", "delayed", "repeat"].includes(card.followup?.type) ? ` <b class="seq">${esc(L(`followup.${card.followup.type}`))}</b>` : ""}</span><span class="check-kind">${esc(card.userName)}</span></header>`;
   const act = card.activation ? `<p class="activation ${card.activation.ok ? "ok" : "ng"}">${esc(L(card.activation.ok ? "activationOk" : "activationFail", { dice: card.activation.dice.join("+") }))}</p>` : "";
@@ -937,13 +967,14 @@ function renderCard(card) {
   // 해설(데이터의 HTML)은 접어 둔다
   const desc = card.description ? `<details class="sk-desc"><summary>${esc(L("description"))}</summary>${card.description}</details>` : "";
   if (card.failed) return `<div class="nssq-skill-card">${head}${desc}${act}${fp}</div>`;
+  const heal = healSummary(card);
   const rows = card.entries.map((e, i) => `<section class="sk-target" data-index="${i}"><div class="target-name"><i class="fas fa-bullseye"></i> ${esc(e.name)}</div><ul>${entryLines(e, card)}</ul><div class="sk-status"></div></section>`).join("");
   const gm = [
     ...(card.gm ?? []).map((g) => L("gmNeeded", { what: game.i18n.localize(`NSSQ.SkillUse.type.${String(g).split(":")[0]}`) })),
     ...(card.partial ? [L("gmNeeded", { what: card.partial })] : []),
     ...(card.unknownScope ? [L("gmScope")] : [])
   ];
-  return `<div class="nssq-skill-card">${head}${desc}${act}${rows}${fp}${gm.map((g) => `<p class="gm-needed"><i class="fas fa-exclamation-triangle"></i> ${esc(g)}</p>`).join("")}
+  return `<div class="nssq-skill-card">${head}${desc}${act}${heal}${rows}${fp}${gm.map((g) => `<p class="gm-needed"><i class="fas fa-exclamation-triangle"></i> ${esc(g)}</p>`).join("")}
     <div class="sk-apply"><span class="apply-status"></span><span class="apply-buttons"><button type="button" data-sk-apply><i class="fas fa-check"></i> ${esc(L("apply"))}</button><button type="button" data-sk-undo><i class="fas fa-undo"></i> ${esc(L("undo"))}</button></span></div></div>`;
 }
 
