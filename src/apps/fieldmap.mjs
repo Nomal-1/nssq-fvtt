@@ -290,9 +290,9 @@ export async function moveTo(to) {
   return processTriggers(r.map, r.triggers);
 }
 
-/** 그 에어리어의 탐색 BGM(에어리어 → 지도). enter: 미궁에 새로 들어옴(이전 곡을 끈다) */
+/** 미궁의 탐색 BGM(지도에 정한 곡, 에어리어별 BGM은 없앴다). enter: 미궁에 새로 들어옴(이전 곡을 끈다) */
 async function areaMusic(map, areaId, enter = false) {
-  const ref = areaOf(map, areaId)?.fieldBgm || map?.fieldBgm || "";
+  const ref = map?.fieldBgm || "";
   return (await import("./location-bgm.mjs")).playLocationBgm(ref, { enter });
 }
 
@@ -1031,8 +1031,6 @@ export class FieldMapApp extends Application {
           <p class="notes">${esc(L("f.actsHint"))}</p>
           ${this.field(`${p}.tags`, a.tags, L("f.tags"), "text", L("f.tagsHint"))}
           <div class="form-group"><label>${esc(L("f.areaBattleBg"))}</label><input type="text" data-path="${p}.battleBg" value="${esc(a.battleBg ?? "")}" placeholder="${esc(L("f.mapDefault"))}"/></div>
-          <div class="form-group"><label>${esc(L("f.areaFieldBgm"))}</label><select data-path="${p}.fieldBgm">${encBgmOptions(a.fieldBgm ?? "", L("f.mapDefault"))}</select></div>
-          <div class="form-group"><label>${esc(L("f.areaBattleBgm"))}</label><select data-path="${p}.battleBgm">${encBgmOptions(a.battleBgm ?? "", L("f.mapDefault"))}</select></div>
           ${this.encounterTableEdit(a, p)}
           ${this.field(`${p}.secret`, a.secret, L("f.secret"), "bool")}
           <p>${map.start === a.id ? `<b><i class="fas fa-flag"></i> ${esc(L("isStart"))}</b>` : `<button type="button" data-fm-act="setStart">${esc(L("setStart"))}</button>`}</p>

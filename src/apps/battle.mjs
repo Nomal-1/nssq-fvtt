@@ -338,10 +338,42 @@ export async function joinBattle(combat, uuid, { row = "front" } = {}) {
   }
   await relayout(copy);
   await combat.createEmbeddedDocuments("Combatant", [{ tokenId: token.id, sceneId: copy.id, actorId: token.actorId, hidden: token.hidden }]);
+  if (enemy) await intrudeMusic(combat, [uuid, doc.uuid, actor.getFlag("nssq", "library"), actor.uuid].filter(Boolean), actor.name);
   await ChatMessage.create({
     speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
     content: `<div class="nssq-combat-note"><i class="fas fa-bolt"></i> ${L(enemy ? "joinedEnemy" : "joinedAlly", { name: esc(token.name) })}</div>`
   });
+}
+
+/**
+ * F.O.E. 난입(사용자 요청): 진행 중인 지도의 F.O.E.(액터가 같거나 이름이 같은 것)에 BGM이 정해져 있으면 지금 전투 곡을 끄고 그 곡.
+ * 전투가 끝나면 끄고 전투 전 곡으로(플래그 battle.intrudeBgm)
+ */
+async function intrudeMusic(combat, uuids, name) {
+  const { activeMap } = await import("./fieldmap.mjs");
+  const foe = (activeMap()?.foes ?? []).find((f) => f.bgm && (uuids.includes(f.actorUuid) || f.name === name || f.actorLabel === name));
+  if (!foe) return;
+  const info = combat.getFlag("nssq", "battle") ?? {};
+  if (info.intrudeBgm === foe.bgm) return;
+  const { parseBgm } = await import("../engine/encounters.mjs");
+  const music = parseBgm(foe.bgm);
+  const pl = game.playlists.get(music.playlist);
+  if (!pl) return;
+  const copy = game.scenes.get(info.copy);
+  if (copy?.playlist) await soundSafe(() => copy.playlist.stopAll());
+  await stopIntrude(info);
+  await soundSafe(async () => (await import("./location-bgm.mjs")).playLooped(pl, pl.sounds.get(music.sound) ?? null));
+  await combat.setFlag("nssq", "battle", { ...info, intrudeBgm: foe.bgm });
+}
+
+async function stopIntrude(info) {
+  if (!info?.intrudeBgm) return;
+  const { parseBgm } = await import("../engine/encounters.mjs");
+  const music = parseBgm(info.intrudeBgm);
+  const pl = game.playlists.get(music.playlist);
+  const so = pl?.sounds.get(music.sound);
+  if (so) await soundSafe(() => so.update({ playing: false }));
+  else if (pl) await soundSafe(() => pl.stopAll());
 }
 
 /* ---------------- 종료 ---------------- */
@@ -396,6 +428,7 @@ export async function endBattle(combat, result = "abort") {
     }
     // 전투 BGM 정지 → 원래 씬·음악
     if (copy?.playlist) await soundSafe(() => copy.playlist.stopAll());
+    await stopIntrude(info);
     if (game.combats.has(combat.id)) await combat.delete();
     // 예전 방식(사본 씬으로 이동한 전투)이면 원래 씬으로 되돌린다
     const origin = game.scenes.get(info.origin);

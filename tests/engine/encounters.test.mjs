@@ -7,7 +7,7 @@ describe("전투 구성", () => {
     expect(resolveStage({ bg: "", bgm: "" }, map)).toEqual({ bg: "forest.webp", bgm: "pl1.s1" });
     expect(resolveStage({ bg: "boss.webp", bgm: "" }, map)).toEqual({ bg: "boss.webp", bgm: "pl1.s1" });
     expect(resolveStage({ bg: "", bgm: "" }, null)).toEqual({ bg: "", bgm: "" });
-    expect(resolveStage({ bg: "", bgm: "" }, map, { battleBg: "cave.webp", battleBgm: "" })).toEqual({ bg: "cave.webp", bgm: "pl1.s1" });
+    expect(resolveStage({ bg: "", bgm: "" }, map, { battleBg: "cave.webp", battleBgm: "pl9" })).toEqual({ bg: "cave.webp", bgm: "pl1.s1" });
     expect(parseBgm("pl1.s1")).toEqual({ playlist: "pl1", sound: "s1" });
     expect(parseBgm("pl1")).toEqual({ playlist: "pl1", sound: null });
   });

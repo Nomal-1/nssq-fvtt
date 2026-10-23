@@ -60,7 +60,6 @@ async function targets(state) {
     add("bgm", m.name, L("t.map", { name: m.name }), m, "battleBgm");
     add("bg", m.name, L("t.map", { name: m.name }), m, "battleBg");
     for (const a of m.areas ?? []) {
-      add("bgm", a.name, L("t.area", { map: m.name, name: a.name }), a, "battleBgm");
       add("bg", a.name, L("t.area", { map: m.name, name: a.name }), a, "battleBg");
       add("area", a.name, L("t.area", { map: m.name, name: a.name }), a, "img");
     }

@@ -71,7 +71,7 @@ export async function startEncounter(id, { map = null, flags = {} } = {}) {
     if (actor) actors.push({ actor, row: e.row });
   }
   if (!actors.length) return ui.notifications.warn(L("noEnemies"));
-  // 진행 중인 지도의 지금 에어리어 기본 무대(에어리어 battleBg·battleBgm)
+  // 진행 중인 지도의 지금 에어리어 배경(battleBg). BGM은 전투 구성 → 지도 기본
   const st = game.settings.get("nssq", "fieldMapState") ?? {};
   const area = m && st.active && st.mapId === m.id ? (m.areas ?? []).find((a) => a.id === st.current) ?? null : null;
   return (await import("./dungeon.mjs")).presetBattle(enc.name, actors, flags, resolveStage(enc, m, area));

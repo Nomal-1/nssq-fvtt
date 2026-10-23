@@ -3,14 +3,14 @@
  * 구성: { id, name, group, bg, bgm, enemies: [{ uuid, name, img, count, row: "front"|"back" }], fav }
  *   group: "map:<지도 id>" | "" (미분류)
  *   bg: 배경 그림 경로("" = 던전 기본), bgm: "재생목록id" 또는 "재생목록id.곡id"("" = 던전 기본)
- * 지도: battleBg·battleBgm(던전 기본 무대), 에어리어 encounters: [{ id, weight }](조우표)
+ * 지도: battleBg·battleBgm(던전 기본 무대). BGM은 전투 구성 → 지도(에어리어 BGM 없음, 사용자 요청), 에어리어 encounters: [{ id, weight }](조우표)
  */
 
 /** 이 전투의 무대: 구성의 배경·BGM → 에어리어 기본 → 던전(지도) 기본 */
 export function resolveStage(enc, map = null, area = null) {
   return {
     bg: enc?.bg || area?.battleBg || map?.battleBg || "",
-    bgm: enc?.bgm || area?.battleBgm || map?.battleBgm || ""
+    bgm: enc?.bgm || map?.battleBgm || ""
   };
 }
 
