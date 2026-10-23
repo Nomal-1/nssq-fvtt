@@ -6,6 +6,7 @@
  * 판정 뒤 조작(카드 버튼)은 chat/check.mjs: 효과 checkFlip(《트릭스터》), checkExtraDie(《호운의 가호》), rerollBonus(《행운의 여신》)
  */
 import { emit, onSocket } from "../socket.mjs";
+import { isDarkNow } from "../apps/darkness.mjs";
 
 export const CHECK_KINDS = ["identify", "knowledge", "lore", "danger", "sight", "senses", "stealth", "tracking", "mapping", "athletic", "riding", "piloting", "machinery", "escape", "negotiation", "rope", "foeEvade"];
 
@@ -45,11 +46,11 @@ export function checkModsHtml(actor, { kinds: preset = [] } = {}) {
     <p class="notes">${esc(L("kindHint"))}</p></details>`;
 }
 
-/** 탐색 중의 밤(필드 지도·랜덤 던전 진행 중이고 시간대가 밤, 전투 밖) */
+/** 탐색 중의 어둠(필드 지도·랜덤 던전 진행 중이고 어둠: 에어리어 밝기 설정 → 시간대가 밤, 전투 밖) */
 function darkField() {
   if (game.combat?.started) return false;
   const exploring = !!game.settings.get("nssq", "fieldMapState")?.active || !!game.settings.get("nssq", "dungeon")?.active;
-  return exploring && game.settings.get("nssq", "timeOfDay") === "night";
+  return exploring && isDarkNow();
 }
 
 /** 선언 스킬의 판정 종류 중 하나를 골랐나(종류 지정이 없으면 언제나) */

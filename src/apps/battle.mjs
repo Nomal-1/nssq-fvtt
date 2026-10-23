@@ -11,8 +11,8 @@ import { relayout } from "../combat/formation.mjs";
 import { enemyActorFor } from "./enemy-library.mjs";
 import { applyIdentify, identifyEnemy } from "../combat/identify.mjs";
 import { CONDITIONS } from "../engine/conditions.mjs";
-import { timeOfDay } from "../combat/profile.mjs";
 import { applyAutoIdentify, recordBestiary, recordSeen } from "../combat/bestiary.mjs";
+import { isDarkNow } from "./darkness.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -135,7 +135,7 @@ export async function openStartDialog(presetId = null) {
         <input type="number" name="identify" value="" placeholder="${L("identifyLater")}"/></div>
       <p class="notes">${L("identifyHint")}</p>
       <div class="form-group"><label>${L("dark")}</label>
-        <input type="checkbox" name="dark" ${timeOfDay() === "night" ? "checked" : ""}/></div>
+        <input type="checkbox" name="dark" ${isDarkNow() ? "checked" : ""}/></div>
       <p class="notes">${L("darkHint")}</p>
       <div class="form-group"><label>${L("surprise")}</label>
         <select name="surprise">
@@ -158,7 +158,7 @@ export async function openStartDialog(presetId = null) {
         members: [...f.querySelectorAll("[name=member]:checked")].map((i) => i.value),
         surprise: f.surprise.value,
         // 시간대 기본값 그대로면 시간 흐름을 따른다(null), 바꿨으면 고정
-        dark: f.dark.checked === (timeOfDay() === "night") ? null : f.dark.checked,
+        dark: f.dark.checked === (isDarkNow()) ? null : f.dark.checked,
         identifyValue: f.identify.value === "" ? null : Number(f.identify.value)
       };
     }
@@ -218,9 +218,9 @@ async function resumeSounds(list) {
 }
 
 export async function startBattle({ presetId, members, surprise = "none", identifyValue = null, dark = null }) {
-  // 어둠 속 전투(01 #165): 정하지 않으면 시간대가 밤일 때. 시간이 흘러 시간대가 바뀌면 따라 바뀐다(darkAuto)
+  // 어둠 속 전투(01 #165): 정하지 않으면 지금 어둠일 때(에어리어 밝기 → 시간대가 밤). 시간이 흘러 시간대가 바뀌면 따라 바뀐다(darkAuto)
   const darkAuto = dark === null || dark === undefined;
-  if (darkAuto) dark = timeOfDay() === "night";
+  if (darkAuto) dark = isDarkNow();
   if (!game.user.isGM) return;
   const preset = game.scenes.get(presetId);
   if (!preset) return;

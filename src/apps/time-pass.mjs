@@ -68,9 +68,11 @@ export async function advanceClock(hours, combat = null) {
   const info = combat?.getFlag("nssq", "battle");
   let darkNote = "";
   // 이미 지운 전투(트래커의 [전투 종료])에는 쓰지 않는다
-  if (info?.darkAuto && game.combats.has(combat.id) && !!info.dark !== (tod === "night")) {
-    await combat.setFlag("nssq", "battle", { ...info, dark: tod === "night" });
-    darkNote = ` ${L(tod === "night" ? "darkStart" : "darkEnd")}`;
+  // 에어리어가 항상 어둠·항상 밝음이면 시간과 관계없이 그대로(apps/darkness.mjs)
+  const dark = (await import("./darkness.mjs")).isDarkNow();
+  if (info?.darkAuto && game.combats.has(combat.id) && !!info.dark !== dark) {
+    await combat.setFlag("nssq", "battle", { ...info, dark });
+    darkNote = ` ${L(dark ? "darkStart" : "darkEnd")}`;
   }
   return ChatMessage.create({ speaker: { alias: L("speaker") }, content: `<div class="nssq-combat-note"><i class="fas fa-clock"></i> ${esc(L("battleHour", { n: hours, h: hour, tod: game.i18n.localize(`NSSQ.Dungeon.tod.${tod}`) }) + darkNote)}</div>` });
 }

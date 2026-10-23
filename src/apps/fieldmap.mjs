@@ -505,6 +505,7 @@ function arrivalHtml(map, s) {
   const foeHere = v.foes.filter((f) => f.area === v.current).map((f) => f.name);
   const img = areaImg(here);
   return `${img ? `<div class="fm-card-img" style="background-image:url('${esc(img)}')"></div>` : ""}<p class="fm-here"><i class="fas fa-flag"></i> <b>${esc(here?.name ?? "")}</b>${here?.terrain ? ` — ${esc(here.terrain)}` : ""}</p>
+    ${["dark", "bright"].includes(here?.light) ? `<p class="fm-light"><i class="fas ${here.light === "dark" ? "fa-moon" : "fa-sun"}"></i> ${esc(L(`lightHere_${here.light}`))}</p>` : ""}
     ${foeHere.length ? `<p class="fm-foe-warn"><i class="fas fa-skull"></i> ${esc(L("foeHere"))}</p>` : ""}
     ${near ? `<ul class="fm-near">${near}</ul>` : ""}
     <button type="button" data-fm="open"><i class="fas fa-map"></i> ${esc(L("openMap"))}</button>`;
@@ -1108,6 +1109,8 @@ export class FieldMapApp extends Application {
           ${this.field(`${p}.tags`, a.tags, L("f.tags"), "text", L("f.tagsHint"))}
           <div class="form-group"><label>${esc(L("f.areaBattleBg"))}</label><input type="text" data-path="${p}.battleBg" value="${esc(a.battleBg ?? "")}" placeholder="${esc(L("f.mapDefault"))}"/></div>
           ${this.encounterTableEdit(a, p)}
+          <div class="form-group"><label>${esc(L("f.light"))}</label><select data-path="${p}.light">${["", "dark", "bright"].map((v) => opt(v, a.light ?? "", L(`f.light_${v || "auto"}`))).join("")}</select></div>
+          <p class="notes">${esc(L("f.lightHint"))}</p>
           ${this.field(`${p}.secret`, a.secret, L("f.secret"), "bool")}
           <p>${map.start === a.id ? `<b><i class="fas fa-flag"></i> ${esc(L("isStart"))}</b>` : `<button type="button" data-fm-act="setStart">${esc(L("setStart"))}</button>`}</p>
           ${this.triggersHtml(`${p}.triggers`, a.triggers ?? [], FM.AREA_TRIGGERS, map)}
