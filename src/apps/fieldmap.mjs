@@ -136,7 +136,7 @@ async function setMapState(s, { undo = true } = {}) {
 /**
  * 전투 중 흐른 시간(apps/time-pass.mjs advanceClock). 진행 중이 아니면 null.
  * 전투(combat)가 있으면 F.O.E.도 그만큼 움직인다(사용자 요청). 파티 에어리어로 들어온 F.O.E.는 전투 플래그 foeArrived에 적고,
- * 다음 개막 페이즈부터 GM에게 난입 여부를 묻는다(foeOpening)
+ * 다음 개막 페이즈부터 GM에게 난입 여부를 묻는다(foeOpening). 그 사이 발동한 세그먼트 트리거는 전투가 끝난 뒤 실행
  */
 export async function shiftHour(h, combat = null) {
   const s = mapState();
@@ -150,8 +150,12 @@ export async function shiftHour(h, combat = null) {
   }
   const r = FM.battleHours(map, s, h, heldFoes(info));
   await game.settings.set("nssq", "fieldMapState", { ...s, ...r.state });
+  // 그 사이 발동한 세그먼트 트리거는 전투가 끝난 뒤 몰아서(사용자 결정)
+  const later = r.triggers.map((x) => ({ triggerId: x.trigger.id }));
+  if (r.arrived.length || later.length) {
+    await combat.setFlag("nssq", "battle", { ...info, foeArrived: [...new Set([...(info.foeArrived ?? []), ...r.arrived])], laterTriggers: [...(info.laterTriggers ?? []), ...later] });
+  }
   if (r.arrived.length) {
-    await combat.setFlag("nssq", "battle", { ...info, foeArrived: [...new Set([...(info.foeArrived ?? []), ...r.arrived])] });
     for (const id of r.arrived) await post(`<p><i class="fas fa-skull"></i> ${esc(L("foeArrived", { name: map.foes.find((f) => f.id === id)?.name ?? "F.O.E." }))}</p>`, { gm: true });
   }
   return r.state.hour;
@@ -1630,6 +1634,9 @@ export function registerFieldMap() {
     const s = mapState();
     const waiting = (info?.foeArrived ?? []).filter((id) => !fought.includes(id) && s.foePos?.[id] === s.current && !(s.foeGone ?? []).includes(id));
     await handleEncounters(map, waiting.map((id) => ({ foeId: id, name: map.foes.find((f) => f.id === id)?.name ?? "F.O.E.", how: "same" })));
+    // 전투 중에 미룬 세그먼트 트리거
+    const later = (info?.laterTriggers ?? []).map((x) => findTrigger(map, x.triggerId)).filter(Boolean).map((f) => ({ scope: f.areaId ? "area" : "map", areaId: f.areaId, trigger: f.trigger }));
+    if (later.length) await processTriggers(map, later);
   });
 }
 

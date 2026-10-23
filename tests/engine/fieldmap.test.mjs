@@ -240,6 +240,10 @@ describe("전투 중 F.O.E. 이동(난입)", () => {
     expect(r.arrived).toEqual(["f"]);
     expect(foeForecast(m, s, ["g"])).toEqual(["f"]);
   });
+  it("세그먼트 트리거는 돌려준다(전투가 끝난 뒤 실행)", () => {
+    const mt = { ...m, triggers: [{ id: "t1", on: "segment", n: 1, actions: [] }] };
+    expect(battleHours(mt, s, 1).triggers.map((x) => x.trigger.id)).toEqual(["t1"]);
+  });
   it("이미 같은 에어리어에 있던 F.O.E.는 arrived 아님", () => {
     const here = { ...s, foePos: { ...s.foePos, f: "forest" } };
     expect(foeForecast(m, here)).not.toContain("f");

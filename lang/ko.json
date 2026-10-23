@@ -1463,7 +1463,7 @@
       "damageLine": "대미지 {n}({count}D6)",
       "crit": "크리티컬",
       "damageTotal": "합계 대미지 {n}", "damageBig": "대미지 {n}", "missBig": "빗나감", "damageDiceHead": "{count}D6(내성 {resist}보다 큰 눈)",
-      "healHp": "【HP】 {n} 회복", "healDiceMin": "{min} 이상", "healDiceHead": "{count}D6({min} 이상인 눈)", "healSummary": "{target} {formula}만큼 {res} 회복", "healTargetDefault": "대상",
+      "healHp": "【HP】 {n} 회복", "healDiceMin": "{min} 이상", "healDiceHead": "{count}D6({min} 이상인 눈)",
       "healTp": "【TP】 {n} 회복",
       "inflictLine": "{label} (심도 {depth})",
       "inflictResisted": "{label} — 막았다",
