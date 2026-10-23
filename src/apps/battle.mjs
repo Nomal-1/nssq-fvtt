@@ -283,13 +283,7 @@ export async function startBattle({ presetId, members, surprise = "none", identi
   const combatants = copy.tokens.filter((t) => t.actor && ["character", "enemy", "token"].includes(t.actor.type))
     .map((t) => ({ tokenId: t.id, sceneId: copy.id, actorId: t.actorId, hidden: t.hidden }));
   await combat.createEmbeddedDocuments("Combatant", combatants);
-  await combat.startCombat();
-  if (identifyValue !== null && identifyValue !== undefined) await applyIdentify(combat, identifyValue);
-  // 도감 처치 수가 기준 이상인 종은 판정 전에도 식별 상태
-  await applyAutoIdentify(combat);
-  // 대미지 적용 등은 채팅 카드에서 하므로 전투 중에도 채팅을 연다(인카운터 기능은 전투 화면에 있다)
-  ui.sidebar.activateTab("chat");
-
+  // 전투 개시 카드를 먼저(그다음 「1턴 개막 페이즈」 안내)
   const surpriseText = surprise === "party" ? L("surprisedEnemy") : surprise === "enemy" ? L("surprisedParty") : "";
   await ChatMessage.create({
     speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") },
@@ -297,6 +291,13 @@ export async function startBattle({ presetId, members, surprise = "none", identi
       <p>${actors.map((a) => esc(a.name)).join(", ")} vs ${copy.tokens.filter((t) => t.actor?.type === "enemy").map((t) => esc(t.name)).join(", ")}</p>
       ${surpriseText ? `<p class="warn">${surpriseText}</p>` : ""}${dark ? `<p class="warn"><i class="fas fa-moon"></i> ${L("darkStarted")}</p>` : ""}</div>`
   });
+  await combat.startCombat();
+  if (identifyValue !== null && identifyValue !== undefined) await applyIdentify(combat, identifyValue);
+  // 도감 처치 수가 기준 이상인 종은 판정 전에도 식별 상태
+  await applyAutoIdentify(combat);
+  // 대미지 적용 등은 채팅 카드에서 하므로 전투 중에도 채팅을 연다(인카운터 기능은 전투 화면에 있다)
+  ui.sidebar.activateTab("chat");
+
   if (surprise === "enemy") await (await import("../combat/turn-status.mjs")).preemptBlocks(combat);
   return combat;
 }
