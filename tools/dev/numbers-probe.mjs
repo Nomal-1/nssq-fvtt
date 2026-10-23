@@ -1,6 +1,7 @@
 // 효과 종류별 「숫자 반영」 점검(강화·약화·상태 이상·상시 보정·대기 자세 → 전투 프로필 → 실제 공격·스킬·회복·부여·종료 페이즈).
 // 기대값은 01 §3.8~3.10. 테스트 월드에서 [e2e] 캐릭터·에너미로 돌리고 정리한다. 결과: build/numbers-probe.json
 // 실행: node tools/dev/numbers-probe.mjs
+/* global window, ui, Dialog -- page.evaluate 안(브라우저)에서 쓴다 */
 import { readFileSync, writeFileSync, appendFileSync } from "node:fs";
 import { connect } from "./foundry-e2e.mjs";
 const s = await connect("gm");
