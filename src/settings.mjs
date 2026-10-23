@@ -1,4 +1,5 @@
 import { onShopHiddenChange, onShopToggle } from "./apps/shop.mjs";
+import { setDayHours } from "./engine/dungeon.mjs";
 
 export function registerSettings() {
   // 에너미 일러스트를 월드 액터·토큰에 적용한 표시(그림 표 크기:버전)
@@ -35,7 +36,13 @@ export function registerSettings() {
     game.settings.register("nssq", key, {
       name: `NSSQ.Settings.${key}.name`, hint: `NSSQ.Settings.${key}.hint`,
       scope: "world", config: true, type: Number, range: { min: 0, max: 23, step: 1 }, default: def,
-      onChange: () => import("./apps/time-pass.mjs").then((m) => m.refreshTimeOfDay())
+      onChange: (v) => {
+        // 엔진에는 바로(비동기 import를 기다리면 그사이 판정이 옛 시각을 쓴다), 시간대 설정 갱신은 그다음
+        const day = key === "dayStart" ? v : game.settings.get("nssq", "dayStart");
+        const night = key === "nightStart" ? v : game.settings.get("nssq", "nightStart");
+        setDayHours(day, night);
+        import("./apps/time-pass.mjs").then((m) => m.refreshTimeOfDay()).catch((e) => console.warn("NSSQ | dayHours", e));
+      }
     });
   }
   // 탐색 시간 경과(세그먼트·랜덤 던전 1시간·캠프)마다 독·자연 회복·심도·오버히트를 처리하는가(사용자 요청으로 기본 끔, 01 #164)
