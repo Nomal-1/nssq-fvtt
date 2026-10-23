@@ -8,6 +8,8 @@ const foundryGlobals = Object.fromEntries([
 ].map((k) => [k, "readonly"]));
 
 export default [
+  // 브라우저에서 함수 본문으로 실행하는 점검 코드(맨 위 return)는 린트하지 않는다
+  { ignores: ["tools/dev/numbers-probe.js"] },
   js.configs.recommended,
   {
     files: ["src/**/*.mjs"],
