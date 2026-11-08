@@ -12,7 +12,7 @@ function autoTargetMode(token) {
   return true;
 }
 
-export class NssqToken extends Token {
+export class NssqToken extends foundry.canvas.placeables.Token {
   /** 자기 것이 아닌 토큰도 클릭은 받는다(이동·조종 권한은 생기지 않는다) */
   _canControl(user, event) {
     if (event && autoTargetMode(this)) return true;
