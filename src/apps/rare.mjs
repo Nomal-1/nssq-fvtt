@@ -41,7 +41,7 @@ export async function makeRare(actor) {
 export async function removeRare(actor) {
   if (!game.user.isGM || actor.type !== "enemy" || !actor.system.isRare) return;
   const o = actor.getFlag("nssq", "rareOriginal");
-  const update = { "system.isRare": false, "flags.nssq.-=rareOriginal": null };
+  const update = { "system.isRare": false, "flags.nssq.rareOriginal": new foundry.data.operators.ForcedDeletion() };
   // 받은 대미지는 남긴다(희소종으로 바꾼 뒤 깎인 만큼)
   const s = actor.system;
   const lost = Math.max(0, (s.hp?.max ?? 0) - (s.hp?.value ?? 0));

@@ -70,7 +70,7 @@ export async function clearGrimoire(item) {
   if (!game.user.isGM || !isGrimoire(item)) return;
   const actor = item.parent;
   if (actor?.getFlag("nssq", "activeGrimoire") === item.id) await actor.unsetFlag("nssq", "activeGrimoire");
-  await item.update({ name: L("empty"), "flags.nssq.-=grimoire": null });
+  await item.update({ name: L("empty"), "flags.nssq.grimoire": new foundry.data.operators.ForcedDeletion() });
   if (actor) await syncGrimoire(actor);
 }
 

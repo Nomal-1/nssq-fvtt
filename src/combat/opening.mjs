@@ -58,7 +58,7 @@ export async function snapshotOpening(combat) {
     combatants.push({ id: c.id, flags: Object.fromEntries(COMBATANT_FLAGS.map((k) => [k, c.getFlag("nssq", k) ?? null])) });
   }
   // 예전 기록(객체)과 합쳐지지 않도록 지우고 새로 쓴다
-  await combat.update({ "flags.nssq.-=openingSnapshot": null });
+  await combat.update({ "flags.nssq.openingSnapshot": new foundry.data.operators.ForcedDeletion() });
   await combat.setFlag("nssq", "openingSnapshot", { round: combat.round, actors, tokens, combatants });
 }
 
@@ -77,7 +77,7 @@ export async function restoreOpening(combat) {
     if (v.tp !== null && a.system.tp) upd["system.tp.value"] = v.tp;
     if (v.fp !== null && a.system.fp) upd["system.fp.value"] = v.fp;
     if (v.order !== null && "order" in a.system) upd["system.order"] = v.order;
-    if (v.overheat === null) upd["flags.nssq.-=overheat"] = null;
+    if (v.overheat === null) upd["flags.nssq.overheat"] = new foundry.data.operators.ForcedDeletion();
     else upd["flags.nssq.overheat"] = v.overheat;
     await a.update(upd);
     const slots = (v.slots ?? []).filter((x) => a.items.get(x._id));
@@ -90,7 +90,7 @@ export async function restoreOpening(combat) {
   const updates = (snap.combatants ?? []).filter(({ id }) => combat.combatants.has(id)).map(({ id, flags }) => {
     const u = { _id: id };
     for (const k of COMBATANT_FLAGS) {
-      if (flags[k] === null || flags[k] === undefined) u[`flags.nssq.-=${k}`] = null;
+      if (flags[k] === null || flags[k] === undefined) u[`flags.nssq.${k}`] = new foundry.data.operators.ForcedDeletion();
       else u[`flags.nssq.${k}`] = flags[k];
     }
     return u;

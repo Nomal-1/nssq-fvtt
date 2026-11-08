@@ -161,8 +161,8 @@ async function applyOne(message, undo) {
       if (cb) {
         const f = e.before.combatant;
         await cb.update({
-          ...(f.stances ? { "flags.nssq.stances": f.stances } : { "flags.nssq.-=stances": null }),
-          ...(f.waiting ? { "flags.nssq.waiting": f.waiting } : { "flags.nssq.-=waiting": null })
+          ...(f.stances ? { "flags.nssq.stances": f.stances } : { "flags.nssq.stances": new foundry.data.operators.ForcedDeletion() }),
+          ...(f.waiting ? { "flags.nssq.waiting": f.waiting } : { "flags.nssq.waiting": new foundry.data.operators.ForcedDeletion() })
         });
       }
       e.before = null;

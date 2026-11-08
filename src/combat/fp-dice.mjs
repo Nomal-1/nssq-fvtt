@@ -25,7 +25,7 @@ export async function spendFpDice(actor, spent, { keep = false } = {}) {
   const upd = {};
   if (spent > 0) upd["system.fp.value"] = Math.max(0, (actor.system.fp?.value ?? 0) - spent);
   // keep: 같은 행동의 다음 공격(쌍수 2회째)도 선언을 쓴다
-  if (!keep && actor.getFlag("nssq", "fpDice")) upd["flags.nssq.-=fpDice"] = null;
+  if (!keep && actor.getFlag("nssq", "fpDice")) upd["flags.nssq.fpDice"] = new foundry.data.operators.ForcedDeletion();
   if (Object.keys(upd).length) await actor.update(upd);
 }
 

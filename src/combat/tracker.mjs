@@ -158,11 +158,11 @@ export async function rollEscape(combat) {
 
 export function registerTracker() {
   Hooks.on("renderCombatTracker", (app, html) => {
+    const root = html instanceof HTMLElement ? html : html[0];
+    // v13+ 트래커는 일부만 다시 그려도 이 훅이 불린다: 전에 붙인 것을 먼저 지운다(전투가 끝나 없어졌을 때도)
+    root.querySelectorAll(".nssq-phase-bar, .nssq-combatant-tools").forEach((el) => el.remove());
     const combat = app.viewed;
     if (!combat) return;
-    const root = html instanceof HTMLElement ? html : html[0];
-    // v13+ 트래커는 일부만 다시 그려도 이 훅이 불린다: 전에 붙인 것을 먼저 지운다
-    root.querySelectorAll(".nssq-phase-bar, .nssq-combatant-tools").forEach((el) => el.remove());
     const started = combat.started;
     const phase = combat.phase ?? "opening";
 

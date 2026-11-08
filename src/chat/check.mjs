@@ -8,6 +8,18 @@ import { applyCheckMods, checkModsHtml, pay, postSkill, readCheckMods } from "./
 
 const TEMPLATE = "systems/nssq/templates/chat/check-card.hbs";
 
+/** v12식 굴림 모드 이름(판정 요청에 남아 있을 수 있다) → v14 메시지 모드 */
+const LEGACY_MODES = { roll: "public", publicroll: "public", gmroll: "gm", blindroll: "blind", selfroll: "self" };
+
+/**
+ * 공개 범위를 적용한다. 모드를 주지 않으면 채팅 입력창에서 고른 모드(core.messageMode)를 따른다.
+ * v14에서 core.rollMode는 더 이상 갱신되지 않아(null) 그것을 읽으면 항상 공개가 된다.
+ */
+function applyMessageMode(data, mode) {
+  if (mode) ChatMessage.applyMode(data, LEGACY_MODES[mode] ?? mode);
+  else ChatMessage.applyMode(data);
+}
+
 /** n개의 D6을 Foundry Roll로 굴린다(Dice So Nice 등이 보이도록) */
 async function rollD6(n) {
   if (n <= 0) return { roll: null, dice: [] };
@@ -134,7 +146,7 @@ export async function rollCheck(actor, { ability = null, modifier = 0, target = 
     sound: CONFIG.sounds.dice,
     flags
   };
-  ChatMessage.applyRollMode(data, rollMode ?? game.settings.get("core", "rollMode"));
+  applyMessageMode(data, rollMode);
   return ChatMessage.create(data);
 }
 
@@ -149,7 +161,7 @@ async function forcedFailure(actor, { ability, modifier, target, contestOf, roll
   if (contestOf) flags.nssq.contest = { of: contestOf };
   if (request) flags.nssq.request = request;
   const data = { speaker: ChatMessage.getSpeaker({ actor }), content: await renderCard(state, { contest: !!contestOf }), flags };
-  ChatMessage.applyRollMode(data, rollMode ?? game.settings.get("core", "rollMode"));
+  applyMessageMode(data, rollMode);
   return ChatMessage.create(data);
 }
 

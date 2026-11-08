@@ -48,8 +48,9 @@ export async function openRequestDialog(preselect = [], defaults = {}) {
       <img src="${a.img}" width="24" height="24"/> <span class="name">${a.name}</span>
       <span class="owner">${ownerNames(a)}</span>
     </label>`).join("");
-  const modes = Object.entries(CONFIG.Dice.rollModes)
-    .map(([k, v]) => `<option value="${k}">${game.i18n.localize(v)}</option>`).join("");
+  // v14 메시지 모드(ic = 캐릭터 발언은 굴림 모드가 아니라 뺀다)
+  const modes = Object.entries(CONFIG.ChatMessage.modes).filter(([k]) => k !== "ic")
+    .map(([k, v]) => `<option value="${k}">${game.i18n.localize(v.label)}</option>`).join("");
   const content = `
     <form class="nssq-request-form">
       <fieldset><legend>${L("characters")}</legend><div class="request-actors">${rows}</div></fieldset>

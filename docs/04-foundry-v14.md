@@ -74,7 +74,8 @@ nssq/
 | 코어 화면 훅 | 사이드바·전투 트래커·채팅 로그·HUD는 v13부터 ApplicationV2라 render 훅의 html이 **HTMLElement**다. 일부만 다시 그려도 훅이 불리므로 붙인 요소는 중복을 막는다(`src/apps/scene-tools.mjs`의 `addDirectoryButton`) |
 | 씬 도구 | `getSceneControlButtons(controls)`의 `controls`·`tools`는 **이름을 키로 쓰는 객체**. 토큰 컨트롤 이름은 `tokens`, 클릭은 `onChange(event, active)`. `addTokenTool` 사용. 전환은 `ui.controls.activate({ control, tool })` |
 | 주사위 | `new Roll("6d6cs>3")` + **`await roll.evaluate()`**(v12는 비동기가 기본). `kh2`, `cs>=4` 사용. `roll.dice[0].results`에서 눈 확인 |
-| 채팅 | `ChatMessage.create({ content, speaker, rolls, flags })`, 훅 `renderChatMessageHTML(message, html, context)` — html은 **HTMLElement** |
+| 채팅 | `ChatMessage.create({ content, speaker, rolls, flags })`, 훅 `renderChatMessageHTML(message, html, context)` — html은 **HTMLElement**. 공개 범위는 `ChatMessage.applyMode(data, mode)`(모드 이름 public/gm/blind/self, 생략하면 채팅 입력창 모드) |
+| 플래그 삭제 | `{"flags.nssq.키": new foundry.data.operators.ForcedDeletion()}`. `-=키: null`은 v14에서 deprecated |
 | 상태 아이콘 | `CONFIG.statusEffects` 배열 `{ id, name, img }`(v12 키. 구버전 `label`/`icon` 아님) |
 | 효과 | `ActiveEffect`(`changes[]`, `statuses`, `flags.nssq.*`) |
 | 소켓 | `game.socket.on("system.nssq", handler)`, `game.socket.emit("system.nssq", payload)` |
@@ -140,8 +141,8 @@ nssq/
 - [ ] #8 매니페스트 `grid` 키 형식(v12)과 `primaryTokenAttribute` 지원 여부
 - [ ] #6 `renderChatMessageHTML`에서 버튼 이벤트를 위임할 때 메시지 재렌더 시의 중복 바인딩
 - [x] #9 (v14) cli 1.1.0으로 빌드한 팩 → 14가 월드 생성 때 자동 마이그레이션하고 그대로 읽는다(2026-11-08 서버 14.370, 팩 8개·스킬 755·에너미 65 로드 확인). cli 3.x 재빌드는 급하지 않음
-- [~] #10 (v14) `styles/nssq.css` 코어 화면 선택자: 데스크톱 화면(시트·전투 트래커·채팅 카드·액터 탭)은 14에서 정상(2026-11-08). **모바일 레이아웃은 아직 확인 안 함**
-- [~] #11 (v14) 시트의 `{{editor}}`: 시트가 오류 없이 열리고 편집기 요소가 있다. 실제로 편집·저장해 보는 것은 아직
-- [ ] #12 (v14) `#hud` 요소와 `renderHeadsUpDisplayContainer` 훅(마을·필드 오버레이)
+- [x] #10 (v14) `styles/nssq.css` 코어 화면 선택자: 데스크톱(시트·트래커·채팅 카드·액터 탭·마을 오버레이) 정상. 모바일은 14에서 이름이 바뀐 `#scene-controls`·`#scene-navigation`을 숨기도록 고침(옛 `#controls`·`#navigation`·`#logo`는 없음). 채팅 서랍 정상(2026-11-08)
+- [x] #11 (v14) 시트의 `{{editor}}`: 편집 버튼 → ProseMirror 편집 → 저장으로 `system.description`에 저장됨(2026-11-08)
+- [~] #12 (v14) `#hud` 마을 오버레이: 씬 위에 붙고 시설 클릭·화면 전환 정상(2026-11-08). 씬 도구 막대는 14에서 평소 흐리게(faded-ui) 보일 뿐 오버레이 위에서 눌린다. 필드 오버레이는 아직
 - [x] 씬 좌표에 HTML UI 붙이기: `#hud`(canvas.hud) 요소는 `HeadsUpDisplay#align()`이 `canvas.primary.getGlobalPosition()`·`stage.scale`로 left/top/transform을 맞춘다(v12.331 서버에서 확인, pointer-events:none·z-index 1. `#hud > * { pointer-events:none; text-align:center }`가 ID 선택자라 자식 규칙은 `#hud > .클래스`로 써야 마우스를 받는다). 자식을 씬 좌표(left/top px)에 두면 이동·확대를 따라간다. 마을 UI(`TownOverlay`)가 쓴다. `Application`(popOut:false)은 `_injectHTML`을 덮어 `#hud`에 넣는다.
-- [ ] #13 (v14) 14에서 새로 deprecated(16에서 제거): 플래그 삭제 문법 `"flags.nssq.-=키": null`(약 29곳) → `foundry.data.operators.ForcedDeletion`, `ChatMessage.applyRollMode` → `ChatMessage.applyMode`(chat/check.mjs 2곳). 지금은 경고만 난다
+- [x] #13 (v14) 14 신규 deprecated: 플래그 삭제는 `"flags.nssq.키": new foundry.data.operators.ForcedDeletion()`(점 표기 키에서 동작 확인), 굴림 공개 범위는 `ChatMessage.applyMode`. **v14는 `core.rollMode`를 갱신하지 않아(null) 그 값을 읽으면 항상 공개가 됐다** → 모드를 주지 않으면 `core.messageMode`를 따르게 함. 판정 요청 창의 모드 목록은 `CONFIG.ChatMessage.modes`(ic 제외)

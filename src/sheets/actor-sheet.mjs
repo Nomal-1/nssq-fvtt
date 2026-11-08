@@ -30,7 +30,7 @@ async function setLevelDialog(actor) {
   if (!level) return;
   const total = levels.find((r) => r.level === level)?.total ?? 0;
   // 바뀐 레벨의 SL을 찍을 수 있게 습득 창구를 연다(한 번에 +1 제약은 두지 않는다: GM이 정한 레벨)
-  await actor.update({ "system.exp": total, "system.level": level, "flags.nssq.skillPick": { level }, "flags.nssq.-=levelUp": null });
+  await actor.update({ "system.exp": total, "system.level": level, "flags.nssq.skillPick": { level }, "flags.nssq.levelUp": new foundry.data.operators.ForcedDeletion() });
 }
 
 export class NssqActorSheet extends foundry.appv1.sheets.ActorSheet {

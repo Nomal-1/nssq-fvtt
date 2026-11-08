@@ -47,16 +47,16 @@ async function dropCombatStates(actor, combatant) {
   const flags = Object.fromEntries(KO_FLAGS.map((k) => [k, combatant?.getFlag("nssq", k)]).filter(([, v]) => v !== undefined && v !== null && v !== false));
   if (!states.length && !Object.keys(flags).length) return;
   // 되돌리기([되돌리기]로 쓰러짐을 취소)하면 복원하도록 남긴다(restoreCombatStates)
-  await actor.update({ "flags.nssq.koDropped": { states, flags, combatantId: combatant?.id ?? null }, "flags.nssq.-=states": null });
+  await actor.update({ "flags.nssq.koDropped": { states, flags, combatantId: combatant?.id ?? null }, "flags.nssq.states": new foundry.data.operators.ForcedDeletion() });
   if (!combatant || !Object.keys(flags).length) return;
-  await combatant.update(Object.fromEntries(Object.keys(flags).map((k) => [`flags.nssq.-=${k}`, null])));
+  await combatant.update(Object.fromEntries(Object.keys(flags).map((k) => [`flags.nssq.${k}`, new foundry.data.operators.ForcedDeletion()])));
 }
 
 /** 되돌리기로 다시 살아났을 때: 쓰러지며 풀린 자세·대기·예약을 되돌린다. 회복 스킬 등으로 살아나면 복원하지 않고 기록만 지운다 */
 async function restoreCombatStates(actor, undo) {
   const d = actor.getFlag("nssq", "koDropped");
   if (!d) return;
-  await actor.update({ "flags.nssq.-=koDropped": null, ...(undo && d.states?.length ? { "flags.nssq.states": d.states } : {}) });
+  await actor.update({ "flags.nssq.koDropped": new foundry.data.operators.ForcedDeletion(), ...(undo && d.states?.length ? { "flags.nssq.states": d.states } : {}) });
   const cb = undo && d.combatantId ? game.combat?.combatants.get(d.combatantId) : null;
   if (cb && Object.keys(d.flags ?? {}).length) await cb.update(Object.fromEntries(Object.entries(d.flags).map(([k, v]) => [`flags.nssq.${k}`, v])));
 }
@@ -82,7 +82,7 @@ async function afterHpChange(actor, options = {}) {
       // 도감: 처치 기록(정보 공개, 01 #47)
       if (actor.type === "enemy") await recordBestiary(actor, { defeated: 1 });
     } else if (!ko && combatant.defeated && auto) {
-      await combatant.update({ defeated: false, "flags.nssq.-=autoDefeated": null }, { nssqAuto: true });
+      await combatant.update({ defeated: false, "flags.nssq.autoDefeated": new foundry.data.operators.ForcedDeletion() }, { nssqAuto: true });
       await setOverlay(false);
     }
   } else await setOverlay(ko);

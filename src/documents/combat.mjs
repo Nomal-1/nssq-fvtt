@@ -68,17 +68,17 @@ export class NssqCombat extends Combat {
   async clearRoundFlags() {
     const updates = this.combatants.map((c) => ({
       _id: c.id,
-      "flags.nssq.-=guarding": null,
-      "flags.nssq.-=waiting": null,
-      "flags.nssq.-=opening": null,
-      "flags.nssq.-=disabled": null,
-      "flags.nssq.-=confused": null,
-      "flags.nssq.-=timing": null,
-      "flags.nssq.-=stances": null,
-      "flags.nssq.-=late": null,
-      "flags.nssq.-=acted": null,
-      "flags.nssq.-=extraAction": null,
-      "flags.nssq.-=lateRepeat": null
+      "flags.nssq.guarding": new foundry.data.operators.ForcedDeletion(),
+      "flags.nssq.waiting": new foundry.data.operators.ForcedDeletion(),
+      "flags.nssq.opening": new foundry.data.operators.ForcedDeletion(),
+      "flags.nssq.disabled": new foundry.data.operators.ForcedDeletion(),
+      "flags.nssq.confused": new foundry.data.operators.ForcedDeletion(),
+      "flags.nssq.timing": new foundry.data.operators.ForcedDeletion(),
+      "flags.nssq.stances": new foundry.data.operators.ForcedDeletion(),
+      "flags.nssq.late": new foundry.data.operators.ForcedDeletion(),
+      "flags.nssq.acted": new foundry.data.operators.ForcedDeletion(),
+      "flags.nssq.extraAction": new foundry.data.operators.ForcedDeletion(),
+      "flags.nssq.lateRepeat": new foundry.data.operators.ForcedDeletion()
     }));
     if (updates.length) await this.updateEmbeddedDocuments("Combatant", updates);
   }
@@ -177,7 +177,7 @@ export class NssqCombat extends Combat {
       await ChatMessage.create({ speaker: { alias: game.i18n.localize("NSSQ.Combat.tracker") }, content: `<div class="nssq-combat-note"><i class="fas fa-redo"></i> ${game.i18n.format("NSSQ.Late.bonusTurn", { name: c.name })}</div>` });
       return this;
     }
-    await this.update({ "flags.nssq.-=bonusTurns": null, "flags.nssq.-=bonusTurn": null });
+    await this.update({ "flags.nssq.bonusTurns": new foundry.data.operators.ForcedDeletion(), "flags.nssq.bonusTurn": new foundry.data.operators.ForcedDeletion() });
     return this.setPhase("end", { turn: null });
   }
 

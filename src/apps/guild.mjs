@@ -32,7 +32,7 @@ function guildPenalty(actor) {
   return {
     "system.exp": Math.max(0, (actor.system.exp ?? 0) - guildCost()),
     "system.level": 1,
-    "flags.nssq.-=levelUp": null,
+    "flags.nssq.levelUp": new foundry.data.operators.ForcedDeletion(),
     "flags.nssq.skillPick": { level: 1 }
   };
 }

@@ -1812,7 +1812,7 @@
 
 /* ======================= 모바일 모드(body.nssq-mobile, apps/mobile.mjs) ======================= */
 /* Foundry 기본 UI 숨김: 씬 컨트롤·씬 내비게이션·핫바·플레이어 목록·카메라·사이드바(채팅은 서랍으로) */
-body.nssq-mobile :is(#controls, #navigation, #hotbar, #players, #camera-views, #logo, #pause) { display: none !important; }
+body.nssq-mobile :is(#scene-controls, #scene-navigation, #hotbar, #players, #camera-views, #pause) { display: none !important; }
 body.nssq-mobile #sidebar { display: none; }
 body.nssq-mobile.nssq-chat-open #sidebar { display: flex; position: fixed; top: 0; right: 0; bottom: 0; height: 100% !important; width: min(420px, 92vw) !important; z-index: 1000; box-shadow: -6px 0 24px rgba(0, 0, 0, 0.6); }
 body.nssq-mobile #ui-left, body.nssq-mobile #ui-bottom { pointer-events: none; }
