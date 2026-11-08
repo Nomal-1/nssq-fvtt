@@ -45,7 +45,7 @@ async function doLevelUp(actor) {
     const left = await skillLeft(actor);
     if (left > 0) {
       if (!game.user.isGM) return ui.notifications.warn(L("spendFirst", { n: left }));
-      if (!(await Dialog.confirm({ title: L("up"), content: `<p>${esc(L("spendFirstGM", { n: left }))}</p>`, rejectClose: false }))) return null;
+      if (!(await foundry.appv1.api.Dialog.confirm({ title: L("up"), content: `<p>${esc(L("spendFirstGM", { n: left }))}</p>`, rejectClose: false }))) return null;
     }
   }
   const from = s.level;

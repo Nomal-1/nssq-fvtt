@@ -8,7 +8,7 @@ const L = (k, d) => (d ? game.i18n.format(`NSSQ.Rare.${k}`, d) : game.i18n.local
 
 export async function makeRare(actor) {
   if (!game.user.isGM || actor.type !== "enemy" || actor.system.isRare) return;
-  const opts = await Dialog.prompt({
+  const opts = await foundry.appv1.api.Dialog.prompt({
     title: `${actor.name} — ${L("on")}`,
     content: `<form>
       <div class="form-group"><label>${L("hpMultiplier")}</label><select name="m"><option value="2">×2</option><option value="3">×3</option></select></div>

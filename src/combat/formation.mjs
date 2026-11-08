@@ -87,7 +87,7 @@ export async function changePosition(combatant) {
   if (!actor) return false;
   
   if (actor.type === "enemy") {
-    const choice = await Dialog.prompt({
+    const choice = await foundry.appv1.api.Dialog.prompt({
       title: L("changeRow"),
       content: `<form><div class="form-group"><label>${L("rowTitle")}</label><select name="row">
         <option value="front" ${actor.system.row !== "back" ? "selected" : ""}>${game.i18n.localize("NSSQ.Row.front")}</option>
@@ -124,7 +124,7 @@ export async function changePosition(combatant) {
     }).join("");
     return `<div class="slot-row"><span class="row-name">${game.i18n.localize(`NSSQ.Row.${row}`)}</span>${cells}</div>`;
   }).join("");
-  const pick = await Dialog.prompt({
+  const pick = await foundry.appv1.api.Dialog.prompt({
     title: `${actor.name} — ${L("changeRow")}`,
     content: `<form class="nssq-slot-picker"><p class="notes">${L("slotPickerHint")}</p>${rowsHtml}</form>`,
     rejectClose: false,
@@ -149,7 +149,7 @@ export async function shuffleRowsDialog(combat) {
   const info = combat.getFlag("nssq", "battle") ?? {};
   const scene = game.scenes.get(info.copy);
   if (!scene) return;
-  const choice = await Dialog.prompt({
+  const choice = await foundry.appv1.api.Dialog.prompt({
     title: L("shuffleTitle"),
     content: `<form>
       <div class="form-group"><label>${L("shuffleSide")}</label><select name="side">
@@ -212,7 +212,7 @@ async function onSwapRequest(p) {
   const from = combat?.combatants.get(p.fromId);
   const to = combat?.combatants.get(p.toId);
   if (!from || !to) return;
-  const ok = await Dialog.confirm({
+  const ok = await foundry.appv1.api.Dialog.confirm({
     title: L("swapTitle"), rejectClose: false,
     content: `<p>${L("swapAsk", { by: game.users.get(p.by)?.name ?? "?", from: from.name, to: to.name })}</p>${p.opening ? `<p class="notes">${L("swapCost")}</p>` : ""}`
   });

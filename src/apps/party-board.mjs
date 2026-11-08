@@ -48,7 +48,7 @@ export async function checkBeforeEntry() {
 
 let app = null;
 
-export class PartyBoard extends Application {
+export class PartyBoard extends foundry.appv1.api.Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-party-board", classes: ["nssq", "nq-window", "nssq-party-board"], title: game.i18n.localize("NSSQ.PartyBoard.title"), width: 560, height: "auto"

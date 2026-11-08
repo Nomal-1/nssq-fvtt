@@ -27,7 +27,7 @@ export function customEnemyArt(name) {
 }
 
 async function browse(path) {
-  try { return await FilePicker.browse("data", path); } catch { return null; }
+  try { return await foundry.applications.apps.FilePicker.implementation.browse("data", path); } catch { return null; }
 }
 
 /** 폴더를 읽는다: { kind: [{ path, name, key }] } */
@@ -148,11 +148,11 @@ export async function openAssetLink() {
     <div class="form-group"><label>${esc(L("folder"))}</label><input type="text" name="root" value="${esc(saved)}"/><button type="button" data-pick style="flex:0 0 32px"><i class="fas fa-folder-open"></i></button></div>
     <div class="form-group"><label class="checkbox"><input type="checkbox" name="overwrite"/> ${esc(L("overwrite"))}</label></div>
     <p class="notes">${esc(L("rule"))}</p></form>`;
-  const opts = await Dialog.prompt({
+  const opts = await foundry.appv1.api.Dialog.prompt({
     title: L("title"), content, label: L("scan"), rejectClose: false, options: { width: 520 },
     render: (html) => (html[0] ?? html).querySelector("[data-pick]")?.addEventListener("click", () => {
       const input = (html[0] ?? html).querySelector("[name=root]");
-      new FilePicker({ type: "folder", current: input.value, callback: (p) => { input.value = p; } }).render(true);
+      new foundry.applications.apps.FilePicker.implementation({ type: "folder", current: input.value, callback: (p) => { input.value = p; } }).render(true);
     }),
     callback: (html) => { const f = html[0].querySelector("form"); return { root: f.root.value.trim().replace(/\/+$/, ""), overwrite: f.overwrite.checked }; }
   });
@@ -177,7 +177,7 @@ export async function openAssetLink() {
     return { prevLinks, state, p: plan(files, t, opts.overwrite) };
   };
   const first = await build();
-  const ok = await Dialog.confirm({ title: L("title"), content: previewHtml(opts.root, first.p), rejectClose: false, options: { width: 640, classes: ["nssq", "dialog"] } });
+  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("title"), content: previewHtml(opts.root, first.p), rejectClose: false, options: { width: 640, classes: ["nssq", "dialog"] } });
   if (!ok) return null;
   const { prevLinks, state, p } = await build();
   const todo = p.rows.filter((r) => !r.skip && r.from !== r.file.path);

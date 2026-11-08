@@ -222,7 +222,7 @@ async function useDeclarations(actor, item) {
     const cost = i.system.cost ?? {};
     if ((cost.tp ?? 0) + (item.system.cost?.tp ?? 0) > (actor.system.tp?.value ?? 0) || (cost.fp ?? 0) + (item.system.cost?.fp ?? 0) > (actor.system.fp?.value ?? 0)) continue;
     const auto = !t.optional || !!actor.getFlag("nssq", "autoTrigger")?.[autoKey(i.system.key)];
-    const ok = auto || await Dialog.confirm({ title: L("declareTitle"), content: `<p>${esc(L("declareAsk", { name: i.name, skill: item.name }))}</p>`, rejectClose: false });
+    const ok = auto || await foundry.appv1.api.Dialog.confirm({ title: L("declareTitle"), content: `<p>${esc(L("declareAsk", { name: i.name, skill: item.name }))}</p>`, rejectClose: false });
     if (ok === null) return null;
     if (!ok) continue;
     const mods = {};
@@ -240,7 +240,7 @@ async function pickChoices(item, variant) {
   const n = Math.max(1, evaluate(e.choose, { SL: item.system.sl ?? 1 }));
   if (n >= ids.length) return ids;
   const boxes = ids.map((id, i) => `<label class="choice"><input type="checkbox" name="c" value="${esc(id)}" ${i < n ? "checked" : ""}/> [${esc(conditionName(id))}]</label>`).join("");
-  return Dialog.prompt({
+  return foundry.appv1.api.Dialog.prompt({
     title: L("chooseTitle", { name: item.name }),
     content: `<p>${esc(L("chooseHint", { n }))}</p><form class="nssq-choices">${boxes}</form>`,
     label: L("chooseGo"),
@@ -256,7 +256,7 @@ async function pickChoices(item, variant) {
 async function pickVariant(item) {
   const names = item.system.variants;
   const buttons = Object.fromEntries(names.map((n, i) => [`v${i}`, { label: `《${esc(n)}》`, callback: () => i }]));
-  return Dialog.wait({ title: L("variantTitle", { name: item.name }), content: `<p>${esc(L("variantHint"))}</p>`, buttons, close: () => null }, { classes: ["nssq", "dialog"] });
+  return foundry.appv1.api.Dialog.wait({ title: L("variantTitle", { name: item.name }), content: `<p>${esc(L("variantHint"))}</p>`, buttons, close: () => null }, { classes: ["nssq", "dialog"] });
 }
 
 /** 이번 턴에 나온 공격의 〈염〉〈빙〉〈뇌〉(전투 플래그 turnElements, combat/chase.mjs가 기록) */
@@ -282,7 +282,7 @@ async function pickTurnElement(combatant, item, effects, variant) {
     return els.includes(got) ? [got] : [els[0]];
   }
   const buttons = Object.fromEntries(els.map((x) => [x, { label: label(x), callback: () => x }]));
-  const got = await Dialog.wait({ title: item.name, content: `<p>${esc(text)}</p>`, buttons, close: () => els[0] }, { classes: ["nssq", "dialog"] });
+  const got = await foundry.appv1.api.Dialog.wait({ title: item.name, content: `<p>${esc(text)}</p>`, buttons, close: () => els[0] }, { classes: ["nssq", "dialog"] });
   return [got ?? els[0]];
 }
 
@@ -290,7 +290,7 @@ async function pickTurnElement(combatant, item, effects, variant) {
 async function pickSome(list, n, title) {
   if (list.length <= n) return list;
   const boxes = list.map((c, i) => `<label class="choice"><input type="checkbox" name="c" value="${c.id}" ${i < n ? "checked" : ""}/> ${esc(c.name)}</label>`).join("");
-  const ids = await Dialog.prompt({
+  const ids = await foundry.appv1.api.Dialog.prompt({
     title, content: `<p>${esc(L("chooseHint", { n }))}</p><form class="nssq-choices">${boxes}</form>`, label: L("chooseGo"), rejectClose: false,
     callback: (html) => [...(html[0] ?? html).querySelectorAll("input[name=c]:checked")].map((x) => x.value).slice(0, n)
   }, { classes: ["nssq", "dialog"] });
@@ -824,10 +824,10 @@ export function registerSkillUse() {
     if (card.group && card.group.index !== card.group.count) return;
     if (!groupPendingReaction(card)) applySkillCard(message.id);
   });
-  Hooks.on("renderChatMessage", (message, html) => {
+  Hooks.on("renderChatMessageHTML", (message, html) => {
     const card = message.getFlag("nssq", "skillCard");
     if (!card) return;
-    const el = html[0];
+    const el = html;
     // 플레이어가 모르는 에너미가 쓴 스킬의 명중 달성값은 ?(01 #47)
     if (!game.user.isGM) {
       const user = fromUuidSync(card.userUuid);

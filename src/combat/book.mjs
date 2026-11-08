@@ -47,7 +47,7 @@ export async function bookAttack(attacker, book, targetToken) {
     const myTurn = combat.getFlag("nssq", "phase") === "main" && combat.combatant?.id === me.id;
     if (!myTurn) {
       if (!game.user.isGM) return ui.notifications.warn(L("notTurn"));
-      if (!(await Dialog.confirm({ title: book.name, content: `<p>${L("notTurn")}</p>`, rejectClose: false }))) return null;
+      if (!(await foundry.appv1.api.Dialog.confirm({ title: book.name, content: `<p>${L("notTurn")}</p>`, rejectClose: false }))) return null;
     }
   }
   const { resolveAndPost } = await import("./skill-use.mjs");

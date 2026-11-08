@@ -99,7 +99,7 @@ function bindDrop(el) {
     const combat = allowed();
     if (!combat) return;
     ev.preventDefault();
-    const data = TextEditor.getDragEventData(ev);
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(ev);
     if (data?.type !== "Actor" || !data.uuid) return ui.notifications.warn(game.i18n.localize("NSSQ.Battle.joinActorOnly"));
     const area = el.querySelector(".nb-enemies")?.getBoundingClientRect();
     const row = area && ev.clientY < area.top + area.height / 2 ? "back" : "front";
@@ -854,7 +854,7 @@ async function toggleAutoApply(combat) {
     if (ep?.applied && ep.combatId === combat.id) jobs.push(() => requestEndPhaseApply(m.id, true));
   }
   if (!jobs.length) return;
-  const undo = await Dialog.confirm({
+  const undo = await foundry.appv1.api.Dialog.confirm({
     title: L("autoOff"),
     content: `<p>${esc(L("autoUndoAsk", { n: jobs.length }))}</p>`,
     yes: () => true, no: () => false, defaultYes: false

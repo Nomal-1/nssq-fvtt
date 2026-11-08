@@ -34,7 +34,7 @@ export async function openFpDiceDialog(actor) {
   if (!actor?.isOwner || actor.type !== "character") return null;
   const fp = actor.system.fp?.value ?? 0;
   const cur = declaredFpDice(actor);
-  const n = await Dialog.prompt({
+  const n = await foundry.appv1.api.Dialog.prompt({
     title: L("title", { name: actor.name }),
     content: `<form><p class="notes">${esc(L("hint"))}</p>
       <div class="form-group"><label>${esc(L("label", { fp }))}</label><input type="number" name="n" min="0" max="${fp}" value="${Math.min(cur, fp)}"/></div></form>`,
@@ -257,8 +257,8 @@ export function registerFpDice() {
     }), 100);
   });
   // 버튼: 공격자 소유자에게만, 남은 【FP】가 모자라면 끈다
-  Hooks.on("renderChatMessage", (message, html) => {
-    const el = html[0] ?? html;
+  Hooks.on("renderChatMessageHTML", (message, html) => {
+    const el = html;
     const atk = message.getFlag("nssq", "attack");
     const sk = message.getFlag("nssq", "skillCard");
     const owner = fromUuidSync((atk?.attackerUuid ?? sk?.userUuid) || "");

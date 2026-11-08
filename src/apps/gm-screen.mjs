@@ -8,6 +8,7 @@ import { storageActive } from "./acquire.mjs";
 import { battlePresets, createPreset, currentBattle, openEndDialog, openStartDialog } from "./battle.mjs";
 import { cleanupEnemies } from "./enemy-library.mjs";
 import tables from "../generated/tables.mjs";
+import { addDirectoryButton, addTokenTool } from "./scene-tools.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.GMScreen.${k}`, d) : game.i18n.localize(`NSSQ.GMScreen.${k}`));
 
@@ -46,7 +47,7 @@ export async function createGMScreenMacro() {
 
 const pct = (v, max) => (max > 0 ? Math.clamp(Math.round((v / max) * 100), 0, 100) : 0);
 
-export class GMScreen extends Application {
+export class GMScreen extends foundry.appv1.api.Application {
   static instance = null;
 
   static get defaultOptions() {
@@ -270,7 +271,7 @@ export class GMScreen extends Application {
   async sessionStart() {
     const fp = game.settings.get("nssq", "fpStart");
     const party = partyActors();
-    const ok = await Dialog.confirm({
+    const ok = await foundry.appv1.api.Dialog.confirm({
       title: L("sessionStart"),
       content: `<p>${L("sessionStartConfirm", { fp, names: party.map((a) => a.name).join(", ") })}</p>`,
       rejectClose: false
@@ -293,15 +294,11 @@ export function registerGMScreen() {
   // 열기: 액터 탭 머리 버튼, 토큰 도구
   Hooks.on("renderActorDirectory", (app, html) => {
     if (!game.user.isGM) return;
-    const btn = $(`<button type="button" class="nssq-gm-screen-btn"><i class="fas fa-book-open"></i> ${L("title")}</button>`);
-    btn.on("click", () => GMScreen.open());
-    html.find(".directory-header .header-actions").append(btn);
+    addDirectoryButton(html, { cls: "nssq-gm-screen-btn", icon: "fas fa-book-open", label: L("title"), onClick: () => GMScreen.open() });
   });
   Hooks.on("getSceneControlButtons", (controls) => {
     if (!game.user.isGM) return;
-    controls.find((c) => c.name === "token")?.tools.push({
-      name: "nssq-gm-screen", title: "NSSQ.GMScreen.title", icon: "fas fa-book-open", button: true, onClick: () => GMScreen.open()
-    });
+    addTokenTool(controls, { name: "nssq-gm-screen", title: "NSSQ.GMScreen.title", icon: "fas fa-book-open", onClick: () => GMScreen.open() });
   });
   // 자동 갱신
   const refresh = foundry.utils.debounce(() => GMScreen.refresh(), 100);

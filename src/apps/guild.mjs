@@ -57,7 +57,7 @@ async function refundSkills(actor) {
 async function confirmCost(actor, title, body) {
   const cost = guildCost();
   // 경험점이 모자라면 0까지만 깎인다. Lv1로 돌아간다(사용자 결정)
-  return Dialog.confirm({
+  return foundry.appv1.api.Dialog.confirm({
     title, rejectClose: false,
     content: `<p>${body}</p><p>${esc(L("costLine", { name: actor.name, n: cost, from: actor.system.exp ?? 0, to: Math.max(0, (actor.system.exp ?? 0) - cost) }))}</p>${actor.system.level > 1 ? `<p class="warn">${esc(L("levelDown", { from: actor.system.level }))}</p>` : ""}`
   });
@@ -98,7 +98,7 @@ export async function changeClass(actor, mainUuid, subUuid) {
 
 let app = null;
 
-export class GuildApp extends Application {
+export class GuildApp extends foundry.appv1.api.Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-guild", classes: ["nssq", "nq-window", "nssq-guild"], title: game.i18n.localize("NSSQ.Guild.title"), width: 760, height: 660, resizable: true, scrollY: [".guild-wrap"]

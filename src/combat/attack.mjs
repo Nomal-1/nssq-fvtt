@@ -162,7 +162,7 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
     if (!myTurn) {
       const reason = phase !== "main" ? L("notMainPhase") : L("notYourTurn", { name: me.name, current: combat.combatant?.name ?? "-" });
       if (!game.user.isGM) return ui.notifications.warn(reason);
-      const go = await Dialog.confirm({ title: L("normalAttack"), content: `<p>${reason}</p><p>${L("gmForce")}</p>`, rejectClose: false });
+      const go = await foundry.appv1.api.Dialog.confirm({ title: L("normalAttack"), content: `<p>${reason}</p><p>${L("gmForce")}</p>`, rejectClose: false });
       if (!go) return;
     }
   }
@@ -263,7 +263,7 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
 }
 
 export async function renderAttackCard(card) {
-  return renderTemplate(TEMPLATE, {
+  return foundry.applications.handlebars.renderTemplate(TEMPLATE, {
     ...card,
     elementText: card.elements.map(elementLabel).join("·"),
     targets: card.targets.map((t) => ({
@@ -298,10 +298,10 @@ export function registerAttackHooks() {
   Hooks.on("updateToken", (token, changes) => {
     if (foundry.utils.getProperty(changes, "delta.system.identified") !== undefined && token.actor) rerenderCardsFor(token.actor);
   });
-  Hooks.on("renderChatMessage", (message, html) => {
+  Hooks.on("renderChatMessageHTML", (message, html) => {
     const card = message.getFlag("nssq", "attack");
     if (!card) return;
-    const el = html[0];
+    const el = html;
     // 플레이어가 모르는 에너미(식별·도감 기록 없음)의 수치는 ?로(01 #47)
     if (!game.user.isGM) {
       const attacker = card.attackerUuid ? fromUuidSync(card.attackerUuid) : null;

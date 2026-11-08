@@ -59,7 +59,7 @@ function effectiveEntry(e, st, index) {
   return m ? { entry: m, shared: true } : { entry: e, shared: false };
 }
 
-export class SkillTree extends Application {
+export class SkillTree extends foundry.appv1.api.Application {
   constructor(actor, options = {}) {
     super({ id: `nssq-skill-tree-${actor.id}`, ...options });
     this.actor = actor;
@@ -350,7 +350,7 @@ export class SkillTree extends Application {
     const sameElsewhere = Math.max(0, ...others.filter((o) => o.name === item.name).map((o) => o.sl));
     const broken = brokenByLowering(item.name, Math.max(next, sameElsewhere), others.filter((o) => o.name !== item.name));
     if (broken.length) {
-      const ok = await Dialog.confirm({
+      const ok = await foundry.appv1.api.Dialog.confirm({
         title: L("tree"),
         content: `<p>${esc(L("brokenConfirm", { name: item.name, list: broken.join(", ") }))}</p>`,
         options: { classes: ["nssq", "dialog"] }

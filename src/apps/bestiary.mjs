@@ -9,6 +9,7 @@
 import { SUB_STATS, RESISTS } from "../engine/derive.mjs";
 import { autoIdentifyKills, bestiaryEntry, bestiaryKey, bestiaryTier, forgetBestiary, setBestiaryEntry } from "../combat/bestiary.mjs";
 import { esc } from "../util.mjs";
+import { addDirectoryButton, addTokenTool } from "./scene-tools.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Bestiary.${k}`, d) : game.i18n.localize(`NSSQ.Bestiary.${k}`));
 const A = (k) => game.i18n.localize(`NSSQ.Analysis.${k}`);
@@ -20,7 +21,7 @@ export const bestiaryForPlayers = () => !!game.settings.get("nssq", "bestiaryPla
 
 let app = null;
 
-export class BestiaryApp extends Application {
+export class BestiaryApp extends foundry.appv1.api.Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-bestiary", classes: ["nssq", "nssq-bestiary"], width: 760, height: 620, resizable: true
@@ -151,7 +152,7 @@ export class BestiaryApp extends Application {
     };
     form.addEventListener("change", () => save());
     form.querySelector("[data-forget]")?.addEventListener("click", async () => {
-      const ok = await Dialog.confirm({ title: L("forget"), content: `<p>${esc(L("forgetConfirm"))}</p>`, rejectClose: false });
+      const ok = await foundry.appv1.api.Dialog.confirm({ title: L("forget"), content: `<p>${esc(L("forgetConfirm"))}</p>`, rejectClose: false });
       if (ok) await forgetBestiary(form.dataset.key);
     });
   }
@@ -161,16 +162,12 @@ export function registerBestiaryApp() {
   // 액터 탭 머리 버튼(GM, 설정이 켜져 있으면 플레이어도)
   Hooks.on("renderActorDirectory", (dir, html) => {
     if (!game.user.isGM && !bestiaryForPlayers()) return;
-    const btn = $(`<button type="button" class="nssq-bestiary-btn"><i class="fas fa-dragon"></i> ${L("title")}</button>`);
-    btn.on("click", () => BestiaryApp.open());
-    html.find(".directory-header .header-actions").append(btn);
+    addDirectoryButton(html, { cls: "nssq-bestiary-btn", icon: "fas fa-dragon", label: L("title"), onClick: () => BestiaryApp.open() });
   });
   // 토큰 도구(전투 화면 왼쪽 위 도구 막대)
   Hooks.on("getSceneControlButtons", (controls) => {
     if (!game.user.isGM && !bestiaryForPlayers()) return;
-    controls.find((c) => c.name === "token")?.tools.push({
-      name: "nssq-bestiary", title: "NSSQ.Bestiary.title", icon: "fas fa-dragon", button: true, onClick: () => BestiaryApp.open()
-    });
+    addTokenTool(controls, { name: "nssq-bestiary", title: "NSSQ.Bestiary.title", icon: "fas fa-dragon", onClick: () => BestiaryApp.open() });
   });
   // 플레이어는 전투 중에 도감을 볼 수 없다(전투가 시작되면 닫는다)
   Hooks.on("updateCombat", (combat, changes) => {

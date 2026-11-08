@@ -15,6 +15,7 @@ import { evaluateCheck } from "../engine/check.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { esc } from "../util.mjs";
+import { addTokenTool } from "./scene-tools.mjs";
 import { L, opt, rid, W, H, R, G, allMaps, mapState, activeMap, areaName, areaOf, areaImg, encBgmOptions, parchment, passageLabel, clock, saveMap } from "./fieldmap-common.mjs";
 export { allMaps, mapState, activeMap } from "./fieldmap-common.mjs";
 import { editorMethods } from "./fieldmap-editor.mjs";
@@ -89,7 +90,7 @@ export async function foeOpening(combat) {
   if (left >= 1 && left <= 3) {
     const coming = FM.foeForecast(map, s, hold);
     if (coming.length) {
-      new Dialog({
+      new foundry.appv1.api.Dialog({
         title: L("foeComingTitle"),
         content: coming.map((id) => `<p><i class="fas fa-skull"></i> ${esc(L("foeComing", { name: name(id), n: left }))}</p>`).join(""),
         buttons: { ok: { icon: '<i class="fas fa-check"></i>', label: L("foeComingOk") } }, default: "ok"
@@ -98,7 +99,7 @@ export async function foeOpening(combat) {
   }
   const here = (info.foeArrived ?? []).filter((id) => !hold.includes(id) && s.foePos?.[id] === s.current && !(s.foeGone ?? []).includes(id));
   for (const id of here) {
-    new Dialog({
+    new foundry.appv1.api.Dialog({
       title: L("foeIntrudeTitle"),
       content: `<p><i class="fas fa-skull"></i> ${esc(L("foeIntrudeAsk", { name: name(id) }))}</p>`,
       buttons: {
@@ -527,7 +528,7 @@ async function pick(message, i) {
 /** GM: 즉석 선택지. 한 줄에 하나, 「라벨 > 에어리어 이름」이면 고르면 그리로 이동(시간 없음) */
 export async function openChoiceDialog() {
   const map = activeMap();
-  const got = await Dialog.prompt({
+  const got = await foundry.appv1.api.Dialog.prompt({
     title: L("choiceHead"),
     content: `<form class="nssq-fm-choice"><div class="form-group stacked"><label>${esc(L("choiceText"))}</label><textarea name="text" rows="2"></textarea></div>
       <div class="form-group stacked"><label>${esc(L("choiceOptions"))}</label><textarea name="opts" rows="4" placeholder="${esc(L("choiceOptionsHint"))}"></textarea></div></form>`,
@@ -635,7 +636,7 @@ function promptVote(st) {
   const a = ex ? areaOf(ex.target, ex.area || ex.target.start) : areaOf(map, p.to);
   const known = game.user.isGM || !!ex || (st.visited?.[p.to] ?? 0) > 0;
   const img = areaImg(a);
-  const dialog = new Dialog({
+  const dialog = new foundry.appv1.api.Dialog({
     title: L("proposalTitle"),
     content: `<div class="nssq-fm-vote">${img ? `<div class="thumb ${known ? "" : "fog"}" style="background-image:url('${esc(img)}')"></div>` : ""}
       <p>${esc(L("proposalAsk", { by: game.users.get(p.by)?.name ?? "", name: ex ? destLabel(map, st, p.to) : known ? a?.name ?? "" : L("unknownArea") }))}</p>${a?.terrain ? `<p class="notes">${esc(a.terrain)}</p>` : ""}</div>`,
@@ -686,7 +687,7 @@ async function onCard(message, action, el) {
 
 let app = null;
 
-export class FieldMapApp extends Application {
+export class FieldMapApp extends foundry.appv1.api.Application {
   constructor(options = {}) {
     super(options);
     this.mode = "play";
@@ -1050,8 +1051,8 @@ export class FieldMapApp extends Application {
       case "delPassage": map.passages = map.passages.filter((p) => p.id !== this.sel.id); this.sel = null; this.dirty = true; return this.render();
       case "flip": { const p = map.passages.find((x) => x.id === this.sel.id); [p.a, p.b] = [p.b, p.a]; this.dirty = true; return this.render(); }
       case "makeScene": return this.makeScene(map.areas.find((x) => x.id === this.sel.id));
-      case "pickFoeBg": { const f = map.foes[Number(id)]; return f ? new FilePicker({ type: "image", current: f.bg, callback: (src) => { f.bg = src; this.dirty = true; this.render(); } }).render(true) : null; }
-      case "pickBattleBg": return new FilePicker({ type: "image", current: map.battleBg, callback: (src) => { map.battleBg = src; this.dirty = true; this.render(); } }).render(true);
+      case "pickFoeBg": { const f = map.foes[Number(id)]; return f ? new foundry.applications.apps.FilePicker.implementation({ type: "image", current: f.bg, callback: (src) => { f.bg = src; this.dirty = true; this.render(); } }).render(true) : null; }
+      case "pickBattleBg": return new foundry.applications.apps.FilePicker.implementation({ type: "image", current: map.battleBg, callback: (src) => { map.battleBg = src; this.dirty = true; this.render(); } }).render(true);
       case "addEnc": { const ar = map.areas.find((x) => x.id === this.sel.id); (ar.encounters ??= []).push({ id: "", weight: 1 }); this.dirty = true; return this.render(); }
       case "openEncounters": return (await import("./encounters.mjs")).EncounterApp.open({ group: `map:${map.id}` });
       case "encEdit": return (await import("./encounters.mjs")).EncounterApp.open({ group: `map:${map.id}`, edit: id, onSave: () => this.render() });
@@ -1064,8 +1065,8 @@ export class FieldMapApp extends Application {
       }
       case "encStart": return (await import("./encounters.mjs")).startEncounter(id, { map });
       case "encRandom": { const here = areaOf(map, mapState().current); return (await import("./encounters.mjs")).randomEncounter(here?.encounters ?? [], { map, name: here?.name ?? "" }); }
-      case "pickImg": { const ar = map.areas.find((x) => x.id === this.sel.id); return new FilePicker({ type: "image", current: ar.img, callback: (src) => { ar.img = src; this.dirty = true; this.render(); } }).render(true); }
-      case "pickBg": return new FilePicker({ type: "image", current: map.bg?.src, callback: (src) => { map.bg = { style: "image", src }; this.dirty = true; this.render(); } }).render(true);
+      case "pickImg": { const ar = map.areas.find((x) => x.id === this.sel.id); return new foundry.applications.apps.FilePicker.implementation({ type: "image", current: ar.img, callback: (src) => { ar.img = src; this.dirty = true; this.render(); } }).render(true); }
+      case "pickBg": return new foundry.applications.apps.FilePicker.implementation({ type: "image", current: map.bg?.src, callback: (src) => { map.bg = { style: "image", src }; this.dirty = true; this.render(); } }).render(true);
       case "route": this.routeFoe = this.routeFoe === id ? null : id; this.tool = "select"; this.linkFrom = null; return this.render();
       case "routeDone": this.routeFoe = null; return this.render();
       case "routeClear": { const f = map.foes.find((x) => x.id === id); f.route = []; this.dirty = true; return this.render(); }
@@ -1076,7 +1077,7 @@ export class FieldMapApp extends Application {
         this.mapId = m.id; this.draft = null; return this.render();
       }
       case "delMap": {
-        if (!(await Dialog.confirm({ title: L("delMap"), content: `<p>${esc(L("delMapAsk", { name: map.name }))}</p>`, rejectClose: false }))) return;
+        if (!(await foundry.appv1.api.Dialog.confirm({ title: L("delMap"), content: `<p>${esc(L("delMapAsk", { name: map.name }))}</p>`, rejectClose: false }))) return;
         if (mapState().mapId === map.id && mapState().active) await endProgress();
         const all = allMaps();
         delete all[map.id];
@@ -1085,7 +1086,7 @@ export class FieldMapApp extends Application {
       }
       // 진행
       case "start": return startProgress(map.id, Number(this.element.find("[data-fm-hour]").val()) || 0);
-      case "restart": if (await Dialog.confirm({ title: L("restart"), content: `<p>${esc(L("restartAsk"))}</p>`, rejectClose: false })) return startProgress(map.id, map.startHour ?? 8, { resume: false }); return;
+      case "restart": if (await foundry.appv1.api.Dialog.confirm({ title: L("restart"), content: `<p>${esc(L("restartAsk"))}</p>`, rejectClose: false })) return startProgress(map.id, map.startHour ?? 8, { resume: false }); return;
       case "end": return endProgress();
       case "toTown": return (await import("./town.mjs")).returnToTown(null, { reason: L("toTownReason") });
       case "undo": return undo();
@@ -1216,15 +1217,15 @@ export function registerFieldMap() {
   Hooks.once("ready", () => { fieldActive = !!mapState().active; });
   Hooks.on("getSceneControlButtons", (controls) => {
     if (!game.user.isGM && !mapState().active) return;
-    controls.find((c) => c.name === "token")?.tools.push({ name: "nssq-fieldmap", title: "NSSQ.FieldMap.title", icon: "fas fa-map", button: true, onClick: () => FieldMapApp.toggle() });
+    addTokenTool(controls, { name: "nssq-fieldmap", title: "NSSQ.FieldMap.title", icon: "fas fa-map", onClick: () => FieldMapApp.toggle() });
   });
   Hooks.on("createChatMessage", (m) => trackMapping(m));
   Hooks.on("updateChatMessage", (m) => trackMapping(m));
   onSocket("fieldPropose", (p) => serial(() => onPropose(p)));
   onSocket("fieldAnswer", (p) => serial(() => onAnswer(p)));
   onSocket("fieldVote", ({ messageId, i, userId }) => serial(async () => { if (isActiveGM()) { const m = game.messages.get(messageId); if (m) await vote(m, i, userId); } }));
-  Hooks.on("renderChatMessage", (message, html) => {
-    const root = html[0];
+  Hooks.on("renderChatMessageHTML", (message, html) => {
+    const root = html;
     if (!root.querySelector(".nssq-fieldmap-card")) return;
     const d = message.getFlag("nssq", "fieldEvent") ?? {};
     root.querySelectorAll(".fm-gm, .fm-gm-only").forEach((el) => { if (!game.user.isGM || d.done === true) el.remove(); });
@@ -1244,7 +1245,7 @@ export function registerFieldMap() {
     if (result === "victory") {
       for (const foeId of fought) {
         const foe = map.foes.find((f) => f.id === foeId);
-        if (foe && (await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("foeDefeatedAsk", { name: foe.name }))}</p>`, rejectClose: false }))) await removeFoe(foeId);
+        if (foe && (await foundry.appv1.api.Dialog.confirm({ title: L("title"), content: `<p>${esc(L("foeDefeatedAsk", { name: foe.name }))}</p>`, rejectClose: false }))) await removeFoe(foeId);
       }
     }
     const s = mapState();

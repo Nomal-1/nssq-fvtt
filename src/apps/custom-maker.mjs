@@ -169,7 +169,7 @@ function pathLabel(p) {
 
 /* ---------------- 스킬 제작기 ---------------- */
 
-export class SkillMaker extends Application {
+export class SkillMaker extends foundry.appv1.api.Application {
   /** @param {{ item?: Item, actor?: Actor }} o */
   constructor({ item = null, actor = null } = {}, options = {}) {
     super(options);
@@ -306,12 +306,12 @@ export class SkillMaker extends Application {
       if (a === "dup") { this.blocks.splice(i + 1, 0, foundry.utils.deepClone(this.blocks[i])); return this.render(); }
       if (a === "loadSkill") return this.loadFrom(pickUuid(html, "loadSkill", this._lib ?? []));
       if (a === "saveCopy") return this.save({ copy: true });
-      if (a === "img") return new FilePicker({ type: "image", current: this.draft.img, callback: (p) => { this.draft.img = p; this.render(); } }).render(true);
+      if (a === "img") return new foundry.applications.apps.FilePicker.implementation({ type: "image", current: this.draft.img, callback: (p) => { this.draft.img = p; this.render(); } }).render(true);
       if (a === "preview") {
         const { list, errors } = this.effects();
         this.errors = errors;
         this.render();
-        return Dialog.prompt({ title: L("previewJson"), content: `<pre class="mk-pre">${esc(JSON.stringify(list, null, 1))}</pre>`, rejectClose: false });
+        return foundry.appv1.api.Dialog.prompt({ title: L("previewJson"), content: `<pre class="mk-pre">${esc(JSON.stringify(list, null, 1))}</pre>`, rejectClose: false });
       }
       if (a === "save") return this.save();
     });
@@ -337,7 +337,7 @@ export class SkillMaker extends Application {
 
 /* ---------------- 에너미 제작기 ---------------- */
 
-export class EnemyMaker extends Application {
+export class EnemyMaker extends foundry.appv1.api.Application {
   constructor({ actor = null } = {}, options = {}) {
     super(options);
     this.actor = actor;
@@ -447,7 +447,7 @@ export class EnemyMaker extends Application {
       this.read(html);
       const d = this.draft;
       switch (a) {
-        case "img": return new FilePicker({ type: "image", current: d.img, callback: (p) => { d.img = p; this.render(); } }).render(true);
+        case "img": return new foundry.applications.apps.FilePicker.implementation({ type: "image", current: d.img, callback: (p) => { d.img = p; this.render(); } }).render(true);
         case "dropAdd": d.drops.push({ min: (d.drops.at(-1)?.max ?? 7) + 1, max: null, item: "", rank: d.level }); return this.render();
         case "dropDel": d.drops.splice(i, 1); return this.render();
         case "skillDel": this.skills.splice(i, 1); return this.render();
@@ -585,7 +585,7 @@ const renameInSkills = (skills, from, to) => skills.map((s) => (s.system?.prereq
   ? { ...s, system: { ...s.system, prereqs: renamePrereqs([{ prereqs: s.system.prereqs }], from, to)[0].prereqs } } : s));
 const prereqText = (prereqs) => (prereqs?.all ?? []).map((g) => (g.any ? g.any.map((q) => `${q.skill} ${q.sl}`).join(` ${L("or")} `) : `${g.skill} ${g.sl}`)).join(" + ");
 
-export class ClassMaker extends Application {
+export class ClassMaker extends foundry.appv1.api.Application {
   constructor({ item = null } = {}, options = {}) {
     super(options);
     this.item = item;
@@ -754,7 +754,7 @@ export class ClassMaker extends Application {
       const i = Number(ev.currentTarget.dataset.i);
       this.read(html);
       switch (a) {
-        case "img": return new FilePicker({ type: "image", current: this.cls.img, callback: (p) => { this.cls.img = p; this.render(); } }).render(true);
+        case "img": return new foundry.applications.apps.FilePicker.implementation({ type: "image", current: this.cls.img, callback: (p) => { this.cls.img = p; this.render(); } }).render(true);
         case "pre": if (this.openRows.has(i)) this.openRows.delete(i); else this.openRows.add(i); return this.render();
         case "up": move(this.skills, i, -1); this.openRows.clear(); return this.render();
         case "down": move(this.skills, i, 1); this.openRows.clear(); return this.render();

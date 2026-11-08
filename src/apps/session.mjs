@@ -20,7 +20,7 @@ export async function openSessionEnd() {
   const dl = (await import("./dungeon.mjs")).dungeonState()?.level ?? 1;
   const rows = party.map((a) => `<tr data-id="${a.id}"><td><input type="checkbox" name="p" checked/></td><td>${esc(a.name)} <small>Lv${a.system.level}</small></td>
     <td><input type="number" name="bonus" value="0" min="0" max="3" style="width:4em"/></td><td><input type="number" name="money" value="0" min="0" style="width:6em"/></td></tr>`).join("");
-  const got = await Dialog.prompt({
+  const got = await foundry.appv1.api.Dialog.prompt({
     title: L("endTitle"),
     content: `<form class="nssq-session-end">
       <div class="form-group"><label><input type="checkbox" name="goal"/> ${esc(L("goal"))}</label></div>
@@ -63,7 +63,7 @@ export async function openLivingCost() {
   const party = (await import("./gm-screen.mjs")).partyActors();
   const rows = party.map((a) => `<tr data-id="${a.id}"><td><input type="checkbox" name="p" checked/></td><td>${esc(a.name)} <small>Lv${a.system.level}</small></td>
     <td><input type="number" name="cost" value="${livingCost(a.system.level)}" min="0" style="width:6em"/>G</td><td>${a.system.money ?? 0}G</td></tr>`).join("");
-  const got = await Dialog.prompt({
+  const got = await foundry.appv1.api.Dialog.prompt({
     title: L("livingTitle"),
     content: `<form class="nssq-session-end"><table><thead><tr><th></th><th></th><th>${esc(L("livingCost"))}</th><th>${esc(L("livingHave"))}</th></tr></thead><tbody>${rows}</tbody></table>
       <p class="notes">${esc(L("livingHint"))}</p></form>`,

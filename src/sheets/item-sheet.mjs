@@ -4,7 +4,7 @@ import { skillUsage } from "../engine/skills.mjs";
 
 const ELEMENTS = ["slash", "strike", "pierce", "fire", "ice", "volt"];
 
-export class NssqItemSheet extends ItemSheet {
+export class NssqItemSheet extends foundry.appv1.sheets.ItemSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["nssq", "nq-window", "sheet", "item"],
@@ -48,7 +48,7 @@ export class NssqItemSheet extends ItemSheet {
       context.refineSlots = Math.max(0, 2 - system.refinements.length);
       context.isGM = game.user.isGM;
     }
-    context.enrichedDescription = await TextEditor.enrichHTML(system.description ?? "", {
+    context.enrichedDescription = await foundry.applications.ux.TextEditor.implementation.enrichHTML(system.description ?? "", {
       async: true,
       secrets: this.item.isOwner,
       relativeTo: this.item

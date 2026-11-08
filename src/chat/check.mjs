@@ -77,7 +77,7 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
       ${checkModsHtml(actor)}
       ${checkPreviewHtml({ bonus: ability ? actor.system.bonus?.[ability] ?? 0 : 0, target: contestOf && active && stateOf(active) ? resultOf(active).total : null })}
     </form>`;
-  return Dialog.prompt({
+  return foundry.appv1.api.Dialog.prompt({
     render: (html) => bindCheckPreview(html[0] ?? html, { actor, target: contestOf && active && stateOf(active) ? resultOf(active).total : null }),
     title: `${actor.name} — ${game.i18n.localize(contestOf ? "NSSQ.Check.contestTitle" : "NSSQ.Check.title")}`,
     content,
@@ -191,7 +191,7 @@ async function renderCard(state, { contest = false } = {}) {
     trick: !state.forcedFail && !state.tricked && postSkill(fromUuidSync(state.actorUuid), "checkFlip")?.name,
     fortune: !state.forcedFail && !state.fortune && postSkill(fromUuidSync(state.actorUuid), "checkExtraDie")?.name
   };
-  return renderTemplate(TEMPLATE, data);
+  return foundry.applications.handlebars.renderTemplate(TEMPLATE, data);
 }
 
 /* ---------------- 카드 버튼 ---------------- */
@@ -309,7 +309,7 @@ async function pickActor() {
     ui.notifications.warn(game.i18n.localize("NSSQ.Check.noActor"));
     return null;
   }
-  const id = await Dialog.prompt({
+  const id = await foundry.appv1.api.Dialog.prompt({
     title: game.i18n.localize("NSSQ.Check.pickActor"),
     content: `<form><div class="form-group"><select name="id">${owned.map((a) => `<option value="${a.id}">${a.name}</option>`).join("")}</select></div></form>`,
     rejectClose: false,
@@ -359,9 +359,9 @@ function renderContest(message, el) {
 /* ---------------- 훅 ---------------- */
 
 export function registerCheckHooks() {
-  Hooks.on("renderChatMessage", (message, html) => {
+  Hooks.on("renderChatMessageHTML", (message, html) => {
     if (!stateOf(message)) return;
-    const el = html[0];
+    const el = html;
     renderContest(message, el);
     // 판정을 고칠 수 있는 사람: 메시지 작성자 또는 GM
     const canEdit = message.isAuthor || game.user.isGM;

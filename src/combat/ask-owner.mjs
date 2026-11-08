@@ -31,7 +31,7 @@ function askHere(spec) {
     let root = null;
     let done = false;
     const finish = (button) => { if (done) return; done = true; resolve({ button, values: readForm(root) }); };
-    new Dialog({
+    new foundry.appv1.api.Dialog({
       title: spec.title, content: spec.content,
       buttons: Object.fromEntries(Object.entries(spec.buttons).map(([id, label]) => [id, { label, callback: () => finish(id) }])),
       default: spec.default ?? Object.keys(spec.buttons)[0],

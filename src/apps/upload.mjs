@@ -41,8 +41,8 @@ export async function shrinkImage(file, max = 1600, quality = 0.88) {
 const safeName = (n) => String(n ?? "img").replace(/[^A-Za-z0-9._-]/g, "_").slice(0, 80);
 
 async function directUpload(blob, dir, name) {
-  try { await FilePicker.createDirectory("data", dir); } catch { /* 이미 있음 */ }
-  const res = await FilePicker.upload("data", dir, new File([blob], name, { type: blob.type || "image/webp" }), {}, { notify: false });
+  try { await foundry.applications.apps.FilePicker.implementation.createDirectory("data", dir); } catch { /* 이미 있음 */ }
+  const res = await foundry.applications.apps.FilePicker.implementation.upload("data", dir, new File([blob], name, { type: blob.type || "image/webp" }), {}, { notify: false });
   return res?.path ?? null;
 }
 

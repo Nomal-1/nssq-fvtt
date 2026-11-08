@@ -34,7 +34,7 @@ async function record(actor, item) {
   const list = recordable(actor);
   if (!list.length) return ui.notifications.warn(L("noSkill")) && null;
   const options = list.map((s) => `<option value="${s.id}">《${esc(s.name)}》 SL${s.system.sl}</option>`).join("");
-  const id = await Dialog.prompt({
+  const id = await foundry.appv1.api.Dialog.prompt({
     title: L("recordTitle"),
     content: `<p>${esc(L("recordHint"))}</p><form><div class="form-group"><select name="s">${options}</select></div></form>`,
     label: L("record"), rejectClose: false,

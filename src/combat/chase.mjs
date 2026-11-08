@@ -304,7 +304,7 @@ export async function rallyChase(user, rally) {
   let chosen = allies.slice(0, rally.count);
   if (allies.length && user.actor.type === "character" && user.actor.isOwner) {
     const html = `<p>${esc(L("rallyHint", { n: rally.count }))}</p>${allies.map((a, k) => `<div class="form-group"><label><input type="checkbox" name="r${k}" ${k < rally.count ? "checked" : ""}/> ${esc(a.name)}</label></div>`).join("")}`;
-    const picked = await Dialog.prompt({
+    const picked = await foundry.appv1.api.Dialog.prompt({
       title: L("rallyTitle"), content: html, label: L("rallyGo"), rejectClose: false,
       callback: (h) => allies.filter((a, k) => !!h[0].querySelector(`[name=r${k}]`)?.checked)
     });
@@ -442,7 +442,7 @@ function scanFollowupPopups(message) {
     const d = { actor: c?.name ?? "?", name: shown(f), type: typeLabel(f) };
     const label = f.type === "trigger" || f.type === "event" ? L("declare", d) : L("run", d);
     let answered = false;
-    const dlg = new Dialog({
+    const dlg = new foundry.appv1.api.Dialog({
       title: `${c?.name ?? ""} — ${L(`type.${f.type === "event" ? "declare" : f.type}`)}`,
       content: `<p>${esc(message.content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 140))}</p><p><b>${esc(label)}</b></p>`,
       buttons: {
@@ -468,5 +468,5 @@ export function registerChase() {
     if (!isActiveGM() || !(message.getFlag("nssq", "attack") || message.getFlag("nssq", "skillCard"))) return;
     onAttackCard(message).catch((err) => console.error("NSSQ | 추격·반격", err));
   });
-  Hooks.on("renderChatMessage", (message, html) => decorate(message, html[0]));
+  Hooks.on("renderChatMessageHTML", (message, html) => decorate(message, html));
 }

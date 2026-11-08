@@ -129,7 +129,7 @@ export function overflowDialog(actor, incomingList, { store = false, leave = fal
       const lv = incomingList.map((_, i) => Number(root.querySelector(`tr[data-incoming="${i}"] [name=leave]`)?.value) || 0);
       return { plan, leave: lv };
     };
-    new Dialog({
+    new foundry.appv1.api.Dialog({
       title: L("overflowTitle", { name: actor.name }),
       content,
       buttons: {
@@ -263,7 +263,7 @@ export async function acquireItems(actor, dataList, { source = "gift", reason = 
 async function askQuantity(item, title) {
   const qty = item.system.quantity ?? 1;
   if (qty <= 1) return qty;
-  return Dialog.prompt({
+  return foundry.appv1.api.Dialog.prompt({
     title,
     content: `<form><div class="form-group"><label>${esc(itemLabel(item))} (${qty})</label><input type="number" name="n" min="1" max="${qty}" value="${qty}"/></div></form>`,
     rejectClose: false,

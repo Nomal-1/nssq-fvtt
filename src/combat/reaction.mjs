@@ -400,7 +400,7 @@ function showPopup(messageId, type, p) {
   };
   try { foundry.audio.AudioHelper.play({ src: CONFIG.sounds.notification, volume: 0.8, autoplay: true, loop: false }, false); } catch { /* 소리 없음 */ }
   return new Promise((resolve) => {
-    const d = new Dialog({ title: L("popupTitle"), content, buttons, default: "o0", close: () => { popups.delete(p.key); resolve(); } }, { classes: ["dialog", "nssq-reaction-popup"] });
+    const d = new foundry.appv1.api.Dialog({ title: L("popupTitle"), content, buttons, default: "o0", close: () => { popups.delete(p.key); resolve(); } }, { classes: ["dialog", "nssq-reaction-popup"] });
     popups.set(p.key, d);
     d.render(true);
   });

@@ -54,7 +54,7 @@ function popup({ title, head, lines, fp = null }) {
       return Math.max(0, Math.min(fp?.max ?? 0, Math.floor(v)));
     };
     let el = null;
-    new Dialog({
+    new foundry.appv1.api.Dialog({
       title, content,
       buttons: { roll: { icon: '<i class="fas fa-dice"></i>', label: L("roll"), callback: (html) => resolve(read(html)) } },
       default: "roll",

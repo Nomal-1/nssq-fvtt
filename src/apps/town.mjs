@@ -113,7 +113,7 @@ async function onGateRequest({ userId, mapId }) {
   const map = (await import("./fieldmap.mjs")).allMaps()[mapId];
   if (!map) return;
   const who = game.users.get(userId)?.name ?? "?";
-  const ok = await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("gateAsk", { who, name: map.name }))}</p>`, rejectClose: false });
+  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("title"), content: `<p>${esc(L("gateAsk", { who, name: map.name }))}</p>`, rejectClose: false });
   if (ok) await enterMapFromTown(mapId);
 }
 
@@ -121,7 +121,7 @@ async function onReturnRequest({ userId }) {
   const { isActiveGM } = await import("../combat/apply.mjs");
   if (!isActiveGM()) return;
   const who = game.users.get(userId)?.name ?? "?";
-  const ok = await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("returnAsk", { who }))}</p>`, rejectClose: false });
+  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("title"), content: `<p>${esc(L("returnAsk", { who }))}</p>`, rejectClose: false });
   if (ok) await returnToTown(null, { reason: L("returnBy", { who }) });
 }
 
@@ -187,7 +187,7 @@ function syncOverlay() {
 
 let app = null;
 
-export class TownApp extends Application {
+export class TownApp extends foundry.appv1.api.Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-town", classes: ["nssq", "nq-window", "nssq-town"], title: game.i18n.localize("NSSQ.Town.title"),
@@ -209,7 +209,7 @@ export class TownApp extends Application {
   static refresh() {
     if (app?.rendered && !app.draft) app.render();
     // 렌더 중이면 끝난 뒤 한 번 더
-    if (overlay?._state === Application.RENDER_STATES.RENDERING) overlay.dirty = true;
+    if (overlay?._state === foundry.appv1.api.Application.RENDER_STATES.RENDERING) overlay.dirty = true;
     else if (overlay?.rendered) overlay.render();
   }
 
@@ -396,7 +396,7 @@ export class TownApp extends Application {
     root.querySelectorAll("[data-pick]").forEach((el) => el.addEventListener("click", () => {
       const [k, field = "img"] = el.dataset.pick.split(".");
       const target = k === "town" ? this.draft : this.draft.facilities[Number(k)];
-      new FilePicker({ type: "image", current: target[field], callback: (src) => { target[field] = src; this.render(); } }).render(true);
+      new foundry.applications.apps.FilePicker.implementation({ type: "image", current: target[field], callback: (src) => { target[field] = src; this.render(); } }).render(true);
     }));
     root.querySelectorAll("[data-mkscene]").forEach((el) => el.addEventListener("click", () => this.makeScene(this.draft.facilities[Number(el.dataset.mkscene)])));
     root.querySelectorAll("[data-town]").forEach((el) => el.addEventListener("click", (ev) => { ev.preventDefault(); this.onAct(el.dataset.town); }));
@@ -439,7 +439,7 @@ export class TownApp extends Application {
         this.draft = null; return this.render();
       }
       case "delete": {
-        if (!(await Dialog.confirm({ title: L("delete"), content: `<p>${esc(L("deleteConfirm", { name: this.draft.name }))}</p>`, rejectClose: false }))) return null;
+        if (!(await foundry.appv1.api.Dialog.confirm({ title: L("delete"), content: `<p>${esc(L("deleteConfirm", { name: this.draft.name }))}</p>`, rejectClose: false }))) return null;
         const all = { ...allTowns() };
         delete all[this.draft.id];
         await game.settings.set("nssq", "towns", all);
@@ -491,7 +491,7 @@ export class TownApp extends Application {
       : game.actors.filter((a) => a.type === "character" && a.isOwner && !a.getFlag("nssq", "benched"));
     if (party.length <= 1) return party[0] ?? (game.user.isGM ? null : game.user.character ?? null);
     const cur = game.user.character?.id ?? "";
-    return Dialog.prompt({
+    return foundry.appv1.api.Dialog.prompt({
       title: L("pickActor"), content: `<form><select name="a">${party.map((a) => opt(a.id, cur, a.name)).join("")}</select></form>`,
       label: L("ok"), rejectClose: false, callback: (html) => game.actors.get(html[0].querySelector("[name=a]").value)
     });
@@ -527,7 +527,7 @@ export class TownOverlay extends TownApp {
 
   /** 렌더 중에 다시 그리기를 부르면 Foundry는 그냥 버린다 → 끝난 뒤 한 번 더(버튼을 눌렀는데 반응 없는 것 방지) */
   render(force = false, options = {}) {
-    if (this._state === Application.RENDER_STATES.RENDERING) { this.dirty = true; return this; }
+    if (this._state === foundry.appv1.api.Application.RENDER_STATES.RENDERING) { this.dirty = true; return this; }
     return super.render(force, options);
   }
 
@@ -551,7 +551,7 @@ export function registerTown() {
   Hooks.on("deleteCombat", () => setTimeout(() => TownApp.refresh(), 500));
   // 접속 직후에는 캔버스를 그린 뒤 #hud를 다시 그려 덮은 UI가 지워진다 → ready·HUD 렌더 때 다시 붙인다
   Hooks.once("ready", () => setTimeout(syncOverlay, 0));
-  Hooks.on("renderHeadsUpDisplay", () => { if (overlay && !document.body.contains(overlay.element?.[0])) setTimeout(syncOverlay, 0); });
+  for (const h of ["renderHeadsUpDisplay", "renderHeadsUpDisplayContainer"]) Hooks.on(h, () => { if (overlay && !document.body.contains(overlay.element?.[0])) setTimeout(syncOverlay, 0); });
   Hooks.on("canvasPan", () => { if (!fitting && overlay) { clearTimeout(registerTown.t); registerTown.t = setTimeout(fitTownView, 400); } });
   Hooks.on("collapseSidebar", () => setTimeout(fitTownView, 300));
   window.addEventListener("resize", () => { clearTimeout(registerTown.r); registerTown.r = setTimeout(fitTownView, 200); });

@@ -96,7 +96,7 @@ async function escapeDeclarations(combat) {
   const out = new Map();
   if (!list.length) return out;
   const html = `<p>${L("dashHint")}</p>${list.map((x, k) => `<div class="form-group"><label><input type="checkbox" name="d${k}" ${x.auto ? "checked" : ""}/> ${esc(x.c.name)}: 《${esc(x.i.name)}》 +${x.value}</label></div>`).join("")}`;
-  const picked = await Dialog.prompt({
+  const picked = await foundry.appv1.api.Dialog.prompt({
     title: L("dashTitle"), content: html, label: L("escape"), rejectClose: false,
     callback: (h) => list.map((x, k) => !!h[0].querySelector(`[name=d${k}]`)?.checked)
   });
@@ -115,7 +115,7 @@ async function escapeDeclarations(combat) {
 
 export async function rollEscape(combat) {
   if (!game.user.isGM || !combat) return;
-  const ok = await Dialog.confirm({ title: L("escape"), content: `<p>${L("escapeConfirm")}</p>`, rejectClose: false });
+  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("escape"), content: `<p>${L("escapeConfirm")}</p>`, rejectClose: false });
   if (!ok) return;
   // 도주 판정 때 선언(《전력 도주》 달성값 +3): 쓸 수 있는 캐릭터를 GM이 고른다(시트 「자동」이면 처음부터 체크)
   const dash = await escapeDeclarations(combat);
@@ -160,7 +160,9 @@ export function registerTracker() {
   Hooks.on("renderCombatTracker", (app, html) => {
     const combat = app.viewed;
     if (!combat) return;
-    const root = html[0] ?? html;
+    const root = html instanceof HTMLElement ? html : html[0];
+    // v13+ 트래커는 일부만 다시 그려도 이 훅이 불린다: 전에 붙인 것을 먼저 지운다
+    root.querySelectorAll(".nssq-phase-bar, .nssq-combatant-tools").forEach((el) => el.remove());
     const started = combat.started;
     const phase = combat.phase ?? "opening";
 
@@ -267,17 +269,15 @@ export function registerTracker() {
     const mine = combat.combatants.some((c) => c.actor?.isOwner);
     if (!mine) return;
     const want = combat.getFlag("nssq", "phase") === "main" && !combat.getFlag("nssq", "over") ? "target" : "select";
-    if (ui.controls.activeControl === "token" && ui.controls.activeTool === want) return;
-    ui.controls.initialize({ control: "token", tool: want });
-    canvas.tokens.activate({ tool: want });
+    if (ui.controls.control?.name === "tokens" && ui.controls.tool?.name === want) return;
+    ui.controls.activate({ control: "tokens", tool: want });
   };
   Hooks.on("updateCombat", (combat, changes) => {
     if (foundry.utils.hasProperty(changes, "flags.nssq.phase") || foundry.utils.hasProperty(changes, "flags.nssq.over")) syncTool(combat);
   });
   Hooks.on("deleteCombat", () => {
-    if (game.user.isGM || !canvas?.ready || ui.controls.activeTool !== "target") return;
-    ui.controls.initialize({ control: "token", tool: "select" });
-    canvas.tokens.activate({ tool: "select" });
+    if (game.user.isGM || !canvas?.ready || ui.controls.tool?.name !== "target") return;
+    ui.controls.activate({ control: "tokens", tool: "select" });
   });
   // 메인 페이즈 도중에 접속하거나 씬이 바뀌어도 맞춘다
   Hooks.on("canvasReady", () => syncTool(game.combat));

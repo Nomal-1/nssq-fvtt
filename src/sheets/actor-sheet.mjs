@@ -20,7 +20,7 @@ async function setLevelDialog(actor) {
   if (!game.user.isGM) return;
   const levels = tables.levelExp?.levels ?? [];
   const options = levels.map((r) => `<option value="${r.level}" ${r.level === actor.system.level ? "selected" : ""}>Lv ${r.level} (${game.i18n.localize("NSSQ.Exp")} ${r.total})</option>`).join("");
-  const level = await Dialog.prompt({
+  const level = await foundry.appv1.api.Dialog.prompt({
     title: game.i18n.format("NSSQ.Level.setTitle", { name: actor.name }),
     content: `<form><div class="form-group"><label>${game.i18n.localize("NSSQ.Level.label")}</label><select name="level">${options}</select></div><p class="notes">${game.i18n.localize("NSSQ.Level.setNote")}</p></form>`,
     label: game.i18n.localize("NSSQ.Level.apply"),
@@ -33,7 +33,7 @@ async function setLevelDialog(actor) {
   await actor.update({ "system.exp": total, "system.level": level, "flags.nssq.skillPick": { level }, "flags.nssq.-=levelUp": null });
 }
 
-export class NssqActorSheet extends ActorSheet {
+export class NssqActorSheet extends foundry.appv1.sheets.ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["nssq", "nq-window", "sheet", "actor"],
@@ -121,7 +121,7 @@ export class NssqActorSheet extends ActorSheet {
       context.resistRows = RESISTS.map((k) => ({ key: k, base: system.resist[k], total: system.resistTotal[k], changed: system.resistTotal[k] !== system.resist[k] }));
     }
     context.items = this.actor.items.contents.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    context.enrichedDescription = await TextEditor.enrichHTML(system.description ?? "", {
+    context.enrichedDescription = await foundry.applications.ux.TextEditor.implementation.enrichHTML(system.description ?? "", {
       async: true,
       secrets: this.actor.isOwner,
       relativeTo: this.actor
@@ -211,7 +211,7 @@ export class NssqActorSheet extends ActorSheet {
       if (item && game.user.isGM) item.update({ "system.reveal": !item.system.reveal });
     });
     html.on("click", "[data-action=bestiary-forget]", async () => {
-      const ok = await Dialog.confirm({ title: game.i18n.localize("NSSQ.Analysis.forget"), content: `<p>${game.i18n.format("NSSQ.Analysis.forgetConfirm", { name: this.actor.name })}</p>`, rejectClose: false });
+      const ok = await foundry.appv1.api.Dialog.confirm({ title: game.i18n.localize("NSSQ.Analysis.forget"), content: `<p>${game.i18n.format("NSSQ.Analysis.forgetConfirm", { name: this.actor.name })}</p>`, rejectClose: false });
       if (ok) await forgetBestiary(this.actor);
       this.render();
     });

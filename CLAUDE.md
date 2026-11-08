@@ -1,6 +1,6 @@
 # NSSQ — 「SRS가 아닌 세계수의 미궁 TRPG」 Foundry VTT 시스템 (한국어판)
 
-팬메이드 TRPG 「SRSじゃない世界樹の迷宮TRPG」(NSSQ)의 **한국어판**을 Foundry VTT **v12.331**에서 돌리는 게임 시스템을 만든다.
+팬메이드 TRPG 「SRSじゃない世界樹の迷宮TRPG」(NSSQ)의 **한국어판**을 Foundry VTT **v14**에서 돌리는 게임 시스템을 만든다(0.55.x까지는 v12.331 전용).
 목표는 **완전 자동화**다. 캐릭터 작성, 판정, 전투(명중·대미지·크리티컬·상태 이상·강화/약화·종료 페이즈), 스킬·아이템 효과, 탐색(채집·캠프), 성장까지 시스템이 처리하고, GM은 확인과 예외 처리만 한다.
 
 ## 문서 지도 (작업 전에 해당 문서를 반드시 읽는다)
@@ -10,7 +10,7 @@
 | `docs/01-rules.md` | 구현할 룰 전체를 공식으로 정리한 명세. 판정·부능력치·전투·상태 이상·탐색·성장·쇼핑 |
 | `docs/02-data.md` | 원천 데이터(`data/raw/`) 형식, 파싱 규칙, 열거형, ID 규칙, Actor/Item 데이터 모델 |
 | `docs/03-effects.md` | 스킬·아이템 효과를 데이터로 적는 스키마(effects DSL)와 작성 절차 |
-| `docs/04-foundry-v12.md` | Foundry v12.331 구현 지침. 써도 되는 API·쓰면 안 되는 API·확인 필요 목록 |
+| `docs/04-foundry-v14.md` | Foundry v14 구현 지침. 써도 되는 API·쓰면 안 되는 API·확인 필요 목록 |
 | `docs/05-roadmap.md` | 구현 단계, 단계별 완료 기준, 테스트 지침 |
 | `docs/06-terminology.md` | 한국어 표기 규칙(괄호 기호, 조사, UI 문구)과 `docs/glossary.json` 사용법 |
 | `docs/07-open-questions.md` | 원문에 명시가 없어 임시로 정한 처리(미결). 확정되면 01 §9 표로 번호 그대로 옮기고 여기서 지운다(코드의 `07 #n` → `01 #n`) |
@@ -23,9 +23,9 @@
 
 ## 절대 규칙
 
-1. **Foundry v12.331 전용.** `system.json`의 `compatibility`는 `{"minimum":"12","verified":"12.331","maximum":"12"}`.
-   v13 API(ApplicationV2 기반 문서 시트, `renderChatMessageHTML`, `foundry.applications.ux.*` 등)는 쓰지 않는다. 자세한 건 04.
-   v12에 그 API가 있는지 확실하지 않으면 추측하지 말고 04의 「확인 필요」에 적은 뒤 v12.331 소스(`resources/app/client`, `common`)에서 확인한다.
+1. **Foundry v14 전용.** `system.json`의 `compatibility`는 `{"minimum":"14","verified":"14.370","maximum":"14"}`(`verified`는 실제 14 서버에서 확인한 버전).
+   v12 시절 API(`renderChatMessage`, 배열 형식 `getSceneControlButtons`, 코어 화면 훅의 jQuery `html`, 전역 `Dialog`·`FilePicker` 등)는 쓰지 않는다. 자세한 건 04.
+   v14에 그 API가 있는지 확실하지 않으면 추측하지 말고 04의 「확인 필요」에 적은 뒤 v14 소스(`resources/app/client`, `common`)나 서버에서 확인한다.
 2. **용어는 `docs/glossary.json`이 절대 기준.** 한국어 문자열을 새로 만들 때는 먼저 glossary에서 찾는다. `forbidden`에 있는 표기는 절대 쓰지 않는다. 표기 규칙은 06.
 3. **UI 문자열은 `lang/ko.json`에만.** 코드에 한국어를 하드코딩하지 않는다(데이터 파일의 이름·해설은 예외).
 4. **스킬·아이템 효과는 데이터(`effects`)로만 구현.** 해설 문장을 런타임에 해석하거나 `if (name === "…")`로 분기하지 않는다. 스키마로 못 적는 것만 `custom` 핸들러로. 03 참조.

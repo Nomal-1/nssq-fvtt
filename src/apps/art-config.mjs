@@ -220,7 +220,7 @@ export async function openArtConfig(actor) {
     }, { passive: false });
   };
 
-  const result = await Dialog.prompt({
+  const result = await foundry.appv1.api.Dialog.prompt({
     title: `${actor.name} — ${L("title")}`,
     content,
     label: L("save"),
@@ -235,7 +235,7 @@ export async function openArtConfig(actor) {
       });
       root.querySelectorAll("[data-pick]").forEach((b) => b.addEventListener("click", () => {
         const key = b.dataset.pick;
-        new FilePicker({
+        new foundry.applications.apps.FilePicker.implementation({
           type: "image",
           current: st[key] || actor.img,
           callback: (path) => {

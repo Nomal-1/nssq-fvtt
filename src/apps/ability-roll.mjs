@@ -24,7 +24,7 @@ export async function rollAbilityTotals(actor) {
   for (let i = 0; i < 5; i++) rolls.push(await new Roll("3d6").evaluate());
   const results = rolls.map((r) => ({ dice: r.dice[0].results.map((x) => x.result), total: r.total }));
   const totals = results.map((r) => r.total);
-  const content = await renderTemplate(TEMPLATE, {
+  const content = await foundry.applications.handlebars.renderTemplate(TEMPLATE, {
     results: results.map((r, i) => ({ ...r, n: i + 1 })),
     sum: totals.reduce((a, b) => a + b, 0),
     money: initialMoney(totals)
@@ -69,7 +69,7 @@ export async function assignDialog(actor, totals) {
     </form>`;
 
   return new Promise((resolve) => {
-    const dialog = new Dialog({
+    const dialog = new foundry.appv1.api.Dialog({
       title: `${actor.name} — ${L("title")}`,
       content,
       buttons: {
@@ -138,10 +138,10 @@ export async function applyAbilities(actor, totals, slots, { setMoney = false } 
 
 /** 채팅 카드의 [배정하기] 버튼: 창을 닫았어도 다시 열 수 있다 */
 export function registerAbilityRollHooks() {
-  Hooks.on("renderChatMessage", (message, html) => {
+  Hooks.on("renderChatMessageHTML", (message, html) => {
     const data = message.getFlag("nssq", "abilityRoll");
     if (!data) return;
-    const btn = html[0].querySelector("[data-nssq-action=assign]");
+    const btn = html.querySelector("[data-nssq-action=assign]");
     if (!btn) return;
     if (!(message.isAuthor || game.user.isGM)) return btn.remove();
     btn.addEventListener("click", async () => {

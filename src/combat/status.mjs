@@ -168,7 +168,7 @@ async function inflictContest(actor, id, source) {
 const openApps = new Map();
 
 /** GM: 한 전투원의 상태를 보고 걸고 푸는 창 */
-export class StatusApp extends Application {
+export class StatusApp extends foundry.appv1.api.Application {
   constructor(actor, options = {}) {
     super(options);
     this.actor = actor;

@@ -13,6 +13,7 @@ import { isActiveGM } from "../combat/apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import tables from "../generated/tables.mjs";
 import { esc } from "../util.mjs";
+import { addDirectoryButton } from "./scene-tools.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Chargen.${k}`, d) : game.i18n.localize(`NSSQ.Chargen.${k}`));
 const ab = (k) => game.i18n.localize(`NSSQ.Ability.${k}`);
@@ -32,7 +33,7 @@ async function commonSkills() {
   return commonCache;
 }
 
-export class ChargenWizard extends Application {
+export class ChargenWizard extends foundry.appv1.api.Application {
   constructor(actor, options = {}) {
     super({ id: `nssq-chargen-${actor.id}`, ...options });
     this.actor = actor;
@@ -53,7 +54,7 @@ export class ChargenWizard extends Application {
   /** 작성 중인 캐릭터를 완성 전에 닫으면 지울지 묻는다(지우지 않으면 창을 그대로 둔다) */
   async close(options = {}) {
     if (options.force || !game.actors.has(this.actor.id) || !this.isDraft) return super.close(options);
-    const discard = await Dialog.wait({
+    const discard = await foundry.appv1.api.Dialog.wait({
       title: L("discardTitle"), content: `<p>${esc(L("discardAsk", { name: this.actor.name }))}</p>`,
       buttons: {
         discard: { icon: '<i class="fas fa-trash"></i>', label: L("discard"), callback: () => true },
@@ -286,7 +287,7 @@ export class ChargenWizard extends Application {
       // 그림: 이 컴퓨터에서 올리기·자르기(art-config). 업로드 권한이 없는 플레이어는 GM이 대신 올린다
       case "img": return (await import("./art-config.mjs")).openArtConfig(actor);
       case "roll": case "reroll": {
-        if (a === "reroll" && !(await Dialog.confirm({ title: L("reroll"), content: `<p>${esc(L("rerollAsk"))}</p>`, rejectClose: false }))) return;
+        if (a === "reroll" && !(await foundry.appv1.api.Dialog.confirm({ title: L("reroll"), content: `<p>${esc(L("rerollAsk"))}</p>`, rejectClose: false }))) return;
         const { rollAbilityTotals } = await import("./ability-roll.mjs");
         const totals = await rollAbilityTotals(actor);
         if (totals) { await actor.update({ "system.abilityRolls": totals }); this.slots = orderedAssignment(); this._slotsTouched = true; }
@@ -434,9 +435,7 @@ export function registerChargen() {
     open();
   });
   Hooks.on("renderActorDirectory", (_app, html) => {
-    const btn = $(`<button type="button" class="nssq-chargen-btn"><i class="fas fa-user-plus"></i> ${esc(L("newButton"))}</button>`);
-    btn.on("click", () => newCharacter());
-    html.find(".directory-header .header-actions").append(btn);
+    addDirectoryButton(html, { cls: "nssq-chargen-btn", icon: "fas fa-user-plus", label: esc(L("newButton")), onClick: () => newCharacter() });
   });
   // 액터·아이템이 바뀌면 열린 마법사를 다시 그린다
   const refresh = (actor) => { for (const w of Object.values(ui.windows)) if (w instanceof ChargenWizard && w.actor === actor) w.render(false); };

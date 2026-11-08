@@ -361,5 +361,5 @@ function decorate(message, el) {
 export function registerLate() {
   onSocket("declare", (p) => { if (isActiveGM()) gmDeclare(p); });
   onSocket("lateTarget", (p) => { if (isActiveGM()) gmChoose(p); });
-  Hooks.on("renderChatMessage", (message, html) => { decorate(message, html[0]); decorateChoice(message, html[0]); });
+  Hooks.on("renderChatMessageHTML", (message, html) => { decorate(message, html); decorateChoice(message, html); });
 }

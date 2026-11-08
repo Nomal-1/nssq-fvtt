@@ -59,7 +59,7 @@ export async function seedDefaults({ force = false } = {}) {
 
 /** GM 스크린 버튼: 확인 후 기본 마을·던전을 원래대로 */
 export async function reseedDefaults() {
-  const ok = await Dialog.confirm({ title: L("title"), content: `<p>${L("ask")}</p>`, rejectClose: false });
+  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("title"), content: `<p>${L("ask")}</p>`, rejectClose: false });
   if (!ok) return null;
   const n = await seedDefaults({ force: true });
   if (n) ui.notifications.info(L("done", n));
@@ -73,7 +73,7 @@ export async function reseedDefaults() {
 export async function registerExpansion() {
   if (!game.user.isGM) return null;
   const data = await (await fetch(`systems/${game.system.id}/data/defaults/expansion.json`)).json();
-  const ok = await Dialog.confirm({ title: game.i18n.localize("NSSQ.Expansion.title"), content: `<p>${game.i18n.format("NSSQ.Expansion.ask", { n: data.items.length, folder: data.folder })}</p>`, rejectClose: false });
+  const ok = await foundry.appv1.api.Dialog.confirm({ title: game.i18n.localize("NSSQ.Expansion.title"), content: `<p>${game.i18n.format("NSSQ.Expansion.ask", { n: data.items.length, folder: data.folder })}</p>`, rejectClose: false });
   if (!ok) return null;
   const folder = game.folders.find((f) => f.type === "Item" && f.name === data.folder) ?? await Folder.create({ name: data.folder, type: "Item" });
   const have = new Map(game.items.filter((i) => i.folder?.id === folder.id).map((i) => [i.name, i]));

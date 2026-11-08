@@ -107,7 +107,7 @@ export async function convertScenePreset(scene) {
 
 let app = null;
 
-export class EncounterApp extends Application {
+export class EncounterApp extends foundry.appv1.api.Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-encounters", classes: ["nssq", "nq-window", "nssq-encounters"], title: game.i18n.localize("NSSQ.Encounter.title"),
@@ -221,13 +221,13 @@ export class EncounterApp extends Application {
       case "edit": this.draft = foundry.utils.deepClone(all[id]); return this.render();
       case "dup": { const e = { ...foundry.utils.deepClone(all[id]), id: rid(), name: L("copyName", { name: all[id].name }) }; await saveEncounter(e); return this.render(); }
       case "del": {
-        if (!(await Dialog.confirm({ title: L("del"), content: `<p>${esc(L("delConfirm", { name: all[id].name }))}</p>`, rejectClose: false }))) return null;
+        if (!(await foundry.appv1.api.Dialog.confirm({ title: L("del"), content: `<p>${esc(L("delConfirm", { name: all[id].name }))}</p>`, rejectClose: false }))) return null;
         await deleteEncounter(id); return this.render();
       }
       case "fav": await saveEncounter({ ...all[id], fav: !all[id].fav }); return this.render();
       case "start": return startEncounter(id);
       case "back": this.draft = null; return this.render();
-      case "pickBg": return new FilePicker({ type: "image", current: this.draft.bg, callback: (src) => { this.draft.bg = src; this.render(); } }).render(true);
+      case "pickBg": return new foundry.applications.apps.FilePicker.implementation({ type: "image", current: this.draft.bg, callback: (src) => { this.draft.bg = src; this.render(); } }).render(true);
       case "add": {
         const root = this.element[0];
         const label = root.querySelector("[data-add-name]").value.trim();

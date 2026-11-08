@@ -102,12 +102,16 @@ export function registerMobile() {
   });
   // 채팅 서랍이 열린 채 새 창(팝업)을 열면 닫는다(창이 가리지 않게). 마을·미궁·전투 레이어의 다시 그리기나 이미 열린 창의 갱신은 제외
   const opened = new WeakSet();
-  Hooks.on("renderApplication", (app) => {
-    if (!app.options?.popOut || opened.has(app)) return;
+  const onOpen = (app, popOut) => {
+    if (!popOut || opened.has(app)) return;
     opened.add(app);
     if (active && document.body.classList.contains("nssq-chat-open")) toggleChat(false);
-  });
+  };
+  Hooks.on("renderApplication", (app) => onOpen(app, app.options?.popOut));
+  // v13+ 코어 창(ApplicationV2)은 훅 이름이 다르고 창틀 여부는 hasFrame
+  Hooks.on("renderApplicationV2", (app) => onOpen(app, app.hasFrame));
   Hooks.on("closeApplication", (app) => opened.delete(app));
+  Hooks.on("closeApplicationV2", (app) => opened.delete(app));
   // 담당 캐릭터가 정해지지 않은 채 새 캐릭터가 생기면(작성 마법사) 그것으로
   Hooks.on("createActor", (a) => { if (a.type === "character" && a.testUserPermission(game.user, "OWNER")) autoAssignCharacter(); });
 }

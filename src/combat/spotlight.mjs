@@ -151,12 +151,12 @@ export async function openThemeConfig(actor) {
     <fieldset><legend>${esc(L("when"))}</legend>${TRIGGERS.map((k) => `<label class="checkbox"><input type="checkbox" name="on.${k}" ${th.on?.[k] ?? k !== "ailment" ? "checked" : ""}/> ${esc(L(`on.${k}`))}</label>`).join("")}</fieldset>
     ${browse ? "" : `<p class="notes">${esc(L("noBrowse"))}</p>`}
   </form>`;
-  const got = await Dialog.prompt({
+  const got = await foundry.appv1.api.Dialog.prompt({
     title: L("title", { name: actor.name }), content, label: L("save"), rejectClose: false,
     options: { classes: ["nssq", "dialog"], width: 440 },
     render: (html) => (html[0] ?? html).querySelector("[data-pick]")?.addEventListener("click", () => {
       const input = (html[0] ?? html).querySelector("[name=src]");
-      new FilePicker({ type: "audio", current: input.value, callback: (src) => { input.value = src; } }).render(true);
+      new foundry.applications.apps.FilePicker.implementation({ type: "audio", current: input.value, callback: (src) => { input.value = src; } }).render(true);
     }),
     callback: (html) => {
       const f = html[0].querySelector("form");

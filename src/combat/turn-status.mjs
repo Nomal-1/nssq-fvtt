@@ -243,7 +243,7 @@ export async function confirmEndPhaseApplied(combat) {
   const msg = endPhaseMessage(combat);
   const data = msg?.getFlag("nssq", "endPhase");
   if (!data || data.applied || !data.updates?.length) return true;
-  const choice = await new Promise((resolve) => new Dialog({
+  const choice = await new Promise((resolve) => new foundry.appv1.api.Dialog({
     title: L("unappliedTitle"),
     content: `<p>${L("unappliedText")}</p>`,
     buttons: {
@@ -282,10 +282,10 @@ export async function applyEndPhase(messageId, undo = false) {
 
 export function registerTurnStatus() {
   onSocket("endPhaseApply", ({ messageId, undo }) => { if (isActiveGM()) applyEndPhase(messageId, undo); });
-  Hooks.on("renderChatMessage", (message, html) => {
+  Hooks.on("renderChatMessageHTML", (message, html) => {
     const data = message.getFlag("nssq", "endPhase");
     if (!data) return;
-    const el = html[0];
+    const el = html;
     const status = el.querySelector(".apply-status");
     const buttons = el.querySelector(".apply-buttons");
     if (status) status.textContent = data.applied ? L("applied") : data.updates.length ? L("notApplied") : "";

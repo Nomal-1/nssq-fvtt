@@ -1,6 +1,8 @@
-# 04. Foundry VTT v12.331 구현 지침
+# 04. Foundry VTT v14 구현 지침
 
-대상은 **v12.331 하나**다. Claude는 최신(v13) API를 섞어 쓰기 쉬우므로 이 문서의 「쓰지 않는 것」을 반드시 지킨다. 확신이 없는 API는 「확인 필요」에 적고, v12.331 설치본의 `resources/app/client`·`resources/app/common` 소스로 확인한 뒤 이 문서를 고친다.
+대상은 **v14 하나**다(운영 서버 14.370). 0.55.x까지는 v12.331 전용이었고, 2026-11에 서버가 14로 올라가면서 v12 지원을 버렸다.
+v12 API와 v13 이후 API를 섞어 쓰지 않도록 이 문서의 「쓰는 것」·「쓰지 않는 것」을 지킨다. 확신이 없는 API는 「확인 필요」에 적고, v14 설치본의 `resources/app/client`·`resources/app/common` 소스나 실제 서버에서 확인한 뒤 이 문서를 고친다.
+아래 §6의 옛 확인 기록 중 「v12」라고 적힌 것은 v14에서 다시 확인해야 한다.
 
 ## 1. 저장소 구조
 
@@ -40,7 +42,7 @@ nssq/
   "id": "nssq",
   "title": "SRS가 아닌 세계수의 미궁 TRPG",
   "version": "0.1.0",
-  "compatibility": { "minimum": "12", "verified": "12.331", "maximum": "12" },
+  "compatibility": { "minimum": "14", "verified": "14.370", "maximum": "14" },
   "esmodules": ["src/nssq.mjs"],
   "styles": ["styles/nssq.css"],
   "languages": [{ "lang": "ko", "name": "한국어", "path": "lang/ko.json" }],
@@ -60,29 +62,34 @@ nssq/
 - `manifest`는 `releases/latest/download/system.json`, `download`는 `releases/download/v<버전>/nssq.zip`. 손으로 고치지 말고 `npm run package <버전>`(릴리스 워크플로가 호출)에 맡긴다.
 - `documentTypes`의 각 타입에 `htmlFields: ["description"]`을 지정했다.
 
-## 3. 쓰는 것 (v12)
+## 3. 쓰는 것 (v14)
 
 | 영역 | API |
 |---|---|
 | 데이터 모델 | `foundry.abstract.TypeDataModel`, `foundry.data.fields.*`(`NumberField`, `StringField`, `SchemaField`, `ArrayField`, `HTMLField`, `BooleanField`, `ObjectField`), `CONFIG.Actor.dataModels`, `CONFIG.Item.dataModels` |
 | 문서 클래스 | `CONFIG.Actor.documentClass` 등에 `Actor`/`Item`/`Combat`/`Combatant`/`ActiveEffect` 서브클래스 |
-| 시트 | `ActorSheet`, `ItemSheet`(Handlebars). `getData()`, `activateListeners(html)` — html은 **jQuery**. 등록: `Actors.unregisterSheet("core", ActorSheet)`, `Actors.registerSheet("nssq", NssqCharacterSheet, { types: ["character"], makeDefault: true })` |
-| 대화창 | `Dialog`, `FormApplication` |
+| 시트 | 아직 구형(AppV1) `foundry.appv1.sheets.ActorSheet`/`ItemSheet`(Handlebars). `getData()`, `activateListeners(html)` — html은 **jQuery**. 등록: `foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, "nssq", cls, { makeDefault: true })`. AppV1은 v13에서 deprecated(v16 제거 예정)라 언젠가 AppV2로 옮긴다 |
+| 창·대화창 | 구형 `foundry.appv1.api.Application`, `foundry.appv1.api.Dialog`(콜백의 html은 jQuery). 전역 `Application`·`Dialog`는 쓰지 않는다(deprecated) |
+| 템플릿·도구 | `foundry.applications.handlebars.renderTemplate`/`loadTemplates`, `foundry.applications.apps.FilePicker.implementation`, `foundry.applications.ux.TextEditor.implementation` |
+| 코어 화면 훅 | 사이드바·전투 트래커·채팅 로그·HUD는 v13부터 ApplicationV2라 render 훅의 html이 **HTMLElement**다. 일부만 다시 그려도 훅이 불리므로 붙인 요소는 중복을 막는다(`src/apps/scene-tools.mjs`의 `addDirectoryButton`) |
+| 씬 도구 | `getSceneControlButtons(controls)`의 `controls`·`tools`는 **이름을 키로 쓰는 객체**. 토큰 컨트롤 이름은 `tokens`, 클릭은 `onChange(event, active)`. `addTokenTool` 사용. 전환은 `ui.controls.activate({ control, tool })` |
 | 주사위 | `new Roll("6d6cs>3")` + **`await roll.evaluate()`**(v12는 비동기가 기본). `kh2`, `cs>=4` 사용. `roll.dice[0].results`에서 눈 확인 |
-| 채팅 | `ChatMessage.create({ content, speaker, rolls, flags })`, 훅 `renderChatMessage(message, html, data)` — html은 jQuery |
+| 채팅 | `ChatMessage.create({ content, speaker, rolls, flags })`, 훅 `renderChatMessageHTML(message, html, context)` — html은 **HTMLElement** |
 | 상태 아이콘 | `CONFIG.statusEffects` 배열 `{ id, name, img }`(v12 키. 구버전 `label`/`icon` 아님) |
 | 효과 | `ActiveEffect`(`changes[]`, `statuses`, `flags.nssq.*`) |
 | 소켓 | `game.socket.on("system.nssq", handler)`, `game.socket.emit("system.nssq", payload)` |
 | 설정 | `game.settings.register("nssq", key, { scope, config, type, choices, default })` |
 | 다국어 | `game.i18n.localize`, `game.i18n.format` |
-| 컴펜디움 빌드 | `@foundryvtt/foundryvtt-cli`의 `compilePack(srcDir, destDir)`(LevelDB) |
+| 컴펜디움 빌드 | `@foundryvtt/foundryvtt-cli`의 `compilePack(srcDir, destDir)`(LevelDB). 아직 1.1.0(v12용)으로 빌드한 팩을 쓴다 — 14가 읽는지 확인 필요 #9 |
 | 토큰 바 | `CONFIG.Actor.trackableAttributes` |
 
-## 4. 쓰지 않는 것 (v13 이후, 또는 v12에서 미성숙)
+## 4. 쓰지 않는 것 (v12 시절 API, v13부터 deprecated 또는 동작이 바뀜)
 
-- `foundry.applications.sheets.ActorSheetV2` / `ItemSheetV2` 및 `HandlebarsApplicationMixin` 기반 문서 시트
-- 훅 `renderChatMessageHTML`
-- `foundry.applications.ux.*` 네임스페이스(TextEditor 등 v13 이동판)
+- 훅 `renderChatMessage`(jQuery html) → `renderChatMessageHTML`
+- `getSceneControlButtons`에서 `controls.find(...)`·`tools.push(...)`, 컨트롤 이름 `token`, `onClick` → 위 「씬 도구」
+- 코어 화면 render 훅에서 `html.find(...)`·`html[0]` → HTMLElement로 다룬다
+- 전역 `renderTemplate`·`loadTemplates`·`FilePicker`·`TextEditor`·`Application`·`Dialog`·`ActorSheet`·`ItemSheet`, `Actors.registerSheet`
+- `ui.controls.initialize`, `ui.controls.activeControl === "token"`
 - `template.json` 방식의 타입 선언(쓰지 말고 `documentTypes` + DataModel로)
 - 동기 `roll.evaluate({async:false})`
 - `foundry.utils.escapeHTML`(v12에 없음, 서버에서 오류 확인). HTML 이스케이프는 모듈 안의 작은 `esc` 함수로
@@ -131,5 +138,9 @@ nssq/
 - [x] #5 `compilePack` 옵션과 `packs` 항목 → `@foundryvtt/foundryvtt-cli` **1.1.0**으로 고정(2.x 이상은 v13용). 소스는 문서당 JSON 1개, 확장자로 yaml/json 구분. 문서마다 `_key` 필수: 최상위 `!items!<id>`·`!actors!<id>`·`!folders!<id>`, 임베디드 `!actors.items!<actorId>.<itemId>`. 액터의 `items`는 객체 배열로 넣으면 CLI가 id 배열로 바꿔 따로 저장한다. `packs` 항목은 `{ name, label, path, type, system, ownership }`, 폴더 묶음은 `packFolders`. `tools/pack.mjs`가 system.json의 두 항목을 다시 쓴다.
 - [x] #7 `game.users.activeGM` 사용(v12에 있음). `src/combat/apply.mjs`의 `isActiveGM`
 - [ ] #8 매니페스트 `grid` 키 형식(v12)과 `primaryTokenAttribute` 지원 여부
-- [ ] #6 `renderChatMessage`에서 버튼 이벤트를 위임할 때 메시지 재렌더 시의 중복 바인딩
+- [ ] #6 `renderChatMessageHTML`에서 버튼 이벤트를 위임할 때 메시지 재렌더 시의 중복 바인딩
+- [ ] #9 (v14) cli 1.1.0으로 빌드한 팩을 14가 그대로 읽는지, 아니면 cli 3.x로 다시 빌드해야 하는지
+- [ ] #10 (v14) `styles/nssq.css`의 코어 화면 선택자(`#sidebar`·`#chat-log`·`#hotbar`·`#controls`·`#navigation`·`#players`·`#ui-left`·`#ui-bottom`)가 14 화면에 맞는지(모바일 레이아웃 포함)
+- [ ] #11 (v14) 시트 템플릿의 `{{editor}}` 헬퍼가 14에서 동작하는지
+- [ ] #12 (v14) `#hud` 요소와 `renderHeadsUpDisplayContainer` 훅(마을·필드 오버레이)
 - [x] 씬 좌표에 HTML UI 붙이기: `#hud`(canvas.hud) 요소는 `HeadsUpDisplay#align()`이 `canvas.primary.getGlobalPosition()`·`stage.scale`로 left/top/transform을 맞춘다(v12.331 서버에서 확인, pointer-events:none·z-index 1. `#hud > * { pointer-events:none; text-align:center }`가 ID 선택자라 자식 규칙은 `#hud > .클래스`로 써야 마우스를 받는다). 자식을 씬 좌표(left/top px)에 두면 이동·확대를 따라간다. 마을 UI(`TownOverlay`)가 쓴다. `Application`(popOut:false)은 `_injectHTML`을 덮어 `#hud`에 넣는다.

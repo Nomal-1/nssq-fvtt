@@ -92,7 +92,7 @@ function sync() {
 /** 다시 그리기. 렌더 중이면 끝난 뒤 한 번 더(그 사이의 변경을 놓치지 않게) */
 const refresh = () => {
   if (!overlay) { if (shownMap()) sync(); return; }
-  if (overlay._state === Application.RENDER_STATES.RENDERING) overlay.dirty = true;
+  if (overlay._state === foundry.appv1.api.Application.RENDER_STATES.RENDERING) overlay.dirty = true;
   else overlay.render();
 };
 const openEvents = () => game.settings.get("nssq", "fieldEvents") ?? [];
@@ -114,7 +114,7 @@ async function postNarration() {
   return ChatMessage.create({ speaker: { alias: here?.name ?? map?.name ?? "" }, content: `<div class="nssq-fieldmap-card fs-narration-card"><p>${esc(text).replace(/\n/g, "<br>")}</p></div>` });
 }
 
-export class FieldOverlay extends Application {
+export class FieldOverlay extends foundry.appv1.api.Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, { id: `nssq-field-overlay-${foundry.utils.randomID()}`, popOut: false });
   }
@@ -232,7 +232,7 @@ export class FieldOverlay extends Application {
 
   /** 렌더 중에 다시 그리기를 부르면 Foundry는 그냥 버린다 → 끝난 뒤 한 번 더(버튼을 눌렀는데 반응 없는 것 방지) */
   render(force = false, options = {}) {
-    if (this._state === Application.RENDER_STATES.RENDERING) { this.dirty = true; return this; }
+    if (this._state === foundry.appv1.api.Application.RENDER_STATES.RENDERING) { this.dirty = true; return this; }
     return super.render(force, options);
   }
 
@@ -306,7 +306,7 @@ async function onActProposal({ userId, act }) {
   if (!isActiveGM() || !ACTS[act] || !activeMap()) return;
   if (!FM.areaActs(areaOf(activeMap(), mapState().current))[act]) return;
   const who = game.users.get(userId)?.name ?? "?";
-  const ok = await Dialog.confirm({ title: L("actTitle"), content: `<p>${esc(L("actAsk", { who, act: L(`act.${act}`) }))}</p>`, rejectClose: false });
+  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("actTitle"), content: `<p>${esc(L("actAsk", { who, act: L(`act.${act}`) }))}</p>`, rejectClose: false });
   if (ok) await runAct(act);
   else await ChatMessage.create({ speaker: { alias: LF("title") }, content: `<p>${esc(L("actRejected", { who, act: L(`act.${act}`) }))}</p>` });
 }
@@ -333,7 +333,7 @@ export function registerFieldScene() {
   Hooks.on("canvasReady", () => sync());
   Hooks.on("nssqRoster", () => refresh());
   Hooks.once("ready", () => setTimeout(sync, 0));
-  Hooks.on("renderHeadsUpDisplay", () => { if (overlay && !document.body.contains(overlay.element?.[0])) setTimeout(sync, 0); });
+  for (const h of ["renderHeadsUpDisplay", "renderHeadsUpDisplayContainer"]) Hooks.on(h, () => { if (overlay && !document.body.contains(overlay.element?.[0])) setTimeout(sync, 0); });
   Hooks.on("canvasPan", () => { if (!fitting && overlay) { clearTimeout(registerFieldScene.t); registerFieldScene.t = setTimeout(fitView, 400); } });
   Hooks.on("collapseSidebar", () => setTimeout(fitView, 300));
   window.addEventListener("resize", () => { clearTimeout(registerFieldScene.r); registerFieldScene.r = setTimeout(fitView, 200); });

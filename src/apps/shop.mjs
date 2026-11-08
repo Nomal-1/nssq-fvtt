@@ -13,6 +13,7 @@ import tables from "../generated/tables.mjs";
 import { refinementBadges } from "../sheets/badges.mjs";
 import { acquireItems } from "./acquire.mjs";
 import { esc } from "../util.mjs";
+import { addTokenTool } from "./scene-tools.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Shop.${k}`, d) : game.i18n.localize(`NSSQ.Shop.${k}`));
 const PACKS = ["nssq.equipment", "nssq.items"];
@@ -45,7 +46,7 @@ async function pickMaterial(candidates, title) {
   if (candidates.length === 1) return candidates[0];
   // R이 낮은 것부터(아까운 소재를 덜 쓰도록)
   const sorted = [...candidates].sort((a, b) => a.system.rank - b.system.rank);
-  const id = await Dialog.prompt({
+  const id = await foundry.appv1.api.Dialog.prompt({
     title,
     content: `<form><div class="form-group"><label>${L("material")}</label><select name="m">${sorted.map((m) => `<option value="${m.id}">${esc(materialLabel(m))}</option>`).join("")}</select></div></form>`,
     label: L("use"),
@@ -152,7 +153,7 @@ export async function setHidden(uuids, hidden) {
   await game.settings.set("nssq", "shopHidden", [...set]);
 }
 
-class ShopApp extends Application {
+class ShopApp extends foundry.appv1.api.Application {
   /** @param {{ creation?: boolean }} options creation: 캐릭터 작성 마법사에서 연 상점(GM이 닫아 놨어도 열리고 작성 모드 고정) */
   constructor(actor, options = {}) {
     super(options);
@@ -387,7 +388,7 @@ class ShopApp extends Application {
     // 농기구 등: 입수할 때 기본 속성 선택(여러 개면 같은 속성)
     const table = tableOf(doc);
     if (table?.elementChoice && !data.system.element) {
-      const element = await Dialog.prompt({
+      const element = await foundry.appv1.api.Dialog.prompt({
         title: L("chooseElement"),
         content: `<form><div class="form-group"><select name="e">${["slash", "strike", "pierce"].map((e) => `<option value="${e}">${game.i18n.localize(`NSSQ.Resist.${e}`)}</option>`).join("")}</select></div></form>`,
         rejectClose: false,
@@ -419,7 +420,7 @@ class ShopApp extends Application {
     const baseName = data.name;
     const shown = `${esc(baseName)}${ranked ? ` R${data.system.rank}` : ""}`;
     const matText = allocation.length ? allocation.map((x) => `${esc(x.item.name)} R${x.item.system.rank} ×${x.n}`).join(", ") : this.creation ? L("creationMode") : L("noMaterialNeeded");
-    const confirmed = await Dialog.prompt({
+    const confirmed = await foundry.appv1.api.Dialog.prompt({
       title: L("confirmTitle"),
       content: `<form class="nssq-buy-confirm">
         <p>${L("confirmBody", { name: shown, qty, unit, total })}</p>
@@ -484,7 +485,7 @@ export function registerShopHooks() {
   // GM 도구: 토큰 컨트롤의 상점 토글
   Hooks.on("getSceneControlButtons", (controls) => {
     if (!game.user.isGM) return;
-    controls.find((c) => c.name === "token")?.tools.push({
+    addTokenTool(controls, {
       name: "nssq-shop",
       title: "NSSQ.Shop.toggle",
       icon: "fas fa-store",
@@ -514,7 +515,7 @@ export async function sellItems(actor, picks) {
   const total = lines.reduce((a, l) => a + l.price, 0);
   const label = (l) => `${esc(l.item.name)}${["weapon", "armor", "material"].includes(l.item.type) ? ` R${l.item.system.rank}` : ""}${l.count > 1 ? ` ×${l.count}` : ""}`;
   const equipped = lines.some((l) => l.item.system.equipped);
-  const ok = await Dialog.confirm({
+  const ok = await foundry.appv1.api.Dialog.confirm({
     title: L("sellTitle"),
     content: `<ul class="nssq-sell-list">${lines.map((l) => `<li>${label(l)} — ${l.price}G</li>`).join("")}</ul>
       <p><b>${L("sellTotal")} ${total}G</b> (${actor.system.money}G → ${actor.system.money + total}G)</p>
@@ -556,7 +557,7 @@ export async function openRefineDialog(actor, item, { creation = false, forced =
       ${canCreation ? `<div class="form-group"><label><input type="checkbox" name="creation" ${creation ? "checked" : ""} ${forced ? "disabled" : ""}/> ${L("creationMode")}</label></div>` : ""}
       <p class="notes">${L("refineMaterialNote", { mats: (table?.materials ?? []).join("/"), rank })}</p>
     </form>`;
-  const pick = await Dialog.prompt({
+  const pick = await foundry.appv1.api.Dialog.prompt({
     title: L("refineTitle"),
     content,
     label: L("refine"),

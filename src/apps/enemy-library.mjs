@@ -123,7 +123,7 @@ export async function cleanupEnemies() {
       <td>${r.fromSystem ? (r.a.getFlag("nssq", "library") ? L("kindLibrary") : L("kindVariant")) : L("kindCustom")}</td>
       <td class="scenes">${r.scenes.length ? esc(r.scenes.join(", ")) : `<span class="notes">${L("unusedHere")}</span>`}</td>
     </tr>`).join("");
-  const ids = await Dialog.prompt({
+  const ids = await foundry.appv1.api.Dialog.prompt({
     title: L("cleanupTitle"),
     content: `<form class="nssq-cleanup">
       <p>${L("cleanupMerged", { merged })}</p>

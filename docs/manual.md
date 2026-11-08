@@ -1,6 +1,6 @@
 # NSSQ 시스템 사용 설명서
 
-「SRS가 아닌 세계수의 미궁 TRPG」(NSSQ) 한국어판을 Foundry VTT v12에서 플레이하는 시스템의 사용법입니다.
+「SRS가 아닌 세계수의 미궁 TRPG」(NSSQ) 한국어판을 Foundry VTT v14에서 플레이하는 시스템의 사용법입니다.
 규칙 자체는 룰북을 기준으로 하고, 이 문서는 **어디를 누르면 무엇이 되는가**를 설명합니다.
 원문에 없어 정해 둔 처리는 `docs/01-rules.md`의 §9(확정 사항)에 번호로 적혀 있습니다.
 
@@ -28,7 +28,7 @@
 
 ## 1. 설치와 업데이트
 
-- Foundry VTT **v12** 전용입니다(v13에서는 동작하지 않습니다).
+- Foundry VTT **v14** 전용입니다. v12 서버에서는 0.55.3을 쓰세요(0.56.0부터 v12에서 설치되지 않습니다).
 - 설치: Foundry 셋업 화면 → 게임 시스템 → 시스템 설치 → 아래 매니페스트 URL을 붙여 넣습니다.
   ```
   https://github.com/Nomal-1/nssq-fvtt/releases/latest/download/system.json

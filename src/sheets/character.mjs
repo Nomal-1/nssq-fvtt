@@ -156,7 +156,7 @@ export async function editAbilities(actor) {
       tr.querySelector(".b").textContent = Math.floor(total / 5);
     }
   };
-  const values = await Dialog.prompt({
+  const values = await foundry.appv1.api.Dialog.prompt({
     title: `${actor.name} — ${L("editAbilities")}`,
     content,
     label: L("save"),
@@ -190,7 +190,7 @@ export async function editAbilities(actor) {
 export function showCreationLog(actor) {
   const log = [...(actor.system.creation?.log ?? [])].reverse().map(logEntry);
   const rows = log.map((e) => `<li><span class="when">${esc(e.when)} · ${esc(e.user)}</span> ${e.text}</li>`).join("") || `<li class="empty">${L("logEmpty")}</li>`;
-  new Dialog({
+  new foundry.appv1.api.Dialog({
     title: `${actor.name} — ${L("creationRecord")}`,
     content: `<ol class="nq-log nq-log-full">${rows}</ol>`,
     buttons: { close: { label: L("close") } },

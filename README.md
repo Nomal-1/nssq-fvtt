@@ -1,6 +1,6 @@
 # NSSQ — SRS가 아닌 세계수의 미궁 TRPG (Foundry VTT 시스템)
 
-팬메이드 TRPG 「SRSじゃない世界樹の迷宮TRPG」(NSSQ, 제작 ◆SQ.iJMf4FY) 한국어판을 Foundry VTT **v12**에서 플레이하기 위한 비공식 게임 시스템입니다.
+팬메이드 TRPG 「SRSじゃない世界樹の迷宮TRPG」(NSSQ, 제작 ◆SQ.iJMf4FY) 한국어판을 Foundry VTT **v14**에서 플레이하기 위한 비공식 게임 시스템입니다.
 
 캐릭터 작성, 판정, 전투(명중·대미지·크리티컬·상태 이상·강화/약화·종료 페이즈), 스킬·아이템 효과, 마을·미궁 탐색(필드 지도·랜덤 던전·채집·캠프), 성장까지 시스템이 처리하고 GM은 확인과 예외 처리를 합니다.
 
@@ -8,7 +8,7 @@
 
 ## 설치
 
-Foundry VTT **v12** → 게임 시스템 → 시스템 설치 → 아래 매니페스트 URL을 붙여 넣기:
+Foundry VTT **v14** → 게임 시스템 → 시스템 설치 → 아래 매니페스트 URL을 붙여 넣기:
 
 ```
 https://github.com/Nomal-1/nssq-fvtt/releases/latest/download/system.json

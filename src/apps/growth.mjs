@@ -11,7 +11,7 @@ const abilityName = (k) => game.i18n.localize(`NSSQ.Ability.${k}`);
 /** 6이 나왔을 때 올릴 능력치 고르기 */
 async function chooseAbility(actor) {
   const buttons = Object.fromEntries(ABILITIES.map((k) => [k, { label: abilityName(k), callback: () => k }]));
-  return Dialog.wait({
+  return foundry.appv1.api.Dialog.wait({
     title: `${actor.name} — ${L("choose")}`,
     content: `<p class="nssq-growth-choose">${L("chooseHint")}</p>`,
     buttons,

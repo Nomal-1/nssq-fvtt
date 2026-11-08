@@ -6,6 +6,7 @@ import { ABILITIES } from "../engine/derive.mjs";
 import { bindCheckPreview, checkPreviewHtml, rollCheck } from "../chat/check.mjs";
 import { CHECK_KINDS, checkModsHtml, readCheckMods } from "../chat/check-mods.mjs";
 import { emit, onSocket } from "../socket.mjs";
+import { addTokenTool } from "./scene-tools.mjs";
 
 const open = new Map(); // requestId → Dialog
 
@@ -63,7 +64,7 @@ export async function openRequestDialog(preselect = [], defaults = {}) {
       <div class="form-group"><label>${L("note")}</label><input type="text" name="note" value="${escape(defaults.note ?? "")}" placeholder="${L("notePlaceholder")}"/></div>
       <div class="form-group"><label>${L("rollMode")}</label><select name="rollMode">${modes}</select></div>
     </form>`;
-  const data = await Dialog.prompt({
+  const data = await foundry.appv1.api.Dialog.prompt({
     title: L("title"),
     content,
     label: L("send"),
@@ -120,7 +121,7 @@ function showRequest(req) {
       ${checkModsHtml(actor, { kinds: req.kinds ?? [] })}
       ${checkPreviewHtml({ bonus, modifier: req.modifier ?? 0, target: req.target })}
     </form>`;
-  const dialog = new Dialog({
+  const dialog = new foundry.appv1.api.Dialog({
     title: L("popupTitle"),
     content,
     buttons: {
@@ -185,11 +186,10 @@ export function registerCheckRequest() {
   // GM 도구: 토큰 컨트롤(액터 탭에서는 GM 스크린에서 연다)
   Hooks.on("getSceneControlButtons", (controls) => {
     if (!game.user.isGM) return;
-    controls.find((c) => c.name === "token")?.tools.push({
+    addTokenTool(controls, {
       name: "nssq-request-check",
       title: "NSSQ.Request.title",
       icon: "fas fa-dice-d6",
-      button: true,
       onClick: () => openRequestDialog(canvas?.tokens?.controlled?.map((t) => t.actor?.id).filter(Boolean) ?? [])
     });
   });

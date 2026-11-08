@@ -69,7 +69,7 @@ export async function openGatherDialog(defaults = {}) {
     <div class="form-group"><label>${esc(L("rank"))}</label><input type="number" name="rank" min="1" value="${Number(defaults.rank) || 1}"/></div>
     <div class="form-group"><label>${esc(L("table"))}</label><input type="text" name="table" value="${esc(defaults.table ?? "")}" placeholder="${esc(L("tablePlaceholder"))}"/></div>
     <p class="notes">${esc(L("gatherHint"))}</p></form>`;
-  const got = await Dialog.prompt({
+  const got = await foundry.appv1.api.Dialog.prompt({
     title: L("gatherTitle"), content, label: L("gatherGo"), rejectClose: false,
     callback: (html) => { const f = html[0].querySelector("form"); return { method: f.method.value, amount: f.amount.value, rank: Number(f.rank.value) || 1, table: f.table.value.trim() }; }
   }, { classes: ["nssq", "dialog"] });
@@ -298,7 +298,7 @@ const send = (payload) => { payload.userId = game.user.id; return isActiveGM() ?
 function decorate(message, html) {
   const card = message.getFlag("nssq", "loot");
   if (!card) return;
-  const el = html[0];
+  const el = html;
   const owns = (uuid) => !!fromUuidSync(uuid)?.isOwner;
   el.querySelectorAll("[data-loot]").forEach((b) => {
     const a = b.dataset.loot;
@@ -334,7 +334,7 @@ function requestPopups(message) {
     if (!x.requested || x.choice || asked.has(key)) return;
     asked.add(key);
     try { foundry.audio.AudioHelper.play({ src: CONFIG.sounds.notification, volume: 0.8, autoplay: true, loop: false }, false); } catch { /* 소리 없음 */ }
-    new Dialog({
+    new foundry.appv1.api.Dialog({
       title: L("requestTitle"),
       content: `<p>${esc(L("requestBody", { name: x.name, skill: x.skill, item: x.requested, n: x.count }))}</p>`,
       buttons: {
@@ -349,7 +349,7 @@ function requestPopups(message) {
 /* ---------------- 팝업 창(사용자 요청): 채팅 카드와 같은 내용·버튼, 카드가 바뀌면 따라 바뀜 ---------------- */
 
 const windows = new Map();
-class LootWindow extends Application {
+class LootWindow extends foundry.appv1.api.Application {
   constructor(messageId) {
     super({ id: `nssq-loot-${messageId}` });
     this.messageId = messageId;
@@ -398,5 +398,5 @@ export function registerLoot() {
   Hooks.on("updateChatMessage", (message) => { requestPopups(message); syncWindow(message); });
   Hooks.on("createChatMessage", (message) => syncWindow(message, { open: true }));
   Hooks.on("deleteChatMessage", (message) => windows.get(message.id)?.close());
-  Hooks.on("renderChatMessage", (message, html) => decorate(message, html));
+  Hooks.on("renderChatMessageHTML", (message, html) => decorate(message, html));
 }

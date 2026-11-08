@@ -84,14 +84,15 @@ Hooks.once("init", () => {
     token: { bar: ["hp"], value: [] }
   };
 
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("nssq", NssqActorSheet, { makeDefault: true, label: "NSSQ.Sheet.actor" });
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("nssq", NssqItemSheet, { makeDefault: true, label: "NSSQ.Sheet.item" });
+  const { DocumentSheetConfig } = foundry.applications.apps;
+  DocumentSheetConfig.unregisterSheet(Actor, "core", foundry.appv1.sheets.ActorSheet);
+  DocumentSheetConfig.registerSheet(Actor, "nssq", NssqActorSheet, { makeDefault: true, label: "NSSQ.Sheet.actor" });
+  DocumentSheetConfig.unregisterSheet(Item, "core", foundry.appv1.sheets.ItemSheet);
+  DocumentSheetConfig.registerSheet(Item, "nssq", NssqItemSheet, { makeDefault: true, label: "NSSQ.Sheet.item" });
 
   registerSettings();
 
-  loadTemplates(TEMPLATES);
+  foundry.applications.handlebars.loadTemplates(TEMPLATES);
 
   Handlebars.registerHelper("nssqLabel", (prefix, key) => game.i18n.localize(`${prefix}.${key}`));
   Handlebars.registerHelper("nssqEq", (a, b) => a === b);
@@ -189,8 +190,8 @@ Hooks.once("ready", () => {
 });
 
 // 시스템 카드가 든 채팅 메시지는 메시지 틀(양피지 테두리)까지 NSSQ 테마로
-Hooks.on("renderChatMessage", (message, html) => {
-  if (html[0]?.querySelector("[class*='nssq-']")) html[0].classList.add("nssq-msg");
+Hooks.on("renderChatMessageHTML", (message, html) => {
+  if (html.querySelector("[class*='nssq-']")) html.classList.add("nssq-msg");
 });
 
 // 시스템 대화창(내용에 nssq 클래스가 있는 것)은 창틀도 NSSQ 테마로

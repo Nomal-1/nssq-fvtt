@@ -45,7 +45,7 @@ export async function guardAttack({ attacker, targets, kind, elements, single, n
   const decide = async ({ holder, stance, target }) => {
     const h = combat.combatants.get(holder.id);
     if (!h?.actor?.isOwner) return false;
-    return Dialog.confirm({
+    return foundry.appv1.api.Dialog.confirm({
       title: L("coverTitle"),
       content: `<p>${esc(L("coverAsk", { holder: h.name, skill: `《${stance.name}》`, target: combat.combatants.get(target.id)?.name ?? "" }))}</p>`,
       rejectClose: false

@@ -30,7 +30,7 @@ export async function openDungeonDialog() {
   const cur = dungeonState();
   // 진행 중이면: 다음 이벤트 / 던전 나가기 / 새로 시작
   if (cur.active) {
-    const pick = await new Promise((resolve) => new Dialog({
+    const pick = await new Promise((resolve) => new foundry.appv1.api.Dialog({
       title: L("title"), content: `<p>${esc(L("activeAsk", { name: cur.name, done: cur.done ?? 0, depth: cur.depth ?? 0 }))}</p>`,
       buttons: {
         next: { icon: '<i class="fas fa-forward"></i>', label: L("next"), callback: () => resolve("next") },
@@ -48,11 +48,11 @@ export async function openDungeonDialog() {
   const { bgmOptions } = await import("./encounters.mjs");
   const imgRow = (k) => `<div class="form-group"><label>${esc(L(`stage.${k}`))}</label><input type="text" name="${k}" value="${esc(stg[k] ?? "")}"/><button type="button" data-pick="${k}" style="flex:0 0 32px"><i class="fas fa-file-import"></i></button></div>`;
   const bgmRow = (k) => `<div class="form-group"><label>${esc(L(`stage.${k}`))}</label><select name="${k}">${bgmOptions(stg[k] ?? "", L("stage.none"))}</select></div>`;
-  const got = await Dialog.prompt({
+  const got = await foundry.appv1.api.Dialog.prompt({
     title: L("startTitle"),
     render: (html) => (html[0] ?? html).querySelectorAll("[data-pick]").forEach((b) => b.addEventListener("click", () => {
       const input = (html[0] ?? html).querySelector(`[name=${b.dataset.pick}]`);
-      new FilePicker({ type: "image", current: input.value, callback: (src) => { input.value = src; } }).render(true);
+      new foundry.applications.apps.FilePicker.implementation({ type: "image", current: input.value, callback: (src) => { input.value = src; } }).render(true);
     })),
     content: `<form>
       <div class="form-group"><label>${esc(L("name"))}</label><input type="text" name="name" value="${esc(L("defaultName"))}"/></div>
@@ -321,7 +321,7 @@ async function rollDungeonEvent(messageId) {
 
 function showRollPopup({ messageId, users, head }) {
   if (!users?.includes(game.user.id) || rollPopups.has(messageId)) return;
-  const dlg = new Dialog({
+  const dlg = new foundry.appv1.api.Dialog({
     title: L("title"),
     content: `<div class="nssq-dungeon-ask"><h3><i class="fas fa-dungeon"></i> ${esc(head ?? "")}</h3><p>${esc(L("rollAskPopup"))}</p></div>`,
     buttons: { roll: { icon: '<i class="fas fa-dice"></i>', label: L("rollButton"), callback: () => rollDungeonEvent(messageId) } },
@@ -352,13 +352,13 @@ export function registerDungeon() {
     // 주사위는 플레이어 쪽 메시지에 이미 보였다 → 결과값만 쓴다
     return resolveEvent({ total, formula }, d, true);
   });
-  Hooks.on("renderChatMessage", (message, html) => {
+  Hooks.on("renderChatMessageHTML", (message, html) => {
     const rd = message.getFlag("nssq", "dungeonRoll");
-    html[0].querySelectorAll("[data-dungeon-roll]").forEach((b) => {
+    html.querySelectorAll("[data-dungeon-roll]").forEach((b) => {
       if (rd?.used) return b.remove();
       b.addEventListener("click", () => { b.disabled = true; rollDungeonEvent(message.id); });
     });
-    html[0].querySelectorAll(".nssq-dungeon [data-dungeon]").forEach((b) => {
+    html.querySelectorAll(".nssq-dungeon [data-dungeon]").forEach((b) => {
       if (!game.user.isGM) return b.remove();
       b.addEventListener("click", () => { b.disabled = true; act(message, b.dataset.dungeon); });
     });
