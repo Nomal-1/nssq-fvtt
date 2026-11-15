@@ -8,7 +8,7 @@
  * - 던전에 들어가면(필드 지도 진행 시작·랜덤 던전 시작) location = dungeon, 상점 닫기
  * - 상점 판매 품목은 마을마다(shopHidden, 없으면 기본 설정)
  */
-import { viewArea } from "./mobile.mjs";
+import { OVERLAY_SCENE_PADDING, ensureOverlayPadding, viewArea } from "./mobile.mjs";
 import { esc } from "../util.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Town.${k}`, d) : game.i18n.localize(`NSSQ.Town.${k}`));
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
@@ -145,7 +145,7 @@ export async function ensureTownScene(t) {
   const folderName = L("sceneFolder");
   const folder = game.folders.find((x) => x.type === "Scene" && x.name === folderName) ?? await Folder.create({ name: folderName, type: "Scene" });
   return Scene.create({
-    name: t.name, folder: folder.id, navigation: true, ...TOWN_SCENE, padding: 0, backgroundColor: "#000000",
+    name: t.name, folder: folder.id, navigation: true, ...TOWN_SCENE, padding: OVERLAY_SCENE_PADDING, backgroundColor: "#000000",
     grid: { type: CONST.GRID_TYPES.GRIDLESS }, background: { src: t.img || null }, tokenVision: false, fog: { exploration: false },
     ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER }, flags: { nssq: { town: t.id } }
   });
@@ -155,6 +155,8 @@ export async function ensureTownScene(t) {
 let fitting = false;
 function fitTownView() {
   if (!canvas.ready || !canvas.scene?.getFlag("nssq", "town")) return;
+  // 예전에 여백 0으로 만든 마을 씬은 GM이 볼 때 여백을 넣는다(고친 뒤 다시 그려지면서 맞춰진다)
+  if ((canvas.scene.padding ?? 0) < OVERLAY_SCENE_PADDING) ensureOverlayPadding(canvas.scene);
   const r = canvas.dimensions.sceneRect;
   // 씬 컨트롤·내비게이션·핫바·사이드바에 가리지 않게(모바일이면 화면 전체, apps/mobile.mjs)
   const area = viewArea();

@@ -59,8 +59,15 @@ import { FieldMapApp, registerFieldMap } from "./apps/fieldmap.mjs";
 import { ChargenWizard, newCharacter, registerChargen } from "./apps/chargen-wizard.mjs";
 import { cleanupEnemies, registerEnemyLibrary } from "./apps/enemy-library.mjs";
 import { createPreset, openEndDialog, openStartDialog, registerBattle } from "./apps/battle.mjs";
+import { resolveJosa } from "./util.mjs";
 
 Hooks.once("init", () => {
+  // 한국어 조사: NSSQ 문구는 이름을 채운 뒤 「을(를)」 같은 표기를 받침에 맞는 조사 하나로 바꾼다(util.mjs resolveJosa)
+  const format = game.i18n.format.bind(game.i18n);
+  game.i18n.format = (key, data) => {
+    const text = format(key, data);
+    return typeof key === "string" && key.startsWith("NSSQ.") && game.i18n.lang === "ko" ? resolveJosa(text) : text;
+  };
   // 단축키: GM 스크린(설정 → 조작 설정에서 바꿀 수 있다)
   game.keybindings.register("nssq", "openGMScreen", {
     name: "NSSQ.GMScreen.keybinding",

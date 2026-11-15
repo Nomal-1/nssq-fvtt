@@ -94,8 +94,8 @@ async function activateDungeonField(name, stage) {
   };
   if (playlist) await (await import("./location-bgm.mjs")).ensureLoop(playlist, playlist.sounds.get(music.sound) ?? null);
   let scene = game.scenes.find((s) => s.getFlag("nssq", "randomField"));
-  if (scene) await scene.update(data);
-  else scene = await Scene.create({ ...data, width: 1920, height: 1080, padding: 0, backgroundColor: "#111", tokenVision: false, fog: { exploration: false }, flags: { nssq: { randomField: true } } });
+  if (scene) await scene.update({ ...data, padding: Math.max(scene.padding ?? 0, 0.25) });
+  else scene = await Scene.create({ ...data, width: 1920, height: 1080, padding: 0.25, backgroundColor: "#111", tokenVision: false, fog: { exploration: false }, flags: { nssq: { randomField: true } } });
   return scene.activate();
 }
 

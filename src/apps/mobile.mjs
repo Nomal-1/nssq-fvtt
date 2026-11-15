@@ -23,12 +23,27 @@ function detect() {
 /** 마을·미궁 씬 UI를 맞출 화면 영역(씬 컨트롤·내비게이션·핫바·사이드바에 가리지 않게). 모바일이면 화면 전체 */
 export function viewArea() {
   if (active) return { l: 2, t: 2, r: window.innerWidth - 2, b: window.innerHeight - 2 };
-  const side = ui.sidebar?._collapsed ? 40 : (ui.sidebar?.element?.[0]?.offsetWidth ?? 300) + 16;
+  // Foundry 14: 씬 컨트롤은 #scene-controls, 씬 내비게이션은 #scene-navigation(세로로 긴 상자라 첫 줄 아래까지만),
+  // 사이드바는 ApplicationV2(#sidebar, 접히면 아이콘 줄만 남는다). 실제 화면 위치를 재서 피한다.
   const box = (id) => document.getElementById(id)?.getBoundingClientRect();
+  const navTop = document.getElementById("scene-navigation")?.firstElementChild?.getBoundingClientRect();
+  const sidebar = box("sidebar");
   return {
-    l: Math.max(70, (box("controls")?.right ?? 60) + 8), t: Math.max(46, (box("navigation")?.bottom ?? 40) + 6),
-    r: window.innerWidth - side, b: Math.min(window.innerHeight - 66, (box("hotbar")?.top ?? window.innerHeight - 66) - 6)
+    l: Math.max(70, (box("scene-controls")?.right ?? 60) + 8),
+    t: Math.max(46, (navTop?.bottom ?? 40) + 6),
+    r: (sidebar?.width ? sidebar.left : window.innerWidth - 316) - 16,
+    b: Math.min(window.innerHeight - 66, (box("hotbar")?.top ?? window.innerHeight - 66) - 6)
   };
+}
+
+/**
+ * 씬 둘레 여백(padding)이 0이면 Foundry 14는 씬보다 작게 줌아웃하지 못해서(최소 배율이 화면을 채우는 배율)
+ * 메뉴 레이어를 화면 안쪽 영역에 맞출 수 없다. 메뉴 레이어를 쓰는 씬(마을·미궁·랜덤 필드)은 여백을 둔다.
+ */
+export const OVERLAY_SCENE_PADDING = 0.25;
+export async function ensureOverlayPadding(scene) {
+  if (!game.user.isGM || !scene || (scene.padding ?? 0) >= OVERLAY_SCENE_PADDING) return;
+  await scene.update({ padding: OVERLAY_SCENE_PADDING });
 }
 
 /** 떠 있는 버튼(채팅·전체 화면) */

@@ -7,7 +7,7 @@
  * - 나레이션 잠금: 이동해 도착하면 GM이 [플레이어 메뉴 열기]를 누를 때까지(또는 GM이 다음 행동을 할 때까지) 플레이어 메뉴를 가린다(설정 fieldNarrate)
  * - 지도 창은 플레이어에게 보기 전용(지도로 조작하는 것은 GM)
  */
-import { viewArea } from "./mobile.mjs";
+import { OVERLAY_SCENE_PADDING, ensureOverlayPadding, viewArea } from "./mobile.mjs";
 import * as FM from "../engine/fieldmap.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
@@ -29,12 +29,12 @@ export const fieldSceneOf = (map) => (map ? game.scenes.find((s) => s.getFlag("n
 export async function ensureFieldScene(map) {
   if (!game.user.isGM || !map) return null;
   const s = fieldSceneOf(map);
-  if (s) { if (s.name !== map.name) await s.update({ name: map.name }); return s; }
+  if (s) { if (s.name !== map.name) await s.update({ name: map.name }); await ensureOverlayPadding(s); return s; }
   const folderName = L("folder");
   const folder = game.folders.find((x) => x.type === "Scene" && x.name === folderName) ?? await Folder.create({ name: folderName, type: "Scene" });
   const start = areaOf(map, map.start);
   return Scene.create({
-    name: map.name, folder: folder.id, navigation: true, width: 1920, height: 1080, padding: 0, backgroundColor: "#000000",
+    name: map.name, folder: folder.id, navigation: true, width: 1920, height: 1080, padding: OVERLAY_SCENE_PADDING, backgroundColor: "#000000",
     grid: { type: CONST.GRID_TYPES.GRIDLESS }, background: { src: areaImg(start) || map.battleBg || null }, tokenVision: false, fog: { exploration: false },
     ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER }, flags: { nssq: { fieldMap: map.id } }
   });
@@ -61,6 +61,7 @@ function shownMap() {
 let fitting = false;
 function fitView() {
   if (!overlay || !canvas.ready) return;
+  if ((canvas.scene?.padding ?? 0) < OVERLAY_SCENE_PADDING) ensureOverlayPadding(canvas.scene);
   const r = canvas.dimensions.sceneRect;
   // 씬 컨트롤·내비게이션·핫바·사이드바에 가리지 않게(모바일이면 화면 전체, apps/mobile.mjs)
   const area = viewArea();
