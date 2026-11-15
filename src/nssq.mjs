@@ -63,11 +63,20 @@ import { resolveJosa } from "./util.mjs";
 
 Hooks.once("init", () => {
   // 한국어 조사: NSSQ 문구는 이름을 채운 뒤 「을(를)」 같은 표기를 받침에 맞는 조사 하나로 바꾼다(util.mjs resolveJosa)
-  const format = game.i18n.format.bind(game.i18n);
-  game.i18n.format = (key, data) => {
-    const text = format(key, data);
-    return typeof key === "string" && key.startsWith("NSSQ.") && game.i18n.lang === "ko" ? resolveJosa(text) : text;
-  };
+  // Foundry 14의 Localization#format은 읽기 전용이라 대입하면 오류가 나서 init 전체가 멈춘다. 인스턴스에 정의하고, 실패해도 넘어간다.
+  try {
+    const format = game.i18n.format.bind(game.i18n);
+    Object.defineProperty(game.i18n, "format", {
+      configurable: true,
+      writable: true,
+      value: (key, data) => {
+        const text = format(key, data);
+        return typeof key === "string" && key.startsWith("NSSQ.") && game.i18n.lang === "ko" ? resolveJosa(text) : text;
+      }
+    });
+  } catch (err) {
+    console.warn("nssq | Korean particle resolver not installed", err);
+  }
   // 단축키: GM 스크린(설정 → 조작 설정에서 바꿀 수 있다)
   game.keybindings.register("nssq", "openGMScreen", {
     name: "NSSQ.GMScreen.keybinding",
