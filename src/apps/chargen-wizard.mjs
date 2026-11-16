@@ -15,6 +15,7 @@ import tables from "../generated/tables.mjs";
 import { esc } from "../util.mjs";
 import { addDirectoryButton } from "./scene-tools.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Chargen.${k}`, d) : game.i18n.localize(`NSSQ.Chargen.${k}`));
 const ab = (k) => game.i18n.localize(`NSSQ.Ability.${k}`);
@@ -34,7 +35,7 @@ async function commonSkills() {
   return commonCache;
 }
 
-export class ChargenWizard extends foundry.appv1.api.Application {
+export class ChargenWizard extends LegacyApp {
   constructor(actor, options = {}) {
     super({ id: `nssq-chargen-${actor.id}`, ...options });
     this.actor = actor;

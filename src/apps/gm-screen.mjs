@@ -10,6 +10,7 @@ import { cleanupEnemies } from "./enemy-library.mjs";
 import tables from "../generated/tables.mjs";
 import { addDirectoryButton, addTokenTool } from "./scene-tools.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.GMScreen.${k}`, d) : game.i18n.localize(`NSSQ.GMScreen.${k}`));
 
@@ -48,7 +49,7 @@ export async function createGMScreenMacro() {
 
 const pct = (v, max) => (max > 0 ? Math.clamp(Math.round((v / max) * 100), 0, 100) : 0);
 
-export class GMScreen extends foundry.appv1.api.Application {
+export class GMScreen extends LegacyApp {
   static instance = null;
 
   static get defaultOptions() {

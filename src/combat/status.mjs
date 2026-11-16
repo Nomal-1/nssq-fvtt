@@ -10,6 +10,7 @@ import { removeState } from "../engine/states.mjs";
 import { combatProfile } from "./profile.mjs";
 import { onInflicted } from "./turn-status.mjs";
 import { esc } from "../util.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Conditions.${k}`, d) : game.i18n.localize(`NSSQ.Conditions.${k}`));
 const loc = (k) => game.i18n.localize(k);
@@ -168,7 +169,7 @@ async function inflictContest(actor, id, source) {
 const openApps = new Map();
 
 /** GM: 한 전투원의 상태를 보고 걸고 푸는 창 */
-export class StatusApp extends foundry.appv1.api.Application {
+export class StatusApp extends LegacyApp {
   constructor(actor, options = {}) {
     super(options);
     this.actor = actor;

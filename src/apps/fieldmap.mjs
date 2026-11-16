@@ -20,6 +20,7 @@ import { L, opt, rid, W, H, R, G, allMaps, mapState, activeMap, areaName, areaOf
 export { allMaps, mapState, activeMap } from "./fieldmap-common.mjs";
 import { editorMethods } from "./fieldmap-editor.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 
 /* ---------------- 상태 ---------------- */
@@ -688,7 +689,7 @@ async function onCard(message, action, el) {
 
 let app = null;
 
-export class FieldMapApp extends foundry.appv1.api.Application {
+export class FieldMapApp extends LegacyApp {
   constructor(options = {}) {
     super(options);
     this.mode = "play";
@@ -1086,7 +1087,7 @@ export class FieldMapApp extends foundry.appv1.api.Application {
         this.mapId = null; this.draft = null; this.dirty = false; this.mode = "play"; return this.render();
       }
       // 진행
-      case "start": return startProgress(map.id, Number(this.element.find("[data-fm-hour]").val()) || 0);
+      case "start": return startProgress(map.id, Number($(this.element).find("[data-fm-hour]").val()) || 0);
       case "restart": if (await Dialog.confirm({ title: L("restart"), content: `<p>${esc(L("restartAsk"))}</p>`, rejectClose: false })) return startProgress(map.id, map.startHour ?? 8, { resume: false }); return;
       case "end": return endProgress();
       case "toTown": return (await import("./town.mjs")).returnToTown(null, { reason: L("toTownReason") });

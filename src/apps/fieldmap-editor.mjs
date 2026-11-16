@@ -243,7 +243,7 @@ export const editorMethods = {
     this.dirty = true;
     const structural = el.dataset.struct !== undefined || el.dataset.type === "enemy" || path === "bg.style" || path.endsWith(".oneWay") || path.endsWith(".state") || path.endsWith(".name") || path.endsWith(".secret");
     if (structural) this.render();
-    else this.element.find("[data-fm-act=save]").addClass("fm-dirty");
+    else $(this.element).find("[data-fm-act=save]").addClass("fm-dirty");
   },
 
   addItem({ fmAdd: path, kind, on }) {

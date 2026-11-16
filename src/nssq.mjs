@@ -211,8 +211,11 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 });
 
 // 시스템 대화창(내용에 nssq 클래스가 있는 것)은 창틀도 NSSQ 테마로
-Hooks.on("renderDialog", (app) => {
-  const el = app.element?.[0];
+// (V1 Dialog는 renderDialog에 jQuery, DialogV2는 renderDialogV2에 HTMLElement — 둘 다 받는다)
+const themeDialog = (app) => {
+  const el = app.element instanceof HTMLElement ? app.element : app.element?.[0];
   if (!el || el.classList.contains("nq-window")) return;
   if (app.options.classes?.includes("nssq") || el.querySelector("[class*='nssq']")) el.classList.add("nssq", "dialog", "nq-window");
-});
+};
+Hooks.on("renderDialog", themeDialog);
+Hooks.on("renderDialogV2", themeDialog);

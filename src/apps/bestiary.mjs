@@ -11,6 +11,7 @@ import { autoIdentifyKills, bestiaryEntry, bestiaryKey, bestiaryTier, forgetBest
 import { esc } from "../util.mjs";
 import { addDirectoryButton, addTokenTool } from "./scene-tools.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Bestiary.${k}`, d) : game.i18n.localize(`NSSQ.Bestiary.${k}`));
 const A = (k) => game.i18n.localize(`NSSQ.Analysis.${k}`);
@@ -22,7 +23,7 @@ export const bestiaryForPlayers = () => !!game.settings.get("nssq", "bestiaryPla
 
 let app = null;
 
-export class BestiaryApp extends foundry.appv1.api.Application {
+export class BestiaryApp extends LegacyApp {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-bestiary", classes: ["nssq", "nssq-bestiary"], width: 760, height: 620, resizable: true

@@ -18,6 +18,7 @@ import { CHECK_KINDS } from "../chat/check-mods.mjs";
 import tables from "../generated/tables.mjs";
 import { esc } from "../util.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Maker.${k}`, d) : game.i18n.localize(`NSSQ.Maker.${k}`));
 const loc = (k) => game.i18n.localize(k);
@@ -170,7 +171,7 @@ function pathLabel(p) {
 
 /* ---------------- 스킬 제작기 ---------------- */
 
-export class SkillMaker extends foundry.appv1.api.Application {
+export class SkillMaker extends LegacyApp {
   /** @param {{ item?: Item, actor?: Actor }} o */
   constructor({ item = null, actor = null } = {}, options = {}) {
     super(options);
@@ -338,7 +339,7 @@ export class SkillMaker extends foundry.appv1.api.Application {
 
 /* ---------------- 에너미 제작기 ---------------- */
 
-export class EnemyMaker extends foundry.appv1.api.Application {
+export class EnemyMaker extends LegacyApp {
   constructor({ actor = null } = {}, options = {}) {
     super(options);
     this.actor = actor;
@@ -586,7 +587,7 @@ const renameInSkills = (skills, from, to) => skills.map((s) => (s.system?.prereq
   ? { ...s, system: { ...s.system, prereqs: renamePrereqs([{ prereqs: s.system.prereqs }], from, to)[0].prereqs } } : s));
 const prereqText = (prereqs) => (prereqs?.all ?? []).map((g) => (g.any ? g.any.map((q) => `${q.skill} ${q.sl}`).join(` ${L("or")} `) : `${g.skill} ${g.sl}`)).join(" + ");
 
-export class ClassMaker extends foundry.appv1.api.Application {
+export class ClassMaker extends LegacyApp {
   constructor({ item = null } = {}, options = {}) {
     super(options);
     this.item = item;

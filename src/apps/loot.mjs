@@ -15,6 +15,7 @@ import { isActiveGM } from "../combat/apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { esc } from "../util.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Loot.${k}`, d) : game.i18n.localize(`NSSQ.Loot.${k}`));
 /** 풀·결과의 표시: 「사슴의 뿔(뿔 R3)」, 이름이 종류와 같으면 「뿔 R3」 */
@@ -350,7 +351,7 @@ function requestPopups(message) {
 /* ---------------- 팝업 창(사용자 요청): 채팅 카드와 같은 내용·버튼, 카드가 바뀌면 따라 바뀜 ---------------- */
 
 const windows = new Map();
-class LootWindow extends foundry.appv1.api.Application {
+class LootWindow extends LegacyApp {
   constructor(messageId) {
     super({ id: `nssq-loot-${messageId}` });
     this.messageId = messageId;

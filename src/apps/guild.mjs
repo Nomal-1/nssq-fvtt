@@ -7,6 +7,7 @@
  */
 import { esc } from "../util.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Guild.${k}`, d) : game.i18n.localize(`NSSQ.Guild.${k}`));
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
@@ -99,7 +100,7 @@ export async function changeClass(actor, mainUuid, subUuid) {
 
 let app = null;
 
-export class GuildApp extends foundry.appv1.api.Application {
+export class GuildApp extends LegacyApp {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-guild", classes: ["nssq", "nq-window", "nssq-guild"], title: game.i18n.localize("NSSQ.Guild.title"), width: 760, height: 660, resizable: true, scrollY: [".guild-wrap"]
@@ -172,7 +173,7 @@ export class GuildApp extends foundry.appv1.api.Application {
       case "tree": return (await import("./skill-tree.mjs")).SkillTree.open(a);
       case "respec": return respec(a);
       case "class": {
-        const root = this.element[0];
+        const root = this.element;
         return changeClass(a, root.querySelector("[data-cls=main]").value, root.querySelector("[data-cls=sub]").value || null);
       }
     }

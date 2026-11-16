@@ -15,6 +15,7 @@ import { acquireItems } from "./acquire.mjs";
 import { esc } from "../util.mjs";
 import { addTokenTool } from "./scene-tools.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Shop.${k}`, d) : game.i18n.localize(`NSSQ.Shop.${k}`));
 const PACKS = ["nssq.equipment", "nssq.items"];
@@ -154,7 +155,7 @@ export async function setHidden(uuids, hidden) {
   await game.settings.set("nssq", "shopHidden", [...set]);
 }
 
-class ShopApp extends foundry.appv1.api.Application {
+class ShopApp extends LegacyApp {
   /** @param {{ creation?: boolean }} options creation: 캐릭터 작성 마법사에서 연 상점(GM이 닫아 놨어도 열리고 작성 모드 고정) */
   constructor(actor, options = {}) {
     super(options);

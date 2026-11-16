@@ -10,6 +10,7 @@ import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { roster } from "./roster.mjs";
 import { esc } from "../util.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.PartyBoard.${k}`, d) : game.i18n.localize(`NSSQ.PartyBoard.${k}`));
 const rid = () => foundry.utils.randomID();
@@ -48,7 +49,7 @@ export async function checkBeforeEntry() {
 
 let app = null;
 
-export class PartyBoard extends foundry.appv1.api.Application {
+export class PartyBoard extends LegacyApp {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-party-board", classes: ["nssq", "nq-window", "nssq-party-board"], title: game.i18n.localize("NSSQ.PartyBoard.title"), width: 560, height: "auto"

@@ -9,6 +9,7 @@ import { expandEnemies, enemiesFromTokens, pickWeighted, resolveStage, validateE
 import { LAYOUT } from "../engine/formation.mjs";
 import { esc } from "../util.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Encounter.${k}`, d) : game.i18n.localize(`NSSQ.Encounter.${k}`));
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
@@ -108,7 +109,7 @@ export async function convertScenePreset(scene) {
 
 let app = null;
 
-export class EncounterApp extends foundry.appv1.api.Application {
+export class EncounterApp extends LegacyApp {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-encounters", classes: ["nssq", "nq-window", "nssq-encounters"], title: game.i18n.localize("NSSQ.Encounter.title"),
@@ -230,7 +231,7 @@ export class EncounterApp extends foundry.appv1.api.Application {
       case "back": this.draft = null; return this.render();
       case "pickBg": return new foundry.applications.apps.FilePicker.implementation({ type: "image", current: this.draft.bg, callback: (src) => { this.draft.bg = src; this.render(); } }).render(true);
       case "add": {
-        const root = this.element[0];
+        const root = this.element;
         const label = root.querySelector("[data-add-name]").value.trim();
         const e = (await enemyChoices()).find((x) => x.label === label || x.name === label);
         if (!e) return ui.notifications.warn(L("unknownEnemy", { name: label }));

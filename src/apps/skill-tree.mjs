@@ -9,6 +9,7 @@ import { brokenByLowering, canRaise, levelCap, prereqList, skillBudget, treeLayo
 import { skillBadgeHtml } from "./skill-badge.mjs";
 import { esc } from "../util.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Skill.${k}`, d) : game.i18n.localize(`NSSQ.Skill.${k}`));
 const plain = (html, n = 160) => {
@@ -60,7 +61,7 @@ function effectiveEntry(e, st, index) {
   return m ? { entry: m, shared: true } : { entry: e, shared: false };
 }
 
-export class SkillTree extends foundry.appv1.api.Application {
+export class SkillTree extends LegacyApp {
   constructor(actor, options = {}) {
     super({ id: `nssq-skill-tree-${actor.id}`, ...options });
     this.actor = actor;
@@ -88,13 +89,13 @@ export class SkillTree extends foundry.appv1.api.Application {
   }
 
   /** 액터가 바뀌면(스킬 추가·삭제·레벨) 함께 다시 그린다 */
-  async _render(force, options) {
-    await super._render(force, options);
-    this.actor.apps[this.appId] = this;
+  _onRender(context, options) {
+    super._onRender?.(context, options);
+    this.actor.apps[this.id] = this;
   }
 
   async close(options) {
-    delete this.actor.apps[this.appId];
+    delete this.actor.apps[this.id];
     return super.close(options);
   }
 
