@@ -10,6 +10,7 @@ import { initialMoney } from "../engine/chargen.mjs";
 import { refinementBadges } from "./badges.mjs";
 import { slotOccupant } from "../engine/equipment.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Sheet.${k}`, d) : game.i18n.localize(`NSSQ.Sheet.${k}`));
 const SHORT = { str: "STR", tec: "TEC", vit: "VIT", agi: "AGI", luc: "LUC" };
@@ -156,7 +157,7 @@ export async function editAbilities(actor) {
       tr.querySelector(".b").textContent = Math.floor(total / 5);
     }
   };
-  const values = await foundry.appv1.api.Dialog.prompt({
+  const values = await Dialog.prompt({
     title: `${actor.name} — ${L("editAbilities")}`,
     content,
     label: L("save"),
@@ -190,7 +191,7 @@ export async function editAbilities(actor) {
 export function showCreationLog(actor) {
   const log = [...(actor.system.creation?.log ?? [])].reverse().map(logEntry);
   const rows = log.map((e) => `<li><span class="when">${esc(e.when)} · ${esc(e.user)}</span> ${e.text}</li>`).join("") || `<li class="empty">${L("logEmpty")}</li>`;
-  new foundry.appv1.api.Dialog({
+  new Dialog({
     title: `${actor.name} — ${L("creationRecord")}`,
     content: `<ol class="nq-log nq-log-full">${rows}</ol>`,
     buttons: { close: { label: L("close") } },

@@ -13,6 +13,7 @@ import { REROLL_COST } from "../engine/check.mjs";
 import { autoApplyMode, isActiveGM, requestApply } from "./apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.FpDice.${k}`, d) : game.i18n.localize(`NSSQ.FpDice.${k}`));
 
@@ -34,7 +35,7 @@ export async function openFpDiceDialog(actor) {
   if (!actor?.isOwner || actor.type !== "character") return null;
   const fp = actor.system.fp?.value ?? 0;
   const cur = declaredFpDice(actor);
-  const n = await foundry.appv1.api.Dialog.prompt({
+  const n = await Dialog.prompt({
     title: L("title", { name: actor.name }),
     content: `<form><p class="notes">${esc(L("hint"))}</p>
       <div class="form-group"><label>${esc(L("label", { fp }))}</label><input type="number" name="n" min="0" max="${fp}" value="${Math.min(cur, fp)}"/></div></form>`,

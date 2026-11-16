@@ -8,6 +8,7 @@
 import { expandEnemies, enemiesFromTokens, pickWeighted, resolveStage, validateEncounter } from "../engine/encounters.mjs";
 import { LAYOUT } from "../engine/formation.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Encounter.${k}`, d) : game.i18n.localize(`NSSQ.Encounter.${k}`));
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
@@ -221,7 +222,7 @@ export class EncounterApp extends foundry.appv1.api.Application {
       case "edit": this.draft = foundry.utils.deepClone(all[id]); return this.render();
       case "dup": { const e = { ...foundry.utils.deepClone(all[id]), id: rid(), name: L("copyName", { name: all[id].name }) }; await saveEncounter(e); return this.render(); }
       case "del": {
-        if (!(await foundry.appv1.api.Dialog.confirm({ title: L("del"), content: `<p>${esc(L("delConfirm", { name: all[id].name }))}</p>`, rejectClose: false }))) return null;
+        if (!(await Dialog.confirm({ title: L("del"), content: `<p>${esc(L("delConfirm", { name: all[id].name }))}</p>`, rejectClose: false }))) return null;
         await deleteEncounter(id); return this.render();
       }
       case "fav": await saveEncounter({ ...all[id], fav: !all[id].fav }); return this.render();

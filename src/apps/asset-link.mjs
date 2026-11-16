@@ -12,6 +12,7 @@
  * 이미 정해 둔 것은 건너뛴다([덮어쓰기]를 켜면 바꾼다). 맞지 않는 파일은 목록으로 보여 준다(그런 것은 각 편집 창에서 직접 고른다)
  */
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Assets.${k}`, d) : game.i18n.localize(`NSSQ.Assets.${k}`));
 const KINDS = ["enemy", "bgm", "bg", "area", "town", "npc", "icon"];
 
@@ -148,7 +149,7 @@ export async function openAssetLink() {
     <div class="form-group"><label>${esc(L("folder"))}</label><input type="text" name="root" value="${esc(saved)}"/><button type="button" data-pick style="flex:0 0 32px"><i class="fas fa-folder-open"></i></button></div>
     <div class="form-group"><label class="checkbox"><input type="checkbox" name="overwrite"/> ${esc(L("overwrite"))}</label></div>
     <p class="notes">${esc(L("rule"))}</p></form>`;
-  const opts = await foundry.appv1.api.Dialog.prompt({
+  const opts = await Dialog.prompt({
     title: L("title"), content, label: L("scan"), rejectClose: false, options: { width: 520 },
     render: (html) => (html[0] ?? html).querySelector("[data-pick]")?.addEventListener("click", () => {
       const input = (html[0] ?? html).querySelector("[name=root]");
@@ -177,7 +178,7 @@ export async function openAssetLink() {
     return { prevLinks, state, p: plan(files, t, opts.overwrite) };
   };
   const first = await build();
-  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("title"), content: previewHtml(opts.root, first.p), rejectClose: false, options: { width: 640, classes: ["nssq", "dialog"] } });
+  const ok = await Dialog.confirm({ title: L("title"), content: previewHtml(opts.root, first.p), rejectClose: false, options: { width: 640, classes: ["nssq", "dialog"] } });
   if (!ok) return null;
   const { prevLinks, state, p } = await build();
   const todo = p.rows.filter((r) => !r.skip && r.from !== r.file.path);

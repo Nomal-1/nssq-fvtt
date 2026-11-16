@@ -4,6 +4,7 @@
  */
 import { ABILITIES, growthAbility, growthAvailable } from "../engine/derive.mjs";
 import { logCreation } from "../sheets/character.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Growth.${k}`, d) : game.i18n.localize(`NSSQ.Growth.${k}`));
 const abilityName = (k) => game.i18n.localize(`NSSQ.Ability.${k}`);
@@ -11,7 +12,7 @@ const abilityName = (k) => game.i18n.localize(`NSSQ.Ability.${k}`);
 /** 6이 나왔을 때 올릴 능력치 고르기 */
 async function chooseAbility(actor) {
   const buttons = Object.fromEntries(ABILITIES.map((k) => [k, { label: abilityName(k), callback: () => k }]));
-  return foundry.appv1.api.Dialog.wait({
+  return Dialog.wait({
     title: `${actor.name} — ${L("choose")}`,
     content: `<p class="nssq-growth-choose">${L("chooseHint")}</p>`,
     buttons,

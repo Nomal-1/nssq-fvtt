@@ -6,6 +6,7 @@ import { campAmbush, campRecovery, trapDamage } from "../engine/explore.mjs";
 import { CONDITIONS, isPetrified } from "../engine/conditions.mjs";
 import { autoApplyMode, isActiveGM } from "../combat/apply.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Explore.${k}`, d) : game.i18n.localize(`NSSQ.Explore.${k}`));
 const carried = (a) => a.items.filter((i) => !i.system.stored);
@@ -32,7 +33,7 @@ export async function openCampDialog(defaults = {}) {
     ${tent ? `<p class="notes">${esc(L("tentNote", { n: -tent }))}</p>` : ""}
     <div class="form-group"><label>${esc(L("food"))}</label><select name="food">${foods.map((f) => `<option value="${esc(f.id)}">${esc(f.label)}</option>`).join("")}<option value="">${esc(L("noFood"))}</option></select></div>
     <p class="notes">${esc(L("campHint"))}</p></form>`;
-  const got = await foundry.appv1.api.Dialog.prompt({
+  const got = await Dialog.prompt({
     title: L("campTitle"), content, label: L("campGo"), rejectClose: false,
     callback: (html) => { const f = html[0].querySelector("form"); return { hours: Math.max(6, Number(f.hours.value) || 6), danger: Math.max(0, Number(f.danger.value) || 0), food: f.food.value }; }
   }, { classes: ["nssq", "dialog"] });
@@ -95,7 +96,7 @@ export async function openTrapDialog() {
     <div class="form-group"><label>${esc(L("trapKind"))}</label><select name="kind"><option value="random">${esc(L("kind.random"))}</option><option value="hp">${esc(L("kind.hp"))}</option><option value="tp">${esc(L("kind.tp"))}</option></select></div>
     <div class="form-group"><label>${esc(L("targets"))}</label><div>${boxes}</div></div>
     <p class="notes">${esc(L("trapHint"))}</p></form>`;
-  const got = await foundry.appv1.api.Dialog.prompt({
+  const got = await Dialog.prompt({
     title: L("trapTitle"), content, label: L("trapGo"), rejectClose: false,
     callback: (html) => { const f = html[0].querySelector("form"); return { level: Number(f.level.value) || 1, kind: f.kind.value, uuids: [...f.querySelectorAll("[name=m]:checked")].map((x) => x.value) }; }
   }, { classes: ["nssq", "dialog"] });

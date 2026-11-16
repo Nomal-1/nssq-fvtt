@@ -13,6 +13,7 @@ import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { activeMap, answerProposal, areaExits, campHere, destLabel, endNarration, gatherHere, mapState, moveTo, requestMove, search } from "./fieldmap.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.FieldScene.${k}`, d) : game.i18n.localize(`NSSQ.FieldScene.${k}`));
 const LF = (k, d) => (d ? game.i18n.format(`NSSQ.FieldMap.${k}`, d) : game.i18n.localize(`NSSQ.FieldMap.${k}`));
@@ -307,7 +308,7 @@ async function onActProposal({ userId, act }) {
   if (!isActiveGM() || !ACTS[act] || !activeMap()) return;
   if (!FM.areaActs(areaOf(activeMap(), mapState().current))[act]) return;
   const who = game.users.get(userId)?.name ?? "?";
-  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("actTitle"), content: `<p>${esc(L("actAsk", { who, act: L(`act.${act}`) }))}</p>`, rejectClose: false });
+  const ok = await Dialog.confirm({ title: L("actTitle"), content: `<p>${esc(L("actAsk", { who, act: L(`act.${act}`) }))}</p>`, rejectClose: false });
   if (ok) await runAct(act);
   else await ChatMessage.create({ speaker: { alias: LF("title") }, content: `<p>${esc(L("actRejected", { who, act: L(`act.${act}`) }))}</p>` });
 }

@@ -12,6 +12,7 @@ import { actionState } from "./turn-status.mjs";
 import { recordBestiary } from "./bestiary.mjs";
 import { autoKey } from "../engine/triggers.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
 
@@ -96,7 +97,7 @@ async function escapeDeclarations(combat) {
   const out = new Map();
   if (!list.length) return out;
   const html = `<p>${L("dashHint")}</p>${list.map((x, k) => `<div class="form-group"><label><input type="checkbox" name="d${k}" ${x.auto ? "checked" : ""}/> ${esc(x.c.name)}: 《${esc(x.i.name)}》 +${x.value}</label></div>`).join("")}`;
-  const picked = await foundry.appv1.api.Dialog.prompt({
+  const picked = await Dialog.prompt({
     title: L("dashTitle"), content: html, label: L("escape"), rejectClose: false,
     callback: (h) => list.map((x, k) => !!h[0].querySelector(`[name=d${k}]`)?.checked)
   });
@@ -115,7 +116,7 @@ async function escapeDeclarations(combat) {
 
 export async function rollEscape(combat) {
   if (!game.user.isGM || !combat) return;
-  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("escape"), content: `<p>${L("escapeConfirm")}</p>`, rejectClose: false });
+  const ok = await Dialog.confirm({ title: L("escape"), content: `<p>${L("escapeConfirm")}</p>`, rejectClose: false });
   if (!ok) return;
   // 도주 판정 때 선언(《전력 도주》 달성값 +3): 쓸 수 있는 캐릭터를 GM이 고른다(시트 「자동」이면 처음부터 체크)
   const dash = await escapeDeclarations(combat);

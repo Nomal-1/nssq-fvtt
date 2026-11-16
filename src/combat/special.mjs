@@ -9,6 +9,7 @@ import { friendly } from "./profile.mjs";
 import { isActiveGM } from "./apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Special.${k}`, d) : game.i18n.localize(`NSSQ.Special.${k}`));
 const alive = (c) => !!c?.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
@@ -33,7 +34,7 @@ export async function useAnytime(combat, combatant, itemId) {
   let job = null;
   if (fx.action === "swapRow") {
     const opts = [`<option value="">${esc(L("selfOnly"))}</option>`, ...allies.map((c) => `<option value="${c.id}">${esc(L("swapWith", { name: c.name, row: game.i18n.localize(`NSSQ.Row.${c.actor.system.row ?? "front"}`) }))}</option>`)].join("");
-    const pick = await foundry.appv1.api.Dialog.prompt({
+    const pick = await Dialog.prompt({
       title: `${actor.name} — 《${item.name}》`, content: `<form><select name="who">${opts}</select></form>`, label: L("go"), rejectClose: false,
       callback: (html) => html[0].querySelector("[name=who]").value
     });
@@ -47,7 +48,7 @@ export async function useAnytime(combat, combatant, itemId) {
     if (!st) return ui.notifications.warn(L("noStance"));
     const list = allies.filter((c) => !(st.guardTargets ?? []).includes(c.id));
     if (!list.length) return ui.notifications.warn(L("noAlly"));
-    const pick = await foundry.appv1.api.Dialog.prompt({
+    const pick = await Dialog.prompt({
       title: `${actor.name} — 《${item.name}》`, content: `<form><p>${esc(L("retargetHint", { skill: st.name }))}</p><select name="who">${list.map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select></form>`,
       label: L("go"), rejectClose: false, callback: (html) => html[0].querySelector("[name=who]").value
     });

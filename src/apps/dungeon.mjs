@@ -11,6 +11,7 @@ import { LAYOUT, enemySlotX } from "../engine/formation.mjs";
 import { rareTransform } from "../engine/rare.mjs";
 import { DUNGEON_EVENTS, eventFor, timeOfDayAt } from "../engine/dungeon.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Dungeon.${k}`, d) : game.i18n.localize(`NSSQ.Dungeon.${k}`));
 
@@ -30,7 +31,7 @@ export async function openDungeonDialog() {
   const cur = dungeonState();
   // 진행 중이면: 다음 이벤트 / 던전 나가기 / 새로 시작
   if (cur.active) {
-    const pick = await new Promise((resolve) => new foundry.appv1.api.Dialog({
+    const pick = await new Promise((resolve) => new Dialog({
       title: L("title"), content: `<p>${esc(L("activeAsk", { name: cur.name, done: cur.done ?? 0, depth: cur.depth ?? 0 }))}</p>`,
       buttons: {
         next: { icon: '<i class="fas fa-forward"></i>', label: L("next"), callback: () => resolve("next") },
@@ -48,7 +49,7 @@ export async function openDungeonDialog() {
   const { bgmOptions } = await import("./encounters.mjs");
   const imgRow = (k) => `<div class="form-group"><label>${esc(L(`stage.${k}`))}</label><input type="text" name="${k}" value="${esc(stg[k] ?? "")}"/><button type="button" data-pick="${k}" style="flex:0 0 32px"><i class="fas fa-file-import"></i></button></div>`;
   const bgmRow = (k) => `<div class="form-group"><label>${esc(L(`stage.${k}`))}</label><select name="${k}">${bgmOptions(stg[k] ?? "", L("stage.none"))}</select></div>`;
-  const got = await foundry.appv1.api.Dialog.prompt({
+  const got = await Dialog.prompt({
     title: L("startTitle"),
     render: (html) => (html[0] ?? html).querySelectorAll("[data-pick]").forEach((b) => b.addEventListener("click", () => {
       const input = (html[0] ?? html).querySelector(`[name=${b.dataset.pick}]`);
@@ -321,7 +322,7 @@ async function rollDungeonEvent(messageId) {
 
 function showRollPopup({ messageId, users, head }) {
   if (!users?.includes(game.user.id) || rollPopups.has(messageId)) return;
-  const dlg = new foundry.appv1.api.Dialog({
+  const dlg = new Dialog({
     title: L("title"),
     content: `<div class="nssq-dungeon-ask"><h3><i class="fas fa-dungeon"></i> ${esc(head ?? "")}</h3><p>${esc(L("rollAskPopup"))}</p></div>`,
     buttons: { roll: { icon: '<i class="fas fa-dice"></i>', label: L("rollButton"), callback: () => rollDungeonEvent(messageId) } },

@@ -35,6 +35,7 @@ import { activeBook } from "./book.mjs";
 import { actionList, beginAction, pickTarget, requestSkillApply } from "./skill-use.mjs";
 import { esc } from "../util.mjs";
 import { cardFx, cycleAttrs, persistClasses, persistOverlay, portraitOverlay } from "./hud-persist.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Hud.${k}`, d) : game.i18n.localize(`NSSQ.Hud.${k}`));
 const pct = (r) => (r?.max > 0 ? Math.clamp(Math.round((r.value / r.max) * 100), 0, 100) : 0);
@@ -854,7 +855,7 @@ async function toggleAutoApply(combat) {
     if (ep?.applied && ep.combatId === combat.id) jobs.push(() => requestEndPhaseApply(m.id, true));
   }
   if (!jobs.length) return;
-  const undo = await foundry.appv1.api.Dialog.confirm({
+  const undo = await Dialog.confirm({
     title: L("autoOff"),
     content: `<p>${esc(L("autoUndoAsk", { n: jobs.length }))}</p>`,
     yes: () => true, no: () => false, defaultYes: false

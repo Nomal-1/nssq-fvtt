@@ -12,6 +12,7 @@ import { combatProfile, sideOf } from "./profile.mjs";
 import { actionState } from "./turn-status.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Chase.${k}`, d) : game.i18n.localize(`NSSQ.Chase.${k}`));
 const alive = (c) => !!c?.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
@@ -304,7 +305,7 @@ export async function rallyChase(user, rally) {
   let chosen = allies.slice(0, rally.count);
   if (allies.length && user.actor.type === "character" && user.actor.isOwner) {
     const html = `<p>${esc(L("rallyHint", { n: rally.count }))}</p>${allies.map((a, k) => `<div class="form-group"><label><input type="checkbox" name="r${k}" ${k < rally.count ? "checked" : ""}/> ${esc(a.name)}</label></div>`).join("")}`;
-    const picked = await foundry.appv1.api.Dialog.prompt({
+    const picked = await Dialog.prompt({
       title: L("rallyTitle"), content: html, label: L("rallyGo"), rejectClose: false,
       callback: (h) => allies.filter((a, k) => !!h[0].querySelector(`[name=r${k}]`)?.checked)
     });
@@ -442,7 +443,7 @@ function scanFollowupPopups(message) {
     const d = { actor: c?.name ?? "?", name: shown(f), type: typeLabel(f) };
     const label = f.type === "trigger" || f.type === "event" ? L("declare", d) : L("run", d);
     let answered = false;
-    const dlg = new foundry.appv1.api.Dialog({
+    const dlg = new Dialog({
       title: `${c?.name ?? ""} — ${L(`type.${f.type === "event" ? "declare" : f.type}`)}`,
       content: `<p>${esc(message.content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 140))}</p><p><b>${esc(label)}</b></p>`,
       buttons: {

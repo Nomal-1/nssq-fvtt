@@ -8,6 +8,7 @@
 import { brokenByLowering, canRaise, levelCap, prereqList, skillBudget, treeLayout } from "../engine/skills.mjs";
 import { skillBadgeHtml } from "./skill-badge.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Skill.${k}`, d) : game.i18n.localize(`NSSQ.Skill.${k}`));
 const plain = (html, n = 160) => {
@@ -350,7 +351,7 @@ export class SkillTree extends foundry.appv1.api.Application {
     const sameElsewhere = Math.max(0, ...others.filter((o) => o.name === item.name).map((o) => o.sl));
     const broken = brokenByLowering(item.name, Math.max(next, sameElsewhere), others.filter((o) => o.name !== item.name));
     if (broken.length) {
-      const ok = await foundry.appv1.api.Dialog.confirm({
+      const ok = await Dialog.confirm({
         title: L("tree"),
         content: `<p>${esc(L("brokenConfirm", { name: item.name, list: broken.join(", ") }))}</p>`,
         options: { classes: ["nssq", "dialog"] }

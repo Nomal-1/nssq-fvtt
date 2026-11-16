@@ -8,6 +8,7 @@ import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { isPhysical, isStored } from "../engine/equipment.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Transfer.${k}`, d) : game.i18n.localize(`NSSQ.Transfer.${k}`));
 const inBattle = () => !!game.combat?.started;
@@ -32,7 +33,7 @@ export async function openTransfer(from, preItemId = null) {
     <div class="form-group"><label>${esc(L("money"))}</label><input type="number" name="money" min="0" max="${from.system.money ?? 0}" value="0"/> <span>/ ${from.system.money ?? 0}G</span></div>
     ${items.length ? `<table class="nssq-transfer-items"><tbody>${rows}</tbody></table>` : `<p class="notes">${esc(L("noItems"))}</p>`}
     <p class="notes">${esc(L("hint"))}</p></form>`;
-  const req = await foundry.appv1.api.Dialog.prompt({
+  const req = await Dialog.prompt({
     title: L("title", { name: from.name }), content, label: L("give"), rejectClose: false,
     options: { classes: ["nssq", "dialog"], width: 460 },
     callback: (html) => {

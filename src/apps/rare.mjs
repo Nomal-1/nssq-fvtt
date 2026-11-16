@@ -3,12 +3,13 @@
  * 원래 값을 flags.nssq.rareOriginal에 남겨 해제할 때 되돌린다.
  */
 import { RARE_BOOST, rareTransform } from "../engine/rare.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Rare.${k}`, d) : game.i18n.localize(`NSSQ.Rare.${k}`));
 
 export async function makeRare(actor) {
   if (!game.user.isGM || actor.type !== "enemy" || actor.system.isRare) return;
-  const opts = await foundry.appv1.api.Dialog.prompt({
+  const opts = await Dialog.prompt({
     title: `${actor.name} — ${L("on")}`,
     content: `<form>
       <div class="form-group"><label>${L("hpMultiplier")}</label><select name="m"><option value="2">×2</option><option value="3">×3</option></select></div>

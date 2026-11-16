@@ -9,6 +9,7 @@ import { battlePresets, createPreset, currentBattle, openEndDialog, openStartDia
 import { cleanupEnemies } from "./enemy-library.mjs";
 import tables from "../generated/tables.mjs";
 import { addDirectoryButton, addTokenTool } from "./scene-tools.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.GMScreen.${k}`, d) : game.i18n.localize(`NSSQ.GMScreen.${k}`));
 
@@ -271,7 +272,7 @@ export class GMScreen extends foundry.appv1.api.Application {
   async sessionStart() {
     const fp = game.settings.get("nssq", "fpStart");
     const party = partyActors();
-    const ok = await foundry.appv1.api.Dialog.confirm({
+    const ok = await Dialog.confirm({
       title: L("sessionStart"),
       content: `<p>${L("sessionStartConfirm", { fp, names: party.map((a) => a.name).join(", ") })}</p>`,
       rejectClose: false

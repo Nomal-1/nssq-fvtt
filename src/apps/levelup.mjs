@@ -8,6 +8,7 @@
 import tables from "../generated/tables.mjs";
 import { levelFromExp } from "../engine/derive.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 /**
  * 스킬 습득 창구(사용자 결정): 플레이어는 캐릭터 작성 중, 레벨업한 그 레벨, 길드 재분배·직업 변경(Lv1로 돌아감) 직후에만 스킬을 찍는다.
@@ -45,7 +46,7 @@ async function doLevelUp(actor) {
     const left = await skillLeft(actor);
     if (left > 0) {
       if (!game.user.isGM) return ui.notifications.warn(L("spendFirst", { n: left }));
-      if (!(await foundry.appv1.api.Dialog.confirm({ title: L("up"), content: `<p>${esc(L("spendFirstGM", { n: left }))}</p>`, rejectClose: false }))) return null;
+      if (!(await Dialog.confirm({ title: L("up"), content: `<p>${esc(L("spendFirstGM", { n: left }))}</p>`, rejectClose: false }))) return null;
     }
   }
   const from = s.level;

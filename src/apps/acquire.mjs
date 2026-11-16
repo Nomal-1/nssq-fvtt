@@ -10,6 +10,7 @@
 import { carryUnits, checkOverflowPlan, exceedsOwnLimit, isPhysical, splitIncoming, stackKey } from "../engine/equipment.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Storage.${k}`, d) : game.i18n.localize(`NSSQ.Storage.${k}`));
 
@@ -129,7 +130,7 @@ export function overflowDialog(actor, incomingList, { store = false, leave = fal
       const lv = incomingList.map((_, i) => Number(root.querySelector(`tr[data-incoming="${i}"] [name=leave]`)?.value) || 0);
       return { plan, leave: lv };
     };
-    new foundry.appv1.api.Dialog({
+    new Dialog({
       title: L("overflowTitle", { name: actor.name }),
       content,
       buttons: {
@@ -263,7 +264,7 @@ export async function acquireItems(actor, dataList, { source = "gift", reason = 
 async function askQuantity(item, title) {
   const qty = item.system.quantity ?? 1;
   if (qty <= 1) return qty;
-  return foundry.appv1.api.Dialog.prompt({
+  return Dialog.prompt({
     title,
     content: `<form><div class="form-group"><label>${esc(itemLabel(item))} (${qty})</label><input type="number" name="n" min="1" max="${qty}" value="${qty}"/></div></form>`,
     rejectClose: false,

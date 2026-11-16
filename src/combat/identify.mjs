@@ -6,6 +6,7 @@
 import { identifyResult } from "../engine/combat.mjs";
 import { meetsAutoIdentify, recordBestiary } from "./bestiary.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Identify.${k}`, d) : game.i18n.localize(`NSSQ.Identify.${k}`));
 
@@ -43,7 +44,7 @@ export async function applyIdentify(combat, value) {
 export async function identifyDialog(combat) {
   if (!game.user.isGM || !combat) return;
   const prev = combat.getFlag("nssq", "battle")?.identifyValue ?? "";
-  const value = await foundry.appv1.api.Dialog.prompt({
+  const value = await Dialog.prompt({
     title: L("title"),
     content: `<form><div class="form-group"><label>${L("value")}</label><input type="number" name="v" value="${prev}" autofocus/></div>
       <p class="notes">${L("hint")}</p></form>`,

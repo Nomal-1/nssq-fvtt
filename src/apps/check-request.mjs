@@ -7,6 +7,7 @@ import { bindCheckPreview, checkPreviewHtml, rollCheck } from "../chat/check.mjs
 import { CHECK_KINDS, checkModsHtml, readCheckMods } from "../chat/check-mods.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { addTokenTool } from "./scene-tools.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const open = new Map(); // requestId → Dialog
 
@@ -65,7 +66,7 @@ export async function openRequestDialog(preselect = [], defaults = {}) {
       <div class="form-group"><label>${L("note")}</label><input type="text" name="note" value="${escape(defaults.note ?? "")}" placeholder="${L("notePlaceholder")}"/></div>
       <div class="form-group"><label>${L("rollMode")}</label><select name="rollMode">${modes}</select></div>
     </form>`;
-  const data = await foundry.appv1.api.Dialog.prompt({
+  const data = await Dialog.prompt({
     title: L("title"),
     content,
     label: L("send"),
@@ -122,7 +123,7 @@ function showRequest(req) {
       ${checkModsHtml(actor, { kinds: req.kinds ?? [] })}
       ${checkPreviewHtml({ bonus, modifier: req.modifier ?? 0, target: req.target })}
     </form>`;
-  const dialog = new foundry.appv1.api.Dialog({
+  const dialog = new Dialog({
     title: L("popupTitle"),
     content,
     buttons: {

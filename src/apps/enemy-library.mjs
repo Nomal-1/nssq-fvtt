@@ -7,6 +7,7 @@
  */
 import { sameEnemyData } from "../engine/rare.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
 
@@ -123,7 +124,7 @@ export async function cleanupEnemies() {
       <td>${r.fromSystem ? (r.a.getFlag("nssq", "library") ? L("kindLibrary") : L("kindVariant")) : L("kindCustom")}</td>
       <td class="scenes">${r.scenes.length ? esc(r.scenes.join(", ")) : `<span class="notes">${L("unusedHere")}</span>`}</td>
     </tr>`).join("");
-  const ids = await foundry.appv1.api.Dialog.prompt({
+  const ids = await Dialog.prompt({
     title: L("cleanupTitle"),
     content: `<form class="nssq-cleanup">
       <p>${L("cleanupMerged", { merged })}</p>

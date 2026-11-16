@@ -7,6 +7,7 @@ import {
   applyAssignment, initialMoney, isValidAssignment, orderedAssignment, randomAssignment
 } from "../engine/chargen.mjs";
 import { logCreation } from "../sheets/character.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/ability-roll.hbs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.AbilityRoll.${k}`, d) : game.i18n.localize(`NSSQ.AbilityRoll.${k}`));
@@ -69,7 +70,7 @@ export async function assignDialog(actor, totals) {
     </form>`;
 
   return new Promise((resolve) => {
-    const dialog = new foundry.appv1.api.Dialog({
+    const dialog = new Dialog({
       title: `${actor.name} — ${L("title")}`,
       content,
       buttons: {

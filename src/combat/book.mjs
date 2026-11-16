@@ -1,3 +1,4 @@
+import { Dialog } from "../dialogs.mjs";
 /**
  * 추가 컨텐츠 「○○의 책」(01 #168, 사용자 결정): 퀘스트·탐색 보상용 유니크 도구. 상점에서 팔지 않는다
  * - 소지품에서 [활성화](동시에 하나만, 전투 중에는 바꿀 수 없다). 액터 플래그 nssq.activeBook = 아이템 id
@@ -47,7 +48,7 @@ export async function bookAttack(attacker, book, targetToken) {
     const myTurn = combat.getFlag("nssq", "phase") === "main" && combat.combatant?.id === me.id;
     if (!myTurn) {
       if (!game.user.isGM) return ui.notifications.warn(L("notTurn"));
-      if (!(await foundry.appv1.api.Dialog.confirm({ title: book.name, content: `<p>${L("notTurn")}</p>`, rejectClose: false }))) return null;
+      if (!(await Dialog.confirm({ title: book.name, content: `<p>${L("notTurn")}</p>`, rejectClose: false }))) return null;
     }
   }
   const { resolveAndPost } = await import("./skill-use.mjs");

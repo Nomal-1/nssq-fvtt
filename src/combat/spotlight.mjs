@@ -10,6 +10,7 @@ import { evaluateCheck } from "../engine/check.mjs";
 import { isActiveGM } from "./apply.mjs";
 import { cutinStyle } from "../apps/art-config.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Spotlight.${k}`, d) : game.i18n.localize(`NSSQ.Spotlight.${k}`));
 const TRIGGERS = ["crit", "absSuccess", "ailment"];
@@ -151,7 +152,7 @@ export async function openThemeConfig(actor) {
     <fieldset><legend>${esc(L("when"))}</legend>${TRIGGERS.map((k) => `<label class="checkbox"><input type="checkbox" name="on.${k}" ${th.on?.[k] ?? k !== "ailment" ? "checked" : ""}/> ${esc(L(`on.${k}`))}</label>`).join("")}</fieldset>
     ${browse ? "" : `<p class="notes">${esc(L("noBrowse"))}</p>`}
   </form>`;
-  const got = await foundry.appv1.api.Dialog.prompt({
+  const got = await Dialog.prompt({
     title: L("title", { name: actor.name }), content, label: L("save"), rejectClose: false,
     options: { classes: ["nssq", "dialog"], width: 440 },
     render: (html) => (html[0] ?? html).querySelector("[data-pick]")?.addEventListener("click", () => {

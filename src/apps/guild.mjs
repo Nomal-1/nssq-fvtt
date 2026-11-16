@@ -6,6 +6,7 @@
  * 경험점이 줄어 레벨이 내려가면 확인 창에 미리 보인다
  */
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Guild.${k}`, d) : game.i18n.localize(`NSSQ.Guild.${k}`));
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
@@ -57,7 +58,7 @@ async function refundSkills(actor) {
 async function confirmCost(actor, title, body) {
   const cost = guildCost();
   // 경험점이 모자라면 0까지만 깎인다. Lv1로 돌아간다(사용자 결정)
-  return foundry.appv1.api.Dialog.confirm({
+  return Dialog.confirm({
     title, rejectClose: false,
     content: `<p>${body}</p><p>${esc(L("costLine", { name: actor.name, n: cost, from: actor.system.exp ?? 0, to: Math.max(0, (actor.system.exp ?? 0) - cost) }))}</p>${actor.system.level > 1 ? `<p class="warn">${esc(L("levelDown", { from: actor.system.level }))}</p>` : ""}`
   });

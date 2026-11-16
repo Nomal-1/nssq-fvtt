@@ -13,6 +13,7 @@
 import { emit, onSocket } from "../socket.mjs";
 import { ownerUser } from "./ask-owner.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.DiceFlow.${k}`, d) : game.i18n.localize(`NSSQ.DiceFlow.${k}`));
 const sign = (n) => (n >= 0 ? `+${n}` : `${n}`);
 
@@ -54,7 +55,7 @@ function popup({ title, head, lines, fp = null }) {
       return Math.max(0, Math.min(fp?.max ?? 0, Math.floor(v)));
     };
     let el = null;
-    new foundry.appv1.api.Dialog({
+    new Dialog({
       title, content,
       buttons: { roll: { icon: '<i class="fas fa-dice"></i>', label: L("roll"), callback: (html) => resolve(read(html)) } },
       default: "roll",

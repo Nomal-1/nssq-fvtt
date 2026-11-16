@@ -5,6 +5,7 @@
 import { ABILITIES } from "../engine/derive.mjs";
 import { REROLL_COST, canReroll, confirmCheck, contestWinner, evaluateCheck, rerollFPDelta, settleOnRoll } from "../engine/check.mjs";
 import { applyCheckMods, checkModsHtml, pay, postSkill, readCheckMods } from "./check-mods.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/check-card.hbs";
 
@@ -89,7 +90,7 @@ export async function promptCheck(actor, { ability = null, contestOf = null } = 
       ${checkModsHtml(actor)}
       ${checkPreviewHtml({ bonus: ability ? actor.system.bonus?.[ability] ?? 0 : 0, target: contestOf && active && stateOf(active) ? resultOf(active).total : null })}
     </form>`;
-  return foundry.appv1.api.Dialog.prompt({
+  return Dialog.prompt({
     render: (html) => bindCheckPreview(html[0] ?? html, { actor, target: contestOf && active && stateOf(active) ? resultOf(active).total : null }),
     title: `${actor.name} — ${game.i18n.localize(contestOf ? "NSSQ.Check.contestTitle" : "NSSQ.Check.title")}`,
     content,
@@ -321,7 +322,7 @@ async function pickActor() {
     ui.notifications.warn(game.i18n.localize("NSSQ.Check.noActor"));
     return null;
   }
-  const id = await foundry.appv1.api.Dialog.prompt({
+  const id = await Dialog.prompt({
     title: game.i18n.localize("NSSQ.Check.pickActor"),
     content: `<form><div class="form-group"><select name="id">${owned.map((a) => `<option value="${a.id}">${a.name}</option>`).join("")}</select></div></form>`,
     rejectClose: false,

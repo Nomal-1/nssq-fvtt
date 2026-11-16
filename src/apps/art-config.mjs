@@ -8,6 +8,7 @@
  */
 import { DEFAULT_CROP, cropCss, dragCrop, zoomCrop } from "../engine/art.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Art.${k}`, d) : game.i18n.localize(`NSSQ.Art.${k}`));
 
@@ -220,7 +221,7 @@ export async function openArtConfig(actor) {
     }, { passive: false });
   };
 
-  const result = await foundry.appv1.api.Dialog.prompt({
+  const result = await Dialog.prompt({
     title: `${actor.name} — ${L("title")}`,
     content,
     label: L("save"),

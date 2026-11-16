@@ -17,6 +17,7 @@ import { renamePrereqs, treeLayout, validateClassDef } from "../engine/skills.mj
 import { CHECK_KINDS } from "../chat/check-mods.mjs";
 import tables from "../generated/tables.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Maker.${k}`, d) : game.i18n.localize(`NSSQ.Maker.${k}`));
 const loc = (k) => game.i18n.localize(k);
@@ -311,7 +312,7 @@ export class SkillMaker extends foundry.appv1.api.Application {
         const { list, errors } = this.effects();
         this.errors = errors;
         this.render();
-        return foundry.appv1.api.Dialog.prompt({ title: L("previewJson"), content: `<pre class="mk-pre">${esc(JSON.stringify(list, null, 1))}</pre>`, rejectClose: false });
+        return Dialog.prompt({ title: L("previewJson"), content: `<pre class="mk-pre">${esc(JSON.stringify(list, null, 1))}</pre>`, rejectClose: false });
       }
       if (a === "save") return this.save();
     });

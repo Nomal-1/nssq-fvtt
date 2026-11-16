@@ -14,6 +14,7 @@ import { CONDITIONS } from "../engine/conditions.mjs";
 import { applyAutoIdentify, recordBestiary, recordSeen } from "../combat/bestiary.mjs";
 import { isDarkNow } from "./darkness.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Battle.${k}`, d) : game.i18n.localize(`NSSQ.Battle.${k}`));
 
@@ -67,7 +68,7 @@ function laneDrawings() {
 /** GM: 새 프리셋 씬 */
 export async function createPreset() {
   if (!game.user.isGM) return;
-  const name = await foundry.appv1.api.Dialog.prompt({
+  const name = await Dialog.prompt({
     title: L("newPreset"),
     content: `<form><div class="form-group"><label>${L("presetName")}</label><input type="text" name="name" value="${L("presetDefaultName")}"/></div>
       <p class="notes">${L("newPresetHint")}</p></form>`,
@@ -145,7 +146,7 @@ export async function openStartDialog(presetId = null) {
         </select></div>
       <p class="notes">${L("startHint")}</p>
     </form>`;
-  const choice = await foundry.appv1.api.Dialog.prompt({
+  const choice = await Dialog.prompt({
     title: L("start"),
     content,
     label: L("startButton"),
@@ -386,7 +387,7 @@ export async function openEndDialog(preset = null) {
   if (!combat) return ui.notifications.warn(L("noBattle"));
   const pick = preset ?? combat.getFlag("nssq", "over") ?? "victory";
   const opt = (v) => `<option value="${v}" ${v === pick ? "selected" : ""}>${L(`result${v[0].toUpperCase()}${v.slice(1)}`)}</option>`;
-  const result = await foundry.appv1.api.Dialog.prompt({
+  const result = await Dialog.prompt({
     title: L("end"),
     content: `<form><div class="form-group"><label>${L("result")}</label><select name="r">
       ${["victory", "escape", "defeat", "abort"].map(opt).join("")}

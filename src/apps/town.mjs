@@ -10,6 +10,7 @@
  */
 import { OVERLAY_SCENE_PADDING, ensureOverlayPadding, viewArea } from "./mobile.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Town.${k}`, d) : game.i18n.localize(`NSSQ.Town.${k}`));
 const opt = (v, cur, label) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(label)}</option>`;
 const rid = () => foundry.utils.randomID();
@@ -113,7 +114,7 @@ async function onGateRequest({ userId, mapId }) {
   const map = (await import("./fieldmap.mjs")).allMaps()[mapId];
   if (!map) return;
   const who = game.users.get(userId)?.name ?? "?";
-  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("title"), content: `<p>${esc(L("gateAsk", { who, name: map.name }))}</p>`, rejectClose: false });
+  const ok = await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("gateAsk", { who, name: map.name }))}</p>`, rejectClose: false });
   if (ok) await enterMapFromTown(mapId);
 }
 
@@ -121,7 +122,7 @@ async function onReturnRequest({ userId }) {
   const { isActiveGM } = await import("../combat/apply.mjs");
   if (!isActiveGM()) return;
   const who = game.users.get(userId)?.name ?? "?";
-  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("title"), content: `<p>${esc(L("returnAsk", { who }))}</p>`, rejectClose: false });
+  const ok = await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("returnAsk", { who }))}</p>`, rejectClose: false });
   if (ok) await returnToTown(null, { reason: L("returnBy", { who }) });
 }
 
@@ -441,7 +442,7 @@ export class TownApp extends foundry.appv1.api.Application {
         this.draft = null; return this.render();
       }
       case "delete": {
-        if (!(await foundry.appv1.api.Dialog.confirm({ title: L("delete"), content: `<p>${esc(L("deleteConfirm", { name: this.draft.name }))}</p>`, rejectClose: false }))) return null;
+        if (!(await Dialog.confirm({ title: L("delete"), content: `<p>${esc(L("deleteConfirm", { name: this.draft.name }))}</p>`, rejectClose: false }))) return null;
         const all = { ...allTowns() };
         delete all[this.draft.id];
         await game.settings.set("nssq", "towns", all);
@@ -493,7 +494,7 @@ export class TownApp extends foundry.appv1.api.Application {
       : game.actors.filter((a) => a.type === "character" && a.isOwner && !a.getFlag("nssq", "benched"));
     if (party.length <= 1) return party[0] ?? (game.user.isGM ? null : game.user.character ?? null);
     const cur = game.user.character?.id ?? "";
-    return foundry.appv1.api.Dialog.prompt({
+    return Dialog.prompt({
       title: L("pickActor"), content: `<form><select name="a">${party.map((a) => opt(a.id, cur, a.name)).join("")}</select></form>`,
       label: L("ok"), rejectClose: false, callback: (html) => game.actors.get(html[0].querySelector("[name=a]").value)
     });

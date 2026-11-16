@@ -19,6 +19,7 @@ import { addTokenTool } from "./scene-tools.mjs";
 import { L, opt, rid, W, H, R, G, allMaps, mapState, activeMap, areaName, areaOf, areaImg, encBgmOptions, parchment, passageLabel, clock, saveMap } from "./fieldmap-common.mjs";
 export { allMaps, mapState, activeMap } from "./fieldmap-common.mjs";
 import { editorMethods } from "./fieldmap-editor.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 
 /* ---------------- 상태 ---------------- */
@@ -90,7 +91,7 @@ export async function foeOpening(combat) {
   if (left >= 1 && left <= 3) {
     const coming = FM.foeForecast(map, s, hold);
     if (coming.length) {
-      new foundry.appv1.api.Dialog({
+      new Dialog({
         title: L("foeComingTitle"),
         content: coming.map((id) => `<p><i class="fas fa-skull"></i> ${esc(L("foeComing", { name: name(id), n: left }))}</p>`).join(""),
         buttons: { ok: { icon: '<i class="fas fa-check"></i>', label: L("foeComingOk") } }, default: "ok"
@@ -99,7 +100,7 @@ export async function foeOpening(combat) {
   }
   const here = (info.foeArrived ?? []).filter((id) => !hold.includes(id) && s.foePos?.[id] === s.current && !(s.foeGone ?? []).includes(id));
   for (const id of here) {
-    new foundry.appv1.api.Dialog({
+    new Dialog({
       title: L("foeIntrudeTitle"),
       content: `<p><i class="fas fa-skull"></i> ${esc(L("foeIntrudeAsk", { name: name(id) }))}</p>`,
       buttons: {
@@ -528,7 +529,7 @@ async function pick(message, i) {
 /** GM: 즉석 선택지. 한 줄에 하나, 「라벨 > 에어리어 이름」이면 고르면 그리로 이동(시간 없음) */
 export async function openChoiceDialog() {
   const map = activeMap();
-  const got = await foundry.appv1.api.Dialog.prompt({
+  const got = await Dialog.prompt({
     title: L("choiceHead"),
     content: `<form class="nssq-fm-choice"><div class="form-group stacked"><label>${esc(L("choiceText"))}</label><textarea name="text" rows="2"></textarea></div>
       <div class="form-group stacked"><label>${esc(L("choiceOptions"))}</label><textarea name="opts" rows="4" placeholder="${esc(L("choiceOptionsHint"))}"></textarea></div></form>`,
@@ -636,7 +637,7 @@ function promptVote(st) {
   const a = ex ? areaOf(ex.target, ex.area || ex.target.start) : areaOf(map, p.to);
   const known = game.user.isGM || !!ex || (st.visited?.[p.to] ?? 0) > 0;
   const img = areaImg(a);
-  const dialog = new foundry.appv1.api.Dialog({
+  const dialog = new Dialog({
     title: L("proposalTitle"),
     content: `<div class="nssq-fm-vote">${img ? `<div class="thumb ${known ? "" : "fog"}" style="background-image:url('${esc(img)}')"></div>` : ""}
       <p>${esc(L("proposalAsk", { by: game.users.get(p.by)?.name ?? "", name: ex ? destLabel(map, st, p.to) : known ? a?.name ?? "" : L("unknownArea") }))}</p>${a?.terrain ? `<p class="notes">${esc(a.terrain)}</p>` : ""}</div>`,
@@ -1077,7 +1078,7 @@ export class FieldMapApp extends foundry.appv1.api.Application {
         this.mapId = m.id; this.draft = null; return this.render();
       }
       case "delMap": {
-        if (!(await foundry.appv1.api.Dialog.confirm({ title: L("delMap"), content: `<p>${esc(L("delMapAsk", { name: map.name }))}</p>`, rejectClose: false }))) return;
+        if (!(await Dialog.confirm({ title: L("delMap"), content: `<p>${esc(L("delMapAsk", { name: map.name }))}</p>`, rejectClose: false }))) return;
         if (mapState().mapId === map.id && mapState().active) await endProgress();
         const all = allMaps();
         delete all[map.id];
@@ -1086,7 +1087,7 @@ export class FieldMapApp extends foundry.appv1.api.Application {
       }
       // 진행
       case "start": return startProgress(map.id, Number(this.element.find("[data-fm-hour]").val()) || 0);
-      case "restart": if (await foundry.appv1.api.Dialog.confirm({ title: L("restart"), content: `<p>${esc(L("restartAsk"))}</p>`, rejectClose: false })) return startProgress(map.id, map.startHour ?? 8, { resume: false }); return;
+      case "restart": if (await Dialog.confirm({ title: L("restart"), content: `<p>${esc(L("restartAsk"))}</p>`, rejectClose: false })) return startProgress(map.id, map.startHour ?? 8, { resume: false }); return;
       case "end": return endProgress();
       case "toTown": return (await import("./town.mjs")).returnToTown(null, { reason: L("toTownReason") });
       case "undo": return undo();
@@ -1245,7 +1246,7 @@ export function registerFieldMap() {
     if (result === "victory") {
       for (const foeId of fought) {
         const foe = map.foes.find((f) => f.id === foeId);
-        if (foe && (await foundry.appv1.api.Dialog.confirm({ title: L("title"), content: `<p>${esc(L("foeDefeatedAsk", { name: foe.name }))}</p>`, rejectClose: false }))) await removeFoe(foeId);
+        if (foe && (await Dialog.confirm({ title: L("title"), content: `<p>${esc(L("foeDefeatedAsk", { name: foe.name }))}</p>`, rejectClose: false }))) await removeFoe(foeId);
       }
     }
     const s = mapState();

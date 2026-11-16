@@ -4,6 +4,7 @@
  * 2분 동안 답이 없으면 지금 화면에서 묻는다(에너미·GM의 NPC는 언제나 지금 화면)
  */
 import { emit, onSocket } from "../socket.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 /** 그 캐릭터를 가진 접속 중인 플레이어(담당 캐릭터인 사람 먼저) */
 export function ownerUser(actor) {
@@ -31,7 +32,7 @@ function askHere(spec) {
     let root = null;
     let done = false;
     const finish = (button) => { if (done) return; done = true; resolve({ button, values: readForm(root) }); };
-    new foundry.appv1.api.Dialog({
+    new Dialog({
       title: spec.title, content: spec.content,
       buttons: Object.fromEntries(Object.entries(spec.buttons).map(([id, label]) => [id, { label, callback: () => finish(id) }])),
       default: spec.default ?? Object.keys(spec.buttons)[0],

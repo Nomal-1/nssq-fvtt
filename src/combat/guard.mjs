@@ -8,6 +8,7 @@ import { combatProfile, sideOf } from "./profile.mjs";
 import { actionState } from "./turn-status.mjs";
 import { spendTokenStance, tokenStances } from "./tokens.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Guard.${k}`, d) : game.i18n.localize(`NSSQ.Guard.${k}`));
 const alive = (c) => !!c?.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
@@ -45,7 +46,7 @@ export async function guardAttack({ attacker, targets, kind, elements, single, n
   const decide = async ({ holder, stance, target }) => {
     const h = combat.combatants.get(holder.id);
     if (!h?.actor?.isOwner) return false;
-    return foundry.appv1.api.Dialog.confirm({
+    return Dialog.confirm({
       title: L("coverTitle"),
       content: `<p>${esc(L("coverAsk", { holder: h.name, skill: `《${stance.name}》`, target: combat.combatants.get(target.id)?.name ?? "" }))}</p>`,
       rejectClose: false

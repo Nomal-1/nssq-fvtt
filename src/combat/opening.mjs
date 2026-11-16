@@ -9,6 +9,7 @@ import { sideOf } from "./profile.mjs";
 import { actionState } from "./turn-status.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "./apply.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Opening.${k}`, d) : game.i18n.localize(`NSSQ.Opening.${k}`));
 const alive = (c) => !!c.actor && !c.defeated && (c.actor.system.hp?.value ?? 0) > 0;
@@ -67,7 +68,7 @@ export async function restoreOpening(combat) {
   if (!game.user.isGM) return;
   const snap = combat.getFlag("nssq", "openingSnapshot");
   if (!snap || snap.round !== combat.round || combat.getFlag("nssq", "phase") !== "opening" || !Array.isArray(snap.actors)) return ui.notifications.warn(L("noSnapshot"));
-  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("undoTitle"), content: `<p>${L("undoConfirm")}</p>`, rejectClose: false });
+  const ok = await Dialog.confirm({ title: L("undoTitle"), content: `<p>${L("undoConfirm")}</p>`, rejectClose: false });
   if (!ok) return;
   for (const v of snap.actors) {
     const a = await fromUuid(v.uuid);
@@ -112,13 +113,13 @@ export async function confirmOpeningDone(combat) {
   const names = (list) => list.map((c) => c.name).join(", ");
   let ok;
   if (players.length) {
-    ok = await foundry.appv1.api.Dialog.confirm({
+    ok = await Dialog.confirm({
       title: L("pendingTitle"),
       content: `<p>${L("pendingPlayers", { names: names(players) })}</p>${gm.length ? `<p>${L("pendingGm", { names: names(gm) })}</p>` : ""}<p class="notes">${L("forceNote")}</p>`,
       yes: () => true, no: () => false, defaultYes: false, rejectClose: false
     });
   } else {
-    ok = await foundry.appv1.api.Dialog.confirm({
+    ok = await Dialog.confirm({
       title: L("pendingTitle"),
       content: `<p>${L("pendingGm", { names: names(gm) })}</p><p>${L("autoPass")}</p>`,
       yes: () => true, no: () => false, defaultYes: true, rejectClose: false

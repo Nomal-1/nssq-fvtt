@@ -12,6 +12,7 @@ import { bookOf, toggleBook } from "../combat/book.mjs";
 import { clearGrimoire, isGrimoire, recordOf, toggleGrimoire } from "../combat/grimoire.mjs";
 import { autoKey, hasOptional } from "../engine/triggers.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const GROUPS = [
   ["weapon", "TYPES.Item.weapon"],
@@ -163,7 +164,7 @@ async function useItem(actor, item) {
     const inCombat = !!game.combat?.started && game.combat.combatants.some((c) => c.actor?.uuid === actor.uuid);
     const why = itemUseReason(use, { inCombat });
     if (why) return ui.notifications.warn(`${item.name}: ${game.i18n.localize(`NSSQ.SkillUse.reason.${why}`)}`);
-    if (!(await foundry.appv1.api.Dialog.confirm({ title: item.name, content: `<p>${game.i18n.format("NSSQ.ItemUse.ask", { name: actor.name, item: item.name })}</p>`, rejectClose: false }))) return;
+    if (!(await Dialog.confirm({ title: item.name, content: `<p>${game.i18n.format("NSSQ.ItemUse.ask", { name: actor.name, item: item.name })}</p>`, rejectClose: false }))) return;
     const next = useOnce(item);
     if (next.remove) await item.delete();
     else await item.update({ "system.quantity": next.quantity, ...(next.usesValue !== null ? { "system.uses.value": next.usesValue } : {}) });
@@ -214,7 +215,7 @@ async function pickItemTargets(actor, item) {
   if (spec.scope === "row") {
     const rows = ["front", "back"].filter((r) => party.some((a) => (a.system.row ?? "front") === r));
     if (rows.length < 2) return party;
-    const row = await foundry.appv1.api.Dialog.wait({
+    const row = await Dialog.wait({
       title: game.i18n.format("NSSQ.Inventory.useTargetTitle", { name: item.name }),
       content: `<p>${game.i18n.localize("NSSQ.Inventory.useRow")}</p>`,
       buttons: Object.fromEntries(rows.map((r) => [r, { label: `${game.i18n.localize(`NSSQ.Row.${r}`)} (${party.filter((a) => (a.system.row ?? "front") === r).map((a) => a.name).join(", ")})`, callback: () => r }])),
@@ -223,7 +224,7 @@ async function pickItemTargets(actor, item) {
     return row ? party.filter((a) => (a.system.row ?? "front") === row) : null;
   }
   const options = party.map((a) => `<option value="${a.id}" ${a === actor ? "selected" : ""}>${esc(a.name)} (HP ${a.system.hp?.value ?? 0}/${a.system.hp?.max ?? 0})</option>`).join("");
-  return foundry.appv1.api.Dialog.prompt({
+  return Dialog.prompt({
     title: game.i18n.format("NSSQ.Inventory.useTargetTitle", { name: item.name }),
     content: `<form><div class="form-group"><label>${game.i18n.localize("NSSQ.Inventory.useTarget")}</label><select name="target">${options}</select></div></form>`,
     label: game.i18n.localize("NSSQ.Inventory.use"),

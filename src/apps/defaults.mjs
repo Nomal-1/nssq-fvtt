@@ -1,3 +1,4 @@
+import { Dialog } from "../dialogs.mjs";
 /**
  * 기본 제공 마을·던전(data/defaults/world.json). 처음 켠 월드에 한 번 넣고, GM 스크린 「준비」에서 다시 넣을 수 있다.
  * - 마을 1(시설 7), 필드 지도 3(제1미궁 「속삭이는 숲」, 예시 「눈 덮인 폐허」, 감춘 예전 예시 「고목의 숲」), 전투 구성 18
@@ -59,7 +60,7 @@ export async function seedDefaults({ force = false } = {}) {
 
 /** GM 스크린 버튼: 확인 후 기본 마을·던전을 원래대로 */
 export async function reseedDefaults() {
-  const ok = await foundry.appv1.api.Dialog.confirm({ title: L("title"), content: `<p>${L("ask")}</p>`, rejectClose: false });
+  const ok = await Dialog.confirm({ title: L("title"), content: `<p>${L("ask")}</p>`, rejectClose: false });
   if (!ok) return null;
   const n = await seedDefaults({ force: true });
   if (n) ui.notifications.info(L("done", n));
@@ -73,7 +74,7 @@ export async function reseedDefaults() {
 export async function registerExpansion() {
   if (!game.user.isGM) return null;
   const data = await (await fetch(`systems/${game.system.id}/data/defaults/expansion.json`)).json();
-  const ok = await foundry.appv1.api.Dialog.confirm({ title: game.i18n.localize("NSSQ.Expansion.title"), content: `<p>${game.i18n.format("NSSQ.Expansion.ask", { n: data.items.length, folder: data.folder })}</p>`, rejectClose: false });
+  const ok = await Dialog.confirm({ title: game.i18n.localize("NSSQ.Expansion.title"), content: `<p>${game.i18n.format("NSSQ.Expansion.ask", { n: data.items.length, folder: data.folder })}</p>`, rejectClose: false });
   if (!ok) return null;
   const folder = game.folders.find((f) => f.type === "Item" && f.name === data.folder) ?? await Folder.create({ name: data.folder, type: "Item" });
   const have = new Map(game.items.filter((i) => i.folder?.id === folder.id).map((i) => [i.name, i]));

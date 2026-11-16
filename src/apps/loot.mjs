@@ -14,6 +14,7 @@ import { isPetrified } from "../engine/conditions.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Loot.${k}`, d) : game.i18n.localize(`NSSQ.Loot.${k}`));
 /** 풀·결과의 표시: 「사슴의 뿔(뿔 R3)」, 이름이 종류와 같으면 「뿔 R3」 */
@@ -69,7 +70,7 @@ export async function openGatherDialog(defaults = {}) {
     <div class="form-group"><label>${esc(L("rank"))}</label><input type="number" name="rank" min="1" value="${Number(defaults.rank) || 1}"/></div>
     <div class="form-group"><label>${esc(L("table"))}</label><input type="text" name="table" value="${esc(defaults.table ?? "")}" placeholder="${esc(L("tablePlaceholder"))}"/></div>
     <p class="notes">${esc(L("gatherHint"))}</p></form>`;
-  const got = await foundry.appv1.api.Dialog.prompt({
+  const got = await Dialog.prompt({
     title: L("gatherTitle"), content, label: L("gatherGo"), rejectClose: false,
     callback: (html) => { const f = html[0].querySelector("form"); return { method: f.method.value, amount: f.amount.value, rank: Number(f.rank.value) || 1, table: f.table.value.trim() }; }
   }, { classes: ["nssq", "dialog"] });
@@ -334,7 +335,7 @@ function requestPopups(message) {
     if (!x.requested || x.choice || asked.has(key)) return;
     asked.add(key);
     try { foundry.audio.AudioHelper.play({ src: CONFIG.sounds.notification, volume: 0.8, autoplay: true, loop: false }, false); } catch { /* 소리 없음 */ }
-    new foundry.appv1.api.Dialog({
+    new Dialog({
       title: L("requestTitle"),
       content: `<p>${esc(L("requestBody", { name: x.name, skill: x.skill, item: x.requested, n: x.count }))}</p>`,
       buttons: {

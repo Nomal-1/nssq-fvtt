@@ -8,6 +8,7 @@
  * - 대가: 전투 중 종료 페이즈마다 【TP】 −SL(사용자 결정 D, combat/turn-status.mjs grimoireUpkeep)
  */
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Grimoire.${k}`, d) : game.i18n.localize(`NSSQ.Grimoire.${k}`));
 
 /** 그리모어 아이템인가 */
@@ -34,7 +35,7 @@ async function record(actor, item) {
   const list = recordable(actor);
   if (!list.length) return ui.notifications.warn(L("noSkill")) && null;
   const options = list.map((s) => `<option value="${s.id}">《${esc(s.name)}》 SL${s.system.sl}</option>`).join("");
-  const id = await foundry.appv1.api.Dialog.prompt({
+  const id = await Dialog.prompt({
     title: L("recordTitle"),
     content: `<p>${esc(L("recordHint"))}</p><form><div class="form-group"><select name="s">${options}</select></div></form>`,
     label: L("record"), rejectClose: false,

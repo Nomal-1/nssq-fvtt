@@ -14,13 +14,14 @@ import { rollGrowth } from "../apps/growth.mjs";
 import { openArtConfig } from "../apps/art-config.mjs";
 import { SkillTree } from "../apps/skill-tree.mjs";
 import tables from "../generated/tables.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 /** GM 편의: 「Lv n으로」 → 경험점을 그 레벨이 되는 값으로 맞춘다(레벨은 경험점으로 정해짐) */
 async function setLevelDialog(actor) {
   if (!game.user.isGM) return;
   const levels = tables.levelExp?.levels ?? [];
   const options = levels.map((r) => `<option value="${r.level}" ${r.level === actor.system.level ? "selected" : ""}>Lv ${r.level} (${game.i18n.localize("NSSQ.Exp")} ${r.total})</option>`).join("");
-  const level = await foundry.appv1.api.Dialog.prompt({
+  const level = await Dialog.prompt({
     title: game.i18n.format("NSSQ.Level.setTitle", { name: actor.name }),
     content: `<form><div class="form-group"><label>${game.i18n.localize("NSSQ.Level.label")}</label><select name="level">${options}</select></div><p class="notes">${game.i18n.localize("NSSQ.Level.setNote")}</p></form>`,
     label: game.i18n.localize("NSSQ.Level.apply"),
@@ -211,7 +212,7 @@ export class NssqActorSheet extends foundry.appv1.sheets.ActorSheet {
       if (item && game.user.isGM) item.update({ "system.reveal": !item.system.reveal });
     });
     html.on("click", "[data-action=bestiary-forget]", async () => {
-      const ok = await foundry.appv1.api.Dialog.confirm({ title: game.i18n.localize("NSSQ.Analysis.forget"), content: `<p>${game.i18n.format("NSSQ.Analysis.forgetConfirm", { name: this.actor.name })}</p>`, rejectClose: false });
+      const ok = await Dialog.confirm({ title: game.i18n.localize("NSSQ.Analysis.forget"), content: `<p>${game.i18n.format("NSSQ.Analysis.forgetConfirm", { name: this.actor.name })}</p>`, rejectClose: false });
       if (ok) await forgetBestiary(this.actor);
       this.render();
     });

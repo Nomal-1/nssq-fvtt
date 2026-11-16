@@ -15,6 +15,7 @@ import tables from "../generated/tables.mjs";
 
 import { declaredFpDice, fpNote, rerollButton, spendFpDice } from "./fp-dice.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const TEMPLATE = "systems/nssq/templates/chat/attack-card.hbs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Combat.${k}`, d) : game.i18n.localize(`NSSQ.Combat.${k}`));
@@ -162,7 +163,7 @@ async function attackWith(attacker, { ignoreRange = false, target: picked = null
     if (!myTurn) {
       const reason = phase !== "main" ? L("notMainPhase") : L("notYourTurn", { name: me.name, current: combat.combatant?.name ?? "-" });
       if (!game.user.isGM) return ui.notifications.warn(reason);
-      const go = await foundry.appv1.api.Dialog.confirm({ title: L("normalAttack"), content: `<p>${reason}</p><p>${L("gmForce")}</p>`, rejectClose: false });
+      const go = await Dialog.confirm({ title: L("normalAttack"), content: `<p>${reason}</p><p>${L("gmForce")}</p>`, rejectClose: false });
       if (!go) return;
     }
   }

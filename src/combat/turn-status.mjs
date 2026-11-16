@@ -15,6 +15,7 @@ import { buffLabel, conditionName } from "./status.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { knowsEnemy, rareMask } from "./bestiary.mjs";
 import { esc } from "../util.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 /** 종료 페이즈 카드의 【HP】 줄: 간파하지 못한 희소종은 모두에게 통상종 값으로(본문은 모두가 본다) */
 const hpShown = (a, before, after) => { const m = rareMask(a, { forAll: true }); return m ? { before: m.hpOf(before), after: m.hpOf(after) } : { before, after }; };
@@ -243,7 +244,7 @@ export async function confirmEndPhaseApplied(combat) {
   const msg = endPhaseMessage(combat);
   const data = msg?.getFlag("nssq", "endPhase");
   if (!data || data.applied || !data.updates?.length) return true;
-  const choice = await new Promise((resolve) => new foundry.appv1.api.Dialog({
+  const choice = await new Promise((resolve) => new Dialog({
     title: L("unappliedTitle"),
     content: `<p>${L("unappliedText")}</p>`,
     buttons: {

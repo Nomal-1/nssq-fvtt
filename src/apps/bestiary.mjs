@@ -10,6 +10,7 @@ import { SUB_STATS, RESISTS } from "../engine/derive.mjs";
 import { autoIdentifyKills, bestiaryEntry, bestiaryKey, bestiaryTier, forgetBestiary, setBestiaryEntry } from "../combat/bestiary.mjs";
 import { esc } from "../util.mjs";
 import { addDirectoryButton, addTokenTool } from "./scene-tools.mjs";
+import { Dialog } from "../dialogs.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Bestiary.${k}`, d) : game.i18n.localize(`NSSQ.Bestiary.${k}`));
 const A = (k) => game.i18n.localize(`NSSQ.Analysis.${k}`);
@@ -152,7 +153,7 @@ export class BestiaryApp extends foundry.appv1.api.Application {
     };
     form.addEventListener("change", () => save());
     form.querySelector("[data-forget]")?.addEventListener("click", async () => {
-      const ok = await foundry.appv1.api.Dialog.confirm({ title: L("forget"), content: `<p>${esc(L("forgetConfirm"))}</p>`, rejectClose: false });
+      const ok = await Dialog.confirm({ title: L("forget"), content: `<p>${esc(L("forgetConfirm"))}</p>`, rejectClose: false });
       if (ok) await forgetBestiary(form.dataset.key);
     });
   }
