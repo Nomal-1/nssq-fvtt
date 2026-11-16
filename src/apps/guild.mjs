@@ -109,9 +109,12 @@ export class GuildApp extends LegacyApp {
 
   static open(title = null) {
     app ??= new GuildApp();
-    if (title) app.options.title = title;
+    // V2 창의 options는 고칠 수 없다 → 제목은 따로 두고 title 게터로
+    if (title) app.customTitle = title;
     return app.render(true, { focus: true });
   }
+
+  get title() { return this.customTitle ?? super.title; }
 
   static refresh() { if (app?.rendered) app.render(); }
 

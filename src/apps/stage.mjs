@@ -26,12 +26,13 @@ const nssqBattle = () => game.combats?.some((c) => c.started && c.getFlag("nssq"
 /** 지금 보여 줄 화면: "field" | "town" | null */
 export function stageMode() {
   if (!game.ready || nssqBattle()) return null;
+  const towns = game.settings.get("nssq", "towns") ?? {};
+  // GM 미리보기가 먼저(미궁 진행 중에도 GM 화면에서만 마을을 볼 수 있다. ✕로 닫으면 원래 화면)
+  if (game.user.isGM && previewTown && towns[previewTown]) return "town";
   const fm = game.settings.get("nssq", "fieldMapState") ?? {};
   if (fm.active && (game.settings.get("nssq", "fieldMaps") ?? {})[fm.mapId]) return "field";
   const loc = game.settings.get("nssq", "location") ?? {};
-  const towns = game.settings.get("nssq", "towns") ?? {};
   if (loc.kind === "town" && towns[loc.townId]) return "town";
-  if (game.user.isGM && previewTown && towns[previewTown]) return "town";
   return null;
 }
 
