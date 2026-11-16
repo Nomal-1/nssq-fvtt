@@ -28,6 +28,12 @@ export function LegacySheet(Base) {
       this._legacyTabs = (this.constructor.legacyTabs ?? []).map((t) => new Tabs({ ...t, callback: () => {} }));
     }
 
+    /** 저장하지 않은 문서(드롭 소재 미리 보기 등)는 읽기 전용(V1 render(true, { editable: false })) */
+    get isEditable() {
+      if (!this.document.id || this.options.editable === false) return false;
+      return super.isEditable;
+    }
+
     /** V1 DocumentSheet#getData의 기본 자료 */
     async getData() {
       const doc = this.document;
