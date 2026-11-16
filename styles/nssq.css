@@ -44,6 +44,8 @@
   border-bottom: 1px solid var(--nq-gold);
   color: var(--nq-gold-l);
 }
+/* ApplicationV2 창: 코어 button 높이 고정(--button-size)을 풀어 두 줄 글자가 밖으로 넘치지 않게 */
+.application.nssq .window-content button { height: auto; }
 :is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) .window-header .window-title { font-family: var(--nq-title); letter-spacing: 0.02em; }
 :is(.nq-window, .nssq.dialog, .nssq.sheet, .nssq-shop, .nssq-gm-screen) .window-content {
   background: radial-gradient(ellipse at top, #16304f 0%, var(--nq-bg) 55%, var(--nq-bg2) 100%);
