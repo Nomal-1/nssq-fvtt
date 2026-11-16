@@ -14,7 +14,11 @@ Foundry VTT **v14** → 게임 시스템 → 시스템 설치 → 아래 매니�
 https://github.com/Nomal-1/nssq-fvtt/releases/latest/download/system.json
 ```
 
-v13에서는 동작하지 않습니다.
+v12·v13에서는 동작하지 않습니다. Foundry v12에서는 마지막 v12판 0.55.3을 버전을 지정한 매니페스트로 설치합니다:
+
+```
+https://github.com/Nomal-1/nssq-fvtt/releases/download/v0.55.3/system.json
+```
 
 ## 개발
 
