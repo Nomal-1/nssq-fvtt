@@ -15,7 +15,7 @@ import { acquireItems } from "./acquire.mjs";
 import { esc } from "../util.mjs";
 import { addTokenTool } from "./scene-tools.mjs";
 import { Dialog } from "../dialogs.mjs";
-import { LegacyApp } from "../legacy-app.mjs";
+import { LegacyApp, allWindows } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Shop.${k}`, d) : game.i18n.localize(`NSSQ.Shop.${k}`));
 const PACKS = ["nssq.equipment", "nssq.items"];
@@ -461,7 +461,7 @@ export function openShop(actor, { creation = false, only = null } = {}) {
   if (!actor?.isOwner) return;
   const forced = creation && !actor.system.creation?.locked;
   if (!shopOpen() && !game.user.isGM && !forced) return ui.notifications.warn(L("closed"));
-  const existing = Object.values(ui.windows).find((w) => w instanceof ShopApp && w.actor === actor);
+  const existing = allWindows().find((w) => w instanceof ShopApp && w.actor === actor);
   if (existing && existing.forced === forced && String(existing.only) === String(only)) return existing.render(true, { focus: true });
   if (existing) existing.close();
   new ShopApp(actor, { creation: forced, only }).render(true);
@@ -469,7 +469,7 @@ export function openShop(actor, { creation = false, only = null } = {}) {
 
 /** 상점이 닫히면 플레이어의 상점 창을 닫고, 시트의 버튼 상태를 갱신한다 */
 export function onShopToggle(open) {
-  for (const w of Object.values(ui.windows)) {
+  for (const w of allWindows()) {
     if (w instanceof ShopApp && !open && !game.user.isGM && !w.forced) w.close();
     else if (w.actor?.type === "character" || w instanceof ShopApp) w.render(false);
   }
@@ -478,11 +478,11 @@ export function onShopToggle(open) {
 }
 
 export function onShopHiddenChange() {
-  for (const w of Object.values(ui.windows)) if (w instanceof ShopApp) w.render(false);
+  for (const w of allWindows()) if (w instanceof ShopApp) w.render(false);
 }
 
 export function registerShopHooks() {
-  const reload = () => { for (const w of Object.values(ui.windows)) if (w instanceof ShopApp) { w.docs = null; w.render(false); } };
+  const reload = () => { for (const w of allWindows()) if (w instanceof ShopApp) { w.docs = null; w.render(false); } };
   for (const hook of ["createItem", "updateItem", "deleteItem", "updateFolder"]) Hooks.on(hook, (doc) => { if (!doc.parent) reload(); });
   // GM 도구: 토큰 컨트롤의 상점 토글
   Hooks.on("getSceneControlButtons", (controls) => {

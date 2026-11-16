@@ -9,7 +9,7 @@ import { brokenByLowering, canRaise, levelCap, prereqList, skillBudget, treeLayo
 import { skillBadgeHtml } from "./skill-badge.mjs";
 import { esc } from "../util.mjs";
 import { Dialog } from "../dialogs.mjs";
-import { LegacyApp } from "../legacy-app.mjs";
+import { LegacyApp, allWindows } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Skill.${k}`, d) : game.i18n.localize(`NSSQ.Skill.${k}`));
 const plain = (html, n = 160) => {
@@ -83,7 +83,7 @@ export class SkillTree extends LegacyApp {
   }
 
   static open(actor) {
-    const app = Object.values(ui.windows).find((w) => w instanceof SkillTree && w.actor === actor) ?? new SkillTree(actor);
+    const app = allWindows().find((w) => w instanceof SkillTree && w.actor === actor) ?? new SkillTree(actor);
     app.render(true, { focus: true });
     return app;
   }

@@ -10,6 +10,11 @@
  */
 const { ApplicationV2 } = foundry.applications.api;
 
+/** 열린 창 전부(V1 ui.windows + V2 foundry.applications.instances). V2 창은 ui.windows에 없다 */
+export function allWindows() {
+  return [...new Set([...Object.values(ui.windows), ...foundry.applications.instances.values()])];
+}
+
 export class LegacyApp extends ApplicationV2 {
   static get defaultOptions() {
     return { id: "", classes: [], title: "", template: null, width: 400, height: "auto", resizable: false, scrollY: [], tabs: [] };

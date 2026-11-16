@@ -373,7 +373,8 @@ class LootWindow extends LegacyApp {
   activateListeners(html) {
     super.activateListeners(html);
     const message = game.messages.get(this.messageId);
-    if (message) decorate(message, html);
+    // decorate는 채팅 카드(renderChatMessageHTML)용이라 HTMLElement를 받는다
+    if (message) decorate(message, html[0]);
   }
 
   async close(options) {

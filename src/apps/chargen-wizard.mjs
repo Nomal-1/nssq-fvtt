@@ -15,7 +15,7 @@ import tables from "../generated/tables.mjs";
 import { esc } from "../util.mjs";
 import { addDirectoryButton } from "./scene-tools.mjs";
 import { Dialog } from "../dialogs.mjs";
-import { LegacyApp } from "../legacy-app.mjs";
+import { LegacyApp, allWindows } from "../legacy-app.mjs";
 
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Chargen.${k}`, d) : game.i18n.localize(`NSSQ.Chargen.${k}`));
 const ab = (k) => game.i18n.localize(`NSSQ.Ability.${k}`);
@@ -71,7 +71,7 @@ export class ChargenWizard extends LegacyApp {
 
   static open(actor) {
     if (!actor?.isOwner || actor.type !== "character") return null;
-    const app = Object.values(ui.windows).find((w) => w instanceof ChargenWizard && w.actor === actor) ?? new ChargenWizard(actor);
+    const app = allWindows().find((w) => w instanceof ChargenWizard && w.actor === actor) ?? new ChargenWizard(actor);
     app.render(true, { focus: true });
     return app;
   }
@@ -440,7 +440,7 @@ export function registerChargen() {
     addDirectoryButton(html, { cls: "nssq-chargen-btn", icon: "fas fa-user-plus", label: esc(L("newButton")), onClick: () => newCharacter() });
   });
   // 액터·아이템이 바뀌면 열린 마법사를 다시 그린다
-  const refresh = (actor) => { for (const w of Object.values(ui.windows)) if (w instanceof ChargenWizard && w.actor === actor) w.render(false); };
+  const refresh = (actor) => { for (const w of allWindows()) if (w instanceof ChargenWizard && w.actor === actor) w.render(false); };
   Hooks.on("updateActor", (actor) => refresh(actor));
   for (const h of ["createItem", "updateItem", "deleteItem"]) Hooks.on(h, (item) => { if (item.parent) refresh(item.parent); });
 }

@@ -1,3 +1,4 @@
+import { allWindows } from "./legacy-app.mjs";
 import { onShopHiddenChange, onShopToggle } from "./apps/shop.mjs";
 import { setDayHours } from "./engine/dungeon.mjs";
 
@@ -66,7 +67,7 @@ export function registerSettings() {
     config: true,
     type: Boolean,
     default: false,
-    onChange: () => Object.values(ui.windows).filter((w) => w.actor?.type === "character").forEach((w) => w.render(false))
+    onChange: () => allWindows().filter((w) => w.actor?.type === "character").forEach((w) => w.render(false))
   });
   // 상점 열림 여부(GM이 액터 탭·토큰 도구로 여닫음)와 추가 품목 폴더
   game.settings.register("nssq", "shopOpen", {
