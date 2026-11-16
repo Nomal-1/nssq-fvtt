@@ -68,7 +68,7 @@ nssq/
 |---|---|
 | 데이터 모델 | `foundry.abstract.TypeDataModel`, `foundry.data.fields.*`(`NumberField`, `StringField`, `SchemaField`, `ArrayField`, `HTMLField`, `BooleanField`, `ObjectField`), `CONFIG.Actor.dataModels`, `CONFIG.Item.dataModels` |
 | 문서 클래스 | `CONFIG.Actor.documentClass` 등에 `Actor`/`Item`/`Combat`/`Combatant`/`ActiveEffect` 서브클래스 |
-| 시트 | 아직 구형(AppV1) `foundry.appv1.sheets.ActorSheet`/`ItemSheet`(Handlebars). `getData()`, `activateListeners(html)` — html은 **jQuery**. 등록: `foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, "nssq", cls, { makeDefault: true })`. AppV1은 v13에서 deprecated(v16 제거 예정)라 언젠가 AppV2로 옮긴다 |
+| 시트 | 0.57.0부터 `foundry.applications.sheets.ActorSheetV2`/`ItemSheetV2` 위의 `LegacySheet` 바탕(`src/sheets/legacy-sheet.mjs`). 시트 코드는 V1처럼 `getData()`, `template`, `activateListeners(html)` — html은 **jQuery**. 템플릿 맨 바깥은 `<div>`(시트가 form), 설명은 `<prose-mirror>`, 그림은 `data-action="editImage"`. (예전: 구형 AppV1 `foundry.appv1.sheets.ActorSheet`/`ItemSheet`.) 등록: `foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, "nssq", cls, { makeDefault: true })`. AppV1은 v13에서 deprecated(v16 제거 예정)라 언젠가 AppV2로 옮긴다 |
 | 창·대화창 | 구형 `foundry.appv1.api.Application`, `foundry.appv1.api.Dialog`(콜백의 html은 jQuery). 전역 `Application`·`Dialog`는 쓰지 않는다(deprecated) |
 | 템플릿·도구 | `foundry.applications.handlebars.renderTemplate`/`loadTemplates`, `foundry.applications.apps.FilePicker.implementation`, `foundry.applications.ux.TextEditor.implementation` |
 | 코어 화면 훅 | 사이드바·전투 트래커·채팅 로그·HUD는 v13부터 ApplicationV2라 render 훅의 html이 **HTMLElement**다. 일부만 다시 그려도 훅이 불리므로 붙인 요소는 중복을 막는다(`src/apps/scene-tools.mjs`의 `addDirectoryButton`) |

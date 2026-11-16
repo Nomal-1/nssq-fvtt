@@ -1,17 +1,19 @@
 import tables from "../generated/tables.mjs";
 import { badgeFor } from "./badges.mjs";
 import { skillUsage } from "../engine/skills.mjs";
+import { LegacySheet } from "./legacy-sheet.mjs";
 
 const ELEMENTS = ["slash", "strike", "pierce", "fire", "ice", "volt"];
 
-export class NssqItemSheet extends foundry.appv1.sheets.ItemSheet {
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["nssq", "nq-window", "sheet", "item"],
-      width: 560,
-      height: 600
-    });
-  }
+export class NssqItemSheet extends LegacySheet(foundry.applications.sheets.ItemSheetV2) {
+  static DEFAULT_OPTIONS = {
+    classes: ["nssq", "nq-window", "item"],
+    position: { width: 560, height: 600 },
+    actions: {
+      skillMaker: async function () { (await import("../apps/custom-maker.mjs")).openSkillMaker({ item: this.item }); },
+      classMaker: async function () { (await import("../apps/custom-maker.mjs")).openClassMaker({ item: this.item }); }
+    }
+  };
 
   get template() {
     return "systems/nssq/templates/item/item-sheet.hbs";
@@ -75,19 +77,12 @@ export class NssqItemSheet extends foundry.appv1.sheets.ItemSheet {
     return c;
   }
 
-  /** GM: 스킬은 제작기로 효과까지 편집 */
-  _getHeaderButtons() {
-    const buttons = super._getHeaderButtons();
-    if (game.user.isGM && this.item.type === "skill") {
-      buttons.unshift({ label: game.i18n.localize("NSSQ.Maker.openSkill"), class: "nssq-skill-maker", icon: "fas fa-tools",
-        onclick: async () => (await import("../apps/custom-maker.mjs")).openSkillMaker({ item: this.item }) });
-    }
-    // 월드의 직업(커스텀 직업)은 직업 제작기로
-    if (game.user.isGM && this.item.type === "class" && !this.item.pack && !this.item.parent) {
-      buttons.unshift({ label: game.i18n.localize("NSSQ.Maker.openClass"), class: "nssq-class-maker", icon: "fas fa-tools",
-        onclick: async () => (await import("../apps/custom-maker.mjs")).openClassMaker({ item: this.item }) });
-    }
-    return buttons;
+  /** GM: 스킬은 제작기로 효과까지 편집, 월드의 직업(커스텀 직업)은 직업 제작기로(창 머리의 메뉴) */
+  _getHeaderControls() {
+    const controls = super._getHeaderControls();
+    if (game.user.isGM && this.item.type === "skill") controls.unshift({ icon: "fas fa-tools", label: "NSSQ.Maker.openSkill", action: "skillMaker" });
+    if (game.user.isGM && this.item.type === "class" && !this.item.pack && !this.item.parent) controls.unshift({ icon: "fas fa-tools", label: "NSSQ.Maker.openClass", action: "classMaker" });
+    return controls;
   }
 
   activateListeners(html) {

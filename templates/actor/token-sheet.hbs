@@ -1,6 +1,6 @@
-<form class="{{cssClass}} nq-sheet" autocomplete="off">
+<div class="{{cssClass}} nq-sheet">
   <header class="nq-head nq-item-head">
-    <img class="nq-portrait" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+    <img class="nq-portrait" src="{{actor.img}}" data-edit="img" data-action="editImage" title="{{actor.name}}"/>
     <div class="nq-id">
       <input class="nq-name" name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'NSSQ.Name'}}"/>
       <div class="nq-sub">
@@ -15,6 +15,6 @@
     </div>
   </header>
   <section class="nq-body nq-description">
-    {{editor enrichedDescription target="system.description" button=true editable=editable owner=owner}}
+    {{#if editable}}<prose-mirror name="system.description" toggled value="{{system.description}}">{{{enrichedDescription}}}</prose-mirror>{{else}}<div class="editor-content">{{{enrichedDescription}}}</div>{{/if}}
   </section>
-</form>
+</div>

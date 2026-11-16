@@ -15,6 +15,7 @@ import { openArtConfig } from "../apps/art-config.mjs";
 import { SkillTree } from "../apps/skill-tree.mjs";
 import tables from "../generated/tables.mjs";
 import { Dialog } from "../dialogs.mjs";
+import { LegacySheet } from "./legacy-sheet.mjs";
 
 /** GM 편의: 「Lv n으로」 → 경험점을 그 레벨이 되는 값으로 맞춘다(레벨은 경험점으로 정해짐) */
 async function setLevelDialog(actor) {
@@ -34,15 +35,13 @@ async function setLevelDialog(actor) {
   await actor.update({ "system.exp": total, "system.level": level, "flags.nssq.skillPick": { level }, "flags.nssq.levelUp": new foundry.data.operators.ForcedDeletion() });
 }
 
-export class NssqActorSheet extends foundry.appv1.sheets.ActorSheet {
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["nssq", "nq-window", "sheet", "actor"],
-      width: 780,
-      height: 780,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "main" }]
-    });
-  }
+export class NssqActorSheet extends LegacySheet(foundry.applications.sheets.ActorSheetV2) {
+  static DEFAULT_OPTIONS = {
+    classes: ["nssq", "nq-window", "actor"],
+    position: { width: 780, height: 780 }
+  };
+
+  static legacyTabs = [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "main" }];
 
   get template() {
     return `systems/nssq/templates/actor/${this.actor.type}-sheet.hbs`;
@@ -130,10 +129,25 @@ export class NssqActorSheet extends foundry.appv1.sheets.ActorSheet {
     return context;
   }
 
+  /** 다른 곳에서 끌어온 아이템은 _onDropItemCreate로(같은 액터 안에서 끌면 V2 기본 = 정렬) */
+  async _onDropItem(event, item) {
+    if (!this.actor.isOwner) return null;
+    if (this.actor.uuid === item.parent?.uuid) return super._onDropItem(event, item);
+    const keepId = !this.actor.items.has(item.id);
+    const data = item.inCompendium ? game.items.fromCompendium(item, { clearFolder: true, keepId }) : item.toObject();
+    const created = await this._onDropItemCreate(data, event, { keepId });
+    return created?.[0] ?? null;
+  }
+
+  /** 아이템 만들기(V1 ActorSheet#_onDropItemCreate 자리) */
+  _createItems(list, { keepId = false } = {}) {
+    return CONFIG.Item.documentClass.create(list, { parent: this.actor, keepId });
+  }
+
   /** 클래스 아이템: 캐릭터당 2개(메인·서브)까지, 같은 클래스 중복 불가. 처음 놓은 것이 메인 */
-  async _onDropItemCreate(itemData, event) {
+  async _onDropItemCreate(itemData, event, { keepId = false } = {}) {
     const list = Array.isArray(itemData) ? itemData : [itemData];
-    if (this.actor.type !== "character") return super._onDropItemCreate(list, event);
+    if (this.actor.type !== "character") return this._createItems(list, { keepId });
     const classes = this.actor.items.filter((i) => i.type === "class");
     const keys = new Set(classes.map((c) => c.system.key));
     const accepted = [];
@@ -150,7 +164,7 @@ export class NssqActorSheet extends foundry.appv1.sheets.ActorSheet {
     // 물건은 소지 수를 확인하며 받는다(넘치면 두고 갈 것·버릴 것 고르기, 창고로는 보낼 수 없음)
     const goods = accepted.filter(isPhysical);
     const others = accepted.filter((d) => !isPhysical(d));
-    const created = others.length ? await super._onDropItemCreate(others, event) : [];
+    const created = others.length ? await this._createItems(others, { keepId }) : [];
     if (goods.length) created.push(...(await acquireItems(this.actor, goods, { source: "gift" })).taken);
     const update = {};
     for (const c of created.filter((i) => i.type === "class")) {
@@ -162,9 +176,9 @@ export class NssqActorSheet extends foundry.appv1.sheets.ActorSheet {
   }
 
   /** 캐릭터 그림 칸을 누르면 그림 설정 창(내 컴퓨터에서 올리기·자르기). 서버 파일 고르기는 그 창 안에서(둘러보기 권한이 있을 때) */
-  _onEditImage(event) {
-    if (this.actor.type === "character" && this.actor.isOwner) return openArtConfig(this.actor);
-    return super._onEditImage(event);
+  _onEditImage() {
+    if (this.actor.type === "character" && this.actor.isOwner) { openArtConfig(this.actor); return true; }
+    return false;
   }
 
   activateListeners(html) {
