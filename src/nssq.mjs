@@ -2,6 +2,7 @@ import { registerArt } from "./apps/art-config.mjs";
 import { registerUpload } from "./apps/upload.mjs";
 import { registerTransfer } from "./apps/transfer.mjs";
 import { registerFieldScene } from "./apps/field-scene.mjs";
+import { registerStage } from "./apps/stage.mjs";
 import { registerLocationBgm } from "./apps/location-bgm.mjs";
 import { PartyBoard, registerPartyBoard } from "./apps/party-board.mjs";
 import { registerRoster } from "./apps/roster.mjs";
@@ -149,8 +150,9 @@ Hooks.once("init", () => {
   registerDungeon();
   registerEncounters();
   registerTown();
-  // 미궁 씬 메뉴: 캔버스를 그리기 전에 훅을 걸어야 한다(init)
+  // 미궁·마을 화면(씬 없이, apps/stage.mjs)
   registerFieldScene();
+  registerStage();
   registerLocationBgm();
   registerPartyBoard();
   registerRoster();

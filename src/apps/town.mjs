@@ -7,8 +7,10 @@
  *   (생활비만 내면 마을에서는 늘 회복된 상태 — 여관·시약원 무료)
  * - 던전에 들어가면(필드 지도 진행 시작·랜덤 던전 시작) location = dungeon, 상점 닫기
  * - 상점 판매 품목은 마을마다(shopHidden, 없으면 기본 설정)
+ * - 화면: 씬을 쓰지 않는다(2026-11-16). 파티가 마을에 있으면 apps/stage.mjs가 마을 화면(TownStage)을 연다. TownApp 창은 GM의 관리·편집용
  */
-import { OVERLAY_SCENE_PADDING, ensureOverlayPadding, viewArea } from "./mobile.mjs";
+import { STAGE_OPTIONS, closePreview, placeStage, previewTownId, refreshStage, resetStageHidden, showTown } from "./stage.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 import { esc } from "../util.mjs";
 import { Dialog } from "../dialogs.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.Town.${k}`, d) : game.i18n.localize(`NSSQ.Town.${k}`));
@@ -82,9 +84,8 @@ export async function returnToTown(townId = null, { reason = "" } = {}) {
   if (dg.active) await game.settings.set("nssq", "dungeon", { ...dg, active: false });
   const party = await restoreParty();
   await (await import("./time-pass.mjs")).resetBattleTurns();
-  const scene = towns[id] ? await ensureTownScene(towns[id]) : null;
+  await resetStageHidden();
   await game.settings.set("nssq", "location", { kind: "town", townId: id });
-  if (scene && !scene.active) await scene.activate();
   await (await import("./location-bgm.mjs")).playLocationBgm(towns[id]?.bgm ?? "", { enter: true });
   if (!game.settings.get("nssq", "shopOpen")) await game.settings.set("nssq", "shopOpen", true);
   const name = towns[id]?.name ?? L("noTownName");
@@ -104,7 +105,7 @@ export async function enterMapFromTown(mapId) {
   const { startProgress, allMaps } = await import("./fieldmap.mjs");
   const map = allMaps()[mapId];
   if (!map) return null;
-  // 미궁 씬으로 옮겨진다(지도 창은 GM이 메뉴의 [지도]로 연다)
+  // 미궁 화면으로 바뀐다(지도 창은 GM이 메뉴의 [지도]로 연다)
   return startProgress(mapId, map.startHour ?? 8);
 }
 
@@ -126,71 +127,11 @@ async function onReturnRequest({ userId }) {
   if (ok) await returnToTown(null, { reason: L("returnBy", { who }) });
 }
 
-/* ---------------- 마을 씬 ---------------- */
-
-/** 마을 씬: 1920×1080 고정, 배경 = 마을 그림, 플래그 nssq.town = 마을 id. UI는 TownOverlay가 씬 위에 덮는다 */
-export const TOWN_SCENE = { width: 1920, height: 1080 };
-const DESIGN = { w: 1280, h: 720 };
-export const townSceneOf = (t) => (t ? game.scenes.find((x) => x.getFlag("nssq", "town") === t.id) ?? null : null);
-
-export async function ensureTownScene(t) {
-  if (!game.user.isGM || !t) return null;
-  const s = townSceneOf(t);
-  if (s) {
-    const upd = {};
-    if ((s.background?.src ?? "") !== (t.img ?? "")) upd["background.src"] = t.img || null;
-    if (s.name !== t.name) upd.name = t.name;
-    if (Object.keys(upd).length) await s.update(upd);
-    return s;
-  }
-  const folderName = L("sceneFolder");
-  const folder = game.folders.find((x) => x.type === "Scene" && x.name === folderName) ?? await Folder.create({ name: folderName, type: "Scene" });
-  return Scene.create({
-    name: t.name, folder: folder.id, navigation: true, ...TOWN_SCENE, padding: OVERLAY_SCENE_PADDING, backgroundColor: "#000000",
-    grid: { type: CONST.GRID_TYPES.GRIDLESS }, background: { src: t.img || null }, tokenVision: false, fog: { exploration: false },
-    ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER }, flags: { nssq: { town: t.id } }
-  });
-}
-
-/** 마을 씬이 화면(사이드바·컨트롤 바깥)에 꽉 차게 */
-let fitting = false;
-function fitTownView() {
-  if (!canvas.ready || !canvas.scene?.getFlag("nssq", "town")) return;
-  // 예전에 여백 0으로 만든 마을 씬은 GM이 볼 때 여백을 넣는다(고친 뒤 다시 그려지면서 맞춰진다)
-  if ((canvas.scene.padding ?? 0) < OVERLAY_SCENE_PADDING) ensureOverlayPadding(canvas.scene);
-  const r = canvas.dimensions.sceneRect;
-  // 씬 컨트롤·내비게이션·핫바·사이드바에 가리지 않게(모바일이면 화면 전체, apps/mobile.mjs)
-  const area = viewArea();
-  const scale = Math.min((area.r - area.l) / r.width, (area.b - area.t) / r.height);
-  const x = r.x + r.width / 2 - ((area.l + area.r) / 2 - window.innerWidth / 2) / scale;
-  const y = r.y + r.height / 2 - ((area.t + area.b) / 2 - window.innerHeight / 2) / scale;
-  fitting = true;
-  canvas.pan({ x, y, scale });
-  fitting = false;
-}
-
-let overlay = null;
-let gen = 0;
-/** 지금 보는 씬이 마을 씬이면 마을 UI를 덮고, 아니면 걷는다(늦게 끝난 옛 렌더가 붙지 않게 세대 번호) */
-function syncOverlay() {
-  gen += 1;
-  import("./location-bgm.mjs").then((m) => m.setFacilityMusic(""));
-  document.querySelectorAll(".town-overlay:not(.field-overlay)").forEach((e) => e.remove());
-  overlay = null;
-  const tid = canvas.ready ? canvas.scene?.getFlag("nssq", "town") : null;
-  if (!tid || !allTowns()[tid]) return;
-  overlay = new TownOverlay();
-  overlay.gen = gen;
-  overlay.townId = tid;
-  overlay.render(true);
-  fitTownView();
-}
-
 /* ---------------- 창 ---------------- */
 
 let app = null;
 
-export class TownApp extends foundry.appv1.api.Application {
+export class TownApp extends LegacyApp {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "nssq-town", classes: ["nssq", "nq-window", "nssq-town"], title: game.i18n.localize("NSSQ.Town.title"),
@@ -201,7 +142,7 @@ export class TownApp extends foundry.appv1.api.Application {
   static open(townId = null) {
     app ??= new TownApp();
     if (townId && townId !== app.townId) { app.townId = townId; app.facId = null; }
-    return app.render(true, { focus: true });
+    return app.render({ force: true, focus: true });
   }
 
   async close(options) {
@@ -211,9 +152,7 @@ export class TownApp extends foundry.appv1.api.Application {
 
   static refresh() {
     if (app?.rendered && !app.draft) app.render();
-    // 렌더 중이면 끝난 뒤 한 번 더
-    if (overlay?._state === foundry.appv1.api.Application.RENDER_STATES.RENDERING) overlay.dirty = true;
-    else if (overlay?.rendered) overlay.render();
+    refreshStage();
   }
 
   /** 마을 고르기(창: 보는 마을만 바꿈) */
@@ -238,12 +177,13 @@ export class TownApp extends foundry.appv1.api.Application {
     const bar = gm ? `<div class="town-bar">
         <select data-town-pick>${towns.map((x) => opt(x.id, t?.id, `${x.name}${location().kind === "town" && location().townId === x.id ? ` ${L("hereMark")}` : ""}`)).join("")}${towns.length ? "" : opt("", "", L("none"))}</select>
         <button type="button" data-town="new" title="${esc(L("new"))}"><i class="fas fa-plus"></i></button>
-        ${t ? `<button type="button" data-town="edit" title="${esc(L("edit"))}"><i class="fas fa-pen"></i></button><button type="button" data-town="viewScene" class="win-only" title="${esc(L("viewScene"))}"><i class="fas fa-map"></i></button>` : ""}
+        ${t ? `<button type="button" data-town="edit" title="${esc(L("edit"))}"><i class="fas fa-pen"></i></button><button type="button" data-town="viewScene" class="win-only" title="${esc(L("viewScene"))}"><i class="fas fa-desktop"></i></button>` : ""}
         <button type="button" data-town="gmScreen" title="${esc(L("gmScreen"))}"><i class="fas fa-user-shield"></i></button>
         ${t && !here ? `<button type="button" data-town="goHere" class="go"><i class="fas fa-home"></i> ${esc(L("goHere"))}</button>` : ""}
+        ${this.previewing ? `<button type="button" data-town="closePreview" title="${esc(L("closePreview"))}"><i class="fas fa-times"></i></button>` : ""}
       </div>` : "";
     if (!t) return $(`<div class="town-stage empty">${bar}<p class="town-empty">${esc(gm ? L("noneGM") : L("notInTown"))}</p></div>`);
-    // GM의 창은 관리용(플레이 화면은 마을 씬 위에 있다. 씬이 없으면 [마을 씬으로 보기]가 만든다)
+    // GM의 창은 관리용(플레이 화면은 마을 화면 apps/stage.mjs)
     if (this.constructor === TownApp && gm) return $(this.managerHtml(t, bar, here));
     const f = (t.facilities ?? []).find((x) => x.id === this.facId) ?? null;
     if (!f) this.facId = null;
@@ -275,7 +215,7 @@ export class TownApp extends foundry.appv1.api.Application {
       <div class="manage-card"><h2><i class="fas fa-home"></i> ${esc(t.name)}</h2>
         <p class="status ${here ? "here" : ""}">${esc(here ? L("partyHereShort") : L("partyAway"))}</p>
         <ul>${facs}</ul>
-        <div class="acts"><button type="button" data-town="viewScene" class="go"><i class="fas fa-map"></i> ${esc(L("viewScene"))}</button>
+        <div class="acts"><button type="button" data-town="viewScene" class="go"><i class="fas fa-desktop"></i> ${esc(L("viewScene"))}</button>
           <button type="button" data-town="edit"><i class="fas fa-pen"></i> ${esc(L("edit"))}</button>
           ${here ? "" : `<button type="button" data-town="goHere"><i class="fas fa-home"></i> ${esc(L("goHere"))}</button>`}</div>
         <p class="notes">${esc(L("manageHint"))}</p></div></div>`;
@@ -438,7 +378,6 @@ export class TownApp extends foundry.appv1.api.Application {
       case "save": {
         if (!String(this.draft.name).trim()) return ui.notifications.warn(L("noName"));
         await saveTown(this.draft);
-        if (townSceneOf(this.draft)) await ensureTownScene(this.draft);
         this.draft = null; return this.render();
       }
       case "delete": {
@@ -455,7 +394,8 @@ export class TownApp extends foundry.appv1.api.Application {
         try { localStorage.setItem("nssq.townPartyHidden", localStorage.getItem("nssq.townPartyHidden") === "1" ? "0" : "1"); } catch { /* 저장 못 함 */ }
         return this.render();
       }
-      case "viewScene": { const sc = await ensureTownScene(t); return sc?.view(); }
+      case "viewScene": { await showTown(t?.id); return this.constructor === TownApp ? this.close() : null; }
+      case "closePreview": return closePreview();
       case "toMap": return (await import("./fieldmap.mjs")).FieldMapApp.open();
       case "toRandom": return (await import("./dungeon.mjs")).openDungeonDialog();
     }
@@ -481,7 +421,13 @@ export class TownApp extends foundry.appv1.api.Application {
       case "potions": { const a = await pickActor(); if (!a) return ui.notifications.warn(L("noCharacter")); return game.nssq.openShop(a, { only: ["consumable"] }); }
       case "living": return (await import("./session.mjs")).openLivingCost();
       case "bestiary": return game.nssq.openBestiary();
-      case "scene": { const s = game.scenes.get(f?.sceneId); if (!s) return null; return game.user.isGM ? s.activate() : s.view(); }
+      // 연결한 씬: 마을 화면을 걷고 씬을 보인다(GM이면 모두, 플레이어면 자기만. 위쪽 [마을 화면으로]로 돌아온다)
+      case "scene": {
+        const s = game.scenes.get(f?.sceneId);
+        if (!s) return null;
+        await (await import("./stage.mjs")).hideStage();
+        return game.user.isGM ? s.activate() : s.view();
+      }
     }
     return null;
   }
@@ -501,43 +447,35 @@ export class TownApp extends foundry.appv1.api.Application {
   }
 }
 
-/** 마을 씬 위에 덮는 마을 UI(01 #167, 사용자 결정: 씬에 박는다, 시설은 각자 따로 본다) */
-export class TownOverlay extends TownApp {
+/** 마을 화면(01 #167, 사용자 결정: 시설은 각자 따로 본다). 씬 없이 apps/stage.mjs가 연다 */
+export class TownStage extends TownApp {
+  static DEFAULT_OPTIONS = STAGE_OPTIONS;
+
   static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, { id: `nssq-town-overlay-${rid()}`, popOut: false, resizable: false });
+    return foundry.utils.mergeObject(super.defaultOptions, { id: "nssq-town-stage", classes: ["nssq", "nssq-town", "town-overlay", "nssq-stage"], resizable: false });
   }
 
-  shownTown() { return allTowns()[this.townId] ?? null; }
+  /** GM이 파티 없는 마을을 미리 보는 중 */
+  get previewing() { return game.user.isGM && !!previewTownId() && allTowns()[previewTownId()]; }
 
-  /** GM이 다른 마을을 고르면 그 마을 씬으로 */
-  async pickTown(id) { const sc = await ensureTownScene(allTowns()[id]); return sc?.view(); }
+  shownTown() {
+    const id = this.previewing ? previewTownId() : location().kind === "town" ? location().townId : null;
+    if (id !== this.townId) { this.townId = id; this.facId = null; }
+    return allTowns()[id] ?? null;
+  }
+
+  /** GM이 다른 마을을 고르면 그 마을 화면으로(파티가 있는 마을이 아니면 미리보기) */
+  async pickTown(id) { return showTown(id); }
+
+  _onRender(context, options) {
+    super._onRender?.(context, options);
+    placeStage(this.element);
+  }
 
   async _renderInner(data) {
     this.draft = null;
     const inner = await super._renderInner(data);
-    const r = canvas.dimensions.sceneRect;
-    const root = $(`<section id="${this.id}" class="nssq nssq-town town-overlay"></section>`).css({ left: r.x, top: r.y, width: r.width, height: r.height });
-    const frame = $(`<div class="town-frame"></div>`).css({ width: DESIGN.w, height: DESIGN.h, transform: `scale(${r.width / DESIGN.w})` }).append(inner);
-    // 마을 위에서는 휠로 확대하지 않는다
-    root[0].addEventListener("wheel", (ev) => ev.stopPropagation());
-    return root.append(frame);
-  }
-
-  async _render(...args) {
-    await super._render(...args);
-    if (this.dirty && this.gen === gen) { this.dirty = false; this.render(); }
-  }
-
-  /** 렌더 중에 다시 그리기를 부르면 Foundry는 그냥 버린다 → 끝난 뒤 한 번 더(버튼을 눌렀는데 반응 없는 것 방지) */
-  render(force = false, options = {}) {
-    if (this._state === foundry.appv1.api.Application.RENDER_STATES.RENDERING) { this.dirty = true; return this; }
-    return super.render(force, options);
-  }
-
-  _injectHTML(html) {
-    if (this.gen !== gen) return;
-    document.getElementById("hud")?.append(html[0]);
-    this._element = html;
+    return $(`<div class="town-frame"></div>`).append(inner);
   }
 
   /** 편집은 창에서 */
@@ -548,30 +486,11 @@ export class TownOverlay extends TownApp {
 }
 
 export function registerTown() {
-  Hooks.on("canvasReady", () => syncOverlay());
   Hooks.on("nssqRoster", () => TownApp.refresh());
   // 전투가 끝나 시설 화면으로 돌아오면 시설 BGM을 다시
   Hooks.on("deleteCombat", () => setTimeout(() => TownApp.refresh(), 500));
-  // 접속 직후에는 캔버스를 그린 뒤 #hud를 다시 그려 덮은 UI가 지워진다 → ready·HUD 렌더 때 다시 붙인다
-  Hooks.once("ready", () => setTimeout(syncOverlay, 0));
-  for (const h of ["renderHeadsUpDisplay", "renderHeadsUpDisplayContainer"]) Hooks.on(h, () => { if (overlay && !document.body.contains(overlay.element?.[0])) setTimeout(syncOverlay, 0); });
-  Hooks.on("canvasPan", () => { if (!fitting && overlay) { clearTimeout(registerTown.t); registerTown.t = setTimeout(fitTownView, 400); } });
-  Hooks.on("collapseSidebar", () => setTimeout(fitTownView, 300));
-  window.addEventListener("resize", () => { clearTimeout(registerTown.r); registerTown.r = setTimeout(fitTownView, 200); });
-  Hooks.on("updateScene", (sc, ch) => { if (sc.id === canvas.scene?.id && ("flags" in ch)) syncOverlay(); });
-  // 파티 HP·TP 표시를 따라 바꾼다
-  Hooks.on("updateActor", (a) => { if (overlay?.rendered && a.type === "character") { clearTimeout(registerTown.u); registerTown.u = setTimeout(() => overlay?.render(), 200); } });
   import("../socket.mjs").then(({ onSocket }) => { onSocket("townReturn", onReturnRequest); onSocket("townGate", onGateRequest); });
   game.settings.register("nssq", "towns", { scope: "world", config: false, type: Object, default: {}, onChange: () => TownApp.refresh() });
-  game.settings.register("nssq", "location", {
-    scope: "world", config: false, type: Object, default: {},
-    // 마을에 도착하면 모두에게 마을 창
-    // 마을 씬이 있으면 씬(GM이 띄움)이 마을 화면이고, 없으면 창으로
-    onChange: (v) => {
-      if (v?.kind === "town") { if (!townSceneOf(allTowns()[v.townId])) TownApp.open(v.townId); else if (app?.rendered) app.close(); }
-      else if (app?.rendered) app.close();
-    }
-  });
-  // 파티가 마을에 있을 때 접속한 플레이어에게도 마을 화면(전투 중이면 열지 않음)
-  Hooks.once("ready", () => { if (!game.user.isGM && location().kind === "town" && !game.combat?.started && !townSceneOf(currentTown())) TownApp.open(location().townId); });
+  // 파티가 있는 곳. 마을 화면은 apps/stage.mjs가 이 값을 보고 연다
+  game.settings.register("nssq", "location", { scope: "world", config: false, type: Object, default: {} });
 }

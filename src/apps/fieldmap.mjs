@@ -28,7 +28,7 @@ import { LegacyApp } from "../legacy-app.mjs";
 /** 엔진에 넘길 상태(되돌리기용 prev 제외) */
 const cur = () => { const s = foundry.utils.deepClone(mapState()); delete s.prev; return s; };
 const party = async () => (await import("./gm-screen.mjs")).partyActors();
-/** 미궁 씬 메뉴가 떠 있으면 지도 창의 플레이어 이동 버튼은 숨긴다(보기 전용) */
+/** 미궁 화면 메뉴가 떠 있으면 지도 창의 플레이어 이동 버튼은 숨긴다(보기 전용) */
 const fieldMenuShown = () => !!document.querySelector(".field-overlay");
 
 
@@ -157,7 +157,7 @@ export async function startProgress(mapId, hour, { resume = true } = {}) {
   await setMapState(s, { undo: false });
   await (await import("./time-pass.mjs")).resetBattleTurns();
   await (await import("./town.mjs")).enteredDungeon();
-  // 모두 미궁 씬으로(씬 위 메뉴로 탐색, field-scene.mjs)
+  // 모두 미궁 화면으로(화면 메뉴로 탐색, field-scene.mjs·stage.mjs)
   await (await import("./field-scene.mjs")).activateFieldScene(map);
   await areaMusic(map, s.current, true);
   await passTime(s.hour, 0);
@@ -1180,7 +1180,7 @@ export class FieldMapApp extends LegacyApp {
     // 진행: 갈 수 있는 곳이면 이동(GM) / 제안(플레이어). GM은 그 밖이면 선택
     const map = activeMap();
     const st = mapState();
-    // 지도로 이동시키는 것은 GM만(플레이어는 미궁 씬의 메뉴로 제안)
+    // 지도로 이동시키는 것은 GM만(플레이어는 미궁 화면의 메뉴로 제안)
     if (gm && map && st.active && map.id === this.mapId && FM.playerView(map, st).reachable.includes(id)) return moveTo(id);
     if (gm) { this.sel = { kind: "area", id }; this.render(); }
   }

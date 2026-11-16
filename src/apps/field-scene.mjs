@@ -1,13 +1,14 @@
 /**
- * 미궁 씬(사용자 결정): 필드 지도 진행 중에는 모두가 미궁 씬을 보고, 씬 위 메뉴로 탐색한다.
- * - 미궁마다 1920×1080 씬(플래그 nssq.fieldMap = 지도 id). 진입하면 활성화. 배경은 지금 에어리어 그림(메뉴 레이어가 그린다)
+ * 미궁 화면(사용자 결정): 필드 지도 진행 중에는 모두가 미궁 화면을 보고, 화면의 메뉴로 탐색한다.
+ * - 씬은 쓰지 않는다(2026-11-16). 화면은 apps/stage.mjs가 연다. 배경은 지금 에어리어 그림
  * - 메뉴: 이동(투표 제안)·조사·채집·캠프·지도 작성 판정·지도 보기·(입구에서) 마을로 돌아간다
  *   플레이어가 누르면 GM에게 제안(GM이 확인하면 실행), GM이 누르면 바로 실행
  * - 이벤트 잠금: GM이 처리하지 않은 트리거·F.O.E. 카드가 있으면(fieldMapState.events) 플레이어 메뉴를 가린다
  * - 나레이션 잠금: 이동해 도착하면 GM이 [플레이어 메뉴 열기]를 누를 때까지(또는 GM이 다음 행동을 할 때까지) 플레이어 메뉴를 가린다(설정 fieldNarrate)
  * - 지도 창은 플레이어에게 보기 전용(지도로 조작하는 것은 GM)
  */
-import { OVERLAY_SCENE_PADDING, ensureOverlayPadding, viewArea } from "./mobile.mjs";
+import { STAGE_OPTIONS, placeStage, resetStageHidden, syncStage } from "./stage.mjs";
+import { LegacyApp } from "../legacy-app.mjs";
 import * as FM from "../engine/fieldmap.mjs";
 import { emit, onSocket } from "../socket.mjs";
 import { isActiveGM } from "../combat/apply.mjs";
@@ -18,85 +19,22 @@ import { Dialog } from "../dialogs.mjs";
 const L = (k, d) => (d ? game.i18n.format(`NSSQ.FieldScene.${k}`, d) : game.i18n.localize(`NSSQ.FieldScene.${k}`));
 const LF = (k, d) => (d ? game.i18n.format(`NSSQ.FieldMap.${k}`, d) : game.i18n.localize(`NSSQ.FieldMap.${k}`));
 const url = (p) => (/%[0-9A-F]{2}/i.test(p ?? "") ? p : encodeURI(p ?? ""));
-const DESIGN_W = 1280;
 const ACTS = { search: "fa-search", gather: "fa-leaf", camp: "fa-campground", mapping: "fa-map-marked-alt" };
 const areaOf = (map, id) => map?.areas?.find((a) => a.id === id) ?? null;
 const areaImg = (a) => a?.img || a?.sceneImg || "";
 
-/* ---------------- 씬 ---------------- */
+/* ---------------- 진입 ---------------- */
 
-export const fieldSceneOf = (map) => (map ? game.scenes.find((s) => s.getFlag("nssq", "fieldMap") === map.id) ?? null : null);
-
-export async function ensureFieldScene(map) {
-  if (!game.user.isGM || !map) return null;
-  const s = fieldSceneOf(map);
-  if (s) { if (s.name !== map.name) await s.update({ name: map.name }); await ensureOverlayPadding(s); return s; }
-  const folderName = L("folder");
-  const folder = game.folders.find((x) => x.type === "Scene" && x.name === folderName) ?? await Folder.create({ name: folderName, type: "Scene" });
-  const start = areaOf(map, map.start);
-  return Scene.create({
-    name: map.name, folder: folder.id, navigation: true, width: 1920, height: 1080, padding: OVERLAY_SCENE_PADDING, backgroundColor: "#000000",
-    grid: { type: CONST.GRID_TYPES.GRIDLESS }, background: { src: areaImg(start) || map.battleBg || null }, tokenVision: false, fog: { exploration: false },
-    ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER }, flags: { nssq: { fieldMap: map.id } }
-  });
-}
-
-/** 진행 시작·재개 때(startProgress): 미궁 씬을 만들어 활성화 */
-export async function activateFieldScene(map) {
+/** 진행 시작·재개 때(startProgress): 처리 못 한 이벤트·나레이션을 비우고, 걷어 둔 화면을 되돌린다(화면은 stage.mjs가 연다) */
+export async function activateFieldScene() {
   if (openEvents().length) await game.settings.set("nssq", "fieldEvents", []);
   await endNarration();
-  const sc = await ensureFieldScene(map);
-  if (sc && !sc.active) await sc.activate();
-  return sc;
+  await resetStageHidden();
+  return syncStage();
 }
 
-/** 지금 보는 씬이 진행 중인 지도의 미궁 씬(또는 에어리어에 연결한 씬)인가 */
-function shownMap() {
-  if (!canvas.ready || !canvas.scene) return null;
-  const map = activeMap();
-  if (!map) return null;
-  if (canvas.scene.getFlag("nssq", "fieldMap") === map.id) return map;
-  return (map.areas ?? []).some((a) => a.sceneId && a.sceneId === canvas.scene.id) ? map : null;
-}
+/* ---------------- 미궁 화면 ---------------- */
 
-let fitting = false;
-function fitView() {
-  if (!overlay || !canvas.ready) return;
-  if ((canvas.scene?.padding ?? 0) < OVERLAY_SCENE_PADDING) ensureOverlayPadding(canvas.scene);
-  const r = canvas.dimensions.sceneRect;
-  // 씬 컨트롤·내비게이션·핫바·사이드바에 가리지 않게(모바일이면 화면 전체, apps/mobile.mjs)
-  const area = viewArea();
-  const scale = Math.min((area.r - area.l) / r.width, (area.b - area.t) / r.height);
-  fitting = true;
-  canvas.pan({
-    x: r.x + r.width / 2 - ((area.l + area.r) / 2 - window.innerWidth / 2) / scale,
-    y: r.y + r.height / 2 - ((area.t + area.b) / 2 - window.innerHeight / 2) / scale, scale
-  });
-  fitting = false;
-}
-
-/* ---------------- 메뉴 레이어 ---------------- */
-
-let overlay = null;
-let gen = 0;
-/** 메뉴 레이어를 다시 붙인다. 렌더가 비동기라 늦게 끝난 옛 레이어가 붙지 않게 세대 번호로 거른다 */
-function sync() {
-  gen += 1;
-  document.querySelectorAll(".field-overlay").forEach((e) => e.remove());
-  overlay = null;
-  if (!shownMap()) return;
-  const o = new FieldOverlay();
-  o.gen = gen;
-  overlay = o;
-  o.render(true);
-  fitView();
-}
-/** 다시 그리기. 렌더 중이면 끝난 뒤 한 번 더(그 사이의 변경을 놓치지 않게) */
-const refresh = () => {
-  if (!overlay) { if (shownMap()) sync(); return; }
-  if (overlay._state === foundry.appv1.api.Application.RENDER_STATES.RENDERING) overlay.dirty = true;
-  else overlay.render();
-};
 const openEvents = () => game.settings.get("nssq", "fieldEvents") ?? [];
 /** F.O.E. 그림(토큰 → 액터 그림). 컴펜디움 문서를 매번 읽지 않게 기억 */
 const foeArt = new Map();
@@ -116,20 +54,23 @@ async function postNarration() {
   return ChatMessage.create({ speaker: { alias: here?.name ?? map?.name ?? "" }, content: `<div class="nssq-fieldmap-card fs-narration-card"><p>${esc(text).replace(/\n/g, "<br>")}</p></div>` });
 }
 
-export class FieldOverlay extends foundry.appv1.api.Application {
+export class FieldStage extends LegacyApp {
+  static DEFAULT_OPTIONS = STAGE_OPTIONS;
+
   static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, { id: `nssq-field-overlay-${foundry.utils.randomID()}`, popOut: false });
+    return foundry.utils.mergeObject(super.defaultOptions, { id: "nssq-field-stage", classes: ["nssq", "nssq-town", "town-overlay", "field-overlay", "nssq-stage"] });
+  }
+
+  _onRender(context, options) {
+    super._onRender?.(context, options);
+    placeStage(this.element);
   }
 
   async _renderInner() {
     const map = activeMap();
     const st = mapState();
-    const r = canvas.dimensions.sceneRect;
-    const scale = r.width / DESIGN_W;
-    const root = $(`<section id="${this.id}" class="nssq nssq-town town-overlay field-overlay"></section>`).css({ left: r.x, top: r.y, width: r.width, height: r.height });
-    const frame = $(`<div class="town-frame"></div>`).css({ width: DESIGN_W, height: r.height / scale, transform: `scale(${scale})` });
-    root[0].addEventListener("wheel", (ev) => ev.stopPropagation());
-    if (!map) return root.append(frame);
+    const frame = $(`<div class="town-frame"></div>`);
+    if (!map) return frame;
     const v = FM.playerView(map, st);
     const here = areaOf(map, v.current);
     const gm = game.user.isGM;
@@ -157,7 +98,7 @@ export class FieldOverlay extends foundry.appv1.api.Application {
       ${top}${warn}${foeLayer}<nav class="town-menu">${menu}</nav>${gm && locked ? `<div class="fs-gmnote"><i class="fas fa-bolt"></i> ${esc(L("eventGm", { n: openEvents().length }))}</div>` : gm && narrating ? this.narrationHtml(here, st) : ""}
       ${await this.partyHtml()}</div>`;
     frame.append(stage);
-    return root.append(frame);
+    return frame;
   }
 
   /** GM 나레이션 칸: 에어리어에 미리 써 둔 글(첫 방문 / 다시 왔을 때)을 GM만 보고, [채팅으로 읽기]로 모두에게 보낸다 */
@@ -225,23 +166,6 @@ export class FieldOverlay extends foundry.appv1.api.Application {
     return `<footer class="town-party ${hidden ? "folded" : ""}">
       <button type="button" class="pc-fold" data-fs="fold"><i class="fas fa-chevron-${hidden ? "up" : "down"}"></i> ${esc(game.i18n.format("NSSQ.Town.party", { n: party.length }))}</button>
       <div class="pc-row">${cards}</div></footer>`;
-  }
-
-  async _render(...args) {
-    await super._render(...args);
-    if (this.dirty && this.gen === gen) { this.dirty = false; this.render(); }
-  }
-
-  /** 렌더 중에 다시 그리기를 부르면 Foundry는 그냥 버린다 → 끝난 뒤 한 번 더(버튼을 눌렀는데 반응 없는 것 방지) */
-  render(force = false, options = {}) {
-    if (this._state === foundry.appv1.api.Application.RENDER_STATES.RENDERING) { this.dirty = true; return this; }
-    return super.render(force, options);
-  }
-
-  _injectHTML(html) {
-    if (this.gen !== gen) return;
-    document.getElementById("hud")?.append(html[0]);
-    this._element = html;
   }
 
   activateListeners(html) {
@@ -332,17 +256,6 @@ async function trackEvent(message, removed = false) {
 export function registerFieldScene() {
   game.settings.register("nssq", "fieldEvents", { scope: "world", config: false, type: Array, default: [] });
   onSocket("fieldAct", onActProposal);
-  Hooks.on("canvasReady", () => sync());
-  Hooks.on("nssqRoster", () => refresh());
-  Hooks.once("ready", () => setTimeout(sync, 0));
-  for (const h of ["renderHeadsUpDisplay", "renderHeadsUpDisplayContainer"]) Hooks.on(h, () => { if (overlay && !document.body.contains(overlay.element?.[0])) setTimeout(sync, 0); });
-  Hooks.on("canvasPan", () => { if (!fitting && overlay) { clearTimeout(registerFieldScene.t); registerFieldScene.t = setTimeout(fitView, 400); } });
-  Hooks.on("collapseSidebar", () => setTimeout(fitView, 300));
-  window.addEventListener("resize", () => { clearTimeout(registerFieldScene.r); registerFieldScene.r = setTimeout(fitView, 200); });
-  for (const h of ["createSetting", "updateSetting"]) Hooks.on(h, (s) => {
-    if (["nssq.fieldMapState", "nssq.fieldMaps", "nssq.fieldEvents", "nssq.fieldNarration"].includes(s.key)) { if (shownMap()) refresh(); else if (overlay) sync(); }
-  });
-  Hooks.on("updateActor", (a) => { if (overlay?.rendered && a.type === "character") { clearTimeout(registerFieldScene.u); registerFieldScene.u = setTimeout(refresh, 200); } });
   Hooks.on("createChatMessage", (m) => trackEvent(m));
   Hooks.on("updateChatMessage", (m) => trackEvent(m));
   Hooks.on("deleteChatMessage", (m) => trackEvent(m, true));

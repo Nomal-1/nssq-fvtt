@@ -1365,9 +1365,14 @@
 .nssq-guild .guild-box .form-group > label { flex: 0 0 60px; }
 .nssq-guild h3 button { width: auto; float: right; font-size: 0.8em; padding: 0 8px; }
 .nssq-town-card h3 { margin: 0 0 4px; }
-/* 마을 씬 위 UI(#hud 안, 씬 좌표 1920×1080에 1280×720 설계를 확대) */
-.nssq-town.town-overlay { position: absolute; pointer-events: auto; overflow: hidden; font-family: var(--nq-font); font-size: 14px; background: #000; }
-.nssq-town.town-overlay .town-frame { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+/* 마을·미궁 화면(씬 없이 화면 영역을 덮는 틀 없는 창, apps/stage.mjs). 1280×720 설계를 가운데에 확대(placeStage) */
+.nssq-town.town-overlay { position: fixed; z-index: 1; margin: 0; padding: 0; border: none; border-radius: 0; box-shadow: none; min-width: 0; min-height: 0; max-height: none;
+  pointer-events: auto; overflow: hidden; text-align: left; font-family: var(--nq-font); font-size: 14px; background: #000; color: var(--tw-ink); }
+.nssq-town.town-overlay .town-frame { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; }
+/* 화면을 걷어 씬을 보는 동안: 위쪽 가운데 [화면으로 돌아가기] */
+#nssq-stage-return { position: fixed; z-index: 2; transform: translateX(-50%); width: auto; height: auto; padding: 6px 16px; border: 1px solid var(--tw-teal-l, #5cc); border-radius: 18px;
+  background: rgba(8, 30, 28, 0.92); color: #fff; font-family: var(--nq-font); font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.6); cursor: pointer; }
+#nssq-stage-return:hover { background: rgba(31, 90, 85, 0.98); }
 .nssq-town.town-overlay .town-stage { width: 100%; height: 100%; }
 .nssq-town.town-overlay .win-only { display: none; }
 .nssq-town.town-overlay :is(button, select) { font-family: var(--nq-font); }
@@ -1380,8 +1385,6 @@
 .nssq-town .town-manage .manage-card ul { margin: 6px 0; padding-left: 4px; list-style: none; columns: 2; }
 .nssq-town .town-manage .manage-card li small { color: #9cc; }
 .nssq-town .town-manage .manage-card .acts { display: flex; gap: 6px; margin: 8px 0; }
-/* Foundry의 `#hud > * { pointer-events: none; text-align: center }`보다 앞서게(ID 선택자) */
-#hud > .nssq-town.town-overlay { pointer-events: auto; text-align: left; }
 /* 경력 직접 입력: 입력칸이 넓게, [추가]는 내용 크기만 */
 .nssq-chargen .cg-tools.cg-histadd input[type="text"] { flex: 1 1 auto; min-width: 0; width: auto; height: 32px; font-size: 1.05em; padding: 0 8px; }
 .nssq-chargen .cg-tools.cg-histadd button { flex: 0 0 auto; width: auto; height: 32px; padding: 0 14px; white-space: nowrap; }
